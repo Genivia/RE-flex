@@ -1,7 +1,7 @@
 
 [![logo][logo-url]][reflex-url]
 
-Flex reimagined.
+Flex reimagined.  Fast, extensible, adds Boost.
 
 RE/flex is a flexible scanner-generator framework for generating regex-centric,
 Flex-compatible scanners.
@@ -17,16 +17,13 @@ What is RE/flex?
   for matching, seaching, splitting and for scanning of tokens on various types
   of data sources, such as strings, files, and streams of unlimited length;
 
-* a stand-alone *regex library* is included with RE/flex for fast matching with
-  efficient deterministic finite state machines (FSMs) that are contructed from
-  regex patterns with POSIX mode matching extended to support lazy quantifiers,
-  word boundary anchors, Unicode UTF-8, and much more;
+* a regex library for fast POSIX regular expression matching with extensions to
+  POSIX such as lazy quantifiers, word boundary anchors, Unicode UTF-8, and
+  much more;
 
-* a *flexible regex framework* that combines the above with a collection of C++
-  class templates that are easy to use and that offer a rich API for searching,
-  matching, scanning, and splitting of input strings, files and streaming data.
-  This framework is flexible and can be extended to include other regex pattern
-  matchers that can operate seamlessly with the RE/flex scanner generator.
+* a flexible regex library that combines the above in a collection of C++ class
+  templates for pattern matching, searching, scanning, and splitting of
+  strings, files, and streaming data.
 
 
 Installation
@@ -43,7 +40,7 @@ can add this location to your $PATH variable to enable the new reflex command:
 
     export PATH=$PATH:/reflex_install_path/bin
 
-Windows users: use reflex.exe located in bin/reflex.exe.
+Windows users: use bin/reflex.exe.
 
 
 How do I use RE/flex?
@@ -59,10 +56,12 @@ command line on a lex specification:
 
     $ reflex --flex --bison lexspec.l
 
-Several examples are included to get you started.
+Several examples are included to get you started.  See the [manual][manual-url]
+for more details.
 
-For the second option, simply use the matcher classes to start pattern matching
-on strings, wide strings, files, and streams:
+For the second option, simply use the new RE/flex matcher classes to start
+pattern matching on strings, wide strings, files, and real streams (that are
+potentially of unlimited length):
 
 ```{.cpp}
 #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
@@ -106,7 +105,7 @@ while (matcher.find() == true)
   std::cout << "Found " << matcher.text() << std::endl;
 ```
 
-Again, but this time with a C++ input stream:
+Same again, but this time with a C++ input stream:
 
 ```{.cpp}
 #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
@@ -117,7 +116,7 @@ while (matcher.find() == true)
   std::cout << "Found " << matcher.text() << std::endl;
 ```
 
-Stuffing the search results into a container:
+Stuffing the search results into a container using RE/flex iterators:
 
 ```{.cpp}
 #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
