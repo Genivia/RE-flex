@@ -1,7 +1,7 @@
 
 RE/flex User Guide                                                  {#mainpage}
 ==================
-                                                               @tableofcontents
+@tableofcontents
 
 
   "The asteroid to kill this dinosaur is still in orbit."  -- Lex Manual
@@ -76,16 +76,16 @@ Consider for example the following patterns and associated actions defined in a
 lex specification:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    /* PATTERN */           /* ACTION */
-    "if"                    return KEYWORD_IF;
-    "*"                     return OP_MUL;
-    "="                     return OP_ASSIGN;
-    [a-zA-Z_][a-zA-Z0-9_]*  return ASCII_IDENTIFIER;
-    [0-9]+                  return CONST_NUMBER;
-    \"([^\\"]|\\")*\"       return CONST_STRING;
-    [ \t\r\n]               /* no action: ignore all white space */
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+/* PATTERN */           /* ACTION */
+"if"                    return KEYWORD_IF;
+"*"                     return OP_MUL;
+"="                     return OP_ASSIGN;
+[a-zA-Z_][a-zA-Z0-9_]*  return ASCII_IDENTIFIER;
+[0-9]+                  return CONST_NUMBER;
+\"([^\\"]|\\")*\"       return CONST_STRING;
+[ \t\r\n]               /* no action: ignore all white space */
+```
 </div>
 
 When the tokenizer matches a pattern, the corresponding action is invoked.  The
@@ -146,22 +146,22 @@ scan over C/C++ source code input to match multiline comments that start with a
 `/*` and end with the first occurrence of a `*/`.  The Flex manual recommends:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    "/*"    {  /* skip multiline comments */
-      int c;
-      while ((c = yyinput()) != 0)
-      {
-        if (c == '\n')
-          ++mylineno;
-        else if (c == '*')
-        {
-          if ((c = yyinput()) == '/')
-            break;
-          unput(c);
-        }
-      }
+```{.cpp}
+"/*"    {  /* skip multiline comments */
+  int c;
+  while ((c = yyinput()) != 0)
+  {
+    if (c == '\n')
+      ++mylineno;
+    else if (c == '*')
+    {
+      if ((c = yyinput()) == '/')
+        break;
+      unput(c);
     }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  }
+}
+```
 </div>
 
 Workarounds such as these are not necessary with RE/flex.  The RE/flex scanners
@@ -169,9 +169,9 @@ use regex libraries with more expressive RE syntax.  We can use lazy repetition
 to write a regex pattern for multiline comments as follows:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    "/*"(.|\n)*?"*/"  /* no action: ignore multiline comments */
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+"/*"(.|\n)*?"*/"  /* no action: ignore multiline comments */
+```
 </div>
 
 Most regex libraries support syntaxes and features that we have come to rely on
@@ -267,24 +267,24 @@ The methods are repeatable, where the last three return additional matches.
 
 For example, to check if a string is a valid date:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+```{.cpp}
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
 
-    // use a BoostMatcher to check if the birthdate string is a valid date
-    if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
-      std::cout << "Valid date!" << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use a BoostMatcher to check if the birthdate string is a valid date
+if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
+  std::cout << "Valid date!" << std::endl;
+```
 
 To search a string for words `\w+`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+```{.cpp}
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
 
-    // use a BoostMatcher to search for words in a sentence
-    reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
-    while (matcher.find() == true)
-      std::cout << "Found " << matcher.text() << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use a BoostMatcher to search for words in a sentence
+reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
+while (matcher.find() == true)
+  std::cout << "Found " << matcher.text() << std::endl;
+```
 
 When executed this code prints:
 
@@ -301,14 +301,14 @@ continuous in this input source.
 The `split` method is roughly the inverse of the `find` method and returns text
 located between matches.  For example using non-word matching `\W+`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+```{.cpp}
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
 
-    // use a BoostMatcher to search for words in a sentence
-    reflex::BoostMatcher matcher("\\W+", "How now brown cow.");
-    while (matcher.split() == true)
-      std::cout << "Found " << matcher.text() << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use a BoostMatcher to search for words in a sentence
+reflex::BoostMatcher matcher("\\W+", "How now brown cow.");
+while (matcher.split() == true)
+  std::cout << "Found " << matcher.text() << std::endl;
+```
 
 When executed this code prints:
 
@@ -355,15 +355,15 @@ as a whole into memory, meaning that the data stream is not limited in size and
 matching happens immediately.  Interactive mode permits matching the input from
 a console (a TTY device generates a potentially endless stream of characters):
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+```{.cpp}
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
 
-    // use a BoostMatcher to search and display words from console input
-    reflex::BoostMatcher matcher("\\w+", std::cin);
-    matcher.interactive();
-    while (matcher.find() == true)
-      std::cout << "Found " << matcher.text() << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use a BoostMatcher to search and display words from console input
+reflex::BoostMatcher matcher("\\w+", std::cin);
+matcher.interactive();
+while (matcher.find() == true)
+  std::cout << "Found " << matcher.text() << std::endl;
+```
 
 We can also pattern match text from `FILE` descriptors.  The additional benefit
 of using `FILE` descriptors is the automatic conversion from UTF-16/32 to UTF-8
@@ -372,17 +372,17 @@ by the `reflex::Input` class that manages input sources and their state.
 For example, pattern matching the content of "cows.txt" that may use UTF-8, 16,
 or 32 encodings:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+```{.cpp}
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
 
-    // use a BoostMatcher to search and display words from a FILE
-    FILE *fd = fopen("cows.txt", "r");
-    if (fd == NULL)
-      exit(EXIT_FAILURE);
-    reflex::BoostMatcher matcher("\\w+", fd);
-    while (matcher.find() == true)
-      std::cout << "Found " << matcher.text() << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use a BoostMatcher to search and display words from a FILE
+FILE *fd = fopen("cows.txt", "r");
+if (fd == NULL)
+  exit(EXIT_FAILURE);
+reflex::BoostMatcher matcher("\\w+", fd);
+while (matcher.find() == true)
+  std::cout << "Found " << matcher.text() << std::endl;
+```
 
 The `find`, `scan`, and `split` methods are also implemented as input iterators
 that apply filtering tokenization, and splitting:
@@ -402,14 +402,14 @@ are also `cbegin()` and `cend()` methods that return a `const_iterator`.
 We can use these RE/flex iterators in C++ for many tasks, including to populate
 containers by stuffing the iterator's text matches into it:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-    #include <vector>         // std::vector
+```{.cpp}
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+#include <vector>         // std::vector
 
-    // use a BoostMatcher to convert words of a sentence into a string vector
-    reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
-    std::vector<std::string> words(matcher.find.begin(), matcher.find.end());
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use a BoostMatcher to convert words of a sentence into a string vector
+reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
+std::vector<std::string> words(matcher.find.begin(), matcher.find.end());
+```
 
 As a result, the `words` vector contains "How", "now", "brown", "cow".
 
@@ -422,14 +422,14 @@ the matcher continued, we should store the matched text in a `std::string`.
 
 RE/flex iterators are useful in C++11 range-based loops.  For example:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    // Requires C++11, compile with: cc -std=c++11
-    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+```{.cpp}
+// Requires C++11, compile with: cc -std=c++11
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
 
-    // use a BoostMatcher to search for words in a sentence using an iterator
-    for (auto& match : reflex::BoostMatcher("\\w+", "How now brown cow.").find)
-      std::cout << "Found " << match.text() << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use a BoostMatcher to search for words in a sentence using an iterator
+for (auto& match : reflex::BoostMatcher("\\w+", "How now brown cow.").find)
+  std::cout << "Found " << match.text() << std::endl;
+```
 
 When executed this code prints:
 
@@ -441,16 +441,16 @@ When executed this code prints:
 And RE/flex iterators are also useful with STL algorithms and lambdas, for
 example to compute a histogram of word frequencies:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    // Requires C++11, compile with: cc -std=c++11
-    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-    #include <algorithm>      // std::for_each
+```{.cpp}
+// Requires C++11, compile with: cc -std=c++11
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+#include <algorithm>      // std::for_each
 
-    // use a BoostMatcher to create a frequency histogram of group captures
-    reflex::BoostMatcher matcher("(now)|(cow)|(ow)", "How now brown cow.");
-    size_t freq[4] = { 0, 0, 0, 0 };
-    std::for_each(matcher.find.begin(), matcher.find.end(), [&](size_t n){ ++freq[n]; });
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use a BoostMatcher to create a frequency histogram of group captures
+reflex::BoostMatcher matcher("(now)|(cow)|(ow)", "How now brown cow.");
+size_t freq[4] = { 0, 0, 0, 0 };
+std::for_each(matcher.find.begin(), matcher.find.end(), [&](size_t n){ ++freq[n]; });
+```
 
 As a result, the `freq` array contains 0, 1, 1, and 2.
 
@@ -458,14 +458,14 @@ Casting the matcher object to a `size_t` returns the group capture index, which
 is used in the example shown above.  We also us it in the example below that is
 capturing all regex pattern groupings into a vector:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-    #include <vector>         // std::vector
+```{.cpp}
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+#include <vector>         // std::vector
 
-    // use a BoostMatcher to convert captured groups into a numeric vector
-    reflex::BoostMatcher matcher("(now)|(cow)|(ow)", "How now brown cow.");
-    std::vector<size_t> captures(matcher.find.begin(), matcher.find.end());
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use a BoostMatcher to convert captured groups into a numeric vector
+reflex::BoostMatcher matcher("(now)|(cow)|(ow)", "How now brown cow.");
+std::vector<size_t> captures(matcher.find.begin(), matcher.find.end());
+```
 
 As a result, the vector contains the group captures 3, 1, 3, and 2.
 
@@ -532,24 +532,24 @@ either a file `FILE*`, or a string (with UTF-8 character data) of `const char*`
 or `std::string` type, or a stream pointer `std::istream*`. The `reflex::Input`
 object is implicitly constructed from one of these input sources, for example:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+```{.cpp}
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
 
-    // set the input source to a string (or a stream or FILE*)
-    reflex::Input source = "How now brown cow.";
+// set the input source to a string (or a stream or FILE*)
+reflex::Input source = "How now brown cow.";
 
-    reflex::BoostMatcher matcher("\\w+", source);
+reflex::BoostMatcher matcher("\\w+", source);
 
-    while (matcher.find() == true)
-      std::cout << "Found " << matcher.text() << std::endl;
+while (matcher.find() == true)
+  std::cout << "Found " << matcher.text() << std::endl;
 
-    // use the same matcher with a new input source:
-    source = std::ifstream("cows.txt", std::ifstream::in);
-    matcher.input(source);
+// use the same matcher with a new input source:
+source = std::ifstream("cows.txt", std::ifstream::in);
+matcher.input(source);
 
-    while (matcher.find() == true)
-      std::cout << "Found " << matcher.text() << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+while (matcher.find() == true)
+  std::cout << "Found " << matcher.text() << std::endl;
+```
 
 So far we explained how to use `reflex::BoostMatcher` for pattern matching.  We
 can also use the RE/flex `reflex::Matcher` class for pattern matching.  The API
@@ -562,17 +562,17 @@ can take some time and therefore adds overhead before matching can start.  This
 FSM construction should not be executed repeatedly if it can be avoided.  So we
 recommend to construct static pattern objects to create the FSMs only once:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "matcher.h" // reflex::Matcher, reflex::Pattern, reflex::Input
+```{.cpp}
+#include "matcher.h" // reflex::Matcher, reflex::Pattern, reflex::Input
 
-    // statically allocate and construct a pattern, i.e. once and for all
-    static reflex::Pattern word_pattern("\\w+");
+// statically allocate and construct a pattern, i.e. once and for all
+static reflex::Pattern word_pattern("\\w+");
 
-    // use the RE/flex POSIX matcher to search for words in a string sentence
-    reflex::Matcher matcher(word_pattern, "How now brown cow.");
-    while (matcher.find() == true)
-      std::cout << "Found " << matcher.text() << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use the RE/flex POSIX matcher to search for words in a string sentence
+reflex::Matcher matcher(word_pattern, "How now brown cow.");
+while (matcher.find() == true)
+  std::cout << "Found " << matcher.text() << std::endl;
+```
 
 The RE/flex matcher only supports POSIX mode matching and does not support Perl
 mode matching.  See \ref reflex-posix-perl for more information.
@@ -580,9 +580,9 @@ mode matching.  See \ref reflex-posix-perl for more information.
 The RE/flex `reflex::Pattern` class has several options that control the regex.
 Options and modes for the regex are set as a string, for example:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    static reflex::Pattern word_pattern("\\w+", "f=graph.gv;f=machine.cpp");
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+static reflex::Pattern word_pattern("\\w+", "f=graph.gv;f=machine.cpp");
+```
 
 The `f=graph.gv` option emits a Graphviz .gv file that can be visually rendered
 with the open source [Graphviz dot tool](http://www.graphviz.org) by converting
@@ -616,38 +616,38 @@ digraph FSM {
 The `f=machine.cpp` option emits C++ code of the finite state machine, which in
 this case is the following table of 11 code words:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    REFLEX_CODE_DECL reflex_code_FSM[11] =
-    {
-      0x617A0005, // 0: GOTO 5 ON a-z
-      0x5F5F0005, // 1: GOTO 5 ON _
-      0x415A0005, // 2: GOTO 5 ON A-Z
-      0x30390005, // 3: GOTO 5 ON 0-9
-      0x00FFFFFF, // 4: HALT
-      0xFF000001, // 5: TAKE 1
-      0x617A0005, // 6: GOTO 5 ON a-z
-      0x5F5F0005, // 7: GOTO 5 ON _
-      0x415A0005, // 8: GOTO 5 ON A-Z
-      0x30390005, // 9: GOTO 5 ON 0-9
-      0x00FFFFFF, // 10: HALT
-    };
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+REFLEX_CODE_DECL reflex_code_FSM[11] =
+{
+  0x617A0005, // 0: GOTO 5 ON a-z
+  0x5F5F0005, // 1: GOTO 5 ON _
+  0x415A0005, // 2: GOTO 5 ON A-Z
+  0x30390005, // 3: GOTO 5 ON 0-9
+  0x00FFFFFF, // 4: HALT
+  0xFF000001, // 5: TAKE 1
+  0x617A0005, // 6: GOTO 5 ON a-z
+  0x5F5F0005, // 7: GOTO 5 ON _
+  0x415A0005, // 8: GOTO 5 ON A-Z
+  0x30390005, // 9: GOTO 5 ON 0-9
+  0x00FFFFFF, // 10: HALT
+};
+```
 
 This code can then be used to omit the FSM construction overhead altogether, by
 including it into the source code and then passing it to the `reflex::Pattern`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "matcher.h"   // reflex::Matcher, reflex::Pattern, reflex::Input
-    #include "machine.cpp" // reflex_code_FSM[]
+```{.cpp}
+#include "matcher.h"   // reflex::Matcher, reflex::Pattern, reflex::Input
+#include "machine.cpp" // reflex_code_FSM[]
 
-    // use the pattern FSM code for fast search
-    static reflex::Pattern pattern(reflex_code_FSM);
+// use the pattern FSM code for fast search
+static reflex::Pattern pattern(reflex_code_FSM);
 
-    // use the RE/flex POSIX matcher to search for words in a string sentence
-    reflex::Matcher matcher(pattern, "How now brown cow.");
-    while (matcher.find() == true)
-      std::cout << "Found " << matcher.text() << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// use the RE/flex POSIX matcher to search for words in a string sentence
+reflex::Matcher matcher(pattern, "How now brown cow.");
+while (matcher.find() == true)
+  std::cout << "Found " << matcher.text() << std::endl;
+```
 
 The RE/flex `reflex::Pattern` construction options are given as a string:
 
@@ -781,13 +781,13 @@ A lex specification consists of three sections that are divided by `%%`
 delimiters:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    Definitions
-    %%
-    Rules
-    %%
-    User code
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+Definitions
+%%
+Rules
+%%
+User code
+```
 </div>
 
 The Definitions section is used to define named regex patterns, to set options
@@ -800,11 +800,11 @@ example, the following lex specification replaces all occurrences of `cow` by
 `chick`:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %%
-    cow      out() << "chick";
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%%
+cow      out() << "chick";
+%%
+```
 </div>
 
 The default rule is to echo any input character that is read from input that
@@ -817,12 +817,12 @@ skipping capitalized Cows.  We can improve this with a pattern that anchors
 word boundaries and accepts a lower or upper case C:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    cow      \<[Cc]ow\>
-    %%
-    {cow}    out() << text()[0] << "hick";
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+cow      \<[Cc]ow\>
+%%
+{cow}    out() << text()[0] << "hick";
+%%
+```
 </div>
 
 Note that we defined a named pattern `cow` in the definitions section to match
@@ -847,13 +847,13 @@ even further to generated a global `yylex()` function and `yy` variables.
 To create a stand-alone scanner, we add `main` to the user code section:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    cow      \<[Cc]ow\>
-    %%
-    {cow}    out() << text()[0] << "hick";
-    %%
-    int main() { return Lexer().lex(); }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+cow      \<[Cc]ow\>
+%%
+{cow}    out() << text()[0] << "hick";
+%%
+int main() { return Lexer().lex(); }
+```
 </div>
 
 The main function instantiates the lexer class and invokes the scanner, which
@@ -869,10 +869,10 @@ The following example defines two names for two patterns, where the second
 regex pattern uses the previously named pattern:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    digit     [0-9]
-    number    {digit}+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+digit     [0-9]
+number    {digit}+
+```
 </div>
 
 Names must be defined before being referenced.  Names are expanded as macros in
@@ -889,21 +889,21 @@ new line.  To inject code at the very top of the generated scanner, place
 this code within `%top{` and `%}`:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %top{
-      #include <iostream>    // std::cout etc.
-    %}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%top{
+  #include <iostream>    // std::cout etc.
+%}
+```
 </div>
 
 The Definition section may also contain one or more options with `%%option` (or
 `%%o` for short).  For example:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %option dotall main
-    %o matcher=boost
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%option dotall main
+%o matcher=boost
+```
 </div>
 
 Multiple options can be grouped on the same line as is shown above.  See
@@ -915,27 +915,27 @@ counter when we see a "cow", and finally report the total tally when we reach
 the end of the input marked by the `<<EOF>>` rule:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %option dotall main
+```{.cpp}
+%option dotall main
 
-    %top{
-      #include <iostream>    // std::cout etc.
-    %}
+%top{
+  #include <iostream>    // std::cout etc.
+%}
 
-    %{
-      static int n = 0;      // a global static variable to count cows
-    %}
+%{
+  static int n = 0;      // a global static variable to count cows
+%}
 
-    cow        \<[Cc]ow\>
+cow        \<[Cc]ow\>
 
-    %%
+%%
 
-    {cow}      n++;          // found a cow, bump count by one
-    .          // do nothing
-    <<EOF>>    out() << n << " cows!" << std::endl; return 0;
+{cow}      n++;          // found a cow, bump count by one
+.          // do nothing
+<<EOF>>    out() << n << " cows!" << std::endl; return 0;
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 The above works fine, but we are using a global counter which is not a best
@@ -962,31 +962,31 @@ For example, we use these code injectors to make our cow counter `n` part of the
 Lexer class state:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %option dotall main
+```{.cpp}
+%option dotall main
 
-    %top{
-      #include <iostream>    // std::cout etc.
-    %}
+%top{
+  #include <iostream>    // std::cout etc.
+%}
 
-    %class{
-      int n;     // lexer class member variable (private by default)
-    %}
+%class{
+  int n;     // lexer class member variable (private by default)
+%}
 
-    %init{
-      n = 0;     // initialize member variable in Lexer class constructor
-    %}
+%init{
+  n = 0;     // initialize member variable in Lexer class constructor
+%}
 
-    cow        \<[Cc]ow\>
+cow        \<[Cc]ow\>
 
-    %%
+%%
 
-    {cow}      n++;          // found a cow, bump count by one
-    .          // do nothing
-    <<EOF>>    out() << n << " cows!" << std::endl; return 0;
+{cow}      n++;          // found a cow, bump count by one
+.          // do nothing
+<<EOF>>    out() << n << " cows!" << std::endl; return 0;
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 Note that nothing else needed to be changed, because the actions are part of
@@ -997,9 +997,9 @@ To modularize lex specifications use `%%import` (or `%%i` for short) to import
 files into the definitions section of a lex specification.  For example:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-     %import "examples/jdefs.l"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%import "examples/jdefs.l"
+```
 </div>
 
 This imports examples/jdefs.l with Java patterns into the current
@@ -1007,13 +1007,13 @@ specification so you can match Java lexical structures, such as copying Java
 identifiers to the output given some Java source program as input:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-     %import "examples/jdefs.l"
-     %%
-     {Identifier}    echo();
-     .|\n            // do nothing
-     %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%import "examples/jdefs.l"
+%%
+{Identifier}    echo();
+.|\n            // do nothing
+%%
+```
 </div>
 
 To declare start condition state names use `%%state` (`%%s` for short) to
@@ -1021,10 +1021,10 @@ declare inclusive states and use `%%xstate` (`%%x` for short) to declare
 exclusive states:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-     %s INCLUSIVE
-     %x EXCLUSIVE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%s INCLUSIVE
+%x EXCLUSIVE
+```
 </div>
 
 See \ref reflex-states for more information about states.
@@ -1035,9 +1035,9 @@ Each rule in the Rules section consists of a pattern-action pair.  For example,
 the following defines an action for a pattern:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    {number}    out() << "number " << text() << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+{number}    out() << "number " << text() << std::endl;
+```
 </div>
 
 To add action code that spans multiple lines, indent the code or place the code
@@ -1128,22 +1128,22 @@ Below is a User Code section example with `main` that invokes the lexer to read
 from standard input (the default input) and display all numbers found:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %top{
-      #include <iostream>
-    %}
+```{.cpp}
+%top{
+  #include <iostream>
+%}
 
-    digit       [0-9]
-    number      {digit}+
+digit       [0-9]
+number      {digit}+
 
-    %%
+%%
 
-    {number}    out() << "number " << text() << std::endl;
+{number}    out() << "number " << text() << std::endl;
 
-    %%
+%%
 
-    int main() { return Lexer().lex(); }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+int main() { return Lexer().lex(); }
+```
 </div>
 
 You can also automatically generate a `main` with the **reflex** `−−main`
@@ -1157,19 +1157,19 @@ argument.  To set an alternative output stream than standard output, pass a
 `std::ostream` object as the second argument to the Lexer class constructor:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    int main(int argc, char **argv)
-    {
-      FILE *fd = stdin;
-      if (argc > 2)
-        fd = fopen(argv[1], "r");
-      std::ofstream of("output.txt", std::ofstream::out);
-      Lexer(fd, of).lex();
-      of.close();
-      fclose(fd);
-      return 0;
-    }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+int main(int argc, char **argv)
+{
+  FILE *fd = stdin;
+  if (argc > 2)
+    fd = fopen(argv[1], "r");
+  std::ofstream of("output.txt", std::ofstream::out);
+  Lexer(fd, of).lex();
+  of.close();
+  fclose(fd);
+  return 0;
+}
+```
 </div>
 
 The above uses a `FILE` descriptor to read input from, which has the advantage
@@ -1368,14 +1368,14 @@ pattern may include any characters that are considered part of indentation
 margins, but should exclude `\n`.  For example:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %%
-    ^\h+      out() << "| "; // text is aligned to current indent margin
-    ^\h*\i    out() << "> "; // indent
-    ^\h*\j    out() << "< "; // dedent
-    \j        out() << "< "; // dedent, for each extra level dedented
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%%
+^\h+      out() << "| "; // text is aligned to current indent margin
+^\h*\i    out() << "> "; // indent
+^\h*\j    out() << "< "; // dedent
+\j        out() << "< "; // dedent, for each extra level dedented
+%%
+```
 </div>
 
 The `\h` pattern matches space and tabs, where tabs advance to the next column
@@ -1386,9 +1386,9 @@ To add a pattern that consumes line continuations without affecting the
 indentation levels, use a negative match, which is a new RE/flex feature:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    (?^\\\n\h+)    // lines ending in \ will continue on the next line
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+(?^\\\n\h+)    // lines ending in \ will continue on the next line
+```
 </div>
 
 The pattern ignores the match as if the matching text was not part of the
@@ -1431,151 +1431,151 @@ To understand the impact of these options, consider the following lex
 specification template:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %option namespace=NAMESPACE
-    %option lexer=LEXER
-    %option lex=LEX
+```{.cpp}
+%option namespace=NAMESPACE
+%option lexer=LEXER
+%option lex=LEX
 
-    %class{
-      MEMBERS
-    %}
+%class{
+  MEMBERS
+%}
 
-    %init{
-      INIT
-    %}
+%init{
+  INIT
+%}
 
-    %%
+%%
 
-    %{
-      CODE
-    %}
+%{
+  CODE
+%}
 
-    REGEX ACTION
+REGEX ACTION
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 This produces the following Lexer class with the template parts filled in:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "abslexer.h"
-    namespace NAMESPACE {
-      class LEXER : public reflex::AbstractLexer<reflex::Matcher> {
-        MEMBERS
-       public:
-        LEXER(
-            const reflex::Input& input = stdin,
-            std::ostream&        os    = std::cout)
-          :
-            AbstractLexer(input, os)
-        {
-          INIT
-        }
-        static const int INITIAL = 0;
-        virtual int LEX(void);
-        int LEX(
-            const reflex::Input& input,
-            std::ostream&        os = std::cout)
-        {
-          in(input);
-          out(os);
-          return LEX();
-        }
-      };
-      int NAMESPACE::LEXER::LEX()
+```{.cpp}
+#include "abslexer.h"
+namespace NAMESPACE {
+  class LEXER : public reflex::AbstractLexer<reflex::Matcher> {
+    MEMBERS
+   public:
+    LEXER(
+        const reflex::Input& input = stdin,
+        std::ostream&        os    = std::cout)
+      :
+        AbstractLexer(input, os)
+    {
+      INIT
+    }
+    static const int INITIAL = 0;
+    virtual int LEX(void);
+    int LEX(
+        const reflex::Input& input,
+        std::ostream&        os = std::cout)
+    {
+      in(input);
+      out(os);
+      return LEX();
+    }
+  };
+  int NAMESPACE::LEXER::LEX()
+  {
+    static const reflex::Pattern PATTERN_INITIAL("(REGEX)", "m");
+    if (!has_matcher())
+    {
+      matcher(new Matcher(PATTERN_INITIAL, in(), this));
+      start(INITIAL);
+    }
+    CODE
+    while (true)
+    {
+      switch (matcher().scan())
       {
-        static const reflex::Pattern PATTERN_INITIAL("(REGEX)", "m");
-        if (!has_matcher())
-        {
-          matcher(new Matcher(PATTERN_INITIAL, in(), this));
-          start(INITIAL);
-        }
-        CODE
-        while (true)
-        {
-          switch (matcher().scan())
+        case 0:
+          if (matcher().at_end())
           {
-            case 0:
-              if (matcher().at_end())
-              {
-                return 0;
-              }
-              else
-              {
-                output(matcher().input());
-              }
-              break;
-            case 1:
-              ACTION
-              break;
+            return 0;
           }
-        }
+          else
+          {
+            output(matcher().input());
+          }
+          break;
+        case 1:
+          ACTION
+          break;
       }
     }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  }
+}
+```
 
 The Lexer class produced with option `−−flex` is compatible with Flex (assuming
 Flex with option `-+` for C++):
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "flexlexer.h"
-    namespace NAMESPACE {
-      typedef reflex::FlexLexer<reflex::Matcher> FlexLexer;
-      class LEXER : public FlexLexer {
-        MEMBERS
-       public:
-        LEXER(
-            const reflex::Input& input = stdin,
-            std::ostream&        os    = std::cout)
-          :
-            FlexLexer(input, os)
-        {
-          INIT
-        }
-        virtual int LEX(void);
-        int LEX(
-            const reflex::Input& input,
-            std::ostream        *os = nullptr)
-        {
-          in(input);
-          out(os ? *os : std::cout);
-          return LEX();
-        }
-      };
-      int NAMESPACE::LEXER::LEX()
+```{.cpp}
+#include "flexlexer.h"
+namespace NAMESPACE {
+  typedef reflex::FlexLexer<reflex::Matcher> FlexLexer;
+  class LEXER : public FlexLexer {
+    MEMBERS
+   public:
+    LEXER(
+        const reflex::Input& input = stdin,
+        std::ostream&        os    = std::cout)
+      :
+        FlexLexer(input, os)
+    {
+      INIT
+    }
+    virtual int LEX(void);
+    int LEX(
+        const reflex::Input& input,
+        std::ostream        *os = nullptr)
+    {
+      in(input);
+      out(os ? *os : std::cout);
+      return LEX();
+    }
+  };
+  int NAMESPACE::LEXER::LEX()
+  {
+    static const reflex::Pattern PATTERN_INITIAL("(REGEX)", "m");
+    if (!has_matcher())
+    {
+      matcher(new Matcher(PATTERN_INITIAL, in(), this));
+      start(INITIAL);
+      YY_USER_INIT
+    }
+    CODE
+    while (true)
+    {
+      switch (matcher().scan())
       {
-        static const reflex::Pattern PATTERN_INITIAL("(REGEX)", "m");
-        if (!has_matcher())
-        {
-          matcher(new Matcher(PATTERN_INITIAL, in(), this));
-          start(INITIAL);
-          YY_USER_INIT
-        }
-        CODE
-        while (true)
-        {
-          switch (matcher().scan())
+        case 0:
+          if (matcher().at_end())
           {
-            case 0:
-              if (matcher().at_end())
-              {
-                return 0;
-              }
-              else
-              {
-                output(matcher().input());
-              }
-              YY_BREAK
-            case 1:
-              YY_USER_ACTION
-              ACTION
-              YY_BREAK
+            return 0;
           }
-        }
+          else
+          {
+            output(matcher().input());
+          }
+          YY_BREAK
+        case 1:
+          YY_USER_ACTION
+          ACTION
+          YY_BREAK
       }
     }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  }
+}
+```
 
 To use a new Lexer class that is derived from the generated base Lexer class,
 use option option `−−class=CLASS`.
@@ -1585,18 +1585,18 @@ derived from the base lexer class.  For example, the simplest derived Lexer
 class would be:
   
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %option class=CLASS
-    %option lexer=LEXER
-    %option lex=LEX
+```{.cpp}
+%option class=CLASS
+%option lexer=LEXER
+%option lex=LEX
 
-    %{
-      class CLASS : public LEXER {
-       public:
-        int LEX();
-      };
-    %}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%{
+  class CLASS : public LEXER {
+   public:
+    int LEX();
+  };
+%}
+```
 </div>
 
 The base Lexer class `LEXER` is the same class as was shown earlier, except
@@ -1617,38 +1617,38 @@ options.  These options can also be specified in the lex specification with
 `%%option` (or `%%o` for short):
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %option flex
-    %option bison
-    %option graphs-file=mygraph
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%option flex
+%option bison
+%option graphs-file=mygraph
+```
 </div>
 
 The above is equivalent to the `−−flex`, `−−bison`, and `−−graphs-file=mygraph`
 command-line options.  Multiple options can be grouped on a single line:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %o flex bison graphs-file=mygraph
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%o flex bison graphs-file=mygraph
+```
 </div>
 
 Option parameters should be quoted when parameters contain special characters:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %o flex bison graphs-file="dev/output/mygraph.gv"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%o flex bison graphs-file="dev/output/mygraph.gv"
+```
 </div>
 
 Shorter forms can be used, with each option on a separate line:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %flex
-    %bison
-    %graphs-file=mygraph
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%flex
+%bison
+%graphs-file=mygraph
+```
 </div>
 
 The **reflex** command-line options are listed below.
@@ -1933,16 +1933,16 @@ Consider for example the following lex specification with rules that are
 intended to match keywords and identifiers in some input text:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %%
+```{.cpp}
+%%
 
-    int                     out() << "int keyword\n;
-    interface               out() << "interface keyword\n;
-    float                   out() << "float keyword\n;
-    [A-Za-z][A-Za-z0-9]*    out() << "identifier\n";
+int                     out() << "int keyword\n;
+interface               out() << "interface keyword\n;
+float                   out() << "float keyword\n;
+[A-Za-z][A-Za-z0-9]*    out() << "identifier\n";
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 When the input to the scanner is the text `integer` then a POSIX matcher
@@ -1992,9 +1992,9 @@ instead of standard input, pass the input source as the first argument to its
 constructor and use the second argument to optionally set an `std::ostream`:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    Lexer lexer(input, std::cout);
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+Lexer lexer(input, std::cout);
+```
 </div>
 
 where `input` is a `reflex::Input` object.  The `reflex::Input` constructor
@@ -2003,22 +2003,22 @@ or a wide string `std::wstring` or `wchar_t*`.
 
 To switch input to another source while using the scanner, use `in(input)`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    // read from a file, this also converts UTF-16/32 encodings automatically
-    FILE *fd = fopen("cow.txt", "r");
-    if (fd)
-      in(fd);
+```{.cpp}
+// read from a file, this also converts UTF-16/32 encodings automatically
+FILE *fd = fopen("cow.txt", "r");
+if (fd)
+  in(fd);
 
-    // read from a stream (as is, can be ASCII or UTF-8)
-    std::istream i = std::ifstream("file", std::ifstream::in);
-    in(i);
+// read from a stream (as is, can be ASCII or UTF-8)
+std::istream i = std::ifstream("file", std::ifstream::in);
+in(i);
 
-    // read from a string (as is, can be ASCII or UTF-8)
-    in("How now brown cow.");
+// read from a string (as is, can be ASCII or UTF-8)
+in("How now brown cow.");
 
-    // read from a wide string, encoding it to UTF-8 for matching
-    in(L"How now brown cow.");
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// read from a wide string, encoding it to UTF-8 for matching
+in(L"How now brown cow.");
+```
 
 However, switching input this way discards the remaining input from a previous
 input source.  To switch input without affecting the current input source,
@@ -2027,14 +2027,14 @@ state, in addition to pattern matching the input.
 
 To switch a matcher that scans from another input source, use
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    Matcher *oldmatcher = matcher();
-    Matcher *newmatcher = new_matcher(input);
-    matcher(newmatcher);
-    ...
-    del_matcher(newmatcher);
-    matcher(oldmatcher);
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+Matcher *oldmatcher = matcher();
+Matcher *newmatcher = new_matcher(input);
+matcher(newmatcher);
+...
+del_matcher(newmatcher);
+matcher(oldmatcher);
+```
   
 This switches the scanner's input by switching to another matcher.  Note that
 `matcher(m)` may be used by the virtual `wrap()` method (or `yywrap()` when
@@ -2052,16 +2052,16 @@ derived Lexer class using option `class=NAME` (or `yyclass=NAME`) and override
 the `wrap()` (or `yywrap()`) method:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %option class=Tokenizer
+```{.cpp}
+%option class=Tokenizer
 
-    %{
-      class Tokenizer : Lexer {
-       public:
-        virtual int wrap() { in(std::in); return 1; }
-      };
-    %}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%{
+  class Tokenizer : Lexer {
+   public:
+    virtual int wrap() { in(std::in); return 1; }
+  };
+%}
+```
 </div>
 
 Switching input sources via either `matcher(m)' or `in(input)' does not change
@@ -2079,50 +2079,50 @@ switching matchers and using the stack of matchers to permit nested `#include`
 directives up to a depth of 99 files:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %top{
-      #include <stdio.h>
-    %}
+```{.cpp}
+%top{
+  #include <stdio.h>
+%}
 
-    %class{
-      int depth;
-      void include_file()
-      {
-        depth++;
-        if (depth > 99)
-          exit(EXIT_FAILURE);           // max include depth exceeded
-        char *q = strchr(text(), '"');  // get ..."filename"
-        char *file = strdup(q + 1);     // get filename"
-        file[strlen(file) - 1] = '\0';  // get filename
-        FILE *fd = fopen(file, "r");
-        free(file);
-        if (!fd)
-          exit(EXIT_FAILURE);           // cannot open file
-        push_matcher(new_matcher(fd));  // push current matcher, use new matcher
-      }
-      bool end_of_file()
-      {
-        if (depth == 0)
-          return true;                  // return true: no more input to read
-        fclose(in());                   // close current input in() (a FILE*)
-        pop_matcher();                  // delete current matcher, pop matcher
-        depth--;
-        return false;                   // return false: continue reading
-      }
-    %}
+%class{
+  int depth;
+  void include_file()
+  {
+    depth++;
+    if (depth > 99)
+      exit(EXIT_FAILURE);           // max include depth exceeded
+    char *q = strchr(text(), '"');  // get ..."filename"
+    char *file = strdup(q + 1);     // get filename"
+    file[strlen(file) - 1] = '\0';  // get filename
+    FILE *fd = fopen(file, "r");
+    free(file);
+    if (!fd)
+      exit(EXIT_FAILURE);           // cannot open file
+    push_matcher(new_matcher(fd));  // push current matcher, use new matcher
+  }
+  bool end_of_file()
+  {
+    if (depth == 0)
+      return true;                  // return true: no more input to read
+    fclose(in());                   // close current input in() (a FILE*)
+    pop_matcher();                  // delete current matcher, pop matcher
+    depth--;
+    return false;                   // return false: continue reading
+  }
+%}
 
-    %init{
-      depth = 0;
-    %}
+%init{
+  depth = 0;
+%}
 
-    %%
+%%
 
-    ^\s*#include\s*\".*?\"    include_file();
-    .|\n                      echo();
-    <<EOF>>                   if (end_of_file()) return 0;
+^\s*#include\s*\".*?\"    include_file();
+.|\n                      echo();
+<<EOF>>                   if (end_of_file()) return 0;
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 To set the current input as interactive, such as input from a console, use
@@ -2139,22 +2139,22 @@ To put back one character unto the input stream, use `matcher().unput(c)`
 For example, to crudily scan a C/C++ multiline comment we can use the rule:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    "/*"    {  /* skip multiline comments */
-      int c;
-      while ((c = yyinput()) != 0)
-      {
-        if (c == '\n')
-          ++mylineno;
-        else if (c == '*')
-        {
-          if ((c = yyinput()) == '/')
-            break;
-          unput(c);
-        }
-      }
+```{.cpp}
+"/*"    {  /* skip multiline comments */
+  int c;
+  while ((c = yyinput()) != 0)
+  {
+    if (c == '\n')
+      ++mylineno;
+    else if (c == '*')
+    {
+      if ((c = yyinput()) == '/')
+        break;
+      unput(c);
     }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  }
+}
+```
 </div>
 
 Instead of the ugly solution above, a better alternative is to use a regex
@@ -2192,11 +2192,11 @@ only be active when the scanner is in one of these start condition states.
 For example:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    <A,B>pattern1    action1
-    <A>pattern2      action2
-    <B>pattern3      action3
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+<A,B>pattern1    action1
+<A>pattern2      action2
+<B>pattern3      action3
+```
 </div>
 
 When the scanner is in state `A` rules 1 and 2 are active. When the scanner
@@ -2232,21 +2232,21 @@ special exception were introduced by Flex).
 For example:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %s A
-    %x B
+```{.cpp}
+%s A
+%x B
 
-    %%
+%%
 
-    <A,B>pattern1    action1    // rule for states A and B
-    <A>pattern2      action2    // rule for state A
-    <B>pattern3      action3    // rule for state B
-    <*>pattern4      action4    // rule for states INITIAL, A and B
-    pattern5         action5    // rule for states INITIAL and A
-    <<EOF>>          action6    // rule for states INITIAL, A and B
+<A,B>pattern1    action1    // rule for states A and B
+<A>pattern2      action2    // rule for state A
+<B>pattern3      action3    // rule for state B
+<*>pattern4      action4    // rule for states INITIAL, A and B
+pattern5         action5    // rule for states INITIAL and A
+<<EOF>>          action6    // rule for states INITIAL, A and B
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 When the scanner is in state `INITIAL` rules 4, 5, and 6 are active.  When the
@@ -2261,21 +2261,21 @@ your scanner allows you to create "mini-scanners" to scan portions of the input
 that are syntactically different from the rest of the input, such as comments:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %x COMMENT
+```{.cpp}
+%x COMMENT
 
-    %%
+%%
 
-    "/*"    start(COMMENT);    // with −−flex use: BEGIN COMMENT;
-    .|\n    echo();            // with −−flex use: ECHO;
+"/*"    start(COMMENT);    // with −−flex use: BEGIN COMMENT;
+.|\n    echo();            // with −−flex use: ECHO;
 
-    <COMMENT>[^*]*         // eat anything that is not a '*'
-    <COMMENT>"*"+[^*/]*    // eat '*'s not followed by a '/'
-    <COMMENT>"*"+"/"       start(INITIAL);
-    <COMMENT><<EOF>>       std::cerr << "EOF in comment\n"; return 1;
+<COMMENT>[^*]*         // eat anything that is not a '*'
+<COMMENT>"*"+[^*/]*    // eat '*'s not followed by a '/'
+<COMMENT>"*"+"/"       start(INITIAL);
+<COMMENT><<EOF>>       std::cerr << "EOF in comment\n"; return 1;
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 Start symbols are actually integer values, where `INITIAL` is 0.  This means
@@ -2286,35 +2286,35 @@ top of the stack and pop it use `pop_state()`.  The `top_state()` returns the
 start condition that is on the top of the stack:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %x COMMENT
+```{.cpp}
+%x COMMENT
 
-    %%
+%%
 
-    "/*"    push_state(COMMENT);
-    .|\n    echo();
+"/*"    push_state(COMMENT);
+.|\n    echo();
 
-    <COMMENT>[^*]*         // eat anything that is not a '*'
-    <COMMENT>"*"+[^*/]*    // eat '*'s not followed by a '/'
-    <COMMENT>"*"+"/"       pop_state();
-    <COMMENT><<EOF>>       std::cerr << "EOF in comment\n"; return 1;
+<COMMENT>[^*]*         // eat anything that is not a '*'
+<COMMENT>"*"+[^*/]*    // eat '*'s not followed by a '/'
+<COMMENT>"*"+"/"       pop_state();
+<COMMENT><<EOF>>       std::cerr << "EOF in comment\n"; return 1;
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 When many rules are prefixed by the same start conditions, you can simplify
 the rules by placing them in a *start condition scope*:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    <COMMENT>{
-    [^*]*         // eat anything that is not a '*'
-    "*"+[^*/]*    // eat '*'s not followed by a '/'
-    "*"+"/"       start(INITIAL);
-    <<EOF>>       std::cerr << "EOF in comment\n"; return 1;
-    }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+<COMMENT>{
+[^*]*         // eat anything that is not a '*'
+"*"+[^*/]*    // eat '*'s not followed by a '/'
+"*"+"/"       start(INITIAL);
+<<EOF>>       std::cerr << "EOF in comment\n"; return 1;
+}
+```
 </div>
 
 Contrary to some Flex manuals, rules cannot be indented in a start condition
@@ -2325,39 +2325,39 @@ executed when the scanner is invoked and if it is in the corresponding start
 condition state:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %s A
-    %x B
+```{.cpp}
+%s A
+%x B
 
-    %%
+%%
 
-    %{
-      // Code for all inclusive states (INITIAL and A)
-    %}
-    pattern    action
-    ...
-    pattern    action
+%{
+  // Code for all inclusive states (INITIAL and A)
+%}
+pattern    action
+...
+pattern    action
 
-    <B>{
-    %{
-      // Code for state B
-    %}
-    pattern    action
-    ...
-    pattern    action
-    }
+<B>{
+%{
+  // Code for state B
+%}
+pattern    action
+...
+pattern    action
+}
 
-    <*>{
-    %{
-      // Code for all inclusive and exclusive states (INITIAL, A and B)
-    %}
-    pattern    action
-    ...
-    pattern    action
-    }
+<*>{
+%{
+  // Code for all inclusive and exclusive states (INITIAL, A and B)
+%}
+pattern    action
+...
+pattern    action
+}
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 Start condition scopes may be nested.
@@ -2379,23 +2379,23 @@ the scanner is compiled in C++, you must set `YY_EXTERN_C` in the lex
 specification to `extern "C"` to enable C linkage rules:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %top{
-      #include "y.tab.h"               /* include y.tab.h generated by bison */
-      #define YY_EXTERN_C extern "C"   /* yylex() must use C linkage rules */
-    %}
+```{.cpp}
+%top{
+  #include "y.tab.h"               /* include y.tab.h generated by bison */
+  #define YY_EXTERN_C extern "C"   /* yylex() must use C linkage rules */
+%}
 
-    %option bison
+%option bison
 
-    %%
-    
-    [0-9]+               yylval.num = strtol(text(), NULL, 10);
-                         return CONST_NUMBER;
-    \"([^\\"]|\\")*\"    yylval.str = text();
-                         return CONST_STRING;
+%%
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[0-9]+               yylval.num = strtol(text(), NULL, 10);
+                     return CONST_NUMBER;
+\"([^\\"]|\\")*\"    yylval.str = text();
+                     return CONST_STRING;
+
+%%
+```
 </div>
 
 This example sets the global `yylval.num` to the integer scanned or
@@ -2404,25 +2404,25 @@ specification defines the tokens `CONST_NUMBER` and `CONST_STRING` and the type
 `YYSTYPE` of `yylval`, which is a union.  For example:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    /* yacc grammar (.y file) */
+```{.cpp}
+/* yacc grammar (.y file) */
 
-    %{
-      extern int yylex(void);
-    %}
+%{
+  extern int yylex(void);
+%}
 
-    %union {         // YYSTYPE yylval is a union:
-      int num;       // yylval.num
-      char* str;     // yylval.str
-    }
+%union {         // YYSTYPE yylval is a union:
+  int num;       // yylval.num
+  char* str;     // yylval.str
+}
 
-    %token <num> CONST_NUMBER
-    %token <str> CONST_STRING
+%token <num> CONST_NUMBER
+%token <str> CONST_STRING
 
-    %%
-    ...  // grammar rules
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+...  // grammar rules
+%%
+```
 </div>
 
 
@@ -2436,37 +2436,37 @@ yacc grammar specification for Bison should include the externs we need to
 import from the scanner:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    /* yacc grammar (.y file) assuming C with externs defined by the scanner using YY_EXTERN_C */
+```{.cpp}
+/* yacc grammar (.y file) assuming C with externs defined by the scanner using YY_EXTERN_C */
 
-    %{
-      extern int yylex(void);
-      extern char *yytext;
-      extern int yyleng;
-      extern int yylineno;
-    %}
+%{
+  extern int yylex(void);
+  extern char *yytext;
+  extern int yyleng;
+  extern int yylineno;
+%}
 
-    %%
-    ...  // grammar rules
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+...  // grammar rules
+%%
+```
 </div>
 
 or a better approach is to generate a `lex.yy.h` header file with option
 `--header-file` and use this header file in the yacc grammar specification:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    /* yacc grammar (.y file) assuming C++ */
+```{.cpp}
+/* yacc grammar (.y file) assuming C++ */
 
-    %{
-      #include "lex.yy.h"
-    %}
+%{
+  #include "lex.yy.h"
+%}
 
-    %%
-    ...  // grammar rules
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+...  // grammar rules
+%%
+```
 </div>
 
 The second option requires the generated parser to be compiled in C++, because
@@ -2497,21 +2497,21 @@ To change the generated code for use with Bison, use the following options:
 The **reflex** option `−−bison-bridge` expects a Bison "pure parser":
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    /* yacc grammar (.y file) assuming C++ */
+```{.cpp}
+/* yacc grammar (.y file) assuming C++ */
 
-    %{
-      #include "lex.yy.h"
-      #define YYPARSE_PARAM scanner
-      #define YYLEX_PARAM   scanner
-    %}
+%{
+  #include "lex.yy.h"
+  #define YYPARSE_PARAM scanner
+  #define YYLEX_PARAM   scanner
+%}
 
-    %pure-parser
+%pure-parser
 
-    %%
-    ...  // grammar rules
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+...  // grammar rules
+%%
+```
 </div>
 
 For the `−−bison-bridge` option, the `yyscan_t` argument type of
@@ -2524,18 +2524,18 @@ For the `−−reentrant` and `−−bison-bridge` options two additional functi
 generated that can be used to create a new scanner and delete the scanner:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    yyscan_t scanner = nullptr;
-    yylex_init(&scanner);      // create a new scanner
-    ...
-    // three possibilities, depending on options:
-    int token = yylex(scanner);                   // reentrant scan
-    int token = yylex(&yylval, scanner);          // reentrant scan with bison-bridge
-    int token = yylex(&yylval, &yylloc, scanner); // reentrant scan with bison-bridge and bison-locations
-    ...
-    yylex_destroy(scanner);    // delete a scanner
-    scanner = nullptr;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+yyscan_t scanner = nullptr;
+yylex_init(&scanner);      // create a new scanner
+...
+// three possibilities, depending on options:
+int token = yylex(scanner);                   // reentrant scan
+int token = yylex(&yylval, scanner);          // reentrant scan with bison-bridge
+int token = yylex(&yylval, &yylloc, scanner); // reentrant scan with bison-bridge and bison-locations
+...
+yylex_destroy(scanner);    // delete a scanner
+scanner = nullptr;
+```
 </div>
 
 The option `−−bison-locations` expects a Bison parser with the locations
@@ -2543,44 +2543,44 @@ feature enabled.  This feature provides line and column numbers of the matched
 text for error reporting.  For example:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    /* yacc grammar (.y file) assuming C++ */
+```{.cpp}
+/* yacc grammar (.y file) assuming C++ */
 
-    %{
-      #include "lex.yy.h"
-      void yyerror(const char*);
-    %}
+%{
+  #include "lex.yy.h"
+  void yyerror(const char*);
+%}
 
-    %locations
+%locations
 
-    %union {         // YYSTYPE yylval is a union:
-      int num;       // type of yylval.num is int
-      char* str;     // type of yylval.str is char*
-    }
+%union {         // YYSTYPE yylval is a union:
+  int num;       // type of yylval.num is int
+  char* str;     // type of yylval.str is char*
+}
 
-    %{
-      /* add this only to patch old bison versions */
-      extern int yylex(YYSTYPE*, YYLTYPE*);
-      #define YYLEX_PARAM &yylval, &yylloc
-    %}
+%{
+  /* add this only to patch old bison versions */
+  extern int yylex(YYSTYPE*, YYLTYPE*);
+  #define YYLEX_PARAM &yylval, &yylloc
+%}
 
-    %token <num> CONST_NUMBER
-    %token <str> CONST_STRING
+%token <num> CONST_NUMBER
+%token <str> CONST_STRING
 
-    %%
-    ...  // grammar rules
-    %%
+%%
+...  // grammar rules
+%%
 
-    void yyerror(const char *msg)
-    {
-      fprintf(stderr, "%s at %d,%d to line %d,%d\n",
-          msg,
-          yylloc.first_line,
-          yylloc.first_column,
-          yylloc.last_line,
-          yylloc.last_column);
-    }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void yyerror(const char *msg)
+{
+  fprintf(stderr, "%s at %d,%d to line %d,%d\n",
+      msg,
+      yylloc.first_line,
+      yylloc.first_column,
+      yylloc.last_line,
+      yylloc.last_column);
+}
+```
 </div>
 
 The `yylval` value is passed to the lex function.  The `yylloc` structure is
@@ -2591,30 +2591,30 @@ And a final example that combines options `−−bison-locations` and
 `−−bison-bridge`, which expects a Bison pure-parser with locations enabled:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    /* yacc grammar (.y file) */
+```{.cpp}
+/* yacc grammar (.y file) */
 
-    %{
-      #include "lex.yy.h"
-      #define YYPARSE_PARAM scanner
-      #define YYLEX_PARAM   scanner
-    %}
+%{
+  #include "lex.yy.h"
+  #define YYPARSE_PARAM scanner
+  #define YYLEX_PARAM   scanner
+%}
 
-    %pure-parser
-    %locations
+%pure-parser
+%locations
 
-    %union {         // YYSTYPE yylval is a union:
-      int num;       // yylval.num
-      char* str;     // yylval.str
-    }
+%union {         // YYSTYPE yylval is a union:
+  int num;       // yylval.num
+  char* str;     // yylval.str
+}
 
-    %token <num> CONST_NUMBER
-    %token <str> CONST_STRING
+%token <num> CONST_NUMBER
+%token <str> CONST_STRING
 
-    %%
-    ...  // grammar rules
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+...  // grammar rules
+%%
+```
 </div>
 
 When Bison `%locations` with `%define api.pure full` is used, `yyerror` has the
@@ -2629,11 +2629,11 @@ can be used as such in the scanner's rules.
 `#include "y.tab.h"` to the top of your lex specification:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %top{
-      #include "y.tab.h"    /* include y.tab.h generated by bison */
-    %}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+%top{
+  #include "y.tab.h"    /* include y.tab.h generated by bison */
+%}
+```
 </div>
 
 ⇢ [Back to contents](#)
@@ -2655,27 +2655,27 @@ the Flex `yy` variables and functions.  This generates a C++ scanner class
 with option `-+` for C++).
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %{
-      #include <stdio.h>
-      int ch = 0, wd = 0, nl = 0;
-    %}
+```{.cpp}
+%{
+  #include <stdio.h>
+  int ch = 0, wd = 0, nl = 0;
+%}
 
-    %option noyywrap
-    %option main
+%option noyywrap
+%option main
 
-    nl      \r?\n
-    wd      [^ \t\r\n]
+nl      \r?\n
+wd      [^ \t\r\n]
 
-    %%
+%%
 
-    {nl}+   ch += yyleng; ++nl;
-    {wd}+   ch += yyleng; ++wd;
-    .       ++ch;
-    <<EOF>> printf("%8d%8d%8d\n", nl, wd, ch); yyterminate();
+{nl}+   ch += yyleng; ++nl;
+{wd}+   ch += yyleng; ++wd;
+.       ++ch;
+<<EOF>> printf("%8d%8d%8d\n", nl, wd, ch); yyterminate();
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 ### Example 2
@@ -2688,38 +2688,38 @@ Unicode word characters.  We drop the `−−flex` option and use RE/flex Lexer
 methods instead of the Flex `yy` functions:
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %top{
-      #include <iostream>
-      #include <iomanip>
-      using namespace std;
-    %}
+```{.cpp}
+%top{
+  #include <iostream>
+  #include <iomanip>
+  using namespace std;
+%}
 
-    %class{
-      int ch, wd, nl;
-    %}
+%class{
+  int ch, wd, nl;
+%}
 
-    %init{
-      ch = wd = nl = 0;
-    %}
+%init{
+  ch = wd = nl = 0;
+%}
 
-    %option unicode
-    %option noyywrap
-    %option main
+%option unicode
+%option noyywrap
+%option main
 
-    nl      \r?\n
-    wd      \w|[^ \t\r\n]
+nl      \r?\n
+wd      \w|[^ \t\r\n]
 
-    %%
+%%
 
-    {nl}+   ch += size(); ++nl;
-    {wd}+   ch += size(); ++wd;
-    .       ++ch;
-    <<EOF>> out() << setw(8) << nl << setw(8) << wd << setw(8) << ch << endl;
-            return 0;
+{nl}+   ch += size(); ++nl;
+{wd}+   ch += size(); ++wd;
+.       ++ch;
+<<EOF>> out() << setw(8) << nl << setw(8) << wd << setw(8) << ch << endl;
+        return 0;
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 ### Example 3
@@ -2733,58 +2733,58 @@ not include invalid XML characters such as `/`, `<`, or `>` in attributes
 regexes.
 
 <div class="alt">
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    %top{
-      #include <stdio.h>
-    %}
+```{.cpp}
+%top{
+  #include <stdio.h>
+%}
 
-    %class{
-      int level;
-    %}
+%class{
+  int level;
+%}
 
-    %init{
-      level = 0;
-    %}
+%init{
+  level = 0;
+%}
 
-    %o matcher=reflex dotall main
-    %x ATTRIBUTES
+%o matcher=reflex dotall main
+%x ATTRIBUTES
 
-    name                    [A-Za-z_:\x80-\xFF][-.0-9A-Za-z_:\x80-\xFF]*
-    pi                      <\?{name}
-    comment                 <!--.*?-->
-    start                   <{name}
-    close                   <\/{name}>
-    cdata                   <!\[CDATA\[.*?]]>
-    string                  \".*?\"|'.*?'
+name                    [A-Za-z_:\x80-\xFF][-.0-9A-Za-z_:\x80-\xFF]*
+pi                      <\?{name}
+comment                 <!--.*?-->
+start                   <{name}
+close                   <\/{name}>
+cdata                   <!\[CDATA\[.*?]]>
+string                  \".*?\"|'.*?'
 
-    %%
+%%
 
-    {comment}               // skip comments
+{comment}               // skip comments
 
-    {cdata}                 // skip CDATA sections
+{cdata}                 // skip CDATA sections
 
-    {pi}                    start(ATTRIBUTES);
+{pi}                    start(ATTRIBUTES);
 
-    {start}                 printf("%*s%s\n", level++, "", text() + 1);
-                            start(ATTRIBUTES);
+{start}                 printf("%*s%s\n", level++, "", text() + 1);
+                        start(ATTRIBUTES);
 
-    {close}                 matcher().less(size() - 1);
-                            printf("%*s%s\n", --level, "", text() + 2);
+{close}                 matcher().less(size() - 1);
+                        printf("%*s%s\n", --level, "", text() + 2);
 
-    <<EOF>>                 printf("Tags are %sbalanced\n", level ? "im" : "");
-                            return 0;
+<<EOF>>                 printf("Tags are %sbalanced\n", level ? "im" : "");
+                        return 0;
 
-    <ATTRIBUTES>\/>         --level;
-                            start(INITIAL);
+<ATTRIBUTES>\/>         --level;
+                        start(INITIAL);
 
-    <ATTRIBUTES>>           start(INITIAL);
+<ATTRIBUTES>>           start(INITIAL);
 
-    <ATTRIBUTES>{string}    // skip string value
+<ATTRIBUTES>{string}    // skip string value
 
-    <*>.                    // skip char
+<*>.                    // skip char
 
-    %%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%
+```
 </div>
 
 Note thay we restrict XML tag names to valid characters, including all UTF-8
@@ -2871,20 +2871,20 @@ A `reflex::BoostMatcher` (or `reflex::BoostPerlMatcher`) engine is created from
 a `boost::regex` object, or string regex, and some given input for normal (Perl
 mode) matching:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h"
+```{.cpp}
+#include "boostmatcher.h"
 
-    reflex::BoostMatcher matcher( boost::regex or string, reflex::Input [, "options"] )
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+reflex::BoostMatcher matcher( boost::regex or string, reflex::Input [, "options"] )
+```
 
 A `reflex::BoostPosixMatcher` engine is created from a `boost::regex` object,
 or string regex, and some given input for POSIX mode matching:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h"
+```{.cpp}
+#include "boostmatcher.h"
 
-    reflex::BoostPosixMatcher matcher( boost::regex or string, reflex::Input [, "options"] )
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+reflex::BoostPosixMatcher matcher( boost::regex or string, reflex::Input [, "options"] )
+```
 
 For input you can specify a string, a wide string, a file, or a stream object.
 
@@ -2916,11 +2916,11 @@ can be much faster than the Boost.Regex matchers.
 A `reflex::Matcher` engine is constructed from a `reflex::Pattern` object, or a
 string regex, and some given input:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "matcher.h"
+```{.cpp}
+#include "matcher.h"
 
-    reflex::Matcher matcher( reflex::Pattern or string, reflex::Input [, "options"] )
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+reflex::Matcher matcher( reflex::Pattern or string, reflex::Input [, "options"] )
+```
 
 Use option `"N"` to permit empty matches (nullable results).  Option `"T=8"`
 sets the tab size to 8 for indent `\i` and dedent `\j` matching.
@@ -2936,11 +2936,11 @@ See \ref regex-methods for more details on pattern matching methods.
 The `reflex::Pattern` class converts a regex pattern to an efficient FSM and
 takes a regex string and options to construct the FSM internally:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "matcher.h"
+```{.cpp}
+#include "matcher.h"
 
-    [static] reflex:Pattern pattern(string [, "options"] )
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[static] reflex:Pattern pattern(string [, "options"] )
+```
 
 It is recommended to create a static instance of the pattern if the regex
 string is fixed.  This avoids repeated FSM construction.
@@ -3061,10 +3061,10 @@ Conversion from wide string to UTF-8 is shown in the example below.  The
 copyright symbol `©` with Unicode U+00A9 is matched against its UTF-8 sequence
 `C2 A9`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    if (reflex::Matcher("\xc2\xa9", L"©").matches())
-      std::cout << "copyright symbol matches\n";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{.cpp}
+if (reflex::Matcher("\xc2\xa9", L"©").matches())
+  std::cout << "copyright symbol matches\n";
+```
 
 To obtain the properties of an input object use the following methods:
 
@@ -3112,43 +3112,43 @@ Some examples to demonstrate the concepts discussed.
 This example illustrates the `find` and `split` methods and iterators with a
 RE/flex `reflex::Matcher` and `reflex::BoostMatcher`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "matcher.h"
-    #include "boostmatcher.h"
+```{.cpp}
+#include "matcher.h"
+#include "boostmatcher.h"
 
-    using namespace reflex;
+using namespace reflex;
 
-    // some random text (with extra spacing)
-    std::string example("Monty\n Python's    Flying  Circus");
+// some random text (with extra spacing)
+std::string example("Monty\n Python's    Flying  Circus");
 
-    // construct a fixed pattern that is case insensitive
-    static Pattern pattern("monty|python", "i");
+// construct a fixed pattern that is case insensitive
+static Pattern pattern("monty|python", "i");
 
-    // construct a matcher to search the example text
-    Matcher matcher(pattern, example);
-    while (matcher.find() == true)
-      std::cout << matcher.text()
-                << " at " << matcher.lineno() << "," << matcher.columno()
-                << " spans " << matcher.first() << ".." << matcher.last()
-                << std::endl;
+// construct a matcher to search the example text
+Matcher matcher(pattern, example);
+while (matcher.find() == true)
+  std::cout << matcher.text()
+            << " at " << matcher.lineno() << "," << matcher.columno()
+            << " spans " << matcher.first() << ".." << matcher.last()
+            << std::endl;
 
-    // construct a Boost.Regex matcher to count the words (all non-spaces "\S+")
-    BoostMatcher boostmatcher("\\S+", example);
-    std::cout << std::distance(boostmatcher.find.begin(), boostmatcher.find.end())
-              << " words"
-              << std::endl;
+// construct a Boost.Regex matcher to count the words (all non-spaces "\S+")
+BoostMatcher boostmatcher("\\S+", example);
+std::cout << std::distance(boostmatcher.find.begin(), boostmatcher.find.end())
+          << " words"
+          << std::endl;
 
-    // reuse the BoostMatcher with a C++11 range-based loop to split the example text on space "\s+":
-    for (auto& split : boostmatcher.pattern("\\s+").input(example).split)
-      std::cout << split.text() << " ";
-    std::cout << std::endl;
+// reuse the BoostMatcher with a C++11 range-based loop to split the example text on space "\s+":
+for (auto& split : boostmatcher.pattern("\\s+").input(example).split)
+  std::cout << split.text() << " ";
+std::cout << std::endl;
 
-    // reuse the BoostMatcher to split on whitespace using an iterator, sort into a set, and print
-    boostmatcher.input(example);
-    std::set<std::string> words(boostmatcher.split.begin(), boostmatcher.split.end());
-    std::copy(words.begin(), words.end(), std::ostream_iterator<std::string>(std::cout, " "));
-    std::cout << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// reuse the BoostMatcher to split on whitespace using an iterator, sort into a set, and print
+boostmatcher.input(example);
+std::set<std::string> words(boostmatcher.split.begin(), boostmatcher.split.end());
+std::copy(words.begin(), words.end(), std::ostream_iterator<std::string>(std::cout, " "));
+std::cout << std::endl;
+```
 
 When executed this code prints:
 
@@ -3163,21 +3163,21 @@ When executed this code prints:
 This example shows how input can be reassigned in each iteration of a loop that
 matches wide strings against a word pattern `\w+`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h"
+```{.cpp}
+#include "boostmatcher.h"
 
-    using namespace reflex;
+using namespace reflex;
 
-    // some random text (with extra spacing)
-    const wchar_t *words[] = { L"Monty", L"Python's", L"Flying", L"Circus" };
+// some random text (with extra spacing)
+const wchar_t *words[] = { L"Monty", L"Python's", L"Flying", L"Circus" };
 
-    // construct a matcher for words, given empty input initially
-    BoostMatcher wordmatcher("\\w+", Input());
+// construct a matcher for words, given empty input initially
+BoostMatcher wordmatcher("\\w+", Input());
 
-    for (int i = 0; i < 4; i++)
-      if (wordmatcher.input(words[i]).matches() == true)
-        std::cout << wordmatcher.text() << ", ";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+for (int i = 0; i < 4; i++)
+  if (wordmatcher.input(words[i]).matches() == true)
+    std::cout << wordmatcher.text() << ", ";
+```
 
 When executed this code prints:
 
@@ -3188,45 +3188,45 @@ When executed this code prints:
 This example counts the number of words, lines, and chars from the `std::cin`
 stream:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h"
+```{.cpp}
+#include "boostmatcher.h"
 
-    using namespace reflex;
+using namespace reflex;
 
-    // construct a word matcher like the wc command (a word is a series of nonspaces)
-    BoostMatcher word("\\S+", std::cin);
+// construct a word matcher like the wc command (a word is a series of nonspaces)
+BoostMatcher word("\\S+", std::cin);
 
-    size_t words = std::distance(word.find.begin(), word.find.end());
-    size_t lines = word.lineno() - 1;
-    size_t chars = word.last();
+size_t words = std::distance(word.find.begin(), word.find.end());
+size_t lines = word.lineno() - 1;
+size_t chars = word.last();
 
-    std::cout << lines << " " << words << " " << chars << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+std::cout << lines << " " << words << " " << chars << std::endl;
+```
 
 ### Example 4
 
 This example tokenizes a string by grouping the subpatterns in a regex and by
 using the group index of the capture obtained with `accept()`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "matcher.h"
+```{.cpp}
+#include "matcher.h"
 
-    using namespace reflex;
+using namespace reflex;
 
-    static Pattern pattern =
-      "(\\w*cat\\w*)|" // 1st group = token 1
-      "(\\w*dog\\w*)|" // 2nd group = token 2
-      "(\\w+)|"        // 3rd group = token 3
-      "(.)";           // 4th group = token 4
+static Pattern pattern =
+  "(\\w*cat\\w*)|" // 1st group = token 1
+  "(\\w*dog\\w*)|" // 2nd group = token 2
+  "(\\w+)|"        // 3rd group = token 3
+  "(.)";           // 4th group = token 4
 
-    Matcher tokenizer(pattern, "cats love hotdogs!");
+Matcher tokenizer(pattern, "cats love hotdogs!");
 
-    for (auto& token : tokenizer.scan)
-      std::cout << "Token = " << token.accept()
-                << ": matched '" << token.text() << "'"
-                << " with '" << token.pattern()[token.accept()] << "'\n";
-    assert(tokenizer.at_end());
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+for (auto& token : tokenizer.scan)
+  std::cout << "Token = " << token.accept()
+            << ": matched '" << token.text() << "'"
+            << " with '" << token.pattern()[token.accept()] << "'\n";
+assert(tokenizer.at_end());
+```
 
 When executed this code prints:
 
@@ -3242,35 +3242,35 @@ When executed this code prints:
 This example reads a file with embedded credit card numbers to extract.  The
 numbers are sorted into five sets for each type of major credit card:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "matcher.h"
+```{.cpp}
+#include "matcher.h"
 
-    using namespace reflex;
+using namespace reflex;
 
-    static Pattern card_patterns =
-      "(?# MasterCard)(5[1-5]\\d{14})|"                   // 1st group = MC
-      "(?# Visa)(4\\d{12}(?:\\d{3})?)|"                   // 2nd group = VISA
-      "(?# AMEX)(3[47]\\d{13})|"                          // 3rd group = AMEX
-      "(?# Discover)(6011\\d{14})|"                       // 4th group = Discover
-      "(?# Diners Club)((?:30[0-5]|36\\d|38\\d)\\d{11})"; // 5th group = Diners
+static Pattern card_patterns =
+  "(?# MasterCard)(5[1-5]\\d{14})|"                   // 1st group = MC
+  "(?# Visa)(4\\d{12}(?:\\d{3})?)|"                   // 2nd group = VISA
+  "(?# AMEX)(3[47]\\d{13})|"                          // 3rd group = AMEX
+  "(?# Discover)(6011\\d{14})|"                       // 4th group = Discover
+  "(?# Diners Club)((?:30[0-5]|36\\d|38\\d)\\d{11})"; // 5th group = Diners
 
-    static const char *card_data =
-      "mark 5212345678901234\n"
-      "vinny 4123456789012\n"
-      "victor 4123456789012345\n"
-      "amy 371234567890123\n"
-      "dirk 601112345678901234\n"
-      "doc 38812345678901 end\n";
+static const char *card_data =
+  "mark 5212345678901234\n"
+  "vinny 4123456789012\n"
+  "victor 4123456789012345\n"
+  "amy 371234567890123\n"
+  "dirk 601112345678901234\n"
+  "doc 38812345678901 end\n";
 
-    std::set<std::string> cards[5];
+std::set<std::string> cards[5];
 
-    for (auto& match : Matcher(card_patterns, card_file).find)
-      cards[match.accept() - 1].insert(match.text());
+for (auto& match : Matcher(card_patterns, card_file).find)
+  cards[match.accept() - 1].insert(match.text());
 
-    for (int i = 0; i < 5; ++i)
-      for (std::set<std::string>::const_iterator j = cards[i].begin(); j != cards[i].end(); ++j)
-        std::cout << i << ": " << *j << std::endl;
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+for (int i = 0; i < 5; ++i)
+  for (std::set<std::string>::const_iterator j = cards[i].begin(); j != cards[i].end(); ++j)
+    std::cout << i << ": " << *j << std::endl;
+```
 
 When executed this code prints:
 
@@ -3287,31 +3287,31 @@ This example shows how a `FILE*` file descriptor is used as input.  The file
 encoding is obtained from the UTF BOM, when present in the file.  Note that the
 file's state is accessed through the matcher's member variable `in`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h"
+```{.cpp}
+#include "boostmatcher.h"
 
-    using namespace reflex;
+using namespace reflex;
 
-    BoostMatcher matcher("\\s+", fopen("filename", "r"));
+BoostMatcher matcher("\\s+", fopen("filename", "r"));
 
-    if (matcher.in.good())
-    {
-      switch (matcher.in.file_encoding())
-      {
-        case Input::Const::plain:   std::cout << "ASCII or binary file"; break;
-        case Input::Const::utf8:    std::cout << "UTF-8 file";           break;
-        case Input::Const::utf16be: std::cout << "UTF-16 big endian";    break;
-        case Input::Const::utf16le: std::cout << "UTF-16 little endian"; break;
-        case Input::Const::utf32be: std::cout << "UTF-32 big endian";    break;
-        case Input::Const::utf32le: std::cout << "UTF-32 little endian"; break;
-      }
-      std::cout << " of " << matcher.in.size() << " converted bytes to read\n";
-      if (matcher.split() == true)
-        std::cout << "Starts with: " << matcher.text() << std::endl;
-      std::cout << "Rest of the file is: " << matcher.rest();
-      fclose(matcher.in.file());
-    }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+if (matcher.in.good())
+{
+  switch (matcher.in.file_encoding())
+  {
+    case Input::Const::plain:   std::cout << "ASCII or binary file"; break;
+    case Input::Const::utf8:    std::cout << "UTF-8 file";           break;
+    case Input::Const::utf16be: std::cout << "UTF-16 big endian";    break;
+    case Input::Const::utf16le: std::cout << "UTF-16 little endian"; break;
+    case Input::Const::utf32be: std::cout << "UTF-32 big endian";    break;
+    case Input::Const::utf32le: std::cout << "UTF-32 little endian"; break;
+  }
+  std::cout << " of " << matcher.in.size() << " converted bytes to read\n";
+  if (matcher.split() == true)
+    std::cout << "Starts with: " << matcher.text() << std::endl;
+  std::cout << "Rest of the file is: " << matcher.rest();
+  fclose(matcher.in.file());
+}
+```
 
 ### Example 7
 
@@ -3319,20 +3319,20 @@ This example shows how to override the file encoding, such as in cases when a fi
 with wide character content has no UTF BOM or when a binary file is read that
 could start with a BOM that should be ignored:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-    #include "boostmatcher.h"
+```{.cpp}
+#include "boostmatcher.h"
 
-    using namespace reflex;
+using namespace reflex;
 
-    BoostMatcher matcher("\\s+", fopen("filename", "r"));
+BoostMatcher matcher("\\s+", fopen("filename", "r"));
 
-    if (matcher.in.good())
-    {
-      matcher.in.file_encoding(Input::Const::plain);
-      ...
-      fclose(matcher.in.file());
-    }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+if (matcher.in.good())
+{
+  matcher.in.file_encoding(Input::Const::plain);
+  ...
+  fclose(matcher.in.file());
+}
+```
 
 ⇢ [Back to contents](#)
 
