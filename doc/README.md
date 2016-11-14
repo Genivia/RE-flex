@@ -76,6 +76,7 @@ Consider for example the following patterns and associated actions defined in a
 lex specification:
 
 <div class="alt">
+
 ```cpp
 /* PATTERN */           /* ACTION */
 "if"                    return KEYWORD_IF;
@@ -86,6 +87,7 @@ lex specification:
 \"([^\\"]|\\")*\"       return CONST_STRING;
 [ \t\r\n]               /* no action: ignore all white space */
 ```
+
 </div>
 
 When the tokenizer matches a pattern, the corresponding action is invoked.  The
@@ -146,6 +148,7 @@ scan over C/C++ source code input to match multiline comments that start with a
 `/*` and end with the first occurrence of a `*/`.  The Flex manual recommends:
 
 <div class="alt">
+
 ```cpp
 "/*"    {  /* skip multiline comments */
   int c;
@@ -162,6 +165,7 @@ scan over C/C++ source code input to match multiline comments that start with a
   }
 }
 ```
+
 </div>
 
 Workarounds such as these are not necessary with RE/flex.  The RE/flex scanners
@@ -169,9 +173,11 @@ use regex libraries with more expressive RE syntax.  We can use lazy repetition
 to write a regex pattern for multiline comments as follows:
 
 <div class="alt">
+
 ```cpp
 "/*"(.|\n)*?"*/"  /* no action: ignore multiline comments */
 ```
+
 </div>
 
 Most regex libraries support syntaxes and features that we have come to rely on
@@ -781,6 +787,7 @@ A lex specification consists of three sections that are divided by `%%`
 delimiters:
 
 <div class="alt">
+
 ```cpp
 Definitions
 %%
@@ -788,6 +795,7 @@ Rules
 %%
 User code
 ```
+
 </div>
 
 The Definitions section is used to define named regex patterns, to set options
@@ -800,11 +808,13 @@ example, the following lex specification replaces all occurrences of `cow` by
 `chick`:
 
 <div class="alt">
+
 ```cpp
 %%
 cow      out() << "chick";
 %%
 ```
+
 </div>
 
 The default rule is to echo any input character that is read from input that
@@ -817,12 +827,14 @@ skipping capitalized Cows.  We can improve this with a pattern that anchors
 word boundaries and accepts a lower or upper case C:
 
 <div class="alt">
+
 ```cpp
 cow      \<[Cc]ow\>
 %%
 {cow}    out() << text()[0] << "hick";
 %%
 ```
+
 </div>
 
 Note that we defined a named pattern `cow` in the definitions section to match
@@ -847,6 +859,7 @@ even further to generated a global `yylex()` function and `yy` variables.
 To create a stand-alone scanner, we add `main` to the user code section:
 
 <div class="alt">
+
 ```cpp
 cow      \<[Cc]ow\>
 %%
@@ -854,6 +867,7 @@ cow      \<[Cc]ow\>
 %%
 int main() { return Lexer().lex(); }
 ```
+
 </div>
 
 The main function instantiates the lexer class and invokes the scanner, which
@@ -869,10 +883,12 @@ The following example defines two names for two patterns, where the second
 regex pattern uses the previously named pattern:
 
 <div class="alt">
+
 ```cpp
 digit     [0-9]
 number    {digit}+
 ```
+
 </div>
 
 Names must be defined before being referenced.  Names are expanded as macros in
@@ -889,21 +905,25 @@ new line.  To inject code at the very top of the generated scanner, place
 this code within `%top{` and `%}`:
 
 <div class="alt">
+
 ```cpp
 %top{
   #include <iostream>    // std::cout etc.
 %}
 ```
+
 </div>
 
 The Definition section may also contain one or more options with `%%option` (or
 `%%o` for short).  For example:
 
 <div class="alt">
+
 ```cpp
 %option dotall main
 %o matcher=boost
 ```
+
 </div>
 
 Multiple options can be grouped on the same line as is shown above.  See
@@ -915,6 +935,7 @@ counter when we see a "cow", and finally report the total tally when we reach
 the end of the input marked by the `<<EOF>>` rule:
 
 <div class="alt">
+
 ```cpp
 %option dotall main
 
@@ -936,6 +957,7 @@ cow        \<[Cc]ow\>
 
 %%
 ```
+
 </div>
 
 The above works fine, but we are using a global counter which is not a best
@@ -962,6 +984,7 @@ For example, we use these code injectors to make our cow counter `n` part of the
 Lexer class state:
 
 <div class="alt">
+
 ```cpp
 %option dotall main
 
@@ -987,6 +1010,7 @@ cow        \<[Cc]ow\>
 
 %%
 ```
+
 </div>
 
 Note that nothing else needed to be changed, because the actions are part of
@@ -997,9 +1021,11 @@ To modularize lex specifications use `%%import` (or `%%i` for short) to import
 files into the definitions section of a lex specification.  For example:
 
 <div class="alt">
+
 ```cpp
 %import "examples/jdefs.l"
 ```
+
 </div>
 
 This imports examples/jdefs.l with Java patterns into the current
@@ -1007,6 +1033,7 @@ specification so you can match Java lexical structures, such as copying Java
 identifiers to the output given some Java source program as input:
 
 <div class="alt">
+
 ```cpp
 %import "examples/jdefs.l"
 %%
@@ -1014,6 +1041,7 @@ identifiers to the output given some Java source program as input:
 .|\n            // do nothing
 %%
 ```
+
 </div>
 
 To declare start condition state names use `%%state` (`%%s` for short) to
@@ -1021,10 +1049,12 @@ declare inclusive states and use `%%xstate` (`%%x` for short) to declare
 exclusive states:
 
 <div class="alt">
+
 ```cpp
 %s INCLUSIVE
 %x EXCLUSIVE
 ```
+
 </div>
 
 See \ref reflex-states for more information about states.
@@ -1035,9 +1065,11 @@ Each rule in the Rules section consists of a pattern-action pair.  For example,
 the following defines an action for a pattern:
 
 <div class="alt">
+
 ```cpp
 {number}    out() << "number " << text() << std::endl;
 ```
+
 </div>
 
 To add action code that spans multiple lines, indent the code or place the code
@@ -1128,6 +1160,7 @@ Below is a User Code section example with `main` that invokes the lexer to read
 from standard input (the default input) and display all numbers found:
 
 <div class="alt">
+
 ```cpp
 %top{
   #include <iostream>
@@ -1144,6 +1177,7 @@ number      {digit}+
 
 int main() { return Lexer().lex(); }
 ```
+
 </div>
 
 You can also automatically generate a `main` with the **reflex** `−−main`
@@ -1157,6 +1191,7 @@ argument.  To set an alternative output stream than standard output, pass a
 `std::ostream` object as the second argument to the Lexer class constructor:
 
 <div class="alt">
+
 ```cpp
 int main(int argc, char **argv)
 {
@@ -1170,6 +1205,7 @@ int main(int argc, char **argv)
   return 0;
 }
 ```
+
 </div>
 
 The above uses a `FILE` descriptor to read input from, which has the advantage
@@ -1368,6 +1404,7 @@ pattern may include any characters that are considered part of indentation
 margins, but should exclude `\n`.  For example:
 
 <div class="alt">
+
 ```cpp
 %%
 ^\h+      out() << "| "; // text is aligned to current indent margin
@@ -1376,6 +1413,7 @@ margins, but should exclude `\n`.  For example:
 \j        out() << "< "; // dedent, for each extra level dedented
 %%
 ```
+
 </div>
 
 The `\h` pattern matches space and tabs, where tabs advance to the next column
@@ -1386,9 +1424,11 @@ To add a pattern that consumes line continuations without affecting the
 indentation levels, use a negative match, which is a new RE/flex feature:
 
 <div class="alt">
+
 ```cpp
 (?^\\\n\h+)    // lines ending in \ will continue on the next line
 ```
+
 </div>
 
 The pattern ignores the match as if the matching text was not part of the
@@ -1431,6 +1471,7 @@ To understand the impact of these options, consider the following lex
 specification template:
 
 <div class="alt">
+
 ```cpp
 %option namespace=NAMESPACE
 %option lexer=LEXER
@@ -1454,6 +1495,7 @@ REGEX ACTION
 
 %%
 ```
+
 </div>
 
 This produces the following Lexer class with the template parts filled in:
@@ -1585,6 +1627,7 @@ derived from the base lexer class.  For example, the simplest derived Lexer
 class would be:
   
 <div class="alt">
+
 ```cpp
 %option class=CLASS
 %option lexer=LEXER
@@ -1597,6 +1640,7 @@ class would be:
   };
 %}
 ```
+
 </div>
 
 The base Lexer class `LEXER` is the same class as was shown earlier, except
@@ -1617,38 +1661,46 @@ options.  These options can also be specified in the lex specification with
 `%%option` (or `%%o` for short):
 
 <div class="alt">
+
 ```cpp
 %option flex
 %option bison
 %option graphs-file=mygraph
 ```
+
 </div>
 
 The above is equivalent to the `−−flex`, `−−bison`, and `−−graphs-file=mygraph`
 command-line options.  Multiple options can be grouped on a single line:
 
 <div class="alt">
+
 ```cpp
 %o flex bison graphs-file=mygraph
 ```
+
 </div>
 
 Option parameters should be quoted when parameters contain special characters:
 
 <div class="alt">
+
 ```cpp
 %o flex bison graphs-file="dev/output/mygraph.gv"
 ```
+
 </div>
 
 Shorter forms can be used, with each option on a separate line:
 
 <div class="alt">
+
 ```cpp
 %flex
 %bison
 %graphs-file=mygraph
 ```
+
 </div>
 
 The **reflex** command-line options are listed below.
@@ -1933,6 +1985,7 @@ Consider for example the following lex specification with rules that are
 intended to match keywords and identifiers in some input text:
 
 <div class="alt">
+
 ```cpp
 %%
 
@@ -1943,6 +1996,7 @@ float                   out() << "float keyword\n;
 
 %%
 ```
+
 </div>
 
 When the input to the scanner is the text `integer` then a POSIX matcher
@@ -1992,9 +2046,11 @@ instead of standard input, pass the input source as the first argument to its
 constructor and use the second argument to optionally set an `std::ostream`:
 
 <div class="alt">
+
 ```cpp
 Lexer lexer(input, std::cout);
 ```
+
 </div>
 
 where `input` is a `reflex::Input` object.  The `reflex::Input` constructor
@@ -2052,6 +2108,7 @@ derived Lexer class using option `class=NAME` (or `yyclass=NAME`) and override
 the `wrap()` (or `yywrap()`) method:
 
 <div class="alt">
+
 ```cpp
 %option class=Tokenizer
 
@@ -2062,6 +2119,7 @@ the `wrap()` (or `yywrap()`) method:
   };
 %}
 ```
+
 </div>
 
 Switching input sources via either `matcher(m)' or `in(input)' does not change
@@ -2079,6 +2137,7 @@ switching matchers and using the stack of matchers to permit nested `#include`
 directives up to a depth of 99 files:
 
 <div class="alt">
+
 ```cpp
 %top{
   #include <stdio.h>
@@ -2123,6 +2182,7 @@ directives up to a depth of 99 files:
 
 %%
 ```
+
 </div>
 
 To set the current input as interactive, such as input from a console, use
@@ -2139,6 +2199,7 @@ To put back one character unto the input stream, use `matcher().unput(c)`
 For example, to crudily scan a C/C++ multiline comment we can use the rule:
 
 <div class="alt">
+
 ```cpp
 "/*"    {  /* skip multiline comments */
   int c;
@@ -2155,6 +2216,7 @@ For example, to crudily scan a C/C++ multiline comment we can use the rule:
   }
 }
 ```
+
 </div>
 
 Instead of the ugly solution above, a better alternative is to use a regex
@@ -2192,11 +2254,13 @@ only be active when the scanner is in one of these start condition states.
 For example:
 
 <div class="alt">
+
 ```cpp
 <A,B>pattern1    action1
 <A>pattern2      action2
 <B>pattern3      action3
 ```
+
 </div>
 
 When the scanner is in state `A` rules 1 and 2 are active. When the scanner
@@ -2232,6 +2296,7 @@ special exception were introduced by Flex).
 For example:
 
 <div class="alt">
+
 ```cpp
 %s A
 %x B
@@ -2247,6 +2312,7 @@ pattern5         action5    // rule for states INITIAL and A
 
 %%
 ```
+
 </div>
 
 When the scanner is in state `INITIAL` rules 4, 5, and 6 are active.  When the
@@ -2261,6 +2327,7 @@ your scanner allows you to create "mini-scanners" to scan portions of the input
 that are syntactically different from the rest of the input, such as comments:
 
 <div class="alt">
+
 ```cpp
 %x COMMENT
 
@@ -2276,6 +2343,7 @@ that are syntactically different from the rest of the input, such as comments:
 
 %%
 ```
+
 </div>
 
 Start symbols are actually integer values, where `INITIAL` is 0.  This means
@@ -2286,6 +2354,7 @@ top of the stack and pop it use `pop_state()`.  The `top_state()` returns the
 start condition that is on the top of the stack:
 
 <div class="alt">
+
 ```cpp
 %x COMMENT
 
@@ -2301,12 +2370,14 @@ start condition that is on the top of the stack:
 
 %%
 ```
+
 </div>
 
 When many rules are prefixed by the same start conditions, you can simplify
 the rules by placing them in a *start condition scope*:
 
 <div class="alt">
+
 ```cpp
 <COMMENT>{
 [^*]*         // eat anything that is not a '*'
@@ -2315,6 +2386,7 @@ the rules by placing them in a *start condition scope*:
 <<EOF>>       std::cerr << "EOF in comment\n"; return 1;
 }
 ```
+
 </div>
 
 Contrary to some Flex manuals, rules cannot be indented in a start condition
@@ -2325,6 +2397,7 @@ executed when the scanner is invoked and if it is in the corresponding start
 condition state:
 
 <div class="alt">
+
 ```cpp
 %s A
 %x B
@@ -2358,6 +2431,7 @@ pattern    action
 
 %%
 ```
+
 </div>
 
 Start condition scopes may be nested.
@@ -2379,6 +2453,7 @@ the scanner is compiled in C++, you must set `YY_EXTERN_C` in the lex
 specification to `extern "C"` to enable C linkage rules:
 
 <div class="alt">
+
 ```cpp
 %top{
   #include "y.tab.h"               /* include y.tab.h generated by bison */
@@ -2396,6 +2471,7 @@ specification to `extern "C"` to enable C linkage rules:
 
 %%
 ```
+
 </div>
 
 This example sets the global `yylval.num` to the integer scanned or
@@ -2404,6 +2480,7 @@ specification defines the tokens `CONST_NUMBER` and `CONST_STRING` and the type
 `YYSTYPE` of `yylval`, which is a union.  For example:
 
 <div class="alt">
+
 ```cpp
 /* yacc grammar (.y file) */
 
@@ -2423,6 +2500,7 @@ specification defines the tokens `CONST_NUMBER` and `CONST_STRING` and the type
 ...  // grammar rules
 %%
 ```
+
 </div>
 
 
@@ -2436,6 +2514,7 @@ yacc grammar specification for Bison should include the externs we need to
 import from the scanner:
 
 <div class="alt">
+
 ```cpp
 /* yacc grammar (.y file) assuming C with externs defined by the scanner using YY_EXTERN_C */
 
@@ -2450,12 +2529,14 @@ import from the scanner:
 ...  // grammar rules
 %%
 ```
+
 </div>
 
 or a better approach is to generate a `lex.yy.h` header file with option
 `--header-file` and use this header file in the yacc grammar specification:
 
 <div class="alt">
+
 ```cpp
 /* yacc grammar (.y file) assuming C++ */
 
@@ -2467,6 +2548,7 @@ or a better approach is to generate a `lex.yy.h` header file with option
 ...  // grammar rules
 %%
 ```
+
 </div>
 
 The second option requires the generated parser to be compiled in C++, because
@@ -2497,6 +2579,7 @@ To change the generated code for use with Bison, use the following options:
 The **reflex** option `−−bison-bridge` expects a Bison "pure parser":
 
 <div class="alt">
+
 ```cpp
 /* yacc grammar (.y file) assuming C++ */
 
@@ -2512,6 +2595,7 @@ The **reflex** option `−−bison-bridge` expects a Bison "pure parser":
 ...  // grammar rules
 %%
 ```
+
 </div>
 
 For the `−−bison-bridge` option, the `yyscan_t` argument type of
@@ -2524,6 +2608,7 @@ For the `−−reentrant` and `−−bison-bridge` options two additional functi
 generated that can be used to create a new scanner and delete the scanner:
 
 <div class="alt">
+
 ```cpp
 yyscan_t scanner = nullptr;
 yylex_init(&scanner);      // create a new scanner
@@ -2536,6 +2621,7 @@ int token = yylex(&yylval, &yylloc, scanner); // reentrant scan with bison-bridg
 yylex_destroy(scanner);    // delete a scanner
 scanner = nullptr;
 ```
+
 </div>
 
 The option `−−bison-locations` expects a Bison parser with the locations
@@ -2543,6 +2629,7 @@ feature enabled.  This feature provides line and column numbers of the matched
 text for error reporting.  For example:
 
 <div class="alt">
+
 ```cpp
 /* yacc grammar (.y file) assuming C++ */
 
@@ -2581,6 +2668,7 @@ void yyerror(const char *msg)
       yylloc.last_column);
 }
 ```
+
 </div>
 
 The `yylval` value is passed to the lex function.  The `yylloc` structure is
@@ -2591,6 +2679,7 @@ And a final example that combines options `−−bison-locations` and
 `−−bison-bridge`, which expects a Bison pure-parser with locations enabled:
 
 <div class="alt">
+
 ```cpp
 /* yacc grammar (.y file) */
 
@@ -2615,6 +2704,7 @@ And a final example that combines options `−−bison-locations` and
 ...  // grammar rules
 %%
 ```
+
 </div>
 
 When Bison `%locations` with `%define api.pure full` is used, `yyerror` has the
@@ -2629,11 +2719,13 @@ can be used as such in the scanner's rules.
 `#include "y.tab.h"` to the top of your lex specification:
 
 <div class="alt">
+
 ```cpp
 %top{
   #include "y.tab.h"    /* include y.tab.h generated by bison */
 %}
 ```
+
 </div>
 
 ⇢ [Back to contents](#)
@@ -2655,6 +2747,7 @@ the Flex `yy` variables and functions.  This generates a C++ scanner class
 with option `-+` for C++).
 
 <div class="alt">
+
 ```cpp
 %{
   #include <stdio.h>
@@ -2676,6 +2769,7 @@ wd      [^ \t\r\n]
 
 %%
 ```
+
 </div>
 
 ### Example 2
@@ -2688,6 +2782,7 @@ Unicode word characters.  We drop the `−−flex` option and use RE/flex Lexer
 methods instead of the Flex `yy` functions:
 
 <div class="alt">
+
 ```cpp
 %top{
   #include <iostream>
@@ -2720,6 +2815,7 @@ wd      \w|[^ \t\r\n]
 
 %%
 ```
+
 </div>
 
 ### Example 3
@@ -2733,6 +2829,7 @@ not include invalid XML characters such as `/`, `<`, or `>` in attributes
 regexes.
 
 <div class="alt">
+
 ```cpp
 %top{
   #include <stdio.h>
@@ -2785,6 +2882,7 @@ string                  \".*?\"|'.*?'
 
 %%
 ```
+
 </div>
 
 Note thay we restrict XML tag names to valid characters, including all UTF-8
