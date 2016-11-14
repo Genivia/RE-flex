@@ -2642,7 +2642,7 @@ can be used as such in the scanner's rules.
 Examples                                                     {#reflex-examples}
 --------
 
-We will illustrate lex specifications with three examples.
+Some lex specification examples to generate scanners with RE/flex.
 
 ### Example 1
 

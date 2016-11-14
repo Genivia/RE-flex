@@ -25,6 +25,8 @@ What is RE/flex?
   templates for pattern matching, searching, scanning, and splitting of
   strings, files, and streaming data.
 
+The repo includes tokenizers for Java and C/C++ source code input with Unicode.
+
 
 Installation
 ------------
@@ -48,7 +50,7 @@ How do I use RE/flex?
 
 There are two ways you can use this project:
 
-1. as a scanner generator for C++, similar to Flex.
+1. as a scanner generator for C++, similar to Flex;
 2. as an extensible regex matching library for C++.
 
 For the first option, simply build the **reflex** tool and run it on the
