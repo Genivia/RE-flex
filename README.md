@@ -1,7 +1,7 @@
 
 [![logo][logo-url]][reflex-url]
 
-Flex reimagined.  Fast, extensible, adds Boost.
+Flex reimagined.  Fast, flexible, adds Boost.
 
 RE/flex is a flexible scanner-generator framework for generating regex-centric,
 Flex-compatible scanners.
@@ -25,7 +25,7 @@ What is RE/flex?
   templates for pattern matching, searching, scanning, and splitting of
   strings, files, and streaming data.
 
-The repo includes tokenizers for Java and C/C++ source code input with Unicode.
+The repo includes tokenizers for Java and C/C++.
 
 
 Installation
