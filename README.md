@@ -65,68 +65,56 @@ For the second option, simply use the new RE/flex matcher classes to start
 pattern matching on strings, wide strings, files, and real streams (that are
 potentially of unlimited length):
 
-```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-// use a BoostMatcher to check if the birthdate string is a valid date
-if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
-  std::cout << "Valid date!" << std::endl;
-```
+    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+    // use a BoostMatcher to check if the birthdate string is a valid date
+    if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
+      std::cout << "Valid date!" << std::endl;
 
 To search a string for words `\w+`:
 
-```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-// use a BoostMatcher to search for words in a sentence
-reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
-while (matcher.find() == true)
-  std::cout << "Found " << matcher.text() << std::endl;
-```
+    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+    // use a BoostMatcher to search for words in a sentence
+    reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
+    while (matcher.find() == true)
+      std::cout << "Found " << matcher.text() << std::endl;
 
 The `split` method is roughly the inverse of the `find` method and returns text
 located between matches.  For example using non-word matching `\W+`:
 
-```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-// use a BoostMatcher to search for words in a sentence
-reflex::BoostMatcher matcher("\\W+", "How now brown cow.");
-while (matcher.split() == true)
-  std::cout << "Found " << matcher.text() << std::endl;
-```
+    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+    // use a BoostMatcher to search for words in a sentence
+    reflex::BoostMatcher matcher("\\W+", "How now brown cow.");
+    while (matcher.split() == true)
+      std::cout << "Found " << matcher.text() << std::endl;
 
 To pattern matching the content of a file that may use UTF-8, 16, or 32
 encodings:
 
-```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-// use a BoostMatcher to search and display words from a FILE
-FILE *fd = fopen("somefile.txt", "r");
-if (fd == NULL)
-  exit(EXIT_FAILURE);
-reflex::BoostMatcher matcher("\\w+", fd);
-while (matcher.find() == true)
-  std::cout << "Found " << matcher.text() << std::endl;
-```
+    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+    // use a BoostMatcher to search and display words from a FILE
+    FILE *fd = fopen("somefile.txt", "r");
+    if (fd == NULL)
+      exit(EXIT_FAILURE);
+    reflex::BoostMatcher matcher("\\w+", fd);
+    while (matcher.find() == true)
+      std::cout << "Found " << matcher.text() << std::endl;
 
 Same again, but this time with a C++ input stream:
 
-```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-// use a BoostMatcher to search and display words from a stream
-std::ifstream file = fopen("somefile.txt", "r");
-reflex::BoostMatcher matcher("\\w+", file);
-while (matcher.find() == true)
-  std::cout << "Found " << matcher.text() << std::endl;
-```
+    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+    // use a BoostMatcher to search and display words from a stream
+    std::ifstream file = fopen("somefile.txt", "r");
+    reflex::BoostMatcher matcher("\\w+", file);
+    while (matcher.find() == true)
+      std::cout << "Found " << matcher.text() << std::endl;
 
 Stuffing the search results into a container using RE/flex iterators:
 
-```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-#include <vector>         // std::vector
-// use a BoostMatcher to convert words of a sentence into a string vector
-reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
-std::vector<std::string> words(matcher.find.begin(), matcher.find.end());
-```
+    #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+    #include <vector>         // std::vector
+    // use a BoostMatcher to convert words of a sentence into a string vector
+    reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
+    std::vector<std::string> words(matcher.find.begin(), matcher.find.end());
 
 
 Where do I find the documentation?
