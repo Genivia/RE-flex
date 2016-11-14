@@ -96,13 +96,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a02c30dabe3972582d662517d42cf75a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a pointer to a std::wstring.  <a href="#a02c30dabe3972582d662517d42cf75a4">More...</a><br /></td></tr>
 <tr class="separator:a02c30dabe3972582d662517d42cf75a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a13135ec6cf70ed5d16396ad2db5b0c7b">Input</a> (FILE *<a class="el" href="classreflex_1_1_input.html#ad96de320b73063857a6d8b84f300eaba">file</a>)</td></tr>
-<tr class="memdesc:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == nullptr.  <a href="#a13135ec6cf70ed5d16396ad2db5b0c7b">More...</a><br /></td></tr>
+<tr class="memdesc:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.  <a href="#a13135ec6cf70ed5d16396ad2db5b0c7b">More...</a><br /></td></tr>
 <tr class="separator:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a25a1b7ebdda31f175e0139713212f1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a2a25a1b7ebdda31f175e0139713212f1">Input</a> (std::istream &amp;<a class="el" href="classreflex_1_1_input.html#add3aa2ba7a605bf45c5bdc3661f7cb55">istream</a>)</td></tr>
 <tr class="memdesc:a2a25a1b7ebdda31f175e0139713212f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a std::istream.  <a href="#a2a25a1b7ebdda31f175e0139713212f1">More...</a><br /></td></tr>
 <tr class="separator:a2a25a1b7ebdda31f175e0139713212f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5a96b263a02333550b1d7d6cd21d776"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#af5a96b263a02333550b1d7d6cd21d776">Input</a> (std::istream *<a class="el" href="classreflex_1_1_input.html#add3aa2ba7a605bf45c5bdc3661f7cb55">istream</a>)</td></tr>
-<tr class="memdesc:af5a96b263a02333550b1d7d6cd21d776"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a pointer to a std::istream, use stdin if istream == nullptr.  <a href="#af5a96b263a02333550b1d7d6cd21d776">More...</a><br /></td></tr>
+<tr class="memdesc:af5a96b263a02333550b1d7d6cd21d776"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a pointer to a std::istream, use stdin if istream == NULL.  <a href="#af5a96b263a02333550b1d7d6cd21d776">More...</a><br /></td></tr>
 <tr class="separator:af5a96b263a02333550b1d7d6cd21d776"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b104b28d7b9be8f7c43c7e79ffabb5e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a0b104b28d7b9be8f7c43c7e79ffabb5e">operator const char *</a> ()</td></tr>
 <tr class="separator:a0b104b28d7b9be8f7c43c7e79ffabb5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -213,7 +213,7 @@ Protected Attributes</h2></td></tr>
 <p>The following example shows how to buffer the entire content of a file:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(fopen(<span class="stringliteral">&quot;input.h&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>));</div>
 <div class="line"><span class="keywordflow">if</span> (!input.file())</div>
-<div class="line">  <a class="code" href="reflex_8cpp.html#a2fc098cac2fd5aabf83c8c4c0cbd67db">abort</a>();</div>
+<div class="line">  <a class="code" href="reflex_8cpp.html#aebaa8f5abd10789858e7528e3465742a">abort</a>();</div>
 <div class="line"><span class="keywordtype">size_t</span> len = input.size();</div>
 <div class="line"><span class="keywordtype">char</span> *buf = <span class="keyword">new</span> <span class="keywordtype">char</span>[len];</div>
 <div class="line">input.get(buf, len);</div>
@@ -534,7 +534,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == nullptr. </p>
+<p>Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">file</td><td>input file </td></tr>
@@ -598,7 +598,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct input character sequence from a pointer to a std::istream, use stdin if istream == nullptr. </p>
+<p>Construct input character sequence from a pointer to a std::istream, use stdin if istream == NULL. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">istream</td><td>input stream </td></tr>
@@ -630,7 +630,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get the remaining string of this <a class="el" href="classreflex_1_1_input.html">Input</a> object. </p><dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated string or nullptr. </dd></dl>
+<p>Get the remaining string of this <a class="el" href="classreflex_1_1_input.html">Input</a> object. </p><dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated string or NULL. </dd></dl>
 
 </div>
 </div>
@@ -680,7 +680,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get the FILE* of this <a class="el" href="classreflex_1_1_input.html">Input</a> object. </p><dl class="section return"><dt>Returns</dt><dd>pointer to current file descriptor or nullptr. </dd></dl>
+<p>Get the FILE* of this <a class="el" href="classreflex_1_1_input.html">Input</a> object. </p><dl class="section return"><dt>Returns</dt><dd>pointer to current file descriptor or NULL. </dd></dl>
 
 </div>
 </div>
@@ -1002,7 +1002,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get the std::istream of this <a class="el" href="classreflex_1_1_input.html">Input</a> object. </p><dl class="section return"><dt>Returns</dt><dd>pointer to current std::istream or nullptr. </dd></dl>
+<p>Get the std::istream of this <a class="el" href="classreflex_1_1_input.html">Input</a> object. </p><dl class="section return"><dt>Returns</dt><dd>pointer to current std::istream or NULL. </dd></dl>
 
 </div>
 </div>
@@ -1026,7 +1026,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Cast this <a class="el" href="classreflex_1_1_input.html">Input</a> object to string. </p><dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated string or nullptr. </dd></dl>
+<p>Cast this <a class="el" href="classreflex_1_1_input.html">Input</a> object to string. </p><dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated string or NULL. </dd></dl>
 
 </div>
 </div>
@@ -1050,7 +1050,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Cast this <a class="el" href="classreflex_1_1_input.html">Input</a> object to wide character string. </p><dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated wide character string or nullptr. </dd></dl>
+<p>Cast this <a class="el" href="classreflex_1_1_input.html">Input</a> object to wide character string. </p><dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated wide character string or NULL. </dd></dl>
 
 </div>
 </div>
@@ -1074,7 +1074,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Cast this <a class="el" href="classreflex_1_1_input.html">Input</a> object to file descriptor FILE*. </p><dl class="section return"><dt>Returns</dt><dd>pointer to current file descriptor or nullptr. </dd></dl>
+<p>Cast this <a class="el" href="classreflex_1_1_input.html">Input</a> object to file descriptor FILE*. </p><dl class="section return"><dt>Returns</dt><dd>pointer to current file descriptor or NULL. </dd></dl>
 
 </div>
 </div>
@@ -1098,7 +1098,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Cast this <a class="el" href="classreflex_1_1_input.html">Input</a> object to std::istream*. </p><dl class="section return"><dt>Returns</dt><dd>pointer to current std::istream or nullptr. </dd></dl>
+<p>Cast this <a class="el" href="classreflex_1_1_input.html">Input</a> object to std::istream*. </p><dl class="section return"><dt>Returns</dt><dd>pointer to current std::istream or NULL. </dd></dl>
 
 </div>
 </div>
@@ -1149,7 +1149,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get the remaining wide character string of this <a class="el" href="classreflex_1_1_input.html">Input</a> object. </p><dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated wide character string or nullptr. </dd></dl>
+<p>Get the remaining wide character string of this <a class="el" href="classreflex_1_1_input.html">Input</a> object. </p><dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated wide character string or NULL. </dd></dl>
 
 </div>
 </div>
@@ -1336,7 +1336,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Nov 13 2016 20:13:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Sun Nov 13 2016 23:00:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

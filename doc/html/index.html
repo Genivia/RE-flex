@@ -844,6 +844,8 @@ Patterns                                                      </h2>
 <td><code>&lt;S&gt;&lt;&lt;EOF&gt;&gt;</code> </td><td>matches EOF only if state <code>S</code> is enabled </td></tr>
 </table>
 <p>Note that the characters <code>.</code> (dot), <code>\</code>, <code>?</code>, <code>*</code>, <code>+</code>, <code>|</code>, <code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>, <code>{</code>, <code>}</code>, <code>^</code>, and <code>$</code> are meta-characters and should be escaped to match. Lex specifications also include the <code>"</code> and <code>/</code> as meta-characters and these should be escaped to match.</p>
+<dl class="section note"><dt>Note</dt><dd>C++ strings requires "regex escapes to be escaped", so we need an additional backslash for every backslash in the regex.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Trigraphs in C++ strings are special three character sequences, beginning with two question marks and followed by one other character. Avoid <code>??</code> at all cost in C++ strings. Instead, use an at least one escaped question mark such as <code>?\?</code>, which the compiler will translate to <code>??</code>. Otherwise, lazy optional pattern constructs will appear broken. Fortunately, most C++ compilers will warn about trigraph translation.</dd></dl>
 <h3>Character classes</h3>
 <p>The 7-bit ASCII character classes are:</p>
 <table class="doxtable">
@@ -2208,7 +2210,7 @@ Token = 4: matched '!' with '(.)'
 <div class="line">  <span class="keywordflow">switch</span> (matcher.in.file_encoding())</div>
 <div class="line">  {</div>
 <div class="line">    <span class="keywordflow">case</span> <a class="code" href="structreflex_1_1_input_1_1_const.html#a2a327de7ecbe34c421ebcb5f09058c49">Input::Const::plain</a>:   std::cout &lt;&lt; <span class="stringliteral">&quot;ASCII or binary file&quot;</span>; <span class="keywordflow">break</span>;</div>
-<div class="line">    <span class="keywordflow">case</span> <a class="code" href="namespacereflex.html#ad91ef9ed5e75182fa9e994e6d0816758">Input::Const::utf8</a>:    std::cout &lt;&lt; <span class="stringliteral">&quot;UTF-8 file&quot;</span>;           <span class="keywordflow">break</span>;</div>
+<div class="line">    <span class="keywordflow">case</span> <a class="code" href="namespacereflex.html#a3475c552254712fd461eaf1bbc4735bc">Input::Const::utf8</a>:    std::cout &lt;&lt; <span class="stringliteral">&quot;UTF-8 file&quot;</span>;           <span class="keywordflow">break</span>;</div>
 <div class="line">    <span class="keywordflow">case</span> <a class="code" href="structreflex_1_1_input_1_1_const.html#a9b6f173e4e331684ef3202bf4d50cd00">Input::Const::utf16be</a>: std::cout &lt;&lt; <span class="stringliteral">&quot;UTF-16 big endian&quot;</span>;    <span class="keywordflow">break</span>;</div>
 <div class="line">    <span class="keywordflow">case</span> <a class="code" href="structreflex_1_1_input_1_1_const.html#a8d02b5c499209ed24ec80bece8d73c3b">Input::Const::utf16le</a>: std::cout &lt;&lt; <span class="stringliteral">&quot;UTF-16 little endian&quot;</span>; <span class="keywordflow">break</span>;</div>
 <div class="line">    <span class="keywordflow">case</span> <a class="code" href="structreflex_1_1_input_1_1_const.html#a7ef046acca7113d23ff77dbfa1ded607">Input::Const::utf32be</a>: std::cout &lt;&lt; <span class="stringliteral">&quot;UTF-32 big endian&quot;</span>;    <span class="keywordflow">break</span>;</div>
@@ -2251,7 +2253,7 @@ License and copyright                                                 </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Nov 13 2016 20:13:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Sun Nov 13 2016 23:00:12 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

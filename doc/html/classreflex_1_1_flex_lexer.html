@@ -92,9 +92,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0844baa3428488f6a56a03e628144044"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a0844baa3428488f6a56a03e628144044">FlexLexer</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;<a class="el" href="classreflex_1_1_flex_lexer.html#af07591a8f965daa9f40844675b94f67e">input</a>=stdin, std::ostream *os=nullptr)</td></tr>
-<tr class="memdesc:a0844baa3428488f6a56a03e628144044"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct Flex-compatible lexer to read from a std::istream (and echo the text matches to a std::ostream).  <a href="#a0844baa3428488f6a56a03e628144044">More...</a><br /></td></tr>
-<tr class="separator:a0844baa3428488f6a56a03e628144044"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a823a6c12df298eef586dcad894d9132f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a823a6c12df298eef586dcad894d9132f">FlexLexer</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;<a class="el" href="classreflex_1_1_flex_lexer.html#af07591a8f965daa9f40844675b94f67e">input</a>=stdin, std::ostream *os=NULL)</td></tr>
+<tr class="memdesc:a823a6c12df298eef586dcad894d9132f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct Flex-compatible lexer to read from a std::istream (and echo the text matches to a std::ostream).  <a href="#a823a6c12df298eef586dcad894d9132f">More...</a><br /></td></tr>
+<tr class="separator:a823a6c12df298eef586dcad894d9132f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fa90e226549b3e7686a88365d29dc8a"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a0fa90e226549b3e7686a88365d29dc8a">YYText</a> (void) const </td></tr>
 <tr class="separator:a0fa90e226549b3e7686a88365d29dc8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b207bcf406a4f33a369d50c978bb459"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a3b207bcf406a4f33a369d50c978bb459">YYLeng</a> (void) const </td></tr>
@@ -202,12 +202,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:aad9d7f330a5addd3dd7bf1ac6c6630bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#aad9d7f330a5addd3dd7bf1ac6c6630bd">yyless</a> (int n)</td></tr>
 <tr class="memdesc:aad9d7f330a5addd3dd7bf1ac6c6630bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Truncate the yytext length of the match to n characters in length and reposition for next match.  <a href="#aad9d7f330a5addd3dd7bf1ac6c6630bd">More...</a><br /></td></tr>
 <tr class="separator:aad9d7f330a5addd3dd7bf1ac6c6630bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12db2d1b05352f9d455f878752f931f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a12db2d1b05352f9d455f878752f931f8">yy_push_state</a> (int state, void *self=nullptr)</td></tr>
-<tr class="memdesc:a12db2d1b05352f9d455f878752f931f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push the current start condition state on the stack and transition to the given start condition state.  <a href="#a12db2d1b05352f9d455f878752f931f8">More...</a><br /></td></tr>
-<tr class="separator:a12db2d1b05352f9d455f878752f931f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa702bf76fdf94580e82007948333ef7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#aaa702bf76fdf94580e82007948333ef7">yy_pop_state</a> (void *self=nullptr)</td></tr>
-<tr class="memdesc:aaa702bf76fdf94580e82007948333ef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the stack start condition state and transition to that state.  <a href="#aaa702bf76fdf94580e82007948333ef7">More...</a><br /></td></tr>
-<tr class="separator:aaa702bf76fdf94580e82007948333ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfb63d84f3823f151b85dc6a559d9e9e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#adfb63d84f3823f151b85dc6a559d9e9e">yy_push_state</a> (int state, void *self=NULL)</td></tr>
+<tr class="memdesc:adfb63d84f3823f151b85dc6a559d9e9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push the current start condition state on the stack and transition to the given start condition state.  <a href="#adfb63d84f3823f151b85dc6a559d9e9e">More...</a><br /></td></tr>
+<tr class="separator:adfb63d84f3823f151b85dc6a559d9e9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8b3f4b4bf32198a114ddf544310063c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#ad8b3f4b4bf32198a114ddf544310063c">yy_pop_state</a> (void *self=NULL)</td></tr>
+<tr class="memdesc:ad8b3f4b4bf32198a114ddf544310063c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the stack start condition state and transition to that state.  <a href="#ad8b3f4b4bf32198a114ddf544310063c">More...</a><br /></td></tr>
+<tr class="separator:ad8b3f4b4bf32198a114ddf544310063c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31a5b9eba28f4b57be94920bcd019107"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a31a5b9eba28f4b57be94920bcd019107">yy_top_state</a> (void)</td></tr>
 <tr class="separator:a31a5b9eba28f4b57be94920bcd019107"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classreflex_1_1_abstract_lexer"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classreflex_1_1_abstract_lexer')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer&lt; M &gt;</a></td></tr>
@@ -265,7 +265,7 @@ class reflex::FlexLexer&lt; M &gt;</h3>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a0844baa3428488f6a56a03e628144044"></a>
+<a class="anchor" id="a823a6c12df298eef586dcad894d9132f"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -284,7 +284,7 @@ template&lt;typename M &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::ostream *&#160;</td>
-          <td class="paramname"><em>os</em> = <code>nullptr</code>&#160;</td>
+          <td class="paramname"><em>os</em> = <code>NULL</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -673,7 +673,7 @@ template&lt;typename M &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="aaa702bf76fdf94580e82007948333ef7"></a>
+<a class="anchor" id="ad8b3f4b4bf32198a114ddf544310063c"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -686,7 +686,7 @@ template&lt;typename M &gt; </div>
           <td class="memname">void <a class="el" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer</a>&lt; M &gt;::yy_pop_state </td>
           <td>(</td>
           <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>self</em> = <code>nullptr</code></td><td>)</td>
+          <td class="paramname"><em>self</em> = <code>NULL</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -707,7 +707,7 @@ template&lt;typename M &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a12db2d1b05352f9d455f878752f931f8"></a>
+<a class="anchor" id="adfb63d84f3823f151b85dc6a559d9e9e"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -726,7 +726,7 @@ template&lt;typename M &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>self</em> = <code>nullptr</code>&#160;</td>
+          <td class="paramname"><em>self</em> = <code>NULL</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1138,7 +1138,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Nov 13 2016 20:13:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Sun Nov 13 2016 23:00:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -9,6 +9,7 @@ Flex reimagined.
 RE/flex is a flexible scanner-generator framework for generating regex-centric,
 Flex-compatible scanners.
 
+
 What is RE/flex?
 ----------------
 
@@ -17,7 +18,7 @@ What is RE/flex?
 
 * an *enhancement* of [Boost.Regex](www.boost.org/libs/regex) to use its engine
   for matching, seaching, splitting and for scanning of tokens on various types
-  of data sources, such as strings, files, and streams of unlimited length.
+  of data sources, such as strings, files, and streams of unlimited length;
 
 * a stand-alone *regex library* is included with RE/flex for fast matching with
   efficient deterministic finite state machines (FSMs) that are contructed from
@@ -29,6 +30,24 @@ What is RE/flex?
   matching, scanning, and splitting of input strings, files and streaming data.
   This framework is flexible and can be extended to include other regex pattern
   matchers that can operate seamlessly with the RE/flex scanner generator.
+
+
+Installation
+------------
+
+    $ ./build.sh
+
+or use the make command:
+
+    $ cd src; make
+
+This compiles the **reflex** tool and installs it locally in bin/reflex.  You
+can add this location to your $PATH variable to enable the new reflex command:
+
+    export PATH=$PATH:/reflex_install_path/bin
+
+Windows users: use reflex.exe located in bin/reflex.exe.
+
 
 How do I use RE/flex?
 ---------------------
@@ -111,10 +130,19 @@ reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
 std::vector<std::string> words(matcher.find.begin(), matcher.find.end());
 ```
 
+
 Where do I find the documentation?
 ----------------------------------
 
 Read more about RE/flex in the [manual][manual-url].
+
+
+License and copyright
+---------------------
+
+Released under the BSD3 license.
+Copyright (C) 2016, Robert van Engelen, Genivia Inc, All Rights Reserved.
+
 
 Changelog
 ---------

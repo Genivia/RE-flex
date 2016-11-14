@@ -9,8 +9,11 @@ build Boost::regex to obtain `libboost_regex.a`.
 
 Then build the reflex library and the reflex tool as follows:
 
-    cd src
-    make
+    ./build.sh
+
+or use the make command:
+
+    cd src; make
 
 This compiles the reflex tool and installs it locally in bin/reflex.  You can
 add this location to your $PATH variable to enable the new reflex command:
