@@ -2,12 +2,7 @@
 Installation
 ============
 
-First read doc/html/index.html for more information about this software release.
-
-Download Boost from <http://www.boost.org/users/download> and make sure to
-build Boost::regex to obtain `libboost_regex.a`.
-
-Then build the reflex library and the reflex tool as follows:
+Build the RE/flex regex library and the **reflex** tool as follows:
 
     ./build.sh
 
@@ -21,6 +16,10 @@ add this location to your $PATH variable to enable the new reflex command:
     export PATH=$PATH:/reflex_install_path/bin
 
 For windows users, please use reflex.exe located in bin/reflex.exe.
+
+To use the RE/flex Boost.Regex matchers in your projects, download Boost from
+<http://www.boost.org/users/download> and make sure to build Boost::regex to
+obtain `libboost_regex.a`.
 
 
 Examples
@@ -115,7 +114,7 @@ following files:
 	|__ UnicodeData.txt
 
 
-Copyright and License
+License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.

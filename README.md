@@ -140,8 +140,11 @@ Read more about RE/flex in the [manual][manual-url].
 License and copyright
 ---------------------
 
-Released under the BSD3 license.
-Copyright (C) 2016, Robert van Engelen, Genivia Inc, All Rights Reserved.
+RE/flex by Robert van Engelen, Genivia Inc.
+Copyright (c) 2015-2016, All rights reserved.   
+
+RE/flex is distributed under the BSD-3 license LICENSE.txt.
+Use, modification, and distribution are subject to the BSD-3 license.
 
 
 Changelog
