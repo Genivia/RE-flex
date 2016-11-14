@@ -1,0 +1,6 @@
+<map id="reflex::AbstractMatcher::Iterator&lt; T &gt;" name="reflex::AbstractMatcher::Iterator&lt; T &gt;">
+<area shape="rect" id="node4" href="$classreflex_1_1_abstract_matcher.html" title="reflex::AbstractMatcher" alt="" coords="187,123,345,151"/>
+<area shape="rect" id="node8" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="242,257,400,301"/>
+<area shape="rect" id="node6" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="113,6,271,50"/>
+<area shape="rect" id="node11" href="$classreflex_1_1_input.html" title="reflex::Input" alt="" coords="296,14,387,42"/>
+</map>

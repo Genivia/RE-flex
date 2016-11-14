@@ -1,0 +1,14 @@
+<map id="debug.h" name="debug.h">
+<area shape="rect" id="node3" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="67,83,168,111"/>
+<area shape="rect" id="node9" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="192,83,265,111"/>
+<area shape="rect" id="node5" href="$boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="5,161,117,189"/>
+<area shape="rect" id="node7" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="141,161,220,189"/>
+<area shape="rect" id="node12" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="245,161,309,189"/>
+<area shape="rect" id="node14" href="$language__scripts_8h.html" title="Unicode language scripts. " alt="" coords="60,238,192,266"/>
+<area shape="rect" id="node18" href="$reflex_8cpp.html" title="RE/Flex scanner generator replacement for Flex/Lex. " alt="" coords="191,315,269,343"/>
+<area shape="rect" id="node20" href="$letter__scripts_8h.html" title="Unicode letter scripts. " alt="" coords="269,238,376,266"/>
+<area shape="rect" id="node25" href="$pl__scripts_8h.html" title="pl_scripts.h" alt="" coords="401,238,489,266"/>
+<area shape="rect" id="node16" href="$language__scripts_8cpp.html" title="language_scripts.cpp" alt="" coords="20,315,167,343"/>
+<area shape="rect" id="node22" href="$letter__scripts_8cpp.html" title="letter_scripts.cpp" alt="" coords="294,315,415,343"/>
+<area shape="rect" id="node27" href="$pl__scripts_8cpp.html" title="RE/Flex scanner generator replacement for Flex/Lex. " alt="" coords="439,315,541,343"/>
+</map>

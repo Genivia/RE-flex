@@ -1,0 +1,10 @@
+<map id="pattern.cpp" name="pattern.cpp">
+<area shape="rect" id="node3" href="$pattern_8h.html" title="RE/Flex regular expression pattern compiler. " alt="" coords="523,83,596,111"/>
+<area shape="rect" id="node5" href="$bits_8h.html" title="RE/Flex operations on STL containers and sets. " alt="" coords="113,161,165,189"/>
+<area shape="rect" id="node13" href="$debug_8h.html" title="RE/Flex debug logs. " alt="" coords="208,161,277,189"/>
+<area shape="rect" id="node15" href="$input_8h.html" title="ReFlex input character sequence class. " alt="" coords="301,161,363,189"/>
+<area shape="rect" id="node39" href="$ranges_8h.html" title="RE/Flex range set container. " alt="" coords="487,161,560,189"/>
+<area shape="rect" id="node45" href="$setop_8h.html" title="RE/Flex operations on STL containers and sets. " alt="" coords="634,161,699,189"/>
+<area shape="rect" id="node17" href="$utf8_8h.html" title="UCS to UTF&#45;8 converters. " alt="" coords="262,238,316,266"/>
+<area shape="rect" id="node19" href="$common_8h.html" title="Common declarations. " alt="" coords="248,315,331,343"/>
+</map>

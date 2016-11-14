@@ -1,0 +1,6 @@
+<map id="reflex::BoostMatcher" name="reflex::BoostMatcher">
+<area shape="rect" id="node7" href="$classreflex_1_1_boost_perl_matcher.html" title="reflex::BoostPerlMatcher" alt="" coords="4,254,171,282"/>
+<area shape="rect" id="node9" href="$classreflex_1_1_boost_posix_matcher.html" title="reflex::BoostPosixMatcher" alt="" coords="196,254,372,282"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; boost::regex \&gt;" alt="" coords="109,83,261,127"/>
+<area shape="rect" id="node4" href="$classreflex_1_1_abstract_matcher.html" title="reflex::AbstractMatcher" alt="" coords="106,6,264,34"/>
+</map>

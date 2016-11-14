@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node3" href="$classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. " alt="" coords="94,5,237,49"/>
+<area shape="rect" id="node5" href="$classreflex_1_1_flex_lexer_1_1_matcher.html" title="Extends reflex::AbstractLexer::Matcher for Flex&#45;compatibility. " alt="" coords="285,5,413,49"/>
+</map>
