@@ -1,9 +1,6 @@
 
 [![logo][logo-url]][reflex-url]
 
-RE/flex
-=======
-
 Flex reimagined.
 
 RE/flex is a flexible scanner-generator framework for generating regex-centric,
@@ -69,7 +66,7 @@ on strings, wide strings, files, and streams:
 
 ```{.cpp}
 #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-// use a BoostMatcher to check if the birthdate string is an valid date
+// use a BoostMatcher to check if the birthdate string is a valid date
 if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
   std::cout << "Valid date!" << std::endl;
 ```
@@ -153,5 +150,5 @@ Changelog
 - Nov 14, 2016: RE/flex 0.9.0 beta released
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
-[reflex-url]: https://www.genivia.com/reflex.html
+[reflex-url]: https://www.genivia.com/get-reflex.html
 [manual-url]: https://www.genivia.com/doc/reflex/html

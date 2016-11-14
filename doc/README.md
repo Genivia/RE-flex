@@ -270,7 +270,7 @@ For example, to check if a string is a valid date:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
     #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
 
-    // use a BoostMatcher to check if the birthdate string is an valid date
+    // use a BoostMatcher to check if the birthdate string is a valid date
     if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
       std::cout << "Valid date!" << std::endl;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
