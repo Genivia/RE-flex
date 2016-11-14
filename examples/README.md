@@ -1,3 +1,4 @@
+[![logo][logo-url]][reflex-url]
 
 Flex-compatible scanner examples
 --------------------------------
@@ -38,3 +39,6 @@ Stand-alone C++ regex matching example
 
 - `cards.cpp` matches credit card numbers.
 
+[logo-url]: https://www.genivia.com/images/reflex-logo.png
+[reflex-url]: https://www.genivia.com/get-reflex.html
+[manual-url]: https://www.genivia.com/doc/reflex/html
