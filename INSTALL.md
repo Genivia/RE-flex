@@ -1,6 +1,7 @@
+[![logo][logo-url]][reflex-url]
 
 Installation
-============
+------------
 
 Build the RE/flex regex library and the **reflex** tool as follows:
 
@@ -15,19 +16,27 @@ add this location to your $PATH variable to enable the new reflex command:
 
     export PATH=$PATH:/reflex_install_path/bin
 
-For windows users, please use reflex.exe located in bin/reflex.exe.
+The `libreflex.a` and `libreflex.so` libraries are saved in reflex/lib.  Link
+against one of these libraries when you use the RE/flex regex engine in your
+code.
 
-To use the RE/flex Boost.Regex matchers in your projects, download Boost from
-<http://www.boost.org/users/download> and make sure to build Boost::regex to
-obtain `libboost_regex.a`.
+Windows users: use reflex/bin/reflex.exe.
+
+Optional:
+
+- To use Boost.Regex as a regex engine with the RE/flex library and scanner
+  generator, install [Boost][boost-url] and link your code against
+  `libboost_regex.a`
+
+- To visualize the FSM graphs generated with **reflex** option `--graphs-file`,
+  install [Graphviz dot][dot-url].
 
 
 Examples
 --------
 
-The examples require the bison tool to demonstrate scanning with parsing,
-including the --bison and --bison-bridge options.  Download bison from
-<http://www.gnu.org/software/bison>
+The examples require the [Bison][bison-url] tool to demonstrate scanning with
+parsing using the **reflex** `--bison` and `--bison-bridge` options.
 
 To build the examples, first build the reflex tool and then execute:
 
@@ -122,3 +131,13 @@ Copyright (c) 2015-2016, All rights reserved.
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.
+
+[logo-url]: https://www.genivia.com/images/reflex-logo.png
+[reflex-url]: https://www.genivia.com/get-reflex.html
+[manual-url]: https://www.genivia.com/doc/reflex/html
+[flex-url]: http://dinosaur.compilertools.net/#flex
+[lex-url]: http://dinosaur.compilertools.net/#lex
+[bison-url]: http://dinosaur.compilertools.net/#bison
+[dot-url]: http://www.graphviz.org
+[FSM-url]: https://www.genivia.com/images/reflex-FSM.png
+[boost-url]: http://www.boost.org
