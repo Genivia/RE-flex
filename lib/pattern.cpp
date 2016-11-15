@@ -35,6 +35,7 @@
 */
 
 #include "pattern.h"
+#include <cstdlib>
 
 #ifdef TIMED
 // TODO consider adding a profiling API to obtain stats, just as nodes() and edges()
@@ -404,8 +405,8 @@ void Pattern::parse2(
       }
       else
       {
-	if (escapes_at(loc, "ij"))
-	  begin = false;
+        if (escapes_at(loc, "ij"))
+          begin = false;
         break;
       }
     }
@@ -566,10 +567,13 @@ void Pattern::parse3(
   }
   else if (c == '{') // {n,m} repeat min n times to max m
   {
-    size_t n = 0;
+    size_t k = 0;
     for (Location i = 0; i < 7 && std::isdigit(c = at(++loc)); ++i)
-      n = 10 * n + (c - '0');
-    size_t m = n;
+      k = 10 * k + (c - '0');
+    if (k > IMAX)
+      error(Error::REGEX_RANGE, "{min,max} range overflow", loc);
+    Index n = static_cast<Index>(k);
+    Index m = n;
     bool unlimited = false;
     if (at(loc) == ',')
     {
@@ -877,7 +881,7 @@ void Pattern::parse4(
       if (c == '[' && at(loc + 1) == ':')
       {
         Location c_loc = find_at(loc + 2, ':');
-        if (c_loc != NPOS && at(c_loc + 1) == ']')
+        if (c_loc != std::string::npos && at(c_loc + 1) == ']')
           loc = c_loc + 1;
       }
       if ((c = at(++loc)) == ']')
@@ -1224,9 +1228,9 @@ void Pattern::compile_transition(
           if (j != i->second.end())
           {
             if (!k->ticked())
-              state->heads.insert(n + std::distance(i->second.begin(), j));
+              state->heads.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
             else // FIXME 7/18 if (state->accept == i->first) no longer check for accept state, assume we are at an accept state
-              state->tails.insert(n + std::distance(i->second.begin(), j));
+              state->tails.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
           }
           n = n + i->second.size();
         }
@@ -1240,7 +1244,7 @@ void Pattern::compile_transition(
           Ranges::const_iterator j = i->second.find(loc);
           DBGLOGN("%d %d (%d) %lu", state->accept, i->first, j != i->second.end(), n.loc());
           if (j != i->second.end())
-            state->heads.insert(n + std::distance(i->second.begin(), j));
+            state->heads.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
           n = n + i->second.size();
         }
       }
@@ -1257,7 +1261,7 @@ void Pattern::compile_transition(
             Ranges::const_iterator j = i->second.find(loc);
             DBGLOGN("%d %d (%d) %lu", state->accept, i->first, j != i->second.end(), n.loc());
             if (j != i->second.end() /* FIXME 7/18 && state->accept == i->first */ ) // only add lookstop when part of the proper accept state
-              state->tails.insert(n + std::distance(i->second.begin(), j));
+              state->tails.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
             n = n + i->second.size();
           }
         }
@@ -1441,14 +1445,15 @@ Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (Erro
   Char c = at(loc);
   if (c == '0')
   {
-    sscanf(rex_.substr(loc + 1, 3).c_str(), "%3o", &c);
+    c = static_cast<Char>(std::strtoul(rex_.substr(loc + 1, 3).c_str(), NULL, 8));
   }
   else if ((c == 'x' || c == 'u') && at(loc + 1) == '{')
   {
-    sscanf(rex_.substr(loc + 2).c_str(), "%x", &c);
+    c = static_cast<Char>(std::strtoul(rex_.c_str() + 2, NULL, 16));
   }
-  else if (c == 'x' && sscanf(rex_.substr(loc + 1, 2).c_str(), "%2x", &c) == 1)
+  else if (c == 'x' && std::isxdigit(at(loc + 1)))
   {
+    c = static_cast<Char>(std::strtoul(rex_.substr(loc + 1, 2).c_str(), NULL, 16));
   }
   else if (c == 'c')
   {
@@ -1480,11 +1485,11 @@ Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (Erro
     const char *s = strchr(abtnvfr, c);
     if (s)
     {
-      c = s - abtnvfr + '\a';
+      c = static_cast<Char>(s - abtnvfr + '\a');
     }
     else
     {
-      static const char escapes[] = "__sS__________hHdD__lL__uUwW";
+      static const char escapes[] = "__sSxX________hHdD__lL__uUwW";
       s = strchr(escapes, c);
       if (s)
       {
@@ -1516,7 +1521,7 @@ void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) con
     else
     {
       Location c_loc;
-      if (c == '[' && at(loc + 1) == ':' && (c_loc = find_at(loc + 2, ':')) != NPOS && at(c_loc + 1) == ']')
+      if (c == '[' && at(loc + 1) == ':' && (c_loc = find_at(loc + 2, ':')) != std::string::npos && at(c_loc + 1) == ']')
       {
         if (c_loc == loc + 3)
           c = compile_esc(loc + 2, chars);
@@ -1727,7 +1732,7 @@ void Pattern::encode_dfa(State& start) throw (Error)
       state->edges[hi] = std::pair<Char,State*>(0xff, NULL);
       ++nop_;
     }
-    nop_ += state->heads.size() + state->tails.size() + (state->accept > 0 || state->redo);
+    nop_ += static_cast<Index>(state->heads.size() + state->tails.size() + (state->accept > 0 || state->redo));
     if (nop_ < state->index)
       error(Error::CODE_OVERFLOW, "out of code memory");
   }
@@ -1741,9 +1746,9 @@ void Pattern::encode_dfa(State& start) throw (Error)
     else if (state->accept > 0)
       opcode[pc++] = opcode_take(state->accept);
     for (Set::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
-      opcode[pc++] = opcode_tail(*i);
+      opcode[pc++] = opcode_tail(static_cast<Index>(*i));
     for (Set::const_iterator i = state->heads.begin(); i != state->heads.end(); ++i)
-      opcode[pc++] = opcode_head(*i);
+      opcode[pc++] = opcode_head(static_cast<Index>(*i));
     for (State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
     {
       Char lo = i->first;
@@ -1791,121 +1796,121 @@ void Pattern::export_dfa(const State& start) const
       if (filename.compare(0, 7, "stdout.") == 0)
         fd = stdout;
       else if (filename.at(0) == '+')
-        fd = std::fopen(filename.c_str() + 1, "a");
+        fd = ::fopen(filename.c_str() + 1, "a");
       else
-        fd = std::fopen(filename.c_str(), "w");
+        fd = ::fopen(filename.c_str(), "w");
       if (fd)
       {
-        std::fprintf(fd, "digraph %s {\n\t\trankdir=LR;\n\t\tconcentrate=true;\n\t\tnode [fontname=\"ArialNarrow\"];\n\t\tedge [fontname=\"Courier\"];\n\n\t\tinit [root=true,peripheries=0,label=\"%s\",fontname=\"Courier\"];\n\t\tinit -> N%p;\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), opt_.n.c_str(), &start);
+        ::fprintf(fd, "digraph %s {\n\t\trankdir=LR;\n\t\tconcentrate=true;\n\t\tnode [fontname=\"ArialNarrow\"];\n\t\tedge [fontname=\"Courier\"];\n\n\t\tinit [root=true,peripheries=0,label=\"%s\",fontname=\"Courier\"];\n\t\tinit -> N%p;\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), opt_.n.c_str(), &start);
         for (const State *state = &start; state; state = state->next)
         {
           if (state == &start)
-            std::fprintf(fd, "\n/*START*/\t");
+            ::fprintf(fd, "\n/*START*/\t");
           if (state->redo) // state->accept == IMAX)
-            std::fprintf(fd, "\n/*REDO*/\t");
+            ::fprintf(fd, "\n/*REDO*/\t");
           else if (state->accept)
-            std::fprintf(fd, "\n/*ACCEPT %hu*/\t", state->accept);
+            ::fprintf(fd, "\n/*ACCEPT %hu*/\t", state->accept);
           for (Set::const_iterator i = state->heads.begin(); i != state->heads.end(); ++i)
-            std::fprintf(fd, "\n/*HEAD %lu*/\t", *i);
+            ::fprintf(fd, "\n/*HEAD %lu*/\t", *i);
           for (Set::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
-            std::fprintf(fd, "\n/*TAIL %lu*/\t", *i);
+            ::fprintf(fd, "\n/*TAIL %lu*/\t", *i);
           if (state != &start && !state->accept && state->heads.empty() && state->tails.empty())
-            std::fprintf(fd, "\n/*STATE*/\t");
-          std::fprintf(fd, "N%p [label=\"", state);
+            ::fprintf(fd, "\n/*STATE*/\t");
+          ::fprintf(fd, "N%p [label=\"", state);
 #ifdef DEBUG
           size_t k = 1;
           size_t n = std::sqrt(state->size()) + 0.5;
           const char *sep = "";
           for (Positions::const_iterator i = state->begin(); i != state->end(); ++i)
           {
-            std::fprintf(fd, "%s", sep);
+            ::fprintf(fd, "%s", sep);
             if (i->accept())
             {
-              std::fprintf(fd, "(%hu)", i->accepts());
+              ::fprintf(fd, "(%hu)", i->accepts());
             }
             else
             {
               if (i->iter())
-                std::fprintf(fd, "%hu.", i->iter());
-              std::fprintf(fd, "%zu", i->loc());
+                ::fprintf(fd, "%hu.", i->iter());
+              ::fprintf(fd, "%zu", i->loc());
             }
             if (i->lazy())
-              std::fprintf(fd, "?%zu", i->lazy());
+              ::fprintf(fd, "?%zu", i->lazy());
             if (i->anchor())
-              std::fprintf(fd, "^");
+              ::fprintf(fd, "^");
             if (i->greedy())
-              std::fprintf(fd, "!");
+              ::fprintf(fd, "!");
             if (i->ticked())
-              std::fprintf(fd, "'");
+              ::fprintf(fd, "'");
             if (k++ % n)
               sep = " ";
             else
               sep = "\\n";
           }
           if ((state->accept && !state->redo) || !state->heads.empty() || !state->tails.empty())
-            std::fprintf(fd, "\\n");
+            ::fprintf(fd, "\\n");
 #endif
           if (state->accept && !state->redo) // state->accept != IMAX)
-            std::fprintf(fd, "[%hu]", state->accept);
+            ::fprintf(fd, "[%hu]", state->accept);
           for (Set::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
-            std::fprintf(fd, "%lu>", *i);
+            ::fprintf(fd, "%lu>", *i);
           for (Set::const_iterator i = state->heads.begin(); i != state->heads.end(); ++i)
-            std::fprintf(fd, "<%lu", *i);
+            ::fprintf(fd, "<%lu", *i);
           if (state->redo) // state->accept != IMAX)
-            std::fprintf(fd, "\",style=dashed,peripheries=1];\n");
+            ::fprintf(fd, "\",style=dashed,peripheries=1];\n");
           else if (state->accept) // state->accept != IMAX)
-            std::fprintf(fd, "\",peripheries=2];\n");
+            ::fprintf(fd, "\",peripheries=2];\n");
           else if (!state->heads.empty())
-            std::fprintf(fd, "\",style=dashed,peripheries=2];\n");
+            ::fprintf(fd, "\",style=dashed,peripheries=2];\n");
           else
-            std::fprintf(fd, "\"];\n");
+            ::fprintf(fd, "\"];\n");
           for (State::Edges::const_iterator i = state->edges.begin(); i != state->edges.end(); ++i)
           {
             Char lo = i->first;
             Char hi = i->second.first;
             if (!is_meta(lo))
             {
-              std::fprintf(fd, "\t\tN%p -> N%p [label=\"", state, i->second.second);
+              ::fprintf(fd, "\t\tN%p -> N%p [label=\"", state, i->second.second);
               if (lo >= '\a' && lo <= '\r')
-                std::fprintf(fd, "\\\\%c", "abtnvfr"[lo - '\a']);
+                ::fprintf(fd, "\\\\%c", "abtnvfr"[lo - '\a']);
               else if (lo == '"' || lo == '\\')
-                std::fprintf(fd, "\\\%c", lo);
+                ::fprintf(fd, "\\\\%c", lo);
               else if (std::isgraph(lo))
-                std::fprintf(fd, "%c", lo);
+                ::fprintf(fd, "%c", lo);
               else if (lo < 8)
-                std::fprintf(fd, "\\\\%u", lo);
+                ::fprintf(fd, "\\\\%u", lo);
               else
-                std::fprintf(fd, "\\\\x%2.2x", lo);
+                ::fprintf(fd, "\\\\x%2.2x", lo);
               if (lo != hi)
               {
-                std::fprintf(fd, "-");
+                ::fprintf(fd, "-");
                 if (hi >= '\a' && hi <= '\r')
-                  std::fprintf(fd, "\\\\%c", "abtnvfr"[hi - '\a']);
+                  ::fprintf(fd, "\\\\%c", "abtnvfr"[hi - '\a']);
                 else if (hi == '"' || hi == '\\')
-                  std::fprintf(fd, "\\\%c", hi);
+                  ::fprintf(fd, "\\\\%c", hi);
                 else if (std::isgraph(hi))
-                  std::fprintf(fd, "%c", hi);
+                  ::fprintf(fd, "%c", hi);
                 else if (hi < 8)
-                  std::fprintf(fd, "\\\\%u", hi);
+                  ::fprintf(fd, "\\\\%u", hi);
                 else
-                  std::fprintf(fd, "\\\\x%2.2x", hi);
+                  ::fprintf(fd, "\\\\x%2.2x", hi);
               }
-              std::fprintf(fd, "\"];\n");
+              ::fprintf(fd, "\"];\n");
             }
             else
             {
               do
               {
-                std::fprintf(fd, "\t\tN%p -> N%p [label=\"%s\",style=\"dashed\"];\n", state, i->second.second, meta_label[lo - META_MIN]);
+                ::fprintf(fd, "\t\tN%p -> N%p [label=\"%s\",style=\"dashed\"];\n", state, i->second.second, meta_label[lo - META_MIN]);
               } while (++lo <= hi);
             }
           }
           if (state->redo) // state->accept == IMAX)
-            std::fprintf(fd, "\t\tN%p -> R%p;\n\t\tR%p [peripheries=0,label=\"redo\"];\n", state, state, state);
+            ::fprintf(fd, "\t\tN%p -> R%p;\n\t\tR%p [peripheries=0,label=\"redo\"];\n", state, state, state);
         }
-        std::fprintf(fd, "}\n");
+        ::fprintf(fd, "}\n");
         if (fd != stdout)
-          std::fclose(fd);
+          ::fclose(fd);
       }
     }
   }
@@ -1928,82 +1933,82 @@ void Pattern::export_code() const
       if (filename.compare(0, 7, "stdout.") == 0)
         fd = stdout;
       else if (filename.at(0) == '+')
-        fd = std::fopen(filename.c_str() + 1, "a");
+        fd = ::fopen(filename.c_str() + 1, "a");
       else
-        fd = std::fopen(filename.c_str(), "w");
+        fd = ::fopen(filename.c_str(), "w");
       if (fd)
       {
-        std::fprintf(fd, "#ifndef REFLEX_CODE_DECL\n#include \"pattern.h\"\n#define REFLEX_CODE_DECL const reflex::Pattern::Opcode\n#endif\n\nREFLEX_CODE_DECL reflex_code_%s[%hu] =\n{\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), nop_);
+        ::fprintf(fd, "#ifndef REFLEX_CODE_DECL\n#include \"pattern.h\"\n#define REFLEX_CODE_DECL const reflex::Pattern::Opcode\n#endif\n\nREFLEX_CODE_DECL reflex_code_%s[%hu] =\n{\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), nop_);
         for (Index i = 0; i < nop_; ++i)
         {
           Opcode opcode = opc_[i];
-          std::fprintf(fd, "  0x%08X, // %hu: ", opcode, i);
+          ::fprintf(fd, "  0x%08X, // %hu: ", opcode, i);
           Index index = index_of(opcode);
           if (is_opcode_redo(opcode))
           {
-            std::fprintf(fd, "REDO\n");
+            ::fprintf(fd, "REDO\n");
           }
           else if (is_opcode_take(opcode))
           {
-            std::fprintf(fd, "TAKE %u\n", index);
+            ::fprintf(fd, "TAKE %u\n", index);
           }
           else if (is_opcode_tail(opcode))
           {
-            std::fprintf(fd, "TAIL %u\n", index);
+            ::fprintf(fd, "TAIL %u\n", index);
           }
           else if (is_opcode_head(opcode))
           {
-            std::fprintf(fd, "HEAD %u\n", index);
+            ::fprintf(fd, "HEAD %u\n", index);
           }
           else if (is_opcode_halt(opcode))
           {
-            std::fprintf(fd, "HALT\n");
+            ::fprintf(fd, "HALT\n");
           }
           else
           {
             if (index == IMAX)
-              std::fprintf(fd, "HALT ON ");
+              ::fprintf(fd, "HALT ON ");
             else
-              std::fprintf(fd, "GOTO %u ON ", index);
+              ::fprintf(fd, "GOTO %u ON ", index);
             Char lo = lo_of(opcode);
             if (!is_meta(lo))
             {
               if (lo >= '\a' && lo <= '\r')
-                std::fprintf(fd, "\\%c", "abtnvfr"[lo - '\a']);
+                ::fprintf(fd, "\\%c", "abtnvfr"[lo - '\a']);
               else if (lo == '\\')
-                std::fprintf(fd, "'\\'");
+                ::fprintf(fd, "'\\'");
               else if (std::isgraph(lo))
-                std::fprintf(fd, "%c", lo);
+                ::fprintf(fd, "%c", lo);
               else if (lo < 8)
-                std::fprintf(fd, "\\%u", lo);
+                ::fprintf(fd, "\\%u", lo);
               else
-                std::fprintf(fd, "\\x%2.2x", lo);
+                ::fprintf(fd, "\\x%2.2x", lo);
               Char hi = hi_of(opcode);
               if (lo != hi)
               {
-                std::fprintf(fd, "-");
+                ::fprintf(fd, "-");
                 if (hi >= '\a' && hi <= '\r')
-                  std::fprintf(fd, "\\%c", "abtnvfr"[hi - '\a']);
+                  ::fprintf(fd, "\\%c", "abtnvfr"[hi - '\a']);
                 else if (hi == '\\')
-                  std::fprintf(fd, "'\\'");
+                  ::fprintf(fd, "'\\'");
                 else if (std::isgraph(hi))
-                  std::fprintf(fd, "%c", hi);
+                  ::fprintf(fd, "%c", hi);
                 else if (hi < 8)
-                  std::fprintf(fd, "\\%u", hi);
+                  ::fprintf(fd, "\\%u", hi);
                 else
-                  std::fprintf(fd, "\\x%2.2x", hi);
+                  ::fprintf(fd, "\\x%2.2x", hi);
               }
             }
             else
             {
-              std::fprintf(fd, "%s", meta_label[lo - META_MIN]);
+              ::fprintf(fd, "%s", meta_label[lo - META_MIN]);
             }
-            std::fprintf(fd, "\n");
+            ::fprintf(fd, "\n");
           }
         }
-        std::fprintf(fd, "};\n\n");
+        ::fprintf(fd, "};\n\n");
         if (fd != stdout)
-          std::fclose(fd);
+          ::fclose(fd);
       }
     }
   }
@@ -2015,7 +2020,7 @@ void Pattern::Error::display(std::ostream& os) const
   if (loc)
   {
     size_t n = loc / 80;
-    size_t r = loc % 80;
+    unsigned short r = static_cast<unsigned short>(loc % 80);
     os
       << "at "
       << loc

@@ -36,21 +36,21 @@
 See `debug.h` for details.
 */
 
-#include <cstdio>
+#include <stdio.h>
 #include <cstring>
 
 FILE *DBGFD_;
 
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
 
-#include "winbase.h"
+#include "windows.h"
 void DBGOUT_(const char *log, const char *file, int line)
 {
   SYSTEMTIME tm;
-  if (DBGFD_ == NULL && (log[0] == '.' || (DBGFD_ = std::fopen(log, "a")) == NULL))
+  if (DBGFD_ == NULL && (log[0] == '.' || ::fopen_s(&DBGFD_, log, "a")))
     DBGFD_ = stderr;
   GetLocalTime(&tm);
-  std::fprintf(DBGFD_, "\n%02d%02d%02d/%02d%02d%02d.%03d%14.14s:%-5d", tm.wYear%100, tm.wMonth, tm.wDay, tm.wHour, tm.wMinute, tm.wSecond, tm.wMilliseconds, file, line);
+  ::fprintf(DBGFD_, "\n%02d%02d%02d/%02d%02d%02d.%03d%14.14s:%-5d", tm.wYear%100, tm.wMonth, tm.wDay, tm.wHour, tm.wMinute, tm.wSecond, tm.wMilliseconds, file, line);
 }
 #else
 
@@ -65,11 +65,11 @@ void DBGOUT_(const char *log, const char *file, int line)
     name++;
   else
     name = file;
-  if (DBGFD_ == NULL && (log[0] == '.' || (DBGFD_ = std::fopen(log, "a")) == NULL))
+  if (DBGFD_ == NULL && (log[0] == '.' || (DBGFD_ = ::fopen(log, "a")) == NULL))
     DBGFD_ = stderr;
   gettimeofday(&tv, NULL);
   localtime_r(&tv.tv_sec, &tm);
-  std::fprintf(DBGFD_, "\n%02d%02d%02d/%02d%02d%02d.%06d%14.14s:%-5d", tm.tm_year%100, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, tv.tv_usec, name, line);
+  ::fprintf(DBGFD_, "\n%02d%02d%02d/%02d%02d%02d.%06d%14.14s:%-5d", tm.tm_year%100, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, tv.tv_usec, name, line);
 }
 
 #endif

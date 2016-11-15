@@ -39,6 +39,7 @@
 
 #include "pattern.h"
 #include "utf8.h"
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -53,7 +54,7 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.0"
+#define REFLEX_VERSION "0.9.1"
 
 /**
 ReFlex scanner generator class.

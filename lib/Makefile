@@ -1,3 +1,4 @@
+INSTALL=/usr/lib
 CPP=c++
 AR=ar
 COFLAGS=-O2
@@ -7,7 +8,10 @@ CMFLAGS=
 # CMFLAGS=-g -DDEBUG
 CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
 
-all:			libreflex.a libreflex.so
+release:		libreflex.a libreflex.so
+
+install:		release
+			cp -f libreflex.a $(INSTALL)
 
 libreflex.a:		debug.o input.o matcher.o pattern.o utf8.o
 			$(AR) -rsc libreflex.a debug.o input.o matcher.o pattern.o utf8.o

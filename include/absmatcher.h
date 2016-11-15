@@ -41,6 +41,7 @@
 #include "input.h"
 #include "traits.h"
 #include <cassert>
+#include <cctype>
 #include <iterator>
 
 namespace reflex {

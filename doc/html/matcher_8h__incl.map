@@ -1,11 +1,11 @@
 <map id="matcher.h" name="matcher.h">
-<area shape="rect" id="node3" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="939,83,1040,111"/>
-<area shape="rect" id="node23" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="583,83,656,111"/>
-<area shape="rect" id="node5" href="$debug_8h.html" title="RE/flex debug logs. " alt="" coords="911,161,980,189"/>
-<area shape="rect" id="node7" href="$input_8h.html" title="ReFlex input character sequence class. " alt="" coords="825,161,887,189"/>
-<area shape="rect" id="node17" href="$traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="1004,161,1065,189"/>
-<area shape="rect" id="node9" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="871,238,925,266"/>
-<area shape="rect" id="node25" href="$bits_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="103,161,155,189"/>
-<area shape="rect" id="node35" href="$ranges_8h.html" title="RE/flex range set container. " alt="" coords="423,161,496,189"/>
-<area shape="rect" id="node41" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="179,161,244,189"/>
+<area shape="rect" id="node3" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="996,83,1097,111"/>
+<area shape="rect" id="node29" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="530,83,603,111"/>
+<area shape="rect" id="node5" href="$debug_8h.html" title="RE/flex debug logs. " alt="" coords="923,161,992,189"/>
+<area shape="rect" id="node7" href="$input_8h.html" title="ReFlex input character sequence class. " alt="" coords="787,161,848,189"/>
+<area shape="rect" id="node21" href="$traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="1100,161,1161,189"/>
+<area shape="rect" id="node9" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="822,238,876,266"/>
+<area shape="rect" id="node31" href="$bits_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="453,161,505,189"/>
+<area shape="rect" id="node38" href="$ranges_8h.html" title="RE/flex range set container. " alt="" coords="530,161,603,189"/>
+<area shape="rect" id="node44" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="5,161,69,189"/>
 </map>

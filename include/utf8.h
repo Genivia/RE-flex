@@ -38,6 +38,7 @@
 #define REFLEX_UTF8_H
 
 #include <string>
+#include <cstring>
 
 namespace reflex {
 
@@ -74,22 +75,23 @@ inline size_t utf8(
     }
     else
     {
+      size_t w = c;
       if (c < 0x200000)
       {
-	*s++ = static_cast<char>(0xF0 | ((c >> 18) & 0x07));
+        *s++ = static_cast<char>(0xF0 | ((w >> 18) & 0x07));
       }
       else
       {
-	if (c < 0x04000000)
-	{
-	  *s++ = static_cast<char>(0xF8 | ((c >> 24) & 0x03));
-	}
-	else
-	{
-	  *s++ = static_cast<char>(0xFC | ((c >> 30) & 0x01));
-	  *s++ = static_cast<char>(0x80 | ((c >> 24) & 0x3F));
-	}
-	*s++ = static_cast<char>(0x80 | ((c >> 18) & 0x3F));
+        if (w < 0x04000000)
+        {
+          *s++ = static_cast<char>(0xF8 | ((w >> 24) & 0x03));
+        }
+        else
+        {
+          *s++ = static_cast<char>(0xFC | ((w >> 30) & 0x01));
+          *s++ = static_cast<char>(0x80 | ((w >> 24) & 0x3F));
+        }
+        *s++ = static_cast<char>(0x80 | ((w >> 18) & 0x3F));
       }
       *s++ = static_cast<char>(0x80 | ((c >> 12) & 0x3F));
     }

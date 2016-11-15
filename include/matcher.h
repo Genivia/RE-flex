@@ -85,7 +85,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   void newline(size_t& col) ///< indent column counter
   {
     while (ind_ + 1 < pos_)
-      col += buf_[ind_++] == '\t' ? 1 + (-col - 1 & (opt_.T - 1)) : 1;
+      col += buf_[ind_++] == '\t' ? 1 + (-1 - col & (opt_.T - 1)) : 1;
     DBGLOG("Newline with indent/dedent? col = %zu", col);
   }
   /// Returns true if looking at indent.

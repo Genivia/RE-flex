@@ -42,6 +42,8 @@
 #include "input.h"
 #include "ranges.h"
 #include "setop.h"
+#include <cctype>
+#include <cstring>
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -49,6 +51,10 @@
 #include <map>
 #include <set>
 #include <vector>
+
+#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
+# pragma warning( disable : 4290 )
+#endif
 
 namespace reflex {
 
@@ -92,8 +98,7 @@ class Pattern {
   typedef uint32_t Opcode; ///< 32 bit opcode word
   /// Common constants.
   enum Const {
-    NPOS = std::string::npos, ///< alias for `std::string::npos`
-    IMAX = 0xffff,            ///< max index, also serves as a marker
+    IMAX = 0xffff, ///< max index, also serves as a marker
   };
   /// Construct a pattern object given a regex string.
   Pattern(
@@ -152,7 +157,7 @@ class Pattern {
   /// @returns number of subpatterns.
   Index size(void) const
   {
-    return end_.size();
+    return static_cast<Index>(end_.size());
   }
   /// Get subpattern of this pattern object.
   /// @returns subpattern string or "".
@@ -217,14 +222,14 @@ class Pattern {
     Position accept(bool b)    const { return b ? Position(k | ACCEPT) : Position(k & ~ACCEPT); }
     Position lazy(Location l)  const { return Position((k & 0x0000ffffffffffffLL) | static_cast<value_type>(l) << 48); }
     Position pos(void)         const { return Position(k & 0x00000000ffffffffLL); }
-    Location loc(void)         const { return k & 0xffff; }
-    Index    accepts(void)     const { return k & 0xffff; }
-    Index    iter(void)        const { return k >> 16 & 0xffff; }
-    bool     ticked(void)      const { return k & TICKED; }
-    bool     greedy(void)      const { return k & GREEDY; }
-    bool     anchor(void)      const { return k & ANCHOR; }
-    bool     accept(void)      const { return k & ACCEPT; }
-    Location lazy(void)        const { return k >> 48 & 0xffff; }
+    Location loc(void)         const { return static_cast<Location>(k & 0xffff); }
+    Index    accepts(void)     const { return static_cast<Index>(k & 0xffff); }
+    Index    iter(void)        const { return static_cast<Index>(k >> 16 & 0xffff); }
+    bool     ticked(void)      const { return (k & TICKED) != 0; }
+    bool     greedy(void)      const { return (k & GREEDY) != 0; }
+    bool     anchor(void)      const { return (k & ANCHOR) != 0; }
+    bool     accept(void)      const { return (k & ACCEPT) != 0; }
+    Location lazy(void)        const { return static_cast<Location>(k >> 48 & 0xffff); }
     value_type k;
   };
   typedef std::set<Position>           Positions;
@@ -409,9 +414,9 @@ class Pattern {
       Location    loc,
       const char *escapes) const
   {
-    if (opt_.e != '\0' && at(loc) == opt_.e && strchr(escapes, at(loc + 1)))
+    if (opt_.e != '\0' && at(loc) == opt_.e && std::strchr(escapes, at(loc + 1)))
       return at(loc + 1);
-    if (at(loc) == '[' && at(loc + 1) == '[' && at(loc + 2) == ':' && strchr(escapes, at(loc + 3)) && at(loc + 4) == ':' && at(loc + 5) == ']' && at(loc + 6) == ']')
+    if (at(loc) == '[' && at(loc + 1) == '[' && at(loc + 2) == ':' && std::strchr(escapes, at(loc + 3)) && at(loc + 4) == ':' && at(loc + 5) == ']' && at(loc + 6) == ']')
       return at(loc + 3);
     return '\0';
   }

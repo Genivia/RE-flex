@@ -1,3 +1,4 @@
+INSTALL=/usr/local
 CPP=c++
 INCS=../include/debug.h ../include/input.h ../include/pattern.h ../include/utf8.h
 LIBS=../lib/libreflex.a
@@ -19,6 +20,10 @@ release:
 			cd ../lib; $(MAKE) libreflex.a
 			$(MAKE) reflex
 			-cp -f reflex ../bin
+
+install:		release
+			cd ../lib; $(MAKE) install
+			-cp -f reflex $(INSTALL)
 
 reflex:			$(reflex_incs) $(reflex_objs)
 			$(CPP) $(CFLAGS) -o $@ $(reflex_objs)

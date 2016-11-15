@@ -245,7 +245,7 @@ redo:
       {
         DBGLOG("Backtrack: pc = %u", index);
         if (back == Pattern::IMAX)
-          back = pc - pat_->opc_;
+          back = static_cast<Pattern::Index>(pc - pat_->opc_);
         pc = pat_->opc_ + index;
         opcode = *pc;
         index = Pattern::IMAX;

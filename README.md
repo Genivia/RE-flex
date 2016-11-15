@@ -180,6 +180,7 @@ Changelog
 ---------
 
 - Nov 14, 2016: RE/flex 0.9.0 beta released
+- Nov 15, 2016: RE/flex 0.9.1 beta released with improved portability
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

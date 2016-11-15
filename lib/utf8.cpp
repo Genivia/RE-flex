@@ -35,12 +35,13 @@
 */
 
 #include "utf8.h"
+#include <stdio.h>
 
 namespace reflex {
 
 static const char *hex_r(char *buf, int a, const char *esc)
 {
-  sprintf(buf, "%sx%02x", esc, a);
+  ::sprintf(buf, "%sx%02x", esc, a);
   return buf;
 }
 
@@ -48,13 +49,13 @@ static const char *hex_r(char *buf, int a, int b, const char *esc)
 {
   if (a == b)
     return hex_r(buf, a, esc);
-  sprintf(buf, "[%sx%02x-%sx%02x]", esc, a, esc, b);
+  ::sprintf(buf, "[%sx%02x-%sx%02x]", esc, a, esc, b);
   return buf;
 }
 
 std::string utf8(wchar_t a, wchar_t b, bool strict, const char *esc)
 {
-  if (esc == NULL || strlen(esc) > 3)
+  if (esc == NULL || std::strlen(esc) > 3)
     esc = "\\";
   if (a < 0)
     return std::string(esc) + "x80"; // undefined
@@ -95,106 +96,111 @@ std::string utf8(wchar_t a, wchar_t b, bool strict, const char *esc)
   const unsigned char *bs = NULL;
   std::string regex;
   if (strict)
+  {
     hex_r(any, 0x80, 0xbf, esc);
+  }
   else
-    strcpy(any, ".");
+  {
+    any[0] = '.';
+    any[1] = '\0';
+  }
   while (n <= m)
   {
     if (n < m)
-      bs = reinterpret_cast<const unsigned char*>(max_utf8[n-1]);
+      bs = reinterpret_cast<const unsigned char*>(max_utf8[n - 1]);
     else
       bs = reinterpret_cast<const unsigned char*>(bt);
     size_t i;
     for (i = 0; i < n && as[i] == bs[i]; ++i)
       regex.append(hex_r(buf, as[i], esc));
-    size_t l = 0; // pattern compression: l == 0 -> as[i+1..n-1] == UTF-8 lower bound
-    for (size_t k = i+1; k < n && l == 0; ++k)
+    int l = 0; // pattern compression: l == 0 -> as[i+1..n-1] == UTF-8 lower bound
+    for (size_t k = i + 1; k < n && l == 0; ++k)
       if (as[k] != 0x80)
-	l = 1;
-    size_t h = 0; // pattern compression: h == 0 -> bs[i+1..n-1] == UTF-8 upper bound
-    for (size_t k = i+1; k < n && h == 0; ++k)
+        l = 1;
+    int h = 0; // pattern compression: h == 0 -> bs[i+1..n-1] == UTF-8 upper bound
+    for (size_t k = i + 1; k < n && h == 0; ++k)
       if (bs[k] != 0xbf)
-	h = 1;
-    if (i+1 < n)
+        h = 1;
+    if (i + 1 < n)
     {
       size_t j = i;
       if (i != 0)
-	regex.append("(");
+        regex.append("(");
       if (l != 0)
       {
-	size_t p = 0;
-	regex.append(hex_r(buf, as[i], esc));
-	++i;
-	while (i+1 < n)
-	{
-	  if (as[i+1] == 0x80) // pattern compression
-	  {
-	    regex.append(hex_r(buf, as[i], 0xbf, esc));
-	    for (++i; i < n && as[i] == 0x80; ++i)
-	      regex.append(any);
-	  }
-	  else
-	  {
-	    if (as[i] != 0xbf)
-	    {
-	      ++p;
-	      regex.append("(").append(hex_r(buf, as[i]+1, 0xbf, esc));
-	      for (size_t k = i+1; k < n; ++k)
-		regex.append(any);
-	      regex.append("|");
-	    }
-	    regex.append(hex_r(buf, as[i], esc));
-	    ++i;
-	  }
-	}
-	if (i < n)
-	  regex.append(hex_r(buf, as[i], 0xbf, esc));
-	for (size_t k = 0; k < p; ++k)
-	  regex.append(")");
-	i = j;
+        size_t p = 0;
+        regex.append(hex_r(buf, as[i], esc));
+        ++i;
+        while (i + 1 < n)
+        {
+          if (as[i + 1] == 0x80) // pattern compression
+          {
+            regex.append(hex_r(buf, as[i], 0xbf, esc));
+            for (++i; i < n && as[i] == 0x80; ++i)
+              regex.append(any);
+          }
+          else
+          {
+            if (as[i] != 0xbf)
+            {
+              ++p;
+              regex.append("(").append(hex_r(buf, as[i] + 1, 0xbf, esc));
+              for (size_t k = i + 1; k < n; ++k)
+                regex.append(any);
+              regex.append("|");
+            }
+            regex.append(hex_r(buf, as[i], esc));
+            ++i;
+          }
+        }
+        if (i < n)
+          regex.append(hex_r(buf, as[i], 0xbf, esc));
+        for (size_t k = 0; k < p; ++k)
+          regex.append(")");
+        i = j;
       }
-      if (i+1 < n && as[i]+l <= bs[i]-h)
+      if (i + 1 < n && as[i] + l <= bs[i] - h)
       {
-	if (l != 0)
-	  regex.append("|");
-	regex.append(hex_r(buf, as[i]+l, bs[i]-h, esc));
-	for (size_t k = i+1; k < n; ++k)
-	  regex.append(any);
+        if (l != 0)
+          regex.append("|");
+        regex.append(hex_r(buf, as[i] + l, bs[i] - h, esc));
+        for (size_t k = i + 1; k < n; ++k)
+          regex.append(any);
       }
       if (h != 0)
       {
-	size_t p = 0;
-	regex.append("|").append(hex_r(buf, bs[i], esc));
-	++i;
-	while (i+1 < n)
-	{
-	  if (bs[i+1] == 0xbf) // pattern compression
-	  {
-	    regex.append(hex_r(buf, 0x80, bs[i], esc));
-	    for (++i; i < n && bs[i] == 0xbf; ++i)
-	      regex.append(any);
-	  }
-	  else
-	  {
-	    if (bs[i] != 0x80)
-	    {
-	      ++p;
-	      regex.append("(").append(hex_r(buf, 0x80, bs[i]-1, esc));
-	      for (size_t k = i+1; k < n; ++k)
-		regex.append(any);
-	      regex.append("|");
-	    }
-	    regex.append(hex_r(buf, bs[i], esc));
-	    ++i;
-	  }
-	}
-	if (i < n)
-	  regex.append(hex_r(buf, 0x80, bs[i], esc));
-	for (size_t k = 0; k < p; ++k)
-	  regex.append(")");
+        size_t p = 0;
+        regex.append("|").append(hex_r(buf, bs[i], esc));
+        ++i;
+        while (i + 1 < n)
+        {
+          if (bs[i + 1] == 0xbf) // pattern compression
+          {
+            regex.append(hex_r(buf, 0x80, bs[i], esc));
+            for (++i; i < n && bs[i] == 0xbf; ++i)
+              regex.append(any);
+          }
+          else
+          {
+            if (bs[i] != 0x80)
+            {
+              ++p;
+              regex.append("(").append(hex_r(buf, 0x80, bs[i] - 1, esc));
+              for (size_t k = i + 1; k < n; ++k)
+                regex.append(any);
+              regex.append("|");
+            }
+            regex.append(hex_r(buf, bs[i], esc));
+            ++i;
+          }
+        }
+        if (i < n)
+          regex.append(hex_r(buf, 0x80, bs[i], esc));
+        for (size_t k = 0; k < p; ++k)
+          regex.append(")");
       }
       if (j != 0)
-	regex.append(")");
+        regex.append(")");
     }
     else if (i < n)
     {

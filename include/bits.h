@@ -37,9 +37,17 @@
 #ifndef REFLEX_BITS_H
 #define REFLEX_BITS_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#include <cstring>
+
+#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
+namespace reflex {
+typedef unsigned __int16 uint16_t;
+typedef unsigned __int32 uint32_t;
+typedef unsigned __int64 uint64_t;
+}
+#else
+# include <stdint.h>
+#endif
 
 namespace reflex {
 
@@ -89,7 +97,7 @@ class Bits {
         size_t    n, ///< n'th bit
         uint64_t *p) ///< in this word
       : 
-        m(1UL << n),
+        m(1ULL << n),
         p(p)
     { }
     uint64_t  m; ///< mask m = 2^n
@@ -98,7 +106,7 @@ class Bits {
     /// @returns bit value true or false.
     operator bool() const
     {
-      return *p & m;
+      return (*p & m) != 0;
     }
     /// Assign bit value.
     /// @returns result value true or false.
@@ -116,7 +124,7 @@ class Bits {
     {
       if (b)
         *p |= m;
-      return *p & m;
+      return (*p & m) != 0;
     }
     /// Bit-and bit value.
     /// @returns result value true or false.
@@ -124,7 +132,7 @@ class Bits {
     {
       if (!b)
         *p &= ~m;
-      return *p & m;
+      return (*p & m) != 0;
     }
     /// Bit-xor bit value.
     /// @returns result value true or false.
@@ -132,7 +140,7 @@ class Bits {
     {
       if (b)
         *p ^= m;
-      return *p & m;
+      return (*p & m) != 0;
     }
   };
   /// Construct an empty bit vector.
@@ -176,7 +184,7 @@ class Bits {
   {
     len_ = bits.len_;
     if (len_)
-      memcpy(vec_ = new uint64_t[len_], bits.vec_, len_ << 3);
+      std::memcpy(vec_ = new uint64_t[len_], bits.vec_, len_ << 3);
     else
       vec_ = NULL;
     return *this;
@@ -192,14 +200,14 @@ class Bits {
   /// @returns true if n'th bit is set, false otherwise.
   bool operator[](size_t n) const ///< n'th bit
   {
-    return n >> 6 < len_ ? vec_[n >> 6] & 1UL << (n & 0x3F) : false;
+    return n >> 6 < len_ && (vec_[n >> 6] & 1ULL << (n & 0x3F)) != 0;
   }
   /// Insert and set a bit in the bit vector.
   /// @returns reference to this object.
   Bits& insert(size_t n) ///< n'th bit to set
   {
     alloc((n >> 6) + 1);
-    vec_[n >> 6] |= 1UL << (n & 0x3F);
+    vec_[n >> 6] |= 1ULL << (n & 0x3F);
     return *this;
   }
   /// Erase a bit in the bit vector.
@@ -207,7 +215,7 @@ class Bits {
   Bits& erase(size_t n) ///< n'th bit to erase
   {
     if (n >> 6 < len_)
-      vec_[n >> 6] &= ~(1UL << (n & 0x3F));
+      vec_[n >> 6] &= ~(1ULL << (n & 0x3F));
     return *this;
   }
   /// Flips a bit in the bit vector.
@@ -215,7 +223,7 @@ class Bits {
   Bits& flip(size_t n) ///< n'th bit to flip
   {
     alloc((n >> 6) + 1);
-    vec_[n >> 6] ^= 1UL << (n & 0x3F);
+    vec_[n >> 6] ^= 1ULL << (n & 0x3F);
     return *this;
   }
   /// Insert and set a range of bits in the bit vector.
@@ -226,7 +234,7 @@ class Bits {
   {
     alloc((n2 >> 6) + 1);
     for (size_t i = n1; i <= n2; ++i)
-      vec_[i >> 6] |= 1UL << (i & 0x3F);
+      vec_[i >> 6] |= 1ULL << (i & 0x3F);
     return *this;
   }
   /// Erase a range of bits in the bit vector.
@@ -238,9 +246,9 @@ class Bits {
     if (n1 >> 6 < len_)
     {
       if (n2 >> 6 >= len_)
-	n2 = (len_ - 1) << 6;
+        n2 = (len_ - 1) << 6;
       for (size_t i = n1; i <= n2; ++i)
-	vec_[i >> 6] &= ~(1UL << (i & 0x3F));
+        vec_[i >> 6] &= ~(1ULL << (i & 0x3F));
     }
     return *this;
   }
@@ -252,7 +260,7 @@ class Bits {
   {
     alloc((n2 >> 6) + 1);
     for (size_t i = n1; i <= n2; ++i)
-      vec_[i >> 6] ^= 1UL << (i & 0x3F);
+      vec_[i >> 6] ^= 1ULL << (i & 0x3F);
     return *this;
   }
   /// Bit-or (set union) the bit vector with the given bits.
@@ -480,12 +488,12 @@ class Bits {
     size_t i = n >> 6;
     if (i < len_ && vec_[i])
       for (size_t j = n & 0x3F; j < 64; ++j)
-        if (vec_[i] & 1UL << j)
+        if (vec_[i] & 1ULL << j)
           return (i << 6) + j;
     for (i = i + 1; i < len_; ++i)
       if (vec_[i])
         for (size_t j = 0; j < 64; ++j)
-          if (vec_[i] & 1UL << j)
+          if (vec_[i] & 1ULL << j)
             return (i << 6) + j;
     return npos;
   }
@@ -498,7 +506,7 @@ class Bits {
   /// Swap bit vectors.
   void swap(Bits& bits) ///< bits
   {
-    uint64_t k = len_;
+    size_t k = len_;
     uint64_t *p = vec_;
     len_ = bits.len_;
     vec_ = bits.vec_;
@@ -517,7 +525,7 @@ class Bits {
       uint64_t *p = new uint64_t[k]();
       if (vec_)
       {
-        memcpy(p, vec_, len_ << 3);
+        std::memcpy(p, vec_, len_ << 3);
         delete[] vec_;
       }
       len_ = k;

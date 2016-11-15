@@ -195,25 +195,25 @@ struct lazy_intersection {
   /// Iterator to lazely get elements of a set intersection.
   struct iterator {
     iterator(
-	const S1& s1,
-	const S2& s2)
+        const S1& s1,
+        const S2& s2)
       :
-	i1(s1.begin()),
-	i1_end(s1.end()),
-	i2(s2.begin()),
-	i2_end(s2.end()),
-	lt(s1.key_comp())
+        i1(s1.begin()),
+        i1_end(s1.end()),
+        i2(s2.begin()),
+        i2_end(s2.end()),
+        lt(s1.key_comp())
     {
       find();
     }
     iterator(
-	const typename S1::const_iterator& i1,
-	const typename S2::const_iterator& i2)
+        const typename S1::const_iterator& i1,
+        const typename S2::const_iterator& i2)
       :
-	i1(i1),
-	i1_end(i1),
-	i2(i2),
-	i2_end(i2)
+        i1(i1),
+        i1_end(i1),
+        i2(i2),
+        i2_end(i2)
     {
       find();
     }
@@ -244,18 +244,18 @@ struct lazy_intersection {
     {
       while (i1 != i1_end && i2 != i2_end)
       {
-	if (lt(*i1, *i2))
-	  i1++;
-	else if (lt(*i2, *i1))
-	  i2++;
-	else
-	  break;
+        if (lt(*i1, *i2))
+          i1++;
+        else if (lt(*i2, *i1))
+          i2++;
+        else
+          break;
       }
     }
     void next(void)
     {
       if (i1 != i1_end)
-	i1++;
+        i1++;
       find();
     }
     typename S1::const_iterator i1, i1_end;
@@ -288,25 +288,25 @@ struct lazy_union {
   /// Iterator to lazely get elements of a set union.
   struct iterator {
     iterator(
-	const S1& s1,
-	const S2& s2)
+        const S1& s1,
+        const S2& s2)
       :
-	i1(s1.begin()),
-	i1_end(s1.end()),
-	i2(s2.begin()),
-	i2_end(s2.end()),
-	lt(s1.key_comp())
+        i1(s1.begin()),
+        i1_end(s1.end()),
+        i2(s2.begin()),
+        i2_end(s2.end()),
+        lt(s1.key_comp())
     {
       find();
     }
     iterator(
-	const typename S1::const_iterator& i1,
-	const typename S2::const_iterator& i2)
+        const typename S1::const_iterator& i1,
+        const typename S2::const_iterator& i2)
       :
-	i1(i1),
-	i1_end(i1),
-	i2(i2),
-	i2_end(i2)
+        i1(i1),
+        i1_end(i1),
+        i2(i2),
+        i2_end(i2)
     {
       find();
     }
@@ -337,57 +337,57 @@ struct lazy_union {
     {
       if (i1 == i1_end)
       {
-	second = true;
+        second = true;
       }
       else
       {
-	while (i2 != i2_end && !lt(*i1, *i2) && !lt(*i2, *i1))
-	  ++i2;
+        while (i2 != i2_end && !lt(*i1, *i2) && !lt(*i2, *i1))
+          ++i2;
       }
     }
     void next(void)
     {
       if (i1 == i1_end)
       {
-	if (i2 != i2_end)
-	  ++i2;
-	second = true;
+        if (i2 != i2_end)
+          ++i2;
+        second = true;
       }
       else if (i2 == i2_end)
       { 
-	if (i1 != i1_end)
-	  ++i1;
-	second = false;
+        if (i1 != i1_end)
+          ++i1;
+        second = false;
       }
       else
       {
-	if (second)
-	{
-	  ++i2;
-	  second = false;
-	}
+        if (second)
+        {
+          ++i2;
+          second = false;
+        }
         else
-	{
-	  ++i1;
-	  second = true;
-	}
-	while (i1 != i1_end && i2 != i2_end)
-	{
-	  if (lt(*i1, *i2))
-	  {
-	    second = false;
-	    break;
-	  }
-	  else if (lt(*i2, *i1))
-	  {
-	    second = true;
-	    break;
-	  }
-	  else
-	  {
-	    ++i2;
-	  }
-	}
+        {
+          ++i1;
+          second = true;
+        }
+        while (i1 != i1_end && i2 != i2_end)
+        {
+          if (lt(*i1, *i2))
+          {
+            second = false;
+            break;
+          }
+          else if (lt(*i2, *i1))
+          {
+            second = true;
+            break;
+          }
+          else
+          {
+            ++i2;
+          }
+        }
       }
     }
     typename S1::const_iterator i1, i1_end;

@@ -81,13 +81,13 @@ inherited `std::set` methods:
   range that contains val and a flag indicating that ranges was updated (true)
   or if the new range was subsumed by current ranges (false).
 
-- `iterator find(const bound_type& lo, const bound_type& hi) const` searches
-  for the first range that overlaps with [lo,hi].  Returns an iterator to the
-  range found or the end iterator.
+- `const_iterator find(const bound_type& lo, const bound_type& hi) const`
+  searches for the first range that overlaps with [lo,hi].  Returns an iterator
+  to the range found or the end iterator.
 
-- `iterator find(const bound_type& val) const` searches for the range that
-  includes the given value.  Returns an iterator to the range found or the end
-  iterator.
+- `const_iterator find(const bound_type& val) const` searches for the range
+  that includes the given value.  Returns an iterator to the range found or the
+  end iterator.
 
 - `Ranges& operator|=(const Ranges& rs)` inserts ranges rs.  Returns reference
   to this object.
@@ -226,7 +226,7 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
   }
   /// Find the first range [lo',hi'] that overlaps the given range [lo,hi], i.e. lo <= hi' and lo' <= hi.
   /// @returns iterator to the first range that overlaps the given range, or the end iterator.
-  iterator find(
+  const_iterator find(
       const bound_type& lo,       ///< lower bound
       const bound_type& hi) const ///< upper bound
   {
@@ -234,7 +234,7 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
   }
   /// Find the range [lo',hi'] that includes the given value val, i.e. lo' <= val <= hi'.
   /// @returns iterator to the range that includes the value, or the end iterator.
-  iterator find(const bound_type& val) const ///< value to search for
+  const_iterator find(const bound_type& val) const ///< value to search for
   {
     return find(val, val);
   }
@@ -652,7 +652,7 @@ class ORanges : public Ranges<T> {
   }
   /// Find the first range that overlaps the given range.
   /// @returns iterator to the first range that overlaps the given range, or the end iterator.
-  iterator find(
+  const_iterator find(
       const bound_type& lo,       ///< lower bound
       const bound_type& hi) const ///< upper bound
   {
@@ -660,7 +660,7 @@ class ORanges : public Ranges<T> {
   }
   /// Find the range that includes the given value.
   /// @returns iterator to the range that includes the value, or the end iterator.
-  iterator find(const bound_type& val) const ///< value to search for
+  const_iterator find(const bound_type& val) const ///< value to search for
   {
     return find(val, val);
   }

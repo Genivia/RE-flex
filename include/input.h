@@ -38,8 +38,10 @@
 #define REFLEX_INPUT_H
 
 #include "utf8.h"
-#include <sys/stat.h>
+#include <stdio.h>
 #include <iostream>
+#include <string>
+#include <cstring>
 
 namespace reflex {
 
@@ -232,7 +234,7 @@ class Input {
       uidx_(input.uidx_),
       utfx_(input.utfx_)
   {
-    memcpy(utf8_, input.utf8_, sizeof(utf8_));
+    std::memcpy(utf8_, input.utf8_, sizeof(utf8_));
   }
   /// Construct empty input character sequence
   Input(void)
@@ -441,22 +443,28 @@ class Input {
   {
     if (cstring_)
     {
-      const char *t = ::stpncpy(s, cstring_, n);
-      cstring_ += t - s;
-      return t - s;
+      size_t k = std::strlen(cstring_);
+      if (k > n)
+        k = n;
+      std::memcpy(s, cstring_, k);
+      cstring_ += k;
+      return k;
     }
     if (wstring_)
     {
       size_t k = n;
       if (uidx_ < sizeof(utf8_))
       {
-        char *t = ::stpncpy(s, utf8_ + uidx_, k);
-        uidx_ += t - s;
-        k -= t - s;
+        size_t l = std::strlen(utf8_ + uidx_);
+        if (l > k)
+          l = k;
+        std::memcpy(s, utf8_ + uidx_, l);
+        uidx_ += static_cast<unsigned short>(l);
+        k -= l;
         if (k == 0)
           return n;
-        s = t;
-	uidx_ = sizeof(utf8_);
+        s += l;
+        uidx_ = sizeof(utf8_);
       }
       wchar_t c;
       while ((c = *wstring_) != L'\0' && k > 0)
@@ -473,13 +481,13 @@ class Input {
           {
             utf8_[l] = '\0';
             uidx_ = static_cast<unsigned short>(k);
-	    memcpy(s, utf8_, k);
+            std::memcpy(s, utf8_, k);
             s += k;
             k = 0;
           }
           else
           {
-	    memcpy(s, utf8_, l);
+            std::memcpy(s, utf8_, l);
             s += l;
             k -= l;
           }
@@ -491,7 +499,7 @@ class Input {
     if (file_)
       return file_get(s, n);
     if (istream_ && istream_->good())
-      return n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, n).gcount();
+      return n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, static_cast<std::streamsize>(n)).gcount();
     return 0;
   }
   /// Set encoding for `FILE*` input to Const::plain, Const::utf16be, Const::utf16le, Const::utf32be, or Const::utf32le. File encodings are automatically detected by the presence of a UTF BOM in the file. This function may be used when a BOM is not present and file encoding is known or to override the BOM.
@@ -530,12 +538,12 @@ class Input {
   /// Implements good()operation on a FILE*.
   bool file_good(void)
   {
-    return !feof(file_) && !ferror(file_);
+    return !::feof(file_) && !::ferror(file_);
   }
   /// Implements eof() on a FILE*.
   bool file_eof(void)
   {
-    return feof(file_);
+    return ::feof(file_) != 0;
   }
   const char    *cstring_; ///< NUL-terminated char string input (when non-null)
   const wchar_t *wstring_; ///< NUL-terminated wide string input (when non-null)

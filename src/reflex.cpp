@@ -765,7 +765,7 @@ std::string Reflex::getregex(size_t& pos)
             }
             else if (pos + 2 < linelen && (line.at(pos) == 'u' || line.at(pos) == 'x') && line.at(pos + 1) == '{') // translate \u{X} and \x{X}
             {
-              wchar_t c = std::strtoul(line.c_str() + pos + 2, NULL, 16);
+              wchar_t c = static_cast<wchar_t>(std::strtoul(line.c_str() + pos + 2, NULL, 16));
               char buf[7];
               buf[reflex::utf8(c, buf)] = '\0';
               regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(buf).append(")");
@@ -2159,12 +2159,12 @@ void Reflex::append_tables(void)
       try
       {
         reflex::Pattern pattern(patterns[start], option);
-        size_t accept = 1;
+	reflex::Pattern::Index accept = 1;
         for (size_t rule = 0; rule < rules[start].size(); ++rule)
           if (rules[start][rule].regex != "<<EOF>>")
             if (!pattern.reachable(accept++))
               warning("rule cannot be matched", "", rules[start][rule].code.lineno);
-        size_t n = 0;
+	reflex::Pattern::Index n = 0;
         if (!patterns[start].empty())
           n = pattern.size();
         if (!options["verbose"].empty())

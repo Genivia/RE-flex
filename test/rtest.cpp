@@ -1,56 +1,6 @@
 
-// test lazy followed by greedy
-// (a|b)*?a*b*|(c|d)*?c*d+|(e|f)*?e+f*|(g|h)*?g+h+|(i|j)+?i*j*|(k|l)+?k*l+|(m|n)+?m+n*|(o|p)+?o+p+
-// (a|b){0,}?a*b*|(c|d){0,}?c*d+|(e|f){0,}?e+f*|(g|h){0,}?g+h+|(i|j){1,}?i*j*|(k|l){1,}?k*l+|(m|n){1,}?m+n*|(o|p){1,}?o+p+
-
-// (a|b)??a?b?|(c|d)??c?d+|(e|f)??e+f?|(g|h)??g+h+|(i|j)??i*j*|(k|l)??k*l?|(m|n)??m?n*|(o|p)??o?p?
-// (a|b){0,1}?a?b?|(c|d){0,1}?c?d+|(e|f){0,1}?e+f?|(g|h){0,1}?g+h+|(i|j){0,1}?i*j*|(k|l){0,1}?k*l?|(m|n){0,1}?m?n*|(o|p){0,1}?o?p?
-
-// (a|b)*?a*b*|(c|d)*?c*d+|(e|f)*?e+f*|(g|h)*?g+h+
-// (a|b)*?a*b*|(c|d)*?c*d?|(e|f)*?e?f*|(g|h)*?g?h?
-// (a|b)*?a?b?|(c|d)*?c?d+|(e|f)*?e+f?|(g|h)*?g+h+
-
-// (a|b)??a*b*|(c|d)??c*d+|(e|f)??e+f*|(g|h)??g+h+
-// (a|b)??a*b*|(c|d)??c*d?|(e|f)??e?f*|(g|h)??g?h?
-// (a|b)??a?b?|(c|d)??c?d+|(e|f)??e+f?|(g|h)??g+h+
-
-// (a|b)+?a*b*|(c|d)+?c*d+|(e|f)+?e+f*|(g|h)+?g+h+
-// (a|b)+?a*b*|(c|d)+?c*d?|(e|f)+?e?f*|(g|h)+?g?h?
-// (a|b)+?a?b?|(c|d)+?c?d+|(e|f)+?e+f?|(g|h)+?g+h+
-
-// test lazy followed by lazy
-// (a|b)??b(a|b)??b|(c|d)*?d(c|d)*?d|(e|f)+?f(e|f)+?f|((g|h)??h){2}|((i|j)*?j){2}|((k|l)+?l){2}
-
-// test lazy nested in greedy
-// ((a|b)??b)* == (a?b)*
-// ((a|b)*?b)* == (a*b)*
-// ((a|b)+?b)* == (a+b)*
-// ((a|b)??b)? == (a?b)? FIXME
-// ((a|b)*?b)? == (a*b)? FIXME
-// ((a|b)+?b)? == (a+b)? FIXME
-// ((a|b)??b)+ == (a?b)+ FIXME
-// ((a|b)*?b)+ == (a*b)+ FIXME
-// ((a|b)+?b)+ == (a+b)+ FIXME
-
-// ((a|b)??)* == (a|b)*
-// ((a|b)*?)* == (a|b)*
-// ((a|b)+?)* == (a|b)*
-// ((a|b)??)? == (a|b)?
-// ((a|b)*?)? == (a|b)?
-// ((a|b)+?)? == (a|b)?
-// ((a|b)??)+ == (a|b)*
-// ((a|b)*?)+ == (a|b)*
-// ((a|b)+?)+ == (a|b)+ FIXME
-
-// (b(a|b)*?)* == b*
-
-// ((a|b)*?){0,} == (a|b)*   FIXME??
-// ((a|b)*?){0,2} == ""
-
 #include "pattern.h"
 #include "matcher.h"
-
-#include <sstream>
 
 void banner(const char *title)
 {
