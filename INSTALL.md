@@ -119,8 +119,8 @@ following files:
     |   |__ ...
     |
     |__ unicode/
-	|__ Scripts.txt
-	|__ UnicodeData.txt
+        |__ Scripts.txt
+        |__ UnicodeData.txt
 
 
 License and copyright
