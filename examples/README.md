@@ -1,5 +1,7 @@
 [![logo][logo-url]][reflex-url]
 
+The examples with Bison require the installation of [Bison][bison-url].
+
 Flex-compatible scanner examples
 --------------------------------
 
@@ -42,3 +44,4 @@ Stand-alone C++ regex matching example
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html
 [manual-url]: https://www.genivia.com/doc/reflex/html
+[bison-url]: http://dinosaur.compilertools.net/#bison

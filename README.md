@@ -37,12 +37,25 @@ or use the make command:
 
     $ cd src; make
 
-This compiles the **reflex** tool and installs it locally in bin/reflex.  You
-can add this location to your $PATH variable to enable the new reflex command:
+This compiles the **reflex** tool and installs it in reflex/bin.  You can add
+this location to your $PATH variable to enable the new reflex command:
 
     export PATH=$PATH:/reflex_install_path/bin
 
-Windows users: use bin/reflex.exe.
+The `libreflex.a` and `libreflex.so` libraries are saved in reflex/lib.  Link
+against one of these libraries when you use the RE/flex regex engine in your
+code.
+
+Windows users: use reflex/bin/reflex.exe.
+
+Optional:
+
+- To use Boost.Regex as a regex engine with the RE/flex library and scanner
+  generator, install [Boost][boost-url] and link your code against
+  `libboost_regex.a`
+
+- To visualize the FSM graphs generated with **reflex** option `--graphs-file`,
+  install [Graphviz dot][dot-url].
 
 
 How do I use RE/flex?
@@ -56,7 +69,16 @@ There are two ways you can use this project:
 For the first option, simply build the **reflex** tool and run it on the
 command line on a lex specification:
 
-    $ reflex --flex --bison lexspec.l
+    $ reflex --flex --bison --graphs-file lexspec.l
+
+This generates a scanner for Bison using from the Flex specification
+`lexspec.l` and also saves the finite state machine (FSM) as a Graphviz `.gv`
+file that can be visualized with the [Graphviz dot][dot-url] tool:
+
+    $ dot -Tpdf reflex.INITIAL.gv > reflex.INITIAL.pdf
+    $ open reflex.INITIAL.pdf
+
+![Visualize DFA graphs with Graphviz dot][FSM-url]
 
 Several examples are included to get you started.  See the [manual][manual-url]
 for more details.
@@ -128,6 +150,15 @@ reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
 std::vector<std::string> words(matcher.find.begin(), matcher.find.end());
 ```
 
+Use C++11 range-based loops with RE/flex iterators:
+
+```{.cpp}
+#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+// use a BoostMatcher to to search for words in a sentence
+for (auto& match : reflex::BoostMatcher("\\w+", "How now brown cow.").find)
+  std::cout << "Found " << match.text() << std::endl;
+```
+
 
 Where do I find the documentation?
 ----------------------------------
@@ -153,3 +184,8 @@ Changelog
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html
 [manual-url]: https://www.genivia.com/doc/reflex/html
+[flex-url]: http://dinosaur.compilertools.net/#flex
+[lex-url]: http://dinosaur.compilertools.net/#lex
+[bison-url]: http://dinosaur.compilertools.net/#bison
+[dot-url]: http://www.graphviz.org
+[FSM-url]: https://www.genivia.com/images/reflex-FSM.png
