@@ -71,9 +71,9 @@ command line on a lex specification:
 
     $ reflex --flex --bison --graphs-file lexspec.l
 
-This generates a scanner for Bison using from the Flex specification
-`lexspec.l` and also saves the finite state machine (FSM) as a Graphviz `.gv`
-file that can be visualized with the [Graphviz dot][dot-url] tool:
+This generates a scanner for Bison from the Flex specification `lexspec.l` and
+saves the finite state machine (FSM) as a Graphviz `.gv` file that can be
+visualized with the [Graphviz dot][dot-url] tool:
 
     $ dot -Tpdf reflex.INITIAL.gv > reflex.INITIAL.pdf
     $ open reflex.INITIAL.pdf
