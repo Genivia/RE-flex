@@ -11,7 +11,7 @@ What is RE/flex?
 ----------------
 
 * a *feature-rich replacement* of both [Flex](dinosaur.compilertools.net/#flex)
-  and [Lex](dinosaur.compilertools.net/#lex);
+  and [Lex](dinosaur.compilertools.net/#lex), see the feature list below.
 
 * an *enhancement* of [Boost.Regex](www.boost.org/libs/regex) to use its engine
   for matching, seaching, splitting and for scanning of tokens on various types
@@ -26,6 +26,44 @@ What is RE/flex?
   strings, files, and streaming data.
 
 The repo includes tokenizers for Java and C/C++.
+
+
+List of features
+----------------
+
+- Fully compatible with Flex to eliminate a learning curve and to make a
+  transition to RE/flex frustration-free
+- To distinguish RE/flex from Flex output files: RE/flex generates lex.yy.cpp
+  files while Flex generates lex.yy.cc files (in C++ mode).
+- Generates MT-safe (reentrant) code by default.
+- Generates clean source code that defines a C++ Lexer class for scanning that
+  is derived from an abstract lexer class.
+- Configurable Lexer class generation to customize the interface with parsers.
+- Works with Bison and supports reentrant, bison-bridge and bison-locations.
+- Generates scanners that operate on files, C++ streams, and (wide) strings.
+- Generates Graphviz files to visualize FSMs with the Graphviz dot tool.
+- Includes many examples, such as a C/C++ tokenizer, Java tokenizer, and more.
+- Adds an extensible hierarchy of pattern matcher engines, with a choice of
+  regex engines, such as Boost.Regex and RE/flex regex.
+- Adds lazy quantifiers to the POSIX regular expression syntax, so not more
+  hacks are needed to fix issues with greedy repetitions in Flex.
+- Adds word boundary anchors to the POSIX regular expression syntax.
+- Adds Unicode support, which is integrated with UTF-8 pattern matching.
+- Adds Unicode property matching `\p{C}` and C++11, Java, C#, and Python
+  Unicode properties for identifier name matching.
+- Adds indent `\i` and dedent `\j` regex patterns to match rules on text with
+  indentation, including `\t` (tab) adjustments.
+- Adds `%class` and `%init` to customize the generated Lexer classes.
+- Adds `%import` to modularize lex specifications.
+- Automatic internal conversion from UTF-16/32 to UTF-8 for matching Unicode on
+  UTF-encoded input files, no need to define `YY_INPUT` for UTF conversions.
+- Converts the official Unicode scripts Scripts.txt and UnicodeData.txt to
+  UTF-8 patterns by applying a RE/flex scanner to convert these scripts to C++
+  code.  Future Unicode standards can be automatically converted using these
+  scanners that are written in RE/flex itself.
+- The RE/flex regex library makes Boost.Regex much easier to use in plain C++
+  code for pattern matching on (wide) strings, files, and streams of
+  potentially unlimited length (e.g. to search streaming data).
 
 
 Installation
