@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex User Guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Nov 15 2016</div>
+      <div style="float: right; font-size: 10px;">updated Thu Nov 17 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -67,6 +67,7 @@
 <li class="level2"><a href="#regex-examples">Examples                                                      </a></li>
 </ul>
 </li>
+<li class="level1"><a href="#download">Download                                                             </a></li>
 <li class="level1"><a href="#license">License and copyright                                                 </a></li>
 </ul>
 </div>
@@ -505,7 +506,7 @@ Lex specifications                                               </h2>
 <div class="line">number    {digit}+</div>
 </div><!-- fragment --> </div><p>Names must be defined before being referenced. Names are expanded as macros in regex patterns. For example, <code>{digit}+</code> is expanded into <code>[0-9]+</code>.</p>
 <dl class="section note"><dt>Note</dt><dd>This is not entirely accurate: when a name is expanded to its right-hand side <code>X</code>, <code>X</code> is placed in a non-capturing group <code>(?:X)</code> to preserve its structure. For example, <code>{number}</code> expands to <code>(?:{digit}+)</code> which in turn expands to <code>(?:(?:[0-9])+)</code>.</dd></dl>
-<p>To inject code into the generated scanner, indent the code or place the code within a <code>%{</code> and <code>%}</code>. The <code>%{</code> and <code>%}</code> should be placed at the start of a new line. To inject code at the very top of the generated scanner, place this code within <code>top{</code> and <code>%}</code>:</p>
+<p>To inject code into the generated scanner, indent the code or place the code within a <code>%{</code> and <code>%}</code>. The <code>%{</code> and <code>%}</code> should be placed at the start of a new line. To inject code at the very top of the generated scanner, place this code within <code>%top{</code> and <code>%}</code>:</p>
 <div class="alt"> <div class="fragment"><div class="line">%top{</div>
 <div class="line"><span class="preprocessor">  #include &lt;iostream&gt;</span>    <span class="comment">// std::cout etc.</span></div>
 <div class="line">%}</div>
@@ -521,23 +522,23 @@ Lex specifications                                               </h2>
 <div class="line">%}</div>
 <div class="line"></div>
 <div class="line">%{</div>
-<div class="line">  <span class="keyword">static</span> <span class="keywordtype">int</span> n = 0;      <span class="comment">// a global static variable to count cows</span></div>
+<div class="line">  <span class="keyword">static</span> <span class="keywordtype">int</span> herd = 0;   <span class="comment">// a global static variable to count cows</span></div>
 <div class="line">%}</div>
 <div class="line"></div>
 <div class="line">cow        \&lt;[Cc]ow\&gt;</div>
 <div class="line"></div>
 <div class="line">%%</div>
 <div class="line"></div>
-<div class="line">{cow}      n++;          <span class="comment">// found a cow, bump count by one</span></div>
+<div class="line">{cow}      herd++;       <span class="comment">// found a cow, bump count by one</span></div>
 <div class="line">.          <span class="comment">// do nothing</span></div>
-<div class="line">&lt;&lt;EOF&gt;&gt;    out() &lt;&lt; n &lt;&lt; <span class="stringliteral">&quot; cows!&quot;</span> &lt;&lt; std::endl; <span class="keywordflow">return</span> 0;</div>
+<div class="line">&lt;&lt;EOF&gt;&gt;    out() &lt;&lt; herd &lt;&lt; <span class="stringliteral">&quot; cows!&quot;</span> &lt;&lt; std::endl; <span class="keywordflow">return</span> 0;</div>
 <div class="line"></div>
 <div class="line">%%</div>
 </div><!-- fragment --> </div><p>The above works fine, but we are using a global counter which is not a best practice and is not MT-safe or reentrant: multiple Lexer class instances may compete to bump the counter. Another problem is that the Lexer can only be used once, there is no proper initialization to restart the Lexer on new input.</p>
 <p>RE/flex allows you to inject code in the generated Lexer class, meaning that class members and constructor code can be added to manage the Lexer class state. All Lexer class members are visible in actions, even when private. New Lexers can be instantiated given some input to scan. Lexers can run in parallel in threads without requiring synchronization when their state is part of the instance and not managed by global variables.</p>
 <p>To inject Lexer class member declarations, place the declarations within <code>%class{</code> and <code>%}</code>. The <code>%class{</code> and <code>%}</code> should be placed at the start of a new line.</p>
 <p>Likewise, to inject Lexer class constructor code, for example to initialize members, place the code within <code>%init{</code> and <code>%}</code>. The <code>%init{</code> and <code>%}</code> should be placed at the start of a new line.</p>
-<p>For example, we use these code injectors to make our cow counter <code>n</code> part of the Lexer class state:</p>
+<p>For example, we use these code injectors to make our cow counter <code>herd</code> part of the Lexer class state:</p>
 <div class="alt"> <div class="fragment"><div class="line">%option dotall <a class="code" href="reflex_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div>
 <div class="line"></div>
 <div class="line">%top{</div>
@@ -545,23 +546,23 @@ Lex specifications                                               </h2>
 <div class="line">%}</div>
 <div class="line"></div>
 <div class="line">%<span class="keyword">class</span>{</div>
-<div class="line">  <span class="keywordtype">int</span> n;     <span class="comment">// lexer class member variable (private by default)</span></div>
+<div class="line">  <span class="keywordtype">int</span> herd;  <span class="comment">// lexer class member variable (private by default)</span></div>
 <div class="line">%}</div>
 <div class="line"></div>
 <div class="line">%init{</div>
-<div class="line">  n = 0;     <span class="comment">// initialize member variable in Lexer class constructor</span></div>
+<div class="line">  herd = 0;  <span class="comment">// initialize member variable in Lexer class constructor</span></div>
 <div class="line">%}</div>
 <div class="line"></div>
 <div class="line">cow        \&lt;[Cc]ow\&gt;</div>
 <div class="line"></div>
 <div class="line">%%</div>
 <div class="line"></div>
-<div class="line">{cow}      n++;          <span class="comment">// found a cow, bump count by one</span></div>
+<div class="line">{cow}      herd++;       <span class="comment">// found a cow, bump count by one</span></div>
 <div class="line">.          <span class="comment">// do nothing</span></div>
-<div class="line">&lt;&lt;EOF&gt;&gt;    out() &lt;&lt; n &lt;&lt; <span class="stringliteral">&quot; cows!&quot;</span> &lt;&lt; std::endl; <span class="keywordflow">return</span> 0;</div>
+<div class="line">&lt;&lt;EOF&gt;&gt;    out() &lt;&lt; herd &lt;&lt; <span class="stringliteral">&quot; cows!&quot;</span> &lt;&lt; std::endl; <span class="keywordflow">return</span> 0;</div>
 <div class="line"></div>
 <div class="line">%%</div>
-</div><!-- fragment --> </div><p>Note that nothing else needed to be changed, because the actions are part of the generated Lexer class and can access the Lexer class members, in this example the member variable <code>n</code>.</p>
+</div><!-- fragment --> </div><p>Note that nothing else needed to be changed, because the actions are part of the generated Lexer class and can access the Lexer class members, in this example the member variable <code>herd</code>.</p>
 <p>To modularize lex specifications use <code>%import</code> (or <code>%i</code> for short) to import files into the definitions section of a lex specification. For example:</p>
 <div class="alt"> <div class="fragment"><div class="line">%<span class="keyword">import</span> <span class="stringliteral">&quot;examples/jdefs.l&quot;</span></div>
 </div><!-- fragment --> </div><p>This imports examples/jdefs.l with Java patterns into the current specification so you can match Java lexical structures, such as copying Java identifiers to the output given some Java source program as input:</p>
@@ -650,7 +651,7 @@ Lex specifications                                               </h2>
 <tr>
 <th>RE/flex action </th><th>Flex action </th><th>Result  </th></tr>
 <tr>
-<td><code>matcher().buffer()</code> </td><td><code><a class="el" href="flexlexer_8h.html#a83e55b4e09de54e0f7c1b00ebd255a57" title="Flex-compatible macro defining interactive mode on/off. ">yy_set_interactive(0)</a></code> </td><td>buffer all input </td></tr>
+<td><code>matcher().buffer()</code> </td><td><em>n/a</em> </td><td>buffer all input </td></tr>
 <tr>
 <td><code>matcher().buffer(n)</code> </td><td><em>n/a</em> </td><td>set buffer size to <code>n</code> </td></tr>
 <tr>
@@ -671,7 +672,7 @@ Lex specifications                                               </h2>
 <tr>
 <td><code>matcher(m)</code> </td><td><code>yy_switch_to_buffer(m)</code> </td><td>use matcher <code>m</code> </td></tr>
 <tr>
-<td><code>new_matcher(i)</code> </td><td><code>yy_create_buffer(i, n)</code> </td><td>new matcher on input <code>i</code> </td></tr>
+<td><code>new_matcher(i)</code> </td><td><code>yy_create_buffer(i, n)</code> </td><td>new matcher <code><a class="el" href="classreflex_1_1_input.html">reflex::Input</a> i</code> </td></tr>
 <tr>
 <td><code>del_matcher(m)</code> </td><td><code>yy_delete_buffer(m)</code> </td><td>delete matcher <code>m</code> </td></tr>
 <tr>
@@ -679,6 +680,7 @@ Lex specifications                                               </h2>
 <tr>
 <td><code>pop_matcher()</code> </td><td><code>yypop_buffer_state()</code> </td><td>pop matcher and delete current </td></tr>
 </table>
+<p>The matcher type <code>m</code> is a Lexer class-specific <code>Matcher</code> type, which depends on the underlying matcher used by the scanner. Therefore, <code>new_matcher(i)</code> instantiates a <code><a class="el" href="classreflex_1_1_matcher.html">reflex::Matcher</a></code> or <code><a class="el" href="classreflex_1_1_boost_posix_matcher.html">reflex::BoostPosixMatcher</a></code> depending on the <code>−−matcher</code> option.</p>
 <p>The generated scanner reads from the standard input by default or from an input source specified as a <code><a class="el" href="classreflex_1_1_input.html">reflex::Input</a></code> object, such as a string, wide string, file, or a stream.</p>
 <p>See <a class="el" href="index.html#reflex-input">Switching input sources </a> for more details on managing the input to a scanner.</p>
 <h3>The user code section</h3>
@@ -715,7 +717,7 @@ Lex specifications                                               </h2>
 <p>⇢ <a href="#">Back to contents</a></p>
 <h2><a class="anchor" id="reflex-patterns"></a>
 Patterns                                                      </h2>
-<p>A pattern is an extended set of regular expressions, possibly nested over subexpressions <code>φ</code> and <code>ψ</code>, which are:</p>
+<p>A pattern is an extended set of regular expressions, with nested sub-expression patterns <code>φ</code> and <code>ψ</code>:</p>
 <table class="doxtable">
 <tr>
 <th>Pattern </th><th>Matches  </th></tr>
@@ -1005,9 +1007,9 @@ Patterns                                                      </h2>
 <tr>
 <th>Pattern </th><th>Matches  </th></tr>
 <tr>
-<td><code>\i</code> </td><td>indent: indent position is increased </td></tr>
+<td><code>\i</code> </td><td>indent: matches the next indent position </td></tr>
 <tr>
-<td><code>\j</code> </td><td>dedent: indent position is decreased </td></tr>
+<td><code>\j</code> </td><td>dedent: matches the previous indent position </td></tr>
 </table>
 <p>These patterns should be used in combination with the start of a line anchor <code>^</code> followed by a pattern that represents the spacing for indentations. The pattern may include any characters that are considered part of indentation margins, but should exclude <code>\n</code>. For example:</p>
 <div class="alt"> <div class="fragment"><div class="line">%%</div>
@@ -1365,7 +1367,9 @@ Switching input sources                                         </h2>
 <div class="line">%}</div>
 <div class="line"></div>
 <div class="line">%<span class="keyword">class</span>{</div>
+<div class="line"></div>
 <div class="line">  <span class="keywordtype">int</span> depth;</div>
+<div class="line"></div>
 <div class="line">  <span class="keywordtype">void</span> include_file()</div>
 <div class="line">  {</div>
 <div class="line">    depth++;</div>
@@ -1380,6 +1384,7 @@ Switching input sources                                         </h2>
 <div class="line">      exit(EXIT_FAILURE);           <span class="comment">// cannot open file</span></div>
 <div class="line">    push_matcher(new_matcher(fd));  <span class="comment">// push current matcher, use new matcher</span></div>
 <div class="line">  }</div>
+<div class="line"></div>
 <div class="line">  <span class="keywordtype">bool</span> end_of_file()</div>
 <div class="line">  {</div>
 <div class="line">    <span class="keywordflow">if</span> (depth == 0)</div>
@@ -1389,6 +1394,7 @@ Switching input sources                                         </h2>
 <div class="line">    depth--;</div>
 <div class="line">    <span class="keywordflow">return</span> <span class="keyword">false</span>;                   <span class="comment">// return false: continue reading</span></div>
 <div class="line">  }</div>
+<div class="line"></div>
 <div class="line">%}</div>
 <div class="line"></div>
 <div class="line">%init{</div>
@@ -1397,12 +1403,61 @@ Switching input sources                                         </h2>
 <div class="line"></div>
 <div class="line">%%</div>
 <div class="line"></div>
-<div class="line">^\s*#include\s*\<span class="stringliteral">&quot;.*?\&quot;    include_file();</span></div>
+<div class="line">^\h*#include\h*\<span class="stringliteral">&quot;.*?\&quot;    include_file();</span></div>
 <div class="line"><span class="stringliteral">.|\n                      echo();</span></div>
 <div class="line"><span class="stringliteral">&lt;&lt;EOF&gt;&gt;                   if (end_of_file()) return 0;</span></div>
 <div class="line"><span class="stringliteral"></span></div>
 <div class="line"><span class="stringliteral">%%</span></div>
-</div><!-- fragment --> </div><p>To set the current input as interactive, such as input from a console, use <code>matcher().interactive()</code>. This disables buffering of the input and makes the scanner responsive.</p>
+</div><!-- fragment --> </div><p>The above examples extracts the file name from <code>text()</code> by searching for a quote with some C code. A better way to extract the file name after the quote is to use start condition states:</p>
+<div class="alt"> <div class="fragment"><div class="line">%top{</div>
+<div class="line"><span class="preprocessor">  #include &lt;stdio.h&gt;</span></div>
+<div class="line">%}</div>
+<div class="line"></div>
+<div class="line">%<span class="keyword">class</span>{</div>
+<div class="line"></div>
+<div class="line">  <span class="keywordtype">int</span> depth;</div>
+<div class="line"></div>
+<div class="line">  <span class="keywordtype">void</span> include_file()</div>
+<div class="line">  {</div>
+<div class="line">    depth++;</div>
+<div class="line">    <span class="keywordflow">if</span> (depth &gt; 99)</div>
+<div class="line">      exit(EXIT_FAILURE);           <span class="comment">// max include depth exceeded</span></div>
+<div class="line">    FILE *fd = fopen(text(), <span class="stringliteral">&quot;r&quot;</span>);</div>
+<div class="line">    <span class="keywordflow">if</span> (!fd)</div>
+<div class="line">      exit(EXIT_FAILURE);           <span class="comment">// cannot open file</span></div>
+<div class="line">    push_matcher(new_matcher(fd));  <span class="comment">// push current matcher, use new matcher</span></div>
+<div class="line">  }</div>
+<div class="line"></div>
+<div class="line">  <span class="keywordtype">bool</span> end_of_file()</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keywordflow">if</span> (depth == 0)</div>
+<div class="line">      <span class="keywordflow">return</span> <span class="keyword">true</span>;                  <span class="comment">// return true: no more input to read</span></div>
+<div class="line">    fclose(in());                   <span class="comment">// close current input in() (a FILE*)</span></div>
+<div class="line">    pop_matcher();                  <span class="comment">// delete current matcher, pop matcher</span></div>
+<div class="line">    depth--;</div>
+<div class="line">    <span class="keywordflow">return</span> <span class="keyword">false</span>;                   <span class="comment">// return false: continue reading</span></div>
+<div class="line">  }</div>
+<div class="line"></div>
+<div class="line">%}</div>
+<div class="line"></div>
+<div class="line">%init{</div>
+<div class="line">  depth = 0;</div>
+<div class="line">%}</div>
+<div class="line"></div>
+<div class="line">%x FILENAME</div>
+<div class="line"></div>
+<div class="line">%%</div>
+<div class="line"></div>
+<div class="line">^\h*#include\h*\<span class="stringliteral">&quot;         start(FILENAME);</span></div>
+<div class="line"><span class="stringliteral">.|\n                      echo();</span></div>
+<div class="line"><span class="stringliteral">&lt;&lt;EOF&gt;&gt;                   if (end_of_file()) return 0;</span></div>
+<div class="line"><span class="stringliteral"></span></div>
+<div class="line"><span class="stringliteral">&lt;FILENAME&gt;[^&quot;</span>]*           include_file();</div>
+<div class="line">&lt;FILENAME&gt;\<span class="stringliteral">&quot;              start(INITIAL);</span></div>
+<div class="line"><span class="stringliteral"></span></div>
+<div class="line"><span class="stringliteral">%%</span></div>
+</div><!-- fragment --> </div><p>See <a class="el" href="index.html#reflex-states">Start condition states </a> for more information.</p>
+<p>To set the current input as interactive, such as input from a console, use <code>matcher().interactive()</code>. This disables buffering of the input and makes the scanner responsive.</p>
 <p>To read from the input without pattern matching, use <code>matcher().input()</code> to read one character at a time (8-bit, ASCII or UTF-8). This function returns EOF if the end of the input was reached. But be careful, the Flex <code>yyinput()</code> and <code>input()</code> functions return 0 instead of an <code>EOF</code> (-1)!</p>
 <p>To put back one character unto the input stream, use <code>matcher().unput(c)</code></p>
 <p>For example, to crudily scan a C/C++ multiline comment we can use the rule:</p>
@@ -2237,6 +2292,10 @@ Token = 4: matched '!' with '(.)'
 <div class="line">  fclose(matcher.in.file());</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>⇢ <a href="#">Back to contents</a></p>
+<h1><a class="anchor" id="download"></a>
+Download                                                             </h1>
+<p><a href="https://sourceforge.net/projects/re-flex">Download RE/flex</a> from SourceForge and visit the GitHub <a href="https://github.com/Genivia/RE-flex">RE/flex repository</a>.</p>
+<p>⇢ <a href="#">Back to contents</a></p>
 <h1><a class="anchor" id="license"></a>
 License and copyright                                                 </h1>
 <p>RE/flex software is released under the BSD-3 license. All parts of the software have reasonable copyright terms permitting free redistribution. This includes the ability to reuse all or parts of the RE/flex source tree.</p>
@@ -2253,7 +2312,7 @@ License and copyright                                                 </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Nov 15 2016 15:45:35 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Thu Nov 17 2016 20:29:42 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

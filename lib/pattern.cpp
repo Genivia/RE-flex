@@ -1873,8 +1873,10 @@ void Pattern::export_dfa(const State& start) const
               ::fprintf(fd, "\t\tN%p -> N%p [label=\"", state, i->second.second);
               if (lo >= '\a' && lo <= '\r')
                 ::fprintf(fd, "\\\\%c", "abtnvfr"[lo - '\a']);
-              else if (lo == '"' || lo == '\\')
-                ::fprintf(fd, "\\\\%c", lo);
+              else if (lo == '"')
+                ::fprintf(fd, "\\\"");
+              else if (lo == '\\')
+                ::fprintf(fd, "\\\\");
               else if (std::isgraph(lo))
                 ::fprintf(fd, "%c", lo);
               else if (lo < 8)
@@ -1886,8 +1888,10 @@ void Pattern::export_dfa(const State& start) const
                 ::fprintf(fd, "-");
                 if (hi >= '\a' && hi <= '\r')
                   ::fprintf(fd, "\\\\%c", "abtnvfr"[hi - '\a']);
-                else if (hi == '"' || hi == '\\')
-                  ::fprintf(fd, "\\\\%c", hi);
+                else if (hi == '"')
+                  ::fprintf(fd, "\\\"");
+                else if (hi == '\\')
+                  ::fprintf(fd, "\\\\");
                 else if (std::isgraph(hi))
                   ::fprintf(fd, "%c", hi);
                 else if (hi < 8)

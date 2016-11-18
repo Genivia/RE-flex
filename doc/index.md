@@ -886,7 +886,7 @@ expands to `(?:(?:[0-9])+)`.
 To inject code into the generated scanner, indent the code or place the code
 within a `%{` and `%}`.  The `%{` and `%}` should be placed at the start of a
 new line.  To inject code at the very top of the generated scanner, place
-this code within `%top{` and `%}`:
+this code within `%%top{` and `%}`:
 
 <div class="alt">
 ```cpp
@@ -923,16 +923,16 @@ the end of the input marked by the `<<EOF>>` rule:
 %}
 
 %{
-  static int n = 0;      // a global static variable to count cows
+  static int herd = 0;   // a global static variable to count cows
 %}
 
 cow        \<[Cc]ow\>
 
 %%
 
-{cow}      n++;          // found a cow, bump count by one
+{cow}      herd++;       // found a cow, bump count by one
 .          // do nothing
-<<EOF>>    out() << n << " cows!" << std::endl; return 0;
+<<EOF>>    out() << herd << " cows!" << std::endl; return 0;
 
 %%
 ```
@@ -958,8 +958,8 @@ Likewise, to inject Lexer class constructor code, for example to initialize
 members, place the code within `%%init{` and `%}`.  The `%%init{` and `%}`
 should be placed at the start of a new line.
 
-For example, we use these code injectors to make our cow counter `n` part of the
-Lexer class state:
+For example, we use these code injectors to make our cow counter `herd` part of
+the Lexer class state:
 
 <div class="alt">
 ```cpp
@@ -970,20 +970,20 @@ Lexer class state:
 %}
 
 %class{
-  int n;     // lexer class member variable (private by default)
+  int herd;  // lexer class member variable (private by default)
 %}
 
 %init{
-  n = 0;     // initialize member variable in Lexer class constructor
+  herd = 0;  // initialize member variable in Lexer class constructor
 %}
 
 cow        \<[Cc]ow\>
 
 %%
 
-{cow}      n++;          // found a cow, bump count by one
+{cow}      herd++;       // found a cow, bump count by one
 .          // do nothing
-<<EOF>>    out() << n << " cows!" << std::endl; return 0;
+<<EOF>>    out() << herd << " cows!" << std::endl; return 0;
 
 %%
 ```
@@ -991,7 +991,7 @@ cow        \<[Cc]ow\>
 
 Note that nothing else needed to be changed, because the actions are part of
 the generated Lexer class and can access the Lexer class members, in this
-example the member variable `n`.
+example the member variable `herd`.
 
 To modularize lex specifications use `%%import` (or `%%i` for short) to import
 files into the definitions section of a lex specification.  For example:
@@ -1093,7 +1093,7 @@ actions are also supported:
 
   RE/flex action            | Flex action             | Result
   ------------------------- | ----------------------- | -----------------------
-  `matcher().buffer()`      | `yy_set_interactive(0)` | buffer all input
+  `matcher().buffer()`      | *n/a*                   | buffer all input
   `matcher().buffer(n)`     | *n/a*                   | set buffer size to `n`
   `matcher().interactive()` | `yy_set_interactive(1)` | set interactive input
   `matcher().flush()`       | `YY_FLUSH_BUFFER`       | flush input buffer
@@ -1107,10 +1107,15 @@ create a new matcher, push/pop a matcher on/from a stack, and delete a matcher:
   RE/flex action    | Flex action              | Result
   ----------------- | ------------------------ | ------------------------------
   `matcher(m)`      | `yy_switch_to_buffer(m)` | use matcher `m`
-  `new_matcher(i)`  | `yy_create_buffer(i, n)` | new matcher on input `i`
+  `new_matcher(i)`  | `yy_create_buffer(i, n)` | new matcher `reflex::Input i`
   `del_matcher(m)`  | `yy_delete_buffer(m)`    | delete matcher `m`
   `push_matcher(m)` | `yypush_buffer_state(m)` | push current matcher, use `m`
   `pop_matcher()`   | `yypop_buffer_state()`   | pop matcher and delete current
+
+The matcher type `m` is a Lexer class-specific `Matcher` type, which depends on
+the underlying matcher used by the scanner.  Therefore, `new_matcher(i)`
+instantiates a `reflex::Matcher` or `reflex::BoostPosixMatcher` depending on
+the `−−matcher` option.
 
 The generated scanner reads from the standard input by default or from an input
 source specified as a `reflex::Input` object, such as a string, wide string,
@@ -1182,8 +1187,8 @@ are `std::istream`, `std::string`, `std::wstring`, `char*`, and `wchar_t*`.
 Patterns                                                      {#reflex-patterns}
 --------
 
-A pattern is an extended set of regular expressions, possibly nested over
-subexpressions `φ` and `ψ`, which are:
+A pattern is an extended set of regular expressions, with nested sub-expression
+patterns `φ` and `ψ`:
 
   Pattern   | Matches
   --------- | ------------------------------------------------------------------
@@ -1358,9 +1363,9 @@ Automatic indent and dedent matching is a new feature in RE/flex and is enabled
 when the RE/flex matcher engine is used (not the Boost.Regex matcher).
 
   Pattern | Matches
-  ------- | --------------------------------------------------------------------
-  `\i`    | indent: indent position is increased
-  `\j`    | dedent: indent position is decreased
+  ------- | -------------------------------------------------------------------
+  `\i`    | indent: matches the next indent position
+  `\j`    | dedent: matches the previous indent position
 
 These patterns should be used in combination with the start of a line anchor
 `^` followed by a pattern that represents the spacing for indentations.  The
@@ -2085,7 +2090,9 @@ directives up to a depth of 99 files:
 %}
 
 %class{
+
   int depth;
+
   void include_file()
   {
     depth++;
@@ -2100,6 +2107,7 @@ directives up to a depth of 99 files:
       exit(EXIT_FAILURE);           // cannot open file
     push_matcher(new_matcher(fd));  // push current matcher, use new matcher
   }
+
   bool end_of_file()
   {
     if (depth == 0)
@@ -2109,6 +2117,7 @@ directives up to a depth of 99 files:
     depth--;
     return false;                   // return false: continue reading
   }
+
 %}
 
 %init{
@@ -2117,13 +2126,71 @@ directives up to a depth of 99 files:
 
 %%
 
-^\s*#include\s*\".*?\"    include_file();
+^\h*#include\h*\".*?\"    include_file();
 .|\n                      echo();
 <<EOF>>                   if (end_of_file()) return 0;
 
 %%
 ```
 </div>
+
+The above examples extracts the file name from `text()` by searching for a
+quote with some C code.  A better way to extract the file name after the quote
+is to use start condition states:
+
+<div class="alt">
+```cpp
+%top{
+  #include <stdio.h>
+%}
+
+%class{
+
+  int depth;
+
+  void include_file()
+  {
+    depth++;
+    if (depth > 99)
+      exit(EXIT_FAILURE);           // max include depth exceeded
+    FILE *fd = fopen(text(), "r");
+    if (!fd)
+      exit(EXIT_FAILURE);           // cannot open file
+    push_matcher(new_matcher(fd));  // push current matcher, use new matcher
+  }
+
+  bool end_of_file()
+  {
+    if (depth == 0)
+      return true;                  // return true: no more input to read
+    fclose(in());                   // close current input in() (a FILE*)
+    pop_matcher();                  // delete current matcher, pop matcher
+    depth--;
+    return false;                   // return false: continue reading
+  }
+
+%}
+
+%init{
+  depth = 0;
+%}
+
+%x FILENAME
+
+%%
+
+^\h*#include\h*\"         start(FILENAME);
+.|\n                      echo();
+<<EOF>>                   if (end_of_file()) return 0;
+
+<FILENAME>[^"]*           include_file();
+<FILENAME>\"              start(INITIAL);
+
+%%
+```
+</div>
+
+See \ref reflex-states for more information.
 
 To set the current input as interactive, such as input from a console, use
 `matcher().interactive()`.  This disables buffering of the input and makes the
@@ -3333,6 +3400,15 @@ if (matcher.in.good())
   fclose(matcher.in.file());
 }
 ```
+
+⇢ [Back to contents](#)
+
+
+Download                                                             {#download}
+========
+
+[Download RE/flex](https://sourceforge.net/projects/re-flex) from SourceForge
+and visit the GitHub [RE/flex repository](https://github.com/Genivia/RE-flex).
 
 ⇢ [Back to contents](#)
 

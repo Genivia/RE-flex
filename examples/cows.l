@@ -1,12 +1,12 @@
 %option dotall main
 %{
 #include <iostream>    // std::cout etc.
-static int n = 0;      // a global static variable
+static int herd = 0;   // a global static variable
 %}
 cow        \<[Cc]ow\>
 %%
-{cow}      n++;
+{cow}      herd++;
 .          // do nothing
-<<EOF>>    out() << n << " cows!" << std::endl;
+<<EOF>>    out() << herd << " cows!" << std::endl;
            return 0;
 %%

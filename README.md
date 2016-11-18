@@ -32,12 +32,12 @@ List of features
 ----------------
 
 - Fully compatible with Flex to eliminate a learning curve and to make a
-  transition to RE/flex frustration-free
-- To distinguish RE/flex from Flex output files: RE/flex generates lex.yy.cpp
-  files while Flex generates lex.yy.cc files (in C++ mode).
+  transition to RE/flex frustration-free.
+- RE/flex generates lex.yy.cpp files while Flex generates lex.yy.cc files (in
+  C++ mode), to distinguish the differences.
 - Generates MT-safe (reentrant) code by default.
-- Generates clean source code that defines a C++ Lexer class for scanning that
-  is derived from an abstract lexer class.
+- Generates clean source code that defines a C++ Lexer class that is derived
+  from an abstract lexer class.
 - Configurable Lexer class generation to customize the interface with parsers.
 - Works with Bison and supports reentrant, bison-bridge and bison-locations.
 - Generates scanners that operate on files, C++ streams, and (wide) strings.
@@ -46,7 +46,7 @@ List of features
 - Adds an extensible hierarchy of pattern matcher engines, with a choice of
   regex engines, such as Boost.Regex and RE/flex regex.
 - Adds lazy quantifiers to the POSIX regular expression syntax, so not more
-  hacks are needed to fix issues with greedy repetitions in Flex.
+  hacks to fix issues with greedy repetitions in Flex.
 - Adds word boundary anchors to the POSIX regular expression syntax.
 - Adds Unicode support, which is integrated with UTF-8 pattern matching.
 - Adds Unicode property matching `\p{C}` and C++11, Java, C#, and Python
@@ -153,7 +153,7 @@ while (matcher.split() == true)
   std::cout << "Found " << matcher.text() << std::endl;
 ```
 
-To pattern matching the content of a file that may use UTF-8, 16, or 32
+To pattern match the content of a file that may use UTF-8, 16, or 32
 encodings:
 
 ```{.cpp}
@@ -218,7 +218,8 @@ Changelog
 ---------
 
 - Nov 14, 2016: RE/flex 0.9.0 beta released
-- Nov 15, 2016: RE/flex 0.9.1 beta released with improved portability
+- Nov 15, 2016: RE/flex 0.9.1 improved portability
+- Nov 17, 2016: RE/flex 0.9.2 improvements and fixes for minor issues
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html
