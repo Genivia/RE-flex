@@ -1408,56 +1408,7 @@ Switching input sources                                         </h2>
 <div class="line"><span class="stringliteral">&lt;&lt;EOF&gt;&gt;                   if (end_of_file()) return 0;</span></div>
 <div class="line"><span class="stringliteral"></span></div>
 <div class="line"><span class="stringliteral">%%</span></div>
-</div><!-- fragment --> </div><p>The above examples extracts the file name from <code>text()</code> by searching for a quote with some C code. A better way to extract the file name after the quote is to use start condition states:</p>
-<div class="alt"> <div class="fragment"><div class="line">%top{</div>
-<div class="line"><span class="preprocessor">  #include &lt;stdio.h&gt;</span></div>
-<div class="line">%}</div>
-<div class="line"></div>
-<div class="line">%<span class="keyword">class</span>{</div>
-<div class="line"></div>
-<div class="line">  <span class="keywordtype">int</span> depth;</div>
-<div class="line"></div>
-<div class="line">  <span class="keywordtype">void</span> include_file()</div>
-<div class="line">  {</div>
-<div class="line">    depth++;</div>
-<div class="line">    <span class="keywordflow">if</span> (depth &gt; 99)</div>
-<div class="line">      exit(EXIT_FAILURE);           <span class="comment">// max include depth exceeded</span></div>
-<div class="line">    FILE *fd = fopen(text(), <span class="stringliteral">&quot;r&quot;</span>);</div>
-<div class="line">    <span class="keywordflow">if</span> (!fd)</div>
-<div class="line">      exit(EXIT_FAILURE);           <span class="comment">// cannot open file</span></div>
-<div class="line">    push_matcher(new_matcher(fd));  <span class="comment">// push current matcher, use new matcher</span></div>
-<div class="line">  }</div>
-<div class="line"></div>
-<div class="line">  <span class="keywordtype">bool</span> end_of_file()</div>
-<div class="line">  {</div>
-<div class="line">    <span class="keywordflow">if</span> (depth == 0)</div>
-<div class="line">      <span class="keywordflow">return</span> <span class="keyword">true</span>;                  <span class="comment">// return true: no more input to read</span></div>
-<div class="line">    fclose(in());                   <span class="comment">// close current input in() (a FILE*)</span></div>
-<div class="line">    pop_matcher();                  <span class="comment">// delete current matcher, pop matcher</span></div>
-<div class="line">    depth--;</div>
-<div class="line">    <span class="keywordflow">return</span> <span class="keyword">false</span>;                   <span class="comment">// return false: continue reading</span></div>
-<div class="line">  }</div>
-<div class="line"></div>
-<div class="line">%}</div>
-<div class="line"></div>
-<div class="line">%init{</div>
-<div class="line">  depth = 0;</div>
-<div class="line">%}</div>
-<div class="line"></div>
-<div class="line">%x FILENAME</div>
-<div class="line"></div>
-<div class="line">%%</div>
-<div class="line"></div>
-<div class="line">^\h*#include\h*\<span class="stringliteral">&quot;         start(FILENAME);</span></div>
-<div class="line"><span class="stringliteral">.|\n                      echo();</span></div>
-<div class="line"><span class="stringliteral">&lt;&lt;EOF&gt;&gt;                   if (end_of_file()) return 0;</span></div>
-<div class="line"><span class="stringliteral"></span></div>
-<div class="line"><span class="stringliteral">&lt;FILENAME&gt;[^&quot;</span>]*           include_file();</div>
-<div class="line">&lt;FILENAME&gt;\<span class="stringliteral">&quot;              start(INITIAL);</span></div>
-<div class="line"><span class="stringliteral"></span></div>
-<div class="line"><span class="stringliteral">%%</span></div>
-</div><!-- fragment --> </div><p>See <a class="el" href="index.html#reflex-states">Start condition states </a> for more information.</p>
-<p>To set the current input as interactive, such as input from a console, use <code>matcher().interactive()</code>. This disables buffering of the input and makes the scanner responsive.</p>
+</div><!-- fragment --> </div><p>To set the current input as interactive, such as input from a console, use <code>matcher().interactive()</code>. This disables buffering of the input and makes the scanner responsive.</p>
 <p>To read from the input without pattern matching, use <code>matcher().input()</code> to read one character at a time (8-bit, ASCII or UTF-8). This function returns EOF if the end of the input was reached. But be careful, the Flex <code>yyinput()</code> and <code>input()</code> functions return 0 instead of an <code>EOF</code> (-1)!</p>
 <p>To put back one character unto the input stream, use <code>matcher().unput(c)</code></p>
 <p>For example, to crudily scan a C/C++ multiline comment we can use the rule:</p>
@@ -2312,7 +2263,7 @@ License and copyright                                                 </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Nov 17 2016 20:29:42 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Thu Nov 17 2016 20:51:34 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

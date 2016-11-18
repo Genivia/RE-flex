@@ -2134,64 +2134,6 @@ directives up to a depth of 99 files:
 ```
 </div>
 
-The above examples extracts the file name from `text()` by searching for a
-quote with some C code.  A better way to extract the file name after the quote
-is to use start condition states:
-
-<div class="alt">
-```cpp
-%top{
-  #include <stdio.h>
-%}
-
-%class{
-
-  int depth;
-
-  void include_file()
-  {
-    depth++;
-    if (depth > 99)
-      exit(EXIT_FAILURE);           // max include depth exceeded
-    FILE *fd = fopen(text(), "r");
-    if (!fd)
-      exit(EXIT_FAILURE);           // cannot open file
-    push_matcher(new_matcher(fd));  // push current matcher, use new matcher
-  }
-
-  bool end_of_file()
-  {
-    if (depth == 0)
-      return true;                  // return true: no more input to read
-    fclose(in());                   // close current input in() (a FILE*)
-    pop_matcher();                  // delete current matcher, pop matcher
-    depth--;
-    return false;                   // return false: continue reading
-  }
-
-%}
-
-%init{
-  depth = 0;
-%}
-
-%x FILENAME
-
-%%
-
-^\h*#include\h*\"         start(FILENAME);
-.|\n                      echo();
-<<EOF>>                   if (end_of_file()) return 0;
-
-<FILENAME>[^"]*           include_file();
-<FILENAME>\"              start(INITIAL);
-
-%%
-```
-</div>
-
-See \ref reflex-states for more information.
-
 To set the current input as interactive, such as input from a console, use
 `matcher().interactive()`.  This disables buffering of the input and makes the
 scanner responsive.
