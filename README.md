@@ -172,7 +172,7 @@ Same again, but this time with a C++ input stream:
 ```{.cpp}
 #include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to search and display words from a stream
-std::ifstream file = fopen("somefile.txt", "r");
+std::ifstream file("somefile.txt", std::ifstream::in);
 reflex::BoostMatcher matcher("\\w+", file);
 while (matcher.find() == true)
   std::cout << "Found " << matcher.text() << std::endl;
