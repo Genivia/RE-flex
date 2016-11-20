@@ -2,6 +2,8 @@
 #include <stdio.h>
 %}
 
+/* may add %option unicode before the %include to match unicode identifiers */
+
 %i "cdefs.l"
 %o flex
 %o nodefault

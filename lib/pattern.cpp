@@ -51,8 +51,6 @@ static clock_t clock_time;
 #define show_clock(s) show_timer(s, clock_time)
 #endif
 
-namespace reflex {
-
 #ifdef DEBUG
 # define DBGLOGPOS(p) \
   if ((p).accept()) \
@@ -79,6 +77,8 @@ namespace reflex {
       DBGLOGA("'"); \
   }
 #endif
+
+namespace reflex {
 
 static const char *posix_class[] = {
   "ASCII",
@@ -274,7 +274,6 @@ void Pattern::parse(
     set_insert(startpos, firstpos);
     if (nullable)
     {
-      // FIXME startpos.insert(Position(choice).accept());
       if (lazypos.empty())
       {
         startpos.insert(Position(choice).accept(true));
@@ -1134,7 +1133,7 @@ void Pattern::lazy(
   for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
     for (Positions::const_iterator q = lazypos.begin(); q != lazypos.end(); ++q)
       // pos1.insert(p->lazy() ? *p : p->lazy(q->loc())); // FIXME only if p is not already lazy??
-      pos1.insert(p->lazy(q->loc())); // FIXME override when p is already lazy appears correct?
+      pos1.insert(p->lazy(q->loc())); // overrides lazyness even when p is already lazy
 }
 
 void Pattern::greedy(Positions& pos) const
@@ -1142,7 +1141,7 @@ void Pattern::greedy(Positions& pos) const
   Positions pos1;
   for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
     // pos1.insert(p->lazy() ? *p : p->greedy(true)); // FIXME 7/29 guard added: p->lazy() ? *p : p->greedy(true)
-    pos1.insert(p->lazy(0).greedy(true)); // FIXME 7/30 experiment
+    pos1.insert(p->lazy(0).greedy(true));
   pos.swap(pos1);
 }
 
@@ -1726,7 +1725,7 @@ void Pattern::encode_dfa(State& start) throw (Error)
       if (is_meta(i->first))
         nop_ += i->second.first - i->first;
     }
-    // add dead state when needed
+    // add dead state only when needed
     if (hi <= 0xff)
     {
       state->edges[hi] = std::pair<Char,State*>(0xff, NULL);
@@ -1767,7 +1766,7 @@ void Pattern::encode_dfa(State& start) throw (Error)
           opcode[pc++] = opcode_goto(lo, lo, target_index);
         } while (++lo <= hi);
       }
-      // else TODO, wide char opcode??
+      // else TODO in the future: wide char opcode??
     }
   }
 }

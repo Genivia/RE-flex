@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Nov 17 2016</div>
+      <div style="float: right; font-size: 10px;">updated Sat Nov 19 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -52,6 +52,7 @@
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classreflex_1_1_matcher-members.html">List of all members</a>  </div>
@@ -98,6 +99,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a641754cf7025a978c7dc672a563ac5c0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a641754cf7025a978c7dc672a563ac5c0">reset</a> (const char *opt=NULL)</td></tr>
 <tr class="memdesc:a641754cf7025a978c7dc672a563ac5c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this matcher's state to the initial state.  <a href="#a641754cf7025a978c7dc672a563ac5c0">More...</a><br /></td></tr>
 <tr class="separator:a641754cf7025a978c7dc672a563ac5c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43734e349aec75a4afd05302f6c5fbb0"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; size_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a43734e349aec75a4afd05302f6c5fbb0">stops</a> (void) const </td></tr>
+<tr class="separator:a43734e349aec75a4afd05302f6c5fbb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a980c06e7c868419074d7815de154ab3d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a980c06e7c868419074d7815de154ab3d">clear_stops</a> (void)</td></tr>
+<tr class="memdesc:a980c06e7c868419074d7815de154ab3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear tab stops.  <a href="#a980c06e7c868419074d7815de154ab3d">More...</a><br /></td></tr>
+<tr class="separator:a980c06e7c868419074d7815de154ab3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4591c398bd930fb5bb0cda5b56ef03c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a4591c398bd930fb5bb0cda5b56ef03c8">push_stops</a> (void)</td></tr>
+<tr class="memdesc:a4591c398bd930fb5bb0cda5b56ef03c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push stops and clear stops.  <a href="#a4591c398bd930fb5bb0cda5b56ef03c8">More...</a><br /></td></tr>
+<tr class="separator:a4591c398bd930fb5bb0cda5b56ef03c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7736ffcc340ede12da1f9bbe8854a5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ad7736ffcc340ede12da1f9bbe8854a5f">pop_stops</a> (void)</td></tr>
+<tr class="memdesc:ad7736ffcc340ede12da1f9bbe8854a5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop stops.  <a href="#ad7736ffcc340ede12da1f9bbe8854a5f">More...</a><br /></td></tr>
+<tr class="separator:ad7736ffcc340ede12da1f9bbe8854a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreflex_1_1_pattern_matcher"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreflex_1_1_pattern_matcher')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreflex_1_1_pattern_matcher.html">reflex::PatternMatcher&lt; reflex::Pattern &gt;</a></td></tr>
 <tr class="memitem:a7b32893191d6bfb4af05e33b5643b2b2 inherit pub_methods_classreflex_1_1_pattern_matcher"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern_matcher.html#a7b32893191d6bfb4af05e33b5643b2b2">PatternMatcher</a> (const <a class="el" href="classreflex_1_1_pattern_matcher.html">PatternMatcher</a> &amp;matcher)</td></tr>
 <tr class="memdesc:a7b32893191d6bfb4af05e33b5643b2b2 inherit pub_methods_classreflex_1_1_pattern_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor.  <a href="#a7b32893191d6bfb4af05e33b5643b2b2">More...</a><br /></td></tr>
@@ -199,6 +211,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a7157e28939ecc094dca648b3bf9759a2 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt; capture index to compare <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff">accept()</a> to  <a href="#a7157e28939ecc094dca648b3bf9759a2">More...</a><br /></td></tr>
 <tr class="separator:a7157e28939ecc094dca648b3bf9759a2 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
+Protected Types</h2></td></tr>
+<tr class="memitem:a9748ab7e9dc48d3893968f432a3f7cfa"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a9748ab7e9dc48d3893968f432a3f7cfa">Stops</a></td></tr>
+<tr class="memdesc:a9748ab7e9dc48d3893968f432a3f7cfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">indent margin/tab stops  <a href="#a9748ab7e9dc48d3893968f432a3f7cfa">More...</a><br /></td></tr>
+<tr class="separator:a9748ab7e9dc48d3893968f432a3f7cfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_types_classreflex_1_1_abstract_matcher"><td colspan="2" onclick="javascript:toggleInherit('pro_types_classreflex_1_1_abstract_matcher')"><img src="closed.png" alt="-"/>&#160;Protected Types inherited from <a class="el" href="classreflex_1_1_abstract_matcher.html">reflex::AbstractMatcher</a></td></tr>
+<tr class="memitem:a82ed7b2c125bd897dea73443d2650ac6 inherit pro_types_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a82ed7b2c125bd897dea73443d2650ac6">Method</a></td></tr>
+<tr class="separator:a82ed7b2c125bd897dea73443d2650ac6 inherit pro_types_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:ab8a1264b3ede06dbba853b1ca0baead5"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ab8a1264b3ede06dbba853b1ca0baead5">match</a> (<a class="el" href="classreflex_1_1_abstract_matcher.html#a82ed7b2c125bd897dea73443d2650ac6">Method</a> method)</td></tr>
@@ -250,12 +271,15 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a3b760391b7b16eed637ada38430d97e1"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3b760391b7b16eed637ada38430d97e1">ded_</a></td></tr>
 <tr class="memdesc:a3b760391b7b16eed637ada38430d97e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">dedent count  <a href="#a3b760391b7b16eed637ada38430d97e1">More...</a><br /></td></tr>
 <tr class="separator:a3b760391b7b16eed637ada38430d97e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c9ad8123585e7f6616d7f5824c2d38f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3c9ad8123585e7f6616d7f5824c2d38f">tab_</a></td></tr>
-<tr class="memdesc:a3c9ad8123585e7f6616d7f5824c2d38f"><td class="mdescLeft">&#160;</td><td class="mdescRight">tab stops set by detecting indent margins  <a href="#a3c9ad8123585e7f6616d7f5824c2d38f">More...</a><br /></td></tr>
-<tr class="separator:a3c9ad8123585e7f6616d7f5824c2d38f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a414c28bfea74537044bee654cb413820"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_matcher.html#a9748ab7e9dc48d3893968f432a3f7cfa">Stops</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a414c28bfea74537044bee654cb413820">tab_</a></td></tr>
+<tr class="memdesc:a414c28bfea74537044bee654cb413820"><td class="mdescLeft">&#160;</td><td class="mdescRight">tab stops set by detecting indent margins  <a href="#a414c28bfea74537044bee654cb413820">More...</a><br /></td></tr>
+<tr class="separator:a414c28bfea74537044bee654cb413820"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31187ae9febac87f463145c18d248476"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a31187ae9febac87f463145c18d248476">lap_</a></td></tr>
 <tr class="memdesc:a31187ae9febac87f463145c18d248476"><td class="mdescLeft">&#160;</td><td class="mdescRight">lookahead position in input that heads a lookahead match (indexed by lookahead number)  <a href="#a31187ae9febac87f463145c18d248476">More...</a><br /></td></tr>
 <tr class="separator:a31187ae9febac87f463145c18d248476"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfeefc270fb9f89da7122f1cea86872c"><td class="memItemLeft" align="right" valign="top">std::stack&lt; <a class="el" href="classreflex_1_1_matcher.html#a9748ab7e9dc48d3893968f432a3f7cfa">Stops</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#adfeefc270fb9f89da7122f1cea86872c">stk_</a></td></tr>
+<tr class="memdesc:adfeefc270fb9f89da7122f1cea86872c"><td class="mdescLeft">&#160;</td><td class="mdescRight">stack to push/pop stops  <a href="#adfeefc270fb9f89da7122f1cea86872c">More...</a><br /></td></tr>
+<tr class="separator:adfeefc270fb9f89da7122f1cea86872c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classreflex_1_1_pattern_matcher"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classreflex_1_1_pattern_matcher')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classreflex_1_1_pattern_matcher.html">reflex::PatternMatcher&lt; reflex::Pattern &gt;</a></td></tr>
 <tr class="memitem:a609bef4919413b1448f4db3d4a1d0fd4 inherit pro_attribs_classreflex_1_1_pattern_matcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern_matcher.html#a609bef4919413b1448f4db3d4a1d0fd4">own_</a></td></tr>
 <tr class="memdesc:a609bef4919413b1448f4db3d4a1d0fd4 inherit pro_attribs_classreflex_1_1_pattern_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if PatternMatcher::pat_ was internally allocated  <a href="#a609bef4919413b1448f4db3d4a1d0fd4">More...</a><br /></td></tr>
@@ -292,7 +316,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memdesc:a8c3372a98e775f5dd2d816d4f8dacf78 inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">total buffer size and max position + 1 to fill  <a href="#a8c3372a98e775f5dd2d816d4f8dacf78">More...</a><br /></td></tr>
 <tr class="separator:a8c3372a98e775f5dd2d816d4f8dacf78 inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0eb104096b1e02b78420bb02c89896c inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ab0eb104096b1e02b78420bb02c89896c">ind_</a></td></tr>
-<tr class="memdesc:ab0eb104096b1e02b78420bb02c89896c inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">indent margin position  <a href="#ab0eb104096b1e02b78420bb02c89896c">More...</a><br /></td></tr>
+<tr class="memdesc:ab0eb104096b1e02b78420bb02c89896c inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">current indent position  <a href="#ab0eb104096b1e02b78420bb02c89896c">More...</a><br /></td></tr>
 <tr class="separator:ab0eb104096b1e02b78420bb02c89896c inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e77a5e960482ff2ee1bb89e3c06c5eb inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a6e77a5e960482ff2ee1bb89e3c06c5eb">blk_</a></td></tr>
 <tr class="memdesc:a6e77a5e960482ff2ee1bb89e3c06c5eb inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">block size for block-based input reading, as set by <a class="el" href="classreflex_1_1_abstract_matcher.html#a0fb96965d228951194f0a2b9ee574dcf">AbstractMatcher::buffer</a>  <a href="#a6e77a5e960482ff2ee1bb89e3c06c5eb">More...</a><br /></td></tr>
@@ -343,13 +367,33 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:ae4e1dd16b4c2deca18d9093fc727ee3b inherit pub_attribs_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_input.html">Input</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae4e1dd16b4c2deca18d9093fc727ee3b">in</a></td></tr>
 <tr class="memdesc:ae4e1dd16b4c2deca18d9093fc727ee3b inherit pub_attribs_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">input character sequence being matched by this matcher  <a href="#ae4e1dd16b4c2deca18d9093fc727ee3b">More...</a><br /></td></tr>
 <tr class="separator:ae4e1dd16b4c2deca18d9093fc727ee3b inherit pub_attribs_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_types_classreflex_1_1_abstract_matcher"><td colspan="2" onclick="javascript:toggleInherit('pro_types_classreflex_1_1_abstract_matcher')"><img src="closed.png" alt="-"/>&#160;Protected Types inherited from <a class="el" href="classreflex_1_1_abstract_matcher.html">reflex::AbstractMatcher</a></td></tr>
-<tr class="memitem:a82ed7b2c125bd897dea73443d2650ac6 inherit pro_types_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a82ed7b2c125bd897dea73443d2650ac6">Method</a></td></tr>
-<tr class="separator:a82ed7b2c125bd897dea73443d2650ac6 inherit pro_types_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex matcher engine class, implements <a class="el" href="classreflex_1_1_pattern_matcher.html" title="< ">reflex::PatternMatcher</a> pattern matching interface with scan, find, split functors and iterators. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a class="anchor" id="a9748ab7e9dc48d3893968f432a3f7cfa"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::vector&lt;size_t&gt; <a class="el" href="classreflex_1_1_matcher.html#a9748ab7e9dc48d3893968f432a3f7cfa">reflex::Matcher::Stops</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>indent margin/tab stops </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="abfaffe8a58a6fd0752966645361be090"></a>
 <div class="memitem">
 <div class="memproto">
@@ -467,6 +511,32 @@ template&lt;typename P &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a980c06e7c868419074d7815de154ab3d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::clear_stops </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clear tab stops. </p>
+
+</div>
+</div>
 <a class="anchor" id="ae1fd3a8df2633a3f234be52022ca3406"></a>
 <div class="memitem">
 <div class="memproto">
@@ -588,6 +658,58 @@ template&lt;typename P &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="ad7736ffcc340ede12da1f9bbe8854a5f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::pop_stops </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pop stops. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4591c398bd930fb5bb0cda5b56ef03c8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::push_stops </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Push stops and clear stops. </p>
+
+</div>
+</div>
 <a class="anchor" id="a641754cf7025a978c7dc672a563ac5c0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -613,6 +735,31 @@ template&lt;typename P &gt; </div>
 <p>Reset this matcher's state to the initial state. </p>
 
 <p>Reimplemented from <a class="el" href="classreflex_1_1_abstract_matcher.html#a66f487ab96e7cef1a66e9780dc45e315">reflex::AbstractMatcher</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a43734e349aec75a4afd05302f6c5fbb0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt;size_t&gt;&amp; reflex::Matcher::stops </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Returns vector of tab stops. </p><dl class="section return"><dt>Returns</dt><dd>vector of size_t. </dd></dl>
 
 </div>
 </div>
@@ -661,7 +808,7 @@ template&lt;typename P &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a3c9ad8123585e7f6616d7f5824c2d38f"></a>
+<a class="anchor" id="adfeefc270fb9f89da7122f1cea86872c"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -669,7 +816,29 @@ template&lt;typename P &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;size_t&gt; reflex::Matcher::tab_</td>
+          <td class="memname">std::stack&lt;<a class="el" href="classreflex_1_1_matcher.html#a9748ab7e9dc48d3893968f432a3f7cfa">Stops</a>&gt; reflex::Matcher::stk_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>stack to push/pop stops </p>
+
+</div>
+</div>
+<a class="anchor" id="a414c28bfea74537044bee654cb413820"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_matcher.html#a9748ab7e9dc48d3893968f432a3f7cfa">Stops</a> reflex::Matcher::tab_</td>
         </tr>
       </table>
   </td>
@@ -689,7 +858,7 @@ template&lt;typename P &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Nov 17 2016 20:51:33 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Sat Nov 19 2016 20:02:21 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

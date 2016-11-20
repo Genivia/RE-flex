@@ -3,7 +3,7 @@
 %}
 %option noyywrap interactive
 %%
-.+ ECHO;
+.+  ECHO;
 %%
 int main()
 {

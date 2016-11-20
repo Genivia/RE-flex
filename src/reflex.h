@@ -54,7 +54,7 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.1"
+#define REFLEX_VERSION "0.9.3"
 
 /**
 ReFlex scanner generator class.
@@ -121,7 +121,7 @@ class Reflex
   void          parse_section_1(void);
   void          parse_section_2(void);
   void          parse_section_3(void);
-  void          import(const std::string& filename);
+  void          include(const std::string& filename);
   void          write(void);
   void          write_banner(const char *title);
   void          write_prelude(void);
@@ -138,6 +138,7 @@ class Reflex
   void          append_tables(void);
   void          write_regex(const std::string& regex);
   bool          getline(void);
+  bool          skipcomment(size_t& pos);
   bool          as(size_t& pos, const char *s);
   bool          ws(size_t& pos);
   bool          eq(size_t& pos);

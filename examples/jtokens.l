@@ -9,6 +9,7 @@ static bool is_keyword(const char *);
 %}
 
 %i "jdefs.l"
+%o dotall unicode
 %o fast
 
 %%

@@ -147,7 +147,7 @@ redo:
               --cur_; // Must unget one char
             opcode = *++pc;
             continue;
-            // FIXME: also include cases for lookahead HEAD and TAIL
+            // FIXME: also include cases for lookahead HEAD and TAIL?
           case 0xff7e:
             la = Pattern::index_of(opcode);
             DBGLOG("Tail: %u", la);

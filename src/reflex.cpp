@@ -68,6 +68,7 @@ static const char *options_table[] = {
   "extra_type",
   "fast",
   "flex",
+  "freespace",
   "graphs_file",
   "header_file",
   "input",
@@ -176,16 +177,18 @@ static void help(const char *message = NULL, const char *arg = NULL)
                 dot in patterns match newline\n\
         -F, --fast\n\
                 generate fast scanner by embedding compiled DFA code\n\
-        -I, --interative, --always-interactive\n\
-                generate interactive scanner\n\
         -i, --case-insensitive\n\
                 ignore case in patterns\n\
+        -I, --interative, --always-interactive\n\
+                generate interactive scanner\n\
         -m NAME, --matcher=NAME\n\
                 use matcher NAME library [reflex|boost|boost-perl|...]\n\
         --pattern=NAME\n\
                 use custom pattern class NAME with custom matcher option -m\n\
         -u, --unicode\n\
                 . (dot), \\s, and \\w match unicode, groups UTF-8 characters\n\
+        -x, --freespace\n\
+                ignore space in patterns\n\
 \n\
    Generated code:\n\
         --namespace=NAME\n\
@@ -533,6 +536,9 @@ void Reflex::init(int argc, char **argv)
           case 'w':
             options["nowarn"] = "true";
             break;
+          case 'x':
+            options["freespace"] = "true";
+            break;
           case 'X':
             options["posix"] = "true";
             break;
@@ -568,8 +574,8 @@ void Reflex::parse(void)
     ifs.close();
 }
 
-/// Parse %import file.
-void Reflex::import(const std::string& filename)
+/// Parse %include file.
+void Reflex::include(const std::string& filename)
 {
   std::ifstream ifs;
   ifs.open(filename.c_str(), std::ifstream::in);
@@ -607,11 +613,36 @@ bool Reflex::getline(void)
   return true;
 }
 
+/// Advance pos over white space and comments, returrn true if end of line.
+bool Reflex::skipcomment(size_t& pos)
+{
+  while (true)
+  {
+    (void)ws(pos);
+    if (pos + 1 < linelen && line.at(pos) == '/' && line.at(pos + 1) == '/')
+    {
+      pos = linelen;
+      return true;
+    }
+    if (pos + 1 < linelen && line.at(pos) == '/' && line.at(pos + 1) == '*')
+    {
+      while (pos + 1 < linelen && (line.at(pos) != '*' || line.at(pos + 1) != '/'))
+        ++pos;
+      pos += 2;
+      continue;
+    }
+    return pos >= linelen;
+  }
+}
+
 /// Advance pos to match case-insensitive string s followed by whitespace, return true if OK.
 bool Reflex::as(size_t& pos, const char *s)
 {
-  while (pos < linelen && std::tolower(line.at(pos)) == *s++)
+  if (pos >= linelen || std::tolower(line.at(pos)) != *s++)
+    return false;
+  do
     ++pos;
+  while (pos < linelen && std::tolower(line.at(pos)) == *s++);
   return ws(pos);
 }
 
@@ -636,7 +667,7 @@ bool Reflex::eq(size_t& pos)
   return true;
 }
 
-/// Advance pos to end of line while skipping whitespace, return OK if end of line.
+/// Advance pos to end of line while skipping whitespace, return true if end of line.
 bool Reflex::nl(size_t& pos)
 {
   while (pos < linelen && isspace(line.at(pos)))
@@ -647,7 +678,7 @@ bool Reflex::nl(size_t& pos)
 /// Check if current line starts a block of code or a comment.
 bool Reflex::iscode(void)
 {
-  return linelen > 0 && (isspace(line.at(0)) || line == "%{" || !line.compare(0, 2, "//") || !line.compare(0, 2, "/*"));
+  return linelen > 0 && ((isspace(line.at(0)) && options["freespace"].empty()) || line == "%{" || !line.compare(0, 2, "//") || !line.compare(0, 2, "/*"));
 }
 
 /// Check if current line starts a block of %top code.
@@ -703,17 +734,16 @@ std::string Reflex::getstring(size_t& pos)
   return line.substr(loc, pos - loc);
 }
 
+// convert (X) to (?:X) for regex engines to ignore groups
 // convert lookahead X/Y to X(?=Y)
 // convert . to UTF-8 (.|[\xC0-\xFF][\x80-\xBF]+) if unicode flag is set
-// convert \s to UTF-8 pattern if unicode flag is set
-// convert \w to UTF-8 pattern if unicode flag is set
+// convert \s, \l, \u, \w to UTF-8 pattern if unicode flag is set
 // convert \X to UTF-8 pattern
 // convert UTF-8-sequence to (?:UTF-8-sequence) if unicode flag is set
-// convert (X) to (?:X) for regex engines to ignore groups
 // convert \p{Script} to UTF-8
 // convert \p{IsScript} to UTF-8
 // convert \u{xxxx} and \x{xxxx} to UTF-8
-// TODO: convert [...\u{xxxx}...\p{Script}...] => [...]|\u{xxxx}|\p{Script}
+// convert [...\u{xxxx}...\p{Script}...] => [...]|\u{xxxx}|\p{Script}
 std::string Reflex::getregex(size_t& pos)
 {
   std::string regex;
@@ -723,23 +753,39 @@ std::string Reflex::getregex(size_t& pos)
   bool blk = pos == 0;
   while (pos < linelen)
   {
-    if (isspace(line.at(pos)))
+    int c = line.at(pos);
+    if (isspace(c) && options["freespace"].empty())
     {
       if (!blk && lev == 0)
         break;
       if (blk)
         warning("regular expression opens with white space");
     }
+    else if (
+        !blk &&
+        !options["freespace"].empty() &&
+        ( (c == '{' && (pos + 1 == linelen || isspace(line.at(pos + 1)))) ||
+          (c == '|' && pos + 1 == linelen) ||
+          (c == '/' && pos + 1 < linelen && (line.at(pos + 1) == '/' || line.at(pos + 1) == '*'))
+        ))
+    {
+      --pos;
+      break;
+    }
     else
     {
-      int c = line.at(pos);
       switch (c)
       {
         case '\\':
           if (pos + 1 < linelen)
           {
             ++pos;
-            if (line.at(pos) == 'Q')
+            if (line.at(pos) == '"')
+            {
+              regex.append(line.substr(loc, pos - loc - 1)).append("\""); // translate \"
+              loc = pos + 1;
+            }
+            else if (line.at(pos) == 'Q')
             {
               while (pos + 2 < linelen && (line.at(++pos) != '\\' || line.at(pos + 1) != 'E'))
                 continue;
@@ -749,29 +795,41 @@ std::string Reflex::getregex(size_t& pos)
             else if (pos + 2 < linelen && line.at(pos) == 'p' && line.at(pos + 1) == '{') // translate \p{X}
             {
               size_t k = pos;
-              while (line.at(++k) != '}')
+              while (k + 1 < linelen && line.at(++k) != '}')
                 continue;
-              Map::const_iterator i;
+              std::string name;
               if (pos + 4 < linelen && line.at(pos + 2) == 'I' && line.at(pos + 3) == 's')
-                i = scripts.find(line.substr(pos + 4, k - pos - 4));
+                name = line.substr(pos + 4, k - pos - 4);
               else
-                i = scripts.find(line.substr(pos + 2, k - pos - 2));
-              if (i != scripts.end())
+                name = line.substr(pos + 2, k - pos - 2);
+              if (name == "Word" && !options["unicode"].empty())
               {
-                regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(i->second).append(")");
-                pos = k;
-                loc = pos + 1;
+                regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(scripts["L"]).append("|").append(scripts["Nd"]).append("|").append(scripts["Pc"]).append(")");
+                loc = k + 1;
               }
+              else
+              {
+                Map::const_iterator i = scripts.find(name);
+                if (i != scripts.end())
+                {
+                  regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(i->second).append(")");
+                  loc = k + 1;
+                }
+              }
+              pos = k;
             }
             else if (pos + 2 < linelen && (line.at(pos) == 'u' || line.at(pos) == 'x') && line.at(pos + 1) == '{') // translate \u{X} and \x{X}
             {
-              wchar_t c = static_cast<wchar_t>(std::strtoul(line.c_str() + pos + 2, NULL, 16));
-              char buf[7];
-              buf[reflex::utf8(c, buf)] = '\0';
-              regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(buf).append(")");
-              while (line.at(++pos) != '}')
-                continue;
-              loc = pos + 1;
+              wchar_t wc = static_cast<wchar_t>(std::strtoul(line.c_str() + pos + 2, NULL, 16));
+              if (wc > 0x7f)
+              {
+                char buf[7];
+                buf[reflex::utf8(wc, buf)] = '\0';
+                regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(buf).append(")");
+                while (line.at(++pos) != '}')
+                  continue;
+                loc = pos + 1;
+              }
             }
             else if (line.at(pos) >= '1' && line.at(pos) <= '7') // translate octals \123 to \0123
             {
@@ -783,12 +841,22 @@ std::string Reflex::getregex(size_t& pos)
               regex.append(line.substr(loc, pos - loc - 1)).append("(?:\\s|").append(scripts["Zs"]).append(")");
               loc = pos + 1;
             }
+            else if (line.at(pos) == 'l' && !options["unicode"].empty()) // translate \l to UTF-8 pattern
+            {
+              regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(scripts["Ll"]).append(")");
+              loc = pos + 1;
+            }
+            else if (line.at(pos) == 'u' && !options["unicode"].empty()) // translate \u to UTF-8 pattern
+            {
+              regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(scripts["Lu"]).append(")");
+              loc = pos + 1;
+            }
             else if (line.at(pos) == 'w' && !options["unicode"].empty()) // translate \w to UTF-8 pattern
             {
               regex.append(line.substr(loc, pos - loc - 1)).append("(?:\\w|").append(scripts["L"]).append("|").append(scripts["Nd"]).append("|").append(scripts["Pc"]).append(")");
               loc = pos + 1;
             }
-            else if (line.at(pos) == 'X') // translate \X to match UTF-8
+            else if (line.at(pos) == 'X') // translate \X to match any UTF-8
             {
               regex.append(line.substr(loc, pos - loc)).append("(?:[\\x00-\\xBF]|[\\xC0-\\xFF][\\x80-\\xBF]+)");
               loc = pos + 1;
@@ -832,16 +900,190 @@ std::string Reflex::getregex(size_t& pos)
           }
           break;
         case '[':
-          regex.append(line.substr(loc, pos - loc));
-          loc = pos++;
           if (pos + 1 < linelen && line.at(pos) == '^')
+          {
             ++pos;
+            while (pos + 1 < linelen && ((line.at(++pos) == '\\' && ++pos + 1 < linelen) || line.at(pos) != ']'))
+              continue;
+          }
           else
           {
-            // TODO collect \p{X}, \u{X}, \x{X} and \u{X}-\u{Y}, translate, and append as alternations
+            // collect \p{X}, \u{X}, \x{X} and \u{X}-\u{Y}, translate, and append as alternations
+            regex.append(line.substr(loc, pos - loc));
+            loc = pos++;
+            std::string lifted;
+            wchar_t wc = -1;
+            bool range = false;
+            size_t size = regex.size();
+            size_t prev = pos;
+            while (pos + 1 < linelen && line.at(pos) != ']')
+            {
+              if (line.at(pos) == '\\' && pos + 1 < linelen)
+              {
+                size_t k = pos + 1;
+                int c = line.at(k);
+                if (k + 1 < linelen && line.at(k + 1) == '{')
+                  while (++k < linelen && line.at(k) != '}')
+                    continue;
+                switch (c)
+                {
+                  case 'p':
+                    if (k > pos + 1) // translate and lift \p{X} from [ ]
+                    {
+                      std::string name;
+                      if (pos + 5 < linelen && line.at(pos + 3) == 'I' && line.at(pos + 4) == 's')
+                        name = line.substr(pos + 5, k - pos - 5);
+                      else
+                        name = line.substr(pos + 3, k - pos - 3);
+                      if (name == "Word" && !options["unicode"].empty())
+                      {
+                        if (lifted.empty())
+                          regex.append("(?:");
+                        regex.append(line.substr(loc, pos - loc));
+                        lifted.append("|").append(scripts["L"]).append("|").append(scripts["Nd"]).append("|").append(scripts["Pc"]);
+                        loc = k + 1;
+                      }
+                      else
+                      {
+                        Map::const_iterator i = scripts.find(name);
+                        if (i != scripts.end())
+                        {
+                          if (lifted.empty())
+                            regex.append("(?:");
+                          regex.append(line.substr(loc, pos - loc));
+                          lifted.append("|").append(i->second);
+                          loc = k + 1;
+                        }
+                      }
+                      pos = k;
+                    }
+                    wc = -1;
+                    break;
+                  case 'u':
+                  case 'x':
+                    if (k > pos + 1) // translate \u{X} and \x{X} and lift from [ ]
+                    {
+                      if (range)
+                      {
+                        if (lifted.empty())
+                          regex.append("(?:");
+                        regex.append(line.substr(loc, prev - loc));
+                        lifted.append("|").append(reflex::utf8(wc, static_cast<wchar_t>(std::strtoul(line.c_str() + pos + 3, NULL, 16))));
+                        pos = k;
+                        loc = k + 1;
+                        range = false;
+                      }
+                      else
+                      {
+                        wc = static_cast<wchar_t>(std::strtoul(line.c_str() + pos + 3, NULL, 16));
+                        if (k + 1 < linelen && line.at(k + 1) != '-')
+                        {
+                          if (wc > 0x7f)
+                          {
+                            char buf[7];
+                            buf[reflex::utf8(wc, buf)] = '\0';
+                            if (lifted.empty())
+                              regex.append("(?:");
+                            regex.append(line.substr(loc, pos - loc));
+                            lifted.append("|").append(buf);
+                            pos = k;
+                            loc = k + 1;
+                          }
+                        }
+                        else
+                        {
+                          prev = pos;
+                          pos = k;
+                        }
+                      }
+                    }
+                    else if (!options["unicode"].empty()) // translate \u and lift from [ ]
+                    {
+                      if (lifted.empty())
+                        regex.append("(?:");
+                      regex.append(line.substr(loc, pos - loc));
+                      lifted.append("|").append(scripts["Lu"]);
+                      ++pos;
+                      loc = pos + 1;
+                      wc = -1;
+                    }
+                    break;
+                  case 's':
+                    if (!options["unicode"].empty()) // translate \s and lift from [ ]
+                    {
+                      if (lifted.empty())
+                        regex.append("(?:");
+                      regex.append(line.substr(loc, pos - loc));
+                      lifted.append("|\\s|").append(scripts["Zs"]);
+                      ++pos;
+                      loc = pos + 1;
+                    }
+                    wc = -1;
+                    break;
+                  case 'l':
+                    if (!options["unicode"].empty()) // translate \l and lift from [ ]
+                    {
+                      if (lifted.empty())
+                        regex.append("(?:");
+                      regex.append(line.substr(loc, pos - loc));
+                      lifted.append("|").append(scripts["Ll"]);
+                      ++pos;
+                      loc = pos + 1;
+                    }
+                    wc = -1;
+                    break;
+                  case 'w':
+                    if (!options["unicode"].empty()) // translate \w and lift from [ ]
+                    {
+                      if (lifted.empty())
+                        regex.append("(?:");
+                      regex.append(line.substr(loc, pos - loc));
+                      lifted.append("|\\w|").append(scripts["L"]).append("|").append(scripts["Nd"]).append("|").append(scripts["Pc"]);
+                      ++pos;
+                      loc = pos + 1;
+                    }
+                    wc = -1;
+                    break;
+                  case 'X': // translate \X and lift from [ ]
+                    if (lifted.empty())
+                      regex.append("(?:");
+                    regex.append(line.substr(loc, pos - loc));
+                    lifted.append("|[\\x00-\\xBF]|[\\xC0-\\xFF][\\x80-\\xBF]+");
+                    ++pos;
+                    loc = pos + 1;
+                    wc = -1;
+                    break;
+                  default:
+                    if (c >= '1' && c <= '7') // translate octals \123 to \0123
+                    {
+                      regex.append(line.substr(loc, pos - loc)).append("\\0");
+                      loc = pos + 1;
+                    }
+                    wc = -1; // TODO octal may be part of a range
+                    break;
+                }
+                range = false;
+              }
+              else if (wc >= 0 && line.at(pos) == '-')
+              {
+                range = true;
+              }
+              else
+              {
+                wc = line.at(pos);
+                range = false;
+                prev = pos;
+              }
+              ++pos;
+            }
+            if (lifted.empty())
+              regex.append(line.substr(loc, pos - loc + 1));
+            else if (pos > loc || regex.size() > size + 4)
+              regex.append(line.substr(loc, pos - loc)).append("]").append(lifted).append(")");
+            else
+              regex = regex.substr(0, regex.size() - 1).append(lifted.substr(1)).append(")");
+            loc = pos + 1;
           }
-          while (pos + 1 < linelen && ((line.at(++pos) == '\\' && ++pos + 1 < linelen) || line.at(pos) != ']'))
-            continue;
           if (line.at(pos) != ']')
             error("missing closing ]: ...", line.substr(loc).c_str());
           break;
@@ -923,6 +1165,10 @@ std::string Reflex::getregex(size_t& pos)
   if (lev > 0)
     error("missing closing )");
   regex.append(line.substr(loc, pos - loc));
+  loc = regex.size();
+  while (loc > 0 && isspace(regex.at(loc - 1)))
+    --loc;
+  regex.resize(loc);
   if (lap)
     regex.append(")");
   return regex;
@@ -1006,7 +1252,7 @@ std::string Reflex::getcode(size_t& pos)
       }
       else
       {
-        if (blk == 0 && lev == 0 && linelen > 0 && !isspace(line.at(0)))
+        if (blk == 0 && lev == 0 && linelen > 0 && (!isspace(line.at(0)) || !options["freespace"].empty()))
           return code;
         code.append(newline).append(line);
       }
@@ -1018,7 +1264,7 @@ std::string Reflex::getcode(size_t& pos)
           ++lev;
         break;
       case '}':
-        if (tok == CODE && lev)
+        if (tok == CODE && lev > 0)
           --lev;
         break;
       case '"':
@@ -1127,77 +1373,77 @@ void Reflex::parse_section_1(void)
         if (linelen > 1 && line.at(0) == '%')
         {
           size_t pos = 1;
-	  if (as(pos, "import"))
-	  {
-	    do
-	    {
-	      std::string filename = getstring(pos);
-	      if (filename.empty())
-		error("bad file name");
-	      import(filename);
-	    } while (!nl(pos));
-	  }
-	  else
-	  {
-	    pos = 1;
-	    if (as(pos, "state"))
-	    {
-	      do
-	      {
-		std::string name = getname(pos);
-		if (name.empty())
-		  error("bad start condition name");
-		inclusive.insert(conditions.size());
-		conditions.push_back(name);
-	      } while (!nl(pos));
-	    }
-	    else
-	    {
-	      pos = 1;
-	      if (as(pos, "xstate"))
-	      {
-		do
-		{
-		  std::string name = getname(pos);
-		  if (name.empty())
-		    error("bad start condition name");
-		  conditions.push_back(name);
-		} while (!nl(pos));
-	      }
-	      else
-	      {
-		bool option = false;
-		pos = 1;
-		if (as(pos, "option"))
-		  option = true;
-		else
-		  pos = 1;
-		do
-		{
-		  std::string name = getname(pos);
-		  if (name.empty())
-		    error("bad %option name");
-		  Map::iterator i = options.find(name);
-		  if (i == options.end())
-		    error("unrecognized %option: ", name.c_str());
-		  (void)ws(pos);
-		  if (eq(pos) && pos < linelen) // %option OPTION = NAME
-		  {
-		    if (line.at(pos) == '"') // %option OPTION = "NAME"
-		      i->second = getstring(pos);
-		    else
-		      i->second = getname(pos);
-		    (void)ws(pos);
-		  }
-		  else
-		  {
-		    i->second = "true";
-		  }
-		  if (!option && !nl(pos))
-		    error("trailing text after %option: ", name.c_str());
-		} while (!nl(pos));
-	      }
-	    }
+          if (as(pos, "include"))
+          {
+            do
+            {
+              std::string filename = getstring(pos);
+              if (filename.empty())
+                error("bad file name");
+              include(filename);
+            } while (!nl(pos));
+          }
+          else
+          {
+            pos = 1;
+            if (as(pos, "state"))
+            {
+              do
+              {
+                std::string name = getname(pos);
+                if (name.empty())
+                  error("bad start condition name");
+                inclusive.insert(conditions.size());
+                conditions.push_back(name);
+              } while (!nl(pos));
+            }
+            else
+            {
+              pos = 1;
+              if (as(pos, "xstate"))
+              {
+                do
+                {
+                  std::string name = getname(pos);
+                  if (name.empty())
+                    error("bad start condition name");
+                  conditions.push_back(name);
+                } while (!nl(pos));
+              }
+              else
+              {
+                bool option = false;
+                pos = 1;
+                if (as(pos, "option"))
+                  option = true;
+                else
+                  pos = 1;
+                do
+                {
+                  std::string name = getname(pos);
+                  if (name.empty())
+                    error("bad %option name");
+                  Map::iterator i = options.find(name);
+                  if (i == options.end())
+                    error("unrecognized %option: ", name.c_str());
+                  (void)ws(pos);
+                  if (eq(pos) && pos < linelen) // %option OPTION = NAME
+                  {
+                    if (line.at(pos) == '"') // %option OPTION = "NAME"
+                      i->second = getstring(pos);
+                    else
+                      i->second = getname(pos);
+                    (void)ws(pos);
+                  }
+                  else
+                  {
+                    i->second = "true";
+                  }
+                  if (!option && !nl(pos))
+                    error("trailing text after %option: ", name.c_str());
+                } while (!nl(pos));
+              }
+            }
           }
         }
         else
@@ -1257,6 +1503,12 @@ void Reflex::parse_section_2(void)
       }
       else
       {
+        while (skipcomment(pos))
+        {
+          if (!getline())
+            return;
+          pos = 0;
+        }
         Starts starts = getstarts(pos);
         if (pos + 1 == linelen && line.at(pos) == '{')
         {
@@ -1758,15 +2010,15 @@ void Reflex::write_lexer(void)
       "#endif\n\n";
     if (!options["bison_locations"].empty())
       *out <<
-	"YY_EXTERN_C int yylex(YYSTYPE *lvalp, YYLTYPE *llocp, yyscan_t scanner)\n"
-	"{\n"
-	"  llocp->first_line = llocp->last_line;\n"
-	"  llocp->first_column = llocp->last_column;\n"
+        "YY_EXTERN_C int yylex(YYSTYPE *lvalp, YYLTYPE *llocp, yyscan_t scanner)\n"
+        "{\n"
+        "  llocp->first_line = llocp->last_line;\n"
+        "  llocp->first_column = llocp->last_column;\n"
         "  int res = static_cast<yyscanner_t*>(scanner)->" << options["lex"] << "(*lvalp);\n"
-	"  llocp->last_line = static_cast<yyscanner_t*>(scanner)->matcher().lineno();\n"
-	"  llocp->last_column = static_cast<yyscanner_t*>(scanner)->matcher().columno();\n"
-	"  return res;\n"
-	"}\n\n";
+        "  llocp->last_line = static_cast<yyscanner_t*>(scanner)->matcher().lineno();\n"
+        "  llocp->last_column = static_cast<yyscanner_t*>(scanner)->matcher().columno();\n"
+        "  return res;\n"
+        "}\n\n";
     else if (!options["bison_bridge"].empty())
       *out <<
         "YY_EXTERN_C int yylex(YYSTYPE *lvalp, yyscan_t scanner)\n"
@@ -1894,6 +2146,8 @@ void Reflex::write_lexer(void)
           *out << ";i";
         if (!options["dotall"].empty())
           *out << ";s";
+        if (!options["freespace"].empty())
+          *out << ";x";
         *out << "\");\n";
       }
     }
@@ -1929,6 +2183,8 @@ void Reflex::write_lexer(void)
         *out << "i";
       if (!options["dotall"].empty())
         *out << "s";
+      if (!options["freespace"].empty())
+        *out << "x";
       *out << ")";
       write_regex(patterns[start]);
       *out << "\";";
@@ -2159,12 +2415,12 @@ void Reflex::append_tables(void)
       try
       {
         reflex::Pattern pattern(patterns[start], option);
-	reflex::Pattern::Index accept = 1;
+        reflex::Pattern::Index accept = 1;
         for (size_t rule = 0; rule < rules[start].size(); ++rule)
           if (rules[start][rule].regex != "<<EOF>>")
             if (!pattern.reachable(accept++))
               warning("rule cannot be matched", "", rules[start][rule].code.lineno);
-	reflex::Pattern::Index n = 0;
+        reflex::Pattern::Index n = 0;
         if (!patterns[start].empty())
           n = pattern.size();
         if (!options["verbose"].empty())

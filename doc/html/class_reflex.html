@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Reflex Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Nov 17 2016</div>
+      <div style="float: right; font-size: 10px;">updated Sat Nov 19 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -166,9 +166,9 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a0b0c259884e5b790c0f5e890ff7e7a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23f1355a69713f777f8d65efaf0a2ec8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a23f1355a69713f777f8d65efaf0a2ec8">parse_section_3</a> (void)</td></tr>
 <tr class="separator:a23f1355a69713f777f8d65efaf0a2ec8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dfa7894449bc52eacbf16f79f9fd5e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a1dfa7894449bc52eacbf16f79f9fd5e9">import</a> (const std::string &amp;filename)</td></tr>
-<tr class="memdesc:a1dfa7894449bc52eacbf16f79f9fd5e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse import file.  <a href="#a1dfa7894449bc52eacbf16f79f9fd5e9">More...</a><br /></td></tr>
-<tr class="separator:a1dfa7894449bc52eacbf16f79f9fd5e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e4f576217a1dd8ba8a0d94ed6814228"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a5e4f576217a1dd8ba8a0d94ed6814228">include</a> (const std::string &amp;filename)</td></tr>
+<tr class="memdesc:a5e4f576217a1dd8ba8a0d94ed6814228"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse include file.  <a href="#a5e4f576217a1dd8ba8a0d94ed6814228">More...</a><br /></td></tr>
+<tr class="separator:a5e4f576217a1dd8ba8a0d94ed6814228"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d2bc980093ae5f8ccbecdcf28dfbc0f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a1d2bc980093ae5f8ccbecdcf28dfbc0f">write</a> (void)</td></tr>
 <tr class="separator:a1d2bc980093ae5f8ccbecdcf28dfbc0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5378b5a1eb6ef820137108103cde676e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a5378b5a1eb6ef820137108103cde676e">write_banner</a> (const char *title)</td></tr>
@@ -202,6 +202,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a8650def336e6aae3e1929ccb575047f9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a8650def336e6aae3e1929ccb575047f9">getline</a> (void)</td></tr>
 <tr class="memdesc:a8650def336e6aae3e1929ccb575047f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch next line from the input.  <a href="#a8650def336e6aae3e1929ccb575047f9">More...</a><br /></td></tr>
 <tr class="separator:a8650def336e6aae3e1929ccb575047f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae28b095d8fb9c85a2a8fed5ffb1a0b1b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ae28b095d8fb9c85a2a8fed5ffb1a0b1b">skipcomment</a> (size_t &amp;pos)</td></tr>
+<tr class="memdesc:ae28b095d8fb9c85a2a8fed5ffb1a0b1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over white space and comments, returrn true if end of line.  <a href="#ae28b095d8fb9c85a2a8fed5ffb1a0b1b">More...</a><br /></td></tr>
+<tr class="separator:ae28b095d8fb9c85a2a8fed5ffb1a0b1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa74ce1f1d7fd97842a4ad42e0b7b02c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#afa74ce1f1d7fd97842a4ad42e0b7b02c">as</a> (size_t &amp;pos, const char *s)</td></tr>
 <tr class="memdesc:afa74ce1f1d7fd97842a4ad42e0b7b02c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos to match case-insensitive string s followed by whitespace, return true if OK.  <a href="#afa74ce1f1d7fd97842a4ad42e0b7b02c">More...</a><br /></td></tr>
 <tr class="separator:afa74ce1f1d7fd97842a4ad42e0b7b02c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,7 +215,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a38d29628a9820d02a99e0465e28e3f66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over '=' and whitespace, return true if OK.  <a href="#a38d29628a9820d02a99e0465e28e3f66">More...</a><br /></td></tr>
 <tr class="separator:a38d29628a9820d02a99e0465e28e3f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d231f33ec2a6c1626a1d7cd867a39ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9d231f33ec2a6c1626a1d7cd867a39ba">nl</a> (size_t &amp;pos)</td></tr>
-<tr class="memdesc:a9d231f33ec2a6c1626a1d7cd867a39ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos to end of line while skipping whitespace, return OK if end of line.  <a href="#a9d231f33ec2a6c1626a1d7cd867a39ba">More...</a><br /></td></tr>
+<tr class="memdesc:a9d231f33ec2a6c1626a1d7cd867a39ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos to end of line while skipping whitespace, return true if end of line.  <a href="#a9d231f33ec2a6c1626a1d7cd867a39ba">More...</a><br /></td></tr>
 <tr class="separator:a9d231f33ec2a6c1626a1d7cd867a39ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82c8e3be7e5c400904116dc77657f9d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a82c8e3be7e5c400904116dc77657f9d3">iscode</a> (void)</td></tr>
 <tr class="memdesc:a82c8e3be7e5c400904116dc77657f9d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of code or a comment.  <a href="#a82c8e3be7e5c400904116dc77657f9d3">More...</a><br /></td></tr>
@@ -624,7 +627,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a1dfa7894449bc52eacbf16f79f9fd5e9"></a>
+<a class="anchor" id="a5e4f576217a1dd8ba8a0d94ed6814228"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -632,7 +635,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Reflex::import </td>
+          <td class="memname">void Reflex::include </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>filename</em></td><td>)</td>
@@ -646,7 +649,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Parse import file. </p>
+<p>Parse include file. </p>
 
 </div>
 </div>
@@ -840,7 +843,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Advance pos to end of line while skipping whitespace, return OK if end of line. </p>
+<p>Advance pos to end of line while skipping whitespace, return true if end of line. </p>
 
 </div>
 </div>
@@ -939,6 +942,32 @@ Private Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae28b095d8fb9c85a2a8fed5ffb1a0b1b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Reflex::skipcomment </td>
+          <td>(</td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Advance pos over white space and comments, returrn true if end of line. </p>
 
 </div>
 </div>
@@ -1770,7 +1799,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Nov 17 2016 20:51:33 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Sat Nov 19 2016 20:02:20 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

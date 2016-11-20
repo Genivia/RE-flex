@@ -2,6 +2,8 @@
 #include "pattern.h"
 #include "matcher.h"
 
+// #define INTERACTIVE // for interactive mode testing
+
 void banner(const char *title)
 {
   int i;
@@ -229,7 +231,7 @@ Test tests[] = {
   // { "[ \\t]*\\i|^[ \\t]+|[ \\t]*\\j|a|[ \\n]|(?^\\\\\n[ \\t]*)", "m", "", "a\n  a\n  a\\\na\n    a\n  a\na\n", { 4, 5, 1, 4, 5, 2, 4, 4, 5, 1, 4, 5, 2, 3, 4, 5, 3, 4, 5 } }, // TODO line continuation stopping at left margin triggers dedent
   // Unicode or UTF-8 (TODO: requires a flag and changes to the parser so that UTF-8 multibyte chars are parsed as ONE char)
   { "(©)+", "", "", "©", { 1 } },
-  { NULL }
+  { NULL, NULL, NULL, NULL, { } }
 };
 
 int main()
@@ -239,7 +241,9 @@ int main()
   {
     Pattern pattern(test->pattern, test->popts);
     Matcher matcher(pattern, test->cstring, test->mopts);
-    // matcher.interactive(); // test with blk=1 FIXME indent at the EOF may fail when interactive blk=1
+#ifdef INTERACTIVE
+    matcher.interactive();
+#endif
     printf("Test \"%s\" against \"%s\"\n", test->pattern, test->cstring);
     if (*test->popts)
       printf("With pattern options \"%s\"\n", test->popts);

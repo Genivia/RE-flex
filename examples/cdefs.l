@@ -1,7 +1,7 @@
 WHITESPACE	\s+
-ILCOMMENT	"//"(.|\\\r?\n)*
-MLCOMMENT	"/*"([^*]|(\*+[^*/]))*\*+\/
-DIRECTIVE	^[ \t]*#(.|\\\r?\n)+
+ILCOMMENT	"//".*?\n
+MLCOMMENT	"/*"(.|\n)*?"*/"
+DIRECTIVE	^\h*#(.|\\\r?\n)+
 NAME		[\u\l_]\w*
 UDEC		0|[1-9]\d*
 UHEX		0[Xx][[:xdigit:]]+

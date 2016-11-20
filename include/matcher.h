@@ -39,6 +39,7 @@
 
 #include "absmatcher.h"
 #include "pattern.h"
+#include <stack>
 
 namespace reflex {
 
@@ -46,6 +47,8 @@ namespace reflex {
 RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan, find, split functors and iterators.
 */
 class Matcher : public PatternMatcher<reflex::Pattern> {
+ protected:
+  typedef std::vector<size_t> Stops; ///< indent margin/tab stops
  public:
   /// Construct matcher engine from a pattern or a string regex, and an input character sequence.
   template<typename P> ///< @tparam <P> a reflex::Pattern or a string regex 
@@ -77,6 +80,29 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     ded_ = 0;
     tab_.resize(0);
   }
+  /// Returns vector of tab stops.
+  /// @return vector of size_t.
+  const std::vector<size_t>& stops(void) const
+  {
+    return tab_;
+  }
+  /// Clear tab stops.
+  void clear_stops(void)
+  {
+    tab_.clear();
+  }
+  /// Push stops and clear stops.
+  void push_stops(void)
+  {
+    stk_.push(std::vector<size_t>());
+    stk_.top().swap(tab_);
+  }
+  /// Pop stops.
+  void pop_stops(void)
+  {
+    stk_.top().swap(tab_);
+    stk_.pop();
+  }
  protected:
   /// Returns true if input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
   /// @returns nonzero if input matched the pattern.
@@ -102,9 +128,10 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     newline(col);
     return !tab_.empty() && tab_.back() > col;
   }
-  size_t              ded_; ///< dedent count
-  std::vector<size_t> tab_; ///< tab stops set by detecting indent margins
-  std::vector<int>    lap_; ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
+  size_t            ded_; ///< dedent count
+  Stops             tab_; ///< tab stops set by detecting indent margins
+  std::vector<int>  lap_; ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
+  std::stack<Stops> stk_; ///< stack to push/pop stops
 };
 
 } // namespace reflex

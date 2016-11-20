@@ -76,6 +76,12 @@ class AbstractMatcher {
   };
   /// AbstractMatcher::Options for matcher engines.
   struct Option {
+    Option()
+      :
+	A(false),
+	N(false),
+	T(8)
+    { }
     bool A; ///< accept any/all (?^X) negative patterns
     bool N; ///< nullable, find may return empty match (N/A to scan, split, matches)
     char T; ///< tab size, between 1 and 9, default is 8, for indent \i and \j
@@ -713,7 +719,7 @@ class AbstractMatcher {
   size_t         pos_; ///< position in AbstractMatcher::buf_ immediately after AbstractMatcher::txt_
   size_t         end_; ///< ending position of the input buffered in AbstractMatcher::buf_
   size_t         max_; ///< total buffer size and max position + 1 to fill
-  size_t         ind_; ///< indent margin position
+  size_t         ind_; ///< current indent position
   size_t         blk_; ///< block size for block-based input reading, as set by AbstractMatcher::buffer
   int            got_; ///< last unsigned character we looked at (to determine anchors and boundaries)
   int            chr_; ///< the character located at AbstractMatcher::buf_[AbstractMatcher::pos_]

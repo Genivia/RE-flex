@@ -1,7 +1,7 @@
 
 #include "boostmatcher.h"
 
-// #define INTERACTIVE // enable interactive tests with blk=1
+// #define INTERACTIVE // for interactive mode testing
 
 static void banner(FILE *fd, const char *title)
 {
@@ -216,7 +216,7 @@ Test tests[] = {
 #endif
   // Unicode (TODO: requires a flag and changes to the parser so that UTF-8 multibyte chars are parsed as ONE char)
   { "(©)+", "", "", "©", { 1 } },
-  { NULL }
+  { NULL, NULL, NULL, NULL, { } }
 };
 
 int main()

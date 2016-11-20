@@ -46,7 +46,7 @@ List of features
 - Adds an extensible hierarchy of pattern matcher engines, with a choice of
   regex engines, such as Boost.Regex and RE/flex regex.
 - Adds lazy quantifiers to the POSIX regular expression syntax, so not more
-  hacks to fix issues with greedy repetitions in Flex.
+  hacks to work around the greedy repetitions in Flex.
 - Adds word boundary anchors to the POSIX regular expression syntax.
 - Adds Unicode support, which is integrated with UTF-8 pattern matching.
 - Adds Unicode property matching `\p{C}` and C++11, Java, C#, and Python
@@ -54,7 +54,7 @@ List of features
 - Adds indent `\i` and dedent `\j` regex patterns to match rules on text with
   indentation, including `\t` (tab) adjustments.
 - Adds `%class` and `%init` to customize the generated Lexer classes.
-- Adds `%import` to modularize lex specifications.
+- Adds `%include` to modularize lex specifications.
 - Automatic internal conversion from UTF-16/32 to UTF-8 for matching Unicode on
   UTF-encoded input files, no need to define `YY_INPUT` for UTF conversions.
 - Converts the official Unicode scripts Scripts.txt and UnicodeData.txt to
@@ -217,9 +217,10 @@ Use, modification, and distribution are subject to the BSD-3 license.
 Changelog
 ---------
 
-- Nov 14, 2016: RE/flex 0.9.0 beta released
-- Nov 15, 2016: RE/flex 0.9.1 improved portability
-- Nov 17, 2016: RE/flex 0.9.2 improvements and fixes for minor issues
+- Nov 14, 2016: 0.9.0 beta released
+- Nov 15, 2016: 0.9.1 beta released with improved portability
+- Nov 17, 2016: 0.9.2 improvements and fixes for minor issues
+- Nov 19, 2016: 0.9.3 replaced `%import` with `%include`, added freespace option `-x`, fixed minor issues
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html
