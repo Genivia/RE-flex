@@ -54,7 +54,7 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.3"
+#define REFLEX_VERSION "0.9.4"
 
 /**
 ReFlex scanner generator class.

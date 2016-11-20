@@ -20,6 +20,7 @@ Flex-compatible scanner examples
 - `wcpp.l` word count example with lexer class variables
 - `wcwc.l` word count example with custom lexer class
 - `echo.l` interactive scanner to echo input
+- `json.l` JSON parser (verified with <http://seriot.ch/parsing_json.php>)
 
 RE/flex scanner examples
 ------------------------

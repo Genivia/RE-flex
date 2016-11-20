@@ -48,6 +48,7 @@ int main()
   yyparse(scanner);	/* scanner is passed on to yylex() */
   yylex_destroy(scanner);
 #endif
+  return 0;
 }
 
 void yyerror(const char *msg)

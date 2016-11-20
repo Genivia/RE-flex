@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex User Guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Nov 19 2016</div>
+      <div style="float: right; font-size: 10px;">updated Sun Nov 20 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -439,7 +439,7 @@ Found cow
 <tr>
 <td><code>s</code> </td><td>dot matches all (aka. single line mode), same as <code>(?s)X</code> </td></tr>
 <tr>
-<td><code>x</code> </td><td>inline comments, same as <code>(?x)X</code> </td></tr>
+<td><code>x</code> </td><td>free space mode with inline comments, same as <code>(?x)X</code> </td></tr>
 <tr>
 <td><code>w</code> </td><td>display regex syntax errors before raising them as exceptions </td></tr>
 </table>
@@ -593,6 +593,10 @@ Lex specifications                                               </h2>
 <tr>
 <td><code>size()</code> </td><td><code>YYLeng()</code>, <code>yyleng</code> </td><td>size of the match </td></tr>
 <tr>
+<td><code>lineno()</code> </td><td><code>yylineno</code> </td><td>line number of match (&gt;=1) </td></tr>
+<tr>
+<td><code>columno()</code> </td><td><em>n/a</em> </td><td>column number of match (&gt;=0) </td></tr>
+<tr>
 <td><code>echo()</code> </td><td><code>ECHO</code> </td><td><code>out().write(text(), size())</code> </td></tr>
 <tr>
 <td><code>start()</code> </td><td><code>YY_START</code> </td><td>get current start condition </td></tr>
@@ -629,10 +633,6 @@ Lex specifications                                               </h2>
 <tr>
 <td><code>matcher().less(n)</code> </td><td><code>yyless(n)</code> </td><td>shrink match's length to <code>n</code> </td></tr>
 <tr>
-<td><code>matcher().lineno()</code> </td><td><code>yylineno</code> </td><td>line number of match </td></tr>
-<tr>
-<td><code>matcher().columno()</code> </td><td><em>n/a</em> </td><td>column number of match </td></tr>
-<tr>
 <td><code>matcher().first()</code> </td><td><em>n/a</em> </td><td>first pos of match in input </td></tr>
 <tr>
 <td><code>matcher().last()</code> </td><td><em>n/a</em> </td><td>last pos+1 of match in input </td></tr>
@@ -650,7 +650,7 @@ Lex specifications                                               </h2>
 <td><code>debug()</code> </td><td><code>debug()</code> </td><td>nonzero when debugging </td></tr>
 </table>
 <p>Note that Flex <code>switch_streams(i, o)</code> is the same as <code>in(i)</code> and <code>out(o)</code>, and Flex <code>yyrestart(i)</code> is just <code>in(i)</code>.</p>
-<p>From the above you may have guessed correctly that <code>text()</code> is just a shorthand for <code>matcher().text()</code>, since <code>matcher()</code> is the matcher object associated with the generated Lexer class.</p>
+<p>From the above you may have guessed correctly that <code>text()</code> is just a shorthand for <code>matcher().text()</code>, since <code>matcher()</code> is the matcher object associated with the generated Lexer class. The same shorthands apply to <code>size()</code>, <code>lineno()</code> and <code>columno()</code>.</p>
 <p>Because <code>matcher()</code> returns the current matcher object, the following Flex-like actions are also supported:</p>
 <table class="doxtable">
 <tr>
@@ -2098,6 +2098,8 @@ Pattern matching methods                                       </h2>
 <tr>
 <td><code>pattern(p)</code> </td><td>set pattern to <code>p</code> (string regex or <code><a class="el" href="classreflex_1_1_pattern.html">reflex::Pattern</a></code>) </td></tr>
 <tr>
+<td><code>pattern()</code> </td><td>get the pattern object, <code><a class="el" href="classreflex_1_1_pattern.html">reflex::Pattern</a></code> or <code>boost::regex</code> </td></tr>
+<tr>
 <td><code>buffer(n)</code> </td><td>set internal buffer size to <code>n</code> bytes to buffer the input </td></tr>
 <tr>
 <td><code>buffer()</code> </td><td>buffer all input at once, returns true if successful </td></tr>
@@ -2353,7 +2355,7 @@ License and copyright                                                 </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Nov 19 2016 20:02:21 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Sun Nov 20 2016 15:50:55 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

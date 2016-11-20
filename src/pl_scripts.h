@@ -28,7 +28,7 @@
 
 /**
 @file      language_scripts.h
-@brief     Unicode language scripts
+@brief     Unicode programming language scripts
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt

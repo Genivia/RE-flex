@@ -12,7 +12,7 @@ CMFLAGS=
 # CMFLAGS=-DDEBUG
 CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
 
-all:		flexexample1 flexexample2 flexexample3 flexexample4 flexexample5 flexexample6 flexexample7 flexexample8 reflexexample3 reflexexample4 reflexexample5 reflexexample6 ctokens jtokens echo wc wcu wcpp wcwc tag tag_lazy tag_lazystates cow cows indent cards
+all:		flexexample1 flexexample2 flexexample3 flexexample4 flexexample5 flexexample6 flexexample7 flexexample8 reflexexample3 reflexexample4 reflexexample5 reflexexample6 ctokens jtokens echo wc wcu wcpp wcwc tag tag_lazy tag_lazystates cow cows indent json cards
 
 flexexample1:	flexexample1.l
 		$(REFLEX) $(REFLAGS) --flex flexexample1.l
@@ -142,6 +142,10 @@ indent:		indent.l
 		$(REFLEX) $(REFLAGS) indent.l
 		$(CPP) $(CFLAGS) -o $@ lex.yy.cpp $(LIBS)
 
+json:		json.l
+		$(REFLEX) $(REFLAGS) json.l
+		$(CPP) $(CFLAGS) -o $@ lex.yy.cpp $(LIBS)
+
 cards:		cards.cpp
 		$(CPP) $(CFLAGS) -o $@ cards.cpp $(LIBS)
 
@@ -155,4 +159,4 @@ clean:
 		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv
 		-rm -f flexexample1 flexexample2 flexexample3 flexexample4 flexexample5 flexexample6 flexexample7 flexexample8
 		-rm -f reflexexample3 reflexexample4 reflexexample5 reflexexample6
-		-rm -f ctokens jtokens echo wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_tidy cow cows indent cards lexer
+		-rm -f ctokens jtokens echo wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_tidy cow cows indent json cards lexer

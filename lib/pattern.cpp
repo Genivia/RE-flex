@@ -525,14 +525,6 @@ void Pattern::parse3(
   if (opt_.x)
     while (std::isspace(c))
       c = at(++loc);
-#if 0 // FIXME 7/31 for testing only, use ! to force greedy
-  if (c == '!')
-  {
-    ++loc;
-    greedy(firstpos);
-  }
-  else
-#endif
   if (c == '*' || c == '+' || c == '?')
   {
     if (c == '*' || c == '?')

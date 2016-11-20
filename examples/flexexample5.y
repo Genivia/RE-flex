@@ -45,6 +45,7 @@ int main()
   params.count = 0;
   yyparse(&params);	// %parse-param, we pass params->scanner on to yylex()
   printf("# assignments = %d\n", params.count);
+  return 0;
 }
 
 void yyerror(struct pass_through *params, const char*)

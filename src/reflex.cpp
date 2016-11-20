@@ -284,8 +284,8 @@ static std::string file_ext(std::string& name, const char *ext)
 {
   size_t n = name.size();
   size_t m = strlen(ext);
-  if (n > m && name.at(n - m) != '.' && !name.compare(n - m, m, ext))
-    name.append(ext);
+  if (n > m && (name.at(n - m - 1) != '.' || name.compare(n - m, m, ext) != 0))
+    name.append(".").append(ext);
   return name;
 }
 
@@ -2401,6 +2401,8 @@ void Reflex::append_tables(void)
       std::string option = "m;r";
       if (!options["case_insensitive"].empty())
         option.append(";i");
+      if (!options["freespace"].empty())
+        option.append(";x");
       option.append(";n=").append(conditions[start]);
       if (options["graphs_file"] == "true")
         option.append(";f=reflex.").append(conditions[start]).append(".gv");

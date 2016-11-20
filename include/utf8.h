@@ -101,6 +101,29 @@ inline size_t utf8(
   return s - t;
 }
 
+/// Convert UTF-8 to UCS.
+/// @returns UCS character.
+inline wchar_t utf8(const char *s) ///< points to the buffer with UTF-8 (1 to 6 bytes)
+{
+  wchar_t c;
+  c = static_cast<unsigned char>(*s++);
+  if (c < 0x80)
+    return c;
+  wchar_t c1 = static_cast<unsigned char>(*s++) & 0x3F;
+  if (c < 0xE0)
+    return (((c & 0x1F) << 6) | c1);
+  wchar_t c2 = static_cast<unsigned char>(*s++) & 0x3F;
+  if (c < 0xF0)
+    return (((c & 0x0F) << 12) | (c1 << 6) | c2);
+  wchar_t c3 = static_cast<unsigned char>(*s++) & 0x3F;
+  if (c < 0xF8)
+    return (((c & 0x07) << 18) | (c1 << 12) | (c2 << 6) | c3);
+  wchar_t c4 = static_cast<unsigned char>(*s++) & 0x3F;
+  if (c < 0xFC)
+    return (((c & 0x03) << 24) | (c1 << 18) | (c2 << 12) | (c3 << 6) | c4);
+  return (((c & 0x01) << 30) | (c1 << 24) | (c2 << 18) | (c3 << 12) | (c4 << 6) | (static_cast<unsigned char>(*s++) & 0x3F));
+}
+
 } // namespace reflex
 
 #endif

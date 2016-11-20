@@ -31,6 +31,7 @@ assignment  : STRING '=' NUMBER ';' { printf("(setf %s %d)\n", $1, $3); }
 int main()
 {
   yyparse();
+  return 0;
 }
 
 void yyerror(const char *msg)

@@ -202,6 +202,12 @@ class AbstractLexer {
   {
     return matcher().lineno();
   }
+  /// Column number of matched text.
+  /// @returns column number.
+  size_t columno(void) const
+  {
+    return matcher().columno();
+  }
  protected:
   /// Transition to the given start condition state.
   /// @returns reference to *this.

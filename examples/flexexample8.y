@@ -35,6 +35,7 @@ int main()
 {
   yyscanner_t scanner;	// new way in C++ using reflex-generated yyscanner_t
   yyparse(&scanner);	// scanner is passed on to yylex()
+  return 0;
 }
 
 void yyerror(const char *msg)

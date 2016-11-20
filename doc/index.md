@@ -674,7 +674,7 @@ The RE/flex `reflex::Pattern` construction options are given as a string:
   `q`           | Lex-style quotations "..." equal `\Q...\E`, same as `(?q)X`
   `r`           | throw regex syntax error exceptions (not just fatal errors)
   `s`           | dot matches all (aka. single line mode), same as `(?s)X`
-  `x`           | inline comments, same as `(?x)X`
+  `x`           | free space mode with inline comments, same as `(?x)X`
   `w`           | display regex syntax errors before raising them as exceptions
 
 For example, `reflex::Pattern pattern(pattern, "isr")` enables case-insensitive
@@ -1063,6 +1063,8 @@ the classic Flex actions shown in the second column of this table:
   --------------------- | -------------------- | ------------------------------
   `text()`              | `YYText()`, `yytext` | `\0`-terminated text match
   `size()`              | `YYLeng()`, `yyleng` | size of the match
+  `lineno()`            | `yylineno`           | line number of match (>=1)
+  `columno()`           | *n/a*                | column number of match (>=0)
   `echo()`              | `ECHO`               | `out().write(text(), size())`
   `start() `            | `YY_START`           | get current start condition
   `start(n)`            | `BEGIN n`            | set start condition to `n`
@@ -1081,8 +1083,6 @@ the classic Flex actions shown in the second column of this table:
   `matcher().unput(c)`  | `unput(c)`           | put back character `c`
   `matcher().more()`    | `yymore()`           | concat next match to the match
   `matcher().less(n)`   | `yyless(n)`          | shrink match's length to `n`
-  `matcher().lineno()`  | `yylineno`           | line number of match
-  `matcher().columno()` | *n/a*                | column number of match
   `matcher().first()`   | *n/a*                | first pos of match in input
   `matcher().last()`    | *n/a*                | last pos+1 of match in input
   `matcher().rest()`    | *n/a*                | get rest of input until end
@@ -1097,7 +1097,8 @@ Flex `yyrestart(i)` is just `in(i)`.
 
 From the above you may have guessed correctly that `text()` is just a shorthand
 for `matcher().text()`, since `matcher()` is the matcher object associated with
-the generated Lexer class.
+the generated Lexer class.  The same shorthands apply to `size()`, `lineno()` and
+`columno()`.
 
 Because `matcher()` returns the current matcher object, the following Flex-like
 actions are also supported:
@@ -3210,6 +3211,7 @@ change its pattern, you can use the following methods:
   --------------- | -----------------------------------------------------------
   `input(i)`      | set input to `reflex::Input i` (string, stream, or `FILE*`)
   `pattern(p)`    | set pattern to `p` (string regex or `reflex::Pattern`)
+  `pattern()`     | get the pattern object, `reflex::Pattern` or `boost::regex`
   `buffer(n)`     | set internal buffer size to `n` bytes to buffer the input
   `buffer()`      | buffer all input at once, returns true if successful
   `interactive()` | sets buffer size to 1 for console-based (TTY) input

@@ -221,6 +221,7 @@ Changelog
 - Nov 15, 2016: 0.9.1 beta released with improved portability
 - Nov 17, 2016: 0.9.2 improvements and fixes for minor issues
 - Nov 19, 2016: 0.9.3 replaced `%import` with `%include`, added freespace option `-x`, fixed minor issues
+- Nov 20, 2016: 0.9.4 fixes minor issues, added new examples/json.l
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html
