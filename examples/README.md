@@ -16,7 +16,7 @@ Flex-compatible scanner examples
 - `flexexample7.l` example from the Flex documentation with bison-locations
 - `flexexample8.l` example from the Flex documentation with bison-bridge and bison-locations
 - `wc.l` word count example
-- `wcu.l` word count example with Unicode matching
+- `wcu.l` word count example with Unicode matching (RE/flex only)
 - `wcpp.l` word count example with lexer class variables
 - `wcwc.l` word count example with custom lexer class
 - `echo.l` interactive scanner to echo input
@@ -25,8 +25,8 @@ Flex-compatible scanner examples
 RE/flex scanner examples
 ------------------------
 
-- `cow.l` scanner to convert cows.
-- `cows.l` scanner to convert cows, uses word boundary anchors.
+- `cow.l` scanner to convert cows
+- `cows.l` scanner to convert cows, uses word boundary anchors
 - `indent.l` indentation detection and reformatting example
 - `reflexexample3.l` example modified from the Flex documentation with bison
 - `reflexexample4.l` example modified from the Flex documentation with bison-bridge
@@ -40,7 +40,7 @@ RE/flex scanner examples
 Stand-alone C++ regex matching example
 --------------------------------------
 
-- `cards.cpp` matches credit card numbers.
+- `cards.cpp` matches credit card numbers
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

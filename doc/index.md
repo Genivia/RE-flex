@@ -2941,15 +2941,18 @@ free space mode to enhance readability.
   #include <stdio.h>
 %}
 
-%o flex freespace
+%o flex freespace main
 
 directive       ^ \h* # (. | \\ \r? \n)+
 name            [\u\l_] \w*
 udec            0 | [1-9] \d*
 uhex            0 [Xx] [[:xdigit:]]+
 uoct            0 [0-7]+
-int             [-+]? ({udec} | {uhex}) ([Ll]{0,2} [Uu]? | [Uu] [Ll]{0,2})
-float           [-+] \d* (\d | \.\d | \d\.) \d* ([Ee][-+]? \d+)? [FfLl]?
+int             [-+]? ({udec} | {uhex}) \
+                  ([Ll]{0,2} [Uu]? | [Uu] [Ll]{0,2})
+float           [-+] \d* (\d | \.\d | \d\.) \d* \
+                  ([Ee][-+]? \d+)? \
+                  [FfLl]?
 char            L? ' (\\. | [^\\\n'])* '
 string          L? \" (\\. | \\\r?\n | [^\\\n"])* \"
 
@@ -2972,9 +2975,10 @@ string          L? \" (\\. | \\\r?\n | [^\\\n"])* \"
 </div>
 
 Free space mode permits spacing between concatenations and alternations.  To
-match a single space, use `" "` or `[ ]`.
+match a single space, use `" "` or `[ ]`.  Long patterns can continue on the
+next line(s) when lines ends with an escape `\`.
 
-In free space mode we MUST place actions in `{` and `}` blocks and other code
+In free space mode you MUST place actions in `{` and `}` blocks and other code
 in `%{` and `%}`.
 
 When used with option `unicode`, the scanner automatically recognizes and scans
@@ -3390,12 +3394,13 @@ matches wide strings against a word pattern `\w+`:
 
 using namespace reflex;
 
-// some random text (with extra spacing)
+// four words
 const wchar_t *words[] = { L"Monty", L"Python's", L"Flying", L"Circus" };
 
 // construct a matcher for words, given empty input initially
 BoostMatcher wordmatcher("\\w+", Input());
 
+// check if each string in words[] is a word
 for (int i = 0; i < 4; i++)
   if (wordmatcher.input(words[i]).matches() == true)
     std::cout << wordmatcher.text() << ", ";
