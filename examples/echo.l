@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
 %}
-%option noyywrap interactive
+%option freespace noyywrap interactive
 %%
 .+  ECHO;
 %%

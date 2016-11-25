@@ -7,12 +7,11 @@
 ^\h*\j          out() << "< "; // dedent
 \j              out() << "< "; // dedent, triggered for each extra level dedented
 (?^\\\n\h+)     // lines ending in \ will continue on the next line with an indent
-"/*"            echo();
-                matcher().push_stops(); // save the indent margin/tab stops
+"/*"            matcher().push_stops(); // save the indent margin/tab stops
                 start(CONTINUE);        // continue w/o indent matching
 <CONTINUE>{
-"*/"            echo();
-                matcher().pop_stops();  // restore the indent margin/tab stops
+"*/"            matcher().pop_stops();  // restore the indent margin/tab stops
                 start(INITIAL);
+.|\n            /* ignore comments */
 }
 %%

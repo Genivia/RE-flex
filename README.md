@@ -165,6 +165,7 @@ if (fd == NULL)
 reflex::BoostMatcher matcher("\\w+", fd);
 while (matcher.find() == true)
   std::cout << "Found " << matcher.text() << std::endl;
+fclose(fd);
 ```
 
 Same again, but this time with a C++ input stream:
@@ -176,6 +177,7 @@ std::ifstream file("somefile.txt", std::ifstream::in);
 reflex::BoostMatcher matcher("\\w+", file);
 while (matcher.find() == true)
   std::cout << "Found " << matcher.text() << std::endl;
+file.close();
 ```
 
 Stuffing the search results into a container using RE/flex iterators:
@@ -222,6 +224,7 @@ Changelog
 - Nov 17, 2016: 0.9.2 improvements and fixes for minor issues
 - Nov 19, 2016: 0.9.3 replaced `%import` with `%include`, added freespace option `-x`, fixed minor issues
 - Nov 20, 2016: 0.9.4 fixes minor issues, added new examples/json.l
+- Nov 25, 2016: 0.9.5 bug fixes and improvements
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

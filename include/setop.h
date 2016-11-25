@@ -85,11 +85,11 @@ Example
 namespace reflex {
 
 /// Check if sets `s1` and `s2` are disjoint.
-/// @returns true or false
 template<typename S1, typename S2> 
 bool is_disjoint(
     const S1& s1,
     const S2& s2)
+  /// @returns true or false
 {
   if (s1.empty() || s2.empty())
     return true;
@@ -113,21 +113,21 @@ bool is_disjoint(
 }
 
 /// Check if value `x` is in set `s`.
-/// @returns true or false
 template<typename T, typename S> 
 inline bool is_in_set(
     const T& x,
     const S& s)
+  /// @returns true or false
 {
   return s.find(x) != s.end();
 }
 
 /// Check if set `s1` is a subset of set `s2`.
-/// @returns true or false
 template<typename S1, typename S2> 
 bool is_subset(
     const S1& s1,
     const S2& s2)
+  /// @returns true or false
 {
   if (s1.empty())
     return true;

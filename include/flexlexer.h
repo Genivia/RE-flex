@@ -191,14 +191,9 @@ namespace reflex {
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-/**
-Flex-compatible FlexLexer abstract base class template derived from
-reflex::AbstractMatcher for the reflex-generated yyFlexLexer scanner class.
-
-TODO
-
-*/
-template<typename M> ///< @tparam <M> matcher class derived from reflex::AbstractMatcher
+/// Flex-compatible FlexLexer abstract base class template derived from reflex::AbstractMatcher for the reflex-generated yyFlexLexer scanner class.
+/** More info TODO */
+template<typename M> /// @tparam <M> matcher class derived from reflex::AbstractMatcher
 class FlexLexer : public AbstractLexer<M> {
  public:
   /// Extends reflex::AbstractLexer::Matcher for Flex-compatibility.
@@ -222,8 +217,8 @@ class FlexLexer : public AbstractLexer<M> {
       return lexer->LexerInput(s, n); // a nice trick to get input from LexerInput()
     }
     /// Check the Flex-compatible FlexLexer::yywrap method to determine if matcher should wrap input after EOF.
-    /// @returns true if FlexLexer::yywrap() == 0
     virtual bool wrap(void)
+      /// @returns true if FlexLexer::yywrap() == 0
     {
       FlexLexer *lexer = dynamic_cast<FlexLexer*>(this->lexer_);
       assert(lexer != NULL);
@@ -238,14 +233,14 @@ class FlexLexer : public AbstractLexer<M> {
       AbstractLexer<M>(input, os ? *os : std::cout)
   { }
   /// The matched text.
-  /// @returns NUL-terminated string.
   const char *YYText(void) const
+    /// @returns NUL-terminated string.
   {
     return this->matcher().text();
   }
   /// The matched text length.
-  /// @returns matched text length.
   size_t YYLeng(void) const
+    /// @returns matched text length.
   {
     return this->matcher().size();
   }
@@ -255,10 +250,10 @@ class FlexLexer : public AbstractLexer<M> {
     this->matcher(m);
   }
   /// Instantiate a new FlexLexer::Matcher and buffer.
-  /// @returns pointer to new FlexLexer::Matcher.
   Matcher *yy_create_buffer(
       const Input& input, ///< read from an input source
       int)                ///< unused (Flex compatibility)
+    /// @returns pointer to new FlexLexer::Matcher.
   {
     return this->new_matcher(input);
   }
@@ -296,8 +291,8 @@ class FlexLexer : public AbstractLexer<M> {
     return this->matcher().lineno();
   }
   /// Default yywrap operation at EOF: do not wrap input.
-  /// @returns 1 (0 indicates that new input was set and wrap after EOF is OK).
   virtual int yywrap(void)
+    /// @returns 1 (0 indicates that new input was set and wrap after EOF is OK).
   {
     return 1;
   }
@@ -305,10 +300,10 @@ class FlexLexer : public AbstractLexer<M> {
   virtual int yylex(void) = 0;
  protected:
   /// Invoked by FlexLexer::Matcher to read input character sequence.
-  /// @returns the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF.
   virtual size_t LexerInput(
       char  *s, ///< points to the string buffer to fill with input
       size_t n) ///< size of buffer pointed to by s
+    /// @returns the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF.
   {
     return this->matcher().in.get(s, n);
   }
@@ -326,15 +321,15 @@ class FlexLexer : public AbstractLexer<M> {
     exit(2);
   }
   /// Read one character, returns zero when EOF.
-  /// @returns the character read.
   int yyinput(void)
+    /// @returns the character read.
   {
     int c = this->matcher().input();
     return c == EOF ? 0 : c;
   }
   /// Read one character, returns zero when EOF.
-  /// @returns the character read.
   int input(void)
+    /// @returns the character read.
   {
     return yyinput();
   }
@@ -372,8 +367,8 @@ class FlexLexer : public AbstractLexer<M> {
     (self ? static_cast<FlexLexer*>(self) : this)->pop_state();
   }
   /// Returns the stack top start condition state.
-  /// @returns start condition (integer).
   int yy_top_state(void)
+    /// @returns start condition (integer).
   {
     return this->top_state();
   }

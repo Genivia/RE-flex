@@ -60,6 +60,7 @@ void Input::file_init(void)
     size_ = static_cast<size_t>(st.st_size);
 #endif
   utfx_ = Const::plain;
+  // if file size can be determined, check for a UTF BOM
   if (size_ > 3)
   {
     std::fread(utf8_, 1, 2, file_);
@@ -95,8 +96,10 @@ void Input::file_init(void)
       else
       {
         utfx_ = Const::utf16le;
-        size_ = 2;
-        uidx_ = 2;
+        wchar_t c = static_cast<unsigned int>(utf8_[2] | utf8_[3] << 8);
+	size_ = utf8(c, utf8_);
+	utf8_[size_] = '\0';
+	uidx_ = 0;
       }
     }
     else if (utf8_[0] == '\xEF' && utf8_[1] == '\xBB') // UTF-8 BOM?
@@ -131,7 +134,7 @@ size_t Input::file_get(char *s, size_t n)
       return k;
     uidx_ = sizeof(utf8_);
   }
-  else if (utfx_)
+  if (utfx_)
   {
     if (utfx_ == Const::utf16be)
     {
@@ -139,7 +142,7 @@ size_t Input::file_get(char *s, size_t n)
       size_t k = n;
       while (k > 0 && std::fread(c2, 2, 1, file_) == 1)
       {
-        wchar_t c = static_cast<unsigned>(c2[0] << 8 | c2[1]);
+        wchar_t c = static_cast<unsigned int>(c2[0] << 8 | c2[1]);
         if (c < 0x80)
         {
           *s++ = static_cast<char>(c);
@@ -151,7 +154,7 @@ size_t Input::file_get(char *s, size_t n)
           if (k < l)
           {
             std::memcpy(s, utf8_, k);
-            utf8_[l] = '\0';
+	    utf8_[l] = '\0';
             uidx_ = static_cast<unsigned short>(k);
             s += k;
             k = 0;
@@ -172,7 +175,7 @@ size_t Input::file_get(char *s, size_t n)
       size_t k = n;
       while (k > 0 && std::fread(c2, 2, 1, file_) == 1)
       {
-        wchar_t c = static_cast<unsigned>(c2[0] | c2[1] << 8);
+        wchar_t c = static_cast<unsigned int>(c2[0] | c2[1] << 8);
         if (c < 0x80)
         {
           *s++ = static_cast<char>(c);
@@ -183,9 +186,9 @@ size_t Input::file_get(char *s, size_t n)
           size_t l = utf8(c, utf8_);
           if (k < l)
           {
-            utf8_[l] = '\0';
-            uidx_ = static_cast<unsigned short>(k);
             std::memcpy(s, utf8_, k);
+	    utf8_[l] = '\0';
+            uidx_ = static_cast<unsigned short>(k);
             s += k;
             k = 0;
           }
@@ -205,7 +208,7 @@ size_t Input::file_get(char *s, size_t n)
       size_t k = n;
       while (k > 0 && std::fread(c4, 4, 1, file_) == 1)
       {
-        wchar_t c = static_cast<unsigned>(c4[0] << 24 | c4[1] << 16 | c4[2] << 8 | c4[3]);
+        wchar_t c = static_cast<unsigned int>(c4[0] << 24 | c4[1] << 16 | c4[2] << 8 | c4[3]);
         if (c < 0x80)
         {
           *s++ = static_cast<char>(c);
@@ -216,9 +219,9 @@ size_t Input::file_get(char *s, size_t n)
           size_t l = utf8(c, utf8_);
           if (k < l)
           {
-            utf8_[l] = '\0';
-            uidx_ = static_cast<unsigned short>(k);
             std::memcpy(s, utf8_, k);
+	    utf8_[l] = '\0';
+            uidx_ = static_cast<unsigned short>(k);
             s += k;
             k = 0;
           }
@@ -232,13 +235,13 @@ size_t Input::file_get(char *s, size_t n)
       }
       return n - k;
     }
-    if (utfx_ == Const::utf16le)
+    if (utfx_ == Const::utf32le)
     {
       unsigned char c4[4];
       size_t k = n;
       while (k > 0 && std::fread(c4, 4, 1, file_) == 1)
       {
-        wchar_t c = static_cast<unsigned>(c4[0] | c4[1] << 8 | c4[2] << 16 | c4[3] << 24);
+        wchar_t c = static_cast<unsigned int>(c4[0] | c4[1] << 8 | c4[2] << 16 | c4[3] << 24);
         if (c < 0x80)
         {
           *s++ = static_cast<char>(c);
@@ -249,9 +252,9 @@ size_t Input::file_get(char *s, size_t n)
           size_t l = utf8(c, utf8_);
           if (k < l)
           {
-            utf8_[l] = '\0';
-            uidx_ = static_cast<unsigned short>(k);
             std::memcpy(s, utf8_, k);
+	    utf8_[l] = '\0';
+            uidx_ = static_cast<unsigned short>(k);
             s += k;
             k = 0;
           }

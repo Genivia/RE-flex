@@ -27,7 +27,7 @@
 \******************************************************************************/
 
 /**
-@file      language_scripts.h
+@file      pl_scripts.h
 @brief     Unicode programming language scripts
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
@@ -36,6 +36,7 @@
 
 #include "reflex.h"
 
+/// Populate scripts with programming language script categories.
 void pl_scripts(Reflex::Map& scripts);
 
 

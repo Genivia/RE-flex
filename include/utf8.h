@@ -43,19 +43,20 @@
 namespace reflex {
 
 /// Convert a UCS range [a,b] to a UTF-8 regex pattern.
-/// @returns regex string to match the UCS range encoded in UTF-8.
 std::string utf8(
     wchar_t     a,             ///< lower bound of UCS range
     wchar_t     b,             ///< upper bound of UCS range
     bool        strict = true, ///< returned regex is strict UTF-8 (true) or lean UTF-8 (false)
     const char *esc = NULL     ///< escape char(s), 0-3 chars limit, one backslash "\\" is the default
-    );
+    )
+  /// @returns regex string to match the UCS range encoded in UTF-8.
+  ;
 
 /// Convert UCS to UTF-8.
-/// @returns length (in bytes) of UTF-8 character sequence stored in s.
 inline size_t utf8(
     wchar_t c, ///< UCS character
-    char   *s) ///< points to the buffer to populate with UTF-8 (1 to 6 bytes)
+    char   *s) ///< points to the buffer to populate with UTF-8 (1 to 6 bytes) not \0-terminated
+  /// @returns length (in bytes) of UTF-8 character sequence stored in s.
 {
   if (c < 0x80)
   {
@@ -102,8 +103,8 @@ inline size_t utf8(
 }
 
 /// Convert UTF-8 to UCS.
-/// @returns UCS character.
 inline wchar_t utf8(const char *s) ///< points to the buffer with UTF-8 (1 to 6 bytes)
+  /// @returns UCS character.
 {
   wchar_t c;
   c = static_cast<unsigned char>(*s++);

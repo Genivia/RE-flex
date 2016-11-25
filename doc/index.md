@@ -1178,9 +1178,11 @@ argument.  To set an alternative output stream than standard output, pass a
 int main(int argc, char **argv)
 {
   FILE *fd = stdin;
-  if (argc > 2)
-    fd = fopen(argv[1], "r");
+  if (argc > 1 && (fd = fopen(argv[1], "r")) == NULL)
+    exit(EXIT_FAILURE);
   std::ofstream of("output.txt", std::ofstream::out);
+  if (!of)
+    exit(EXIT_FAILURE);
   Lexer(fd, of).lex();
   of.close();
   fclose(fd);
@@ -1273,12 +1275,12 @@ The order of precedence for composing larger patterns from sub-patterns is as
 follows, from high to low precedence:
 
 1. Characters, character classes, bracket expressions, escapes, quotation
-2. Grouping `( )`, `(?: )`, `(?= )`, and inline modifiers `(?imsx: )`
+2. Grouping `(φ)`, `(?:φ)`, `(?=φ)`, and inline modifiers `(?imsx:φ)`
 3. Quantifiers `?`, `*`, `+`, `{n,m}`
 4. Concatenation (including lookahead)
 5. Anchoring `^`, `$`, `\<`, `\>`, `\b`, `\B`, `\A`, `\Z` 
 6. Alternation `|`
-7. Modifiers `(?imsx)`
+7. Global modifiers `(?imsx)φ`
 
 Note that the characters `.` (dot), `\`, `?`, `*`, `+`, `|`, `(`, `)`, `[`,
 `]`, `{`, `}`, `^`, and `$` are meta-characters and should be escaped to match.
@@ -1288,13 +1290,16 @@ should be escaped to match.
 Bracket lists cannot be empty, so `[]` and `[^]` are invalid.  In fact, the
 first character after the bracket is always part of the list.  So `[][]` is a
 list that matches a `]` and a `[`, `[^][]` is a list that matches anything but
-`[` and `]`, and `[-^]` is a list that matches a `-` and a `^`.
+`]` and `[`, and `[-^]` is a list that matches a `-` and a `^`.
 
 Multi-line mode is the default mode in lex specifications.  Free space mode can
 be useful to improve readability.  To enable free space mode in **reflex** use
 the `−−freespace` option.  Be warned that this requires all actions in lex
 specifications to be placed within `{` and `}` blocks and other code to be
 placed in `%{` and `%}` blocks.
+
+Patterns ending in an escape `\` in lex specifications continue on the next
+line.  This permits layout out long patterns, for example in free space mode.
 
 @note We need the "regex escapes to be escaped" in C++ literal strings, so we
 need an additional backslash for every backslash in a regex.
@@ -1306,10 +1311,10 @@ rooted in the theory of formal languages.
 
 @warning Trigraphs in C++ strings are special three character sequences,
 beginning with two question marks and followed by one other character.  Avoid
-`??` at all cost in C++ strings.  Instead, use an at least one escaped question
-mark such as `?\?`, which the compiler will translate to `??`.  Otherwise, lazy
-optional pattern constructs will appear broken.  Fortunately, most C++
-compilers will warn about trigraph translation.
+`??` at all cost in C++ strings.  Instead, use at least one escaped question
+mark, such as `?\?`, which the compiler will translate to `??`.  Otherwise,
+lazy optional pattern constructs will appear broken.  Fortunately, most C++
+compilers will warn about trigraph translation before causing trouble.
 
 ### Character categories
 
@@ -1431,7 +1436,7 @@ In addition, the `−−unicode` option enables Unicode language scripts:
   `\p{Syloti_Nagri}`, `\p{Syriac}`, `\p{Tagalog}`, `\p{Tagbanwa}`,
   `\p{Tai_Le}`, `\p{Tai_Tham}`, `\p{Tai_Viet}`, `\p{Takri}`, `\p{Tamil}`,
   `\p{Telugu}`, `\p{Thaana}`, `\p{Thai}`, `\p{Tibetan}`, `\p{Tifinagh}`,
-  `\p{Tirhuta}`, `\p{Ugaritic}`, `\p{Vai}`, `\p{Warang_Citi}`, `\p{Yi}`
+  `\p{Tirhuta}`, `\p{Ugaritic}`, `\p{Vai}`, `\p{Warang_Citi}`, `\p{Yi}`.
 
 ### Indent and dedent matching
 
@@ -1488,19 +1493,19 @@ the content between `/*` and `*/`:
 
 <div class="alt">
 ```cpp
+%o tabs=8
 %x CONTINUE
 %%
 ^\h+          out() << "| "; // text is aligned to current indent margin
 ^\h*\i        out() << "> "; // indent
 ^\h*\j        out() << "< "; // dedent
 \j            out() << "< "; // dedent, for each extra level dedented
-"/*"          echo();
-              matcher().push_stops(); // save the indent margin/tab stops
+"/*"          matcher().push_stops(); // save the indent margin/tab stops
               start(CONTINUE);        // continue w/o indent matching
 <CONTINUE>{
-"*/"          echo();
-              matcher().pop_stops();  // restore the indent margin/tab stops
-              start(INITIAL);
+"*/"          matcher().pop_stops();  // restore the indent margin/tab stops
+              start(INITIAL);         // go back to the initial scanning state
+.|\n          /* ignore */
 }
 
 ```
@@ -1771,6 +1776,19 @@ This generates a scanner that works with Bison pure (MT-safe and reentrant)
 parsers using a Bison bridge for one ore more scanner objects.  See \ref
 reflex-bison for more details.
 
+### `−−bison-locations`
+
+This generates a scanner that works with Bison with locations enabled.  See
+\ref reflex-bison for more details.
+
+### `-R`, `−−reentrant`
+
+This generates additional Flex-compatible `yylex()` reentrant scanner
+functions.  RE/flex scanners are always reentrant, assuming that `%%class`
+variables are used instead of global variables in the scanner's user code.
+This is a Flex-compatibility option only to be used with options `−−flex` and
+`−−bison`.  See \ref reflex-bison.
+
 ### `−−main`
 
 This generates a `main` function to create a stand-alone scanner that scans
@@ -1782,6 +1800,13 @@ This initializes input to `std::cin` instead of stdin.  Automatic UTF-encoding
 conversion is not supported.  Use stdin for automatic UTF-encoded input
 conversion.
 
+### `-u`, `−−unicode`
+
+This makes `.` (dot), `\s`, `\w`, `\l`, and `\u` match Unicode and also groups
+UTF-8 sequences in the regex, such that each UTF-8 encoded character in a regex
+is properly matched as one wide character.  Note that `\S` and `\W` are *not
+affected* by this switch.
+
 ### `-x`, `−−freespace`
 
 This switches the **reflex** scanner generator to *free space mode*.  Regular
@@ -1789,14 +1814,7 @@ expressions in free space mode may contain spacing to improve readability.
 Spacing within regular expressions is ignored, so use `" "` or `[ ]` to match a
 space and `\h` to match a space or a tab character.  Actions in free space mode
 MUST be placed in `{` and `}` blocks and all other code must be placed in `%{`
-and `%}` blocks.
-
-### `-u`, `−−unicode`
-
-This makes `.` (dot), `\s`, `\w` match Unicode and groups UTF-8 encoded
-sequences in the regex, such that each UTF-8 encoded character in a regex is
-properly matched as one wide character.  Note that `\S` and `\W` are *not
-affected* by this switch.
+and `%}` blocks.  Patterns ending in an escape `\` continue on the next line.
 
 ### `-a`, `−−dotall`
 
@@ -1808,10 +1826,16 @@ character except a newline (`\n` ASCII 0x0A).
 This ignore case in patterns.  Patterns match lower and upper case letters.
 This switch only applies to ASCII letters.
 
-### `-I`, `−−interactive`
+### `-B`, `−−batch`
+
+This generates a batch input scanner that reads all input at once when
+possible.  This scanner is fast, but consumes more memory depending on the
+input data size.
+
+### `-I`, `−−interactive`, `−−always-interactive`
 
 This generates an interactive scanner and permits console input by sacrificing
-speed.  By contrast, buffered (batch) input is more efficient.
+speed.  By contrast, the default buffered input strategy is more efficient.
 
 ### `-d`, `−−debug`
 
@@ -1825,14 +1849,9 @@ behavior in a derived lexer class.
 ### `-s`, `−−nodefault`
 
 This suppresses the default rule that ECHOs all unmatched text when no rule
-matches.
-
-### `-R`, `−−reentrant`
-
-This generates additional Flex-compatible `yylex()` reentrant scanner
-functions.  RE/flex scanners are always reentrant, assuming that no global
-variables are used by the scanner's user code.  This is a Flex-compatibility
-option for options `−−flex` and `−−bison`.  See \ref reflex-bison.
+matches.  With the `−−flex` option, the scanner reports "scanner jammed" when
+no rule matches.  Without the `−−flex` option, unmatched input is silently
+ignored.
 
 ### `-o FILE`, `−−outfile=FILE`
 
@@ -2170,7 +2189,7 @@ the `wrap()` (or `yywrap()`) method:
 ```
 </div>
 
-Switching input sources via either `matcher(m)' or `in(input)' does not change
+Switching input sources via either `matcher(m)` or `in(input)` does not change
 the current start condition state.
 
 You can use the `wrap()` method to set up a new input source when the current
@@ -2593,8 +2612,8 @@ To change the generated code for use with Bison, use the following options:
   --------------------------------------------- | ----------------------------------------- | ------------------------------
   &nbsp;                                        | `int Lexer::lex()`                        | &nbsp;                          
   `−−flex`                                      | `int yyFlexLexer::yylex()`                | &nbsp;                          
-  `−−bison`                                     | `int Lexer::lex()`                        | `Lexer YY_SCANNER`, `int yylex()`, `yylval`
-  `−−flex` `−−bison`                            | `int yyFlexLexer::yylex()`                | `yyFlexLexer YY_SCANNER`, `int yylex()`, `yylval`, `char *yytext`, `int yyleng`, `int yylineno`
+  `−−bison`                                     | `int Lexer::lex()`                        | `Lexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`
+  `−−flex` `−−bison`                            | `int yyFlexLexer::yylex()`                | `yyFlexLexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`, `char *yytext`, `int yyleng`, `int yylineno`
   `−−bison` `−−reentrant`                       | `int Lexer::lex()`                        | `int yylex(yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
   `−−flex` `−−bison` `−−reentrant`              | `int yyFlexLexer::lex()`                  | `int yylex(yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)`
   `−−bison-bridge`                              | `int Lexer::lex(YYSTYPE& yylval)`         | `int yylex(YYSTYPE*, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)`
@@ -2921,31 +2940,42 @@ free space mode to enhance readability.
 %{
   #include <stdio.h>
 %}
+
 %o flex freespace
-directive       ^\h*#(.|\\\r?\n)+
-name            [\u\l_]\w*
-udec            0 | [1-9]\d*
-uhex            0[Xx][[:xdigit:]]+
-uoct            0[0-7]+
+
+directive       ^ \h* # (. | \\ \r? \n)+
+name            [\u\l_] \w*
+udec            0 | [1-9] \d*
+uhex            0 [Xx] [[:xdigit:]]+
+uoct            0 [0-7]+
 int             [-+]? ({udec} | {uhex}) ([Ll]{0,2} [Uu]? | [Uu] [Ll]{0,2})
 float           [-+] \d* (\d | \.\d | \d\.) \d* ([Ee][-+]? \d+)? [FfLl]?
 char            L? ' (\\. | [^\\\n'])* '
 string          L? \" (\\. | \\\r?\n | [^\\\n"])* \"
+
 %%
+
 \s+
 "//" .*? \n
 "/*" (.|\n)*? "*/"
-{directive}     printf("DIRECTIVE %s\n", yytext);
-{name}          printf("NAME      %s\n", yytext);
-{int}           printf("INT       %s\n", yytext);
-{float}         printf("FLOAT     %s\n", yytext);
-{char}          printf("CHAR      %s\n", yytext);
-{string}        printf("STRING    %s\n", yytext);
-[[:punct:]]     printf("PUNCT     %s\n", yytext);
-.               printf("*** ERROR '%s' at line %d\n", yytext, yylineno);
+{directive}     { printf("DIRECTIVE %s\n", yytext); }
+{name}          { printf("NAME      %s\n", yytext); }
+{int}           { printf("INT       %s\n", yytext); }
+{float}         { printf("FLOAT     %s\n", yytext); }
+{char}          { printf("CHAR      %s\n", yytext); }
+{string}        { printf("STRING    %s\n", yytext); }
+[[:punct:]]     { printf("PUNCT     %s\n", yytext); }
+.               { printf("*** ERROR '%s' at line %d\n", yytext, yylineno); }
+
 %%
 ```
 </div>
+
+Free space mode permits spacing between concatenations and alternations.  To
+match a single space, use `" "` or `[ ]`.
+
+In free space mode we MUST place actions in `{` and `}` blocks and other code
+in `%{` and `%}`.
 
 When used with option `unicode`, the scanner automatically recognizes and scans
 Unicode identifier names.  Note that we can use `matcher().columno` in the
@@ -2955,8 +2985,8 @@ other methods that Flex does not support.
 ⇢ [Back to contents](#)
 
 
-Limitations                                               {#reflex-limitations}
------------
+Limitations and known issues                              {#reflex-limitations}
+----------------------------
 
 The RE/flex matcher engine uses an efficient FSM.  There are known limitations
 to FSM matching:
@@ -2967,20 +2997,30 @@ to FSM matching:
   the pattern matches the beginning of the second part, such as `zx*/xy*`,
   where the `x*` matches the `x` at the beginning of the lookahead pattern.
 - Word boundary anchors must appear at the start or at the end of a pattern, so
-  `\<cow\>` is permitted, but `.*\Boy` is not.
+  `\<cow\>` is permitted, but `.*\Bboy` is not.
 
 Current **reflex** tool limitations that may be removed in future versions:
 
 - Character set operations are not yet implemented, such as `[a-z]{-}[aeiou]`.
-- Negative lists `[^...]` cannot contain Unicode character sets.  Likewise,
-  character set operations on Unicode sets is not possible.
+- Negative lists `[^...]` cannot contain Unicode characters.
 - The `REJECT` action is not supported.
 
 Boost.Regex issues that may be resolved in future versions:
 
-- Boost.Regex may fail to match anchors at buffer boundaries.  So interactive
-  mode matching may fail when anchors and lookaheads are used in patterns.  We
-  believe this is a Boost.Regex bug in `match_partial` matching.
+- Boost.Regex may fail to find the longest match when greedy repetition
+  patterns such as `.*` are used.  Under certain conditions greedy repetitions
+  may behave as lazy repetitions.  For example, the Boost.Regex engine may
+  return the short match `abc` when the regex `a.*c` is applied to `abc abc`,
+  instead of returning the full match `abc abc`.  The problem is caused by the
+  limitations of Boost.Regex `match_partial` matching algorithm.  To work
+  around this limitation, we suggest to make the repetition pattern as specific
+  as possible and not overlap with the pattern that follows the repetition.
+  *The easiest solution is to read the entire input* using **reflex** option
+  `-B` (batch input).  For a stand-alone `BoostMatcher`, use the `buffer()`
+  method.  We consider this Boost.Regex partial match behavior a bug, not a
+  restriction, because *as long as backtracking on a repetition pattern is
+  possible given some partial text, Boost.Regex should flag the result as a
+  partial match instead of a full match.*
 
 ⇢ [Back to contents](#)
 
@@ -3080,8 +3120,8 @@ See \ref regex-methods for more details on pattern matching methods.
 ⇢ [Back to contents](#)
 
 
-RE/flex POSIX matcher class                                    {#regex-matcher}
----------------------------
+The RE/flex matcher class                                      {#regex-matcher}
+-------------------------
 
 The RE/flex framework includes a POSIX regex matching library `reflex::Matcher`
 that inherits the API from `reflex::PatternMatcher<reflex::Pattern>`:
@@ -3225,8 +3265,8 @@ invocations can be chained together.
 ⇢ [Back to contents](#)
 
 
-Input class                                                      {#regex-input}
------------
+The Input class                                                  {#regex-input}
+---------------
 
 A matcher may accept several types of input, but can only read from one input
 source at a time.  Input to a matcher is represented by a single
@@ -3476,7 +3516,7 @@ using namespace reflex;
 
 BoostMatcher matcher("\\s+", fopen("filename", "r"));
 
-if (matcher.in.good())
+if (matcher.in.file() && matcher.in.good())
 {
   switch (matcher.in.file_encoding())
   {
@@ -3508,7 +3548,7 @@ using namespace reflex;
 
 BoostMatcher matcher("\\s+", fopen("filename", "r"));
 
-if (matcher.in.good())
+if (matcher.in.file() && matcher.in.good())
 {
   matcher.in.file_encoding(Input::Const::plain);
   ...
@@ -3519,8 +3559,8 @@ if (matcher.in.good())
 ⇢ [Back to contents](#)
 
 
-Download                                                             {#download}
-========
+Where to download                                                   {#download}
+=================
 
 [Download RE/flex](https://sourceforge.net/projects/re-flex) from SourceForge
 and visit the GitHub [RE/flex repository](https://github.com/Genivia/RE-flex).

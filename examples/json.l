@@ -16,6 +16,7 @@
 // 13. The main() program reads a FILE* for automatic UTF-16/32 conversion
 // 14. JSON class stores parsed JSON data
 // 15. JSON class instances are printable on std::ostream
+// 16. Use reflex::utf8() to convert UCS character to/from UTF-8
 
 %top{
   #include <stdlib.h> // strtoul(), strtod()
@@ -68,7 +69,7 @@ false           { return 'f'; }
 
 %%
 
-// JSON value is one of: undefined, null, boolean, number, sting, array, object, or error
+// JSON value is one of: undefined, null, boolean, number, string, array, object, or error
 class JSON {
  public:
   JSON() : tag(UND) { }
@@ -99,10 +100,10 @@ class JSONParser : public yyFlexLexer {
   }
  protected:
   JSON::Tag parse_array(JSON& data) {
-    JSON item;
     if (++level > MAXLEVEL)
       return JSON::ERR;
     for (size_t len = 0; len < MAXSIZE; ++len) {
+      JSON item;
       switch (parse(item)) {
         case JSON::NUL:
         case JSON::BOO:
@@ -180,10 +181,15 @@ void print_string(std::ostream& os, const std::wstring& s) {
       case '\n': os << "\\n"; break;
       case '\r': os << "\\r"; break;
       case '\t': os << "\\t"; break;
-      default  : if (*i >= '\x20' && *i <= '\x7f')
+      default  : if (*i >= '\x20' && *i <= '\x7f') { // emit printable char
                    os << static_cast<char>(*i);
-                 else
+                 } else if (*i < 0x20) { // emit \u00xx for control codes
                    os << "\\u" << std::internal << std::setw(4) << std::setfill('0') << std::hex << *i << std::dec;
+                 } else { // else emit UTF-8
+                   char buf[8];
+                   buf[reflex::utf8(*i, buf)] = '\0'; // convert to UTF-8 and make \0-terminated
+                   os << buf;
+                 }
     }
   }
   os << "\"";

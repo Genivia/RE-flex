@@ -54,24 +54,15 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.4"
+#define REFLEX_VERSION "0.9.5"
 
+/// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
-ReFlex scanner generator class.
 
-A variation of the classic "lex" tool to generate scanners.
-
-TODO
+More info TODO
 
 The Lex specification file extension is `.l`, but also `.lex`, `.ll`, `.l++`,
 `.lxx`, and `.lpp` are in use.
-
-differences with Flex:
---nodefault produces flex error "scanner jammed" or in non-flex mode ignores unmatched char
-
-bison, bison-bridge, and reentrant:
-http://www.lemoda.net/c/reentrant-parser/
-
 */
 class Reflex
 {

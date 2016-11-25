@@ -43,15 +43,14 @@
 
 namespace reflex {
 
-/**
-RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan, find, split functors and iterators.
-*/
+/// RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan, find, split functors and iterators.
+/** More info TODO */
 class Matcher : public PatternMatcher<reflex::Pattern> {
  protected:
   typedef std::vector<size_t> Stops; ///< indent margin/tab stops
  public:
   /// Construct matcher engine from a pattern or a string regex, and an input character sequence.
-  template<typename P> ///< @tparam <P> a reflex::Pattern or a string regex 
+  template<typename P> /// @tparam <P> a reflex::Pattern or a string regex 
   Matcher(
       const P&     pat,            ///< a reflex::Pattern or a string regex for this matcher
       const Input& inp = Input(),  ///< input character sequence for this matcher
@@ -62,7 +61,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     reset(opt);
   }
   /// Construct matcher engine from a pattern or a string regex, and an input character sequence.
-  template<typename P> ///< @tparam <P> a reflex::Pattern or a string regex 
+  template<typename P> /// @tparam <P> a reflex::Pattern or a string regex 
   Matcher(
       const P     *pat,           ///< points to a reflex::Pattern or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
@@ -105,8 +104,9 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   }
  protected:
   /// Returns true if input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
-  /// @returns nonzero if input matched the pattern.
-  virtual size_t match(Method method); ///< Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH
+  virtual size_t match(Method method) ///< Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH
+    /// @returns nonzero if input matched the pattern.
+    ;
   /// Update indentation column counter for indent() and dedent().
   void newline(size_t& col) ///< indent column counter
   {
@@ -115,15 +115,15 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     DBGLOG("Newline with indent/dedent? col = %zu", col);
   }
   /// Returns true if looking at indent.
-  /// @returns true if indent.
   bool indent(size_t& col) ///< indent column counter
+    /// @returns true if indent.
   {
     newline(col);
     return col > 0 && (tab_.empty() || tab_.back() < col);
   }
   /// Returns true if looking at dedent.
-  /// @returns true if dedent.
   bool dedent(size_t& col) ///< indent column counter
+    /// @returns true if dedent.
   {
     newline(col);
     return !tab_.empty() && tab_.back() > col;

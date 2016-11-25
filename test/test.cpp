@@ -1,4 +1,6 @@
 
+// test regex [text [buflen [opts]]]
+
 #include "pattern.h"
 #include "matcher.h"
 #include "boostmatcher.h"
@@ -26,12 +28,18 @@ int main(int argc, char **argv)
       else
         printf("Match\n");
       matcher.input(argv[2]);
+      if (argc > 3)
+        matcher.buffer(strtoul(argv[3], NULL, 10));
       while (matcher.scan())
         printf("Scan %zu '%s'\n", matcher.accept(), matcher.text());
       matcher.input(argv[2]);
+      if (argc > 3)
+        matcher.buffer(strtoul(argv[3], NULL, 10));
       while (matcher.find())
         printf("Find %zu '%s' at %zu,%zu spans %zu..%zu %s\n", matcher.accept(), matcher.text(), matcher.lineno(), matcher.columno(), matcher.first(), matcher.last(), matcher.at_end() ? "at end" : "");
       matcher.input(argv[2]);
+      if (argc > 3)
+        matcher.buffer(strtoul(argv[3], NULL, 10));
       while (matcher.split())
         printf("Split %zu '%s' at %zu\n", matcher.accept(), matcher.text(), matcher.columno());
     }
@@ -47,12 +55,18 @@ int main(int argc, char **argv)
       else
         printf("Match\n");
       matcher.input(argv[2]);
+      if (argc > 3)
+        matcher.buffer(strtoul(argv[3], NULL, 10));
       while (matcher.scan())
         printf("Scan %zu '%s'\n", matcher.accept(), matcher.text());
       matcher.input(argv[2]);
+      if (argc > 3)
+        matcher.buffer(strtoul(argv[3], NULL, 10));
       while (matcher.find())
         printf("Find %zu '%s' at %zu,%zu spans %zu..%zu %s\n", matcher.accept(), matcher.text(), matcher.lineno(), matcher.columno(), matcher.first(), matcher.last(), matcher.at_end() ? "at end" : "");
       matcher.input(argv[2]);
+      if (argc > 3)
+        matcher.buffer(strtoul(argv[3], NULL, 10));
       while (matcher.split())
         printf("Split %zu '%s' at %zu\n", matcher.accept(), matcher.text(), matcher.columno());
     }

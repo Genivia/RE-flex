@@ -36,6 +36,7 @@
 
 #include "pattern.h"
 #include <cstdlib>
+#include <cmath>
 
 #ifdef TIMED
 // TODO consider adding a profiling API to obtain stats, just as nodes() and edges()

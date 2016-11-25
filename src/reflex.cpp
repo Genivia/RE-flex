@@ -175,11 +175,13 @@ static void help(const char *message = NULL, const char *arg = NULL)
                 generate Flex-compatible C++ scanner\n\
         -a, --dotall\n\
                 dot in patterns match newline\n\
+        -B, --batch\n\
+                generate scanner for batch input by buffering all input\n\
         -F, --fast\n\
                 generate fast scanner by embedding compiled DFA code\n\
         -i, --case-insensitive\n\
                 ignore case in patterns\n\
-        -I, --interative, --always-interactive\n\
+        -I, --interactive, --always-interactive\n\
                 generate interactive scanner\n\
         -m NAME, --matcher=NAME\n\
                 use matcher NAME library [reflex|boost|boost-perl|...]\n\
@@ -250,7 +252,6 @@ static void help(const char *message = NULL, const char *arg = NULL)
                 display reflex release version\n\
 \n\
    Lex/Flex-compatible options that are enabled by default or have no effect:\n\
-        --batch                default\n\
         --c++                  default\n\
         --lex-compat           n/a\n\
         --never-interactive    default\n\
@@ -457,6 +458,7 @@ void Reflex::init(int argc, char **argv)
             options["dotall"] = "true";
             break;
           case 'B':
+	    options["batch"] = "true";
             break;
           case 'c':
             break;
@@ -744,6 +746,7 @@ std::string Reflex::getstring(size_t& pos)
 // convert \p{IsScript} to UTF-8
 // convert \u{xxxx} and \x{xxxx} to UTF-8
 // convert [...\u{xxxx}...\p{Script}...] => [...]|\u{xxxx}|\p{Script}
+// convert # to \# if freespace flag is set
 std::string Reflex::getregex(size_t& pos)
 {
   std::string regex;
@@ -867,6 +870,15 @@ std::string Reflex::getregex(size_t& pos)
                || (!options["matcher"].empty() && options["matcher"] != "reflex" && strchr("ABDHLNPSUVWZabcdefghlnprstuvwxz", line.at(pos)) == NULL))
                 warning("unsupported escape sequence: ", line.substr(pos - 1, 2).c_str());
             }
+          }
+          else
+          {
+            regex.append(line.substr(loc, pos - loc));
+            if (!getline())
+              error("EOF encountered inside a pattern");
+            if (line == "%%")
+              error("%% section ending encountered inside a pattern");
+            loc = pos = 0;
           }
           break;
         case '/':
@@ -1133,6 +1145,13 @@ std::string Reflex::getregex(size_t& pos)
             }
             if (pos + 1 < linelen && line.at(pos + 1) == '?' && options["matcher"] == "boost")
               warning("unsupported lazy quantifier: ", line.substr(pos, 2).c_str());
+          }
+          break;
+        case '#':
+          if (!options["freespace"].empty())
+          {
+            regex.append(line.substr(loc, pos - loc)).append("\\#");
+            loc = pos + 1;
           }
           break;
         case '.':
@@ -2202,6 +2221,9 @@ void Reflex::write_lexer(void)
   if (!options["interactive"].empty() || !options["always_interactive"].empty())
     *out <<
       "    matcher().interactive();\n";
+  else if (!options["batch"].empty())
+    *out <<
+      "    matcher().buffer();\n";
   *out <<
     "    start(" << conditions[0] << ");\n";
   if (!options["flex"].empty())

@@ -73,6 +73,6 @@ value			=\s*[^/>\s'"]+
 
 <ATTRIBUTES>\s+		out() << " ";
 
-<ATTRIBUTES>[^'"]	echo();		// FIXME <ATTRIBUTES>. invalidates lazy {string}
+<ATTRIBUTES>[^'"]	echo();
 
 %%

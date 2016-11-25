@@ -28,7 +28,7 @@
 
 /**
 @file      bits.h
-@brief     RE/flex operations on STL containers and sets
+@brief     RE/flex operations on dynamic bit vectors
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
@@ -51,9 +51,8 @@ typedef unsigned __int64 uint64_t;
 
 namespace reflex {
 
+/// RE/flex Bits class for dynamic bit vectors.
 /**
-RE/flex Bits class.
-
 Dynamic bit vectors are stored in Bits objects, which can be manipulated
 with the usual bit-operations (`|` (bitor), `&` (bitand), `^` (bitxor)).
 
@@ -103,14 +102,15 @@ class Bits {
     uint64_t  m; ///< mask m = 2^n
     uint64_t *p; ///< in this word
     /// Returns bit value.
-    /// @returns bit value true or false.
     operator bool() const
+      /// @returns bit value true or false.
     {
       return (*p & m) != 0;
     }
     /// Assign bit value.
-    /// @returns result value true or false.
-    bool operator=(bool b) const ///< bit
+    bool operator=(bool b) ///< bit to assign
+      /// @returns result value true or false.
+      const
     {
       if (b)
         *p |= m;
@@ -119,24 +119,27 @@ class Bits {
       return b;
     }
     /// Bit-or bit value.
-    /// @returns result value true or false.
-    bool operator|=(bool b) const ///< bit-or with this bit
+    bool operator|=(bool b) ///< bit-or with this bit
+      /// @returns result value true or false.
+      const
     {
       if (b)
         *p |= m;
       return (*p & m) != 0;
     }
     /// Bit-and bit value.
-    /// @returns result value true or false.
-    bool operator&=(bool b) const ///< bit-and with this bit
+    bool operator&=(bool b) ///< bit-and with this bit
+      /// @returns result value true or false.
+      const
     {
       if (!b)
         *p &= ~m;
       return (*p & m) != 0;
     }
     /// Bit-xor bit value.
-    /// @returns result value true or false.
-    bool operator^=(bool b) const ///< bit-xor with this bit
+    bool operator^=(bool b) ///< bit-xor with this bit
+      /// @returns result value true or false.
+      const
     {
       if (b)
         *p ^= m;
@@ -179,8 +182,8 @@ class Bits {
       delete vec_;
   }
   /// Assign bits.
-  /// @returns reference to this object.
   Bits& operator=(const Bits& bits) ///< bits to copy
+    /// @returns reference to this object.
   {
     len_ = bits.len_;
     if (len_)
@@ -190,47 +193,48 @@ class Bits {
     return *this;
   }
   /// Reference n'th bit in the bit vector to assign a value to that bit.
-  /// @returns bit reference to assign.
   Bitref operator[](size_t n) ///< n'th bit
+    /// @returns bit reference to assign.
   {
     alloc((n >> 6) + 1);
     return Bitref(n & 0x3F, &vec_[n >> 6]);
   }
   /// Returns n'th bit.
-  /// @returns true if n'th bit is set, false otherwise.
-  bool operator[](size_t n) const ///< n'th bit
+  bool operator[](size_t n) ///< n'th bit to return
+    /// @returns true if n'th bit is set, false otherwise.
+    const
   {
     return n >> 6 < len_ && (vec_[n >> 6] & 1ULL << (n & 0x3F)) != 0;
   }
   /// Insert and set a bit in the bit vector.
-  /// @returns reference to this object.
   Bits& insert(size_t n) ///< n'th bit to set
+    /// @returns reference to this object.
   {
     alloc((n >> 6) + 1);
     vec_[n >> 6] |= 1ULL << (n & 0x3F);
     return *this;
   }
   /// Erase a bit in the bit vector.
-  /// @returns reference to this object.
   Bits& erase(size_t n) ///< n'th bit to erase
+    /// @returns reference to this object.
   {
     if (n >> 6 < len_)
       vec_[n >> 6] &= ~(1ULL << (n & 0x3F));
     return *this;
   }
   /// Flips a bit in the bit vector.
-  /// @returns reference to this object.
   Bits& flip(size_t n) ///< n'th bit to flip
+    /// @returns reference to this object.
   {
     alloc((n >> 6) + 1);
     vec_[n >> 6] ^= 1ULL << (n & 0x3F);
     return *this;
   }
   /// Insert and set a range of bits in the bit vector.
-  /// @returns reference to this object.
   Bits& insert(
       size_t n1, ///< first bit to set
       size_t n2) ///< last bit to set
+    /// @returns reference to this object.
   {
     alloc((n2 >> 6) + 1);
     for (size_t i = n1; i <= n2; ++i)
@@ -238,10 +242,10 @@ class Bits {
     return *this;
   }
   /// Erase a range of bits in the bit vector.
-  /// @returns reference to this object.
   Bits& erase(
       size_t n1, ///< first bit to erase
       size_t n2) ///< last bit to erase
+    /// @returns reference to this object.
   {
     if (n1 >> 6 < len_)
     {
@@ -264,8 +268,8 @@ class Bits {
     return *this;
   }
   /// Bit-or (set union) the bit vector with the given bits.
-  /// @returns reference to this object.
   Bits& operator|=(const Bits& bits) ///< bits
+    /// @returns reference to this object.
   {
     alloc(bits.len_);
     for (size_t i = 0; i < bits.len_; ++i)
@@ -273,8 +277,8 @@ class Bits {
     return *this;
   } 
   /// Bit-and (set intersection) the bit vector with the given bits.
-  /// @returns reference to this object.
   Bits& operator&=(const Bits& bits) ///< bits
+    /// @returns reference to this object.
   {
     alloc(bits.len_);
     for (size_t i = 0; i < bits.len_; ++i)
@@ -284,8 +288,8 @@ class Bits {
     return *this;
   } 
   /// Bit-xor the bit vector with the given bits.
-  /// @returns reference to this object.
   Bits& operator^=(const Bits& bits) ///< bits
+    /// @returns reference to this object.
   {
     alloc(bits.len_);
     for (size_t i = 0; i < bits.len_; ++i)
@@ -293,8 +297,8 @@ class Bits {
     return *this;
   } 
   /// Bit-delete (set minus) the bit vector with the given bits.
-  /// @returns reference to this object.
   Bits& operator-=(const Bits& bits) ///< bits
+    /// @returns reference to this object.
   {
     size_t k = len_;
     if (bits.len_ < k)
@@ -304,38 +308,43 @@ class Bits {
     return *this;
   } 
   /// Bit-or (set union) of two bit vectors.
-  /// @returns bit vector of the result.
-  Bits operator|(const Bits& bits) const ///< bits
+  Bits operator|(const Bits& bits) ///< bits
+    /// @returns bit vector of the result.
+    const
   {
     return Bits(*this) |= bits;
   } 
   /// Bit-and (set intersection) of two bit vectors.
-  /// @returns bit vector of the result.
-  Bits operator&(const Bits& bits) const ///< bits
+  Bits operator&(const Bits& bits) ///< bits
+    /// @returns bit vector of the result.
+    const
   {
     return Bits(*this) &= bits;
   } 
   /// Bit-xor of two bit vectors.
-  /// @returns bit vector of the result.
-  Bits operator^(const Bits& bits) const ///< bits
+  Bits operator^(const Bits& bits) ///< bits
+    /// @returns bit vector of the result.
+    const
   {
     return Bits(*this) ^= bits;
   } 
   /// Bit-delete (set minus) of two bit vectors.
-  /// @returns bit vector of the result.
-  Bits operator-(const Bits& bits) const ///< bits
+  Bits operator-(const Bits& bits) ///< bits
+    /// @returns bit vector of the result.
+    const
   {
     return Bits(*this) -= bits;
   } 
   /// Complement of the bit vector with all bits flipped.
-  /// @returns bit vector of the result.
   Bits operator~() const
+    /// @returns bit vector of the result.
   {
     return Bits(*this).flip();
   } 
   /// Returns true if bit vectors are equal.
-  /// @returns true (equal) or false (unequal).
-  bool operator==(const Bits& bits) const ///< rhs bits
+  bool operator==(const Bits& bits) ///< rhs bits
+    /// @returns true (equal) or false (unequal).
+    const
   {
     size_t k = len_;
     if (bits.len_ < k)
@@ -352,14 +361,16 @@ class Bits {
     return true;
   }
   /// Returns true if bit vectors are unequal.
-  /// @returns true (unequal) or false (equal).
-  bool operator!=(const Bits& bits) const ///< rhs bits
+  bool operator!=(const Bits& bits) ///< rhs bits
+    /// @returns true (unequal) or false (equal).
+    const
   {
     return !operator==(bits);
   }
   /// Returns true if the bit vector is lexicographically less than the given right-hand side bits.
-  /// @returns true (less) or false (greater-or-equal).
-  bool operator<(const Bits& bits) const ///< rhs bits
+  bool operator<(const Bits& bits) ///< rhs bits
+    /// @returns true (less) or false (greater-or-equal).
+    const
   {
     size_t k = len_;
     if (bits.len_ < k)
@@ -380,26 +391,29 @@ class Bits {
     return false;
   }
   /// Returns true if the bit vector is lexicographically greater than the given right-hand side bits.
-  /// @returns true (greater) or false (less-or-equal).
-  bool operator>(const Bits& bits) const ///< rhs bits
+  bool operator>(const Bits& bits) ///< rhs bits
+    /// @returns true (greater) or false (less-or-equal).
+    const
   {
     return bits.operator<(*this);
   }
   /// Returns true if the bit vector is lexicographically less-or-equal to the given right-hand side bits.
-  /// @returns true (less-or-equal) or false (greater).
-  bool operator<=(const Bits& bits) const ///< rhs bits
+  bool operator<=(const Bits& bits) ///< rhs bits
+    /// @returns true (less-or-equal) or false (greater).
+    const
   {
     return !operator>(bits);
   }
   /// Returns true if the bit vector is lexicographically greater-or-equal to the given right-hand side bits.
-  /// @returns true (greater-or-equal) or false (less).
-  bool operator>=(const Bits& bits) const ///< rhs bits
+  bool operator>=(const Bits& bits) ///< rhs bits
+    /// @returns true (greater-or-equal) or false (less).
+    const
   {
     return !operator<(bits);
   }
   /// Returns true if all bits are set.
-  /// @returns true if all bits set, false otherwise.
   bool all() const
+    /// @returns true if all bits set, false otherwise.
   {
     for (size_t i = 0; i < len_; ++i)
       if (vec_[i] + 1 != 0)
@@ -407,8 +421,8 @@ class Bits {
     return true;
   }
   /// Returns true if any bit is set.
-  /// @returns true if any bit set, false if none.
   bool any() const
+    /// @returns true if any bit set, false if none.
   {
     for (size_t i = 0; i < len_; ++i)
       if (vec_[i] != 0)
@@ -416,38 +430,38 @@ class Bits {
     return false;
   }
   /// Erase all bits.
-  /// @returns reference to this object.
   Bits& clear()
+    /// @returns reference to this object.
   {
     if (vec_)
       memset(vec_, 0, len_ << 3);
     return *this;
   }
   /// Flip all bits.
-  /// @returns reference to this object.
   Bits& flip()
+    /// @returns reference to this object.
   {
     for (size_t i = 0; i < len_; ++i)
       vec_[i] = ~vec_[i];
     return *this;
   }
   /// Reserves space in the bit vector for len bits without changing its current content.
-  /// @returns reference to this object.
   Bits& reserve(size_t len) ///< number of bits to reserve
+    /// @returns reference to this object.
   {
     if (len)
       alloc(((len - 1) >> 6) + 1);
     return *this;
   }
   /// Returns the current length of the bit vector.
-  /// @returns number of bits.
   size_t size() const
+    /// @returns number of bits.
   {
     return len_ << 6;
   }
   /// Returns the number of bits set.
-  /// @returns number of 1 bits.
   size_t count() const
+    /// @returns number of 1 bits.
   {
     size_t n = 0, k = 0;
     while ((n = find_first(n)) != npos)
@@ -455,8 +469,9 @@ class Bits {
     return k;
   }
   /// Returns true if the bit vector intersects with the given bits, false if the bit vectors are disjoint.
-  /// @returns true if bits intersect or false if disjoint.
-  bool intersects(const Bits& bits) const ///< bits
+  bool intersects(const Bits& bits) ///< bits
+    /// @returns true if bits intersect or false if disjoint.
+    const
   {
     size_t k = len_;
     if (bits.len_ < k)
@@ -467,8 +482,9 @@ class Bits {
     return false;
   }
   /// Returns true if the given bits are a subset of the bit vector, i.e. for each bit in bits, the corresponding bit in the bit vector is set.
-  /// @returns true if bits is a subset.
-  bool contains(const Bits& bits) const ///< bits
+  bool contains(const Bits& bits) ///< bits
+    /// @returns true if bits is a subset.
+    const
   {
     size_t k = len_;
     if (bits.len_ < k)
@@ -482,8 +498,9 @@ class Bits {
     return true;
   }
   /// Returns the position of the first bit set in the bit vector, or Bits::npos if none.
-  /// @returns first position or Bits::npos.
-  size_t find_first(size_t n = 0) const ///< internal parameter (do not use)
+  size_t find_first(size_t n = 0) ///< internal parameter (do not use)
+    /// @returns first position or Bits::npos.
+    const
   {
     size_t i = n >> 6;
     if (i < len_ && vec_[i])
@@ -498,8 +515,9 @@ class Bits {
     return npos;
   }
   /// Returns the next position of a bit set in the bit vector, or Bits::npos if none.
-  /// @returns next position or Bits::npos.
-  size_t find_next(size_t n) const ///< the current position to search from
+  size_t find_next(size_t n) ///< the current position to search from
+    /// @returns next position or Bits::npos.
+    const
   {
     return find_first(n + 1);
   }

@@ -42,17 +42,12 @@
 
 namespace reflex {
 
-/**
-A matcher engine class, implements reflex::PatternMatcher pattern matching
-interface with scan, find, split functors and iterators, using the Boost::regex
-library.
-
-TODO
-*/
+/// Boost matcher engine class implements reflex::PatternMatcher pattern matching interface with scan, find, split functors and iterators, using the Boost::regex library.
+/** More info TODO */
 class BoostMatcher : public PatternMatcher<boost::regex> {
  public:
   /// Construct matcher engine from a boost::regex object or string regex, and an input character sequence.
-  template<typename P> ///< @tparam <P> pattern is a boost::regex or a string regex
+  template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostMatcher(
       const P&     pat,           ///< a boost::regex or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
@@ -64,7 +59,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
     reset();
   }
   /// Construct matcher engine from a boost::regex object or string regex, and an input character sequence.
-  template<typename P> ///< @tparam <P> pattern is a boost::regex or a string regex
+  template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostMatcher(
       const P     *pat,           ///< points to a boost::regex or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
@@ -84,29 +79,29 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   }
   using PatternMatcher::pattern;
   /// Set the pattern to use with this matcher.
-  /// @returns this matcher.
   virtual PatternMatcher& pattern(const Pattern& pat) ///< boost::regex for this matcher
+    /// @returns this matcher.
   {
     itr_ = fin_;
     return PatternMatcher::pattern(pat);
   }
   /// Set the pattern from a regex string to use with this matcher.
-  /// @returns this matcher.
   virtual PatternMatcher& pattern(const char *regex) ///< regex string to instantiate internal pattern object
+    /// @returns this matcher.
   {
     itr_ = fin_;
     return PatternMatcher::pattern(regex);
   }
   /// Set the pattern from a regex string to use with this matcher.
-  /// @returns this matcher.
   virtual PatternMatcher& pattern(const std::string& regex) ///< regex string to instantiate internal pattern object
+    /// @returns this matcher.
   {
     itr_ = fin_;
     return PatternMatcher::pattern(regex);
   }
   /// Convert a string regex to a regex with group captures only for the outermost (top-level) choices. All outermost (top-level) choices `X1`, `X2`, ... `Xn` in a regex `X1|X2|...|Xn` are regrouped such that `X1|X2|...|Xn` => `(X1)|(X2)|...|(Xn)`. Innermost (nested) group captures `(Y)` are converted to non-captured `(Y)` => `(?:Y)`. All existing non-capturing groups are retained. For example, `a|b(c)|(?:d)` => `(a)|(b(?:c))|((?:d))`.
-  /// @returns string regex.
   static std::string regroup(const std::string& regex)
+    /// @returns string regex.
   {
     DBGLOG("BoostMatcher::regroup(\"%s\")", regex.c_str());
     std::string newregex = "(";
@@ -175,8 +170,8 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   }
  protected:
   /// The match method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH, implemented with boost::regex.
-  /// @returns nonzero when input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
   virtual size_t match(Method method)
+    /// @returns nonzero when input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
   {
     DBGLOG("BEGIN BoostMatcher::match(%d)", method);
     bool bob = at_bob();
@@ -231,12 +226,13 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
             }
             else
             {
+              DBGLOGN("Matched empty end");
               cap_ = Const::EMPTY;
               len_ = pos_ - (txt_ - buf_); // size() spans txt_ to cur_ in buf_[]
               eof_ = true;
             }
             itr_ = fin_;
-            set_current(pos_);
+            cur_ = pos_;
             buf_[txt_ - buf_ + len_] = '\0';
             DBGLOGN("Split: act = %zu txt = '%s' len = %zu pos = %zu eof = %d", cap_, txt_, len_, pos_, eof_ == true);
           }
@@ -358,20 +354,16 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   boost::cregex_iterator fin_; ///< boost regex iterator final end
 };
 
+/// Boost matcher engine class, extends reflex::BoostMatcher for Boost POSIX regex matching.
 /**
-A matcher engine class, extends reflex::BoostMatcher for Boost POSIX regex
-matching.
-
 Boost POSIX regex matching enables Boost match flags `match_posix` and
 `match_not_dot_newline`. Lazy quantifiers are not supported by this matcher
 engine.
-
-TODO
 */
 class BoostPosixMatcher : public BoostMatcher {
  public:
   /// Construct a POSIX matcher engine from a boost::regex pattern and an input character sequence.
-  template<typename P> ///< @tparam <P> pattern is a boost::regex or a string regex
+  template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostPosixMatcher(
       const P&     pat,           ///< a boost::regex or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
@@ -394,19 +386,15 @@ class BoostPosixMatcher : public BoostMatcher {
   }
 };
 
+/// Boost matcher engine class, extends reflex::BoostMatcher for Boost Perl regex matching.
 /**
-A matcher engine class, extends reflex::BoostMatcher for Boost Perl regex
-matching.
-
 Boost Perl regex matching enables Boost match flag `match_perl` and
 `match_not_dot_newline`.
-
-TODO
 */
 class BoostPerlMatcher : public BoostMatcher {
  public:
   /// Construct a Perl matcher engine from a boost::regex pattern and an input character sequence.
-  template<typename P> ///< @tparam <P> pattern is a boost::regex or a string regex
+  template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostPerlMatcher(
       const P&     pat,           ///< a boost::regex or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher

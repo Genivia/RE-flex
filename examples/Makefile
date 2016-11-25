@@ -1,18 +1,19 @@
 CPP=c++
 BOOST=$(HOME)/boost
+BOOSTLIB=$(BOOST)/stage/lib/libboost_regex.a
 REFLEX=../bin/reflex
 BISON=bison
 LIBS=../lib/libreflex.a
-#LIBS=../lib/libreflex.a $(BOOST)/stage/lib/libboost_regex.a
+# LIBS=../lib/libreflex.a $(BOOSTLIB)
 REFLAGS=--matcher=reflex
 COFLAGS=-g -O2
 CWFLAGS=-Wall -Wunused -Wextra
-CIFLAGS=-I. -I../include -I $(HOME)/boost
+CIFLAGS=-I. -I../include -I $(BOOST)
 CMFLAGS=
 # CMFLAGS=-DDEBUG
 CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
 
-all:		flexexample1 flexexample2 flexexample3 flexexample4 flexexample5 flexexample6 flexexample7 flexexample8 reflexexample3 reflexexample4 reflexexample5 reflexexample6 ctokens jtokens echo wc wcu wcpp wcwc tag tag_lazy tag_lazystates cow cows indent json cards
+all:		flexexample1 flexexample2 flexexample3 flexexample4 flexexample5 flexexample6 flexexample7 flexexample8 reflexexample3 reflexexample4 reflexexample5 reflexexample6 ctokens jtokens echo wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_tidy cow cows indent json cards
 
 flexexample1:	flexexample1.l
 		$(REFLEX) $(REFLAGS) --flex flexexample1.l

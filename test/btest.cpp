@@ -23,9 +23,6 @@ static void error(const char *text)
 
 using namespace reflex;
 
-// TODO: with lazy optional ??, trigraphs should be disabled (or use ?\?) so use GNU standard:
-// c++ -std=gnu++11 -Wall test.cpp pattern.cpp matcher.cpp
-
 struct Test {
   const char *pattern;
   const char *popts;
@@ -44,7 +41,7 @@ Test tests[] = {
   // special cases of empty patterns, sometimes not permitted
   { "a(b|)|c", "", "", "abc", { 1, 2 } },
   { "a(b|(|))|c", "", "", "abc", { 1, 2 } },
-  // DFA edge compaction test
+  // DFA edge compaction test (only applicable to RE/flex)
   { "[a-cg-ik]z|d|[e-g]|j|y|[x-z]|.|\\n", "", "", "azz", { 1, 6 } },
   // POSIX character classes
   {
@@ -241,15 +238,15 @@ int main()
     {
       printf("  At %zu,%zu;[%zu,%zu]: \"%s\" matches pattern %zu\n", matcher.lineno(), matcher.columno(), matcher.first(), matcher.last(), matcher.text(), matcher.accept());
       if (matcher.accept() != test->accepts[i])
-	break;
+        break;
       ++i;
     }
     if (matcher.accept() != 0 || test->accepts[i] != 0 || !matcher.at_end())
     {
       if (!matcher.at_end())
-	printf("ERROR: remaining input rest = '%s'\n", matcher.rest());
+        printf("ERROR: remaining input rest = '%s'\n", matcher.rest());
       else
-	printf("ERROR: accept = %zu text = '%s'\n", matcher.accept(), matcher.text());
+        printf("ERROR: accept = %zu text = '%s'\n", matcher.accept(), matcher.text());
       exit(1);
     }
     printf("OK\n\n");
@@ -460,13 +457,15 @@ int main()
   matcher.pattern(pattern7);
   matcher.input("ab c  d");
   matcher.unput('a');
+  test = "";
   while (true)
   {
     if (matcher.scan())
     {
       std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
       if (*matcher.text() == 'b')
-	matcher.unput('c');
+        matcher.unput('c');
     }
     else if (!matcher.at_end())
     {
@@ -478,6 +477,8 @@ int main()
     }
   }
   std::cout << std::endl;
+  if (test != "a/a/b/c/c/d/")
+    error("unput");
   //
   banner(stdout, "TEST MORE");
   //

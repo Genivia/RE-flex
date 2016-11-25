@@ -36,4 +36,5 @@
 
 #include "reflex.h"
 
+/// Populate scripts with letter script categories.
 void letter_scripts(Reflex::Map& scripts);

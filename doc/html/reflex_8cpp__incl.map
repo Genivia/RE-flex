@@ -2,12 +2,12 @@
 <area shape="rect" id="node3" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="1034,161,1099,189"/>
 <area shape="rect" id="node61" href="$letter__scripts_8h.html" title="Unicode letter scripts. " alt="" coords="941,83,1048,111"/>
 <area shape="rect" id="node64" href="$language__scripts_8h.html" title="Unicode language scripts. " alt="" coords="1072,83,1204,111"/>
-<area shape="rect" id="node67" href="$pl__scripts_8h.html" title="pl_scripts.h" alt="" coords="1229,83,1317,111"/>
+<area shape="rect" id="node67" href="$pl__scripts_8h.html" title="Unicode programming language scripts. " alt="" coords="1229,83,1317,111"/>
 <area shape="rect" id="node5" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="582,238,655,266"/>
 <area shape="rect" id="node17" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="895,393,949,421"/>
-<area shape="rect" id="node7" href="$bits_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="257,315,309,343"/>
+<area shape="rect" id="node7" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="257,315,309,343"/>
 <area shape="rect" id="node13" href="$debug_8h.html" title="RE/flex debug logs. " alt="" coords="164,315,233,343"/>
-<area shape="rect" id="node15" href="$input_8h.html" title="ReFlex input character sequence class. " alt="" coords="713,315,775,343"/>
+<area shape="rect" id="node15" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="713,315,775,343"/>
 <area shape="rect" id="node28" href="$ranges_8h.html" title="RE/flex range set container. " alt="" coords="66,315,139,343"/>
 <area shape="rect" id="node34" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="334,315,399,343"/>
 </map>

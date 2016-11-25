@@ -295,7 +295,7 @@ redo:
   }
 done:
 #ifndef FASTER
-  if (bol && cap_ != Pattern::IMAX)
+  if (bol && cap_ != Const::EMPTY)
   {
     if (col > 0 && (tab_.empty() || tab_.back() < col))
     {
@@ -389,30 +389,21 @@ done:
     if (cur_ == end_ && len_ == 0)
     {
       DBGLOG("Hit end: got = %d", got_);
-      if (cap_ == Pattern::IMAX && !opt_.A)
+      if (cap_ == Const::EMPTY && !opt_.A)
         cap_ = 0; // cannot goto scan?
     }
     else
     {
-      // if (cap_ == Pattern::IMAX && method == Const::FIND && !opt_.A) // ignore + continue: advance one char (for find())
-      // {
-        // ++cur_;
-        // len_ = 1;
-      // }
+      set_current(cur_);
       if (len_ > 0)
       {
-        set_current(cur_);
-        if (cap_ == Pattern::IMAX && !opt_.A)
+        if (cap_ == Const::EMPTY && !opt_.A)
         {
           DBGLOG("Ignore accept and continue: len = %zu", len_);
           if (method != Const::MATCH)
             goto scan;
           cap_ = 0;
         }
-      }
-      else
-      {
-        pos_ = cur_; // set_current(cur_);
       }
     }
   }

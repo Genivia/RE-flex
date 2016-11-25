@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">flexlexer.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Nov 20 2016</div>
+      <div style="float: right; font-size: 10px;">updated Fri Nov 25 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -67,7 +67,7 @@ Include dependency graph for flexlexer.h:</div>
 <div class="center"><img src="flexlexer_8h__incl.png" border="0" usemap="#flexlexer_8h" alt=""/></div>
 <map name="flexlexer_8h" id="flexlexer_8h">
 <area shape="rect" id="node3" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="150,83,231,111"/>
-<area shape="rect" id="node5" href="input_8h.html" title="ReFlex input character sequence class. " alt="" coords="120,161,181,189"/>
+<area shape="rect" id="node5" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="120,161,181,189"/>
 <area shape="rect" id="node7" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="58,238,112,266"/>
 </map>
 </div>
@@ -75,7 +75,7 @@ Include dependency graph for flexlexer.h:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer&lt; M &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt;  <a href="classreflex_1_1_flex_lexer.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible <a class="el" href="classreflex_1_1_flex_lexer.html" title="Flex-compatible FlexLexer abstract base class template derived from reflex::AbstractMatcher for the r...">FlexLexer</a> abstract base class template derived from <a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">reflex::AbstractMatcher</a> for the reflex-generated yyFlexLexer scanner class.  <a href="classreflex_1_1_flex_lexer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer_1_1_matcher.html">reflex::FlexLexer&lt; M &gt;::Matcher</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extends <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. ">reflex::AbstractLexer::Matcher</a> for Flex-compatibility.  <a href="classreflex_1_1_flex_lexer_1_1_matcher.html#details">More...</a><br /></td></tr>
@@ -149,7 +149,7 @@ Macros</h2></td></tr>
 <tr class="memdesc:a97f4214383553e1b43928bd0f3b96f6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro defining the matched action index.  <a href="#a97f4214383553e1b43928bd0f3b96f6c">More...</a><br /></td></tr>
 <tr class="separator:a97f4214383553e1b43928bd0f3b96f6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa789f4617e33fb99594cb04a3688a0c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aa789f4617e33fb99594cb04a3688a0c1">yyin</a>&#160;&#160;&#160;YY_SCANNER.matcher().in</td></tr>
-<tr class="memdesc:aa789f4617e33fb99594cb04a3688a0c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro defining the current input (<a class="el" href="classreflex_1_1_input.html">reflex::Input</a> can be a stream, file, or string).  <a href="#aa789f4617e33fb99594cb04a3688a0c1">More...</a><br /></td></tr>
+<tr class="memdesc:aa789f4617e33fb99594cb04a3688a0c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro defining the current input (<a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a> can be a stream, file, or string).  <a href="#aa789f4617e33fb99594cb04a3688a0c1">More...</a><br /></td></tr>
 <tr class="separator:aa789f4617e33fb99594cb04a3688a0c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fd44867d448dcb6fc32ea004a15de54"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a4fd44867d448dcb6fc32ea004a15de54">yyout</a>&#160;&#160;&#160;YY_SCANNER.os_</td></tr>
 <tr class="memdesc:a4fd44867d448dcb6fc32ea004a15de54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro defining the current output stream.  <a href="#a4fd44867d448dcb6fc32ea004a15de54">More...</a><br /></td></tr>
@@ -633,7 +633,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flex-compatible macro defining the current input (<a class="el" href="classreflex_1_1_input.html">reflex::Input</a> can be a stream, file, or string). </p>
+<p>Flex-compatible macro defining the current input (<a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a> can be a stream, file, or string). </p>
 
 </div>
 </div>
@@ -825,7 +825,7 @@ Macros</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Nov 20 2016 15:50:54 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Fri Nov 25 2016 11:28:08 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

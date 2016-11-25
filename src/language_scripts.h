@@ -36,5 +36,6 @@
 
 #include "reflex.h"
 
+/// Populate scripts with language script categories.
 void language_scripts(Reflex::Map& scripts);
 

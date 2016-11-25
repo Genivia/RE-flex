@@ -46,18 +46,18 @@ namespace reflex {
 template<typename T>
 struct range_compare {
   /// Compares two ranges lhs and rhs and returns true if lhs < rhs.
-  /// @returns true if lhs < rhs.
   bool operator()(
-      const std::pair<T,T>& lhs,
-      const std::pair<T,T>& rhs) const
+      const std::pair<T,T>& lhs, ///< LHS range to compare
+      const std::pair<T,T>& rhs) ///< RHS range to compare
+    const
+    /// @returns true if lhs < rhs.
   {
     return std::less<T>()(lhs.second, rhs.first);
   }
 };
 
+/// RE/flex Ranges template class.
 /**
-RE/flex Ranges template class.
-
 The `std::set` container is a base class of this Ranges class.  Value ranges
 [lo,hi] are stored in the underlying `std::set` container as `std::pair(lo,
 hi)` pairs of bounds.
@@ -185,16 +185,16 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
     insert(val, val);
   }
   /// Update ranges to include range [lo,hi] by merging overlapping ranges into one range.
-  /// @returns a pair of an iterator to the range and a flag indicating whether the range was inserted as new.
   std::pair<iterator,bool> insert(const value_type& r) ///< range
+    /// @returns a pair of an iterator to the range and a flag indicating whether the range was inserted as new.
   {
     return insert(r.first, r.second);
   }
   /// Update ranges to include range [lo,hi] by merging overlapping ranges into one range.
-  /// @returns a pair of an iterator to the range and a flag indicating whether the range was inserted as new.
   std::pair<iterator,bool> insert(
       const bound_type& lo, ///< lower bound
       const bound_type& hi) ///< upper bound
+    /// @returns a pair of an iterator to the range and a flag indicating whether the range was inserted as new.
   {
     // r = [lo,hi]
     value_type r(lo, hi);
@@ -219,28 +219,30 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
     return std::pair<iterator,bool>(container_type::insert(i, r), true); // insert with hint i that follows the insertion point
   }
   /// Update ranges to include the range [val,val].
-  /// @returns a pair of an iterator to the range and a flag indicating whether the range was inserted as new.
   std::pair<iterator,bool> insert(const bound_type& val) ///< value to insert
+    /// @returns a pair of an iterator to the range and a flag indicating whether the range was inserted as new.
   {
     return insert(val, val);
   }
   /// Find the first range [lo',hi'] that overlaps the given range [lo,hi], i.e. lo <= hi' and lo' <= hi.
-  /// @returns iterator to the first range that overlaps the given range, or the end iterator.
   const_iterator find(
-      const bound_type& lo,       ///< lower bound
-      const bound_type& hi) const ///< upper bound
+      const bound_type& lo, ///< lower bound
+      const bound_type& hi) ///< upper bound
+    const
+    /// @returns iterator to the first range that overlaps the given range, or the end iterator.
   {
     return container_type::find(value_type(lo, hi));
   }
   /// Find the range [lo',hi'] that includes the given value val, i.e. lo' <= val <= hi'.
-  /// @returns iterator to the range that includes the value, or the end iterator.
-  const_iterator find(const bound_type& val) const ///< value to search for
+  const_iterator find(const bound_type& val) ///< value to search for
+    const
+    /// @returns iterator to the range that includes the value, or the end iterator.
   {
     return find(val, val);
   }
   /// Update ranges to insert the given range set, where this method has lower complexity than iterating insert() for each range in rs.
-  /// @returns reference to this object.
   Ranges& operator|=(const Ranges& rs) ///< ranges to insert
+    /// @returns reference to this object.
   {
     iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -284,14 +286,14 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
     return *this;
   }
   /// Update ranges to insert the ranges of the given range set, same as Ranges::operator|=(rs).
-  /// @returns reference to this object.
   Ranges& operator+=(const Ranges& rs) ///< ranges to insert
+    /// @returns reference to this object.
   {
     return operator|=(rs);
   }
   /// Update ranges to intersect the ranges of the given range set.
-  /// @returns reference to this object.
   Ranges& operator&=(const Ranges& rs) ///< ranges to intersect
+    /// @returns reference to this object.
   {
     iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -355,20 +357,23 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
     return *this;
   }
   /// Returns the union of two range sets.
-  /// @returns the union of this set and rs.
-  Ranges operator|(const Ranges& rs) const ///< ranges to merge
+  Ranges operator|(const Ranges& rs) ///< ranges to merge
+    const
+    /// @returns the union of this set and rs.
   {
     return Ranges(*this) |= rs;
   }
   /// Returns the union of two range sets, same as Ranges::operator|(rs).
-  /// @returns the union of this set and rs.
-  Ranges operator+(const Ranges& rs) const ///< ranges to merge
+  Ranges operator+(const Ranges& rs) ///< ranges to merge
+    const
+    /// @returns the union of this set and rs.
   {
     return Ranges(*this) |= rs;
   }
   /// Returns the intersection of two range sets.
-  /// @returns the intersection of this set and rs.
-  Ranges operator&(const Ranges& rs) const ///< ranges to intersect
+  Ranges operator&(const Ranges& rs) ///< ranges to intersect
+    const
+    /// @returns the intersection of this set and rs.
   {
     const_iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -448,14 +453,15 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
   }
   */
   /// Return true if this set of ranges contains at least one range, i.e. is not empty.
-  /// @returns true if non empty, false if empty.
   bool any() const
+    /// @returns true if non empty, false if empty.
   {
     return !container_type::empty();
   }
   /// Return true if this set of ranges intersects with ranges rs, i.e. this set has at least one range [lo',hi'] that overlaps with a range [lo,hi] in rs such that lo <= hi' and lo' <= hi.
-  /// @returns true if this set intersects rs.
-  bool intersects(const Ranges& rs) const ///< ranges
+  bool intersects(const Ranges& rs) ///< ranges
+    const
+    /// @returns true if this set intersects rs.
   {
     const_iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -471,8 +477,9 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
     return false;
   }
   /// Return true if this set of ranges contains all ranges in rs, i.e. rs is a subset of this set which means that for each range [lo,hi] in rs, there is a range [lo',hi'] such that lo' <= lo and hi <= hi'.
-  /// @returns true if this set contains rs.
-  bool contains(const Ranges& rs) const ///< ranges
+  bool contains(const Ranges& rs) ///< ranges
+    const
+    /// @returns true if this set contains rs.
   {
     const_iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -493,9 +500,8 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
   }
 };
 
+/// RE/flex ORanges (open-ended, ordinal value range) template class.
 /**
-RE/flex ORanges (open-ended, ordinal value range) template class.
-
 The ORanges class is an optimization of the ranges class for ordinal types,
 i.e. types with the property that values can be counted and have a `+` (plus)
 operator.
@@ -602,24 +608,24 @@ class ORanges : public Ranges<T> {
     insert(val, val);
   }
   /// Update ranges to include range [lo,hi] by merging overlapping and adjacent ranges into one range.
-  /// @returns a pair of an iterator to the range and a flag indicating whether the range was inserted as new.
   std::pair<iterator,bool> insert(
       const bound_type& lo, ///< lower bound
       const bound_type& hi) ///< upper bound
+    /// @returns a pair of an iterator to the range and a flag indicating whether the range was inserted as new.
   {
     return Ranges<T>::insert(lo, bump(hi));
   }
   /// Update ranges to include range [val,val] by merging overlapping and adjacent ranges into one range.
-  /// @returns a pair of an iterator to the range and a flag indicating whether the range was inserted as new.
   std::pair<iterator,bool> insert(const bound_type& val) ///< value to insert
+    /// @returns a pair of an iterator to the range and a flag indicating whether the range was inserted as new.
   {
     return insert(val, val);
   }
   /// Update ranges by deleting the given range [lo,hi].
-  /// @returns true if ranges was updated.
   bool erase(
       const bound_type& lo, ///< lower bound
       const bound_type& hi) ///< upper bound
+    /// @returns true if ranges was updated.
   {
     // r = [lo+1, hi]
     value_type r(bump(lo), hi);
@@ -645,28 +651,30 @@ class ORanges : public Ranges<T> {
     return true;
   }
   /// Update ranges by deleting the given range [val,val].
-  /// @returns true if ranges was updated.
   bool erase(const bound_type& val) ///< value to delete
+    /// @returns true if ranges was updated.
   {
     return erase(val, val);
   }
   /// Find the first range that overlaps the given range.
-  /// @returns iterator to the first range that overlaps the given range, or the end iterator.
   const_iterator find(
-      const bound_type& lo,       ///< lower bound
-      const bound_type& hi) const ///< upper bound
+      const bound_type& lo, ///< lower bound
+      const bound_type& hi) ///< upper bound
+    const
+    /// @returns iterator to the first range that overlaps the given range, or the end iterator.
   {
     return Ranges<T>::find(bump(lo), hi);
   }
   /// Find the range that includes the given value.
-  /// @returns iterator to the range that includes the value, or the end iterator.
-  const_iterator find(const bound_type& val) const ///< value to search for
+  const_iterator find(const bound_type& val) ///< value to search for
+    const
+    /// @returns iterator to the range that includes the value, or the end iterator.
   {
     return find(val, val);
   }
   /// Update ranges to remove ranges rs, has lower complexity than repeating erase().
-  /// @returns reference to this object.
   ORanges& operator-=(const ORanges& rs)
+    /// @returns reference to this object.
   {
     iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -705,8 +713,8 @@ class ORanges : public Ranges<T> {
     return *this;
   }
   /// Update ranges to intersect the ranges of the given range set.
-  /// @returns reference to this object.
   ORanges& operator&=(const ORanges& rs) ///< ranges to intersect
+    /// @returns reference to this object.
   {
     iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -770,14 +778,16 @@ class ORanges : public Ranges<T> {
     return *this;
   }
   /// Returns the difference of two open-ended range sets.
-  /// @returns the difference of this set and rs.
-  ORanges operator-(const ORanges& rs) const ///< ranges
+  ORanges operator-(const ORanges& rs) ///< ranges
+    const
+    /// @returns the difference of this set and rs.
   {
     return ORanges(*this) -= rs;
   }
   /// Returns the intersection of two open-ended range sets.
-  /// @returns the intersection of this set and rs.
-  ORanges operator&(const ORanges& rs) const ///< ranges to intersect
+  ORanges operator&(const ORanges& rs) ///< ranges to intersect
+    const
+    /// @returns the intersection of this set and rs.
   {
     const_iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -823,8 +833,9 @@ class ORanges : public Ranges<T> {
     return r;
   }
   /// Return true if this set of ranges intersects with ranges rs, i.e. this set has at least one range [lo',hi'] that overlaps with a range [lo,hi] in rs such that lo <= hi' and lo' <= hi.
-  /// @returns true if this set intersects rs.
-  bool intersects(const ORanges& rs) const ///< ranges
+  bool intersects(const ORanges& rs) ///< ranges
+    const
+    /// @returns true if this set intersects rs.
   {
     const_iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -841,8 +852,8 @@ class ORanges : public Ranges<T> {
   }
  private:
   /// Bump with clamping.
-  /// @returns val + 1 or val when max.
   static bound_type bump(bound_type val) ///< the value to bump
+    /// @returns val + 1 or val when max.
   {
     if (static_cast<bound_type>(val + 1) < val)
       return val;

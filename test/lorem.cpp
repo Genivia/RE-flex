@@ -266,7 +266,7 @@ void test_lorem(AbstractMatcher &tokenizer, AbstractMatcher &filter, AbstractMat
   timer();
   for (size_t run = 0; run < RUNS; ++run)
   {
-    stream.clear(); // do this before seekg()
+    stream.clear(); // always do this before seekg()
     stream.seekg(0);
     tokenizer.input(stream);
     hits = 0;

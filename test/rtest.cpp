@@ -1,4 +1,9 @@
 
+// To use lazy optional ?? in strings, trigraphs should be disabled or we
+// simply use ?\?
+// To disable trigraphs enable the GNU standard:
+// c++ -std=gnu++11 -Wall test.cpp pattern.cpp matcher.cpp
+
 #include "pattern.h"
 #include "matcher.h"
 
@@ -23,9 +28,6 @@ static void error(const char *text)
 }
 
 using namespace reflex;
-
-// TODO: with lazy optional ??, trigraphs should be disabled (or use ?\?) so use GNU standard:
-// c++ -std=gnu++11 -Wall test.cpp pattern.cpp matcher.cpp
 
 struct Test {
   const char *pattern;
@@ -251,21 +253,21 @@ int main()
       printf("With matcher options \"%s\"\n", test->mopts);
     for (Pattern::Index i = 1; i <= pattern.size(); ++i)
       if (!pattern.reachable(i))
-	printf("WARNING: pattern[%u]=\"%s\" not reachable\n", i, pattern[i].c_str());
+        printf("WARNING: pattern[%u]=\"%s\" not reachable\n", i, pattern[i].c_str());
     size_t i = 0;
     while (matcher.scan())
     {
       printf("  At %zu,%zu;[%zu,%zu]: \"%s\" matches pattern[%zu]=\"%s\" from %u choice(s)\n", matcher.lineno(), matcher.columno(), matcher.first(), matcher.last(), matcher.text(), matcher.accept(), pattern[matcher.accept()].c_str(), pattern.size());
       if (matcher.accept() != test->accepts[i])
-	break;
+        break;
       ++i;
     }
     if (matcher.accept() != 0 || test->accepts[i] != 0 || !matcher.at_end())
     {
       if (!matcher.at_end())
-	printf("ERROR: remaining input rest = '%s'; dumping dump.gv and dump.cpp\n", matcher.rest());
+        printf("ERROR: remaining input rest = '%s'; dumping dump.gv and dump.cpp\n", matcher.rest());
       else
-	printf("ERROR: accept = %zu text = '%s'; dumping dump.gv and dump.cpp\n", matcher.accept(), matcher.text());
+        printf("ERROR: accept = %zu text = '%s'; dumping dump.gv and dump.cpp\n", matcher.accept(), matcher.text());
       std::string options(test->popts);
       options.append(";f=dump.gv,dump.cpp");
       Pattern(test->pattern, options);
@@ -479,13 +481,15 @@ int main()
   matcher.pattern(pattern7);
   matcher.input("ab c  d");
   matcher.unput('a');
+  test = "";
   while (true)
   {
     if (matcher.scan())
     {
       std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
       if (*matcher.text() == 'b')
-	matcher.unput('c');
+        matcher.unput('c');
     }
     else if (!matcher.at_end())
     {
@@ -497,6 +501,8 @@ int main()
     }
   }
   std::cout << std::endl;
+  if (test != "a/a/b/c/c/d/")
+    error("unput");
   //
   banner("TEST MORE");
   //

@@ -1,10 +1,11 @@
 CPP=c++
 BOOST=$(HOME)/boost
+BOOSTLIB=$(BOOST)/stage/lib/libboost_regex.a
 REFLEX=../bin/reflex
 LIBS=../lib/libreflex.a
 COFLAGS=-g -O2
 CWFLAGS=-Wall -Wunused -Wextra
-CIFLAGS=-I. -I../include -I $(HOME)/boost
+CIFLAGS=-I. -I../include -I $(BOOST)
 CMFLAGS=
 # CMFLAGS=-DDEBUG
 CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
@@ -12,11 +13,11 @@ CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
 all:		lorem test rtest btest
 
 lorem:		lorem.cpp
-		$(CPP) $(CFLAGS) -o $@ lorem.cpp $(OBJS) $(LIBS) $(BOOST)/stage/lib/libboost_regex.a
+		$(CPP) $(CFLAGS) -o $@ lorem.cpp $(OBJS) $(LIBS) $(BOOSTLIB)
 		./lorem
 
 test:		test.cpp
-		$(CPP) $(CFLAGS) -o $@ test.cpp $(OBJS) $(LIBS) $(BOOST)/stage/lib/libboost_regex.a
+		$(CPP) $(CFLAGS) -o $@ test.cpp $(OBJS) $(LIBS) $(BOOSTLIB)
 		./test '(a|b)*?abb' 'ababb'
 
 rtest:		rtest.cpp
@@ -24,7 +25,7 @@ rtest:		rtest.cpp
 		./rtest
 
 btest:		btest.cpp
-		$(CPP) $(CFLAGS) -o $@ btest.cpp $(OBJS) $(LIBS) $(BOOST)/stage/lib/libboost_regex.a
+		$(CPP) $(CFLAGS) -o $@ btest.cpp $(OBJS) $(LIBS) $(BOOSTLIB)
 		./btest
 
 test_bits:	test_bits.cpp

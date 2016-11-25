@@ -42,10 +42,9 @@
 
 namespace reflex {
 
-/**
-The abstract lexer class template that is the abstract root class of all reflex-generated scanners.
-*/
-template<typename M> ///< @tparam <M> matcher class derived from reflex::AbstractMatcher
+/// The abstract lexer class template that is the abstract root class of all reflex-generated scanners.
+/** More info TODO */
+template<typename M> /// @tparam <M> matcher class derived from reflex::AbstractMatcher
 class AbstractLexer {
  public:
   /// Extend matcher class M with a member pointing to the instantiating lexer class.
@@ -62,8 +61,8 @@ class AbstractLexer {
     { }
    protected:
     /// Returns true if matcher should wrap input after EOF.
-    /// @returns true if reflex::AbstractLexer::wrap() == 0
     virtual bool wrap(void)
+      /// @returns true if reflex::AbstractLexer::wrap() == 0
     {
       return lexer_->wrap() == 0;
     }
@@ -92,20 +91,20 @@ class AbstractLexer {
     debug_ = flag;
   }
   /// Get debug flag value.
-  /// @returns debug flag value.
   virtual int debug(void) const
+    /// @returns debug flag value.
   {
     return debug_;
   }
   /// The default wrap operation at EOF: do not wrap input.
-  /// @returns 1 (override to return 0 to indicate that new input is available after this invocation so that wrap after EOF is OK).
   virtual int wrap(void)
+    /// @returns 1 (override to return 0 to indicate that new input is available after this invocation so that wrap after EOF is OK).
   {
     return 1;
   }
   /// Start scanning from the given input character sequence.
-  /// @returns reference to *this.
   AbstractLexer& in(const Input& input) ///< reflex::Input character sequence to scan
+    /// @returns reference to *this.
   {
     in_ = input;
     if (has_matcher())
@@ -113,50 +112,50 @@ class AbstractLexer {
     return *this;
   }
   /// Returns the current input character sequence that is being scanned.
-  /// @returns reference to the current reflex::Input object.
   Input& in(void)
+    /// @returns reference to the current reflex::Input object.
   {
     if (has_matcher())
       return matcher().in;
     return in_;
   }
   /// Set the current output to the given output stream to echo text matches to.
-  /// @returns reference to *this.
   AbstractLexer& out(std::ostream& os) ///< output stream to echo text matches to
+    /// @returns reference to *this.
   {
     os_ = &os;
     return *this;
   }
   /// Returns the current output stream used to echo text matches to.
-  /// @returns reference to the current std::ostream object.
   std::ostream& out(void) const
+    /// @returns reference to the current std::ostream object.
   {
     assert(os_ != NULL);
     return *os_;
   }
   /// Returns true if a matcher was assigned to this lexer for scanning.
-  /// @returns true if a matcher was assigned.
   bool has_matcher(void) const
+    /// @returns true if a matcher was assigned.
   {
     return matcher_ != NULL;
   }
   /// Set the matcher (and its current state) for scanning.
-  /// @returns reference to *this.
   AbstractLexer& matcher(Matcher *matcher) ///< points to a matcher object
+    /// @returns reference to *this.
   {
     matcher_ = matcher;
     return *this;
   }
   /// Returns the current matcher.
-  /// @returns reference to the current matcher.
   Matcher& matcher(void) const
+    /// @returns reference to the current matcher.
   {
     assert(has_matcher() == true);
     return *matcher_;
   }
   /// Returns a new matcher for the given input.
-  /// @returns pointer to new reflex::AbstractLexer::Matcher.
   virtual Matcher *new_matcher(const Input& input) ///< reflex::Input character sequence to match
+    /// @returns pointer to new reflex::AbstractLexer::Matcher.
   {
     return new Matcher(matcher().pattern(), input, this);
   }
@@ -184,41 +183,41 @@ class AbstractLexer {
   {
     out().write(matcher().text(), matcher().size());
   }
-  /// Matched text.
-  /// @returns matched text.
+  /// Returns string with the text matched.
   const char *text(void) const
+    /// @returns matched text.
   {
     return matcher().text();
   }
   /// Matched text size (length in bytes).
-  /// @returns matched text size.
   size_t size(void) const
+    /// @returns matched text size.
   {
     return matcher().size();
   }
   /// Line number of matched text.
-  /// @returns line number.
   size_t lineno(void) const
+    /// @returns line number.
   {
     return matcher().lineno();
   }
   /// Column number of matched text.
-  /// @returns column number.
   size_t columno(void) const
+    /// @returns column number.
   {
     return matcher().columno();
   }
  protected:
   /// Transition to the given start condition state.
-  /// @returns reference to *this.
   AbstractLexer& start(int state) ///< start condition state to transition to
+    /// @returns reference to *this.
   {
     start_ = state;
     return *this;
   }
   /// Returns the current start condition state.
-  /// @returns start condition (integer).
   int start(void) const
+    /// @returns start condition (integer).
   {
     return start_;
   }
@@ -235,8 +234,8 @@ class AbstractLexer {
     state_.pop();
   }
   /// Returns the stack top start condition state.
-  /// @returns start condition (integer).
   int top_state(void) const
+    /// @returns start condition (integer).
   {
     return state_.top();
   }

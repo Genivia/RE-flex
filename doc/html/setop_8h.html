@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">setop.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Nov 20 2016</div>
+      <div style="float: right; font-size: 10px;">updated Fri Nov 25 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -71,7 +71,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" id="node9" href="language__scripts_8h.html" title="Unicode language scripts. " alt="" coords="45,238,177,266"/>
 <area shape="rect" id="node13" href="reflex_8cpp.html" title="RE/Flex scanner generator replacement for Flex/Lex. " alt="" coords="176,315,255,343"/>
 <area shape="rect" id="node15" href="letter__scripts_8h.html" title="Unicode letter scripts. " alt="" coords="254,238,361,266"/>
-<area shape="rect" id="node20" href="pl__scripts_8h.html" title="pl_scripts.h" alt="" coords="386,238,475,266"/>
+<area shape="rect" id="node20" href="pl__scripts_8h.html" title="Unicode programming language scripts. " alt="" coords="386,238,475,266"/>
 <area shape="rect" id="node11" href="language__scripts_8cpp.html" title="language_scripts.cpp" alt="" coords="5,315,152,343"/>
 <area shape="rect" id="node17" href="letter__scripts_8cpp.html" title="letter_scripts.cpp" alt="" coords="279,315,400,343"/>
 <area shape="rect" id="node22" href="pl__scripts_8cpp.html" title="Unicode programming language scripts. " alt="" coords="425,315,527,343"/>
@@ -102,12 +102,15 @@ Namespaces</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a3deed9d6b147d91074913f47c330d232"><td class="memTemplParams" colspan="2">template&lt;typename S1 , typename S2 &gt; </td></tr>
 <tr class="memitem:a3deed9d6b147d91074913f47c330d232"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a3deed9d6b147d91074913f47c330d232">reflex::is_disjoint</a> (const S1 &amp;s1, const S2 &amp;s2)</td></tr>
+<tr class="memdesc:a3deed9d6b147d91074913f47c330d232"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if sets <code>s1</code> and <code>s2</code> are disjoint.  <a href="namespacereflex.html#a3deed9d6b147d91074913f47c330d232">More...</a><br /></td></tr>
 <tr class="separator:a3deed9d6b147d91074913f47c330d232"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53a990336f7c3c72595d034bd685ee5c"><td class="memTemplParams" colspan="2">template&lt;typename T , typename S &gt; </td></tr>
 <tr class="memitem:a53a990336f7c3c72595d034bd685ee5c"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a53a990336f7c3c72595d034bd685ee5c">reflex::is_in_set</a> (const T &amp;x, const S &amp;s)</td></tr>
+<tr class="memdesc:a53a990336f7c3c72595d034bd685ee5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if value <code>x</code> is in set <code>s</code>.  <a href="namespacereflex.html#a53a990336f7c3c72595d034bd685ee5c">More...</a><br /></td></tr>
 <tr class="separator:a53a990336f7c3c72595d034bd685ee5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a088abc7ab84436832139b9c106cad426"><td class="memTemplParams" colspan="2">template&lt;typename S1 , typename S2 &gt; </td></tr>
 <tr class="memitem:a088abc7ab84436832139b9c106cad426"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a088abc7ab84436832139b9c106cad426">reflex::is_subset</a> (const S1 &amp;s1, const S2 &amp;s2)</td></tr>
+<tr class="memdesc:a088abc7ab84436832139b9c106cad426"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if set <code>s1</code> is a subset of set <code>s2</code>.  <a href="namespacereflex.html#a088abc7ab84436832139b9c106cad426">More...</a><br /></td></tr>
 <tr class="separator:a088abc7ab84436832139b9c106cad426"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6f035f9bac92cfcc709fd34844805d4"><td class="memTemplParams" colspan="2">template&lt;typename S1 , typename S2 &gt; </td></tr>
 <tr class="memitem:ae6f035f9bac92cfcc709fd34844805d4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ae6f035f9bac92cfcc709fd34844805d4">reflex::set_insert</a> (S1 &amp;s1, const S2 &amp;s2)</td></tr>
@@ -125,9 +128,9 @@ Functions</h2></td></tr>
 <dd>
 (c) BSD-3 License - see LICENSE.txt</dd></dl>
 <h2>Usage </h2>
-<p><code><a class="el" href="namespacereflex.html#a3deed9d6b147d91074913f47c330d232">reflex::is_disjoint</a>&lt;S1,S2&gt;(S1 s1, S2 s2)</code> is true if <code>s1</code> and <code>s2</code> are disjoint sets.</p>
-<p><code><a class="el" href="namespacereflex.html#a088abc7ab84436832139b9c106cad426">reflex::is_subset</a>&lt;S1,S2&gt;(S1 s1, S2 s2)</code> is true if <code>s1</code> is a subset of <code>s2</code>.</p>
-<p><code><a class="el" href="namespacereflex.html#a53a990336f7c3c72595d034bd685ee5c">reflex::is_in_set</a>&lt;T,S&gt;(T x, S s)</code> is true if <code>x</code> is in <code>s</code>.</p>
+<p><code><a class="el" href="namespacereflex.html#a3deed9d6b147d91074913f47c330d232" title="Check if sets s1 and s2 are disjoint. ">reflex::is_disjoint</a>&lt;S1,S2&gt;(S1 s1, S2 s2)</code> is true if <code>s1</code> and <code>s2</code> are disjoint sets.</p>
+<p><code><a class="el" href="namespacereflex.html#a088abc7ab84436832139b9c106cad426" title="Check if set s1 is a subset of set s2. ">reflex::is_subset</a>&lt;S1,S2&gt;(S1 s1, S2 s2)</code> is true if <code>s1</code> is a subset of <code>s2</code>.</p>
+<p><code><a class="el" href="namespacereflex.html#a53a990336f7c3c72595d034bd685ee5c" title="Check if value x is in set s. ">reflex::is_in_set</a>&lt;T,S&gt;(T x, S s)</code> is true if <code>x</code> is in <code>s</code>.</p>
 <p><code><a class="el" href="namespacereflex.html#ae6f035f9bac92cfcc709fd34844805d4" title="Insert set s2 into set s1. ">reflex::set_insert</a>&lt;S1,S2&gt;(S1 s1, S2 s2)</code> inserts elements of <code>s2</code> into <code>s1</code>.</p>
 <p><code><a class="el" href="namespacereflex.html#a677294e5ecf35a97b41e72370672f3bc" title="Delete elements of set s2 from set s1. ">reflex::set_delete</a>&lt;S1,S2&gt;(S1 s1, S2 s2)</code> deletes elements of <code>s2</code> from <code>s1</code>.</p>
 <p><code><a class="el" href="structreflex_1_1lazy__intersection.html" title="Intersection of two ordered sets, with an iterator to get elements lazely. ">reflex::lazy_intersection</a>&lt;S1,S2&gt;(S1 s1, S2 s2)</code> is a structure with an iterator over elements that are in <code>s1</code> and in <code>s2</code>.</p>
@@ -151,7 +154,7 @@ Functions</h2></td></tr>
 </div><!-- fragment --> </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Nov 20 2016 15:50:54 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Fri Nov 25 2016 11:28:08 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

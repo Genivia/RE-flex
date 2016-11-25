@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Nov 20 2016</div>
+      <div style="float: right; font-size: 10px;">updated Fri Nov 25 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -61,7 +61,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p>&lt;  
+<p>The abstract lexer class template that is the abstract root class of all reflex-generated scanners.  
  <a href="classreflex_1_1_abstract_lexer.html#details">More...</a></p>
 
 <p><code>#include &lt;abslexer.h&gt;</code></p>
@@ -70,7 +70,7 @@ Inheritance diagram for reflex::AbstractLexer&lt; M &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreflex_1_1_abstract_lexer__inherit__graph.png" border="0" usemap="#reflex_1_1_abstract_lexer_3_01_m_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="reflex_1_1_abstract_lexer_3_01_m_01_4_inherit__map" id="reflex_1_1_abstract_lexer_3_01_m_01_4_inherit__map">
-<area shape="rect" id="node3" href="classreflex_1_1_flex_lexer.html" title="&lt; " alt="" coords="16,83,169,111"/>
+<area shape="rect" id="node3" href="classreflex_1_1_flex_lexer.html" title="Flex&#45;compatible FlexLexer abstract base class template derived from reflex::AbstractMatcher for the r..." alt="" coords="16,83,169,111"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -79,7 +79,7 @@ Collaboration diagram for reflex::AbstractLexer&lt; M &gt;:</div>
 <div class="center"><img src="classreflex_1_1_abstract_lexer__coll__graph.png" border="0" usemap="#reflex_1_1_abstract_lexer_3_01_m_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="reflex_1_1_abstract_lexer_3_01_m_01_4_coll__map" id="reflex_1_1_abstract_lexer_3_01_m_01_4_coll__map">
 <area shape="rect" id="node2" href="classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. " alt="" coords="14,193,156,237"/>
-<area shape="rect" id="node7" href="classreflex_1_1_input.html" title="reflex::Input" alt="" coords="110,6,201,34"/>
+<area shape="rect" id="node7" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. " alt="" coords="110,6,201,34"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -101,24 +101,34 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3a070058e52c93918d41b1f37901f01b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set debug flag value.  <a href="#a3a070058e52c93918d41b1f37901f01b">More...</a><br /></td></tr>
 <tr class="separator:a3a070058e52c93918d41b1f37901f01b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d6e805887811d8c2c061ab908eca79f"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a8d6e805887811d8c2c061ab908eca79f">debug</a> (void) const </td></tr>
+<tr class="memdesc:a8d6e805887811d8c2c061ab908eca79f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get debug flag value.  <a href="#a8d6e805887811d8c2c061ab908eca79f">More...</a><br /></td></tr>
 <tr class="separator:a8d6e805887811d8c2c061ab908eca79f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae77e2fac36ed991f62b1308557bfd146"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#ae77e2fac36ed991f62b1308557bfd146">wrap</a> (void)</td></tr>
+<tr class="memdesc:ae77e2fac36ed991f62b1308557bfd146"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default wrap operation at EOF: do not wrap input.  <a href="#ae77e2fac36ed991f62b1308557bfd146">More...</a><br /></td></tr>
 <tr class="separator:ae77e2fac36ed991f62b1308557bfd146"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affea8a2b877c58c7c85f750b57f18df8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#affea8a2b877c58c7c85f750b57f18df8">in</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;input)</td></tr>
+<tr class="memdesc:affea8a2b877c58c7c85f750b57f18df8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start scanning from the given input character sequence.  <a href="#affea8a2b877c58c7c85f750b57f18df8">More...</a><br /></td></tr>
 <tr class="separator:affea8a2b877c58c7c85f750b57f18df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66bec00e18d3e47c4ca395a54efcdc59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_input.html">Input</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a66bec00e18d3e47c4ca395a54efcdc59">in</a> (void)</td></tr>
+<tr class="memdesc:a66bec00e18d3e47c4ca395a54efcdc59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current input character sequence that is being scanned.  <a href="#a66bec00e18d3e47c4ca395a54efcdc59">More...</a><br /></td></tr>
 <tr class="separator:a66bec00e18d3e47c4ca395a54efcdc59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5611c94c961a216fc733244c9b688f8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a5611c94c961a216fc733244c9b688f8f">out</a> (std::ostream &amp;os)</td></tr>
+<tr class="memdesc:a5611c94c961a216fc733244c9b688f8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current output to the given output stream to echo text matches to.  <a href="#a5611c94c961a216fc733244c9b688f8f">More...</a><br /></td></tr>
 <tr class="separator:a5611c94c961a216fc733244c9b688f8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e6542bb8ef8e767f0237d1d85eb5bb6"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a3e6542bb8ef8e767f0237d1d85eb5bb6">out</a> (void) const </td></tr>
+<tr class="memdesc:a3e6542bb8ef8e767f0237d1d85eb5bb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current output stream used to echo text matches to.  <a href="#a3e6542bb8ef8e767f0237d1d85eb5bb6">More...</a><br /></td></tr>
 <tr class="separator:a3e6542bb8ef8e767f0237d1d85eb5bb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3171a284ccd3e97985ec1d909f7eaf6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#ab3171a284ccd3e97985ec1d909f7eaf6">has_matcher</a> (void) const </td></tr>
+<tr class="memdesc:ab3171a284ccd3e97985ec1d909f7eaf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if a matcher was assigned to this lexer for scanning.  <a href="#ab3171a284ccd3e97985ec1d909f7eaf6">More...</a><br /></td></tr>
 <tr class="separator:ab3171a284ccd3e97985ec1d909f7eaf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70ee52cef2c37c2ca47a686eea75a5db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a70ee52cef2c37c2ca47a686eea75a5db">matcher</a> (<a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *matcher)</td></tr>
+<tr class="memdesc:a70ee52cef2c37c2ca47a686eea75a5db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the matcher (and its current state) for scanning.  <a href="#a70ee52cef2c37c2ca47a686eea75a5db">More...</a><br /></td></tr>
 <tr class="separator:a70ee52cef2c37c2ca47a686eea75a5db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e93b0111f4946f8b16690bd60bfbd37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a0e93b0111f4946f8b16690bd60bfbd37">matcher</a> (void) const </td></tr>
+<tr class="memdesc:a0e93b0111f4946f8b16690bd60bfbd37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current matcher.  <a href="#a0e93b0111f4946f8b16690bd60bfbd37">More...</a><br /></td></tr>
 <tr class="separator:a0e93b0111f4946f8b16690bd60bfbd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ab259fa3a2881fc2eb5580967f769b4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a5ab259fa3a2881fc2eb5580967f769b4">new_matcher</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;input)</td></tr>
+<tr class="memdesc:a5ab259fa3a2881fc2eb5580967f769b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new matcher for the given input.  <a href="#a5ab259fa3a2881fc2eb5580967f769b4">More...</a><br /></td></tr>
 <tr class="separator:a5ab259fa3a2881fc2eb5580967f769b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c1e5064cc9a248871c7b3b3f3dc61b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a2c1e5064cc9a248871c7b3b3f3dc61b3">del_matcher</a> (<a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *<a class="el" href="classreflex_1_1_abstract_lexer.html#a70ee52cef2c37c2ca47a686eea75a5db">matcher</a>) const </td></tr>
 <tr class="memdesc:a2c1e5064cc9a248871c7b3b3f3dc61b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a matcher.  <a href="#a2c1e5064cc9a248871c7b3b3f3dc61b3">More...</a><br /></td></tr>
@@ -133,19 +143,25 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a07a433d80dd674a3ac1b9929acbf9d78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Echo the matched text to the current output.  <a href="#a07a433d80dd674a3ac1b9929acbf9d78">More...</a><br /></td></tr>
 <tr class="separator:a07a433d80dd674a3ac1b9929acbf9d78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4adc8cccffbc846e0f8408ddadfed22f"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a4adc8cccffbc846e0f8408ddadfed22f">text</a> (void) const </td></tr>
+<tr class="memdesc:a4adc8cccffbc846e0f8408ddadfed22f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns string with the text matched.  <a href="#a4adc8cccffbc846e0f8408ddadfed22f">More...</a><br /></td></tr>
 <tr class="separator:a4adc8cccffbc846e0f8408ddadfed22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a981d20f5395a9d278cc7be9f8c8a50"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a8a981d20f5395a9d278cc7be9f8c8a50">size</a> (void) const </td></tr>
+<tr class="memdesc:a8a981d20f5395a9d278cc7be9f8c8a50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matched text size (length in bytes).  <a href="#a8a981d20f5395a9d278cc7be9f8c8a50">More...</a><br /></td></tr>
 <tr class="separator:a8a981d20f5395a9d278cc7be9f8c8a50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36d6d30a2f3c8add23d379a1afa54e69"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a36d6d30a2f3c8add23d379a1afa54e69">lineno</a> (void) const </td></tr>
+<tr class="memdesc:a36d6d30a2f3c8add23d379a1afa54e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Line number of matched text.  <a href="#a36d6d30a2f3c8add23d379a1afa54e69">More...</a><br /></td></tr>
 <tr class="separator:a36d6d30a2f3c8add23d379a1afa54e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab802f6d0c624523a0a7f34cc4eebb139"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#ab802f6d0c624523a0a7f34cc4eebb139">columno</a> (void) const </td></tr>
+<tr class="memdesc:ab802f6d0c624523a0a7f34cc4eebb139"><td class="mdescLeft">&#160;</td><td class="mdescRight">Column number of matched text.  <a href="#ab802f6d0c624523a0a7f34cc4eebb139">More...</a><br /></td></tr>
 <tr class="separator:ab802f6d0c624523a0a7f34cc4eebb139"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a905c83f6978b3599c43167ae3c7f5b30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a905c83f6978b3599c43167ae3c7f5b30">start</a> (int state)</td></tr>
+<tr class="memdesc:a905c83f6978b3599c43167ae3c7f5b30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transition to the given start condition state.  <a href="#a905c83f6978b3599c43167ae3c7f5b30">More...</a><br /></td></tr>
 <tr class="separator:a905c83f6978b3599c43167ae3c7f5b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9230120566cda8006cb8549daa53f61f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a9230120566cda8006cb8549daa53f61f">start</a> (void) const </td></tr>
+<tr class="memdesc:a9230120566cda8006cb8549daa53f61f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current start condition state.  <a href="#a9230120566cda8006cb8549daa53f61f">More...</a><br /></td></tr>
 <tr class="separator:a9230120566cda8006cb8549daa53f61f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a996791039f153c27947dab23db026f41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a996791039f153c27947dab23db026f41">push_state</a> (int state)</td></tr>
 <tr class="memdesc:a996791039f153c27947dab23db026f41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push the current start condition state on the stack and transition to the given start condition state.  <a href="#a996791039f153c27947dab23db026f41">More...</a><br /></td></tr>
@@ -154,6 +170,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a329ce0260ce6b49ec00472ddaa7b3783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the stack start condition state and transition to that state.  <a href="#a329ce0260ce6b49ec00472ddaa7b3783">More...</a><br /></td></tr>
 <tr class="separator:a329ce0260ce6b49ec00472ddaa7b3783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3469ff468c7a2472af990876110b227"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#ab3469ff468c7a2472af990876110b227">top_state</a> (void) const </td></tr>
+<tr class="memdesc:ab3469ff468c7a2472af990876110b227"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stack top start condition state.  <a href="#ab3469ff468c7a2472af990876110b227">More...</a><br /></td></tr>
 <tr class="separator:ab3469ff468c7a2472af990876110b227"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
@@ -184,10 +201,10 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename M&gt;<br />
 class reflex::AbstractLexer&lt; M &gt;</h3>
 
-<p>&lt; </p>
-<p>The abstract lexer class template that is the abstract root class of all reflex-generated scanners. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>The abstract lexer class template that is the abstract root class of all reflex-generated scanners. </p>
+<p>More info TODO </p><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">&lt;M&gt;</td><td>matcher class derived from <a class="el" href="classreflex_1_1_abstract_matcher.html">reflex::AbstractMatcher</a> </td></tr>
+    <tr><td class="paramname">&lt;M&gt;</td><td>matcher class derived from <a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">reflex::AbstractMatcher</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -229,7 +246,7 @@ template&lt;typename M &gt; </div>
 <p>Construct abstract lexer to scan an input character sequence and echo the text matches to output. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td><a class="el" href="classreflex_1_1_input.html">reflex::Input</a> character sequence to read from </td></tr>
+    <tr><td class="paramname">input</td><td><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a> character sequence to read from </td></tr>
     <tr><td class="paramname">os</td><td>echo the text matches to this std::ostream or to std::cout </td></tr>
   </table>
   </dd>
@@ -289,7 +306,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Column number of matched text. </p><dl class="section return"><dt>Returns</dt><dd>column number. </dd></dl>
+
+<p>Column number of matched text. </p>
+<dl class="section return"><dt>Returns</dt><dd>column number. </dd></dl>
 
 </div>
 </div>
@@ -316,7 +335,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get debug flag value. </p><dl class="section return"><dt>Returns</dt><dd>debug flag value. </dd></dl>
+
+<p>Get debug flag value. </p>
+<dl class="section return"><dt>Returns</dt><dd>debug flag value. </dd></dl>
 
 </div>
 </div>
@@ -399,7 +420,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Returns true if a matcher was assigned to this lexer for scanning. </p><dl class="section return"><dt>Returns</dt><dd>true if a matcher was assigned. </dd></dl>
+
+<p>Returns true if a matcher was assigned to this lexer for scanning. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if a matcher was assigned. </dd></dl>
 
 </div>
 </div>
@@ -426,10 +449,12 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Start scanning from the given input character sequence. </p><dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
+
+<p>Start scanning from the given input character sequence. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td><a class="el" href="classreflex_1_1_input.html">reflex::Input</a> character sequence to scan </td></tr>
+    <tr><td class="paramname">input</td><td><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a> character sequence to scan </td></tr>
   </table>
   </dd>
 </dl>
@@ -459,7 +484,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Returns the current input character sequence that is being scanned. </p><dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html">reflex::Input</a> object. </dd></dl>
+
+<p>Returns the current input character sequence that is being scanned. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a> object. </dd></dl>
 
 </div>
 </div>
@@ -486,7 +513,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Line number of matched text. </p><dl class="section return"><dt>Returns</dt><dd>line number. </dd></dl>
+
+<p>Line number of matched text. </p>
+<dl class="section return"><dt>Returns</dt><dd>line number. </dd></dl>
 
 </div>
 </div>
@@ -513,7 +542,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Set the matcher (and its current state) for scanning. </p><dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
+
+<p>Set the matcher (and its current state) for scanning. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">matcher</td><td>points to a matcher object </td></tr>
@@ -546,7 +577,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Returns the current matcher. </p><dl class="section return"><dt>Returns</dt><dd>reference to the current matcher. </dd></dl>
+
+<p>Returns the current matcher. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to the current matcher. </dd></dl>
 
 </div>
 </div>
@@ -573,10 +606,12 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Returns a new matcher for the given input. </p><dl class="section return"><dt>Returns</dt><dd>pointer to new <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. ">reflex::AbstractLexer::Matcher</a>. </dd></dl>
+
+<p>Returns a new matcher for the given input. </p>
+<dl class="section return"><dt>Returns</dt><dd>pointer to new <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. ">reflex::AbstractLexer::Matcher</a>. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td><a class="el" href="classreflex_1_1_input.html">reflex::Input</a> character sequence to match </td></tr>
+    <tr><td class="paramname">input</td><td><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a> character sequence to match </td></tr>
   </table>
   </dd>
 </dl>
@@ -606,7 +641,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Set the current output to the given output stream to echo text matches to. </p><dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
+
+<p>Set the current output to the given output stream to echo text matches to. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">os</td><td>output stream to echo text matches to </td></tr>
@@ -639,7 +676,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Returns the current output stream used to echo text matches to. </p><dl class="section return"><dt>Returns</dt><dd>reference to the current std::ostream object. </dd></dl>
+
+<p>Returns the current output stream used to echo text matches to. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to the current std::ostream object. </dd></dl>
 
 </div>
 </div>
@@ -824,7 +863,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Matched text size (length in bytes). </p><dl class="section return"><dt>Returns</dt><dd>matched text size. </dd></dl>
+
+<p>Matched text size (length in bytes). </p>
+<dl class="section return"><dt>Returns</dt><dd>matched text size. </dd></dl>
 
 </div>
 </div>
@@ -851,7 +892,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Transition to the given start condition state. </p><dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
+
+<p>Transition to the given start condition state. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>start condition state to transition to </td></tr>
@@ -884,7 +927,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Returns the current start condition state. </p><dl class="section return"><dt>Returns</dt><dd>start condition (integer). </dd></dl>
+
+<p>Returns the current start condition state. </p>
+<dl class="section return"><dt>Returns</dt><dd>start condition (integer). </dd></dl>
 
 </div>
 </div>
@@ -911,7 +956,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Matched text. </p><dl class="section return"><dt>Returns</dt><dd>matched text. </dd></dl>
+
+<p>Returns string with the text matched. </p>
+<dl class="section return"><dt>Returns</dt><dd>matched text. </dd></dl>
 
 </div>
 </div>
@@ -938,7 +985,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Returns the stack top start condition state. </p><dl class="section return"><dt>Returns</dt><dd>start condition (integer). </dd></dl>
+
+<p>Returns the stack top start condition state. </p>
+<dl class="section return"><dt>Returns</dt><dd>start condition (integer). </dd></dl>
 
 </div>
 </div>
@@ -965,7 +1014,9 @@ template&lt;typename M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The default wrap operation at EOF: do not wrap input. </p><dl class="section return"><dt>Returns</dt><dd>1 (override to return 0 to indicate that new input is available after this invocation so that wrap after EOF is OK). </dd></dl>
+
+<p>The default wrap operation at EOF: do not wrap input. </p>
+<dl class="section return"><dt>Returns</dt><dd>1 (override to return 0 to indicate that new input is available after this invocation so that wrap after EOF is OK). </dd></dl>
 
 </div>
 </div>
@@ -1144,7 +1195,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Nov 20 2016 15:50:54 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Fri Nov 25 2016 11:28:08 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

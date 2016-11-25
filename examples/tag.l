@@ -20,6 +20,6 @@ close		<\/[^>]+>
 {open}		printf("%*s%s\n", level++, "", text());
 {close}		printf("%*s%s\n", --level, "", text());
 .|\n		;
-<<EOF>>		printf("Tags are %sbalanced\n", level ? "im" : ""); return 9;
+<<EOF>>		printf("Tags are %sbalanced\n", level ? "im" : ""); return 0;
 
 %%

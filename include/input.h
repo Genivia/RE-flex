@@ -28,7 +28,7 @@
 
 /**
 @file      input.h
-@brief     ReFlex input character sequence class
+@brief     RE/flex input character sequence class
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
@@ -45,10 +45,8 @@
 
 namespace reflex {
 
+/// Input character sequence class for unified access to sources of input.
 /**
-ReFlex input character sequence class for unified access to sources of input of
-character sequences.
-
 Description
 -----------
 
@@ -236,7 +234,7 @@ class Input {
   {
     std::memcpy(utf8_, input.utf8_, sizeof(utf8_));
   }
-  /// Construct empty input character sequence
+  /// Construct empty input character sequence.
   Input(void)
     :
       cstring_(NULL),
@@ -337,57 +335,57 @@ class Input {
     init();
   }
   /// Cast this Input object to string.
-  /// @returns remaining unbuffered part of the NUL-terminated string or NULL.
   operator const char *()
+    /// @returns remaining unbuffered part of the NUL-terminated string or NULL.
   {
     return cstring_;
   }
   /// Cast this Input object to wide character string.
-  /// @returns remaining unbuffered part of the NUL-terminated wide character string or NULL.
   operator const wchar_t *()
+    /// @returns remaining unbuffered part of the NUL-terminated wide character string or NULL.
   {
     return wstring_;
   }
   /// Cast this Input object to file descriptor FILE*.
-  /// @returns pointer to current file descriptor or NULL.
   operator FILE *()
+    /// @returns pointer to current file descriptor or NULL.
   {
     return file_;
   }
   /// Cast this Input object to std::istream*.
-  /// @returns pointer to current std::istream or NULL.
   operator std::istream *()
+    /// @returns pointer to current std::istream or NULL.
   {
     return istream_;
   }
   /// Get the remaining string of this Input object.
-  /// @returns remaining unbuffered part of the NUL-terminated string or NULL.
   const char *cstring(void)
+    /// @returns remaining unbuffered part of the NUL-terminated string or NULL.
   {
     return cstring_;
   }
   /// Get the remaining wide character string of this Input object.
-  /// @returns remaining unbuffered part of the NUL-terminated wide character string or NULL.
   const wchar_t *wstring(void)
+    /// @returns remaining unbuffered part of the NUL-terminated wide character string or NULL.
   {
     return wstring_;
   }
   /// Get the FILE* of this Input object.
-  /// @returns pointer to current file descriptor or NULL.
   FILE *file(void)
+    /// @returns pointer to current file descriptor or NULL.
   {
     return file_;
   }
   /// Get the std::istream of this Input object.
-  /// @returns pointer to current std::istream or NULL.
   std::istream *istream(void)
+    /// @returns pointer to current std::istream or NULL.
   {
     return istream_;
   }
   /// Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a `FILE*` or `std::istream` source).
-  /// @returns the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable.
-  /// @warning This function SHOULD NOT be used after get().
   size_t size(void)
+    /// @returns the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable.
+    /// @warning This function SHOULD NOT be used after get().
   {
     if (size_ > 0)
       return size_;
@@ -531,8 +529,9 @@ class Input {
   void file_init(void);
   /// Implements get() on a FILE*.
   size_t file_get(
-      char  *s,  ///< points to the string buffer to fill with input
-      size_t n); ///< size of buffer pointed to by s
+      char  *s, ///< points to the string buffer to fill with input
+      size_t n) ///< size of buffer pointed to by s
+      ;
   /// Implements size() on a FILE*.
   void file_size(void);
   /// Implements good()operation on a FILE*.
