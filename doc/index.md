@@ -51,14 +51,14 @@ on macros and globals as Flex does.  Macros and globals are only added when the
 Flex-compatibility option `−−flex` is used when invoking the **reflex** scanner
 generator.  However, in all cases the **reflex** scanner generator produces C++
 scanner classes derived from a base lexer class template, with a matcher engine
-as the template parameter.  An extensible approach to scanner generation.
+as the template parameter.  This offers an extensible approach that permits new
+regex matching engines to be included in this framework in the future.
 
 In this document we refer to a *regex* as a shorthand for *regular expression*.
 Some of you may not agree with this broad use of terminology.  The term regular
 expressions refers to the formal concept of *regular languages*, wheras *regex*
 refers to backtracking-based regex matching that Perl introduced, that could no
-longer be said to be regular in the mathematical sense.  We will use Perl-style
-regex and POSIX regular expressions when applicable, but will mostly use regex.
+longer be said to be regular in a true mathematical sense.
 
 ⇢ [Back to contents](#)
 
@@ -98,15 +98,17 @@ lex specification:
 When the tokenizer matches a pattern, the corresponding action is invoked.  The
 example above returns tokens to the compiler's parser, which repeatedly invokes
 the tokenizer for more tokens until the tokenizer reaches the end of the input.
+The tokenizer returns zero (0) when the end of the input is reached.
 
 Lex and Flex have remained relatively stable (inert) tools while the demand has
 increased for tokenizing Unicode texts encoded in common wide character formats
 such as UTF-8, UCS/UTF-16, and UTF-32.  Lex/Flex still use 8-bit character sets
-for regex patterns.
+for regex patterns.  Regex pattern syntax in Lex/Flex is also limited.  No lazy
+repetitions.  No word boundary anchors.  No indent and dedent matching.
 
 It is possible, but not trivial to implement scanners with Lex/Flex to tokenize
 the source code of more modern programming languages with Unicode-based lexical
-structures such as Java, C#, and C++11.
+structures, such as Java, C#, and C++11.
 
 A possible approach is to use UTF-8 in patterns and reformat the input to UTF-8
 for matching.  However, the UTF-8 patterns for common Unicode character classes
@@ -146,7 +148,7 @@ of the `X*?` repeat to match only `X` repeately if the rest of the pattern does
 not match.  Therefore, the regex `<!−−.*?−−>` matches HTML comments and nothing
 more.
 
-But POSIX matching with Lex/Flex will not permit us to be lazy!
+But POSIX matching with Lex/Flex does not permit us to be lazy!
 
 Not surprising, even the Flex manual shows ad-hoc code rather than a pattern to
 scan over C/C++ source code input to match multiline comments that start with a
@@ -172,7 +174,7 @@ scan over C/C++ source code input to match multiline comments that start with a
 </div>
 
 Workarounds such as these are not necessary with RE/flex.  The RE/flex scanners
-use regex libraries with more expressive RE syntax.  We can use lazy repetition
+use regex libraries with expressive pattern syntax.  We can use lazy repetition
 to write a regex pattern for multiline comments as follows:
 
 <div class="alt">
@@ -207,33 +209,36 @@ before `ASCII_IDENTIFIER`.
 
 For this reason, RE/flex scanners use a regex library in POSIX mode by default.
 
-The advantages that RE/flex has to offer compared to Flex are:
+The advantages that RE/flex has to offer:
 
-* Lex and Flex scanners are restricted to ASCII or 8-bit character sets without
-  adequate support for Unicode.  RE/flex specifications are extended to support
-  Unicode such that the RE/flex scanner generator produces scanners that handle
-  UTF-8/16/32 input files.
-
-* The regular expression syntax of patterns in lex specifications is restricted
-  to POSIX ERE.  By contrast, the RE/flex scanner generator is "regex-based" by
-  design and offers a rich pattern syntax including lazy quantifiers.
+* RE/flex is fully compatible with Flex and Bison, by using the `−−flex` and/or
+  `−−bison` options.  This eliminates a learning curve to use RE/flex.
 
 * The RE/flex scanner generator takes a lex specification that is compatible to
   [Flex](dinosaur.compilertools.net/#flex), with additional options to select a
   matcher engine and to specify names and options for C++ class generation.
   
-* RE/flex scanners are not implemented as a set of global functions and tables.
-  RE/flex scanners are instances of generated lexer classes.  Thus are MT-safe.
-  A lexer class is derived from an abstract base lexer class template and it is
-  instantiated with a regex matcher engine class as template parameter.
+* The RE/flex scanner generator option `−−bison` generates a scanner compatible
+  with [Bison](dinosaur.compilertools.net/#bison).  RE/flex also supports Bison
+  bridge (pure reentrant and MT-safe) parsers.
+
+* The regular expression syntax of patterns in lex specifications is restricted
+  to POSIX ERE.  By contrast, the RE/flex scanner generator is regex-centric by
+  design and offers a rich pattern syntax including lazy quantifiers.
 
 * A matcher engine for a lexer class has a common interface API declared by the
   abstract base matcher class template.
 
-* The RE/flex scanner generator includes an option to produce a scanner that is
-  fully compatible with [Bison](dinosaur.compilertools.net/#bison) by declaring
-  and implementing a global scanner.  RE/flex also generates Bison bridge (pure
-  reentrant and MT-safe) parsers.
+* RE/flex scanners are not implemented as a set of global functions and tables.
+  RE/flex scanners are instances of generated lexer classes.  Thus are MT-safe.
+  A lexer class is derived from an abstract base lexer class template and it is
+  instantiated with a regex matcher engine class that is provided as a template
+  parameter.
+
+* Lex and Flex scanners are restricted to ASCII or 8-bit character sets without
+  adequate support for Unicode.  RE/flex specifications are extended to support
+  Unicode such that the RE/flex scanner generator produces scanners that handle
+  UTF-8/16/32 input files.
 
 * Input to matcher engines and scanners is implemented as a class that supports
   streaming sources of input and automatically decodes UTF-encoded files.
@@ -245,7 +250,7 @@ See \ref reflex for more details on the RE/flex scanner generator tool.
 In the next part of this manual, we will take a quick look at the RE/flex regex
 API that can be used as a stand-alone library for matching, searching, scanning
 and splitting input from strings, files and streams in regular C++ applications
-that are not tokenizers for compilers.
+(i.e. applications that are not necessarily tokenizers for compilers).
 
 ⇢ [Back to contents](#)
 
@@ -255,7 +260,8 @@ Regex matching in C++                                                 {#intro2}
 
 The RE/flex regex pattern matching classes include Boost.Regex and an efficient
 RE/flex engine that compiles regex patterns to finite state machines (FSMs).  A
-common C++ API is used by these matchers so switching between matchers is easy.
+common C++ API is used by these matchers, meaning that the design makes it easy
+to select and switch between matching engines.
 
 The RE/flex regex common interface API is implemented in an abstract base class
 template `reflex::AbstractMatcher` from which regex matchers are derived.  This
@@ -272,7 +278,7 @@ engines that are derived from this base abstract class:
   `scan()`    | scan input and return true if input at current position matches
   `split()`   | split input at the next match
 
-The methods are repeatable, where the last three return additional matches.
+These methods are repeatable, where the last three return additional matches.
 
 For example, to check if a string is a valid date:
 
@@ -375,8 +381,8 @@ while (matcher.find() == true)
 ```
 
 We can also pattern match text from `FILE` descriptors.  The additional benefit
-of using `FILE` descriptors is the automatic conversion from UTF-16/32 to UTF-8
-by the `reflex::Input` class that manages input sources and their state.
+of using `FILE` descriptors is the automatic decoding of UTF-16/32 input to
+UTF-8 by the `reflex::Input` class that manages input sources and their state.
 
 For example, pattern matching the content of "cows.txt" that may use UTF-8, 16,
 or 32 encodings:
@@ -734,8 +740,8 @@ POSIX matcher engine.
 
 The input class `reflex::Input` manages input from strings, wide strings,
 streams, and data from `FILE` descriptors.  File data may be encoded in ASCII,
-binary or in UTF-8/16/32.  UTF-16/32 is automatically converted to UTF-8 for
-UTF-8-based regex matching:
+binary or in UTF-8/16/32.  UTF-16/32 is automatically decoded and converted to
+UTF-8 for UTF-8-based regex matching:
 
 @dot
 digraph execute {
@@ -1192,7 +1198,7 @@ int main(int argc, char **argv)
 </div>
 
 The above uses a `FILE` descriptor to read input from, which has the advantage
-of automatic internal UTF-8/16/32 conversion.  Other permissible input sources
+of automatically decoding UTF-8/16/32 input.  Other permissible input sources
 are `std::istream`, `std::string`, `std::wstring`, `char*`, and `wchar_t*`.
 
 ⇢ [Back to contents](#)
@@ -1786,19 +1792,19 @@ This generates a scanner that works with Bison with locations enabled.  See
 This generates additional Flex-compatible `yylex()` reentrant scanner
 functions.  RE/flex scanners are always reentrant, assuming that `%%class`
 variables are used instead of global variables in the scanner's user code.
-This is a Flex-compatibility option only to be used with options `−−flex` and
-`−−bison`.  See \ref reflex-bison.
+This is a Flex-compatibility option and should only be used with options
+`−−flex` and `−−bison`.  See \ref reflex-bison.
 
 ### `−−main`
 
 This generates a `main` function to create a stand-alone scanner that scans
-data from stdin standard input.
+data from standard input (using `stdin`).
 
 ### `−−nostdinit`
 
-This initializes input to `std::cin` instead of stdin.  Automatic UTF-encoding
-conversion is not supported.  Use stdin for automatic UTF-encoded input
-conversion.
+This initializes input to `std::cin` instead of using `stdin`.  Automatic
+UTF decoding is not supported.  Use `stdin` for automatic UTF BOM detection and
+decoding.
 
 ### `-u`, `−−unicode`
 
@@ -1904,12 +1910,12 @@ name `lex()` (and `yylex()` when option `−−flex` is used).
 
 ### `−−class=NAME`
 
-This defines the NAME of the scanner class that is derived from the generated
-base `Lexer` class.  Use this option when defining your own scanner class named
-NAME.  A custom lexer class can be declared in the first section of the lex
-specification.  Because the custom lexer class is already defined, **reflex**
-will just generate the implementation of the `lex()` scanner function for this
-derived lexer class.
+This defines the NAME of the scanner class that should be derived from the
+generated base `Lexer` class.  Use this option when defining your own scanner
+class named NAME.  You can declare a custom lexer class in the first section of
+the lex specification.  Because the custom lexer class is user-defined,
+**reflex** generates the implementation of the `lex()` scanner function for
+this specified class.
 
 ### `−−yyclass=NAME`
 
@@ -1942,7 +1948,8 @@ Graphviz output.
 (RE/flex matcher only).  This option adds the FSM to the generated code as a
 static code table.  This means that the FSM construction overhead is eliminated
 when the scanner is initialized, resulting in a scanner that starts scanning
-the input immediately.
+the input immediately.  In future releases this option may produce optimized
+FSM code that runs faster compared to FSM tables.
 
 ### `−−graphs-file[=FILE]`
 
@@ -2129,7 +2136,7 @@ or a wide string `std::wstring` or `wchar_t*`.
 To switch input to another source while using the scanner, use `in(input)`:
 
 ```cpp
-// read from a file, this also converts UTF-16/32 encodings automatically
+// read from a file, this also decodes UTF-16/32 encodings automatically
 FILE *fd = fopen("cow.txt", "r");
 if (fd)
   in(fd);
@@ -3280,8 +3287,7 @@ An input object can be assigned `std::string` and `char*` strings, wide strings
 `std::wstring` and `wchar_t*`, a `FILE*`, or a `std::istream`.
 
 Wide strings are internally converted to UTF-8 for matching, which effectively
-normalizes the content.  A `FILE*` with content in UTF-16 or UTF-32 is
-converted internally (i.e. streaming) for matching to UTF-8.
+normalizes the content.
 
 Conversion from wide string to UTF-8 is shown in the example below.  The
 copyright symbol `©` with Unicode U+00A9 is matched against its UTF-8 sequence
@@ -3305,8 +3311,9 @@ To obtain the properties of an input object use the following methods:
   `istream()` | a `std::istream*` pointer to the current stream object or NULL
 
 File content specified with a `FILE*` file descriptor can be encoded in ASCII,
-binary, or UTF-8/16/32 formats.  UTF-16/32 file content is converted internally
-to UTF-8 (i.e. streaming) to normalize the input for matching.
+binary, or UTF-8/16/32 formats.  UTF-16/32 file content is automatically
+decoded and converted to UTF-8 (i.e. streaming) to normalize the input for
+matching.
 
 A [UTF byte order mark (BOM)](www.unicode.org/faq/utf_bom.html) is detected in
 the content of a file by the matcher, which enables UTF-8 normalization of the

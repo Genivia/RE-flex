@@ -33,16 +33,16 @@ List of features
 
 - Fully compatible with Flex to eliminate a learning curve and to make a
   transition to RE/flex frustration-free.
+- Extensive documentation in the online [manual][manual-url].
 - RE/flex generates lex.yy.cpp files while Flex generates lex.yy.cc files (in
   C++ mode), to distinguish the differences.
 - Generates MT-safe (reentrant) code by default.
-- Generates clean source code that defines a C++ Lexer class that is derived
-  from an abstract lexer class.
+- Generates clean source code that defines a C++ Lexer class derived from an abstract lexer class.
 - Configurable Lexer class generation to customize the interface with parsers.
 - Works with Bison and supports reentrant, bison-bridge and bison-locations.
-- Generates scanners that operate on files, C++ streams, and (wide) strings.
+- Generates scanners for lexical analysis on files, C++ streams, and (wide) strings.
 - Generates Graphviz files to visualize FSMs with the Graphviz dot tool.
-- Includes many examples, such as a C/C++ tokenizer, Java tokenizer, and more.
+- Includes many examples, such as a C/C++ source code tokenizer, Java tokenizer, and more.
 - Adds an extensible hierarchy of pattern matcher engines, with a choice of
   regex engines, such as Boost.Regex and RE/flex regex.
 - Adds lazy quantifiers to the POSIX regular expression syntax, so not more
@@ -206,6 +206,13 @@ Where do I find the documentation?
 Read more about RE/flex in the [manual][manual-url].
 
 
+Work in progress / nice to have
+-------------------------------
+
+- Faster RE/flex FSM matching by generating code instead of tables.
+- Option to support Unicode without UTF-8 (RE/flex matcher/FSM is prepared)
+
+
 License and copyright
 ---------------------
 
@@ -225,6 +232,7 @@ Changelog
 - Nov 19, 2016: 0.9.3 replaced `%import` with `%include`, added freespace option `-x`, fixed minor issues
 - Nov 20, 2016: 0.9.4 fixes minor issues, added new examples/json.l
 - Nov 25, 2016: 0.9.5 bug fixes and improvements
+- Dec  1, 2016: 0.9.6 portability improvements
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

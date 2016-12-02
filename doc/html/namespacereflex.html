@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Nov 25 2016</div>
+      <div style="float: right; font-size: 10px;">updated Thu Dec 1 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -47,6 +47,7 @@
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">reflex Namespace Reference</div>  </div>
@@ -110,6 +111,11 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template specialization of <a class="el" href="structreflex_1_1_type_op.html" title="TypeOp<T>::Type = T, TypeOp<T>::ConstType = const T, TypeOp<T>::NonConstType = non-const T...">reflex::TypeOp</a>.  <a href="structreflex_1_1_type_op_3_01const_01_t_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ac99e95721f82307930f9c46737af8c39"><td class="memItemLeft" align="right" valign="top">typedef wchar_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">unicode_t</a></td></tr>
+<tr class="separator:ac99e95721f82307930f9c46737af8c39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">isword</a> (int c)</td></tr>
@@ -135,16 +141,29 @@ Functions</h2></td></tr>
 <tr class="memitem:a677294e5ecf35a97b41e72370672f3bc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a677294e5ecf35a97b41e72370672f3bc">set_delete</a> (S1 &amp;s1, const S2 &amp;s2)</td></tr>
 <tr class="memdesc:a677294e5ecf35a97b41e72370672f3bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete elements of set <code>s2</code> from set <code>s1</code>.  <a href="#a677294e5ecf35a97b41e72370672f3bc">More...</a><br /></td></tr>
 <tr class="separator:a677294e5ecf35a97b41e72370672f3bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3475c552254712fd461eaf1bbc4735bc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a3475c552254712fd461eaf1bbc4735bc">utf8</a> (wchar_t a, wchar_t b, bool strict=true, const char *esc=NULL)</td></tr>
-<tr class="memdesc:a3475c552254712fd461eaf1bbc4735bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS range [a,b] to a UTF-8 regex pattern.  <a href="#a3475c552254712fd461eaf1bbc4735bc">More...</a><br /></td></tr>
-<tr class="separator:a3475c552254712fd461eaf1bbc4735bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7001e682621fe100ba33d2bf7b5d6061"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a7001e682621fe100ba33d2bf7b5d6061">utf8</a> (wchar_t c, char *s)</td></tr>
-<tr class="memdesc:a7001e682621fe100ba33d2bf7b5d6061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UCS to UTF-8.  <a href="#a7001e682621fe100ba33d2bf7b5d6061">More...</a><br /></td></tr>
-<tr class="separator:a7001e682621fe100ba33d2bf7b5d6061"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e10f0f519a93baa12555f2efd016822"><td class="memItemLeft" align="right" valign="top">wchar_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a3e10f0f519a93baa12555f2efd016822">utf8</a> (const char *s)</td></tr>
-<tr class="memdesc:a3e10f0f519a93baa12555f2efd016822"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS.  <a href="#a3e10f0f519a93baa12555f2efd016822">More...</a><br /></td></tr>
-<tr class="separator:a3e10f0f519a93baa12555f2efd016822"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20e957eccf80d8ae722992cb3b9300d9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a20e957eccf80d8ae722992cb3b9300d9">utf8</a> (<a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">unicode_t</a> a, <a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">unicode_t</a> b, bool strict=true, const char *esc=NULL)</td></tr>
+<tr class="memdesc:a20e957eccf80d8ae722992cb3b9300d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS range [a,b] to a UTF-8 regex pattern.  <a href="#a20e957eccf80d8ae722992cb3b9300d9">More...</a><br /></td></tr>
+<tr class="separator:a20e957eccf80d8ae722992cb3b9300d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad35cb60c1cec6faa2f862f4ef4f6351d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ad35cb60c1cec6faa2f862f4ef4f6351d">utf8</a> (<a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">unicode_t</a> c, char *s)</td></tr>
+<tr class="memdesc:ad35cb60c1cec6faa2f862f4ef4f6351d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UCS to UTF-8.  <a href="#ad35cb60c1cec6faa2f862f4ef4f6351d">More...</a><br /></td></tr>
+<tr class="separator:ad35cb60c1cec6faa2f862f4ef4f6351d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add56c4bf6e67e4bfda162a541de2fe30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">unicode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#add56c4bf6e67e4bfda162a541de2fe30">utf8</a> (const char *s)</td></tr>
+<tr class="memdesc:add56c4bf6e67e4bfda162a541de2fe30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS.  <a href="#add56c4bf6e67e4bfda162a541de2fe30">More...</a><br /></td></tr>
+<tr class="separator:add56c4bf6e67e4bfda162a541de2fe30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="ac99e95721f82307930f9c46737af8c39"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef wchar_t <a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">reflex::unicode_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a3deed9d6b147d91074913f47c330d232"></a>
 <div class="memitem">
@@ -348,20 +367,20 @@ template&lt;typename S1 , typename S2 &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a3475c552254712fd461eaf1bbc4735bc"></a>
+<a class="anchor" id="a20e957eccf80d8ae722992cb3b9300d9"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">std::string reflex::utf8 </td>
           <td>(</td>
-          <td class="paramtype">wchar_t&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">unicode_t</a>&#160;</td>
           <td class="paramname"><em>a</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">wchar_t&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">unicode_t</a>&#160;</td>
           <td class="paramname"><em>b</em>, </td>
         </tr>
         <tr>
@@ -398,7 +417,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a7001e682621fe100ba33d2bf7b5d6061"></a>
+<a class="anchor" id="ad35cb60c1cec6faa2f862f4ef4f6351d"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -408,7 +427,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
         <tr>
           <td class="memname">size_t reflex::utf8 </td>
           <td>(</td>
-          <td class="paramtype">wchar_t&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">unicode_t</a>&#160;</td>
           <td class="paramname"><em>c</em>, </td>
         </tr>
         <tr>
@@ -442,7 +461,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a3e10f0f519a93baa12555f2efd016822"></a>
+<a class="anchor" id="add56c4bf6e67e4bfda162a541de2fe30"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -450,7 +469,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">wchar_t reflex::utf8 </td>
+          <td class="memname"><a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">unicode_t</a> reflex::utf8 </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>s</em></td><td>)</td>
@@ -478,7 +497,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Nov 25 2016 12:31:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Thu Dec 1 2016 20:45:52 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

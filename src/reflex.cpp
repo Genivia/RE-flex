@@ -28,7 +28,7 @@
 
 /**
 @file      reflex.cpp
-@brief     RE/Flex scanner generator replacement for Flex/Lex
+@brief     RE/flex scanner generator replacement for Flex/Lex
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
@@ -747,6 +747,7 @@ std::string Reflex::getstring(size_t& pos)
 // convert \u{xxxx} and \x{xxxx} to UTF-8
 // convert [...\u{xxxx}...\p{Script}...] => [...]|\u{xxxx}|\p{Script}
 // convert # to \# if freespace flag is set
+// permit line continuation with \ and indent at end of regex
 std::string Reflex::getregex(size_t& pos)
 {
   std::string regex;
@@ -823,7 +824,7 @@ std::string Reflex::getregex(size_t& pos)
             }
             else if (pos + 2 < linelen && (line.at(pos) == 'u' || line.at(pos) == 'x') && line.at(pos + 1) == '{') // translate \u{X} and \x{X}
             {
-              wchar_t wc = static_cast<wchar_t>(std::strtoul(line.c_str() + pos + 2, NULL, 16));
+	      reflex::unicode_t wc = static_cast<reflex::unicode_t>(std::strtoul(line.c_str() + pos + 2, NULL, 16));
               if (wc > 0x7f)
               {
                 char buf[7];
@@ -873,12 +874,15 @@ std::string Reflex::getregex(size_t& pos)
           }
           else
           {
+	    // line ends in \ and continues on the next line
             regex.append(line.substr(loc, pos - loc));
             if (!getline())
               error("EOF encountered inside a pattern");
             if (line == "%%")
               error("%% section ending encountered inside a pattern");
-            loc = pos = 0;
+            pos = 0;
+	    (void)ws(pos); // skip indent
+	    loc = pos;
           }
           break;
         case '/':
@@ -924,7 +928,7 @@ std::string Reflex::getregex(size_t& pos)
             regex.append(line.substr(loc, pos - loc));
             loc = pos++;
             std::string lifted;
-            wchar_t wc = -1;
+	    reflex::unicode_t wc = -1;
             bool range = false;
             size_t size = regex.size();
             size_t prev = pos;
@@ -980,14 +984,14 @@ std::string Reflex::getregex(size_t& pos)
                         if (lifted.empty())
                           regex.append("(?:");
                         regex.append(line.substr(loc, prev - loc));
-                        lifted.append("|").append(reflex::utf8(wc, static_cast<wchar_t>(std::strtoul(line.c_str() + pos + 3, NULL, 16))));
+                        lifted.append("|").append(reflex::utf8(wc, static_cast<reflex::unicode_t>(std::strtoul(line.c_str() + pos + 3, NULL, 16))));
                         pos = k;
                         loc = k + 1;
                         range = false;
                       }
                       else
                       {
-                        wc = static_cast<wchar_t>(std::strtoul(line.c_str() + pos + 3, NULL, 16));
+                        wc = static_cast<reflex::unicode_t>(std::strtoul(line.c_str() + pos + 3, NULL, 16));
                         if (k + 1 < linelen && line.at(k + 1) != '-')
                         {
                           if (wc > 0x7f)

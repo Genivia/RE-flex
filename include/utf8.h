@@ -42,10 +42,16 @@
 
 namespace reflex {
 
+#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
+typedef _uint32_t unicode_t;
+#else
+typedef wchar_t unicode_t;
+#endif
+
 /// Convert a UCS range [a,b] to a UTF-8 regex pattern.
 std::string utf8(
-    wchar_t     a,             ///< lower bound of UCS range
-    wchar_t     b,             ///< upper bound of UCS range
+    unicode_t   a,             ///< lower bound of UCS range
+    unicode_t   b,             ///< upper bound of UCS range
     bool        strict = true, ///< returned regex is strict UTF-8 (true) or lean UTF-8 (false)
     const char *esc = NULL     ///< escape char(s), 0-3 chars limit, one backslash "\\" is the default
     )
@@ -54,8 +60,8 @@ std::string utf8(
 
 /// Convert UCS to UTF-8.
 inline size_t utf8(
-    wchar_t c, ///< UCS character
-    char   *s) ///< points to the buffer to populate with UTF-8 (1 to 6 bytes) not \0-terminated
+    unicode_t c, ///< UCS character
+    char     *s) ///< points to the buffer to populate with UTF-8 (1 to 6 bytes) not \0-terminated
   /// @returns length (in bytes) of UTF-8 character sequence stored in s.
 {
   if (c < 0x80)
@@ -103,23 +109,23 @@ inline size_t utf8(
 }
 
 /// Convert UTF-8 to UCS.
-inline wchar_t utf8(const char *s) ///< points to the buffer with UTF-8 (1 to 6 bytes)
+inline unicode_t utf8(const char *s) ///< points to the buffer with UTF-8 (1 to 6 bytes)
   /// @returns UCS character.
 {
-  wchar_t c;
+  unicode_t c;
   c = static_cast<unsigned char>(*s++);
   if (c < 0x80)
     return c;
-  wchar_t c1 = static_cast<unsigned char>(*s++) & 0x3F;
+  unicode_t c1 = static_cast<unsigned char>(*s++) & 0x3F;
   if (c < 0xE0)
     return (((c & 0x1F) << 6) | c1);
-  wchar_t c2 = static_cast<unsigned char>(*s++) & 0x3F;
+  unicode_t c2 = static_cast<unsigned char>(*s++) & 0x3F;
   if (c < 0xF0)
     return (((c & 0x0F) << 12) | (c1 << 6) | c2);
-  wchar_t c3 = static_cast<unsigned char>(*s++) & 0x3F;
+  unicode_t c3 = static_cast<unsigned char>(*s++) & 0x3F;
   if (c < 0xF8)
     return (((c & 0x07) << 18) | (c1 << 12) | (c2 << 6) | c3);
-  wchar_t c4 = static_cast<unsigned char>(*s++) & 0x3F;
+  unicode_t c4 = static_cast<unsigned char>(*s++) & 0x3F;
   if (c < 0xFC)
     return (((c & 0x03) << 24) | (c1 << 18) | (c2 << 12) | (c3 << 6) | c4);
   return (((c & 0x01) << 30) | (c1 << 24) | (c2 << 18) | (c3 << 12) | (c4 << 6) | (static_cast<unsigned char>(*s++) & 0x3F));

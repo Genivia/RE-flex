@@ -497,7 +497,7 @@ class Input {
     if (file_)
       return file_get(s, n);
     if (istream_ && istream_->good())
-      return n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, static_cast<std::streamsize>(n)).gcount();
+      return static_cast<size_t>(n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, static_cast<std::streamsize>(n)).gcount());
     return 0;
   }
   /// Set encoding for `FILE*` input to Const::plain, Const::utf16be, Const::utf16le, Const::utf32be, or Const::utf32le. File encodings are automatically detected by the presence of a UTF BOM in the file. This function may be used when a BOM is not present and file encoding is known or to override the BOM.

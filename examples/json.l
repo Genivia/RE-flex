@@ -10,7 +10,7 @@
 // 7.  JSON values are indicated with tokens '0', 't', 'f', '#', '$'
 // 8.  C++ yyFlexLexer class members to store lexer values (MT-safe)
 // 9.  JSONParser is a recursive descent parser for JSON
-// 10. JSONParser inherits yyFlexLexer, so it can call yyFlexLexer::yylex()
+// 10. JSONParser inherits yyFlexLexer, to integrate yyFlexLexer::yylex()
 // 11. JSONParser recurses 100 levels deep max (MAXLEVEL)
 // 12. JSONParser accepts 1000 items per array/object max (MAXSIZE)
 // 13. The main() program reads a FILE* for automatic UTF-16/32 conversion

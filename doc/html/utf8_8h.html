@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">utf8.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Nov 25 2016</div>
+      <div style="float: right; font-size: 10px;">updated Thu Dec 1 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -51,6 +51,7 @@
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">utf8.h File Reference</div>  </div>
@@ -80,7 +81,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" id="node11" href="boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="110,238,223,266"/>
 <area shape="rect" id="node13" href="matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="247,238,325,266"/>
 <area shape="rect" id="node20" href="language__scripts_8h.html" title="Unicode language scripts. " alt="" coords="165,315,297,343"/>
-<area shape="rect" id="node24" href="reflex_8cpp.html" title="RE/Flex scanner generator replacement for Flex/Lex. " alt="" coords="296,393,375,421"/>
+<area shape="rect" id="node24" href="reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="296,393,375,421"/>
 <area shape="rect" id="node26" href="letter__scripts_8h.html" title="Unicode letter scripts. " alt="" coords="374,315,481,343"/>
 <area shape="rect" id="node31" href="pl__scripts_8h.html" title="Unicode programming language scripts. " alt="" coords="506,315,595,343"/>
 <area shape="rect" id="node22" href="language__scripts_8cpp.html" title="language_scripts.cpp" alt="" coords="125,393,272,421"/>
@@ -94,17 +95,22 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacereflex"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html">reflex</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ac99e95721f82307930f9c46737af8c39"><td class="memItemLeft" align="right" valign="top">typedef wchar_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">reflex::unicode_t</a></td></tr>
+<tr class="separator:ac99e95721f82307930f9c46737af8c39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3475c552254712fd461eaf1bbc4735bc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a3475c552254712fd461eaf1bbc4735bc">reflex::utf8</a> (wchar_t a, wchar_t b, bool strict=true, const char *esc=NULL)</td></tr>
-<tr class="memdesc:a3475c552254712fd461eaf1bbc4735bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS range [a,b] to a UTF-8 regex pattern.  <a href="namespacereflex.html#a3475c552254712fd461eaf1bbc4735bc">More...</a><br /></td></tr>
-<tr class="separator:a3475c552254712fd461eaf1bbc4735bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7001e682621fe100ba33d2bf7b5d6061"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a7001e682621fe100ba33d2bf7b5d6061">reflex::utf8</a> (wchar_t c, char *s)</td></tr>
-<tr class="memdesc:a7001e682621fe100ba33d2bf7b5d6061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UCS to UTF-8.  <a href="namespacereflex.html#a7001e682621fe100ba33d2bf7b5d6061">More...</a><br /></td></tr>
-<tr class="separator:a7001e682621fe100ba33d2bf7b5d6061"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e10f0f519a93baa12555f2efd016822"><td class="memItemLeft" align="right" valign="top">wchar_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a3e10f0f519a93baa12555f2efd016822">reflex::utf8</a> (const char *s)</td></tr>
-<tr class="memdesc:a3e10f0f519a93baa12555f2efd016822"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS.  <a href="namespacereflex.html#a3e10f0f519a93baa12555f2efd016822">More...</a><br /></td></tr>
-<tr class="separator:a3e10f0f519a93baa12555f2efd016822"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20e957eccf80d8ae722992cb3b9300d9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a20e957eccf80d8ae722992cb3b9300d9">reflex::utf8</a> (unicode_t a, unicode_t b, bool strict=true, const char *esc=NULL)</td></tr>
+<tr class="memdesc:a20e957eccf80d8ae722992cb3b9300d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS range [a,b] to a UTF-8 regex pattern.  <a href="namespacereflex.html#a20e957eccf80d8ae722992cb3b9300d9">More...</a><br /></td></tr>
+<tr class="separator:a20e957eccf80d8ae722992cb3b9300d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad35cb60c1cec6faa2f862f4ef4f6351d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ad35cb60c1cec6faa2f862f4ef4f6351d">reflex::utf8</a> (unicode_t c, char *s)</td></tr>
+<tr class="memdesc:ad35cb60c1cec6faa2f862f4ef4f6351d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UCS to UTF-8.  <a href="namespacereflex.html#ad35cb60c1cec6faa2f862f4ef4f6351d">More...</a><br /></td></tr>
+<tr class="separator:ad35cb60c1cec6faa2f862f4ef4f6351d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add56c4bf6e67e4bfda162a541de2fe30"><td class="memItemLeft" align="right" valign="top">unicode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#add56c4bf6e67e4bfda162a541de2fe30">reflex::utf8</a> (const char *s)</td></tr>
+<tr class="memdesc:add56c4bf6e67e4bfda162a541de2fe30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS.  <a href="namespacereflex.html#add56c4bf6e67e4bfda162a541de2fe30">More...</a><br /></td></tr>
+<tr class="separator:add56c4bf6e67e4bfda162a541de2fe30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex UCS to UTF-8 converters. </p>
@@ -115,7 +121,7 @@ Functions</h2></td></tr>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Nov 25 2016 12:31:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Thu Dec 1 2016 20:45:52 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

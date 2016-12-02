@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex User Guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Nov 25 2016</div>
+      <div style="float: right; font-size: 10px;">updated Thu Dec 1 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -86,8 +86,8 @@ What is RE/flex?                                                       </h1>
 <li>a <em>flexible regex framework</em> that combines the above with a collection of C++ class templates that are easy to use and that offer a rich API for searching, matching, scanning, and splitting of input strings, files and streaming data. This framework is flexible and can be extended to include other regex pattern matchers that can operate seamlessly with the RE/flex scanner generator.</li>
 </ul>
 <p>RE/flex is not merely designed to fix the limitations of Lex and Flex! RE/flex balances efficiency with flexibility by offering a choice of regex engines that are used by the generated scanner. The choice includes Boost.Regex and RE/flex matcher engines that offer a rich regex syntax. The RE/flex POSIX matcher adds lazy quantifiers, word boundary anchors, and other useful patterns to the POSIX mode of matching. Also Unicode character sets and ASCII/UTF-8/16/32 file input is supported by RE/flex, without any additional coding required. RE/flex regex patterns are converted to efficient deterministic finite state machines. These machines differ from Flex in supporting the new pattern-matching features.</p>
-<p>RE/flex incorporates proper object-oriented design principles and does not rely on macros and globals as Flex does. Macros and globals are only added when the Flex-compatibility option <code>−−flex</code> is used when invoking the <b>reflex</b> scanner generator. However, in all cases the <b>reflex</b> scanner generator produces C++ scanner classes derived from a base lexer class template, with a matcher engine as the template parameter. An extensible approach to scanner generation.</p>
-<p>In this document we refer to a <em>regex</em> as a shorthand for <em>regular expression</em>. Some of you may not agree with this broad use of terminology. The term regular expressions refers to the formal concept of <em>regular languages</em>, wheras <em>regex</em> refers to backtracking-based regex matching that Perl introduced, that could no longer be said to be regular in the mathematical sense. We will use Perl-style regex and POSIX regular expressions when applicable, but will mostly use regex.</p>
+<p>RE/flex incorporates proper object-oriented design principles and does not rely on macros and globals as Flex does. Macros and globals are only added when the Flex-compatibility option <code>−−flex</code> is used when invoking the <b>reflex</b> scanner generator. However, in all cases the <b>reflex</b> scanner generator produces C++ scanner classes derived from a base lexer class template, with a matcher engine as the template parameter. This offers an extensible approach that permits new regex matching engines to be included in this framework in the future.</p>
+<p>In this document we refer to a <em>regex</em> as a shorthand for <em>regular expression</em>. Some of you may not agree with this broad use of terminology. The term regular expressions refers to the formal concept of <em>regular languages</em>, wheras <em>regex</em> refers to backtracking-based regex matching that Perl introduced, that could no longer be said to be regular in a true mathematical sense.</p>
 <p>⇢ <a href="#">Back to contents</a></p>
 <h2><a class="anchor" id="intro1"></a>
 Scanner generators                                                    </h2>
@@ -102,9 +102,9 @@ Scanner generators                                                    </h2>
 <div class="line">[0-9]+                  <span class="keywordflow">return</span> CONST_NUMBER;</div>
 <div class="line">\<span class="stringliteral">&quot;([^\\&quot;</span>]|\\<span class="stringliteral">&quot;)*\&quot;       return CONST_STRING;</span></div>
 <div class="line"><span class="stringliteral">[ \t\r\n]               /* no action: ignore all white space */</span></div>
-</div><!-- fragment --> </div><p>When the tokenizer matches a pattern, the corresponding action is invoked. The example above returns tokens to the compiler's parser, which repeatedly invokes the tokenizer for more tokens until the tokenizer reaches the end of the input.</p>
-<p>Lex and Flex have remained relatively stable (inert) tools while the demand has increased for tokenizing Unicode texts encoded in common wide character formats such as UTF-8, UCS/UTF-16, and UTF-32. Lex/Flex still use 8-bit character sets for regex patterns.</p>
-<p>It is possible, but not trivial to implement scanners with Lex/Flex to tokenize the source code of more modern programming languages with Unicode-based lexical structures such as Java, C#, and C++11.</p>
+</div><!-- fragment --> </div><p>When the tokenizer matches a pattern, the corresponding action is invoked. The example above returns tokens to the compiler's parser, which repeatedly invokes the tokenizer for more tokens until the tokenizer reaches the end of the input. The tokenizer returns zero (0) when the end of the input is reached.</p>
+<p>Lex and Flex have remained relatively stable (inert) tools while the demand has increased for tokenizing Unicode texts encoded in common wide character formats such as UTF-8, UCS/UTF-16, and UTF-32. Lex/Flex still use 8-bit character sets for regex patterns. Regex pattern syntax in Lex/Flex is also limited. No lazy repetitions. No word boundary anchors. No indent and dedent matching.</p>
+<p>It is possible, but not trivial to implement scanners with Lex/Flex to tokenize the source code of more modern programming languages with Unicode-based lexical structures, such as Java, C#, and C++11.</p>
 <p>A possible approach is to use UTF-8 in patterns and reformat the input to UTF-8 for matching. However, the UTF-8 patterns for common Unicode character classes are unrecognizable by humans and are prone to errors when written by hand. The UTF-8 pattern to match a Unicode letter <code>\p{L}</code> is hundreds of lines long!</p>
 <p>Furthermore, the regular expression syntax in Lex/Flex is limited to meet POSIX mode matching constraints. Scanners should use POSIX mode matching, as we will explain below, but we have to avoid the "greedy trap" problem as a consequence.</p>
 <p>Lex/Flex scanners use POSIX pattern matching, meaning that the leftmost longest match is returned (among a set of patterns that match the same input). Because POSIX matchers produce the longest match for any given input text, we should be careful when using patterns with "greedy" repetitions (<code>X*</code>, <code>X+</code> etc.) because our pattern may gobble up more input than intended. We end up falling into the "greedy trap".</p>
@@ -112,7 +112,7 @@ Scanner generators                                                    </h2>
 <dl class="section note"><dt>Note</dt><dd>Dot <code>.</code> normally does not match newline <code>\n</code> in Lex/Flex patterns, unless we use <em>dot-all mode</em> that is sometimes confusingly called "single line mode".</dd></dl>
 <p>We can use much more complex patterns such as <code>&lt;!−−([^−]|−[^−]|−−+[^−&gt;])*−*−−&gt;</code> just to match comments in HTML, by ensuring the pattern ends at the first match of a <code>−−&gt;</code> in the input and not at the very last <code>−−&gt;</code> in the input. The POSIX leftmost longest match can be surprisingly effective in rendering our tokenizer into works of ASCII art!</p>
 <p>We may claim our intricate pattern trophies as high achievements to the project team, but our team will quickly point out that a regex <code>&lt;!−−.*?−−&gt;</code> suffices to match HTML comments with the <em>lazy repetition</em> <code>X*?</code> construct, also known as a <em>non-greedy repeat</em>. The <code>?</code> is a <em>lazy quantifier</em> that modifies the behavior of the <code>X*?</code> repeat to match only <code>X</code> repeately if the rest of the pattern does not match. Therefore, the regex <code>&lt;!−−.*?−−&gt;</code> matches HTML comments and nothing more.</p>
-<p>But POSIX matching with Lex/Flex will not permit us to be lazy!</p>
+<p>But POSIX matching with Lex/Flex does not permit us to be lazy!</p>
 <p>Not surprising, even the Flex manual shows ad-hoc code rather than a pattern to scan over C/C++ source code input to match multiline comments that start with a <code>/*</code> and end with the first occurrence of a <code>*/</code>. The Flex manual recommends:</p>
 <div class="alt"> <div class="fragment"><div class="line"><span class="stringliteral">&quot;/*&quot;</span>    {  <span class="comment">/* skip multiline comments */</span></div>
 <div class="line">  <span class="keywordtype">int</span> c;</div>
@@ -128,29 +128,30 @@ Scanner generators                                                    </h2>
 <div class="line">    }</div>
 <div class="line">  }</div>
 <div class="line">}</div>
-</div><!-- fragment --> </div><p>Workarounds such as these are not necessary with RE/flex. The RE/flex scanners use regex libraries with more expressive RE syntax. We can use lazy repetition to write a regex pattern for multiline comments as follows:</p>
+</div><!-- fragment --> </div><p>Workarounds such as these are not necessary with RE/flex. The RE/flex scanners use regex libraries with expressive pattern syntax. We can use lazy repetition to write a regex pattern for multiline comments as follows:</p>
 <div class="alt"> <div class="fragment"><div class="line"><span class="stringliteral">&quot;/*&quot;</span>(.|\n)*?<span class="stringliteral">&quot;*/&quot;</span>  <span class="comment">/* no action: ignore multiline comments */</span></div>
 </div><!-- fragment --> </div><p>Most regex libraries support syntaxes and features that we have come to rely on for pattern matching. A regex with lazy quantifiers can be much easier to read and comprehend compared to a greedy variant. Most regex libraries that support lazy quantifiers run in Perl mode, using backtracking over the input. Scanners use POSIX mode matching, meaning that the leftmost longest match is found. The difference is important as we saw earlier and even more so when we consider the problems with Perl mode matching when specifying patterns to tokenize input, as we will explain next.</p>
 <p>Consider the lex specification at the start of this section. Suppose the input to tokenize is <code>iflag = 1</code>. In POSIX mode we return <code>ASCII_IDENTIFIER</code> for the name <code>iflag</code>, <code>OP_ASSIGN</code> for <code>=</code>, and <code>NUMBER</code> for <code>1</code>. In Perl mode, we find that <code>iflag</code> matches <code>if</code> and the rest of the name is not consumed, which gives <code>KEYWORD_IF</code> for <code>if</code>, <code>ASCII_IDENTIFIER</code> for <code>lag</code>, <code>OP_ASSIGN</code> for <code>=</code>, and a <code>NUMBER</code> for <code>1</code>.</p>
 <p>Using Perl mode in a scanner requires all overlapping patterns to be defined in a lex specification with longer patterns defined first to avoid partial matches of tokens as demonstrated. By contrast, POSIX mode is <em>declarative</em> and allows you to define the patterns in the specification in any order. Perhaps the only ordering constraint on patterns is for patterns that match the same input, such such as matching the keyword <code>if</code> in the example: <code>KEYWORD_IF</code> must be matched before <code>ASCII_IDENTIFIER</code>.</p>
 <p>For this reason, RE/flex scanners use a regex library in POSIX mode by default.</p>
-<p>The advantages that RE/flex has to offer compared to Flex are:</p>
+<p>The advantages that RE/flex has to offer:</p>
 <ul>
-<li>Lex and Flex scanners are restricted to ASCII or 8-bit character sets without adequate support for Unicode. RE/flex specifications are extended to support Unicode such that the RE/flex scanner generator produces scanners that handle UTF-8/16/32 input files.</li>
-<li>The regular expression syntax of patterns in lex specifications is restricted to POSIX ERE. By contrast, the RE/flex scanner generator is "regex-based" by design and offers a rich pattern syntax including lazy quantifiers.</li>
+<li>RE/flex is fully compatible with Flex and Bison, by using the <code>−−flex</code> and/or <code>−−bison</code> options. This eliminates a learning curve to use RE/flex.</li>
 <li>The RE/flex scanner generator takes a lex specification that is compatible to <a href="dinosaur.compilertools.net/#flex">Flex</a>, with additional options to select a matcher engine and to specify names and options for C++ class generation.</li>
-<li>RE/flex scanners are not implemented as a set of global functions and tables. RE/flex scanners are instances of generated lexer classes. Thus are MT-safe. A lexer class is derived from an abstract base lexer class template and it is instantiated with a regex matcher engine class as template parameter.</li>
+<li>The RE/flex scanner generator option <code>−−bison</code> generates a scanner compatible with <a href="dinosaur.compilertools.net/#bison">Bison</a>. RE/flex also supports Bison bridge (pure reentrant and MT-safe) parsers.</li>
+<li>The regular expression syntax of patterns in lex specifications is restricted to POSIX ERE. By contrast, the RE/flex scanner generator is regex-centric by design and offers a rich pattern syntax including lazy quantifiers.</li>
 <li>A matcher engine for a lexer class has a common interface API declared by the abstract base matcher class template.</li>
-<li>The RE/flex scanner generator includes an option to produce a scanner that is fully compatible with <a href="dinosaur.compilertools.net/#bison">Bison</a> by declaring and implementing a global scanner. RE/flex also generates Bison bridge (pure reentrant and MT-safe) parsers.</li>
+<li>RE/flex scanners are not implemented as a set of global functions and tables. RE/flex scanners are instances of generated lexer classes. Thus are MT-safe. A lexer class is derived from an abstract base lexer class template and it is instantiated with a regex matcher engine class that is provided as a template parameter.</li>
+<li>Lex and Flex scanners are restricted to ASCII or 8-bit character sets without adequate support for Unicode. RE/flex specifications are extended to support Unicode such that the RE/flex scanner generator produces scanners that handle UTF-8/16/32 input files.</li>
 <li>Input to matcher engines and scanners is implemented as a class that supports streaming sources of input and automatically decodes UTF-encoded files.</li>
 <li>RE/flex scanners can be stand-alone applications, similar to Flex scanners.</li>
 </ul>
 <p>See <a class="el" href="index.html#reflex">The RE/flex scanner generator </a> for more details on the RE/flex scanner generator tool.</p>
-<p>In the next part of this manual, we will take a quick look at the RE/flex regex API that can be used as a stand-alone library for matching, searching, scanning and splitting input from strings, files and streams in regular C++ applications that are not tokenizers for compilers.</p>
+<p>In the next part of this manual, we will take a quick look at the RE/flex regex API that can be used as a stand-alone library for matching, searching, scanning and splitting input from strings, files and streams in regular C++ applications (i.e. applications that are not necessarily tokenizers for compilers).</p>
 <p>⇢ <a href="#">Back to contents</a></p>
 <h2><a class="anchor" id="intro2"></a>
 Regex matching in C++                                                 </h2>
-<p>The RE/flex regex pattern matching classes include Boost.Regex and an efficient RE/flex engine that compiles regex patterns to finite state machines (FSMs). A common C++ API is used by these matchers so switching between matchers is easy.</p>
+<p>The RE/flex regex pattern matching classes include Boost.Regex and an efficient RE/flex engine that compiles regex patterns to finite state machines (FSMs). A common C++ API is used by these matchers, meaning that the design makes it easy to select and switch between matching engines.</p>
 <p>The RE/flex regex common interface API is implemented in an abstract base class template <code><a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">reflex::AbstractMatcher</a></code> from which regex matchers are derived. This regex API offers a common interface that is used in the generated scanner. You can also use this API in your C++ application for pattern matching.</p>
 <p>The RE/flex abstract matcher offers four operations for matching with the regex engines that are derived from this base abstract class:</p>
 <table class="doxtable">
@@ -165,7 +166,7 @@ Regex matching in C++                                                 </h2>
 <tr>
 <td><code>split()</code> </td><td>split input at the next match </td></tr>
 </table>
-<p>The methods are repeatable, where the last three return additional matches.</p>
+<p>These methods are repeatable, where the last three return additional matches.</p>
 <p>For example, to check if a string is a valid date:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="boostmatcher_8h.html">boostmatcher.h</a>&quot;</span> <span class="comment">// reflex::BoostMatcher, reflex::Input, boost::regex</span></div>
 <div class="line"></div>
@@ -222,7 +223,7 @@ Found
 <div class="line">matcher.interactive();</div>
 <div class="line"><span class="keywordflow">while</span> (matcher.find() == <span class="keyword">true</span>)</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Found &quot;</span> &lt;&lt; matcher.text() &lt;&lt; std::endl;</div>
-</div><!-- fragment --><p>We can also pattern match text from <code>FILE</code> descriptors. The additional benefit of using <code>FILE</code> descriptors is the automatic conversion from UTF-16/32 to UTF-8 by the <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a></code> class that manages input sources and their state.</p>
+</div><!-- fragment --><p>We can also pattern match text from <code>FILE</code> descriptors. The additional benefit of using <code>FILE</code> descriptors is the automatic decoding of UTF-16/32 input to UTF-8 by the <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a></code> class that manages input sources and their state.</p>
 <p>For example, pattern matching the content of "cows.txt" that may use UTF-8, 16, or 32 encodings:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="boostmatcher_8h.html">boostmatcher.h</a>&quot;</span> <span class="comment">// reflex::BoostMatcher, reflex::Input, boost::regex</span></div>
 <div class="line"></div>
@@ -460,7 +461,7 @@ The RE/flex scanner generator                                         </h1>
 </div>
 <p>The RE/flex-generated scanners use the RE/flex regex library API for pattern matching. The RE/flex regex library API is defined by the abstract class <code><a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">reflex::AbstractMatcher</a></code>.</p>
 <p>There are two regex matching engines to choose from for the generated scanner: the Boost.Regex library (assuming Boost.Regex is installed) or the RE/flex POSIX matcher engine.</p>
-<p>The input class <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a></code> manages input from strings, wide strings, streams, and data from <code>FILE</code> descriptors. File data may be encoded in ASCII, binary or in UTF-8/16/32. UTF-16/32 is automatically converted to UTF-8 for UTF-8-based regex matching:</p>
+<p>The input class <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a></code> manages input from strings, wide strings, streams, and data from <code>FILE</code> descriptors. File data may be encoded in ASCII, binary or in UTF-8/16/32. UTF-16/32 is automatically decoded and converted to UTF-8 for UTF-8-based regex matching:</p>
 <div align="center">
 <img src="dot_inline_dotgraph_3.png" alt="dot_inline_dotgraph_3.png" border="0" usemap="#dot_inline_dotgraph_3.map"/>
 <map name="dot_inline_dotgraph_3.map" id="dot_inline_dotgraph_3.map"></map>
@@ -720,7 +721,7 @@ Lex specifications                                               </h2>
 <div class="line">  fclose(fd);</div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --> </div><p>The above uses a <code>FILE</code> descriptor to read input from, which has the advantage of automatic internal UTF-8/16/32 conversion. Other permissible input sources are <code>std::istream</code>, <code>std::string</code>, <code>std::wstring</code>, <code>char*</code>, and <code>wchar_t*</code>.</p>
+</div><!-- fragment --> </div><p>The above uses a <code>FILE</code> descriptor to read input from, which has the advantage of automatically decoding UTF-8/16/32 input. Other permissible input sources are <code>std::istream</code>, <code>std::string</code>, <code>std::wstring</code>, <code>char*</code>, and <code>wchar_t*</code>.</p>
 <p>⇢ <a href="#">Back to contents</a></p>
 <h2><a class="anchor" id="reflex-patterns"></a>
 Patterns                                                      </h2>
@@ -1262,11 +1263,11 @@ Command-line options                                          </h2>
 <h3><code>−−bison-locations</code></h3>
 <p>This generates a scanner that works with Bison with locations enabled. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison and Yacc </a> for more details.</p>
 <h3><code>-R</code>, <code>−−reentrant</code></h3>
-<p>This generates additional Flex-compatible <code>yylex()</code> reentrant scanner functions. RE/flex scanners are always reentrant, assuming that <code>%class</code> variables are used instead of global variables in the scanner's user code. This is a Flex-compatibility option only to be used with options <code>−−flex</code> and <code>−−bison</code>. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison and Yacc </a>.</p>
+<p>This generates additional Flex-compatible <code>yylex()</code> reentrant scanner functions. RE/flex scanners are always reentrant, assuming that <code>%class</code> variables are used instead of global variables in the scanner's user code. This is a Flex-compatibility option and should only be used with options <code>−−flex</code> and <code>−−bison</code>. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison and Yacc </a>.</p>
 <h3><code>−−main</code></h3>
-<p>This generates a <code>main</code> function to create a stand-alone scanner that scans data from stdin standard input.</p>
+<p>This generates a <code>main</code> function to create a stand-alone scanner that scans data from standard input (using <code>stdin</code>).</p>
 <h3><code>−−nostdinit</code></h3>
-<p>This initializes input to <code>std::cin</code> instead of stdin. Automatic UTF-encoding conversion is not supported. Use stdin for automatic UTF-encoded input conversion.</p>
+<p>This initializes input to <code>std::cin</code> instead of using <code>stdin</code>. Automatic UTF decoding is not supported. Use <code>stdin</code> for automatic UTF BOM detection and decoding.</p>
 <h3><code>-u</code>, <code>−−unicode</code></h3>
 <p>This makes <code>.</code> (dot), <code>\s</code>, <code>\w</code>, <code>\l</code>, and <code>\u</code> match Unicode and also groups UTF-8 sequences in the regex, such that each UTF-8 encoded character in a regex is properly matched as one wide character. Note that <code>\S</code> and <code>\W</code> are <em>not affected</em> by this switch.</p>
 <h3><code>-x</code>, <code>−−freespace</code></h3>
@@ -1306,7 +1307,7 @@ Command-line options                                          </h2>
 <h3><code>−−lex=NAME</code></h3>
 <p>This defines the NAME of the generated scanner function to replace the function name <code>lex()</code> (and <code>yylex()</code> when option <code>−−flex</code> is used).</p>
 <h3><code>−−class=NAME</code></h3>
-<p>This defines the NAME of the scanner class that is derived from the generated base <code>Lexer</code> class. Use this option when defining your own scanner class named NAME. A custom lexer class can be declared in the first section of the lex specification. Because the custom lexer class is already defined, <b>reflex</b> will just generate the implementation of the <code>lex()</code> scanner function for this derived lexer class.</p>
+<p>This defines the NAME of the scanner class that should be derived from the generated base <code>Lexer</code> class. Use this option when defining your own scanner class named NAME. You can declare a custom lexer class in the first section of the lex specification. Because the custom lexer class is user-defined, <b>reflex</b> generates the implementation of the <code>lex()</code> scanner function for this specified class.</p>
 <h3><code>−−yyclass=NAME</code></h3>
 <p>This option combines options <code>−−flex</code> and <code>−−class=NAME</code>.</p>
 <h3><code>-m reflex</code>, <code>−−matcher=reflex</code></h3>
@@ -1316,7 +1317,7 @@ Command-line options                                          </h2>
 <h3><code>-m boost-perl</code>, <code>−−matcher=boost-perl</code></h3>
 <p>This generates a scanner that uses the <code><a class="el" href="classreflex_1_1_boost_perl_matcher.html" title="Boost matcher engine class, extends reflex::BoostMatcher for Boost Perl regex matching. ">reflex::BoostPerlMatcher</a></code> class with a Boost.Regex normal (Perl) matcher engine for scanning. The matching behavior deviates from the POSIX <em>leftmost-longest rule</em>, which results in the first matching rule to be applied instead of the rule that produces the longest match. The matcher supports lazy quantifiers and word boundary anchors. No Graphviz output.</p>
 <h3><code>-F</code>, <code>−−fast</code></h3>
-<p>(RE/flex matcher only). This option adds the FSM to the generated code as a static code table. This means that the FSM construction overhead is eliminated when the scanner is initialized, resulting in a scanner that starts scanning the input immediately.</p>
+<p>(RE/flex matcher only). This option adds the FSM to the generated code as a static code table. This means that the FSM construction overhead is eliminated when the scanner is initialized, resulting in a scanner that starts scanning the input immediately. In future releases this option may produce optimized FSM code that runs faster compared to FSM tables.</p>
 <h3><code>−−graphs-file[=FILE]</code></h3>
 <p>(RE/flex matcher only). This generates a Graphviz file FILE.gv, where FILE is optional. When FILE is omitted the <b>reflex</b> command generates the file reflex.S.gv for each start condition state S defined in the lex specification. This includes reflex.INITIAL.gv for the INITIAL start condition state. This option can be used to visualize the RE/flex matcher's finite state machine with the <a href="http://www.graphviz.org">Graphviz dot</a> tool. For example:</p>
 <div align="center">
@@ -1374,7 +1375,7 @@ Switching input sources                                         </h2>
 <div class="alt"> <div class="fragment"><div class="line">Lexer lexer(input, std::cout);</div>
 </div><!-- fragment --> </div><p>where <code>input</code> is a <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a></code> object. The <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a></code> constructor takes a <code>FILE*</code> descriptor, <code>std::istream</code>, a string <code>std::string</code> or <code>char*</code>, or a wide string <code>std::wstring</code> or <code>wchar_t*</code>.</p>
 <p>To switch input to another source while using the scanner, use <code>in(input)</code>:</p>
-<div class="fragment"><div class="line"><span class="comment">// read from a file, this also converts UTF-16/32 encodings automatically</span></div>
+<div class="fragment"><div class="line"><span class="comment">// read from a file, this also decodes UTF-16/32 encodings automatically</span></div>
 <div class="line">FILE *fd = fopen(<span class="stringliteral">&quot;cow.txt&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>);</div>
 <div class="line"><span class="keywordflow">if</span> (fd)</div>
 <div class="line">  in(fd);</div>
@@ -2135,7 +2136,7 @@ Pattern matching methods                                       </h2>
 The Input class                                                  </h2>
 <p>A matcher may accept several types of input, but can only read from one input source at a time. Input to a matcher is represented by a single <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a></code> class instance that the matcher uses internally.</p>
 <p>An input object can be assigned <code>std::string</code> and <code>char*</code> strings, wide strings <code>std::wstring</code> and <code>wchar_t*</code>, a <code>FILE*</code>, or a <code>std::istream</code>.</p>
-<p>Wide strings are internally converted to UTF-8 for matching, which effectively normalizes the content. A <code>FILE*</code> with content in UTF-16 or UTF-32 is converted internally (i.e. streaming) for matching to UTF-8.</p>
+<p>Wide strings are internally converted to UTF-8 for matching, which effectively normalizes the content.</p>
 <p>Conversion from wide string to UTF-8 is shown in the example below. The copyright symbol <code>©</code> with Unicode U+00A9 is matched against its UTF-8 sequence <code>C2 A9</code>:</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (<a class="code" href="classreflex_1_1_matcher.html">reflex::Matcher</a>(<span class="stringliteral">&quot;\xc2\xa9&quot;</span>, L<span class="stringliteral">&quot;©&quot;</span>).matches())</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;copyright symbol matches\n&quot;</span>;</div>
@@ -2158,7 +2159,7 @@ The Input class                                                  </h2>
 <tr>
 <td><code>istream()</code> </td><td>a <code>std::istream*</code> pointer to the current stream object or NULL </td></tr>
 </table>
-<p>File content specified with a <code>FILE*</code> file descriptor can be encoded in ASCII, binary, or UTF-8/16/32 formats. UTF-16/32 file content is converted internally to UTF-8 (i.e. streaming) to normalize the input for matching.</p>
+<p>File content specified with a <code>FILE*</code> file descriptor can be encoded in ASCII, binary, or UTF-8/16/32 formats. UTF-16/32 file content is automatically decoded and converted to UTF-8 (i.e. streaming) to normalize the input for matching.</p>
 <p>A <a href="www.unicode.org/faq/utf_bom.html">UTF byte order mark (BOM)</a> is detected in the content of a file by the matcher, which enables UTF-8 normalization of the input automatically.</p>
 <p>The file encoding is obtained with the <code>file_encoding()</code> method of a <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">reflex::Input</a></code> object and it returns one of:</p>
 <table class="doxtable">
@@ -2326,7 +2327,7 @@ Token = 4: matched '!' with '(.)'
 <div class="line">  <span class="keywordflow">switch</span> (matcher.in.file_encoding())</div>
 <div class="line">  {</div>
 <div class="line">    <span class="keywordflow">case</span> <a class="code" href="structreflex_1_1_input_1_1_const.html#a2a327de7ecbe34c421ebcb5f09058c49">Input::Const::plain</a>:   std::cout &lt;&lt; <span class="stringliteral">&quot;ASCII or binary file&quot;</span>; <span class="keywordflow">break</span>;</div>
-<div class="line">    <span class="keywordflow">case</span> <a class="code" href="namespacereflex.html#a3475c552254712fd461eaf1bbc4735bc">Input::Const::utf8</a>:    std::cout &lt;&lt; <span class="stringliteral">&quot;UTF-8 file&quot;</span>;           <span class="keywordflow">break</span>;</div>
+<div class="line">    <span class="keywordflow">case</span> <a class="code" href="namespacereflex.html#a20e957eccf80d8ae722992cb3b9300d9">Input::Const::utf8</a>:    std::cout &lt;&lt; <span class="stringliteral">&quot;UTF-8 file&quot;</span>;           <span class="keywordflow">break</span>;</div>
 <div class="line">    <span class="keywordflow">case</span> <a class="code" href="structreflex_1_1_input_1_1_const.html#a9b6f173e4e331684ef3202bf4d50cd00">Input::Const::utf16be</a>: std::cout &lt;&lt; <span class="stringliteral">&quot;UTF-16 big endian&quot;</span>;    <span class="keywordflow">break</span>;</div>
 <div class="line">    <span class="keywordflow">case</span> <a class="code" href="structreflex_1_1_input_1_1_const.html#a8d02b5c499209ed24ec80bece8d73c3b">Input::Const::utf16le</a>: std::cout &lt;&lt; <span class="stringliteral">&quot;UTF-16 little endian&quot;</span>; <span class="keywordflow">break</span>;</div>
 <div class="line">    <span class="keywordflow">case</span> <a class="code" href="structreflex_1_1_input_1_1_const.html#a7ef046acca7113d23ff77dbfa1ded607">Input::Const::utf32be</a>: std::cout &lt;&lt; <span class="stringliteral">&quot;UTF-32 big endian&quot;</span>;    <span class="keywordflow">break</span>;</div>
@@ -2373,7 +2374,7 @@ License and copyright                                                 </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Nov 25 2016 12:31:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
+Converted on Thu Dec 1 2016 20:45:53 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.10</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

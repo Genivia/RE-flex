@@ -28,7 +28,7 @@
 
 /**
 @file      pattern.cpp
-@brief     RE/Flex regular expression pattern compiler
+@brief     RE/flex regular expression pattern compiler
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
@@ -80,6 +80,12 @@ static clock_t clock_time;
 #endif
 
 namespace reflex {
+
+#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
+inline errno_t fopen_s(FILE **fd, const char *name, const char *mode) { return ::fopen_s(fd, name, mode); }
+#else
+inline errno_t fopen_s(FILE **fd, const char *name, const char *mode) { return (*fd = ::fopen(name, mode)) ? 0 : errno; }
+#endif
 
 static const char *posix_class[] = {
   "ASCII",
@@ -1784,14 +1790,15 @@ void Pattern::export_dfa(const State& start) const
     size_t len = filename.length();
     if (len > 3 && filename.compare(len - 3, 3, ".gv") == 0)
     {
-      FILE *fd;
+      FILE *fd = NULL;
+      errno_t err = 0;
       if (filename.compare(0, 7, "stdout.") == 0)
         fd = stdout;
       else if (filename.at(0) == '+')
-        fd = ::fopen(filename.c_str() + 1, "a");
+        err = reflex::fopen_s(&fd, filename.c_str() + 1, "a");
       else
-        fd = ::fopen(filename.c_str(), "w");
-      if (fd)
+        err = reflex::fopen_s(&fd, filename.c_str(), "w");
+      if (!err && fd)
       {
         ::fprintf(fd, "digraph %s {\n\t\trankdir=LR;\n\t\tconcentrate=true;\n\t\tnode [fontname=\"ArialNarrow\"];\n\t\tedge [fontname=\"Courier\"];\n\n\t\tinit [root=true,peripheries=0,label=\"%s\",fontname=\"Courier\"];\n\t\tinit -> N%p;\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), opt_.n.c_str(), &start);
         for (const State *state = &start; state; state = state->next)
@@ -1925,14 +1932,15 @@ void Pattern::export_code() const
      || (len > 4 && filename.compare(len - 4, 4, ".cpp") == 0)
      || (len > 3 && filename.compare(len - 3, 3, ".cc" ) == 0))
     {
-      FILE *fd;
+      FILE *fd = NULL;
+      errno_t err = 0;
       if (filename.compare(0, 7, "stdout.") == 0)
         fd = stdout;
       else if (filename.at(0) == '+')
-        fd = ::fopen(filename.c_str() + 1, "a");
+        err = reflex::fopen_s(&fd, filename.c_str() + 1, "a");
       else
-        fd = ::fopen(filename.c_str(), "w");
-      if (fd)
+        err = reflex::fopen_s(&fd, filename.c_str(), "w");
+      if (!err && fd)
       {
         ::fprintf(fd, "#ifndef REFLEX_CODE_DECL\n#include \"pattern.h\"\n#define REFLEX_CODE_DECL const reflex::Pattern::Opcode\n#endif\n\nREFLEX_CODE_DECL reflex_code_%s[%hu] =\n{\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), nop_);
         for (Index i = 0; i < nop_; ++i)

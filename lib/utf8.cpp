@@ -28,20 +28,26 @@
 
 /**
 @file      utf8.cpp
-@brief     RE/Flex UCS to UTF8 converters
+@brief     RE/flex UCS to UTF8 converters
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
 #include "utf8.h"
-#include <stdio.h>
 
 namespace reflex {
 
-static const char *hex_r(char *buf, int a, const char *esc)
+static const char *hex_r(char *buf, int a, const char *esc, size_t *n = NULL)
 {
-  ::sprintf(buf, "%sx%02x", esc, a);
+  size_t k = strlen(esc);
+  std::memcpy(buf, esc, k);
+  buf[k] = 'x';
+  buf[k + 1] = "0123456789abcdef"[a >> 4 & 0xf];
+  buf[k + 2] = "0123456789abcdef"[a & 0xf];
+  buf[k + 3] = '\0';
+  if (n)
+    *n = k + 3;
   return buf;
 }
 
@@ -49,11 +55,17 @@ static const char *hex_r(char *buf, int a, int b, const char *esc)
 {
   if (a == b)
     return hex_r(buf, a, esc);
-  ::sprintf(buf, "[%sx%02x-%sx%02x]", esc, a, esc, b);
+  size_t n;
+  buf[0] = '[';
+  hex_r(buf + 1, a, esc, &n);
+  buf[n] = '-';
+  hex_r(buf + 2 + n, b, esc, &n);
+  buf[n] = ']';
+  buf[n + 1] = '\0';
   return buf;
 }
 
-std::string utf8(wchar_t a, wchar_t b, bool strict, const char *esc)
+std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
 {
   if (esc == NULL || std::strlen(esc) > 3)
     esc = "\\";
