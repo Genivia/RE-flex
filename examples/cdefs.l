@@ -1,3 +1,5 @@
+// C/C++ lexical structure w/o unicode
+
 WHITESPACE	\s+
 ILCOMMENT	"//".*?\n
 MLCOMMENT	"/*"(.|\n)*?"*/"

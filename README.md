@@ -227,12 +227,13 @@ Changelog
 ---------
 
 - Nov 14, 2016: 0.9.0 beta released
-- Nov 15, 2016: 0.9.1 beta released with improved portability
+- Nov 15, 2016: 0.9.1 improved portability
 - Nov 17, 2016: 0.9.2 improvements and fixes for minor issues
-- Nov 19, 2016: 0.9.3 replaced `%import` with `%include`, added freespace option `-x`, fixed minor issues
+- Nov 19, 2016: 0.9.3 replaces `%import` with `%include`, adds freespace option `-x`, fixes minor issues
 - Nov 20, 2016: 0.9.4 fixes minor issues, added new examples/json.l
 - Nov 25, 2016: 0.9.5 bug fixes and improvements
 - Dec  1, 2016: 0.9.6 portability improvements
+- Dec  7, 2016: 0.9.7 bug fixes, added option `--regexp-file`, Python tokenizer
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

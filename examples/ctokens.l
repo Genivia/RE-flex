@@ -1,3 +1,5 @@
+// C/C++ tokenizer (plain, no Unicode)
+
 %{
 #include <stdio.h>
 %}

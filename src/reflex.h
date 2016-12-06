@@ -54,7 +54,7 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.6"
+#define REFLEX_VERSION "0.9.7"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -126,7 +126,7 @@ class Reflex
   void          write_code(const Code& code);
   void          write_lexer(void);
   void          write_main(void);
-  void          append_tables(void);
+  void          write_stats(void);
   void          write_regex(const std::string& regex);
   bool          getline(void);
   bool          skipcomment(size_t& pos);

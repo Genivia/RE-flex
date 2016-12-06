@@ -1,5 +1,5 @@
+// Java lexical structure
 // https://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html
-//
 // Note: place IntegerLiteral before FloatingPointLiteral since the latter also matches the former
 
 InputCharacter                  [\x00-\x09\x0B\x0C\x0E-\x7F]|\p{Non_ASCII_Unicode}

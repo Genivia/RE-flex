@@ -6,7 +6,7 @@
 ^\h*\i          out() << "> "; // indent
 ^\h*\j          out() << "< "; // dedent
 \j              out() << "< "; // dedent, triggered for each extra level dedented
-(?^\\\n\h+)     // lines ending in \ will continue on the next line with an indent
+(?^\\\n\h*)     // lines ending in \ will continue on the next line
 "/*"            matcher().push_stops(); // save the indent margin/tab stops
                 start(CONTINUE);        // continue w/o indent matching
 <CONTINUE>{

@@ -102,6 +102,7 @@ static const char *options_table[] = {
   "posix",
   "prefix",
   "reentrant",
+  "regexp_file",
   "stack",
   "stdinit",
   "stdout",
@@ -227,11 +228,13 @@ static void help(const char *message = NULL, const char *arg = NULL)
         -t, --stdout\n\
                 write scanner on stdout instead of lex.yy.cpp\n\
         --graphs-file[=FILE]\n\
-                write DFA to FILE.gv for the Graphviz dot tool\n\
+                write the scanner's DFA to FILE.gv for the Graphviz dot tool\n\
         --header-file[=FILE]\n\
                 write a C++ header FILE.h in addition to the scanner\n\
+        --regexp-file[=FILE]\n\
+                write the scanner's regular expression patterns to FILE.txt\n\
         --tables-file[=FILE]\n\
-                write tables to FILE.cpp\n\
+                write the scanner's tables to FILE.cpp\n\
 \n\
    Debugging:\n\
         -d, --debug\n\
@@ -458,7 +461,7 @@ void Reflex::init(int argc, char **argv)
             options["dotall"] = "true";
             break;
           case 'B':
-	    options["batch"] = "true";
+            options["batch"] = "true";
             break;
           case 'c':
             break;
@@ -597,7 +600,7 @@ void Reflex::include(const std::string& filename)
   lineno = save_lineno;
 }
 
-/// Fetch next line from the input.
+/// Fetch next line from the input, return true if ok.
 bool Reflex::getline(void)
 {
   if (in->eof())
@@ -615,7 +618,7 @@ bool Reflex::getline(void)
   return true;
 }
 
-/// Advance pos over white space and comments, returrn true if end of line.
+/// Advance pos over white space and comments, return true if ok.
 bool Reflex::skipcomment(size_t& pos)
 {
   while (true)
@@ -624,16 +627,33 @@ bool Reflex::skipcomment(size_t& pos)
     if (pos + 1 < linelen && line.at(pos) == '/' && line.at(pos + 1) == '/')
     {
       pos = linelen;
-      return true;
     }
-    if (pos + 1 < linelen && line.at(pos) == '/' && line.at(pos + 1) == '*')
+    else if (pos + 1 < linelen && line.at(pos) == '/' && line.at(pos + 1) == '*')
     {
-      while (pos + 1 < linelen && (line.at(pos) != '*' || line.at(pos + 1) != '/'))
-        ++pos;
+      while (true)
+      {
+        while (pos + 1 < linelen && (line.at(pos) != '*' || line.at(pos + 1) != '/'))
+          ++pos;
+        if (pos + 1 < linelen)
+          break;
+        if (!getline())
+          return false;
+        pos = 0;
+      }
       pos += 2;
+      if (pos >= linelen)
+      {
+        if (!getline())
+          return false;
+        pos = 0;
+      }
       continue;
     }
-    return pos >= linelen;
+    if (pos < linelen)
+      return true;
+    if (!getline())
+      return false;
+    pos = 0;
   }
 }
 
@@ -738,7 +758,7 @@ std::string Reflex::getstring(size_t& pos)
 
 // convert (X) to (?:X) for regex engines to ignore groups
 // convert lookahead X/Y to X(?=Y)
-// convert . to UTF-8 (.|[\xC0-\xFF][\x80-\xBF]+) if unicode flag is set
+// convert . to UTF-8 (.|[\xc0-\xff][\x80-\xbf]+) if unicode flag is set
 // convert \s, \l, \u, \w to UTF-8 pattern if unicode flag is set
 // convert \X to UTF-8 pattern
 // convert UTF-8-sequence to (?:UTF-8-sequence) if unicode flag is set
@@ -824,7 +844,7 @@ std::string Reflex::getregex(size_t& pos)
             }
             else if (pos + 2 < linelen && (line.at(pos) == 'u' || line.at(pos) == 'x') && line.at(pos + 1) == '{') // translate \u{X} and \x{X}
             {
-	      reflex::unicode_t wc = static_cast<reflex::unicode_t>(std::strtoul(line.c_str() + pos + 2, NULL, 16));
+              reflex::unicode_t wc = static_cast<reflex::unicode_t>(std::strtoul(line.c_str() + pos + 2, NULL, 16));
               if (wc > 0x7f)
               {
                 char buf[7];
@@ -862,7 +882,7 @@ std::string Reflex::getregex(size_t& pos)
             }
             else if (line.at(pos) == 'X') // translate \X to match any UTF-8
             {
-              regex.append(line.substr(loc, pos - loc)).append("(?:[\\x00-\\xBF]|[\\xC0-\\xFF][\\x80-\\xBF]+)");
+              regex.append(line.substr(loc, pos - loc)).append("(?:[\\x00-\\xbf]|[\\xc0-\\xff][\\x80-\\xbf]+)");
               loc = pos + 1;
             }
             else if (isalpha(line.at(pos)))
@@ -874,15 +894,15 @@ std::string Reflex::getregex(size_t& pos)
           }
           else
           {
-	    // line ends in \ and continues on the next line
+            // line ends in \ and continues on the next line
             regex.append(line.substr(loc, pos - loc));
             if (!getline())
               error("EOF encountered inside a pattern");
             if (line == "%%")
               error("%% section ending encountered inside a pattern");
             pos = 0;
-	    (void)ws(pos); // skip indent
-	    loc = pos;
+            (void)ws(pos); // skip indent
+            loc = pos;
           }
           break;
         case '/':
@@ -928,11 +948,11 @@ std::string Reflex::getregex(size_t& pos)
             regex.append(line.substr(loc, pos - loc));
             loc = pos++;
             std::string lifted;
-	    reflex::unicode_t wc = -1;
+            reflex::unicode_t wc = -1;
             bool range = false;
             size_t size = regex.size();
             size_t prev = pos;
-            while (pos + 1 < linelen && line.at(pos) != ']')
+            while (pos + 1 < linelen)
             {
               if (line.at(pos) == '\\' && pos + 1 < linelen)
               {
@@ -1013,7 +1033,7 @@ std::string Reflex::getregex(size_t& pos)
                         }
                       }
                     }
-                    else if (!options["unicode"].empty()) // translate \u and lift from [ ]
+                    else if (c == 'u' && !options["unicode"].empty()) // translate \u and lift from [ ]
                     {
                       if (lifted.empty())
                         regex.append("(?:");
@@ -1064,7 +1084,7 @@ std::string Reflex::getregex(size_t& pos)
                     if (lifted.empty())
                       regex.append("(?:");
                     regex.append(line.substr(loc, pos - loc));
-                    lifted.append("|[\\x00-\\xBF]|[\\xC0-\\xFF][\\x80-\\xBF]+");
+                    lifted.append("|[\\x00-\\xbf]|[\\xc0-\\xff][\\x80-\\xbf]+");
                     ++pos;
                     loc = pos + 1;
                     wc = -1;
@@ -1080,6 +1100,13 @@ std::string Reflex::getregex(size_t& pos)
                 }
                 range = false;
               }
+	      else if (line.at(pos) == '[' && pos + 1 < linelen && line.at(pos + 1) == ':')
+	      {
+		pos += 2;
+		while (pos + 1 < linelen && (line.at(pos) != ':' || line.at(pos + 1) != ']'))
+		  ++pos;
+		++pos;
+	      }
               else if (wc >= 0 && line.at(pos) == '-')
               {
                 range = true;
@@ -1091,6 +1118,8 @@ std::string Reflex::getregex(size_t& pos)
                 prev = pos;
               }
               ++pos;
+	      if (pos >= linelen || line.at(pos) == ']')
+		break;
             }
             if (lifted.empty())
               regex.append(line.substr(loc, pos - loc + 1));
@@ -1152,7 +1181,7 @@ std::string Reflex::getregex(size_t& pos)
           }
           break;
         case '#':
-          if (!options["freespace"].empty())
+          if (!options["freespace"].empty()) // escape # in freespace mode, otherwise ends up as a comment
           {
             regex.append(line.substr(loc, pos - loc)).append("\\#");
             loc = pos + 1;
@@ -1161,7 +1190,7 @@ std::string Reflex::getregex(size_t& pos)
         case '.':
           if (!options["unicode"].empty())
           {
-            regex.append(line.substr(loc, pos - loc)).append("(?:.|[\\xC0-\\xFF][\\x80-\\xBF]+)");
+            regex.append(line.substr(loc, pos - loc)).append("(?:.|[\\xc0-\\xff][\\x80-\\xbf]+)");
             loc = pos + 1;
           }
           break;
@@ -1490,7 +1519,7 @@ void Reflex::parse_section_1(void)
 void Reflex::parse_section_2(void)
 {
   if (in->eof())
-    error("missing section 2");
+    error("missing %% section 2");
   bool init = true;
   std::stack<Starts> scopes;
   if (!getline())
@@ -1500,7 +1529,7 @@ void Reflex::parse_section_2(void)
     if (linelen == 0)
     {
       if (!getline())
-        return;
+        break;
     }
     else
     {
@@ -1522,16 +1551,12 @@ void Reflex::parse_section_2(void)
       {
         scopes.pop();
         if (!getline())
-          return;
+          break;
       }
       else
       {
-        while (skipcomment(pos))
-        {
-          if (!getline())
-            return;
-          pos = 0;
-        }
+        if (!skipcomment(pos) || line == "%%")
+          break;
         Starts starts = getstarts(pos);
         if (pos + 1 == linelen && line.at(pos) == '{')
         {
@@ -1587,6 +1612,8 @@ void Reflex::parse_section_2(void)
 
 void Reflex::parse_section_3(void)
 {
+  if (in->eof())
+    error("missing %% section 3");
   while (getline())
     section_3.push_back(Code(line, infile, lineno));
 }
@@ -1629,7 +1656,42 @@ void Reflex::write(void)
     write_banner("TABLES");
   if (ofs.is_open())
     ofs.close();
-  append_tables();
+  write_stats();
+  if (!options["regexp_file"].empty())
+  {
+    std::ofstream ofs;
+    bool append = false;
+    for (Start start = 0; start < conditions.size(); ++start)
+    {
+      if (!append)
+      {
+        std::string filename;
+        if (options["regexp_file"] == "true")
+        {
+          filename = "reflex.";
+          filename.append(conditions[start]).append(".txt");
+        }
+        else
+        {
+          filename = file_ext(options["regexp_file"], "txt");
+          append = true;
+        }
+        ofs.open(filename.c_str(), std::ofstream::out);
+        if (!ofs.is_open())
+          abort("opening file ", filename.c_str());
+        out = &ofs;
+      }
+      *out << "\"";
+      write_regex(patterns[start]);
+      *out << "\"" << std::endl;
+      if (!ofs.good())
+        abort("in writing");
+      if (!append)
+        ofs.close();
+    }
+    if (append)
+      ofs.close();
+  }
   if (!options["header_file"].empty())
   {
     ofs.open(options["header_file"].c_str(), std::ofstream::out);
@@ -2394,7 +2456,7 @@ void Reflex::write_main(void)
   }
 }
 
-void Reflex::append_tables(void)
+void Reflex::write_stats(void)
 {
   if (!options["verbose"].empty())
   {

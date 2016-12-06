@@ -1,10 +1,10 @@
 <map id="reflex::BoostPosixMatcher" name="reflex::BoostPosixMatcher">
-<area shape="rect" id="node2" href="$classreflex_1_1_boost_matcher.html" title="Boost matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="720,118,864,146"/>
-<area shape="rect" id="node4" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; boost::regex \&gt;" alt="" coords="513,110,666,154"/>
-<area shape="rect" id="node6" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="243,59,402,87"/>
-<area shape="rect" id="node10" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="510,37,669,81"/>
-<area shape="rect" id="node8" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="6,5,165,49"/>
-<area shape="rect" id="node13" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. " alt="" coords="40,73,131,101"/>
-<area shape="rect" id="node15" href="$classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM and code for the reflex::Matcher engine..." alt="" coords="270,139,375,167"/>
-<area shape="rect" id="node17" href="$structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="10,139,161,167"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_boost_matcher.html" title="Boost matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="717,117,861,143"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; boost::regex \&gt;" alt="" coords="512,109,665,151"/>
+<area shape="rect" id="node4" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="243,58,401,85"/>
+<area shape="rect" id="node6" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="509,37,668,79"/>
+<area shape="rect" id="node5" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="5,5,164,47"/>
+<area shape="rect" id="node7" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. " alt="" coords="39,71,131,98"/>
+<area shape="rect" id="node8" href="$classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM and code for the reflex::Matcher engine..." alt="" coords="269,137,375,163"/>
+<area shape="rect" id="node9" href="$structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="9,137,161,163"/>
 </map>

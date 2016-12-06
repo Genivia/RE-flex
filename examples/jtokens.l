@@ -1,4 +1,4 @@
-// Java tokenizer, standardized to meet Java Lexical Structure requirements
+// Java tokenizer, standardized to meet Java lexical structure requirements
 // Reads UTF-8 files (with or without UTF-8 BOM) and UTF16 files (with UTF-16 BOM)
 // Converts Unicode Escapes \uxxxx first, prior to lexical analysis
 

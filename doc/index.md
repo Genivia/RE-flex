@@ -1480,7 +1480,7 @@ indentation levels, use a negative match, which is a new RE/flex feature:
 
 <div class="alt">
 ```cpp
-(?^\\\n\h+)  // lines ending in \ will continue on the next line with an indent
+(?^\\\n\h*)  // lines ending in \ will continue on the next line
 ```
 </div>
 
@@ -2000,12 +2000,6 @@ patterns: [1] a pattern to match dollar amounts with the regex
 `\$\d+(\.\d{2})?` and [2] the regex `.|\n` to skip a character and advance to
 the next match.
 
-### `−−header-file[=FILE]`
-
-(RE/flex matcher only).  This generates a C++ header file FILE.h that declares
-the lexer class, in addition to the generated lexer class code, where FILE is
-optional.  When FILE is omitted the **reflex** command generates lex.yy.h.
-
 ### `−−tables-file[=FILE]`
 
 (RE/flex matcher only).  This generates a C++ file FILE.cpp with the finite state
@@ -2017,6 +2011,20 @@ state.  When this option is used in combination with `−−fast`, the
 Therefore, when combines with `−−fast` you must compile the generated table
 file with the scanner.  Option `−−fast` eliminates the FSM construction
 overhead when the scanner is initialized.
+
+### `−−header-file[=FILE]`
+
+This generates a C++ header file FILE.h that declares the lexer class, in
+addition to the generated lexer class code, where FILE is optional.  When FILE
+is omitted the **reflex** command generates lex.yy.h.
+
+### `−−regexp-file[=FILE]`
+
+This generates a text file with FILE.txt that contains the scanner's regular
+expression patterns, where FILE is optional.  When FILE is omitted the
+**reflex** command generates reflex.S.txt for each start condition state S.
+The regular expression patterns are converted from the lex specification and
+translated into valid C++ strings for regex pattern matching.
 
 ### `−−pattern=NAME`
 

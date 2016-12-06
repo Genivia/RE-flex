@@ -43,7 +43,7 @@
 namespace reflex {
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
-typedef _uint32_t unicode_t;
+typedef uint32_t unicode_t;
 #else
 typedef wchar_t unicode_t;
 #endif

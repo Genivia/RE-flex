@@ -1,6 +1,6 @@
 CPP=c++
-BOOST=$(HOME)/boost
-BOOSTLIB=$(BOOST)/stage/lib/libboost_regex.a
+BOOST=/opt/local/include
+BOOSTLIB=/opt/local/lib/libboost_regex-mt.dylib
 REFLEX=../bin/reflex
 LIBS=../lib/libreflex.a
 COFLAGS=-g -O2
@@ -43,6 +43,6 @@ clean:
 		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c
 		-rm -rf *.dSYM
 		-rm -f *.o *.gch *.log
-		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv
+		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f test_regex_history dump.gv dump.pdf dump.cpp
 		-rm -f lorem test rtest btest test_bits test_ranges

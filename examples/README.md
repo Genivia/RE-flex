@@ -5,8 +5,8 @@ The examples with Bison require the installation of [Bison][bison-url].
 Flex-compatible scanner examples
 --------------------------------
 
-- `ctokens.l` a C/C++ tokenizer
-- `jtokens.l` a Java tokenizer, meets Java Lexical Structure requirements
+- `ctokens.l` and `cdefs.l` a C/C++ tokenizer
+- `jtokens.l` and `jdefs.l` a Java tokenizer, meets Java Lexical Structure requirements
 - `flexexample1.l` example taken from the Flex documentation
 - `flexexample2.l` example from <http://matt.might.net/articles/standalone-lexers-with-lex>
 - `flexexample3.l` example from the Flex documentation with bison
@@ -25,6 +25,7 @@ Flex-compatible scanner examples
 RE/flex scanner examples
 ------------------------
 
+- `ptokens.l` and `pdefs.l` a Python tokenizer
 - `cow.l` scanner to convert cows
 - `cows.l` scanner to convert cows, uses word boundary anchors
 - `indent.l` indentation detection and reformatting example

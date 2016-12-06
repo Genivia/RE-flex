@@ -132,3 +132,40 @@ table.doxtable th {
 	padding-top: 5px;
 }
 
+.navpath ul
+{
+	font-size: 11px;
+        color: rgba(255, 255, 255, 0.9);
+        background: #c0504d;
+	border: 1px solid #ddd;
+	margin:0px;
+	padding:0px;
+}
+
+.navpath li
+{
+	list-style-type:none;
+	float:left;
+	padding-left:10px;
+	padding-right:15px;
+        background: #c0504d;
+        color: rgba(255, 255, 255, 0.9);
+}
+
+.navpath li.navelem a
+{
+	height:32px;
+	display:block;
+	text-decoration: none;
+	outline: none;
+        color: rgba(255, 255, 255, 0.9);
+	text-shadow: none;
+	text-decoration: none;        
+}
+
+.navpath li.navelem a:hover
+{
+        background: #E23232;
+        color: #fff;
+}
+

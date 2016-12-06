@@ -1,5 +1,5 @@
 <map id="flexlexer.h" name="flexlexer.h">
-<area shape="rect" id="node3" href="$abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="150,83,231,111"/>
-<area shape="rect" id="node5" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="120,161,181,189"/>
-<area shape="rect" id="node7" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="58,238,112,266"/>
+<area shape="rect" id="node2" href="$abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="151,80,235,107"/>
+<area shape="rect" id="node3" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="120,155,183,181"/>
+<area shape="rect" id="node4" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="58,229,114,256"/>
 </map>
