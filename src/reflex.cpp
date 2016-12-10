@@ -69,6 +69,7 @@ static const char *options_table[] = {
   "fast",
   "flex",
   "freespace",
+  "full",
   "graphs_file",
   "header_file",
   "input",
@@ -178,8 +179,10 @@ static void help(const char *message = NULL, const char *arg = NULL)
                 dot in patterns match newline\n\
         -B, --batch\n\
                 generate scanner for batch input by buffering all input\n\
+        -f, --full\n\
+                generate full scanner with FSM opcode tables\n\
         -F, --fast\n\
-                generate fast scanner by embedding compiled DFA code\n\
+                generate fast scanner with FSM code\n\
         -i, --case-insensitive\n\
                 ignore case in patterns\n\
         -I, --interactive, --always-interactive\n\
@@ -234,7 +237,7 @@ static void help(const char *message = NULL, const char *arg = NULL)
         --regexp-file[=FILE]\n\
                 write the scanner's regular expression patterns to FILE.txt\n\
         --tables-file[=FILE]\n\
-                write the scanner's tables to FILE.cpp\n\
+                write the scanner's FSM opcode tables or FSM code to FILE.cpp\n\
 \n\
    Debugging:\n\
         -d, --debug\n\
@@ -469,6 +472,8 @@ void Reflex::init(int argc, char **argv)
             options["debug"] = "1";
             break;
           case 'f':
+            options["full"] = "true";
+            break;
           case 'F':
             options["fast"] = "true";
             break;
@@ -1100,13 +1105,13 @@ std::string Reflex::getregex(size_t& pos)
                 }
                 range = false;
               }
-	      else if (line.at(pos) == '[' && pos + 1 < linelen && line.at(pos + 1) == ':')
-	      {
-		pos += 2;
-		while (pos + 1 < linelen && (line.at(pos) != ':' || line.at(pos + 1) != ']'))
-		  ++pos;
-		++pos;
-	      }
+              else if (line.at(pos) == '[' && pos + 1 < linelen && line.at(pos + 1) == ':')
+              {
+                pos += 2;
+                while (pos + 1 < linelen && (line.at(pos) != ':' || line.at(pos + 1) != ']'))
+                  ++pos;
+                ++pos;
+              }
               else if (wc >= 0 && line.at(pos) == '-')
               {
                 range = true;
@@ -1118,8 +1123,8 @@ std::string Reflex::getregex(size_t& pos)
                 prev = pos;
               }
               ++pos;
-	      if (pos >= linelen || line.at(pos) == ']')
-		break;
+              if (pos >= linelen || line.at(pos) == ']')
+                break;
             }
             if (lifted.empty())
               regex.append(line.substr(loc, pos - loc + 1));
@@ -1282,30 +1287,37 @@ std::string Reflex::getcode(size_t& pos)
     {
       if (!getline())
         error("EOF encountered inside an action");
-      if ((blk > 0 || lev > 0) && line == "%%")
-        error("%% section ending encountered inside an action");
       pos = 0;
-      if (line == "%{")
+      if (tok == CODE)
       {
-        code.append(newline);
-        ++blk;
-      }
-      else if (line == "%}")
-      {
-        code.append(newline);
-        if (blk > 0)
-          --blk;
-        if (blk == 0 && lev == 0)
+        if ((blk > 0 || lev > 0) && line == "%%")
+          error("%% section ending encountered inside an action");
+        if (line == "%{")
         {
-          if (!getline())
-            error("EOF encountered inside an action");
-          return code;
+          code.append(newline);
+          ++blk;
+        }
+        else if (line == "%}")
+        {
+          code.append(newline);
+          if (blk > 0)
+            --blk;
+          if (blk == 0 && lev == 0)
+          {
+            if (!getline())
+              error("EOF encountered inside an action");
+            return code;
+          }
+        }
+        else
+        {
+          if (blk == 0 && lev == 0 && linelen > 0 && (!isspace(line.at(0)) || !options["freespace"].empty()))
+            return code;
+          code.append(newline).append(line);
         }
       }
       else
       {
-        if (blk == 0 && lev == 0 && linelen > 0 && (!isspace(line.at(0)) || !options["freespace"].empty()))
-          return code;
         code.append(newline).append(line);
       }
     }
@@ -1652,7 +1664,7 @@ void Reflex::write(void)
   write_section_3();
   if (!out->good())
     abort("in writing");
-  if (options["matcher"].empty() && !options["fast"].empty() && options["tables_file"].empty() && options["stdout"].empty())
+  if (options["matcher"].empty() && (!options["full"].empty() || !options["fast"].empty()) && options["tables_file"].empty() && options["stdout"].empty())
     write_banner("TABLES");
   if (ofs.is_open())
     ofs.close();
@@ -1676,20 +1688,34 @@ void Reflex::write(void)
           filename = file_ext(options["regexp_file"], "txt");
           append = true;
         }
-        ofs.open(filename.c_str(), std::ofstream::out);
-        if (!ofs.is_open())
-          abort("opening file ", filename.c_str());
-        out = &ofs;
+        if (filename.compare(0, 7, "stdout.") == 0)
+        {
+          out = &std::cout;
+        }
+        else
+        {
+          ofs.open(filename.c_str(), std::ofstream::out);
+          if (!ofs.is_open())
+            abort("opening file ", filename.c_str());
+          out = &ofs;
+        }
       }
-      *out << "\"";
+      *out << "\"(?m";
+      if (!options["case_insensitive"].empty())
+        *out << "i";
+      if (!options["dotall"].empty())
+        *out << "s";
+      if (!options["freespace"].empty())
+        *out << "x";
+      *out << ")";
       write_regex(patterns[start]);
       *out << "\"" << std::endl;
       if (!ofs.good())
         abort("in writing");
-      if (!append)
+      if (!append && ofs.is_open())
         ofs.close();
     }
-    if (append)
+    if (append && ofs.is_open())
       ofs.close();
   }
   if (!options["header_file"].empty())
@@ -2198,6 +2224,12 @@ void Reflex::write_lexer(void)
   if (options["matcher"].empty() && !options["fast"].empty())
   {
     for (Start start = 0; start < conditions.size(); ++start)
+      *out << "extern void reflex_code_" << conditions[start] << "(reflex::Matcher&);\n";
+    *out << std::endl;
+  }
+  else if (options["matcher"].empty() && !options["full"].empty())
+  {
+    for (Start start = 0; start < conditions.size(); ++start)
       *out << "extern const reflex::Pattern::Opcode reflex_code_" << conditions[start] << "[];\n";
     *out << std::endl;
   }
@@ -2218,7 +2250,7 @@ void Reflex::write_lexer(void)
   {
     if (options["matcher"].empty())
     {
-      if (!options["fast"].empty())
+      if (!options["full"].empty() || !options["fast"].empty())
       {
         *out << "  static const reflex::Pattern PATTERN_" << conditions[start] << "(reflex_code_" << conditions[start] << ");\n";
       }
@@ -2489,6 +2521,8 @@ void Reflex::write_stats(void)
       std::string option = "m;r";
       if (!options["case_insensitive"].empty())
         option.append(";i");
+      if (!options["dotall"].empty())
+        option.append(";s");
       if (!options["freespace"].empty())
         option.append(";x");
       option.append(";n=").append(conditions[start]);
@@ -2496,11 +2530,13 @@ void Reflex::write_stats(void)
         option.append(";f=reflex.").append(conditions[start]).append(".gv");
       else if (!options["graphs_file"].empty())
         option.append(";f=").append(start > 0 ? "+" : "").append(file_ext(options["graphs_file"], "gv"));
+      if (!options["fast"].empty())
+        option.append(";o");
       if (options["tables_file"] == "true")
         option.append(";f=reflex.").append(conditions[start]).append(".cpp");
       else if (!options["tables_file"].empty())
         option.append(";f=").append(start > 0 ? "+" : "").append(file_ext(options["tables_file"], "cpp"));
-      if (!options["fast"].empty() && options["tables_file"].empty() && options["stdout"].empty())
+      if ((!options["full"].empty() || !options["fast"].empty()) && options["tables_file"].empty() && options["stdout"].empty())
         option.append(";f=+").append(options["outfile"]);
       try
       {

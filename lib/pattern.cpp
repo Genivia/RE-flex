@@ -184,6 +184,7 @@ void Pattern::init_options(const char *opt)
   opt_.i = false;
   opt_.l = false;
   opt_.m = false;
+  opt_.o = false;
   opt_.q = false;
   opt_.r = false;
   opt_.s = false;
@@ -210,6 +211,9 @@ void Pattern::init_options(const char *opt)
           break;
         case 'm':
           opt_.m = true;
+          break;
+        case 'o':
+          opt_.o = true;
           break;
         case 'q':
           opt_.q = true;
@@ -1676,6 +1680,7 @@ void Pattern::assemble(State& start) throw (Error)
   export_dfa(start);
   compact_dfa(start);
   encode_dfa(start);
+  gencode_dfa(start);
   delete_dfa(start);
   export_code();
   DBGLOG("END assemble()");
@@ -1765,7 +1770,184 @@ void Pattern::encode_dfa(State& start) throw (Error)
           opcode[pc++] = opcode_goto(lo, lo, target_index);
         } while (++lo <= hi);
       }
-      // else TODO in the future: wide char opcode??
+      // else TODO in the future: unicode wide char opcode??
+    }
+  }
+}
+
+void Pattern::gencode_dfa(const State& start) const
+{
+  if (!opt_.o)
+    return;
+  for (std::vector<std::string>::const_iterator i = opt_.f.begin(); i != opt_.f.end(); ++i)
+  {
+    const std::string& filename = *i;
+    size_t len = filename.length();
+    if ((len > 2 && filename.compare(len - 2, 2, ".h"  ) == 0)
+     || (len > 4 && filename.compare(len - 4, 4, ".hpp") == 0)
+     || (len > 4 && filename.compare(len - 4, 4, ".cpp") == 0)
+     || (len > 3 && filename.compare(len - 3, 3, ".cc" ) == 0))
+    {
+      FILE *fd = NULL;
+      errno_t err = 0;
+      if (filename.compare(0, 7, "stdout.") == 0)
+        fd = stdout;
+      else if (filename.at(0) == '+')
+        err = reflex::fopen_s(&fd, filename.c_str() + 1, "a");
+      else
+        err = reflex::fopen_s(&fd, filename.c_str(), "w");
+      if (!err && fd)
+      {
+        ::fprintf(fd, "#include \"matcher.h\"\n\nvoid reflex_code_%s(reflex::Matcher& m)\n{\n  int c0, c1;\n  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
+        for (const State *state = &start; state; state = state->next)
+        {
+          ::fprintf(fd, "\nS%u:\n", state->index);
+          if (state->redo)
+            ::fprintf(fd, "  m.FSM_REDO();\n");
+          else if (state->accept > 0)
+            ::fprintf(fd, "  m.FSM_TAKE(%u);\n", state->accept);
+          for (Set::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
+            ::fprintf(fd, "  m.FSM_TAIL(%zu);\n", *i);
+          for (Set::const_iterator i = state->heads.begin(); i != state->heads.end(); ++i)
+            ::fprintf(fd, "  m.FSM_HEAD(%zu);\n", *i);
+          if (state->edges.rbegin() != state->edges.rend() && state->edges.rbegin()->first == META_DED)
+            ::fprintf(fd, "  if (m.FSM_DENT()) goto S%u;\n", state->edges.rbegin()->second.second->index);
+          bool read = false;
+          bool elseif = false;
+          for (State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
+          {
+            Char lo = i->first;
+            Char hi = i->second.first;
+            Index target_index = IMAX;
+            if (i->second.second)
+              target_index = i->second.second->index;
+            if (!is_meta(lo))
+            {
+              if (lo != 0x00 || hi != 0xff || target_index != IMAX)
+              {
+                if (!read)
+                {
+                  ::fprintf(fd, "  c0 = c1, c1 = m.FSM_CHAR();\n");
+                  read = true;
+                }
+                if (lo == hi && target_index == IMAX)
+                  ::fprintf(fd, "  if (c1 == %u) return m.FSM_HALT(c1);\n", lo);
+                else if (hi == 0xff && target_index == IMAX)
+                  ::fprintf(fd, "  if (%u <= c1) return m.FSM_HALT(c1);\n", lo);
+                else if (target_index == IMAX)
+                  ::fprintf(fd, "  if (%u <= c1 && c1 <= %u) return m.FSM_HALT(c1);\n", lo, hi);
+                else if (lo == hi)
+                  ::fprintf(fd, "  if (c1 == %u) goto S%u;\n", lo, target_index);
+                else if (hi == 0xff)
+                  ::fprintf(fd, "  if (%u <= c1) goto S%u;\n", lo, target_index);
+                else
+                  ::fprintf(fd, "  if (%u <= c1 && c1 <= %u) goto S%u;\n", lo, hi, target_index);
+              }
+            }
+            else
+            {
+              if (!read)
+              {
+                ::fprintf(fd, "  c0 = c1, c1 = m.FSM_CHAR();\n");
+                read = true;
+              }
+              do
+              {
+                switch (lo)
+                {
+                  case META_EOB:
+                  case META_EOL:
+                    ::fprintf(fd, "  ");
+                    if (elseif)
+                      ::fprintf(fd, "else ");
+                    ::fprintf(fd, "if (m.FSM_META_%s(c1)) {\n", meta_label[lo - META_MIN]);
+                    gencode_dfa_closure(fd, i->second.second, 2);
+                    ::fprintf(fd, "  }\n");
+                    elseif = true;
+                    break;
+                  case META_EWE:
+                  case META_BWE:
+                  case META_NWE:
+                    ::fprintf(fd, "  ");
+                    if (elseif)
+                      ::fprintf(fd, "else ");
+                    ::fprintf(fd, "if (m.FSM_META_%s(c0, c1)) {\n", meta_label[lo - META_MIN]);
+                    gencode_dfa_closure(fd, i->second.second, 2);
+                    ::fprintf(fd, "  }\n");
+                    elseif = true;
+                    break;
+                  default:
+                    ::fprintf(fd, "  ");
+                    if (elseif)
+                      ::fprintf(fd, "else ");
+                    ::fprintf(fd, "if (m.FSM_META_%s()) {\n", meta_label[lo - META_MIN]);
+                    gencode_dfa_closure(fd, i->second.second, 2);
+                    ::fprintf(fd, "  }\n");
+                    elseif = true;
+                }
+              } while (++lo <= hi);
+            }
+          }
+          ::fprintf(fd, "  return m.FSM_HALT(c1);\n");
+        }
+        ::fprintf(fd, "}\n\n");
+        if (fd != stdout)
+          ::fclose(fd);
+      }
+    }
+  }
+}
+
+void Pattern::gencode_dfa_closure(FILE *fd, const State *state, int nest) const
+{
+  bool elseif = false;
+  if (state->redo)
+    ::fprintf(fd, "%*sm.FSM_REDO(c1);\n", 2*nest, "");
+  else if (state->accept > 0)
+    ::fprintf(fd, "%*sm.FSM_TAKE(%u, c1);\n", 2*nest, "", state->accept);
+  for (Set::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
+    ::fprintf(fd, "%*sm.FSM_TAIL(%zu);\n", 2*nest, "", *i);
+  for (State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
+  {
+    Char lo = i->first;
+    Char hi = i->second.first;
+    if (is_meta(lo))
+    {
+      do
+      {
+        switch (lo)
+        {
+          case META_EOB:
+          case META_EOL:
+            ::fprintf(fd, "%*s", 2*nest, "");
+            if (elseif)
+              ::fprintf(fd, "else ");
+            ::fprintf(fd, "if (m.FSM_META_%s(c1))\n {\n", meta_label[lo - META_MIN]);
+            gencode_dfa_closure(fd, i->second.second, nest + 1);
+            ::fprintf(fd, "%*s}\n", 2*nest, "");
+            elseif = true;
+            break;
+          case META_EWE:
+          case META_BWE:
+          case META_NWE:
+            ::fprintf(fd, "%*s", 2*nest, "");
+            if (elseif)
+              ::fprintf(fd, "else ");
+            ::fprintf(fd, "if (m.FSM_META_%s(c0, c1)) {\n", meta_label[lo - META_MIN]);
+            gencode_dfa_closure(fd, i->second.second, nest + 1);
+            ::fprintf(fd, "%*s}\n", 2*nest, "");
+            elseif = true;
+            break;
+          default:
+            ::fprintf(fd, "%*s", 2*nest, "");
+            if (elseif)
+              ::fprintf(fd, "else ");
+            ::fprintf(fd, "if (m.FSM_META_%s()) {\n", meta_label[lo - META_MIN]);
+            gencode_dfa_closure(fd, i->second.second, nest + 1);
+            ::fprintf(fd, "%*s}\n", 2*nest, "");
+            elseif = true;
+        }
+      } while (++lo <= hi);
     }
   }
 }
@@ -1922,6 +2104,8 @@ void Pattern::export_dfa(const State& start) const
 void Pattern::export_code() const
 {
   if (!nop_)
+    return;
+  if (opt_.o)
     return;
   for (std::vector<std::string>::const_iterator i = opt_.f.begin(); i != opt_.f.end(); ++i)
   {

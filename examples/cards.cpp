@@ -1,12 +1,12 @@
 #include "pattern.h"
 #include "matcher.h"
 
-static reflex::Pattern card_patterns =
-  "(?# MasterCard)(5[1-5]\\d{14})|"                   // 1st group = MC
-  "(?# Visa)(4\\d{12}(?:\\d{3})?)|"                   // 2nd group = VISA
-  "(?# AMEX)(3[47]\\d{13})|"                          // 3rd group = AMEX
-  "(?# Discover)(6011\\d{14})|"                       // 4th group = Discover
-  "(?# Diners Club)((?:30[0-5]|36\\d|38\\d)\\d{11})"; // 5th group = Diners
+static reflex::Pattern card_patterns(
+  "(?# MasterCard)(5[1-5]\\d{14})|"                    // 1st group = MC
+  "(?# Visa)(4\\d{12}(?:\\d{3})?)|"                    // 2nd group = VISA
+  "(?# AMEX)(3[47]\\d{13})|"                           // 3rd group = AMEX
+  "(?# Discover)(6011\\d{14})|"                        // 4th group = Discover
+  "(?# Diners Club)((?:30[0-5]|36\\d|38\\d)\\d{11})"); // 5th group = Diners
 
 static const char *card_data =
   "mark 5212345678901234\n"

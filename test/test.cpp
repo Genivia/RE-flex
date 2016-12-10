@@ -44,7 +44,7 @@ int main(int argc, char **argv)
         printf("Split %zu '%s' at %zu\n", matcher.accept(), matcher.text(), matcher.columno());
     }
     printf("\n** Reflex regex = %s\n\n", argv[1]);
-    reflex::Pattern reflex_pattern(argv[1], "mrw;f=dump.gv,dump.cpp");
+    reflex::Pattern reflex_pattern(argv[1], "mrw;o;f=dump.gv,dump.cpp");
     if (argc > 2)
     {
       reflex::Matcher matcher(reflex_pattern, argv[2], opts);

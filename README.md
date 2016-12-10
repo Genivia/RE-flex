@@ -25,7 +25,7 @@ What is RE/flex?
   templates for pattern matching, searching, scanning, and splitting of
   strings, files, and streaming data.
 
-The repo includes tokenizers for Java and C/C++.
+The repo includes tokenizers for Java, Python, and C/C++.
 
 
 List of features
@@ -233,7 +233,8 @@ Changelog
 - Nov 20, 2016: 0.9.4 fixes minor issues, added new examples/json.l
 - Nov 25, 2016: 0.9.5 bug fixes and improvements
 - Dec  1, 2016: 0.9.6 portability improvements
-- Dec  7, 2016: 0.9.7 bug fixes, added option `--regexp-file`, Python tokenizer
+- Dec  6, 2016: 0.9.7 bug fixes, added option `--regexp-file`, Python tokenizer
+- Dec  9, 2016: 0.9.8 fixes minor issues, improved reflex tool options `--full` and `--fast`, generates scanner with FSM table or a fast scanner with FSM code, respectively
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

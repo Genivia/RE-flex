@@ -102,7 +102,143 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     stk_.top().swap(tab_);
     stk_.pop();
   }
+  /// FSM code INIT,
+  inline void FSM_INIT(int& c1)
+  {
+    c1 = fsm_.c1;
+  }
+  /// FSM code CHAR.
+  inline int FSM_CHAR(void)
+  {
+    return get();
+  }
+  /// FSM code HALT.
+  inline void FSM_HALT(int c1)
+  {
+    fsm_.c1 = c1;
+  }
+  /// FSM code TAKE.
+  inline void FSM_TAKE(Pattern::Index cap)
+  {
+    cap_ = cap;
+    cur_ = pos_;
+  }
+  /// FSM code TAKE.
+  inline void FSM_TAKE(Pattern::Index cap, int c1)
+  {
+    cap_ = cap;
+    cur_ = pos_;
+    if (c1 != EOF)
+      --cur_;
+  }
+  /// FSM code REDO.
+  inline void FSM_REDO(void)
+  {
+    cap_ = Const::EMPTY;
+    cur_ = pos_;
+  }
+  /// FSM code REDO.
+  inline void FSM_REDO(int c1)
+  {
+    cap_ = Const::EMPTY;
+    cur_ = pos_;
+    if (c1 != EOF)
+      --cur_;
+  }
+  /// FSM code HEAD.
+  inline void FSM_HEAD(Pattern::Index la)
+  {
+    if (lap_.size() <= la)
+      lap_.resize(la + 1, -1);
+    lap_[la] = static_cast<int>(pos_ - (txt_ - buf_));
+  }
+  /// FSM code TAIL.
+  inline void FSM_TAIL(Pattern::Index la)
+  {
+    if (lap_.size() > la && lap_[la] >= 0)
+      cur_ = txt_ - buf_ + static_cast<size_t>(lap_[la]);
+  }
+  /// FSM code DENT.
+  inline bool FSM_DENT(void)
+  {
+    if (ded_ > 0)
+    {
+      fsm_.nul = true;
+      return true;
+    }
+    return false;
+  }
+  /// FSM code META DED.
+  inline bool FSM_META_DED(void)
+  {
+    return fsm_.bol && dedent(fsm_.col);
+  }
+  /// FSM code META IND.
+  inline bool FSM_META_IND(void)
+  {
+    return fsm_.bol && indent(fsm_.col);
+  }
+  /// FSM code META EOB.
+  inline bool FSM_META_EOB(int c1)
+  {
+    return c1 == EOF;
+  }
+  /// FSM code META BOB.
+  inline bool FSM_META_BOB(void)
+  {
+    return fsm_.bob;
+  }
+  /// FSM code META EOL.
+  inline bool FSM_META_EOL(int c1)
+  {
+    return c1 == EOF || c1 == '\n';
+  }
+  /// FSM code META BOL.
+  inline bool FSM_META_BOL(void)
+  {
+    return fsm_.bol;
+  }
+  /// FSM code META EWE.
+  inline bool FSM_META_EWE(int c0, int c1)
+  {
+    return isword(c0) && !isword(c1);
+  }
+  /// FSM code META BWE.
+  inline bool FSM_META_BWE(int c0, int c1)
+  {
+    return !isword(c0) && isword(c1);
+  }
+  /// FSM code META EWB.
+  inline bool FSM_META_EWB(void)
+  {
+    return fsm_.eow;
+  }
+  /// FSM code META BWB.
+  inline bool FSM_META_BWB(void)
+  {
+    return fsm_.bow;
+  }
+  /// FSM code META NWE.
+  inline bool FSM_META_NWE(int c0, int c1)
+  {
+    return isword(c0) == isword(c1);
+  }
+  /// FSM code META NWB.
+  inline bool FSM_META_NWB(void)
+  {
+    return !fsm_.bow && !fsm_.eow;
+  }
  protected:
+  /// FSM data for FSM code
+  struct FSM {
+    bool bob;
+    bool bol;
+    bool bow;
+    bool eow;
+    bool nul;
+    size_t col;
+    int c1;
+  };
   /// Returns true if input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
   virtual size_t match(Method method) ///< Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH
     /// @returns nonzero if input matched the pattern.
@@ -132,6 +268,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   Stops             tab_; ///< tab stops set by detecting indent margins
   std::vector<int>  lap_; ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
   std::stack<Stops> stk_; ///< stack to push/pop stops
+  FSM               fsm_; ///< local state for FSM code
 };
 
 } // namespace reflex

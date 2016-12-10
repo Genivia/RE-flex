@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Dec 5 2016</div>
+      <div style="float: right; font-size: 10px;">updated Fri Dec 9 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -66,7 +66,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM and code for the reflex::Matcher engine...">Pattern</a> class holds a regex pattern and its compiled FSM and code for the <a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a> engine.  
+<p><a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">Pattern</a> class holds a regex pattern and its compiled FSM opcode table or code for the <a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a> engine.  
  <a href="classreflex_1_1_pattern.html#details">More...</a></p>
 
 <p><code>#include &lt;pattern.h&gt;</code></p>
@@ -75,7 +75,14 @@ Collaboration diagram for reflex::Pattern:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreflex_1_1_pattern__coll__graph.png" border="0" usemap="#reflex_1_1_pattern_coll__map" alt="Collaboration graph"/></div>
 <map name="reflex_1_1_pattern_coll__map" id="reflex_1_1_pattern_coll__map">
-<area shape="rect" id="node2" href="structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="5,5,157,32"/>
+<area shape="rect" id="node4" href="classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="357,228,511,269"/>
+<area shape="rect" id="node2" href="structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="433,13,585,39"/>
+<area shape="rect" id="node3" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="379,332,489,359"/>
+<area shape="rect" id="node5" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="235,109,393,136"/>
+<area shape="rect" id="node7" href="classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="175,228,333,269"/>
+<area shape="rect" id="node6" href="structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="109,5,268,47"/>
+<area shape="rect" id="node8" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. " alt="" coords="292,13,384,39"/>
+<area shape="rect" id="node9" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="5,235,151,262"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -101,10 +108,13 @@ Public Types</h2></td></tr>
 </td></tr>
 <tr class="separator:a6a8a7676fec8c629e3f8ab8849306d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38d69acf1e472d48225a3ba50b138e02"><td class="memItemLeft" align="right" valign="top">typedef uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Index</a></td></tr>
-<tr class="memdesc:a38d69acf1e472d48225a3ba50b138e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">index into opcodes array <a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1" title="points to the generated opcode ">Pattern::opc_</a> and subpattern indexing  <a href="#a38d69acf1e472d48225a3ba50b138e02">More...</a><br /></td></tr>
+<tr class="memdesc:a38d69acf1e472d48225a3ba50b138e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">index into opcodes array <a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1" title="points to the opcode table ">Pattern::opc_</a> and subpattern indexing  <a href="#a38d69acf1e472d48225a3ba50b138e02">More...</a><br /></td></tr>
 <tr class="separator:a38d69acf1e472d48225a3ba50b138e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d44677873f6377230f2513218101c1c"><td class="memItemLeft" align="right" valign="top">typedef uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a4d44677873f6377230f2513218101c1c">Opcode</a></td></tr>
+<tr class="memdesc:a4d44677873f6377230f2513218101c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">32 bit opcode word  <a href="#a4d44677873f6377230f2513218101c1c">More...</a><br /></td></tr>
 <tr class="separator:a4d44677873f6377230f2513218101c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bd5471ccfee49021fd76a135bd52db0"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a6bd5471ccfee49021fd76a135bd52db0">FSM</a>) (class <a class="el" href="classreflex_1_1_matcher.html">Matcher</a> &amp;)</td></tr>
+<tr class="separator:a6bd5471ccfee49021fd76a135bd52db0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -121,8 +131,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:af65f65e0258490f623622781ce1d3a1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a pattern object given a regex string.  <a href="#af65f65e0258490f623622781ce1d3a1a">More...</a><br /></td></tr>
 <tr class="separator:af65f65e0258490f623622781ce1d3a1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a578730c9b82a874a270c00bd20095dc4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a578730c9b82a874a270c00bd20095dc4">Pattern</a> (const <a class="el" href="classreflex_1_1_pattern.html#a4d44677873f6377230f2513218101c1c">Opcode</a> *code)  throw (Error)</td></tr>
-<tr class="memdesc:a578730c9b82a874a270c00bd20095dc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a pattern object given a code array.  <a href="#a578730c9b82a874a270c00bd20095dc4">More...</a><br /></td></tr>
+<tr class="memdesc:a578730c9b82a874a270c00bd20095dc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a pattern object given an opcode table.  <a href="#a578730c9b82a874a270c00bd20095dc4">More...</a><br /></td></tr>
 <tr class="separator:a578730c9b82a874a270c00bd20095dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48d3f10b3223b4cb3fdbd1fd5b1802f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a48d3f10b3223b4cb3fdbd1fd5b1802f7">Pattern</a> (<a class="el" href="classreflex_1_1_pattern.html#a6bd5471ccfee49021fd76a135bd52db0">FSM</a> fsm)  throw (Error)</td></tr>
+<tr class="memdesc:a48d3f10b3223b4cb3fdbd1fd5b1802f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a pattern object given a function pointer to FSM code.  <a href="#a48d3f10b3223b4cb3fdbd1fd5b1802f7">More...</a><br /></td></tr>
+<tr class="separator:a48d3f10b3223b4cb3fdbd1fd5b1802f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d4e90a2d3c30d30935622d3841ff1a5"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a0d4e90a2d3c30d30935622d3841ff1a5">~Pattern</a> (void)</td></tr>
 <tr class="memdesc:a0d4e90a2d3c30d30935622d3841ff1a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor, deletes internal code array when owned and allocated.  <a href="#a0d4e90a2d3c30d30935622d3841ff1a5">More...</a><br /></td></tr>
 <tr class="separator:a0d4e90a2d3c30d30935622d3841ff1a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -178,6 +191,7 @@ Private Types</h2></td></tr>
 <tr class="memitem:a98c79e11448d94900f6db02a09fecd69"><td class="memItemLeft" align="right" valign="top">typedef unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a98c79e11448d94900f6db02a09fecd69">Char</a></td></tr>
 <tr class="separator:a98c79e11448d94900f6db02a09fecd69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5941659aec38a8a39608088e0799555"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a98c79e11448d94900f6db02a09fecd69">Char</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab5941659aec38a8a39608088e0799555">Chars</a></td></tr>
+<tr class="memdesc:ab5941659aec38a8a39608088e0799555"><td class="mdescLeft">&#160;</td><td class="mdescRight">represent (wide) char set as a set of ranges  <a href="#ab5941659aec38a8a39608088e0799555">More...</a><br /></td></tr>
 <tr class="separator:ab5941659aec38a8a39608088e0799555"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72409ec8de3a69e4b5ebfcb8b30a4607"><td class="memItemLeft" align="right" valign="top">typedef size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a72409ec8de3a69e4b5ebfcb8b30a4607">Location</a></td></tr>
 <tr class="separator:a72409ec8de3a69e4b5ebfcb8b30a4607"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -243,6 +257,10 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a885813800facf0d10934583600ad454f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87ad6f65bf821d26564a23c4abba137c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a87ad6f65bf821d26564a23c4abba137c">encode_dfa</a> (<a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> &amp;start)  throw (Error)</td></tr>
 <tr class="separator:a87ad6f65bf821d26564a23c4abba137c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a187faf20988e050da392b193d9103dd6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a187faf20988e050da392b193d9103dd6">gencode_dfa</a> (const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> &amp;start) const </td></tr>
+<tr class="separator:a187faf20988e050da392b193d9103dd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d6270d42db10b99a3e96e7ab0dbb5a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a2d6270d42db10b99a3e96e7ab0dbb5a5">gencode_dfa_closure</a> (FILE *fd, const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> *start, int nest) const </td></tr>
+<tr class="separator:a2d6270d42db10b99a3e96e7ab0dbb5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad17af88082dbd8e8fbfa01912cef09ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ad17af88082dbd8e8fbfa01912cef09ab">delete_dfa</a> (<a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> &amp;start)</td></tr>
 <tr class="separator:ad17af88082dbd8e8fbfa01912cef09ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa834ea7a2d631d973aaaf1cc7c320e7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aa834ea7a2d631d973aaaf1cc7c320e7f">export_dfa</a> (const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> &amp;start) const </td></tr>
@@ -324,11 +342,14 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a53bcee00c584232a3d0991c5ead49bdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of finite state machine edges |E|  <a href="#a53bcee00c584232a3d0991c5ead49bdf">More...</a><br /></td></tr>
 <tr class="separator:a53bcee00c584232a3d0991c5ead49bdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab67c0f79238c0e2e5bccd80c43c07a1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classreflex_1_1_pattern.html#a4d44677873f6377230f2513218101c1c">Opcode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1">opc_</a></td></tr>
-<tr class="memdesc:aab67c0f79238c0e2e5bccd80c43c07a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">points to the generated opcode  <a href="#aab67c0f79238c0e2e5bccd80c43c07a1">More...</a><br /></td></tr>
+<tr class="memdesc:aab67c0f79238c0e2e5bccd80c43c07a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">points to the opcode table  <a href="#aab67c0f79238c0e2e5bccd80c43c07a1">More...</a><br /></td></tr>
 <tr class="separator:aab67c0f79238c0e2e5bccd80c43c07a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb40e55f6d057d0b1bed8cadab7f8548"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#adb40e55f6d057d0b1bed8cadab7f8548">nop_</a></td></tr>
 <tr class="memdesc:adb40e55f6d057d0b1bed8cadab7f8548"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of opcodes generated  <a href="#adb40e55f6d057d0b1bed8cadab7f8548">More...</a><br /></td></tr>
 <tr class="separator:adb40e55f6d057d0b1bed8cadab7f8548"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bc2f333f66f08463a9b5471ae7a1a7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#a6bd5471ccfee49021fd76a135bd52db0">FSM</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a8bc2f333f66f08463a9b5471ae7a1a7f">fsm_</a></td></tr>
+<tr class="memdesc:a8bc2f333f66f08463a9b5471ae7a1a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">function pointer to FSM code  <a href="#a8bc2f333f66f08463a9b5471ae7a1a7f">More...</a><br /></td></tr>
+<tr class="separator:a8bc2f333f66f08463a9b5471ae7a1a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -337,7 +358,7 @@ Friends</h2></td></tr>
 <tr class="separator:a516355df9ce1c7333bdc6d42e0cf89ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM and code for the reflex::Matcher engine...">Pattern</a> class holds a regex pattern and its compiled FSM and code for the <a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a> engine. </p>
+<div class="textblock"><p><a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">Pattern</a> class holds a regex pattern and its compiled FSM opcode table or code for the <a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a> engine. </p>
 <p>More info TODO </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a98c79e11448d94900f6db02a09fecd69"></a>
@@ -378,6 +399,8 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>represent (wide) char set as a set of ranges </p>
+
 </div>
 </div>
 <a class="anchor" id="a0c44038d35a1a401ae2fb75787d6df2c"></a>
@@ -400,6 +423,19 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6bd5471ccfee49021fd76a135bd52db0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* reflex::Pattern::FSM) (class <a class="el" href="classreflex_1_1_matcher.html">Matcher</a> &amp;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>function pointer to FSM code </p>
+
+</div>
+</div>
 <a class="anchor" id="a38d69acf1e472d48225a3ba50b138e02"></a>
 <div class="memitem">
 <div class="memproto">
@@ -410,7 +446,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>index into opcodes array <a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1" title="points to the generated opcode ">Pattern::opc_</a> and subpattern indexing </p>
+<p>index into opcodes array <a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1" title="points to the opcode table ">Pattern::opc_</a> and subpattern indexing </p>
 
 </div>
 </div>
@@ -503,6 +539,7 @@ Friends</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>32 bit opcode word </p>
 
 </div>
@@ -686,7 +723,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -849,7 +886,39 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct a pattern object given a code array. </p>
+<p>Construct a pattern object given an opcode table. </p>
+
+</div>
+</div>
+<a class="anchor" id="a48d3f10b3223b4cb3fdbd1fd5b1802f7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">reflex::Pattern::Pattern </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a6bd5471ccfee49021fd76a135bd52db0">FSM</a>&#160;</td>
+          <td class="paramname"><em>fsm</em></td><td>)</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td align="right">throw </td><td>(</td><td colspan="2"><a class="el" href="structreflex_1_1_pattern_1_1_error.html">Error</a></td>
+        </tr>
+        <tr>
+          <td align="right"></td><td>)</td><td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a pattern object given a function pointer to FSM code. </p>
 
 </div>
 </div>
@@ -1478,6 +1547,70 @@ Friends</h2></td></tr>
           <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#ab5941659aec38a8a39608088e0799555">Chars</a> &amp;&#160;</td>
           <td class="paramname"><em>chars</em></td><td>)</td>
           <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a187faf20988e050da392b193d9103dd6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Pattern::gencode_dfa </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> &amp;&#160;</td>
+          <td class="paramname"><em>start</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2d6270d42db10b99a3e96e7ab0dbb5a5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Pattern::gencode_dfa_closure </td>
+          <td>(</td>
+          <td class="paramtype">FILE *&#160;</td>
+          <td class="paramname"><em>fd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> *&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nest</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
   </td>
@@ -2924,6 +3057,28 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a8bc2f333f66f08463a9b5471ae7a1a7f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html#a6bd5471ccfee49021fd76a135bd52db0">FSM</a> reflex::Pattern::fsm_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>function pointer to FSM code </p>
+
+</div>
+</div>
 <a class="anchor" id="adb40e55f6d057d0b1bed8cadab7f8548"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2964,7 +3119,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>points to the generated opcode </p>
+<p>points to the opcode table </p>
 
 </div>
 </div>
@@ -3040,7 +3195,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Dec 5 2016 23:05:30 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Fri Dec 9 2016 22:49:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

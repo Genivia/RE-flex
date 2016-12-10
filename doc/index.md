@@ -629,8 +629,8 @@ digraph FSM {
 }
 @enddot
 
-The `f=machine.cpp` option emits C++ code of the finite state machine, which in
-this case is the following table of 11 code words:
+The `f=machine.cpp` option emits opcode tables for the finite state machine,
+which in this case is the following table of 11 code words:
 
 ```cpp
 REFLEX_CODE_DECL reflex_code_FSM[11] =
@@ -649,14 +649,44 @@ REFLEX_CODE_DECL reflex_code_FSM[11] =
 };
 ```
 
-This code can then be used to omit the FSM construction overhead altogether, by
-including it into the source code and then passing it to the `reflex::Pattern`:
+Option `o` can be used with `f=machine.cpp` to emit optimized native C++ code
+for the finite state machine:
+
+```cpp
+void reflex_code_FSM(reflex::Matcher& m)
+{
+  int c0, c1;
+  m.FSM_INIT(c1);
+
+S0:
+  c0 = c1, c1 = m.FSM_CHAR();
+  if (97 <= c1 && c1 <= 122) goto S5;
+  if (c1 == 95) goto S5;
+  if (65 <= c1 && c1 <= 90) goto S5;
+  if (48 <= c1 && c1 <= 57) goto S5;
+  return m.FSM_HALT(c1);
+
+S5:
+  m.FSM_TAKE(1);
+  c0 = c1, c1 = m.FSM_CHAR();
+  if (97 <= c1 && c1 <= 122) goto S5;
+  if (c1 == 95) goto S5;
+  if (65 <= c1 && c1 <= 90) goto S5;
+  if (48 <= c1 && c1 <= 57) goto S5;
+  return m.FSM_HALT(c1);
+}
+```
+
+The compact FSM opcode tables or the optimized larger FSM code may be used
+directly in your code.  This omits the FSM construction overhead at runtime.
+You can simply including it in your source code and pass it to the
+`reflex::Pattern`:
 
 ```cpp
 #include "matcher.h"   // reflex::Matcher, reflex::Pattern, reflex::Input
 #include "machine.cpp" // reflex_code_FSM[]
 
-// use the pattern FSM code for fast search
+// use the pattern FSM (opcode table or C++ code) for fast search
 static reflex::Pattern pattern(reflex_code_FSM);
 
 // use the RE/flex POSIX matcher to search for words in a string sentence
@@ -676,7 +706,8 @@ The RE/flex `reflex::Pattern` construction options are given as a string:
   `i`           | case-insensitive matching, same as `(?i)X`
   `l`           | Lex-style trailing context with `/`, same as `(?l)X`
   `m`           | multiline mode, same as `(?m)X`
-  `n=name;`     | use `reflex_code_name` for the machine (instead of FSM)
+  `n=name;`     | use `reflex_code_name` for the machine (instead of `FSM`)
+  `o`           | only with option `f`: generate optimized FSM native C++ code
   `q`           | Lex-style quotations "..." equal `\Q...\E`, same as `(?q)X`
   `r`           | throw regex syntax error exceptions (not just fatal errors)
   `s`           | dot matches all (aka. single line mode), same as `(?s)X`
@@ -1943,13 +1974,21 @@ matching rule to be applied instead of the rule that produces the longest
 match.  The matcher supports lazy quantifiers and word boundary anchors.  No
 Graphviz output.
 
-### `-F`, `−−fast`
+### `-f`, `−−full`
 
 (RE/flex matcher only).  This option adds the FSM to the generated code as a
-static code table.  This means that the FSM construction overhead is eliminated
-when the scanner is initialized, resulting in a scanner that starts scanning
-the input immediately.  In future releases this option may produce optimized
-FSM code that runs faster compared to FSM tables.
+static opcode table, thus generating the scanner in full.  FSM construction
+overhead is eliminated when the scanner is initialized, resulting in a scanner
+that starts scanning the input immediately.  This option has no effect when
+option `−−fast` is used.
+
+### `-F`, `−−fast`
+
+(RE/flex matcher only).  This option adds the FSM to the generated code as
+optimized native C++ code.  FSM construction overhead is eliminated when the
+scanner is initialized, resulting in a scanner that starts scanning the input
+immediately.  The generated code takes more space compared to the `−−full`
+option.
 
 ### `−−graphs-file[=FILE]`
 
@@ -2006,11 +2045,12 @@ the next match.
 machine in source code form, where FILE is optional.  When FILE is omitted the
 **reflex** command generates reflex.S.cpp for each start condition state S.
 This includes the file reflex.INITIAL.cpp for the INITIAL start condition
-state.  When this option is used in combination with `−−fast`, the
+state.  When this option is used in combination with `−−full` or `−−fast`, the
 `reflex::Pattern` is instantiated with the code table defined in this file.
-Therefore, when combines with `−−fast` you must compile the generated table
-file with the scanner.  Option `−−fast` eliminates the FSM construction
-overhead when the scanner is initialized.
+Therefore, when you combine this option with `−−full` or `−−fast` then you
+should compile the generated table file with the scanner.  Options `−−full` and
+`−−fast` eliminate the FSM construction overhead when the scanner is
+initialized.
 
 ### `−−header-file[=FILE]`
 
@@ -3008,14 +3048,16 @@ Limitations and known issues                              {#reflex-limitations}
 ----------------------------
 
 The RE/flex matcher engine uses an efficient FSM.  There are known limitations
-to FSM matching:
+to FSM matching that apply to Lex/Flex and therefore also apply to RE/flex:
 
 - Lookaheads (trailing contexts) must appear at the end of a pattern, so `a/b`
   and `a(?=b)` are permitted, but `(a/b)c` and `a(?=b)c` are not.
 - Lookaheads cannot be properly matched when the ending of the first part of
   the pattern matches the beginning of the second part, such as `zx*/xy*`,
   where the `x*` matches the `x` at the beginning of the lookahead pattern.
-- Word boundary anchors must appear at the start or at the end of a pattern, so
+- Anchors must appear at the start or at the end of a pattern.  The begin of
+  buffer/line anchors `\A` and `^`, end of buffer/line anchors `\Z` and `$` and
+  the word boundary anchors must start or end a pattern.  For example,
   `\<cow\>` is permitted, but `.*\Bboy` is not.
 
 Current **reflex** tool limitations that may be removed in future versions:

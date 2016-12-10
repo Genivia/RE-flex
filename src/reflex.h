@@ -54,7 +54,7 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.7"
+#define REFLEX_VERSION "0.9.8"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**

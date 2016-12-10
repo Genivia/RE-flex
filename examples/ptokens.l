@@ -17,28 +17,30 @@
 // import Python 3.x token definitions
 %i "pdefs.l"
 
-// fast option eliminates startup time, indent tabs=8
-%o fast tabs=8
+// use full option to eliminate tokenizer startup time, set indent tabs=8
+%o full tabs=8
 
 // implicit line joining is done with the JOINING start condition state
 %x JOINING
 
 %%
 
-[\f\h]+                 // eat blanks
+^\f?\h*                 // eat nodent margin space
 
 \r?\n                   |
 #.*?\r?\n               emit("NEWLINE");
 
 ^\f?\h*\i               emit("INDENT");
+
 ^\f?\h*\j               |
 \j                      emit("DEDENT");
 
-(?^^\f?\h*#.*?\r?\n)    // eat comments that start a line, note the ^ in (?^X)
+(?^\h+)                 // eat space and tabs
 
-(?^^\f?\h*\r?\n)        // eat blank lines, note the ^ in (?^X)
+(?^^(\f?\h*(#.*?)?\r?\n)+)
+                        // eat blank lines and comments, anchor ^ in (?^X)
 
-(?^\\\r?\n\f?\h*)       // explicit line joining
+(?^\\\r?\n\f?\h*)       // explicit line joining by eating \ \n ...
 
 [[({]                   // implicit line joining
                         join = 1;

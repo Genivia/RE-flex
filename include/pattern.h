@@ -58,7 +58,7 @@
 
 namespace reflex {
 
-/// Pattern class holds a regex pattern and its compiled FSM and code for the reflex::Matcher engine.
+/// Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher engine.
 /** More info TODO */
 class Pattern {
   friend class Matcher; ///< permit access by the reflex::Matcher engine
@@ -92,17 +92,19 @@ class Pattern {
   };
   typedef uint16_t Index;  ///< index into opcodes array Pattern::opc_ and subpattern indexing
   typedef uint32_t Opcode; ///< 32 bit opcode word
+  typedef void (*FSM)(class Matcher&); ///< function pointer to FSM code
   /// Common constants.
   enum Const {
     IMAX = 0xffff, ///< max index, also serves as a marker
   };
   /// Construct a pattern object given a regex string.
-  Pattern(
+  explicit Pattern(
       const char *regex,
       const char *options = NULL) throw (Error)
     :
       rex_(regex),
-      opc_(NULL)
+      opc_(NULL),
+      fsm_(NULL)
   {
     init(options);
   }
@@ -112,7 +114,8 @@ class Pattern {
       const std::string& options) throw (Error)
     :
       rex_(regex),
-      opc_(NULL)
+      opc_(NULL),
+      fsm_(NULL)
   {
     init(options.c_str());
   }
@@ -122,7 +125,8 @@ class Pattern {
       const char        *options = NULL) throw (Error)
     :
       rex_(regex),
-      opc_(NULL)
+      opc_(NULL),
+      fsm_(NULL)
   {
     init(options);
   }
@@ -132,14 +136,26 @@ class Pattern {
       const std::string& options) throw (Error)
     :
       rex_(regex),
-      opc_(NULL)
+      opc_(NULL),
+      fsm_(NULL)
   {
     init(options.c_str());
   }
-  /// Construct a pattern object given a code array.
+  /// Construct a pattern object given an opcode table.
   explicit Pattern(const Opcode *code) throw (Error)
     :
-      opc_(code)
+      opc_(code),
+      nop_(0),
+      fsm_(NULL)
+  {
+    init(NULL);
+  }
+  /// Construct a pattern object given a function pointer to FSM code.
+  explicit Pattern(FSM fsm) throw (Error)
+    :
+      opc_(NULL),
+      nop_(0),
+      fsm_(fsm)
   {
     init(NULL);
   }
@@ -148,6 +164,8 @@ class Pattern {
   {
     if (nop_ && opc_)
       delete[] opc_;
+    opc_ = NULL;
+    fsm_ = NULL;
   }
   /// Number of subpatterns of this pattern object.
   Index size(void) const
@@ -193,9 +211,9 @@ class Pattern {
  private:
   typedef unsigned int         Char;
 #ifdef BITS
-  typedef Bits                 Chars; // represent 8-bit char (+ meta char) set as a bitvector
+  typedef Bits                 Chars; ///< represent 8-bit char (+ meta char) set as a bitvector
 #else
-  typedef ORanges<Char>        Chars; // represent (wide) char set as a set of ranges
+  typedef ORanges<Char>        Chars; ///< represent (wide) char set as a set of ranges
 #endif
   typedef size_t               Location;
   typedef ORanges<Location>    Ranges;
@@ -267,6 +285,7 @@ class Pattern {
     bool                     l; ///< lex mode
     bool                     m; ///< multi-line mode, also `(?m:X)`
     std::string              n; ///< pattern name (for use in generated code)
+    bool                     o; ///< generate optimized FSM code for option f
     bool                     q; ///< enable "X" quotation of verbatim content, also `(?q:X)`
     bool                     r; ///< raise syntax errors
     bool                     s; ///< single-line mode (dotall mode), also `(?s:X)`
@@ -381,6 +400,11 @@ class Pattern {
   void assemble(State& start) throw (Error);
   void compact_dfa(State& start);
   void encode_dfa(State& start) throw (Error);
+  void gencode_dfa(const State& start) const;
+  void gencode_dfa_closure(
+      FILE *fd,
+      const State *start,
+      int nest) const;
   void delete_dfa(State& start);
   void export_dfa(const State& start) const;
   void export_code(void) const;
@@ -514,8 +538,9 @@ class Pattern {
   std::vector<bool>     acc_; ///< true if subpattern n is acceptable (state is reachable)
   size_t                vno_; ///< number of finite state machine vertices |V|
   size_t                eno_; ///< number of finite state machine edges |E|
-  const Opcode         *opc_; ///< points to the generated opcode
+  const Opcode         *opc_; ///< points to the opcode table
   Index                 nop_; ///< number of opcodes generated
+  FSM                   fsm_; ///< function pointer to FSM code
 };
 
 } // namespace reflex

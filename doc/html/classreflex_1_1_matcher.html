@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Dec 5 2016</div>
+      <div style="float: right; font-size: 10px;">updated Fri Dec 9 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -51,6 +51,7 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
@@ -79,16 +80,23 @@ Collaboration diagram for reflex::Matcher:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreflex_1_1_matcher__coll__graph.png" border="0" usemap="#reflex_1_1_matcher_coll__map" alt="Collaboration graph"/></div>
 <map name="reflex_1_1_matcher_coll__map" id="reflex_1_1_matcher_coll__map">
-<area shape="rect" id="node2" href="classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="512,109,665,151"/>
-<area shape="rect" id="node3" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="243,58,401,85"/>
-<area shape="rect" id="node5" href="classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="509,37,668,79"/>
-<area shape="rect" id="node4" href="structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="5,5,164,47"/>
-<area shape="rect" id="node6" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. " alt="" coords="39,71,131,98"/>
-<area shape="rect" id="node7" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM and code for the reflex::Matcher engine..." alt="" coords="269,137,375,163"/>
-<area shape="rect" id="node8" href="structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="9,137,161,163"/>
+<area shape="rect" id="node7" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher..." alt="" coords="499,159,604,186"/>
+<area shape="rect" id="node2" href="classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="741,152,895,193"/>
+<area shape="rect" id="node3" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="472,71,631,98"/>
+<area shape="rect" id="node5" href="classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="739,32,897,73"/>
+<area shape="rect" id="node4" href="structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="232,5,391,47"/>
+<area shape="rect" id="node6" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. " alt="" coords="265,71,357,98"/>
+<area shape="rect" id="node8" href="structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="235,122,387,149"/>
+<area shape="rect" id="node9" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="5,193,151,219"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html">FSM</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> data for <a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code.  <a href="structreflex_1_1_matcher_1_1_f_s_m.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abfaffe8a58a6fd0752966645361be090"><td class="memTemplParams" colspan="2">template&lt;typename P &gt; </td></tr>
@@ -113,6 +121,72 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad7736ffcc340ede12da1f9bbe8854a5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ad7736ffcc340ede12da1f9bbe8854a5f">pop_stops</a> (void)</td></tr>
 <tr class="memdesc:ad7736ffcc340ede12da1f9bbe8854a5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop stops.  <a href="#ad7736ffcc340ede12da1f9bbe8854a5f">More...</a><br /></td></tr>
 <tr class="separator:ad7736ffcc340ede12da1f9bbe8854a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81899695d5bb82e06e49608ed9ebd629"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a81899695d5bb82e06e49608ed9ebd629">FSM_INIT</a> (int &amp;c1)</td></tr>
+<tr class="memdesc:a81899695d5bb82e06e49608ed9ebd629"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code INIT,.  <a href="#a81899695d5bb82e06e49608ed9ebd629">More...</a><br /></td></tr>
+<tr class="separator:a81899695d5bb82e06e49608ed9ebd629"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c852851aeae6ed96e7adb0f6afe7932"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a1c852851aeae6ed96e7adb0f6afe7932">FSM_CHAR</a> (void)</td></tr>
+<tr class="memdesc:a1c852851aeae6ed96e7adb0f6afe7932"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code CHAR.  <a href="#a1c852851aeae6ed96e7adb0f6afe7932">More...</a><br /></td></tr>
+<tr class="separator:a1c852851aeae6ed96e7adb0f6afe7932"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16876012f70f8957f689b9bda076a730"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a16876012f70f8957f689b9bda076a730">FSM_HALT</a> (int c1)</td></tr>
+<tr class="memdesc:a16876012f70f8957f689b9bda076a730"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code HALT.  <a href="#a16876012f70f8957f689b9bda076a730">More...</a><br /></td></tr>
+<tr class="separator:a16876012f70f8957f689b9bda076a730"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6237f5989d641c75edc310beb73fd84d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a6237f5989d641c75edc310beb73fd84d">FSM_TAKE</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Pattern::Index</a> cap)</td></tr>
+<tr class="memdesc:a6237f5989d641c75edc310beb73fd84d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code TAKE.  <a href="#a6237f5989d641c75edc310beb73fd84d">More...</a><br /></td></tr>
+<tr class="separator:a6237f5989d641c75edc310beb73fd84d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a041cea3bd793a450445cc82b24fc90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a1a041cea3bd793a450445cc82b24fc90">FSM_TAKE</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Pattern::Index</a> cap, int c1)</td></tr>
+<tr class="memdesc:a1a041cea3bd793a450445cc82b24fc90"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code TAKE.  <a href="#a1a041cea3bd793a450445cc82b24fc90">More...</a><br /></td></tr>
+<tr class="separator:a1a041cea3bd793a450445cc82b24fc90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ba89f6e60b06a9e280ceb6159d78dd2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3ba89f6e60b06a9e280ceb6159d78dd2">FSM_REDO</a> (void)</td></tr>
+<tr class="memdesc:a3ba89f6e60b06a9e280ceb6159d78dd2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code REDO.  <a href="#a3ba89f6e60b06a9e280ceb6159d78dd2">More...</a><br /></td></tr>
+<tr class="separator:a3ba89f6e60b06a9e280ceb6159d78dd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29425e4f07a84ed574e99e034891493d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a29425e4f07a84ed574e99e034891493d">FSM_REDO</a> (int c1)</td></tr>
+<tr class="memdesc:a29425e4f07a84ed574e99e034891493d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code REDO.  <a href="#a29425e4f07a84ed574e99e034891493d">More...</a><br /></td></tr>
+<tr class="separator:a29425e4f07a84ed574e99e034891493d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaf6459dd5e3c961efae5285ae1e3ad4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#abaf6459dd5e3c961efae5285ae1e3ad4">FSM_HEAD</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Pattern::Index</a> la)</td></tr>
+<tr class="memdesc:abaf6459dd5e3c961efae5285ae1e3ad4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code HEAD.  <a href="#abaf6459dd5e3c961efae5285ae1e3ad4">More...</a><br /></td></tr>
+<tr class="separator:abaf6459dd5e3c961efae5285ae1e3ad4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05bf4f34f39a43143b0942dc053c8718"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a05bf4f34f39a43143b0942dc053c8718">FSM_TAIL</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Pattern::Index</a> la)</td></tr>
+<tr class="memdesc:a05bf4f34f39a43143b0942dc053c8718"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code TAIL.  <a href="#a05bf4f34f39a43143b0942dc053c8718">More...</a><br /></td></tr>
+<tr class="separator:a05bf4f34f39a43143b0942dc053c8718"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fb6dab47fc270e53d4b8af86aaf744f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a5fb6dab47fc270e53d4b8af86aaf744f">FSM_DENT</a> (void)</td></tr>
+<tr class="memdesc:a5fb6dab47fc270e53d4b8af86aaf744f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code DENT.  <a href="#a5fb6dab47fc270e53d4b8af86aaf744f">More...</a><br /></td></tr>
+<tr class="separator:a5fb6dab47fc270e53d4b8af86aaf744f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f07084ad78c0f79ecf3e01b279f450a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a6f07084ad78c0f79ecf3e01b279f450a">FSM_META_DED</a> (void)</td></tr>
+<tr class="memdesc:a6f07084ad78c0f79ecf3e01b279f450a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META DED.  <a href="#a6f07084ad78c0f79ecf3e01b279f450a">More...</a><br /></td></tr>
+<tr class="separator:a6f07084ad78c0f79ecf3e01b279f450a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe1192161f249844190d6f3b76349c1b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#abe1192161f249844190d6f3b76349c1b">FSM_META_IND</a> (void)</td></tr>
+<tr class="memdesc:abe1192161f249844190d6f3b76349c1b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META IND.  <a href="#abe1192161f249844190d6f3b76349c1b">More...</a><br /></td></tr>
+<tr class="separator:abe1192161f249844190d6f3b76349c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7acbb9557977ccf9a85f6baedc63287f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a7acbb9557977ccf9a85f6baedc63287f">FSM_META_EOB</a> (int c1)</td></tr>
+<tr class="memdesc:a7acbb9557977ccf9a85f6baedc63287f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EOB.  <a href="#a7acbb9557977ccf9a85f6baedc63287f">More...</a><br /></td></tr>
+<tr class="separator:a7acbb9557977ccf9a85f6baedc63287f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3714503b8e60531d572db6838b0d7d98"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3714503b8e60531d572db6838b0d7d98">FSM_META_BOB</a> (void)</td></tr>
+<tr class="memdesc:a3714503b8e60531d572db6838b0d7d98"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BOB.  <a href="#a3714503b8e60531d572db6838b0d7d98">More...</a><br /></td></tr>
+<tr class="separator:a3714503b8e60531d572db6838b0d7d98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0222ac0b08f7dfe4232cc1ae38ec86b0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a0222ac0b08f7dfe4232cc1ae38ec86b0">FSM_META_EOL</a> (int c1)</td></tr>
+<tr class="memdesc:a0222ac0b08f7dfe4232cc1ae38ec86b0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EOL.  <a href="#a0222ac0b08f7dfe4232cc1ae38ec86b0">More...</a><br /></td></tr>
+<tr class="separator:a0222ac0b08f7dfe4232cc1ae38ec86b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a431d6fdd08b14eea0d758aa4d577f003"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a431d6fdd08b14eea0d758aa4d577f003">FSM_META_BOL</a> (void)</td></tr>
+<tr class="memdesc:a431d6fdd08b14eea0d758aa4d577f003"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BOL.  <a href="#a431d6fdd08b14eea0d758aa4d577f003">More...</a><br /></td></tr>
+<tr class="separator:a431d6fdd08b14eea0d758aa4d577f003"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a108d0fa7893bd165a1103aca4e8708ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a108d0fa7893bd165a1103aca4e8708ca">FSM_META_EWE</a> (int c0, int c1)</td></tr>
+<tr class="memdesc:a108d0fa7893bd165a1103aca4e8708ca"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EWE.  <a href="#a108d0fa7893bd165a1103aca4e8708ca">More...</a><br /></td></tr>
+<tr class="separator:a108d0fa7893bd165a1103aca4e8708ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade19817779426782ab997a7a5d8e2e3b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ade19817779426782ab997a7a5d8e2e3b">FSM_META_BWE</a> (int c0, int c1)</td></tr>
+<tr class="memdesc:ade19817779426782ab997a7a5d8e2e3b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BWE.  <a href="#ade19817779426782ab997a7a5d8e2e3b">More...</a><br /></td></tr>
+<tr class="separator:ade19817779426782ab997a7a5d8e2e3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53183f5dab031514f52bad12fb2dbca1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a53183f5dab031514f52bad12fb2dbca1">FSM_META_EWB</a> (void)</td></tr>
+<tr class="memdesc:a53183f5dab031514f52bad12fb2dbca1"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EWB.  <a href="#a53183f5dab031514f52bad12fb2dbca1">More...</a><br /></td></tr>
+<tr class="separator:a53183f5dab031514f52bad12fb2dbca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1290821154dd3abd8646117c18bb0d24"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a1290821154dd3abd8646117c18bb0d24">FSM_META_BWB</a> (void)</td></tr>
+<tr class="memdesc:a1290821154dd3abd8646117c18bb0d24"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BWB.  <a href="#a1290821154dd3abd8646117c18bb0d24">More...</a><br /></td></tr>
+<tr class="separator:a1290821154dd3abd8646117c18bb0d24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77fbd40b1c0fc532f3ec5dda683d5d86"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a77fbd40b1c0fc532f3ec5dda683d5d86">FSM_META_NWE</a> (int c0, int c1)</td></tr>
+<tr class="memdesc:a77fbd40b1c0fc532f3ec5dda683d5d86"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META NWE.  <a href="#a77fbd40b1c0fc532f3ec5dda683d5d86">More...</a><br /></td></tr>
+<tr class="separator:a77fbd40b1c0fc532f3ec5dda683d5d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a406ca28596bc6f75dcf975d3abb4c963"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a406ca28596bc6f75dcf975d3abb4c963">FSM_META_NWB</a> (void)</td></tr>
+<tr class="memdesc:a406ca28596bc6f75dcf975d3abb4c963"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META NWB.  <a href="#a406ca28596bc6f75dcf975d3abb4c963">More...</a><br /></td></tr>
+<tr class="separator:a406ca28596bc6f75dcf975d3abb4c963"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreflex_1_1_pattern_matcher"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreflex_1_1_pattern_matcher')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreflex_1_1_pattern_matcher.html">reflex::PatternMatcher&lt; reflex::Pattern &gt;</a></td></tr>
 <tr class="memitem:a7b32893191d6bfb4af05e33b5643b2b2 inherit pub_methods_classreflex_1_1_pattern_matcher"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern_matcher.html#a7b32893191d6bfb4af05e33b5643b2b2">PatternMatcher</a> (const <a class="el" href="classreflex_1_1_pattern_matcher.html">PatternMatcher</a> &amp;matcher)</td></tr>
 <tr class="memdesc:a7b32893191d6bfb4af05e33b5643b2b2 inherit pub_methods_classreflex_1_1_pattern_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor.  <a href="#a7b32893191d6bfb4af05e33b5643b2b2">More...</a><br /></td></tr>
@@ -315,6 +389,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:adfeefc270fb9f89da7122f1cea86872c"><td class="memItemLeft" align="right" valign="top">std::stack&lt; <a class="el" href="classreflex_1_1_matcher.html#a9748ab7e9dc48d3893968f432a3f7cfa">Stops</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#adfeefc270fb9f89da7122f1cea86872c">stk_</a></td></tr>
 <tr class="memdesc:adfeefc270fb9f89da7122f1cea86872c"><td class="mdescLeft">&#160;</td><td class="mdescRight">stack to push/pop stops  <a href="#adfeefc270fb9f89da7122f1cea86872c">More...</a><br /></td></tr>
 <tr class="separator:adfeefc270fb9f89da7122f1cea86872c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a619a527eb79b444fba089a33fb1fdd33"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html">FSM</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a619a527eb79b444fba089a33fb1fdd33">fsm_</a></td></tr>
+<tr class="memdesc:a619a527eb79b444fba089a33fb1fdd33"><td class="mdescLeft">&#160;</td><td class="mdescRight">local state for <a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code  <a href="#a619a527eb79b444fba089a33fb1fdd33">More...</a><br /></td></tr>
+<tr class="separator:a619a527eb79b444fba089a33fb1fdd33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classreflex_1_1_pattern_matcher"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classreflex_1_1_pattern_matcher')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classreflex_1_1_pattern_matcher.html">reflex::PatternMatcher&lt; reflex::Pattern &gt;</a></td></tr>
 <tr class="memitem:a609bef4919413b1448f4db3d4a1d0fd4 inherit pro_attribs_classreflex_1_1_pattern_matcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern_matcher.html#a609bef4919413b1448f4db3d4a1d0fd4">own_</a></td></tr>
 <tr class="memdesc:a609bef4919413b1448f4db3d4a1d0fd4 inherit pro_attribs_classreflex_1_1_pattern_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if PatternMatcher::pat_ was internally allocated  <a href="#a609bef4919413b1448f4db3d4a1d0fd4">More...</a><br /></td></tr>
@@ -473,13 +550,13 @@ template&lt;typename P &gt; </div>
 <p>Construct matcher engine from a pattern or a string regex, and an input character sequence. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">&lt;P&gt;</td><td>a <a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM and code for the reflex::Matcher engine...">reflex::Pattern</a> or a string regex </td></tr>
+    <tr><td class="paramname">&lt;P&gt;</td><td>a <a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a> or a string regex </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pat</td><td>a <a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM and code for the reflex::Matcher engine...">reflex::Pattern</a> or a string regex for this matcher </td></tr>
+    <tr><td class="paramname">pat</td><td>a <a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a> or a string regex for this matcher </td></tr>
     <tr><td class="paramname">inp</td><td>input character sequence for this matcher </td></tr>
     <tr><td class="paramname">opt</td><td>option string of the form <code>(A|N|T(=[[:digit:]])?|;)*</code> </td></tr>
   </table>
@@ -531,13 +608,13 @@ template&lt;typename P &gt; </div>
 <p>Construct matcher engine from a pattern or a string regex, and an input character sequence. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">&lt;P&gt;</td><td>a <a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM and code for the reflex::Matcher engine...">reflex::Pattern</a> or a string regex </td></tr>
+    <tr><td class="paramname">&lt;P&gt;</td><td>a <a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a> or a string regex </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pat</td><td>points to a <a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM and code for the reflex::Matcher engine...">reflex::Pattern</a> or a string regex for this matcher </td></tr>
+    <tr><td class="paramname">pat</td><td>points to a <a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a> or a string regex for this matcher </td></tr>
     <tr><td class="paramname">inp</td><td>input character sequence for this matcher </td></tr>
     <tr><td class="paramname">opt</td><td>option string of the form <code>(A|N|T(=[[:digit:]])?|;)*</code> </td></tr>
   </table>
@@ -603,6 +680,618 @@ template&lt;typename P &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a1c852851aeae6ed96e7adb0f6afe7932"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int reflex::Matcher::FSM_CHAR </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code CHAR. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5fb6dab47fc270e53d4b8af86aaf744f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_DENT </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code DENT. </p>
+
+</div>
+</div>
+<a class="anchor" id="a16876012f70f8957f689b9bda076a730"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::FSM_HALT </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c1</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code HALT. </p>
+
+</div>
+</div>
+<a class="anchor" id="abaf6459dd5e3c961efae5285ae1e3ad4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::FSM_HEAD </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Pattern::Index</a>&#160;</td>
+          <td class="paramname"><em>la</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code HEAD. </p>
+
+</div>
+</div>
+<a class="anchor" id="a81899695d5bb82e06e49608ed9ebd629"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::FSM_INIT </td>
+          <td>(</td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>c1</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code INIT,. </p>
+
+</div>
+</div>
+<a class="anchor" id="a3714503b8e60531d572db6838b0d7d98"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_BOB </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BOB. </p>
+
+</div>
+</div>
+<a class="anchor" id="a431d6fdd08b14eea0d758aa4d577f003"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_BOL </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BOL. </p>
+
+</div>
+</div>
+<a class="anchor" id="a1290821154dd3abd8646117c18bb0d24"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_BWB </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BWB. </p>
+
+</div>
+</div>
+<a class="anchor" id="ade19817779426782ab997a7a5d8e2e3b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_BWE </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c1</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BWE. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6f07084ad78c0f79ecf3e01b279f450a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_DED </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META DED. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7acbb9557977ccf9a85f6baedc63287f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_EOB </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c1</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EOB. </p>
+
+</div>
+</div>
+<a class="anchor" id="a0222ac0b08f7dfe4232cc1ae38ec86b0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_EOL </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c1</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EOL. </p>
+
+</div>
+</div>
+<a class="anchor" id="a53183f5dab031514f52bad12fb2dbca1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_EWB </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EWB. </p>
+
+</div>
+</div>
+<a class="anchor" id="a108d0fa7893bd165a1103aca4e8708ca"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_EWE </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c1</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EWE. </p>
+
+</div>
+</div>
+<a class="anchor" id="abe1192161f249844190d6f3b76349c1b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_IND </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META IND. </p>
+
+</div>
+</div>
+<a class="anchor" id="a406ca28596bc6f75dcf975d3abb4c963"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_NWB </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META NWB. </p>
+
+</div>
+</div>
+<a class="anchor" id="a77fbd40b1c0fc532f3ec5dda683d5d86"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::FSM_META_NWE </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c1</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META NWE. </p>
+
+</div>
+</div>
+<a class="anchor" id="a3ba89f6e60b06a9e280ceb6159d78dd2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::FSM_REDO </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code REDO. </p>
+
+</div>
+</div>
+<a class="anchor" id="a29425e4f07a84ed574e99e034891493d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::FSM_REDO </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c1</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code REDO. </p>
+
+</div>
+</div>
+<a class="anchor" id="a05bf4f34f39a43143b0942dc053c8718"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::FSM_TAIL </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Pattern::Index</a>&#160;</td>
+          <td class="paramname"><em>la</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code TAIL. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6237f5989d641c75edc310beb73fd84d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::FSM_TAKE </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Pattern::Index</a>&#160;</td>
+          <td class="paramname"><em>cap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code TAKE. </p>
+
+</div>
+</div>
+<a class="anchor" id="a1a041cea3bd793a450445cc82b24fc90"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::FSM_TAKE </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Pattern::Index</a>&#160;</td>
+          <td class="paramname"><em>cap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c1</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code TAKE. </p>
 
 </div>
 </div>
@@ -834,6 +1523,28 @@ template&lt;typename P &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a619a527eb79b444fba089a33fb1fdd33"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html">FSM</a> reflex::Matcher::fsm_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>local state for <a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code </p>
+
+</div>
+</div>
 <a class="anchor" id="a31187ae9febac87f463145c18d248476"></a>
 <div class="memitem">
 <div class="memproto">
@@ -906,7 +1617,7 @@ template&lt;typename P &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Dec 5 2016 23:05:30 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Fri Dec 9 2016 22:49:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

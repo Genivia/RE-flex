@@ -1,7 +1,7 @@
 INSTALL=/usr/lib
 CPP=c++
 AR=ar
-COFLAGS=-O2
+COFLAGS=-O3
 CWFLAGS=-Wall -Wunused -Wextra
 CIFLAGS=-I. -I../include
 CMFLAGS=

@@ -297,9 +297,10 @@ class AbstractMatcher {
         return false;
       (void)grow(n); // attempt to fetch all (remaining) input data to store in the buffer
       end_ = get(buf_, n);
+      if (end_ > 0)
+        chr_ = static_cast<unsigned char>(buf_[pos_]);
       if (end_ < n)
         return false; // could not fetch all
-      eof_ = true;
     }
     return true;
   }
@@ -307,7 +308,7 @@ class AbstractMatcher {
   void interactive(void)
     /// @warning Use this method before any matching is done and before any input is read since the last time input was (re)set.
   {
-    buffer(1);
+    (void)buffer(1);
   }
   /// Flush the buffer's remaining content.
   void flush(void)
@@ -430,7 +431,7 @@ class AbstractMatcher {
     /// @returns the character read (unsigned char 0..255) read or EOF (-1).
   {
     DBGLOG("AbstractMatcher::input() pos = %zu end = %zu chr = %c", pos_, end_, chr_);
-    if (pos_ < end_)
+    if (pos_ < end_ && chr_ != Const::UNK)
     {
       got_ = chr_;
       ++pos_;
@@ -642,7 +643,7 @@ class AbstractMatcher {
     = 0;
   /// Shift or expand the internal buffer when it is too small to accommodate more input, where the buffer size is doubled when needed.
   bool grow(size_t need = Const::BLOCK) ///< optional needed space = Const::BLOCK size by default
-    /// @returns true if buffer was enlarged
+    /// @returns true if buffer was shifted or was enlarged
   {
     if (max_ - end_ >= need)
       return false;

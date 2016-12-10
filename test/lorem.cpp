@@ -9,6 +9,10 @@
 #define RUNS 1
 #endif
 
+#include "test_lorem_tokenizer.cpp"
+#include "test_lorem_filter.cpp"
+#include "test_lorem_splitter.cpp"
+
 using namespace reflex;
 
 void banner(const char *title)
@@ -89,12 +93,12 @@ Etiam interdum porta libero, sed lobortis sapien porta sed. Curabitur ullamcorpe
 \
 Mauris dignissim mattis dui, feugiat lobortis diam mattis non. Curabitur neque mi, scelerisque in convallis quis, imperdiet consectetur lorem. Vestibulum non mi ac justo facilisis consequat in sit amet ligula. Quisque urna sem, tristique non ligula consectetur amet.\n");
 
-void test_lorem(AbstractMatcher &tokenizer, AbstractMatcher &filter, AbstractMatcher &splitter)
+void test_lorem(const char *title, AbstractMatcher &tokenizer, AbstractMatcher &filter, AbstractMatcher &splitter)
 {
   FILE *file;
   size_t hits;
 
-  banner(typeid(tokenizer).name());
+  banner(title);
 
   printf("Number of runs per timed test = %d\n\n", RUNS);
 
@@ -283,14 +287,29 @@ int main()
   Matcher tokenizer("(\\w+)|(\\W)");
   Matcher filter("\\w+");
   Matcher splitter("\\s+");
+  test_lorem("RE/flex with FSM opcode table (default)", tokenizer, filter, splitter);
 
-  test_lorem(tokenizer, filter, splitter);
+#if 0
+  // 1. generate code with below
+  static const Pattern tokenizer_pattern("(\\w+)|(\\W)", "n=tokenizer;f=test_lorem_tokenizer.cpp");
+  static const Pattern filter_pattern("\\w+", "n=filter;f=test_lorem_filter.cpp");
+  static const Pattern splitter_pattern("\\s+", "n=splitter;f=test_lorem_splitter.cpp");
+#else
+  // 2. set the patterns and compile the generated code with this test code
+  static const Pattern tokenizer_pattern(reflex_code_tokenizer);
+  static const Pattern filter_pattern(reflex_code_filter);
+  static const Pattern splitter_pattern(reflex_code_splitter);
+#endif
+  // 3. set the matchers
+  Matcher fast_tokenizer(tokenizer_pattern);
+  Matcher fast_filter(filter_pattern);
+  Matcher fast_splitter(splitter_pattern);
+  test_lorem("RE/flex with FSM code (--fast and pattern option \"o\")", fast_tokenizer, fast_filter, fast_splitter);
 
   BoostMatcher boost_tokenizer("(\\w+)|(\\W)");
   BoostMatcher boost_filter("\\w+");
   BoostMatcher boost_splitter("\\s+");
-
-  test_lorem(boost_tokenizer, boost_filter, boost_splitter);
+  test_lorem("Boost", boost_tokenizer, boost_filter, boost_splitter);
 
   return 0;
 }
