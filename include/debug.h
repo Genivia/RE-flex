@@ -28,7 +28,7 @@
 
 /**
 @file      debug.h
-@brief     RE/flex debug logs
+@brief     RE/flex debug logs and assertions
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
@@ -51,6 +51,8 @@ message. The log entry is added to a log file or sent to `stderr` as specified:
 
 `DBGLOGA(format, ...)` appends the formatted string to the previous log entry.
 
+`DBGCHK(condition)` calls `assert(condition)` when compiled in DEBUG mode.
+
 The utility macro `DBGSTR(const char *s)` returns string `s` or `"(null)"` when
 `s == NULL`.
 
@@ -72,6 +74,7 @@ Example
       }
       else
       {
+        DBGCHK(fd != NULL);
         // OK, so go ahead to read foo.bar ...
         // ...
         fclose(fd);
@@ -117,9 +120,14 @@ Techniques used:
 
 #ifdef DEBUG
 
+#include <cassert>
 #include <stdio.h>
+
+#define DBGCHK(c) assert(c)
+
 extern FILE *DBGFD_;
 extern void DBGOUT_(const char *log, const char *file, int line);
+
 #define DBGXIFY(S) DBGIFY_(S)
 #define DBGIFY_(S) #S
 #if DEBUG + 0
@@ -136,6 +144,8 @@ extern void DBGOUT_(const char *log, const char *file, int line);
 ( ::fprintf(DBGFD_, "" __VA_ARGS__), ::fflush(DBGFD_) )
 
 #else
+
+#define DBGCHK(c) (void)0
 
 /// When compiled with -DDEBUG, adds a timestamped log entry with a printf-formatted message.
 #define DBGLOG(...) (void)0

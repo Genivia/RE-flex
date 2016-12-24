@@ -58,10 +58,10 @@ static const char *hex_r(char *buf, int a, int b, const char *esc)
   size_t n;
   buf[0] = '[';
   hex_r(buf + 1, a, esc, &n);
-  buf[n] = '-';
-  hex_r(buf + 2 + n, b, esc, &n);
-  buf[n] = ']';
-  buf[n + 1] = '\0';
+  buf[n + 1] = '-';
+  hex_r(buf + n + 2, b, esc);
+  buf[2*n + 2] = ']';
+  buf[2*n + 3] = '\0';
   return buf;
 }
 
@@ -73,7 +73,7 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
     return std::string(esc) + "x80"; // undefined
   if (a > b)
     b = a;
-  static const char *min_utf8_strict[6] = { // strict UTF8 validation
+  static const char *min_utf8_strict[6] = { // strict: exact UTF-8 validation
     "\x00",
     "\xc2\x80",
     "\xe0\xa0\x80",
@@ -81,7 +81,7 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
     "\xf8\x88\x80\x80\x80",
     "\xfc\x84\x80\x80\x80\x80"
   };
-  static const char *min_utf8_lean[6] = { // lean output, no UTF8 form validation
+  static const char *min_utf8_lean[6] = { // lean: loose UTF-8 validation with more compressed UTF-8
     "\x00",
     "\xc2\x80",
     "\xe0\x80\x80",
