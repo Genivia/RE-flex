@@ -190,14 +190,14 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
       }
       else
       {
-        itr_ = fin_;
+        itr_ = fin_; // need new iterator
       }
     }
     while (pos_ == end_ || itr_ == fin_) // fetch more data while pos_ is hitting the end_ or no iterator
     {
       if (pos_ == end_ && !eof_)
       {
-        if (grow()) // make sure we have enough storage for input
+        if (grow()) // make sure we have enough storage to read input
           itr_ = fin_; // buffer shifting/growing invalidates iterator
         end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
       }
@@ -222,7 +222,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
               size_t n = (*itr_).size();
               for (cap_ = 1; cap_ < n && !(*itr_)[cap_].matched; ++cap_)
                 continue; // set cap_ to the capture index
-              len_ = (*itr_)[0].first - txt_; // cur_ - (txt_ - buf_); // size() spans txt_ to cur_ in buf_[]
+              len_ = (*itr_)[0].first - txt_; // size() spans txt_ to cur_ in buf_[]
             }
             else
             {
@@ -245,7 +245,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
         if (itr_ != fin_)
           break; // OK if iterator is still valid
       }
-      new_itr(method, bob);
+      new_itr(method, bob); // need new iterator
       if (itr_ != fin_)
       {
         DBGLOGN("Possible (partial) match, pos = %zu", pos_);
@@ -324,12 +324,12 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
     if (len_ == 0 && cap_ != 0 && opt_.N && pos_ + 1 == end_)
       set_current(end_);
     DBGLOGN("Accept: act = %zu txt = '%s' len = %zu", cap_, txt_, len_);
-    assert(len_ != 0 || method == Const::MATCH || (method == Const::FIND && opt_.N));
+    DBGCHK(len_ != 0 || method == Const::MATCH || (method == Const::FIND && opt_.N));
     DBGLOG("END BoostMatcher::match()");
     return cap_;
   }
   /// Create a new boost::regex iterator to (continue to) advance over input.
-  void new_itr(Method method, bool bob)
+  inline void new_itr(Method method, bool bob)
   {
     DBGLOGN("New iterator");
     bool bol = bob || at_bol();

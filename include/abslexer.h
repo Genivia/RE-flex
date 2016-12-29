@@ -130,7 +130,6 @@ class AbstractLexer {
   std::ostream& out(void) const
     /// @returns reference to the current std::ostream object.
   {
-    assert(os_ != NULL);
     return *os_;
   }
   /// Returns true if a matcher was assigned to this lexer for scanning.
@@ -150,7 +149,6 @@ class AbstractLexer {
   Matcher& matcher(void) const
     /// @returns reference to the current matcher.
   {
-    assert(has_matcher() == true);
     return *matcher_;
   }
   /// Returns a new matcher for the given input.
@@ -173,7 +171,6 @@ class AbstractLexer {
   /// Pop matcher from the stack and continue scanning where it left off, delete the current matcher.
   void pop_matcher(void)
   {
-    assert(stack_.empty() == false);
     delete matcher_;
     matcher_ = stack_.top();
     stack_.pop();

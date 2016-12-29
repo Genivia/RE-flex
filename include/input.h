@@ -358,6 +358,12 @@ class Input {
   {
     return istream_;
   }
+  // Cast this Input object to bool, same as checking good().
+  operator bool()
+    /// @returns true if a non-empty sequence of characters is available to get.
+  {
+    return good();
+  }
   /// Get the remaining string of this Input object.
   const char *cstring(void)
     /// @returns remaining unbuffered part of the NUL-terminated string or NULL.
@@ -406,8 +412,8 @@ class Input {
     return size_;
   }
   /// Check if input is available.
-  /// @returns true if a non-empty sequence of characters is available to get.
   bool good(void)
+    /// @returns true if a non-empty sequence of characters is available to get.
   {
     if (cstring_)
       return *cstring_ != '\0';
@@ -420,8 +426,8 @@ class Input {
     return false;
   }
   /// Check if input reached EOF.
-  /// @returns true if input is at EOF and no characters are available.
   bool eof(void)
+    /// @returns true if input is at EOF and no characters are available.
   {
     if (cstring_)
       return *cstring_ == '\0';
@@ -434,10 +440,10 @@ class Input {
     return true;
   }
   /// Copy subsequent character sequence data into buffer.
-  /// @returns the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF.
   size_t get(
       char  *s, ///< points to the string buffer to fill with input
       size_t n) ///< size of buffer pointed to by s
+    /// @returns the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF.
   {
     if (cstring_)
     {
@@ -511,8 +517,8 @@ class Input {
     }
   }
   /// Get encoding of the current `FILE*` input, Const::plain, Const::utf16be, Const::utf16le, Const::utf32be, or Const::utf32le.
-  /// @returns Const::plain, Const::utf16be, Const::utf16le, Const::utf32be, or Const::utf32le.
   short file_encoding(void) const
+    /// @returns Const::plain, Const::utf16be, Const::utf16le, Const::utf32be, or Const::utf32le.
   {
     return utfx_;
   }

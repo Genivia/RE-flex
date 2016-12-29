@@ -886,14 +886,16 @@ void Pattern::parse4(
         if (c_loc != std::string::npos && at(c_loc + 1) == ']')
           loc = c_loc + 1;
       }
-      if ((c = at(++loc)) == ']')
+      else if (c == opt_.e && opt_.e != '\0' && !opt_.b)
       {
         ++loc;
-        break;
       }
+      if ((c = at(++loc)) == ']')
+        break;
     }
     if (c == '\0')
       error(Error::REGEX_SYNTAX, "missing ]", loc);
+    ++loc;
   }
   else if ((c == '"' && opt_.q) || escape_at(loc) == 'Q')
   {

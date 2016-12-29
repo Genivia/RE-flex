@@ -9,9 +9,9 @@
 #define RUNS 1
 #endif
 
-#include "test_lorem_tokenizer.cpp"
-#include "test_lorem_filter.cpp"
-#include "test_lorem_splitter.cpp"
+#include "test_lorem_tokenizer.cpp"  // reflex_code_tokenizer
+#include "test_lorem_filter.cpp"     // reflex_code_filter
+#include "test_lorem_splitter.cpp"   // reflex_code_splitter
 
 using namespace reflex;
 
@@ -290,10 +290,10 @@ int main()
   test_lorem("RE/flex with FSM opcode table (default)", tokenizer, filter, splitter);
 
 #if 0
-  // 1. generate code with below
-  static const Pattern tokenizer_pattern("(\\w+)|(\\W)", "n=tokenizer;f=test_lorem_tokenizer.cpp");
-  static const Pattern filter_pattern("\\w+", "n=filter;f=test_lorem_filter.cpp");
-  static const Pattern splitter_pattern("\\s+", "n=splitter;f=test_lorem_splitter.cpp");
+  // 1. generate code with options n;o;f below:
+  static const Pattern tokenizer_pattern("(\\w+)|(\\W)", "n=tokenizer;o;f=test_lorem_tokenizer.cpp");
+  static const Pattern filter_pattern("\\w+", "n=filter;o;f=test_lorem_filter.cpp");
+  static const Pattern splitter_pattern("\\s+", "n=splitter;o;f=test_lorem_splitter.cpp");
 #else
   // 2. set the patterns and compile the generated code with this test code
   static const Pattern tokenizer_pattern(reflex_code_tokenizer);
@@ -309,7 +309,7 @@ int main()
   BoostMatcher boost_tokenizer("(\\w+)|(\\W)");
   BoostMatcher boost_filter("\\w+");
   BoostMatcher boost_splitter("\\s+");
-  test_lorem("Boost", boost_tokenizer, boost_filter, boost_splitter);
+  test_lorem("Boost.Regex", boost_tokenizer, boost_filter, boost_splitter);
 
   return 0;
 }

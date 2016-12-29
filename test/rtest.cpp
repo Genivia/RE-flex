@@ -1,7 +1,7 @@
 
 // To use lazy optional ?? in strings, trigraphs should be disabled or we
 // simply use ?\?
-// To disable trigraphs enable the GNU standard:
+// Or disable trigraphs by enabling the GNU standard:
 // c++ -std=gnu++11 -Wall test.cpp pattern.cpp matcher.cpp
 
 #include "pattern.h"

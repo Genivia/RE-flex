@@ -21,7 +21,7 @@ dshortbyte              []-\x7f\x00-!#-[]|\\\p{ASCII}
 longbyte                [^\\]|\\\p{ASCII}
 shortbytes              '{qshortbyte}*'|\"{dshortbyte}*\"
 longbytes               '''{longbyte}*?'''|\"\"\"{longbyte}*?\"\"\"
-bytesliteral            {bytesprefix}?({shortbytes}|{longbytes})
+bytesliteral            {bytesprefix}({shortbytes}|{longbytes})
 
 octdigit                [0-7]
 hexdigit                [0-9|A-F|a-f]

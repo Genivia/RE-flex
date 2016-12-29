@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">debug.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Dec 9 2016</div>
+      <div style="float: right; font-size: 10px;">updated Thu Dec 29 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -56,7 +56,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p>RE/flex debug logs.  
+<p>RE/flex debug logs and assertions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -80,6 +80,8 @@ This graph shows which files directly or indirectly include this file:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a1d20ed9010534224290496a3ec91b1fc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a1d20ed9010534224290496a3ec91b1fc">DBGCHK</a>(c)&#160;&#160;&#160;(void)0</td></tr>
+<tr class="separator:a1d20ed9010534224290496a3ec91b1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53b7d4ef6b5cc76b0bce2fd6fe5733ed"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(...)&#160;&#160;&#160;(void)0</td></tr>
 <tr class="memdesc:a53b7d4ef6b5cc76b0bce2fd6fe5733ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">When compiled with -DDEBUG, adds a timestamped log entry with a printf-formatted message.  <a href="#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">More...</a><br /></td></tr>
 <tr class="separator:a53b7d4ef6b5cc76b0bce2fd6fe5733ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -91,7 +93,7 @@ Macros</h2></td></tr>
 <tr class="separator:a8f77c970ada64b34cd82308462c9ea76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>RE/flex debug logs. </p>
+<div class="textblock"><p>RE/flex debug logs and assertions. </p>
 <dl class="section author"><dt>Author</dt><dd>Robert van Engelen - <a href="#" onclick="location.href='mai'+'lto:'+'eng'+'el'+'en@'+'ge'+'niv'+'ia'+'.co'+'m'; return false;">engel<span style="display: none;">.nosp@m.</span>en@g<span style="display: none;">.nosp@m.</span>enivi<span style="display: none;">.nosp@m.</span>a.co<span style="display: none;">.nosp@m.</span>m</a> </dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>(c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
 <dd>
@@ -111,9 +113,10 @@ Macros</h2></td></tr>
 </table>
 <p><code>DBGLOGN(format, ...)</code> creates a log entry without a timestamp.</p>
 <p><code>DBGLOGA(format, ...)</code> appends the formatted string to the previous log entry.</p>
+<p><code><a class="el" href="debug_8h.html#a1d20ed9010534224290496a3ec91b1fc">DBGCHK(condition)</a></code> calls <code>assert(condition)</code> when compiled in DEBUG mode.</p>
 <p>The utility macro <code>DBGSTR(const char *s)</code> returns string <code>s</code> or <code>"(null)"</code> when <code>s == NULL</code>.</p>
 <h2>Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="debug_8h.html">debug.h</a>&quot;</span></div><div class="line"></div><div class="line"><span class="keywordtype">int</span> <a class="code" href="reflex_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div><div class="line">{</div><div class="line">  FILE *fd;</div><div class="line">  <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Program start&quot;</span>);</div><div class="line">  <span class="keywordflow">if</span> ((fd = fopen(<span class="stringliteral">&quot;foo.bar&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>)) == NULL)</div><div class="line">  {</div><div class="line">    <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Error %d: %s &quot;</span>, errno, DBGSTR(strerror(errno)));</div><div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; argc; ++i)</div><div class="line">      <a class="code" href="debug_8h.html#a8f77c970ada64b34cd82308462c9ea76">DBGLOGA</a>(<span class="stringliteral">&quot; %s&quot;</span>, argv[1]);</div><div class="line">  }</div><div class="line">  <span class="keywordflow">else</span></div><div class="line">  {</div><div class="line">    <span class="comment">// OK, so go ahead to read foo.bar ...</span></div><div class="line">    <span class="comment">// ...</span></div><div class="line">    fclose(fd);</div><div class="line">  }</div><div class="line">  <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Program end&quot;</span>);</div><div class="line">}</div></div><!-- fragment --><p>Compiled with <code>-DDEBUG</code> this example logs the following messages in <code>DEBUG.log</code>:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="debug_8h.html">debug.h</a>&quot;</span></div><div class="line"></div><div class="line"><span class="keywordtype">int</span> <a class="code" href="reflex_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div><div class="line">{</div><div class="line">  FILE *fd;</div><div class="line">  <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Program start&quot;</span>);</div><div class="line">  <span class="keywordflow">if</span> ((fd = fopen(<span class="stringliteral">&quot;foo.bar&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>)) == NULL)</div><div class="line">  {</div><div class="line">    <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Error %d: %s &quot;</span>, errno, DBGSTR(strerror(errno)));</div><div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; argc; ++i)</div><div class="line">      <a class="code" href="debug_8h.html#a8f77c970ada64b34cd82308462c9ea76">DBGLOGA</a>(<span class="stringliteral">&quot; %s&quot;</span>, argv[1]);</div><div class="line">  }</div><div class="line">  <span class="keywordflow">else</span></div><div class="line">  {</div><div class="line">    <a class="code" href="debug_8h.html#a1d20ed9010534224290496a3ec91b1fc">DBGCHK</a>(fd != NULL);</div><div class="line">    <span class="comment">// OK, so go ahead to read foo.bar ...</span></div><div class="line">    <span class="comment">// ...</span></div><div class="line">    fclose(fd);</div><div class="line">  }</div><div class="line">  <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Program end&quot;</span>);</div><div class="line">}</div></div><!-- fragment --><p>Compiled with <code>-DDEBUG</code> this example logs the following messages in <code>DEBUG.log</code>:</p>
 <div class="fragment"><div class="line">140201/225654.692194   example.cpp:11   Program has started</div><div class="line">140201/225654.692564   example.cpp:15   Error 2: No such file or directory</div><div class="line">140201/225654.692577   example.cpp:17   Program ended</div></div><!-- fragment --><p>The first column records the date (140201 is February 1, 2014) and the time (225654 is 10:56PM + 54 seconds) with microsecond fraction. The second column records the source code file name and the line number of the <code>DBGLOG</code> command. The third column shows the printf-formatted message.</p>
 <p>The <code>DEBUG.log</code> file is created in the current directory when it does not already exist.</p>
 <p>Techniques used:</p>
@@ -125,6 +128,22 @@ Macros</h2></td></tr>
 <li><code>"" __VA_ARGS__</code> forces <code>__VA_ARGS__</code> to start with a literal format string (printf security advisory). </li>
 </ul>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a1d20ed9010534224290496a3ec91b1fc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DBGCHK</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">c</td><td>)</td>
+          <td>&#160;&#160;&#160;(void)0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a53b7d4ef6b5cc76b0bce2fd6fe5733ed"></a>
 <div class="memitem">
 <div class="memproto">
@@ -182,7 +201,7 @@ Macros</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Dec 9 2016 22:49:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Dec 29 2016 14:04:07 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

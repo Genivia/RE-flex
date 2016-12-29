@@ -37,10 +37,12 @@
 #ifndef REFLEX_ABSMATCHER_H
 #define REFLEX_ABSMATCHER_H
 
+// TODO FIXME this option speeds up matching somewhat, but slows down input() a lot
+// #define FAST_GET
+
 #include "debug.h"
 #include "input.h"
 #include "traits.h"
-#include <cassert>
 #include <cctype>
 #include <iterator>
 
@@ -367,7 +369,16 @@ class AbstractMatcher {
     for (const char *s = txt_ - 1; s >= buf_; --s)
       if (*s == '\n')
         return txt_ - s - 1;
+#ifdef WITH_BYTE_COLUMNO
+    // count column offset in bytes
     return cno_ + txt_ - buf_;
+#else
+    // count column offset in UTF-8 chars
+    size_t n = cno_;
+    for (const char *t = buf_; t < txt_; ++t)
+      n += (*t & 0xc0) != 0x80;
+    return n;
+#endif
   }
   /// Returns a pair of size_t accept() and std::string text(), useful for tokenizing input into containers of pairs.
   std::pair<size_t,std::string> pair() const
@@ -431,14 +442,21 @@ class AbstractMatcher {
     /// @returns the character read (unsigned char 0..255) read or EOF (-1).
   {
     DBGLOG("AbstractMatcher::input() pos = %zu end = %zu chr = %c", pos_, end_, chr_);
-    if (pos_ < end_ && chr_ != Const::UNK)
+    if (pos_ < end_)
     {
-      got_ = chr_;
+      if (chr_ != Const::UNK)
+        got_ = chr_;
+      else
+        got_ = static_cast<unsigned char>(buf_[pos_]);
       ++pos_;
     }
     else
     {
+#ifdef FAST_GET
+      got_ = get_more();
+#else
       got_ = get();
+#endif
     }
     if (pos_ < end_)
       chr_ = static_cast<unsigned char>(buf_[pos_]);
@@ -446,7 +464,7 @@ class AbstractMatcher {
     return got_;
   }
   /// Put back one character on the input character sequence for matching, invalidating the current match info and text.
-  void unput(char c)
+  void unput(char c) ///< character to put back
   {
     DBGLOG("AbstractMatcher::unput()");
     if (pos_ < end_)
@@ -467,7 +485,7 @@ class AbstractMatcher {
     chr_ = static_cast<unsigned char>(c);
     cur_ = pos_;
   }
-  /// Fetch the rest of the input as text, useful for matching/splitting up to n times after which the rest is needed.
+  /// Fetch the rest of the input as text, useful for searching/splitting up to n times after which the rest is needed.
   const char *rest(void)
     /// @returns const char* string of the remaining input (wrapped when AbstractMatcher::wrap is defined).
   {
@@ -515,10 +533,10 @@ class AbstractMatcher {
   {
     if (n < len_)
     {
-      assert(pos_ < max_);
+      DBGCHK(pos_ < max_);
       buf_[pos_] = chr_;
       pos_ = txt_ - buf_ + n;
-      assert(pos_ < max_);
+      DBGCHK(pos_ < max_);
       chr_ = static_cast<unsigned char>(buf_[pos_]);
       buf_[pos_] = '\0';
       len_ = n;
@@ -602,12 +620,12 @@ class AbstractMatcher {
   Operation scan;  ///< functor to scan input (to tokenize input)
   Operation find;  ///< functor to search input
   Operation split; ///< functor to split input
-  Input in;    ///< input character sequence being matched by this matcher
+  Input in;        ///< input character sequence being matched by this matcher
  protected:
   /// Construct a base abstract matcher.
   AbstractMatcher(
-      const Input&   inp, ///< input character sequence for this matcher
-      const char    *opt) ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const Input& inp, ///< input character sequence for this matcher
+      const char  *opt) ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
       scan(this, Const::SCAN),
       find(this, Const::FIND),
@@ -686,6 +704,9 @@ class AbstractMatcher {
     /// @returns the character read (unsigned char 0..255) or EOF (-1).
   {
     DBGLOG("AbstractMatcher::get()");
+#ifdef FAST_GET
+    return pos_ < end_ ? static_cast<unsigned char>(buf_[pos_++]) : get_more();
+#else
     if (pos_ < end_)
       return static_cast<unsigned char>(buf_[pos_++]);
     if (eof_)
@@ -704,12 +725,16 @@ class AbstractMatcher {
         return EOF;
       }
     }
+#endif
   }
   /// Peek at the next character in the buffered input without consuming it.
   int peek(void)
     /// @returns the character (unsigned char 0..255) or EOF (-1).
   {
     DBGLOG("AbstractMatcher::peek()");
+#ifdef FAST_GET
+    return pos_ < end_ ? static_cast<unsigned char>(buf_[pos_]) : peek_more();
+#else
     if (pos_ < end_)
       return static_cast<unsigned char>(buf_[pos_]);
     if (eof_)
@@ -728,11 +753,12 @@ class AbstractMatcher {
         return EOF;
       }
     }
+#endif
   }
   /// Set the current position to advance to the next match.
   void set_current(size_t loc) ///< new location in buffer
   {
-    assert(loc <= end_);
+    DBGCHK(loc <= end_);
     pos_ = cur_ = loc;
     if (cur_ > 0)
       got_ = static_cast<unsigned char>(buf_[loc - 1]);
@@ -762,11 +788,56 @@ class AbstractMatcher {
   bool           eof_; ///< input has reached EOF
   bool           mat_; ///< true if AbstractMatcher::matches() was successful
  private:
+#ifdef FAST_GET
+  /// Get the next character if not currently buffered.
+  int get_more(void)
+    /// @returns the character read (unsigned char 0..255) or EOF (-1).
+  {
+    if (eof_)
+      return EOF;
+    if (end_ + blk_ >= max_)
+      (void)grow();
+    while (true)
+    {
+      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
+      if (pos_ < end_)
+        return static_cast<unsigned char>(buf_[pos_++]);
+      DBGLOGN("get(): EOF");
+      if (!wrap())
+      {
+        eof_ = true;
+        return EOF;
+      }
+    }
+  }
+  /// Peek at the next character if not currently buffered.
+  int peek_more(void)
+    /// @returns the character (unsigned char 0..255) or EOF (-1).
+  {
+    if (eof_)
+      return EOF;
+    if (end_ + blk_ >= max_)
+      (void)grow();
+    while (true)
+    {
+      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
+      if (pos_ < end_)
+        return static_cast<unsigned char>(buf_[pos_]);
+      DBGLOGN("peek(): EOF");
+      if (!wrap())
+      {
+        eof_ = true;
+        return EOF;
+      }
+    }
+  }
+#endif
   /// Update the newline count, column count, and character count when shifting the buffer. 
   void update(void)
   {
+#ifdef WITH_BYTE_COLUMNO
     const char *t = buf_;
-    for (const char *s = t; s < txt_; ++s)
+    for (const char *s = buf_; s < txt_; ++s)
     {
       if (*s == '\n')
       {
@@ -775,8 +846,25 @@ class AbstractMatcher {
         cno_ = 0;
       }
     }
+    // count column offset in bytes
     cno_ += txt_ - t;
     num_ += txt_ - buf_;
+#else
+    for (const char *s = buf_; s < txt_; ++s)
+    {
+      if (*s == '\n')
+      {
+        ++lno_;
+        cno_ = 0;
+      }
+      else
+      {
+        // count column offset in UTF-8 chars
+        cno_ += (*s & 0xc0) != 0x80;
+      }
+    }
+    num_ += txt_ - buf_;
+#endif
   }
 };
 

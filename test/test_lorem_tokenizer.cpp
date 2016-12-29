@@ -1,22 +1,30 @@
-#ifndef REFLEX_CODE_DECL
-#include "pattern.h"
-#define REFLEX_CODE_DECL const reflex::Pattern::Opcode
-#endif
+#include "matcher.h"
 
-REFLEX_CODE_DECL reflex_code_tokenizer[13] =
+void reflex_code_tokenizer(reflex::Matcher& m)
 {
-  0x617A0007, // 0: GOTO 7 ON a-z
-  0x5F5F0007, // 1: GOTO 7 ON _
-  0x415A0007, // 2: GOTO 7 ON A-Z
-  0x30390007, // 3: GOTO 7 ON 0-9
-  0x00FF0005, // 4: GOTO 5 ON \0-\xff
-  0xFF000002, // 5: TAKE 2
-  0x00FFFFFF, // 6: HALT
-  0xFF000001, // 7: TAKE 1
-  0x617A0007, // 8: GOTO 7 ON a-z
-  0x5F5F0007, // 9: GOTO 7 ON _
-  0x415A0007, // 10: GOTO 7 ON A-Z
-  0x30390007, // 11: GOTO 7 ON 0-9
-  0x00FFFFFF, // 12: HALT
-};
+  int c0, c1;
+  m.FSM_INIT(c1);
+
+S0:
+  c0 = c1, c1 = m.FSM_CHAR();
+  if (97 <= c1 && c1 <= 122) goto S7;
+  if (c1 == 95) goto S7;
+  if (65 <= c1 && c1 <= 90) goto S7;
+  if (48 <= c1 && c1 <= 57) goto S7;
+  if (0 <= c1) goto S5;
+  return m.FSM_HALT(c1);
+
+S5:
+  m.FSM_TAKE(2);
+  return m.FSM_HALT(c1);
+
+S7:
+  m.FSM_TAKE(1);
+  c0 = c1, c1 = m.FSM_CHAR();
+  if (97 <= c1 && c1 <= 122) goto S7;
+  if (c1 == 95) goto S7;
+  if (65 <= c1 && c1 <= 90) goto S7;
+  if (48 <= c1 && c1 <= 57) goto S7;
+  return m.FSM_HALT(c1);
+}
 

@@ -1129,13 +1129,26 @@ the classic Flex actions shown in the second column of this table:
   `set_debug(n)`        | `set_debug(n)`       | reflex option `-d` sets `n=1`
   `debug()`             | `debug()`            | nonzero when debugging
 
-Note that Flex `switch_streams(i, o)` is the same as `in(i)` and `out(o)`, and
-Flex `yyrestart(i)` is just `in(i)`.
+Note that Flex `switch_streams(i, o)` is the same as invoking the `in(i)` and
+`out(o)` methods.  Flex `yyrestart(i)` is the same as setting the input
+`yyin=&i` or invoking `in(i)`.
 
-From the above you may have guessed correctly that `text()` is just a shorthand
-for `matcher().text()`, since `matcher()` is the matcher object associated with
-the generated Lexer class.  The same shorthands apply to `size()`, `lineno()` and
-`columno()`.
+Use **reflex** options `−−flex` and `−−bison` to enable global Flex actions and
+variables.  This makes Flex actions and variables globally accessible with the
+exception of `yy_push_state`, `yy_pop_state`, `yy_top_state`.  Also, use the
+global action `yyinput` instead of `input`, use the global action `yyunput`
+instead of `unput`, and use the global action `yyoutput` instead of `output`.
+With these options, the globals `yytext`, `yyleng`, and `yylineno` are
+available.  However, `yyin` and `yyout` are macros and cannot be (re)declared
+or accessed as global variables.  To avoid compilation errors, use **reflex**
+option `−−header-file` to generate a header file `lex.yy.h` to include in your
+code to use the global use Flex actions and variables.  See \ref reflex-bison
+for more details on the `−−bison` options to use.
+
+From the first entries in the table shown above you may have guessed correctly
+that `text()` is just a shorthand for `matcher().text()`, since `matcher()` is
+the matcher object associated with the generated Lexer class.  The same
+shorthands apply to `size()`, `lineno()` and `columno()`.
 
 Because `matcher()` returns the current matcher object, the following Flex-like
 actions are also supported:
@@ -1292,7 +1305,8 @@ patterns `φ` and `ψ`:
   `(?x:φ)`  | *free space mode*: ignore all whitespace and comments in `φ`
   `(?#:..)` | *commenting*: all of `..` is skipped as a comment
 
-The following patterns can be used in lex specifications for **reflex**:
+In addition, the following patterns can be used in lex specifications for
+the **reflex** scanner generator:
 
   Pattern       | Matches
   ------------- | --------------------------------------------------------------
@@ -2060,11 +2074,12 @@ is omitted the **reflex** command generates lex.yy.h.
 
 ### `−−regexp-file[=FILE]`
 
-This generates a text file with FILE.txt that contains the scanner's regular
+This generates a text file FILE.txt that contains the scanner's regular
 expression patterns, where FILE is optional.  When FILE is omitted the
 **reflex** command generates reflex.S.txt for each start condition state S.
 The regular expression patterns are converted from the lex specification and
-translated into valid C++ strings for regex pattern matching.
+translated into valid C++ strings that can be used with a regex library for
+pattern matching.
 
 ### `−−pattern=NAME`
 
@@ -2073,8 +2088,9 @@ option `-m`.
 
 ### `−−tabs=N`
 
-This sets the tab size to N, where N > 0 must be a power of 2, for indent `\i`
-and dedent `\j` matching.
+This sets the tab size to N, where N > 0 must be a power of 2.  The tab size is
+used internally to determine the column position in indent `\i` and dedent `\j`
+matching.  It has no effect otherwise.
 
 ### `−−lineno`, `−−yymore` `−−yywrap`, `−−batch`
 
@@ -2238,7 +2254,11 @@ the `wrap()` (or `yywrap()`) method:
 %{
   class Tokenizer : Lexer {
    public:
-    virtual int wrap() { in(std::in); return 1; }
+    virtual int wrap()
+    {
+      in(std::in);
+      return in().good() ? 1 : 0; // 1 if stdin is OK (not EOF or error)
+    }
   };
 %}
 ```
@@ -2356,10 +2376,32 @@ input handler you can use a proper object-oriented approach: create a derived
 class of `reflex::Matcher` (or `reflex::BoostPosixMatcher`) and in the derived
 class override the `size_t reflex::Matcher::get(char *s, size_t n)` method for
 input handling.  This function is called with a string buffer `s` of size `n`
-bytes.  Fill the string buffer `s` up to `n` and return the number of bytes
-stored in `s`.  Return zero upon EOF.  Use **reflex** options `−−matcher=NAME`
-and `−−pattern=reflex::Pattern` to use your new matcher class `NAME` (or leave
-out `−−pattern` for Boost.Regex derived matchers).
+bytes.  Fill the string buffer `s` up to `n` bytes and return the number of
+bytes stored in `s`.  Return zero upon EOF.  Use **reflex** options
+`−−matcher=NAME` and `−−pattern=reflex::Pattern` to use your new matcher class
+`NAME` (or leave out `−−pattern` for Boost.Regex derived matchers).
+
+The `FlexLexer` lexer class that is the base class of the `yyFlexLexer` lexer
+class generated with **reflex** option `−−flex` defines a virtual `size_t
+LexerInput(char*, size_t)` method.  This approach is compatible with Flex.  The
+virtual method can be redefined in the generated `yyFlexLexer` lexer to consume
+input from some source of text:
+
+<div class="alt">
+```cpp
+%class{
+  virtual size_t LexerInput(char *s, size_t n)
+  {
+    size_t k;
+    // populate s[0..k-1] for some k with k <= n
+    return k; // return number of bytes filled in s[]
+  }
+%}
+```
+</div>
+
+The `LexerInput` method may be invoked multiple times until it returns zero
+indicating EOF.
 
 ⇢ [Back to contents](#)
 
@@ -2609,11 +2651,19 @@ specification defines the tokens `CONST_NUMBER` and `CONST_STRING` and the type
 ```
 </div>
 
-
 When option `−−flex` is used together with `−−bison`, the `yytext`, `yyleng`,
-and `yylineno` globals are made accessible to the parser.  See the generated
-`lex.yy.cpp` BISON section, which contains declarations specific to Bison when
-the `−−bison` option is used.
+and `yylineno` globals are accessible to the Bison/Yacc parser.  In fact, all
+Flex actions and variables are globally accessible with the exception of
+`yy_push_state`, `yy_pop_state`, `yy_top_state` that are class methods.
+Furthermore, `yyin` and `yyout` are macros and cannot be (re)declared or
+accessed as global variables.  To use these and avoid compilation errors, use
+**reflex** option `−−header-file` to generate a header file `lex.yy.h` to
+include in your code.  Finally, use `yyinput` instead of `input`, use the
+global action `yyunput` instead of `unput`, and use the global action
+`yyoutput` instead of `output`.
+
+See the generated `lex.yy.cpp` BISON section, which contains declarations
+specific to Bison when the `−−bison` option is used.
 
 There are two approaches for a Bison parser to work with a scanner.  Either the
 yacc grammar specification for Bison should include the externs we need to
@@ -2626,7 +2676,7 @@ import from the scanner:
 %{
   extern int yylex(void);
   extern char *yytext;
-  extern int yyleng;
+  extern yy_size_t yyleng;
   extern int yylineno;
 %}
 
@@ -2657,9 +2707,18 @@ The second option requires the generated parser to be compiled in C++, because
 `lex.yy.h` contains C++ declarations.
 
 The ugly Flex macro `YY_DECL` is not supported by RE/flex.  This macro is
-needed with Flex to redeclare the `yyflex()` function signature, for example to
+needed with Flex to redeclare the `yylex()` function signature, for example to
 take an additional `yylval` parameter that must be passed through from
-`yyparse()` to `yylex()`.
+`yyparse()` to `yylex()`.  Because the generated scanner uses a Lexer class for
+scanning, the class can be extended with `%%class{` and `%}` to hold state
+information and additional token-related values.  These values can then be
+exchanged with the parser using getters and setters, which is preferred over
+changing the `yylex()` function signature.
+
+Yacc and Bison use the global variable `yylval` to exchange token values.
+Reentrant Bison parsers pass the `yylval` to the `yylex()` function as a
+parameter.  RE/flex supports all of these Bison-specific features with
+command-line options.
 
 To change the generated code for use with Bison, use the following options:
 
@@ -2668,7 +2727,7 @@ To change the generated code for use with Bison, use the following options:
   &nbsp;                                        | `int Lexer::lex()`                        | &nbsp;                          
   `−−flex`                                      | `int yyFlexLexer::yylex()`                | &nbsp;                          
   `−−bison`                                     | `int Lexer::lex()`                        | `Lexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`
-  `−−flex` `−−bison`                            | `int yyFlexLexer::yylex()`                | `yyFlexLexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`, `char *yytext`, `int yyleng`, `int yylineno`
+  `−−flex` `−−bison`                            | `int yyFlexLexer::yylex()`                | `yyFlexLexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`, `char *yytext`, `yy_size_t yyleng`, `int yylineno`
   `−−bison` `−−reentrant`                       | `int Lexer::lex()`                        | `int yylex(yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
   `−−flex` `−−bison` `−−reentrant`              | `int yyFlexLexer::lex()`                  | `int yylex(yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)`
   `−−bison-bridge`                              | `int Lexer::lex(YYSTYPE& yylval)`         | `int yylex(YYSTYPE*, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)`

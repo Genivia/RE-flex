@@ -3,7 +3,7 @@
 <area shape="rect" id="node3" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="589,155,664,181"/>
 <area shape="rect" id="node9" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="907,304,963,331"/>
 <area shape="rect" id="node4" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="261,229,315,256"/>
-<area shape="rect" id="node7" href="$debug_8h.html" title="RE/flex debug logs. " alt="" coords="166,229,237,256"/>
+<area shape="rect" id="node7" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="166,229,237,256"/>
 <area shape="rect" id="node8" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="722,229,785,256"/>
 <area shape="rect" id="node13" href="$ranges_8h.html" title="RE/flex range set container. " alt="" coords="69,229,142,256"/>
 <area shape="rect" id="node16" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="339,229,405,256"/>

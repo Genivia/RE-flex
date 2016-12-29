@@ -1,6 +1,6 @@
 <map id="pattern.h" name="pattern.h">
 <area shape="rect" id="node2" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="30,80,83,107"/>
-<area shape="rect" id="node5" href="$debug_8h.html" title="RE/flex debug logs. " alt="" coords="250,80,321,107"/>
+<area shape="rect" id="node5" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="250,80,321,107"/>
 <area shape="rect" id="node6" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="345,80,408,107"/>
 <area shape="rect" id="node11" href="$ranges_8h.html" title="RE/flex range set container. " alt="" coords="581,80,654,107"/>
 <area shape="rect" id="node14" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="730,80,796,107"/>

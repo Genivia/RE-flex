@@ -818,7 +818,7 @@ std::string Reflex::getregex(size_t& pos)
             {
               while (pos + 2 < linelen && (line.at(++pos) != '\\' || line.at(pos + 1) != 'E'))
                 continue;
-              if (line.at(pos) != '\\')
+              if (pos >= linelen || line.at(pos) != '\\')
                 error("missing closing \\E: ", line.substr(loc).c_str());
             }
             else if (pos + 2 < linelen && line.at(pos) == 'p' && line.at(pos + 1) == '{') // translate \p{X}
@@ -941,11 +941,26 @@ std::string Reflex::getregex(size_t& pos)
           }
           break;
         case '[':
-          if (pos + 1 < linelen && line.at(pos) == '^')
+          if (pos + 1 < linelen && line.at(pos + 1) == '^')
           {
-            ++pos;
-            while (pos + 1 < linelen && ((line.at(++pos) == '\\' && ++pos + 1 < linelen) || line.at(pos) != ']'))
-              continue;
+            pos += 2;
+            while (pos + 1 < linelen)
+            {
+              if (line.at(pos) == '\\' && pos + 1 < linelen)
+              {
+                ++pos;
+              }
+              else if (line.at(pos) == '[' && pos + 1 < linelen && line.at(pos + 1) == ':')
+              {
+                pos += 2;
+                while (pos + 1 < linelen && (line.at(pos) != ':' || line.at(pos + 1) != ']'))
+                  ++pos;
+                ++pos;
+              }
+              ++pos;
+              if (pos >= linelen || line.at(pos) == ']')
+                break;
+            }
           }
           else
           {
@@ -1100,6 +1115,7 @@ std::string Reflex::getregex(size_t& pos)
                       regex.append(line.substr(loc, pos - loc)).append("\\0");
                       loc = pos + 1;
                     }
+                    ++pos;
                     wc = -1; // TODO octal may be part of a range
                     break;
                 }
@@ -1134,21 +1150,22 @@ std::string Reflex::getregex(size_t& pos)
               regex = regex.substr(0, regex.size() - 1).append(lifted.substr(1)).append(")");
             loc = pos + 1;
           }
-          if (line.at(pos) != ']')
+          if (pos >= linelen || line.at(pos) != ']')
             error("missing closing ]: ...", line.substr(loc).c_str());
           break;
         case '"':
           regex.append(line.substr(loc, pos - loc)).append("\\Q"); // translate to \Q...\E
           loc = ++pos;
-          while (pos + 1 < linelen && line.at(++pos) != '"')
+          while (pos < linelen && line.at(pos) != '"')
           {
             if (line.at(pos) == '\\' && pos + 1 < linelen && line.at(pos + 1) == '"')
             {
               regex.append(line.substr(loc, pos - loc));
               loc = ++pos;
             }
+            ++pos;
           }
-          if (line.at(pos) != '"')
+          if (pos >= linelen || line.at(pos) != '"')
             error("missing closing \": \"...", line.substr(loc).c_str());
           regex.append(line.substr(loc, pos - loc)).append("\\E");
           loc = pos + 1;
@@ -1732,7 +1749,6 @@ void Reflex::write(void)
     write_prelude();
     write_section_top();
     write_class();
-    write_section_1();
     if (!options["reentrant"].empty() || !options["bison_bridge"].empty())
     {
       if (!options["bison_locations"].empty())
@@ -1792,7 +1808,7 @@ void Reflex::write(void)
       if (!options["flex"].empty())
         *out <<
           "extern char *yytext;\n"
-          "extern int yyleng;\n"
+          "extern yy_size_t yyleng;\n"
           "extern int yylineno;\n";
       *out <<
         "extern ";
@@ -1894,6 +1910,11 @@ void Reflex::write_class(void)
     for (Start start = 0; start < conditions.size(); ++start)
       *out << "#define " << conditions[start] << " (" << start << ")" << std::endl;
     *out << "#define YY_NUM_RULES (" << num_rules << ")" << std::endl;
+    if (!options["bison"].empty() && options["reentrant"].empty() && options["bison_bridge"].empty() && options["bison_locations"].empty())
+      *out <<
+        "#undef yytext\n"
+        "#undef yyleng\n"
+        "#undef yylineno\n";
     if (!options["namespace"].empty())
       *out << std::endl << "namespace " << options["namespace"] << " {" << std::endl;
     *out << "typedef reflex::FlexLexer" << "<" << matcher << "> FlexLexer;" << std::endl;
@@ -2196,22 +2217,19 @@ void Reflex::write_lexer(void)
       "#endif\n\n";
     if (!options["flex"].empty())
       *out <<
-        "#undef yytext\n"
-        "#undef yyleng\n"
-        "#undef yylineno\n\n"
         "char *yytext;\n"
-        "int yyleng;\n"
+        "yy_size_t yyleng;\n"
         "int yylineno;\n"
         "YY_EXTERN_C int yylex(void)\n"
         "{\n"
         "  int res = YY_SCANNER." << options["lex"] << "();\n"
         "  yytext = const_cast<char*>(YY_SCANNER.YYText());\n"
-        "  yyleng = static_cast<int>(YY_SCANNER.YYLeng());\n"
+        "  yyleng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
         "  yylineno = static_cast<int>(YY_SCANNER.lineno());\n"
         "  return res;\n"
         "}\n\n"
         "#define yytext const_cast<char*>(YY_SCANNER.YYText())\n"
-        "#define yyleng static_cast<int>(YY_SCANNER.YYLeng())\n"
+        "#define yyleng static_cast<yy_size_t>(YY_SCANNER.YYLeng())\n"
         "#define yylineno static_cast<int>(YY_SCANNER.lineno())\n";
     else
       *out <<

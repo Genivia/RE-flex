@@ -1,3 +1,4 @@
+/* echo input to output in interactive mode */
 %{
 #include <stdio.h>
 %}

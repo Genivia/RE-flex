@@ -1,4 +1,4 @@
-INSTALL=/usr/local
+INSTALL=/usr/local/bin
 CPP=c++
 INCS=../include/debug.h ../include/input.h ../include/pattern.h ../include/utf8.h
 LIBS=../lib/libreflex.a

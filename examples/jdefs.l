@@ -5,8 +5,8 @@
 InputCharacter                  [\x00-\x09\x0B\x0C\x0E-\x7F]|\p{Non_ASCII_Unicode}
 SingleCharacter                 [\x00-\x09\x0B\x0C\x0E-\x26\x28-\x5B\x5D-\x7F]|\p{Non_ASCII_Unicode}
 StringCharacter                 [\x00-\x09\x0B\x0C\x0E-\x21\x23-\x5B\x5D-\x7F]|\p{Non_ASCII_Unicode}
-OctalEscape                     "\"([0-7]{1,2}|[0-3][0-7]{2})
-EscapeSequence                  "\"[btnfr"'\\]|{OctalEscape}
+OctalEscape                     \\([0-7]{1,2}|[0-3][0-7]{2})
+EscapeSequence                  \\[btnfr"'\\]|{OctalEscape}
 LineTerminator                  \n|\r\n?
 WhiteSpace                      [ \t\f]|{LineTerminator}
 Sub                             \cZ\Z

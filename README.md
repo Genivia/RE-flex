@@ -35,14 +35,14 @@ List of features
   transition to RE/flex frustration-free.
 - Extensive documentation in the online [manual][manual-url].
 - RE/flex generates lex.yy.cpp files while Flex generates lex.yy.cc files (in
-  C++ mode), to distinguish the differences.
+  C++ mode with option -+), to distinguish the differences.
 - Generates MT-safe (reentrant) code by default.
 - Generates clean source code that defines a C++ Lexer class derived from an abstract lexer class.
-- Configurable Lexer class generation to customize the interface with parsers.
+- Configurable Lexer class generation to customize the interface for various parsers, including Yacc and Bison.
 - Works with Bison and supports reentrant, bison-bridge and bison-locations.
 - Generates scanners for lexical analysis on files, C++ streams, and (wide) strings.
 - Generates Graphviz files to visualize FSMs with the Graphviz dot tool.
-- Includes many examples, such as a C/C++ source code tokenizer, Java tokenizer, and more.
+- Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for Python code, a tokenizer for Java code, and more.
 - Adds an extensible hierarchy of pattern matcher engines, with a choice of
   regex engines, such as Boost.Regex and RE/flex regex.
 - Adds lazy quantifiers to the POSIX regular expression syntax, so not more
@@ -82,7 +82,7 @@ this location to your $PATH variable to enable the new reflex command:
 
 The `libreflex.a` and `libreflex.so` libraries are saved in reflex/lib.  Link
 against one of these libraries when you use the RE/flex regex engine in your
-code.
+code.  Header files are located in reflex/include.
 
 Windows users: use reflex/bin/reflex.exe.
 
@@ -206,10 +206,10 @@ Where do I find the documentation?
 Read more about RE/flex in the [manual][manual-url].
 
 
-Work in progress / nice to have
--------------------------------
+TODO / Work in progress / Nice to have
+--------------------------------------
 
-- Faster RE/flex FSM matching by generating code instead of tables.
+- Should `columno` count bytes or Unicode chars? Every UTF-8 byte is counted, perhaps should count UTF-8 encoded char as one.
 - Option to support Unicode without UTF-8 (RE/flex matcher/FSM is prepared)
 
 
@@ -235,6 +235,7 @@ Changelog
 - Dec  1, 2016: 0.9.6 portability improvements
 - Dec  6, 2016: 0.9.7 bug fixes, added option `--regexp-file`, Python tokenizer
 - Dec  9, 2016: 0.9.8 fixes minor issues, improved reflex tool options `--full` and `--fast`, generates scanner with FSM table or a fast scanner with FSM code, respectively
+- Dec 28, 2016: 0.9.9 bug fixes and improved Flex compatibility
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

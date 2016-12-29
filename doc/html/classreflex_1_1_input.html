@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Dec 9 2016</div>
+      <div style="float: right; font-size: 10px;">updated Thu Dec 29 2016</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -119,6 +119,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a88d8c4d8c5105aa81138d3ea6a60c11d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a88d8c4d8c5105aa81138d3ea6a60c11d">operator std::istream *</a> ()</td></tr>
 <tr class="memdesc:a88d8c4d8c5105aa81138d3ea6a60c11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object to std::istream*.  <a href="#a88d8c4d8c5105aa81138d3ea6a60c11d">More...</a><br /></td></tr>
 <tr class="separator:a88d8c4d8c5105aa81138d3ea6a60c11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1911f432346e847695e868386ab6acbd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a1911f432346e847695e868386ab6acbd">operator bool</a> ()</td></tr>
+<tr class="separator:a1911f432346e847695e868386ab6acbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35426a06bf4b8928c8ee10b30de93c8b"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a35426a06bf4b8928c8ee10b30de93c8b">cstring</a> (void)</td></tr>
 <tr class="memdesc:a35426a06bf4b8928c8ee10b30de93c8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remaining string of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object.  <a href="#a35426a06bf4b8928c8ee10b30de93c8b">More...</a><br /></td></tr>
 <tr class="separator:a35426a06bf4b8928c8ee10b30de93c8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,15 +137,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a7adcaddc90acd4be7e521f5362d230d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a <code>FILE*</code> or <code>std::istream</code> source).  <a href="#a7adcaddc90acd4be7e521f5362d230d3">More...</a><br /></td></tr>
 <tr class="separator:a7adcaddc90acd4be7e521f5362d230d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbed78324e9deccb7c22df0559602864"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864">good</a> (void)</td></tr>
+<tr class="memdesc:adbed78324e9deccb7c22df0559602864"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if input is available.  <a href="#adbed78324e9deccb7c22df0559602864">More...</a><br /></td></tr>
 <tr class="separator:adbed78324e9deccb7c22df0559602864"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc9bc1fa36ca6f4df73d724aa4892ad3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3">eof</a> (void)</td></tr>
+<tr class="memdesc:adc9bc1fa36ca6f4df73d724aa4892ad3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if input reached EOF.  <a href="#adc9bc1fa36ca6f4df73d724aa4892ad3">More...</a><br /></td></tr>
 <tr class="separator:adc9bc1fa36ca6f4df73d724aa4892ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a3830a022486d78670f01003b56d5e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get</a> (char *s, size_t n)</td></tr>
+<tr class="memdesc:a3a3830a022486d78670f01003b56d5e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy subsequent character sequence data into buffer.  <a href="#a3a3830a022486d78670f01003b56d5e5">More...</a><br /></td></tr>
 <tr class="separator:a3a3830a022486d78670f01003b56d5e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac522bcd8f822f9191f890ba6543b5f71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#ac522bcd8f822f9191f890ba6543b5f71">file_encoding</a> (short enc)</td></tr>
 <tr class="memdesc:ac522bcd8f822f9191f890ba6543b5f71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set encoding for <code>FILE*</code> input to <a class="el" href="structreflex_1_1_input_1_1_const.html#a2a327de7ecbe34c421ebcb5f09058c49" title="plain ASCII/UTF-8 file_encoding ">Const::plain</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a9b6f173e4e331684ef3202bf4d50cd00" title="UTF-16 big endian file_encoding. ">Const::utf16be</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a8d02b5c499209ed24ec80bece8d73c3b" title="UTF-16 little endian file_encoding. ">Const::utf16le</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a7ef046acca7113d23ff77dbfa1ded607" title="UTF-32 big endian file_encoding. ">Const::utf32be</a>, or <a class="el" href="structreflex_1_1_input_1_1_const.html#aad4ebc8336540986901531df517c619a" title="UTF-32 little endian file_encoding. ">Const::utf32le</a>. File encodings are automatically detected by the presence of a UTF BOM in the file. This function may be used when a BOM is not present and file encoding is known or to override the BOM.  <a href="#ac522bcd8f822f9191f890ba6543b5f71">More...</a><br /></td></tr>
 <tr class="separator:ac522bcd8f822f9191f890ba6543b5f71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ea80c0af7f4a0442a49a5ec9a58f40f"><td class="memItemLeft" align="right" valign="top">short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a0ea80c0af7f4a0442a49a5ec9a58f40f">file_encoding</a> (void) const </td></tr>
+<tr class="memdesc:a0ea80c0af7f4a0442a49a5ec9a58f40f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get encoding of the current <code>FILE*</code> input, <a class="el" href="structreflex_1_1_input_1_1_const.html#a2a327de7ecbe34c421ebcb5f09058c49" title="plain ASCII/UTF-8 file_encoding ">Const::plain</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a9b6f173e4e331684ef3202bf4d50cd00" title="UTF-16 big endian file_encoding. ">Const::utf16be</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a8d02b5c499209ed24ec80bece8d73c3b" title="UTF-16 little endian file_encoding. ">Const::utf16le</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a7ef046acca7113d23ff77dbfa1ded607" title="UTF-32 big endian file_encoding. ">Const::utf32be</a>, or <a class="el" href="structreflex_1_1_input_1_1_const.html#aad4ebc8336540986901531df517c619a" title="UTF-32 little endian file_encoding. ">Const::utf32le</a>.  <a href="#a0ea80c0af7f4a0442a49a5ec9a58f40f">More...</a><br /></td></tr>
 <tr class="separator:a0ea80c0af7f4a0442a49a5ec9a58f40f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
@@ -155,16 +161,16 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a0681f7b13d04de6ab9ed8050529147b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a5349be78e278fc166fa74dfd726c7d4a" title="Initialize the state after (re)setting the input source. ">init()</a> on a FILE*.  <a href="#a0681f7b13d04de6ab9ed8050529147b2">More...</a><br /></td></tr>
 <tr class="separator:a0681f7b13d04de6ab9ed8050529147b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37dd7c46da3413a52866bee4bb060cc5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a37dd7c46da3413a52866bee4bb060cc5">file_get</a> (char *s, size_t n)</td></tr>
-<tr class="memdesc:a37dd7c46da3413a52866bee4bb060cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get()</a> on a FILE*.  <a href="#a37dd7c46da3413a52866bee4bb060cc5">More...</a><br /></td></tr>
+<tr class="memdesc:a37dd7c46da3413a52866bee4bb060cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy subsequent character sequence data into buffer. ">get()</a> on a FILE*.  <a href="#a37dd7c46da3413a52866bee4bb060cc5">More...</a><br /></td></tr>
 <tr class="separator:a37dd7c46da3413a52866bee4bb060cc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e52b0c33bcfd629d441867152e028c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a2e52b0c33bcfd629d441867152e028c6">file_size</a> (void)</td></tr>
 <tr class="memdesc:a2e52b0c33bcfd629d441867152e028c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a7adcaddc90acd4be7e521f5362d230d3" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> on a FILE*.  <a href="#a2e52b0c33bcfd629d441867152e028c6">More...</a><br /></td></tr>
 <tr class="separator:a2e52b0c33bcfd629d441867152e028c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a888c01c45af9d069ab3a59e36dcd9c50"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a888c01c45af9d069ab3a59e36dcd9c50">file_good</a> (void)</td></tr>
-<tr class="memdesc:a888c01c45af9d069ab3a59e36dcd9c50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864">good()</a>operation on a FILE*.  <a href="#a888c01c45af9d069ab3a59e36dcd9c50">More...</a><br /></td></tr>
+<tr class="memdesc:a888c01c45af9d069ab3a59e36dcd9c50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864" title="Check if input is available. ">good()</a>operation on a FILE*.  <a href="#a888c01c45af9d069ab3a59e36dcd9c50">More...</a><br /></td></tr>
 <tr class="separator:a888c01c45af9d069ab3a59e36dcd9c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3671ad8d99495f403d4f18f311712679"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a3671ad8d99495f403d4f18f311712679">file_eof</a> (void)</td></tr>
-<tr class="memdesc:a3671ad8d99495f403d4f18f311712679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3">eof()</a> on a FILE*.  <a href="#a3671ad8d99495f403d4f18f311712679">More...</a><br /></td></tr>
+<tr class="memdesc:a3671ad8d99495f403d4f18f311712679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3" title="Check if input reached EOF. ">eof()</a> on a FILE*.  <a href="#a3671ad8d99495f403d4f18f311712679">More...</a><br /></td></tr>
 <tr class="separator:a3671ad8d99495f403d4f18f311712679"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
@@ -200,14 +206,14 @@ Protected Attributes</h2></td></tr>
 <p>The <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> class unifies access to a source of input of a character sequence as follows:</p>
 <ul>
 <li>An <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object is instantiated and (re)assigned a (new) source input: either a <code>char*</code> string, a <code>wchar_t*</code> wide string, a <code>std::string</code>, a <code>std::wstring</code>, a <code>FILE*</code> descriptor, or a <code>std::istream</code> object.</li>
-<li>When assigned a wide string source as input, the wide character content is automatically converted to an UTF-8 character sequence when reading with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get()</a>.</li>
-<li>When assigned a <code>FILE*</code> source as input, the file is checked for the presence of a UTF-8 or a UTF-16 BOM (Byte Order Mark). A UTF-8 BOM is ignored and will not appear on the input character stream (and size is adjusted by 3 bytes). A UTF-16 BOM is intepreted, resulting in the conversion of the file content automatically to an UTF-8 character sequence when reading the file with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get()</a>. Also, <a class="el" href="classreflex_1_1_input.html#a7adcaddc90acd4be7e521f5362d230d3" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> gives the content size in the number of UTF-8 bytes.</li>
+<li>When assigned a wide string source as input, the wide character content is automatically converted to an UTF-8 character sequence when reading with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy subsequent character sequence data into buffer. ">get()</a>.</li>
+<li>When assigned a <code>FILE*</code> source as input, the file is checked for the presence of a UTF-8 or a UTF-16 BOM (Byte Order Mark). A UTF-8 BOM is ignored and will not appear on the input character stream (and size is adjusted by 3 bytes). A UTF-16 BOM is intepreted, resulting in the conversion of the file content automatically to an UTF-8 character sequence when reading the file with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy subsequent character sequence data into buffer. ">get()</a>. Also, <a class="el" href="classreflex_1_1_input.html#a7adcaddc90acd4be7e521f5362d230d3" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> gives the content size in the number of UTF-8 bytes.</li>
 <li>An input object can be reassigned a new source of input for reading at any time.</li>
 <li>An input object obeys move semantics. That is, after assigning an input object to another, the former can no longer be used to read input. This prevents adding the overhead and complexity of file and stream duplication.</li>
-<li><code>size_t <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">Input::get(char *buf, size_t len)</a>;</code> reads source input and fills <code>buf</code> with up to <code>len</code> bytes, returning the number of bytes read or zero when a stream or file is bad or when EOF is reached.</li>
-<li><code>size_t <a class="el" href="classreflex_1_1_input.html#a7adcaddc90acd4be7e521f5362d230d3" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">Input::size(void)</a>;</code> returns the number of ASCII/UTF-8 bytes available to read from the source input or zero (zero is also returned when the size is not determinable). Use this function only before reading input with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get()</a>. Wide character strings and UTF-16 <code>FILE*</code> content is counted as the total number of UTF-8 bytes that will be produced by <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get()</a>. The size of a <code>std::istream</code> cannot be determined.</li>
-<li><code>bool <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864">Input::good(void)</a>;</code> returns true if the input is readable and a non-empty sequence of characters is available to get. Returns false on EOF or if an error condition is present.</li>
-<li><code>bool <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3">Input::eof(void)</a>;</code> returns true if the input reached EOF. Note that <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864">good()</a> == ! <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3">eof()</a> for string source input only, since files and streams may have error conditions that prevent reading. That is, for files and streams <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3">eof()</a> implies <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864">good()</a> == false, but not vice versa. Thus, an error is diagnosed when the condition <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864">good()</a> == false &amp;&amp; <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3">eof()</a> == false holds. Note that get(buf, len) == 0 &amp;&amp; len &gt; 0 implies <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864">good()</a> == false.</li>
+<li><code>size_t <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy subsequent character sequence data into buffer. ">Input::get(char *buf, size_t len)</a>;</code> reads source input and fills <code>buf</code> with up to <code>len</code> bytes, returning the number of bytes read or zero when a stream or file is bad or when EOF is reached.</li>
+<li><code>size_t <a class="el" href="classreflex_1_1_input.html#a7adcaddc90acd4be7e521f5362d230d3" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">Input::size(void)</a>;</code> returns the number of ASCII/UTF-8 bytes available to read from the source input or zero (zero is also returned when the size is not determinable). Use this function only before reading input with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy subsequent character sequence data into buffer. ">get()</a>. Wide character strings and UTF-16 <code>FILE*</code> content is counted as the total number of UTF-8 bytes that will be produced by <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy subsequent character sequence data into buffer. ">get()</a>. The size of a <code>std::istream</code> cannot be determined.</li>
+<li><code>bool <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864" title="Check if input is available. ">Input::good(void)</a>;</code> returns true if the input is readable and a non-empty sequence of characters is available to get. Returns false on EOF or if an error condition is present.</li>
+<li><code>bool <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3" title="Check if input reached EOF. ">Input::eof(void)</a>;</code> returns true if the input reached EOF. Note that <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864" title="Check if input is available. ">good()</a> == ! <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3" title="Check if input reached EOF. ">eof()</a> for string source input only, since files and streams may have error conditions that prevent reading. That is, for files and streams <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3" title="Check if input reached EOF. ">eof()</a> implies <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864" title="Check if input is available. ">good()</a> == false, but not vice versa. Thus, an error is diagnosed when the condition <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864" title="Check if input is available. ">good()</a> == false &amp;&amp; <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3" title="Check if input reached EOF. ">eof()</a> == false holds. Note that get(buf, len) == 0 &amp;&amp; len &gt; 0 implies <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864" title="Check if input is available. ">good()</a> == false.</li>
 </ul>
 <h2>Example </h2>
 <p>The following example shows how to read a character sequence in blocks from a <code>std::ifstream</code>:</p>
@@ -620,7 +626,9 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Check if input reached EOF. </p><dl class="section return"><dt>Returns</dt><dd>true if input is at EOF and no characters are available. </dd></dl>
+
+<p>Check if input reached EOF. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if input is at EOF and no characters are available. </dd></dl>
 
 </div>
 </div>
@@ -704,7 +712,9 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get encoding of the current <code>FILE*</code> input, <a class="el" href="structreflex_1_1_input_1_1_const.html#a2a327de7ecbe34c421ebcb5f09058c49" title="plain ASCII/UTF-8 file_encoding ">Const::plain</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a9b6f173e4e331684ef3202bf4d50cd00" title="UTF-16 big endian file_encoding. ">Const::utf16be</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a8d02b5c499209ed24ec80bece8d73c3b" title="UTF-16 little endian file_encoding. ">Const::utf16le</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a7ef046acca7113d23ff77dbfa1ded607" title="UTF-32 big endian file_encoding. ">Const::utf32be</a>, or <a class="el" href="structreflex_1_1_input_1_1_const.html#aad4ebc8336540986901531df517c619a" title="UTF-32 little endian file_encoding. ">Const::utf32le</a>. </p><dl class="section return"><dt>Returns</dt><dd><a class="el" href="structreflex_1_1_input_1_1_const.html#a2a327de7ecbe34c421ebcb5f09058c49" title="plain ASCII/UTF-8 file_encoding ">Const::plain</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a9b6f173e4e331684ef3202bf4d50cd00" title="UTF-16 big endian file_encoding. ">Const::utf16be</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a8d02b5c499209ed24ec80bece8d73c3b" title="UTF-16 little endian file_encoding. ">Const::utf16le</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a7ef046acca7113d23ff77dbfa1ded607" title="UTF-32 big endian file_encoding. ">Const::utf32be</a>, or <a class="el" href="structreflex_1_1_input_1_1_const.html#aad4ebc8336540986901531df517c619a" title="UTF-32 little endian file_encoding. ">Const::utf32le</a>. </dd></dl>
+
+<p>Get encoding of the current <code>FILE*</code> input, <a class="el" href="structreflex_1_1_input_1_1_const.html#a2a327de7ecbe34c421ebcb5f09058c49" title="plain ASCII/UTF-8 file_encoding ">Const::plain</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a9b6f173e4e331684ef3202bf4d50cd00" title="UTF-16 big endian file_encoding. ">Const::utf16be</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a8d02b5c499209ed24ec80bece8d73c3b" title="UTF-16 little endian file_encoding. ">Const::utf16le</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a7ef046acca7113d23ff77dbfa1ded607" title="UTF-32 big endian file_encoding. ">Const::utf32be</a>, or <a class="el" href="structreflex_1_1_input_1_1_const.html#aad4ebc8336540986901531df517c619a" title="UTF-32 little endian file_encoding. ">Const::utf32le</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structreflex_1_1_input_1_1_const.html#a2a327de7ecbe34c421ebcb5f09058c49" title="plain ASCII/UTF-8 file_encoding ">Const::plain</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a9b6f173e4e331684ef3202bf4d50cd00" title="UTF-16 big endian file_encoding. ">Const::utf16be</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a8d02b5c499209ed24ec80bece8d73c3b" title="UTF-16 little endian file_encoding. ">Const::utf16le</a>, <a class="el" href="structreflex_1_1_input_1_1_const.html#a7ef046acca7113d23ff77dbfa1ded607" title="UTF-32 big endian file_encoding. ">Const::utf32be</a>, or <a class="el" href="structreflex_1_1_input_1_1_const.html#aad4ebc8336540986901531df517c619a" title="UTF-32 little endian file_encoding. ">Const::utf32le</a>. </dd></dl>
 
 </div>
 </div>
@@ -730,7 +740,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3">eof()</a> on a FILE*. </p>
+<p>Implements <a class="el" href="classreflex_1_1_input.html#adc9bc1fa36ca6f4df73d724aa4892ad3" title="Check if input reached EOF. ">eof()</a> on a FILE*. </p>
 
 </div>
 </div>
@@ -766,7 +776,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get()</a> on a FILE*. </p>
+<p>Implements <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy subsequent character sequence data into buffer. ">get()</a> on a FILE*. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">s</td><td>points to the string buffer to fill with input </td></tr>
@@ -799,7 +809,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864">good()</a>operation on a FILE*. </p>
+<p>Implements <a class="el" href="classreflex_1_1_input.html#adbed78324e9deccb7c22df0559602864" title="Check if input is available. ">good()</a>operation on a FILE*. </p>
 
 </div>
 </div>
@@ -886,7 +896,9 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Copy subsequent character sequence data into buffer. </p><dl class="section return"><dt>Returns</dt><dd>the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF. </dd></dl>
+
+<p>Copy subsequent character sequence data into buffer. </p>
+<dl class="section return"><dt>Returns</dt><dd>the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">s</td><td>points to the string buffer to fill with input </td></tr>
@@ -918,7 +930,9 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Check if input is available. </p><dl class="section return"><dt>Returns</dt><dd>true if a non-empty sequence of characters is available to get. </dd></dl>
+
+<p>Check if input is available. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if a non-empty sequence of characters is available to get. </dd></dl>
 
 </div>
 </div>
@@ -972,6 +986,30 @@ Protected Attributes</h2></td></tr>
 
 <p>Get the std::istream of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to current std::istream or NULL. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a1911f432346e847695e868386ab6acbd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">reflex::Input::operator bool </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>true if a non-empty sequence of characters is available to get. </dd></dl>
 
 </div>
 </div>
@@ -1103,7 +1141,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a <code>FILE*</code> or <code>std::istream</code> source). </p>
 <dl class="section return"><dt>Returns</dt><dd>the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable. </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>This function SHOULD NOT be used after <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get()</a>. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function SHOULD NOT be used after <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy subsequent character sequence data into buffer. ">get()</a>. </dd></dl>
 
 </div>
 </div>
@@ -1317,7 +1355,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Dec 9 2016 22:49:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Dec 29 2016 14:04:07 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
