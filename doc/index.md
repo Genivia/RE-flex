@@ -1134,16 +1134,16 @@ Note that Flex `switch_streams(i, o)` is the same as invoking the `in(i)` and
 `yyin=&i` or invoking `in(i)`.
 
 Use **reflex** options `−−flex` and `−−bison` to enable global Flex actions and
-variables.  This makes Flex actions and variables globally accessible with the
-exception of `yy_push_state`, `yy_pop_state`, `yy_top_state`.  Also, use the
-global action `yyinput` instead of `input`, use the global action `yyunput`
-instead of `unput`, and use the global action `yyoutput` instead of `output`.
-With these options, the globals `yytext`, `yyleng`, and `yylineno` are
-available.  However, `yyin` and `yyout` are macros and cannot be (re)declared
-or accessed as global variables.  To avoid compilation errors, use **reflex**
-option `−−header-file` to generate a header file `lex.yy.h` to include in your
-code to use the global use Flex actions and variables.  See \ref reflex-bison
-for more details on the `−−bison` options to use.
+variables.  This makes Flex actions and variables globally accessible outside
+of the rules section, with the exception of `yy_push_state`, `yy_pop_state`,
+`yy_top_state`.  Outside the rules section you must use the global action
+`yyinput` instead of `input`, global action `yyunput` instead of `unput`, and
+global action `yyoutput` instead of `output`.  Because `yyin` and `yyout` are
+macros they cannot be (re)declared or accessed as global variables, but they
+can be used as if these were variables.  To avoid compilation errors, use
+**reflex** option `−−header-file` to generate a header file `lex.yy.h` to
+include in your code to use the global use Flex actions and variables.
+See \ref reflex-bison for more details on the `−−bison` options to use.
 
 From the first entries in the table shown above you may have guessed correctly
 that `text()` is just a shorthand for `matcher().text()`, since `matcher()` is
@@ -1155,7 +1155,7 @@ actions are also supported:
 
   RE/flex action            | Flex action             | Result
   ------------------------- | ----------------------- | -----------------------
-  `matcher().buffer()`      | *n/a*                   | buffer all input
+  `matcher().buffer()`      | *n/a*                   | buffer entire input
   `matcher().buffer(n)`     | *n/a*                   | set buffer size to `n`
   `matcher().interactive()` | `yy_set_interactive(1)` | set interactive input
   `matcher().flush()`       | `YY_FLUSH_BUFFER`       | flush input buffer
@@ -1879,8 +1879,8 @@ This switch only applies to ASCII letters.
 
 ### `-B`, `−−batch`
 
-This generates a batch input scanner that reads all input at once when
-possible.  This scanner is fast, but consumes more memory depending on the
+This generates a batch input scanner that reads the entire input all at once
+when possible.  This scanner is fast, but consumes more memory depending on the
 input data size.
 
 ### `-I`, `−−interactive`, `−−always-interactive`
@@ -1932,7 +1932,7 @@ This disables warnings.
 
 This specifies NAME as a prefix for the generated `yyFlexLexer` class to
 replace the default `yy` prefix.  This option is only useful with the `−−flex`
-option.
+option and can be used in combination with `−−bison`.
 
 ### `-L`, `−−noline`
 
@@ -2651,16 +2651,19 @@ specification defines the tokens `CONST_NUMBER` and `CONST_STRING` and the type
 ```
 </div>
 
-When option `−−flex` is used together with `−−bison`, the `yytext`, `yyleng`,
+When option `−−flex` is used with `−−bison`, the `yytext`, `yyleng`,
 and `yylineno` globals are accessible to the Bison/Yacc parser.  In fact, all
-Flex actions and variables are globally accessible with the exception of
-`yy_push_state`, `yy_pop_state`, `yy_top_state` that are class methods.
-Furthermore, `yyin` and `yyout` are macros and cannot be (re)declared or
-accessed as global variables.  To use these and avoid compilation errors, use
-**reflex** option `−−header-file` to generate a header file `lex.yy.h` to
-include in your code.  Finally, use `yyinput` instead of `input`, use the
-global action `yyunput` instead of `unput`, and use the global action
-`yyoutput` instead of `output`.
+Flex actions and variables are globally accessible (outside the rules section
+of the lex specification) with the exception of `yy_push_state`,
+`yy_pop_state`, and `yy_top_state` that are class methods.  Furthermore, `yyin`
+and `yyout` are macros and cannot be (re)declared or accessed as global
+variables, but these can be used as if they are variables to assign a new input
+source and to set the output stream.  To avoid compilation errors when using
+globals such as `yyin`, use **reflex** option `−−header-file` to generate a
+header file `lex.yy.h` to include in your code.  Finally, in code outside of
+the rules section you must use `yyinput` instead of `input`, use the global
+action `yyunput` instead of `unput`, and use the global action `yyoutput`
+instead of `output`.
 
 See the generated `lex.yy.cpp` BISON section, which contains declarations
 specific to Bison when the `−−bison` option is used.
@@ -2736,6 +2739,11 @@ To change the generated code for use with Bison, use the following options:
   `−−flex` `−−bison-locations`                  | `int yyFlexLexer::yylex(YYSTYPE& yylval)` | `yyFlexLexer YY_SCANNER`, `int yylex(YYSTYPE*, YYLTYPE*)` 
   `−−bison-locations` `−−bison-bridge`          | `int Lexer::lex(YYSTYPE& yylval)`         | `int yylex(YYSTYPE*, YYLTYPE*, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
   `−−flex` `−−bison-locations` `−−bison-bridge` | `int yyFlexLexer::yylex(YYSTYPE& yylval)` | `int yylex(YYSTYPE*, YYLTYPE*, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
+
+Option `−−prefix` may be used with option `−−flex` to change the prefix of the
+generated `yyFlexLexer` and `yylex`.  This option can be combined with option
+`−−bison` to also change the prefix of the generated `yytext`, `yyleng`, and
+`yylineno`.
 
 The **reflex** option `−−bison-bridge` expects a Bison "pure parser":
 

@@ -235,7 +235,7 @@ Changelog
 - Dec  1, 2016: 0.9.6 portability improvements
 - Dec  6, 2016: 0.9.7 bug fixes, added option `--regexp-file`, Python tokenizer
 - Dec  9, 2016: 0.9.8 fixes minor issues, improved reflex tool options `--full` and `--fast`, generates scanner with FSM table or a fast scanner with FSM code, respectively
-- Dec 28, 2016: 0.9.9 bug fixes and improved Flex compatibility
+- Jan  8, 2017: 0.9.9 bug fixes and improved Flex compatibility
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

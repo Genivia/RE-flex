@@ -178,7 +178,7 @@ static void help(const char *message = NULL, const char *arg = NULL)
         -a, --dotall\n\
                 dot in patterns match newline\n\
         -B, --batch\n\
-                generate scanner for batch input by buffering all input\n\
+                generate scanner for batch input by reading the entire input\n\
         -f, --full\n\
                 generate full scanner with FSM opcode tables\n\
         -F, --fast\n\
@@ -414,7 +414,6 @@ void Reflex::init(int argc, char **argv)
   inclusive.insert(0);
   in = &std::cin;
   out = &std::cout;
-  options["outfile"] = "lex.yy.cpp";
   lineno = 0;
 
   for (int i = 1; i < argc; ++i)
@@ -1658,14 +1657,26 @@ void Reflex::write(void)
   if (options["lex"].empty())
     options["lex"] = options["prefix"] + "lex";
   if (options["header_file"] == "true")
-    options["header_file"] = "lex.yy.h";
+  {
+    if (options["prefix"].empty())
+      options["header_file"] = "lex.yy.h";
+    else
+      options["header_file"] = std::string("lex.").append(options["prefix"]).append(".h");
+  }
   if (options["matcher"] == "reflex")
     options["matcher"].clear();
   else if (!options["matcher"].empty() && options["matcher"] != "boost" && options["matcher"] != "boost-perl")
     warning("using custom matcher ", options["matcher"].c_str());
   std::ofstream ofs;
-  if (options["stdout"].empty() && !options["outfile"].empty())
+  if (options["stdout"].empty())
   {
+    if (options["outfile"].empty())
+    {
+      if (options["prefix"].empty())
+        options["outfile"] = "lex.yy.cpp";
+      else
+        options["outfile"] = std::string("lex.").append(options["prefix"]).append(".cpp");
+    }
     ofs.open(options["outfile"].c_str(), std::ofstream::out);
     if (!ofs.is_open())
       abort("opening file ", options["outfile"].c_str());
@@ -1807,9 +1818,9 @@ void Reflex::write(void)
       write_banner("BISON");
       if (!options["flex"].empty())
         *out <<
-          "extern char *yytext;\n"
-          "extern yy_size_t yyleng;\n"
-          "extern int yylineno;\n";
+          "extern char *" << options["prefix"] << "text;\n"
+          "extern yy_size_t " << options["prefix"] << "leng;\n"
+          "extern int " << options["prefix"] << "lineno;\n";
       *out <<
         "extern ";
       if (!options["namespace"].empty())
@@ -1824,8 +1835,11 @@ void Reflex::write(void)
         " YY_SCANNER;\n\n"
         "#ifndef YY_EXTERN_C\n"
         "#define YY_EXTERN_C\n"
-        "#endif\n\n"
-        "YY_EXTERN_C int yylex(void);\n";
+        "#endif\n\n";
+      if (!options["flex"].empty())
+        *out << "YY_EXTERN_C int " << options["prefix"] << "lex(void);\n";
+      else
+        *out << "YY_EXTERN_C int yylex(void);\n";
     }
     *out << std::endl << "#endif" << std::endl;
     if (!out->good())
@@ -2217,20 +2231,20 @@ void Reflex::write_lexer(void)
       "#endif\n\n";
     if (!options["flex"].empty())
       *out <<
-        "char *yytext;\n"
-        "yy_size_t yyleng;\n"
-        "int yylineno;\n"
-        "YY_EXTERN_C int yylex(void)\n"
+        "char *" << options["prefix"] << "text;\n"
+        "yy_size_t " << options["prefix"] << "leng;\n"
+        "int " << options["prefix"] << "lineno;\n"
+        "YY_EXTERN_C int " << options["prefix"] << "lex(void)\n"
         "{\n"
         "  int res = YY_SCANNER." << options["lex"] << "();\n"
-        "  yytext = const_cast<char*>(YY_SCANNER.YYText());\n"
-        "  yyleng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
-        "  yylineno = static_cast<int>(YY_SCANNER.lineno());\n"
+        "  " << options["prefix"] << "text = const_cast<char*>(YY_SCANNER.YYText());\n"
+        "  " << options["prefix"] << "leng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
+        "  " << options["prefix"] << "lineno = static_cast<int>(YY_SCANNER.lineno());\n"
         "  return res;\n"
         "}\n\n"
-        "#define yytext const_cast<char*>(YY_SCANNER.YYText())\n"
-        "#define yyleng static_cast<yy_size_t>(YY_SCANNER.YYLeng())\n"
-        "#define yylineno static_cast<int>(YY_SCANNER.lineno())\n";
+        "#define " << options["prefix"] << "text const_cast<char*>(YY_SCANNER.YYText())\n"
+        "#define " << options["prefix"] << "leng static_cast<yy_size_t>(YY_SCANNER.YYLeng())\n"
+        "#define " << options["prefix"] << "lineno static_cast<int>(YY_SCANNER.lineno())\n";
     else
       *out <<
         "YY_EXTERN_C int yylex(void)\n"

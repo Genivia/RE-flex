@@ -71,7 +71,7 @@
 #define YY_SCANNER             (*this)
 #endif
 
-/// Flex-compatible macro.
+/// Flex-compatible macro: size of default input buffer.
 #ifndef YY_BUF_SIZE
 #define YY_BUF_SIZE            (16384)
 #endif
@@ -81,7 +81,7 @@
 #define yy_state_type          int
 #endif
 
-/// Flex-compatible macro.
+/// Flex-compatible macro: yy_size_t type of yyleng.
 #ifndef yy_size_t
 #define yy_size_t              size_t
 #endif
@@ -107,10 +107,10 @@
 /// Flex-compatible macro: the current start condition.
 #define yy_current_state       YY_SCANNER.start()
 
-/// Flex-compatible macro: the current matcher buffer.
+/// Flex-compatible macro: the current matcher buffer (use only when scanner has started).
 #define YY_CURRENT_BUFFER      YY_SCANNER.matcher()
 
-/// Flex-compatible macro: the buffer flush action.
+/// Flex-compatible macro: the buffer flush action (use only when scanner has started).
 #define YY_FLUSH_BUFFER        YY_SCANNER.matcher().flush()
 
 /// Flex-compatible macro: the matched text.
@@ -122,7 +122,7 @@
 /// Flex-compatible macro: the line number of the matched text.
 #define yylineno               static_cast<int>(YY_SCANNER.matcher().lineno())
 
-/// Flex-compatible macro: the matched action index.
+/// Flex-compatible macro: the matched action index (use only when scanner has started).
 #define yy_act                 YY_SCANNER.matcher().accept()
 
 /// Flex-compatible macro: the current input (reflex::Input can be a stream, file, or string).
@@ -131,13 +131,13 @@
 /// Flex-compatible macro: the current output stream.
 #define yyout                  YY_SCANNER.os_
 
-/// Flex-compatible macro: at-begin-of-line check.
+/// Flex-compatible macro: at-begin-of-line check (use only when scanner has started).
 #define YY_AT_BOL()            YY_SCANNER.matcher().at_bol()
 
-/// Flex-compatible macro: a begin-of-line forced set.
+/// Flex-compatible macro: a begin-of-line forced set (use only when scanner has started).
 #define yy_set_bol(b)          YY_SCANNER.matcher().set_bol(b)
 
-/// Flex-compatible macro: interactive mode on/off.
+/// Flex-compatible macro: interactive mode on/off (use only when scanner has started).
 #define yy_set_interactive(b)  YY_SCANNER.matcher().buffer((b) ? 1 : 0)
 
 /// Flex-compatible macro: create a new buffer.
@@ -170,10 +170,10 @@
 /// Flex-compatible macro: output one character.
 #define yyoutput(c)            YY_SCANNER.output(c)
 
-/// Flex-compatible macro: append the next matched text to the currently matched text.
+/// Flex-compatible macro: append the next matched text to the currently matched text (use only when scanner has started).
 #define yymore()               YY_SCANNER.matcher().more()
 
-/// Flex-compatible macro: truncate the yytext length of the match to n characters in length and reposition for next match.
+/// Flex-compatible macro: truncate the yytext length of the match to n characters in length and reposition for next match (use only when scanner has started).
 #define yyless(n)              YY_SCANNER.matcher().less(n)
 
 /// Flex-compatible macro: the debug flag.
@@ -198,13 +198,13 @@
 #define yyget_lineno(s)        static_cast<FlexLexer*>(s)->lineno()
 
 /// Flex-compatible macro: the in accessor for reentrant scanner.
-#define yyget_in(s)            static_cast<FlexLexer*>(s)->matcher().in
+#define yyget_in(s)            static_cast<FlexLexer*>(s)->in()
 
 /// Flex-compatible macro: the out accessor for reentrant scanner.
 #define yyget_out(s)           static_cast<FlexLexer*>(s)->os_
 
 /// Flex-compatible macro: the in accessor for reentrant scanner.
-#define yyset_in(i, s)         static_cast<FlexLexer*>(s)->matcher().input(i)
+#define yyset_in(i, s)         static_cast<FlexLexer*>(s)->in(i)
 
 /// Flex-compatible macro: the out accessor for reentrant scanner.
 #define yyset_out(o, s)        (static_cast<FlexLexer*>(s)->os_ = o)
