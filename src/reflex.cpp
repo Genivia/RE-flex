@@ -30,7 +30,7 @@
 @file      reflex.cpp
 @brief     RE/flex scanner generator replacement for Flex/Lex
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -963,7 +963,7 @@ std::string Reflex::getregex(size_t& pos)
           }
           else
           {
-            // collect \p{X}, \u{X}, \x{X} and \u{X}-\u{Y}, translate, and append as alternations
+            // collect UTF-8 char sequences, \p{X}, \u{X}, \x{X} and \u{X}-\u{Y}, translate, and append as alternations
             regex.append(line.substr(loc, pos - loc));
             loc = pos++;
             std::string lifted;
@@ -1115,10 +1115,22 @@ std::string Reflex::getregex(size_t& pos)
                       loc = pos + 1;
                     }
                     ++pos;
-                    wc = -1; // TODO octal may be part of a range
+                    wc = -1; // FIXME: UTF-8 or octal may be part of a bracket range
                     break;
                 }
                 range = false;
+              }
+              else if ((line.at(pos) & 0x80) == 0x80 && !options["unicode"].empty()) // lift UTF-8 char sequence from [ ]
+              {
+                if (lifted.empty())
+                  regex.append("(?:");
+                regex.append(line.substr(loc, pos - loc));
+                lifted.append("|");
+                lifted.push_back(line.at(pos));
+                int c;
+                while (++pos < linelen && ((c = line.at(pos)) & 0xc0) == 0x80)
+                  lifted.push_back(c);
+                loc = pos--;
               }
               else if (line.at(pos) == '[' && pos + 1 < linelen && line.at(pos + 1) == ':')
               {

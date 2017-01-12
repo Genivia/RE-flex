@@ -209,7 +209,6 @@ Read more about RE/flex in the [manual][manual-url].
 TODO / Work in progress / Nice to have
 --------------------------------------
 
-- Should `columno` count bytes or Unicode chars? Every UTF-8 byte is counted, perhaps should count UTF-8 encoded char as one.
 - Option to support Unicode without UTF-8 (RE/flex matcher/FSM is prepared)
 
 
@@ -217,7 +216,7 @@ License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2015-2016, All rights reserved.   
+Copyright (c) 2015-2017, All rights reserved.   
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.

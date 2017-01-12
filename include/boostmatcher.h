@@ -1,5 +1,5 @@
 /******************************************************************************\
-* Copyright (c) 2014, Robert van Engelen, Genivia Inc. All rights reserved.    *
+* Copyright (c) 2016, Robert van Engelen, Genivia Inc. All rights reserved.    *
 *                                                                              *
 * Redistribution and use in source and binary forms, with or without           *
 * modification, are permitted provided that the following conditions are met:  *
@@ -30,7 +30,7 @@
 @file      boostmatcher.h
 @brief     Boost::regex-based matcher engines for pattern matching
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
