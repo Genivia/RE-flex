@@ -258,7 +258,6 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
       }
       else if (!std::less<bound_type>()(j->first, i->first) && !std::less<bound_type>()(i->second, j->second))
       {
-        ++i;
         ++j;
       }
       else
@@ -268,7 +267,7 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
         // while [lo,hi] overlaps with range(s) in the set, erase ranges and adjust [lo,hi]
         do
         {
-          if (std::less<bound_type>()(i->first, r.first)) // lo = min(lo, i.lo)
+          if (std::less<bound_type>()(i->first, r.first)) // lo = min(i.lo, lo)
             r.first = i->first;
           if (std::less<bound_type>()(r.second, i->second)) // hi = max(hi, i.hi)
             r.second = i->second;
@@ -282,7 +281,7 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
     }
     // add ranges that are in rs that are not in this range set
     while (j != rs.end())
-      container_type::insert(i, *j++); // insert with hint i == end()
+      container_type::insert(this->end(), *j++); // insert with hint i == end()
     return *this;
   }
   /// Update ranges to insert the ranges of the given range set, same as Ranges::operator|=(rs).
@@ -371,9 +370,9 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
     return Ranges(*this) |= rs;
   }
   /// Returns the intersection of two range sets.
-  Ranges operator&(const Ranges& rs) ///< ranges to intersect
+  Ranges operator&(const Ranges& rs) ///< range set to intersect
     const
-    /// @returns the intersection of this set and rs.
+    /// @returns the intersection of this range set and rs.
   {
     const_iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -418,9 +417,10 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
     }
     return r;
   }
-  /// TODO
-  /*
-  bool operator<(const Ranges& rs) const
+  /// True if this range set is lexicographically less than range set rs.
+  bool operator<(const Ranges& rs) ///< ranges
+    const
+    /// @returns true if this range set is less than rs.
   {
     const_iterator i = this->begin();
     const_iterator j = rs.begin();
@@ -439,19 +439,27 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
     }
     return false;
   }
-  bool operator>(const Ranges& rs) const
+  /// True if this range set is lexicographically greater than range set rs.
+  bool operator>(const Ranges& rs) ///< ranges
+    const
+    /// @returns true if this range set is greater than rs.
   {
     return rs.operator<(*this);
   }
-  bool operator<=(const Ranges& rs) const
+  /// True if this range set is lexicographically less or equal to range set rs.
+  bool operator<=(const Ranges& rs) ///< ranges
+    const
+    /// @returns true if this rnage set is less or equal to rs.
   {
     return !operator>(rs);
   }
-  bool operator>=(const Ranges& rs) const
+  /// True if this range set is lexicographically greater or equal to range set rs.
+  bool operator>=(const Ranges& rs) ///< ranges
+    const
+    /// @returns true if this is greater or equal to rs.
   {
     return !operator<(rs);
   }
-  */
   /// Return true if this set of ranges contains at least one range, i.e. is not empty.
   bool any() const
     /// @returns true if non empty, false if empty.

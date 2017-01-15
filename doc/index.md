@@ -22,7 +22,7 @@ supports Flex options.
 
 The features of RE/flex include:
 
-- integrated support for Unicode
+- integrated support for Unicode, auto-detects BOM in files (UTF-8/16/32);
 - optional "free space mode" improves lex specification readability;
 - regular expressions may contain lazy quantifiers;
 - regular expressions may contain word boundary anchors;
@@ -841,7 +841,7 @@ as a replacement of the classic Flex and Lex tools:
     $ reflex −−flex −−bison lexspec.l
 
 The first option `−−flex` specifies that `lexspec.l` is a classic Lex
-specification with `yytext` or `YYText()` and the usual `yy` variables and
+specification with `yytext` or `YYText()` and the usual "yy" variables and
 functions.
 
 The second option `−−bison` generates a scanner class and auxiliary code for
@@ -922,7 +922,7 @@ reflecting the C code expected with Flex, then rest assured that RE/flex
 supports the classic Flex and Lex actions such as `yytext` instead of `text()`
 and `*yyout` instead of `out()`.  Simply use option `−−flex` to regress to the
 C-style Flex names and actions.  Use options `−−flex` and `−−bison` to regress
-even further to generated a global `yylex()` function and `yy` variables.
+even further to generated a global `yylex()` function and "yy" variables.
 
 To create a stand-alone scanner, we add `main` to the user code section:
 
@@ -1841,13 +1841,17 @@ Shorter forms can be used, with each option on a separate line:
 ```
 </div>
 
+Options that affect the regular expressions such as `%%option unicode` and
+`%%option dotall` MUST be specified before the regular expressions are defined
+and used in the specification.
+
 The **reflex** command-line options are listed below.
 
 ### `−+`, `−−flex`
 
 This generates a `yyFlexLexer` scanner class that is compatible with the
 Flex-generated `yyFlexLexer` scanner class (assuming Flex with option `−+` for
-C++).  The generated `yyFlexLexer` class has the usual `yytext` and other `yy`
+C++).  The generated `yyFlexLexer` class has the usual `yytext` and other "yy"
 variables and functions, as defined by the lex specification standard.  Without
 this option, RE/flex actions should be used that are lexer class methods such
 as `echo()` and `reflex::AbstractMatcher` class methods such as
@@ -1856,7 +1860,7 @@ as `echo()` and `reflex::AbstractMatcher` class methods such as
 ### `−−bison`
 
 This generates a scanner that works with Bison parsers, by defining global
-(non-MT-safe and non-reentrant) `yy` variables and functions.  See
+(non-MT-safe and non-reentrant) "yy" variables and functions.  See
 \ref reflex-bison for more details.  Use option `−−noyywrap` to remove the
 dependency on the global `yywrap()` function.
 
@@ -2134,9 +2138,12 @@ matching.  It has no effect otherwise.
 
 ### `−−yywrap` and `−−noyywrap`
 
-This generates a scanner that calls the global `int yywrap()` function when EOF
-is reached.  Only applies when option `−−flex` is used.  Use `−−noyywrap` to
-disable.
+Option `−−yywrap` generates a scanner that calls the global `int yywrap()`
+function when EOF is reached.  Only applicable when `−−flex` is used for
+compatibility.  The same applies when options `−−flex`  and `−−bison` are used
+together.  Use `−−noyywrap` to disable the dependence on this global function.
+This option has no effect for C++ lexer classes, which have a virtual
+`int wrap()` (or `yywrap()` with option `−−flex`) method.
 
 ### `−−lineno`, `−−yymore`, `−−batch`
 
@@ -2982,10 +2989,10 @@ Some lex specification examples to generate scanners with RE/flex.
 The following Flex specification counts the lines, words, and characters on the
 input.  We use `yyleng` match text length to count 8-bit characters (bytes).
 
-To build this example with RE/flex, use **reflex** option `−−flex` to support
-the Flex `yy` variables and functions.  This generates a C++ scanner class
-`yyFlexLexer` that is compatible with the Flex scanner class (assuming Flex
-with option `-+` for C++).
+To build this example with RE/flex, use **reflex** option `−−flex` to generate
+Flex-compatible "yy" variables and functions.  This generates a C++ scanner
+class `yyFlexLexer` that is compatible with the Flex scanner class (assuming
+Flex with option `-+` for C++).
 
 <div class="alt">
 ```cpp
@@ -2998,12 +3005,12 @@ with option `-+` for C++).
 %option main
 
 nl      \r?\n
-wd      [^ \t\r\n]
+wd      [^ \t\r\n]+
 
 %%
 
-{nl}+   ch += yyleng; ++nl;
-{wd}+   ch += yyleng; ++wd;
+{nl}    ch += yyleng; ++nl;
+{wd}    ch += yyleng; ++wd;
 .       ++ch;
 <<EOF>> printf("%8d%8d%8d\n", nl, wd, ch); yyterminate();
 
@@ -3011,14 +3018,23 @@ wd      [^ \t\r\n]
 ```
 </div>
 
+To generate a scanner with a global `yylex()` function similar to Flex in C
+mode (i.e. without Flex option `-+`), use **reflex** option `−−bison` with the
+lex specification above.  This option when combined with `−−flex` produces the
+global "yy" functions and variables.  This means that you can use RE/flex
+scanners with Bison (Yacc) and with any other C code, assuming everything is
+compiled together with a C++ compiler.
+
 ### Example 2
 
 An improved implementation drops the use of global variables in favor of Lexer
 class member variables.  We also want to count Unicode letters with the `wd`
 counter instead of ASCII letters, which are single bytes while Unicode UTF-8
 encodings vary in size.  So we add the Unicode option and use `\w` to match
-Unicode word characters.  We drop the `−−flex` option and use RE/flex Lexer
-methods instead of the Flex `yy` functions:
+Unicode word characters.  Note that `.` (dot) matches Unicode, so the match
+length may be longer than one character that must be counted.  We drop the
+`−−flex` option and use RE/flex Lexer methods instead of the Flex "yy"
+functions:
 
 <div class="alt">
 ```cpp
@@ -3037,23 +3053,28 @@ methods instead of the Flex `yy` functions:
 %}
 
 %option unicode
-%option noyywrap
 %option main
+%option full
 
 nl      \r?\n
-wd      \w|[^ \t\r\n]
+wd      (\w|\p{Punctuation})+
 
 %%
 
-{nl}+   ch += size(); ++nl;
-{wd}+   ch += size(); ++wd;
-.       ++ch;
+{nl}    ch += size(); ++nl;
+{wd}    ch += size(); ++wd;
+.       ch += size();
 <<EOF>> out() << setw(8) << nl << setw(8) << wd << setw(8) << ch << endl;
         return 0;
 
 %%
 ```
 </div>
+
+This simple word count program differs slightly from the Unix wc utility,
+because the wc utility counts words delimited by wide character spaces
+(`iswspace`) whereas this program counts words made up from word characters
+combined with punctuation.
 
 ### Example 3
 

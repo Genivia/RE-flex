@@ -4,17 +4,17 @@
 int ch = 0, wd = 0, nl = 0;
 %}
 
-nl	\r?\n
-wd      \w|[^ \t\r\n]
+// the unicode option changes \w and . to match unicode
+%option main unicode full
 
-// the unicode option changes \w to match unicode word chars
-%option main unicode
+nl	\r?\n
+wd      (\w|\p{Punctuation})+
 
 %%
 
 {nl}	ch += yyleng; ++nl;
-{wd}+	ch += yyleng; ++wd;
-.       ++ch;
+{wd} 	ch += yyleng; ++wd;
+.       ch += yyleng;
 <<EOF>>	printf("%8d%8d%8d\n", nl, wd, ch); yyterminate();
 
 %%

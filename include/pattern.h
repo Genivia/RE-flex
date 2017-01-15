@@ -210,7 +210,7 @@ class Pattern {
     const throw (Error);
  private:
   typedef unsigned int         Char;
-#ifdef BITS
+#ifdef WITH_BITS
   typedef Bits                 Chars; ///< represent 8-bit char (+ meta char) set as a bitvector
 #else
   typedef ORanges<Char>        Chars; ///< represent (wide) char set as a set of ranges

@@ -1080,7 +1080,7 @@ void Pattern::compile(
         } while (target_state);
         if (!target_state)
           back_state = back_state->next = *branch_ptr = target_state = new State(pos);
-#ifdef BITS
+#ifdef WITH_BITS
         size_t lo = i->first.find_first(), j = lo, k = lo;
         for (;;)
         {
@@ -1399,7 +1399,7 @@ void Pattern::transition(
   {
     if (i->second == follow)
     {
-      // chars += i->first; // FIXME ??? is this needed ??? NO! because ranges do not overlap so chars cannot intersect
+      // chars |= i->first; // FIXME ??? is this needed ??? NO! because ranges do not overlap so chars cannot intersect
       rest |= i->first;
       moves.erase(i++);
     }
@@ -1659,7 +1659,7 @@ void Pattern::posix(size_t index, Chars& chars) const
 
 void Pattern::flip(Chars& chars) const
 {
-#ifdef BITS
+#ifdef WITH_BITS
   chars.reserve(256).flip();
 #else
   Chars flip;

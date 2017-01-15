@@ -1,7 +1,5 @@
 // test ranges.h
 
-#include "ranges.h"
-#include "bits.h"
 #include <bitset>
 #include <map>
 #include <iostream>
@@ -9,6 +7,8 @@
 #include <sys/times.h>
 #include <unistd.h>
 #include <cassert>
+#include "ranges.h"
+#include "bits.h"
 
 enum Color { RED, GREEN, BLUE };
 
@@ -186,7 +186,19 @@ Set of 4 ranges:
   ivals -= isec;
   assert(ivals.empty() == true);
 
-/* displays:
+  ORanges<int> ichar1, ichar2;
+  ichar1.insert('0','@');
+  ichar1.insert('^','`');
+  ichar2.insert('0','9');
+  ichar2.insert('A','Z');
+  ichar2.insert('_','_');
+  ichar2.insert('a','z');
+  ichar1 += ichar2;
+  for (Ranges<int>::const_iterator i = ivals.begin(); i != ivals.end(); ++i)
+    std::cout << "[" << (char)i->first << "," << (char)i->second << ")" << std::endl;
+  assert(ichar1.contains(ichar2) == true);
+
+/*displays:
 Set of 1 open-ended ranges:
 [100,401)
 200 is in the set

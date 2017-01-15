@@ -1,6 +1,7 @@
 // simple unix-like wc (word count) with lexer class data members
 
 %{
+#include <cstdio>
 #include <iostream>
 #include <iomanip>
 using namespace std;

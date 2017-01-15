@@ -1,4 +1,6 @@
-// JSON parser tested against <http://seriot.ch/parsing_json.php>
+// A JSON parser and printer
+//
+// Parser was tested against <http://seriot.ch/parsing_json.php>
 //
 // This example demonstrates:
 // 1.  %o flex compatible actions yytext and BEGIN
@@ -169,7 +171,7 @@ class JSONParser : public yyFlexLexer {
   size_t level;
 };
 
-// Print JSON string with unicode
+// Print wide string as JSON string encoded as UTF-8
 void print_string(std::ostream& os, const std::wstring& s) {
   os << "\"";
   for (std::wstring::const_iterator i = s.begin(); i != s.end(); ++i) {
@@ -227,15 +229,17 @@ int main(int argc, char **argv) {
   if (argc > 1 && (fd = fopen(argv[1], "r")) == NULL)
     exit(EXIT_FAILURE);
   JSON data;
+  // parse JSON from stdin or a file provided as a command-line argument (FILE* permits UTF BOM detection)
   JSONParser parser(fd);
-  // parse the JSON data from stdin and print it
   if (parser.parse(data) == JSON::ERR) {
     std::cerr <<
-      "Error at (" << parser.lineno() << "," << parser.columno() <<
-      ") when looking at " <<
-      parser.text() << std::endl;
+      "Error at (" << parser.lineno() << "," << parser.columno() << ") when looking at " << parser.text() <<
+      std::endl;
     exit(EXIT_FAILURE);
   }
+  if (fd)
+    fclose(fd);
+  // print JSON value
   std::cout << data;
   return 0;
 }
