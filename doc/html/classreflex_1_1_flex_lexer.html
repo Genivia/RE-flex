@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::FlexLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 8 2017</div>
+      <div style="float: right; font-size: 10px;">updated Sat Jan 14 2017</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -52,9 +52,9 @@
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classreflex_1_1_flex_lexer-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">reflex::FlexLexer&lt; M &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
@@ -87,8 +87,14 @@ Collaboration diagram for reflex::FlexLexer&lt; M &gt;:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer_1_1_matcher.html">Matcher</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extends <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. ">reflex::AbstractLexer::Matcher</a> for Flex-compatibility.  <a href="classreflex_1_1_flex_lexer_1_1_matcher.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extends reflex::AbstractLexer&lt;M&gt;::Matcher for Flex-compatibility.  <a href="classreflex_1_1_flex_lexer_1_1_matcher.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a037e7938cb95e20d0ad429d7b9918d5a"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a>&lt; M &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a037e7938cb95e20d0ad429d7b9918d5a">BaseLexer</a></td></tr>
+<tr class="memdesc:a037e7938cb95e20d0ad429d7b9918d5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Typedef for the abstract base class.  <a href="#a037e7938cb95e20d0ad429d7b9918d5a">More...</a><br /></td></tr>
+<tr class="separator:a037e7938cb95e20d0ad429d7b9918d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -154,14 +160,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a70ee52cef2c37c2ca47a686eea75a5db inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the matcher (and its current state) for scanning.  <a href="#a70ee52cef2c37c2ca47a686eea75a5db">More...</a><br /></td></tr>
 <tr class="separator:a70ee52cef2c37c2ca47a686eea75a5db inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e93b0111f4946f8b16690bd60bfbd37 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a0e93b0111f4946f8b16690bd60bfbd37">matcher</a> (void) const </td></tr>
-<tr class="memdesc:a0e93b0111f4946f8b16690bd60bfbd37 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current matcher.  <a href="#a0e93b0111f4946f8b16690bd60bfbd37">More...</a><br /></td></tr>
+<tr class="memdesc:a0e93b0111f4946f8b16690bd60bfbd37 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the current matcher.  <a href="#a0e93b0111f4946f8b16690bd60bfbd37">More...</a><br /></td></tr>
 <tr class="separator:a0e93b0111f4946f8b16690bd60bfbd37 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a203aa970eb8f9bc13559b180118ffed9 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a203aa970eb8f9bc13559b180118ffed9">ptr_matcher</a> (void) const </td></tr>
+<tr class="memdesc:a203aa970eb8f9bc13559b180118ffed9 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the current matcher, NULL if none was set.  <a href="#a203aa970eb8f9bc13559b180118ffed9">More...</a><br /></td></tr>
+<tr class="separator:a203aa970eb8f9bc13559b180118ffed9 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ab259fa3a2881fc2eb5580967f769b4 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a5ab259fa3a2881fc2eb5580967f769b4">new_matcher</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;input)</td></tr>
 <tr class="memdesc:a5ab259fa3a2881fc2eb5580967f769b4 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new matcher for the given input.  <a href="#a5ab259fa3a2881fc2eb5580967f769b4">More...</a><br /></td></tr>
 <tr class="separator:a5ab259fa3a2881fc2eb5580967f769b4 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c1e5064cc9a248871c7b3b3f3dc61b3 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a2c1e5064cc9a248871c7b3b3f3dc61b3">del_matcher</a> (<a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *<a class="el" href="classreflex_1_1_abstract_lexer.html#a70ee52cef2c37c2ca47a686eea75a5db">matcher</a>) const </td></tr>
-<tr class="memdesc:a2c1e5064cc9a248871c7b3b3f3dc61b3 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a matcher.  <a href="#a2c1e5064cc9a248871c7b3b3f3dc61b3">More...</a><br /></td></tr>
-<tr class="separator:a2c1e5064cc9a248871c7b3b3f3dc61b3 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45d00ce513ed727dc4fdde304fcb8d97 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a45d00ce513ed727dc4fdde304fcb8d97">del_matcher</a> (<a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *<a class="el" href="classreflex_1_1_abstract_lexer.html#a70ee52cef2c37c2ca47a686eea75a5db">matcher</a>)</td></tr>
+<tr class="memdesc:a45d00ce513ed727dc4fdde304fcb8d97 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a matcher.  <a href="#a45d00ce513ed727dc4fdde304fcb8d97">More...</a><br /></td></tr>
+<tr class="separator:a45d00ce513ed727dc4fdde304fcb8d97 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7da8596b9eeb820214e2630a331e43d inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#aa7da8596b9eeb820214e2630a331e43d">push_matcher</a> (<a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *<a class="el" href="classreflex_1_1_abstract_lexer.html#a70ee52cef2c37c2ca47a686eea75a5db">matcher</a>)</td></tr>
 <tr class="memdesc:aa7da8596b9eeb820214e2630a331e43d inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push the current matcher on the stack and use the given matcher for scanning.  <a href="#aa7da8596b9eeb820214e2630a331e43d">More...</a><br /></td></tr>
 <tr class="separator:aa7da8596b9eeb820214e2630a331e43d inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,7 +196,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a2b2600310dd893711df5b357b4c79d9e"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a2b2600310dd893711df5b357b4c79d9e">LexerInput</a> (char *s, size_t n)</td></tr>
-<tr class="memdesc:a2b2600310dd893711df5b357b4c79d9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked by <a class="el" href="classreflex_1_1_flex_lexer_1_1_matcher.html" title="Extends reflex::AbstractLexer::Matcher for Flex-compatibility. ">FlexLexer::Matcher</a> to read input character sequence.  <a href="#a2b2600310dd893711df5b357b4c79d9e">More...</a><br /></td></tr>
+<tr class="memdesc:a2b2600310dd893711df5b357b4c79d9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked by <a class="el" href="classreflex_1_1_flex_lexer_1_1_matcher.html" title="Extends reflex::AbstractLexer&lt;M&gt;::Matcher for Flex-compatibility. ">FlexLexer::Matcher</a> to read input character sequence.  <a href="#a2b2600310dd893711df5b357b4c79d9e">More...</a><br /></td></tr>
 <tr class="separator:a2b2600310dd893711df5b357b4c79d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7240a5020fb06c2548e26017e77dfed"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#ab7240a5020fb06c2548e26017e77dfed">LexerOutput</a> (const char *s, size_t n)</td></tr>
 <tr class="memdesc:ab7240a5020fb06c2548e26017e77dfed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked by ECHO and <a class="el" href="classreflex_1_1_flex_lexer.html#a70353b2ef20bec00e1e3ca724fef4652" title="Output one character. ">FlexLexer::output</a>.  <a href="#ab7240a5020fb06c2548e26017e77dfed">More...</a><br /></td></tr>
@@ -221,11 +230,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:ab3469ff468c7a2472af990876110b227 inherit pro_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stack top start condition state.  <a href="#ab3469ff468c7a2472af990876110b227">More...</a><br /></td></tr>
 <tr class="separator:ab3469ff468c7a2472af990876110b227 inherit pro_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:ac98e322a100ad3faf2a1bb5efabd6c4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="flexlexer_8h.html#a26938d921de835f6183c02e54cf08828">YY_EXTRA_TYPE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#ac98e322a100ad3faf2a1bb5efabd6c4d">yyextra</a></td></tr>
-<tr class="memdesc:ac98e322a100ad3faf2a1bb5efabd6c4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible reentrant YY_EXTRA_TYPE yyextra.  <a href="#ac98e322a100ad3faf2a1bb5efabd6c4d">More...</a><br /></td></tr>
-<tr class="separator:ac98e322a100ad3faf2a1bb5efabd6c4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_attribs_classreflex_1_1_abstract_lexer"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classreflex_1_1_abstract_lexer')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer&lt; M &gt;</a></td></tr>
 <tr class="memitem:a31804738641329190e2ab79c0429d805 inherit pro_attribs_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a31804738641329190e2ab79c0429d805">matcher_</a></td></tr>
 <tr class="memdesc:a31804738641329190e2ab79c0429d805 inherit pro_attribs_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">the matcher used for scanning  <a href="#a31804738641329190e2ab79c0429d805">More...</a><br /></td></tr>
@@ -260,7 +266,24 @@ class reflex::FlexLexer&lt; M &gt;</h3>
   </table>
   </dd>
 </dl>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a class="anchor" id="a037e7938cb95e20d0ad429d7b9918d5a"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a>&lt;M&gt; <a class="el" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer</a>&lt; M &gt;::<a class="el" href="classreflex_1_1_flex_lexer.html#a037e7938cb95e20d0ad429d7b9918d5a">BaseLexer</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Typedef for the abstract base class. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a823a6c12df298eef586dcad894d9132f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -404,7 +427,7 @@ template&lt;typename M &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Invoked by <a class="el" href="classreflex_1_1_flex_lexer_1_1_matcher.html" title="Extends reflex::AbstractLexer::Matcher for Flex-compatibility. ">FlexLexer::Matcher</a> to read input character sequence. </p>
+<p>Invoked by <a class="el" href="classreflex_1_1_flex_lexer_1_1_matcher.html" title="Extends reflex::AbstractLexer&lt;M&gt;::Matcher for Flex-compatibility. ">FlexLexer::Matcher</a> to read input character sequence. </p>
 <dl class="section return"><dt>Returns</dt><dd>the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -797,38 +820,13 @@ template&lt;typename M &gt; </div>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="ac98e322a100ad3faf2a1bb5efabd6c4d"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename M &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="flexlexer_8h.html#a26938d921de835f6183c02e54cf08828">YY_EXTRA_TYPE</a> <a class="el" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer</a>&lt; M &gt;::yyextra</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Flex-compatible reentrant YY_EXTRA_TYPE yyextra. </p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="flexlexer_8h.html">flexlexer.h</a></li>
 </ul>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 8 2017 21:28:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Jan 14 2017 19:50:07 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

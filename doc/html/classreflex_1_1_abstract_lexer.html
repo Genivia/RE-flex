@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 8 2017</div>
+      <div style="float: right; font-size: 10px;">updated Sat Jan 14 2017</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -125,14 +125,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a70ee52cef2c37c2ca47a686eea75a5db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the matcher (and its current state) for scanning.  <a href="#a70ee52cef2c37c2ca47a686eea75a5db">More...</a><br /></td></tr>
 <tr class="separator:a70ee52cef2c37c2ca47a686eea75a5db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e93b0111f4946f8b16690bd60bfbd37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a0e93b0111f4946f8b16690bd60bfbd37">matcher</a> (void) const </td></tr>
-<tr class="memdesc:a0e93b0111f4946f8b16690bd60bfbd37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current matcher.  <a href="#a0e93b0111f4946f8b16690bd60bfbd37">More...</a><br /></td></tr>
+<tr class="memdesc:a0e93b0111f4946f8b16690bd60bfbd37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the current matcher.  <a href="#a0e93b0111f4946f8b16690bd60bfbd37">More...</a><br /></td></tr>
 <tr class="separator:a0e93b0111f4946f8b16690bd60bfbd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a203aa970eb8f9bc13559b180118ffed9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a203aa970eb8f9bc13559b180118ffed9">ptr_matcher</a> (void) const </td></tr>
+<tr class="memdesc:a203aa970eb8f9bc13559b180118ffed9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the current matcher, NULL if none was set.  <a href="#a203aa970eb8f9bc13559b180118ffed9">More...</a><br /></td></tr>
+<tr class="separator:a203aa970eb8f9bc13559b180118ffed9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ab259fa3a2881fc2eb5580967f769b4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a5ab259fa3a2881fc2eb5580967f769b4">new_matcher</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;input)</td></tr>
 <tr class="memdesc:a5ab259fa3a2881fc2eb5580967f769b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new matcher for the given input.  <a href="#a5ab259fa3a2881fc2eb5580967f769b4">More...</a><br /></td></tr>
 <tr class="separator:a5ab259fa3a2881fc2eb5580967f769b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c1e5064cc9a248871c7b3b3f3dc61b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a2c1e5064cc9a248871c7b3b3f3dc61b3">del_matcher</a> (<a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *<a class="el" href="classreflex_1_1_abstract_lexer.html#a70ee52cef2c37c2ca47a686eea75a5db">matcher</a>) const </td></tr>
-<tr class="memdesc:a2c1e5064cc9a248871c7b3b3f3dc61b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a matcher.  <a href="#a2c1e5064cc9a248871c7b3b3f3dc61b3">More...</a><br /></td></tr>
-<tr class="separator:a2c1e5064cc9a248871c7b3b3f3dc61b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45d00ce513ed727dc4fdde304fcb8d97"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a45d00ce513ed727dc4fdde304fcb8d97">del_matcher</a> (<a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *<a class="el" href="classreflex_1_1_abstract_lexer.html#a70ee52cef2c37c2ca47a686eea75a5db">matcher</a>)</td></tr>
+<tr class="memdesc:a45d00ce513ed727dc4fdde304fcb8d97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a matcher.  <a href="#a45d00ce513ed727dc4fdde304fcb8d97">More...</a><br /></td></tr>
+<tr class="separator:a45d00ce513ed727dc4fdde304fcb8d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7da8596b9eeb820214e2630a331e43d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#aa7da8596b9eeb820214e2630a331e43d">push_matcher</a> (<a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *<a class="el" href="classreflex_1_1_abstract_lexer.html#a70ee52cef2c37c2ca47a686eea75a5db">matcher</a>)</td></tr>
 <tr class="memdesc:aa7da8596b9eeb820214e2630a331e43d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push the current matcher on the stack and use the given matcher for scanning.  <a href="#aa7da8596b9eeb820214e2630a331e43d">More...</a><br /></td></tr>
 <tr class="separator:aa7da8596b9eeb820214e2630a331e43d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -341,7 +344,7 @@ template&lt;typename M &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a2c1e5064cc9a248871c7b3b3f3dc61b3"></a>
+<a class="anchor" id="a45d00ce513ed727dc4fdde304fcb8d97"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -355,7 +358,7 @@ template&lt;typename M &gt; </div>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *&#160;</td>
           <td class="paramname"><em>matcher</em></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -578,7 +581,7 @@ template&lt;typename M &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the current matcher. </p>
+<p>Returns a reference to the current matcher. </p>
 <dl class="section return"><dt>Returns</dt><dd>reference to the current matcher. </dd></dl>
 
 </div>
@@ -738,6 +741,35 @@ template&lt;typename M &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a203aa970eb8f9bc13559b180118ffed9"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a>* <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt; M &gt;::ptr_matcher </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a pointer to the current matcher, NULL if none was set. </p>
+<dl class="section return"><dt>Returns</dt><dd>pointer to the current matcher or NULL if no matcher was set. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="aa7da8596b9eeb820214e2630a331e43d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -833,7 +865,7 @@ template&lt;typename M &gt; </div>
 <p>Set debug flag value. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">flag</td><td>0 or 1 </td></tr>
+    <tr><td class="paramname">flag</td><td>0 or 1 (false or true) </td></tr>
   </table>
   </dd>
 </dl>
@@ -1195,7 +1227,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 8 2017 21:28:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Jan 14 2017 19:50:07 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

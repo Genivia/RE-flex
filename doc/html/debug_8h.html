@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">debug.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 8 2017</div>
+      <div style="float: right; font-size: 10px;">updated Sat Jan 14 2017</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -58,7 +58,13 @@
 
 <p>RE/flex debug logs and assertions.  
 <a href="#details">More...</a></p>
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &lt;cassert&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for debug.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="debug_8h__incl.png" border="0" usemap="#debug_8h" alt=""/></div>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="debug_8h__dep__incl.png" border="0" usemap="#debug_8hdep" alt=""/></div>
@@ -80,6 +86,9 @@ This graph shows which files directly or indirectly include this file:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:aad4e5b6078e35a063d909d9a2db2e5e0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#aad4e5b6078e35a063d909d9a2db2e5e0">ASSERT</a>(c)</td></tr>
+<tr class="memdesc:aad4e5b6078e35a063d909d9a2db2e5e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If ASSERT not defined, make ASSERT a no-op.  <a href="#aad4e5b6078e35a063d909d9a2db2e5e0">More...</a><br /></td></tr>
+<tr class="separator:aad4e5b6078e35a063d909d9a2db2e5e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d20ed9010534224290496a3ec91b1fc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a1d20ed9010534224290496a3ec91b1fc">DBGCHK</a>(c)&#160;&#160;&#160;(void)0</td></tr>
 <tr class="separator:a1d20ed9010534224290496a3ec91b1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53b7d4ef6b5cc76b0bce2fd6fe5733ed"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(...)&#160;&#160;&#160;(void)0</td></tr>
@@ -95,7 +104,7 @@ Macros</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex debug logs and assertions. </p>
 <dl class="section author"><dt>Author</dt><dd>Robert van Engelen - <a href="#" onclick="location.href='mai'+'lto:'+'eng'+'el'+'en@'+'ge'+'niv'+'ia'+'.co'+'m'; return false;">engel<span style="display: none;">.nosp@m.</span>en@g<span style="display: none;">.nosp@m.</span>enivi<span style="display: none;">.nosp@m.</span>a.co<span style="display: none;">.nosp@m.</span>m</a> </dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>(c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
+<dl class="section copyright"><dt>Copyright</dt><dd>(c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
 <dd>
 (c) BSD-3 License - see LICENSE.txt</dd></dl>
 <p>Exploiting macro magic to simplify debug logging.</p>
@@ -128,6 +137,24 @@ Macros</h2></td></tr>
 <li><code>"" __VA_ARGS__</code> forces <code>__VA_ARGS__</code> to start with a literal format string (printf security advisory). </li>
 </ul>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="aad4e5b6078e35a063d909d9a2db2e5e0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ASSERT</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">c</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If ASSERT not defined, make ASSERT a no-op. </p>
+
+</div>
+</div>
 <a class="anchor" id="a1d20ed9010534224290496a3ec91b1fc"></a>
 <div class="memitem">
 <div class="memproto">
@@ -201,7 +228,7 @@ Macros</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 8 2017 21:28:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Jan 14 2017 19:50:07 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -52,7 +52,7 @@ typedef wchar_t unicode_t;
 std::string utf8(
     unicode_t   a,             ///< lower bound of UCS range
     unicode_t   b,             ///< upper bound of UCS range
-    bool        strict = true, ///< returned regex is strict UTF-8 (true) or lean UTF-8 (false)
+    bool        strict = true, ///< returned regex is strict UTF-8 (true) or permissive and lean UTF-8 (false)
     const char *esc = NULL     ///< escape char(s), 0-3 chars limit, one backslash "\\" is the default
     )
   /// @returns regex string to match the UCS range encoded in UTF-8.

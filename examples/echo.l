@@ -8,5 +8,6 @@
 %%
 int main()
 {
+  // Flex C++, otherwise we return yylex() (also when using option --bison)
   return yyFlexLexer().yylex();
 }

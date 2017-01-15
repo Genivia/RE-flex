@@ -37,7 +37,7 @@
 #ifndef REFLEX_ABSMATCHER_H
 #define REFLEX_ABSMATCHER_H
 
-// TODO FIXME this option speeds up matching somewhat, but slows down input() a lot
+// TODO this option speeds up matching somewhat, but slows down input() a lot
 // #define FAST_GET
 
 #include "debug.h"
@@ -288,7 +288,7 @@ class AbstractMatcher {
   {
     if (blk > Const::BLOCK)
       blk = Const::BLOCK;
-    DBGLOG("AbstracMatcher::buffer(%zu)", blk);
+    DBGLOG("AbstractMatcher::buffer(%zu)", blk);
     blk_ = blk;
     if (blk == 0)
     {
@@ -315,14 +315,14 @@ class AbstractMatcher {
   /// Flush the buffer's remaining content.
   void flush(void)
   {
-    DBGLOG("AbstracMatcher::flush()");
+    DBGLOG("AbstractMatcher::flush()");
     pos_ = end_;
   }
   /// Set the input character sequence for this matcher and reset the matcher.
   virtual AbstractMatcher& input(const Input& inp) ///< input character sequence for this matcher
     /// @returns this matcher.
   {
-    DBGLOG("AbstracMatcher::input()");
+    DBGLOG("AbstractMatcher::input()");
     in = inp;
     reset();
     return *this;

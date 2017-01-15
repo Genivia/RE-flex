@@ -77,7 +77,10 @@ class AbstractLexer {
       matcher_(NULL),
       in_(input),
       os_(&os),
-      debug_(0)
+      start_(),
+      debug_(),
+      stack_(),
+      state_()
   { }
   /// Delete lexer and its current matcher and input.
   virtual ~AbstractLexer(void)
@@ -86,7 +89,7 @@ class AbstractLexer {
       delete matcher_;
   }
   /// Set debug flag value.
-  virtual void set_debug(int flag) ///< 0 or 1
+  virtual void set_debug(int flag) ///< 0 or 1 (false or true)
   {
     debug_ = flag;
   }
@@ -145,11 +148,18 @@ class AbstractLexer {
     matcher_ = matcher;
     return *this;
   }
-  /// Returns the current matcher.
+  /// Returns a reference to the current matcher.
   Matcher& matcher(void) const
     /// @returns reference to the current matcher.
   {
+    ASSERT(matcher_ != NULL);
     return *matcher_;
+  }
+  /// Returns a pointer to the current matcher, NULL if none was set.
+  Matcher *ptr_matcher(void) const
+    /// @returns pointer to the current matcher or NULL if no matcher was set.
+  {
+    return matcher_;
   }
   /// Returns a new matcher for the given input.
   virtual Matcher *new_matcher(const Input& input) ///< reflex::Input character sequence to match
@@ -158,9 +168,12 @@ class AbstractLexer {
     return new Matcher(matcher().pattern(), input, this);
   }
   /// Delete a matcher.
-  void del_matcher(Matcher *matcher) const
+  void del_matcher(Matcher *matcher)
   {
-    delete matcher;
+    if (matcher != NULL)
+      delete matcher;
+    if (matcher_ == matcher)
+      matcher_ = NULL;
   }
   /// Push the current matcher on the stack and use the given matcher for scanning.
   void push_matcher(Matcher *matcher) ///< points to a matcher object
@@ -171,7 +184,9 @@ class AbstractLexer {
   /// Pop matcher from the stack and continue scanning where it left off, delete the current matcher.
   void pop_matcher(void)
   {
-    delete matcher_;
+    ASSERT(!stack_.empty());
+    if (matcher_)
+      delete matcher_;
     matcher_ = stack_.top();
     stack_.pop();
   }
@@ -227,6 +242,7 @@ class AbstractLexer {
   /// Pop the stack start condition state and transition to that state.
   void pop_state(void)
   {
+    ASSERT(!state_.empty());
     start_ = state_.top();
     state_.pop();
   }
@@ -234,6 +250,7 @@ class AbstractLexer {
   int top_state(void) const
     /// @returns start condition (integer).
   {
+    ASSERT(!state_.empty());
     return state_.top();
   }
   Matcher             *matcher_; ///< the matcher used for scanning

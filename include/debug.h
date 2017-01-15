@@ -114,13 +114,19 @@ Techniques used:
 #ifndef REFLEX_DEBUG_H
 #define REFLEX_DEBUG_H
 
+#include <cassert>
+
+/// If ASSERT not defined, make ASSERT a no-op
+#ifndef ASSERT
+#define ASSERT(c)
+#endif
+
 #undef DBGLOG
 #undef DBGLOGN
 #undef DBGLOGA
 
 #ifdef DEBUG
 
-#include <cassert>
 #include <stdio.h>
 
 #define DBGCHK(c) assert(c)

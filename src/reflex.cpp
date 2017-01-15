@@ -224,6 +224,8 @@ static void help(const char *message = NULL, const char *arg = NULL)
         -R, --reentrant\n\
                 generate Flex-compatible yylex() reentrant scanner functions\n\
                 NOTE: adds functions only, reflex scanners are always reentrant\n\
+        --[no]yywrap\n\
+                [do not] call global yywrap() on EOF, requires option --flex\n\
 \n\
    Files:\n\
         -o FILE, --outfile=FILE\n\
@@ -262,13 +264,11 @@ static void help(const char *message = NULL, const char *arg = NULL)
         --lex-compat           n/a\n\
         --never-interactive    default\n\
         --nounistd             n/a\n\
-        --noyywrap             n/a\n\
         --posix                n/a\n\
         --stack                n/a\n\
         --warn                 default\n\
         --yylineno             default\n\
         --yymore               default\n\
-        --yywrap               default\n\
         --7bit                 n/a\n\
         --8bit                 n/a\n\
 " << std::endl;
@@ -468,7 +468,7 @@ void Reflex::init(int argc, char **argv)
           case 'c':
             break;
           case 'd':
-            options["debug"] = "1";
+            options["debug"] = "true";
             break;
           case 'f':
             options["full"] = "true";
@@ -963,7 +963,7 @@ std::string Reflex::getregex(size_t& pos)
           }
           else
           {
-            // collect UTF-8 char sequences, \p{X}, \u{X}, \x{X} and \u{X}-\u{Y}, translate, and append as alternations
+            // collect UTF-8 chars, \p{X}, \u{X}, \x{X} and \u{X}-\u{Y}, translate, and append as alternations
             regex.append(line.substr(loc, pos - loc));
             loc = pos++;
             std::string lifted;
@@ -1109,13 +1109,37 @@ std::string Reflex::getregex(size_t& pos)
                     wc = -1;
                     break;
                   default:
-                    if (c >= '1' && c <= '7') // translate octals \123 to \0123
+                    if (c >= '0' && c <= '7')
                     {
-                      regex.append(line.substr(loc, pos - loc)).append("\\0");
-                      loc = pos + 1;
+                      if (c >= '1')
+                      {
+                        // translate octals \123 to \0123
+                        regex.append(line.substr(loc, pos - loc)).append("\\0");
+                        loc = pos + 1;
+                        ++pos;
+                      }
+                      wc = 0;
+                      while (wc < 0x20 && (c = line.at(pos)) >= '0' && c <= '7')
+                      {
+                        wc = 8*wc + c - '0';
+                        ++pos;
+                      }
                     }
-                    ++pos;
-                    wc = -1; // FIXME: UTF-8 or octal may be part of a bracket range
+                    else if (c == 'c') // \cA control
+                    {
+                      pos += 2;
+                      wc = line.at(pos) % 32;
+                    }
+                    else
+                    {
+                      static const char abtnvfr[] = "abtnvfr"; // \a \b \t etc
+                      const char *s = strchr(abtnvfr, c);
+                      if (s)
+                        wc = s - abtnvfr + '\a';
+                      else
+                        wc = -1;
+                      ++pos;
+                    }
                     break;
                 }
                 range = false;
@@ -1801,9 +1825,10 @@ void Reflex::write(void)
         *out << "YY_EXTERN_C int yylex(YYSTYPE*, yyscan_t);\n";
       else
         *out << "YY_EXTERN_C int yylex(yyscan_t);\n";
-      *out <<
-        "YY_EXTERN_C void yylex_init(yyscan_t*);\n"
-        "YY_EXTERN_C void yylex_destroy(yyscan_t);\n";
+      *out << "YY_EXTERN_C void yylex_init(yyscan_t*);\n";
+      if (!options["flex"].empty())
+        *out << "YY_EXTERN_C void yylex_init_extra(YY_EXTRA_TYPE, yyscan_t*);\n";
+      *out << "YY_EXTERN_C void yylex_destroy(yyscan_t);\n";
     }
     else if (!options["bison_locations"].empty())
     {
@@ -1896,6 +1921,8 @@ void Reflex::write_prelude(void)
       *out << option->second << std::endl;
     }
   }
+  if (!options["debug"].empty())
+    *out << "\n// debug option enables ASSERT\n#define ASSERT(c) assert(c)" << std::endl;
 }
 
 void Reflex::write_class(void)
@@ -2028,11 +2055,12 @@ void Reflex::write_class(void)
     write_section_class();
     *out <<
       " public:\n"
+      "  typedef " << base << " BaseLexer;\n"
       "  " << lexer << "(\n"
       "      const reflex::Input& input = " << (options["nostdinit"].empty() ? "stdin" : "std::cin") << ",\n" <<
       "      std::ostream&        os    = std::cout)\n"
       "    :\n"
-      "      " << base << "(input, os)\n";
+      "      BaseLexer(input, os)\n";
     write_section_init();
     for (Start start = 0; start < conditions.size(); ++start)
       *out <<
@@ -2193,7 +2221,15 @@ void Reflex::write_lexer(void)
       "YY_EXTERN_C void yylex_init(yyscan_t *scanner)\n"
       "{\n"
       "  *scanner = static_cast<yyscan_t>(new yyscanner_t);\n"
-      "}\n\n"
+      "}\n\n";
+    if (!options["flex"].empty())
+      *out <<
+        "YY_EXTERN_C void yylex_init_extra(YY_EXTRA_TYPE extra, yyscan_t *scanner)\n"
+        "{\n"
+        "  *scanner = static_cast<yyscan_t>(new yyscanner_t);\n"
+        "  yyset_extra(extra, *scanner);\n"
+        "}\n\n";
+    *out <<
       "YY_EXTERN_C void yylex_destroy(yyscan_t scanner)\n"
       "{\n"
       "  delete static_cast<yyscanner_t*>(scanner);\n"

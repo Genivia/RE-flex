@@ -1,7 +1,7 @@
 <map id="boostmatcher.h" name="boostmatcher.h">
-<area shape="rect" id="node2" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="187,80,289,107"/>
-<area shape="rect" id="node3" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="25,155,96,181"/>
-<area shape="rect" id="node4" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="120,155,183,181"/>
-<area shape="rect" id="node10" href="$traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="207,155,269,181"/>
-<area shape="rect" id="node5" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="58,229,114,256"/>
+<area shape="rect" id="node2" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="241,80,344,107"/>
+<area shape="rect" id="node3" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="57,155,128,181"/>
+<area shape="rect" id="node5" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="175,155,237,181"/>
+<area shape="rect" id="node11" href="$traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="261,155,324,181"/>
+<area shape="rect" id="node6" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="146,229,202,256"/>
 </map>

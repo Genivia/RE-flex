@@ -6,7 +6,7 @@
 #define YY_EXTERN_C extern "C" /* only needed for yylex C linkage when compiling y.tab.c in C */
 %}
 
-%option bison-locations
+%option bison-locations noyywrap
 
 %%
 

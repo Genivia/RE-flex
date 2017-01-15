@@ -4,25 +4,23 @@
 Flex reimagined.  Fast, flexible, adds Boost.
 
 RE/flex is a flexible scanner-generator framework for generating regex-centric,
-Flex-compatible scanners.
-
-
-What is RE/flex?
-----------------
+Flex-compatible scanners.  The RE/flex command-line tool is compatible with the
+Flex command-line tool.  RE/flex offers:
 
 * a *feature-rich replacement* of both [Flex](dinosaur.compilertools.net/#flex)
-  and [Lex](dinosaur.compilertools.net/#lex), see the feature list below.
+  and [Lex](dinosaur.compilertools.net/#lex), preserving the compatibility with
+  the Bison (Yacc) parser generators (see the feature list below).
 
 * an *enhancement* of [Boost.Regex](www.boost.org/libs/regex) to use its engine
   for matching, seaching, splitting and for scanning of tokens on various types
   of data sources, such as strings, files, and streams of unlimited length;
 
-* a regex library for fast POSIX regular expression matching with extensions to
-  POSIX such as lazy quantifiers, word boundary anchors, Unicode UTF-8, and
+* a *regex library* for fast POSIX regular expression matching with extensions
+  to POSIX such as lazy quantifiers, word boundary anchors, Unicode UTF-8, and
   much more;
 
-* a flexible regex library that combines the above in a collection of C++ class
-  templates for pattern matching, searching, scanning, and splitting of
+* a *flexible regex framework* that combines the above in a collection of C++
+  class templates for pattern matching, searching, scanning, and splitting of
   strings, files, and streaming data.
 
 The repo includes tokenizers for Java, Python, and C/C++.
@@ -31,8 +29,8 @@ The repo includes tokenizers for Java, Python, and C/C++.
 List of features
 ----------------
 
-- Fully compatible with Flex to eliminate a learning curve and to make a
-  transition to RE/flex frustration-free.
+- Fully compatible with Flex to eliminate a learning curve, making a transition
+  to RE/flex frustration-free.
 - Extensive documentation in the online [manual][manual-url].
 - RE/flex generates lex.yy.cpp files while Flex generates lex.yy.cc files (in
   C++ mode with option -+), to distinguish the differences.
@@ -225,16 +223,17 @@ Use, modification, and distribution are subject to the BSD-3 license.
 Changelog
 ---------
 
-- Nov 14, 2016: 0.9.0 beta released
-- Nov 15, 2016: 0.9.1 improved portability
-- Nov 17, 2016: 0.9.2 improvements and fixes for minor issues
-- Nov 19, 2016: 0.9.3 replaces `%import` with `%include`, adds freespace option `-x`, fixes minor issues
-- Nov 20, 2016: 0.9.4 fixes minor issues, added new examples/json.l
-- Nov 25, 2016: 0.9.5 bug fixes and improvements
-- Dec  1, 2016: 0.9.6 portability improvements
-- Dec  6, 2016: 0.9.7 bug fixes, added option `--regexp-file`, Python tokenizer
-- Dec  9, 2016: 0.9.8 fixes minor issues, improved reflex tool options `--full` and `--fast`, generates scanner with FSM table or a fast scanner with FSM code, respectively
-- Jan  8, 2017: 0.9.9 bug fixes and improved Flex compatibility
+- Nov 14, 2016: 0.9.0  beta released
+- Nov 15, 2016: 0.9.1  improved portability
+- Nov 17, 2016: 0.9.2  improvements and fixes for minor issues
+- Nov 19, 2016: 0.9.3  replaces `%import` with `%include`, adds freespace option `-x`, fixes minor issues
+- Nov 20, 2016: 0.9.4  fixes minor issues, added new examples/json.l
+- Nov 25, 2016: 0.9.5  bug fixes and improvements
+- Dec  1, 2016: 0.9.6  portability improvements
+- Dec  6, 2016: 0.9.7  bug fixes, added option `--regexp-file`, Python tokenizer
+- Dec  9, 2016: 0.9.8  fixes minor issues, improved reflex tool options `--full` and `--fast`, generates scanner with FSM table or a fast scanner with FSM code, respectively
+- Jan  8, 2017: 0.9.9  bug fixes and improved Flex compatibility
+- Jan 14, 2017: 0.9.10 improved compatibility with Flex options
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

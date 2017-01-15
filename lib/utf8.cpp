@@ -81,7 +81,7 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
     "\xf8\x88\x80\x80\x80",
     "\xfc\x84\x80\x80\x80\x80"
   };
-  static const char *min_utf8_lean[6] = { // lean: loose UTF-8 validation with more compressed UTF-8
+  static const char *min_utf8_lean[6] = { // lean: perimissive UTF-8 validation with more tightly compressed UTF-8
     "\x00",
     "\xc2\x80",
     "\xe0\x80\x80",

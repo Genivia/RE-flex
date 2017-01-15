@@ -3,6 +3,7 @@
 /* This scanner prints "//" comments. */
 
 %option reentrant stack noyywrap
+
 %x COMMENT
 
 %%

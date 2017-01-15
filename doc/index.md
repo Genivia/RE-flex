@@ -16,27 +16,26 @@ What is RE/flex?                                                       {#intro}
 ================
 
 RE/flex is a flexible scanner-generator framework for generating regex-centric,
-Flex-compatible scanners.  RE/flex offers:
+Flex-compatible scanners.  The RE/flex command-line tool is compatible with the
+Flex command-line tool.  RE/flex accepts standard Flex specification syntax and
+supports Flex options.
 
-* a *feature-rich replacement* of both [Flex](dinosaur.compilertools.net/#flex)
-  and [Lex](dinosaur.compilertools.net/#lex);
+The features of RE/flex include:
 
-* an *enhancement* of [Boost.Regex](www.boost.org/libs/regex) to use its engine
-  for matching, seaching, splitting and for scanning of tokens on various types
-  of data sources, such as strings, files, and streams of unlimited length.
+- integrated support for Unicode
+- optional "free space mode" improves lex specification readability;
+- regular expressions may contain lazy quantifiers;
+- regular expressions may contain word boundary anchors;
+- regular expressions may contain indent/dedent markers for matching;
+- easy customization of the C++ lexer class code output;
+- efficient matching in direct code or by tables;
+- visualization of finite state machines;
+- generates scanners that are thread-safe by default;
+- works with Bison and supports reentrant, bison-bridge and bison-locations;
+- the regex library is extensible with abstract matcher class as base class;
+- Boost.Regex can be used for matching as one of the regex library extensions.
 
-* a stand-alone *regex library* is included with RE/flex for fast matching with
-  efficient deterministic finite state machines (FSMs) that are contructed from
-  regex patterns with POSIX mode matching extended to support lazy quantifiers,
-  word boundary anchors, Unicode UTF-8, and much more;
-
-* a *flexible regex framework* that combines the above with a collection of C++
-  class templates that are easy to use and that offer a rich API for searching,
-  matching, scanning, and splitting of input strings, files and streaming data.
-  This framework is flexible and can be extended to include other regex pattern
-  matchers that can operate seamlessly with the RE/flex scanner generator.
-
-RE/flex is not merely designed to fix the limitations of Lex and Flex!  RE/flex
+RE/flex is not merely designed to fix the limitations of Flex and Lex!  RE/flex
 balances efficiency with flexibility by offering a choice of regex engines that
 are used by the generated scanner.  The choice includes Boost.Regex and RE/flex
 matcher engines that offer a rich regex syntax.  The RE/flex POSIX matcher adds
@@ -54,17 +53,42 @@ scanner classes derived from a base lexer class template, with a matcher engine
 as the template parameter.  This offers an extensible approach that permits new
 regex matching engines to be included in this framework in the future.
 
+Use the **reflex** scanner generator with two options `−−flex` and `−−bison` to 
+output Flex C-compatible code.  These options generate the global non-reentrant
+"yy" functions and variables, such as `yylex()` and `yytext`.
+
 In this document we refer to a *regex* as a shorthand for *regular expression*.
 Some of you may not agree with this broad use of terminology.  The term regular
 expressions refers to the formal concept of *regular languages*, wheras *regex*
 refers to backtracking-based regex matching that Perl introduced, that could no
 longer be said to be regular in a true mathematical sense.
 
+In summary, RE/flex is
+
+- a *feature-rich replacement* of both [Flex](dinosaur.compilertools.net/#flex)
+  and [Lex](dinosaur.compilertools.net/#lex), preserving the compatibility with
+  the Bison (Yacc) parser generators;
+
+- an *enhancement* of [Boost.Regex](www.boost.org/libs/regex) to use its engine
+  for matching, seaching, splitting and for scanning of tokens on various types
+  of data sources, such as strings, files, and streams of unlimited length.
+
+- a stand-alone *regex library* is included with RE/flex for fast matching with
+  efficient deterministic finite state machines (FSMs) that are contructed from
+  regex patterns with POSIX mode matching extended to support lazy quantifiers,
+  word boundary anchors, Unicode UTF-8, and much more;
+
+- a *flexible regex framework* that combines the above with a collection of C++
+  class templates that are easy to use and that offer a rich API for searching,
+  matching, scanning, and splitting of input strings, files and streaming data.
+  This framework is flexible and can be extended to include other regex pattern
+  matchers that can operate seamlessly with the RE/flex scanner generator.
+
 ⇢ [Back to contents](#)
 
 
-Scanner generators                                                    {#intro1}
-------------------
+Yet another scanner generator                                         {#intro1}
+-----------------------------
 
 Lex, Flex and variants are powerful *scanner generators* that generate scanners
 (a.k.a. *lexical analyzers* and *lexers*) from *lex specifications*.  These lex
@@ -84,6 +108,7 @@ lex specification:
 
 <div class="alt">
 ```cpp
+%%
 /* PATTERN */           /* ACTION */
 "if"                    return KEYWORD_IF;
 "*"                     return OP_MUL;
@@ -92,6 +117,7 @@ lex specification:
 [0-9]+                  return CONST_NUMBER;
 \"([^\\"]|\\")*\"       return CONST_STRING;
 [ \t\r\n]               /* no action: ignore all white space */
+%%
 ```
 </div>
 
@@ -117,7 +143,8 @@ UTF-8 pattern to match a Unicode letter `\p{L}` is hundreds of lines long!
 
 Furthermore, the regular expression syntax in Lex/Flex is limited to meet POSIX
 mode matching constraints.  Scanners should use POSIX mode matching, as we will
-explain below, but we have to avoid the "greedy trap" problem as a consequence.
+explain below.  To make things even more interesting, scanners should avoid the
+"greedy trap" when matching input.
 
 Lex/Flex scanners use POSIX pattern matching, meaning that the leftmost longest
 match is returned (among a set of patterns that match the same input).  Because
@@ -148,7 +175,7 @@ of the `X*?` repeat to match only `X` repeately if the rest of the pattern does
 not match.  Therefore, the regex `<!−−.*?−−>` matches HTML comments and nothing
 more.
 
-But POSIX matching with Lex/Flex does not permit us to be lazy!
+But Lex/Flex does not permit us to be lazy!
 
 Not surprising, even the Flex manual shows ad-hoc code rather than a pattern to
 scan over C/C++ source code input to match multiline comments that start with a
@@ -172,6 +199,10 @@ scan over C/C++ source code input to match multiline comments that start with a
 }
 ```
 </div>
+
+Another argument to use this code with Flex is that the internal Flex buffer is
+limited to 16KB.  By contrast, RE/flex buffers are dynamically resized and will
+accept long matches.
 
 Workarounds such as these are not necessary with RE/flex.  The RE/flex scanners
 use regex libraries with expressive pattern syntax.  We can use lazy repetition
@@ -209,43 +240,43 @@ before `ASCII_IDENTIFIER`.
 
 For this reason, RE/flex scanners use a regex library in POSIX mode by default.
 
-The advantages that RE/flex has to offer:
+In summary, the advantages that RE/flex has to offer include:
 
-* RE/flex is fully compatible with Flex and Bison, by using the `−−flex` and/or
+- RE/flex is fully compatible with Flex and Bison, by using the `−−flex` and/or
   `−−bison` options.  This eliminates a learning curve to use RE/flex.
 
-* The RE/flex scanner generator takes a lex specification that is compatible to
+- The RE/flex scanner generator takes a lex specification that is compatible to
   [Flex](dinosaur.compilertools.net/#flex), with additional options to select a
   matcher engine and to specify names and options for C++ class generation.
   
-* The RE/flex scanner generator option `−−bison` generates a scanner compatible
+- The RE/flex scanner generator option `−−bison` generates a scanner compatible
   with [Bison](dinosaur.compilertools.net/#bison).  RE/flex also supports Bison
   bridge (pure reentrant and MT-safe) parsers.
 
-* The regular expression syntax of patterns in lex specifications is restricted
+- The regular expression syntax of patterns in lex specifications is restricted
   to POSIX ERE.  By contrast, the RE/flex scanner generator is regex-centric by
   design and offers a rich pattern syntax including lazy quantifiers.
 
-* A matcher engine for a lexer class has a common interface API declared by the
+- A matcher engine for a lexer class has a common interface API declared by the
   abstract base matcher class template.
 
-* RE/flex scanners are not implemented as a set of global functions and tables.
+- RE/flex scanners are not implemented as a set of global functions and tables.
   RE/flex scanners are instances of generated lexer classes.  Thus are MT-safe.
   A lexer class is derived from an abstract base lexer class template and it is
   instantiated with a regex matcher engine class that is provided as a template
   parameter.
 
-* Lex and Flex scanners are restricted to ASCII or 8-bit character sets without
+- Lex and Flex scanners are restricted to ASCII or 8-bit character sets without
   adequate support for Unicode.  RE/flex specifications are extended to support
   Unicode such that the RE/flex scanner generator produces scanners that handle
   UTF-8/16/32 input files.
 
-* Input to matcher engines and scanners is implemented as a class that supports
+- Input to matcher engines and scanners is implemented as a class that supports
   streaming sources of input and automatically decodes UTF-encoded files.
 
-* RE/flex scanners can be stand-alone applications, similar to Flex scanners.  
+- RE/flex scanners can be stand-alone applications, similar to Flex scanners.  
 
-See \ref reflex for more details on the RE/flex scanner generator tool.
+\ref reflex section has more details on the RE/flex scanner generator tool.
 
 In the next part of this manual, we will take a quick look at the RE/flex regex
 API that can be used as a stand-alone library for matching, searching, scanning
@@ -255,8 +286,8 @@ and splitting input from strings, files and streams in regular C++ applications
 ⇢ [Back to contents](#)
 
 
-Regex matching in C++                                                 {#intro2}
----------------------
+A regex library for pattern matching in C++                           {#intro2}
+-------------------------------------------
 
 The RE/flex regex pattern matching classes include Boost.Regex and an efficient
 RE/flex engine that compiles regex patterns to finite state machines (FSMs).  A
@@ -522,12 +553,13 @@ string that is stored in an internal buffer.  This pointer *should not be used*
 after matching continues and when the matcher object is deallocated.  To retain
 the `text()` string value we recommend to instantiate a `std::string`.
 
-Two special methods can be used to manipulate the input stream directly:
+Three special methods can be used to manipulate the input stream directly:
 
   Method     | Result
   ---------- | ----------------------------------------------------------------
   `input()`  | returns the next character from the input, matcher then skips it
   `unput(c)` | put character `c` back unto the stream, matcher then takes it
+  `peek()`   | returns the next character from the input without consuming it
 
 To initialize a matcher for interactive use, to assign a new input source or to
 change its pattern, you can use the following methods:
@@ -679,8 +711,8 @@ S5:
 
 The compact FSM opcode tables or the optimized larger FSM code may be used
 directly in your code.  This omits the FSM construction overhead at runtime.
-You can simply including it in your source code and pass it to the
-`reflex::Pattern`:
+You can simply include this generated file in your source code and pass it on
+to the `reflex::Pattern` constructor:
 
 ```cpp
 #include "matcher.h"   // reflex::Matcher, reflex::Pattern, reflex::Input
@@ -720,17 +752,17 @@ exceptions.
 
 In summary:
 
-* RE/flex defines an extensible abstract class interface that offers a standard
+- RE/flex defines an extensible abstract class interface that offers a standard
   API to use regex matcher engines.  The API is used by the generated scanners.
   The API supports UTF-8/16/32-encoded FILE content, wide strings and streaming
   data.
 
-* RE/flex includes a regex matcher class and a regex pattern class to implement
+- RE/flex includes a regex matcher class and a regex pattern class to implement
   fast matching with deterministic finite state machines (FSMs).  The FSM graph
   can be visualized with the Graphviz dot tool.  Furthermore, this FSM can also
   be exported and imported as source code to expedite pattern matching.
 
-See \ref regex for more information about the RE/flex regex library.
+\ref regex section has more information about the RE/flex regex library.
 
 ⇢ [Back to contents](#)
 
@@ -753,11 +785,11 @@ digraph build {
   lexyycpp [ label="lexer class\n(lex.yy.cpp)", peripheries=0 ];
   cpp      [ label="C++ compiler & linker" ];
   scanner  [ label="scanner\n(a.out)", peripheries=0 ];
-  regex    [ label="regex class\n(pattern.cpp+matcher.cpp\nor boostmatcher.cpp)", peripheries=0 ];
-  input    [ label="input class\n(input.cpp)", peripheries=0 ];
+  libs     [ label="libraries\n(libreflex, libboost_regex)", peripheries=0 ];
+  incs     [ label="option --header-file\n(lex.yy.h)", peripheries=0 ];
   spec -> reflex -> lexyycpp -> cpp -> scanner;
-  regex -> cpp;
-  input -> cpp;
+  incs -> cpp;
+  libs -> cpp;
 }
 @enddot
 
@@ -767,12 +799,13 @@ matching.  The RE/flex regex library API is defined by the abstract class
 
 There are two regex matching engines to choose from for the generated scanner:
 the Boost.Regex library (assuming Boost.Regex is installed) or the RE/flex
-POSIX matcher engine.
+POSIX matcher engine.  The `libreflex` library should be linked and also
+`libboost_regex` when needed.
 
-The input class `reflex::Input` manages input from strings, wide strings,
-streams, and data from `FILE` descriptors.  File data may be encoded in ASCII,
-binary or in UTF-8/16/32.  UTF-16/32 is automatically decoded and converted to
-UTF-8 for UTF-8-based regex matching:
+The input class `reflex::Input` of the `libreflex` library manages input from
+strings, wide strings, streams, and data from `FILE` descriptors.  File data
+may be encoded in ASCII, binary or in UTF-8/16/32.  UTF-16/32 is automatically
+decoded and converted to UTF-8 for UTF-8-based regex matching:
 
 @dot
 digraph execute {
@@ -1118,6 +1151,7 @@ the classic Flex actions shown in the second column of this table:
   `matcher().accept()`  | `yy_act`             | number of the matched rule
   `matcher().input()`   | `yyinput()`          | get next character from input
   `matcher().unput(c)`  | `unput(c)`           | put back character `c`
+  `matcher().peek()`    | *n/a*                | peek at character on input
   `matcher().more()`    | `yymore()`           | concat next match to the match
   `matcher().less(n)`   | `yyless(n)`          | shrink match's length to `n`
   `matcher().first()`   | *n/a*                | first pos of match in input
@@ -1131,7 +1165,7 @@ the classic Flex actions shown in the second column of this table:
 
 Note that Flex `switch_streams(i, o)` is the same as invoking the `in(i)` and
 `out(o)` methods.  Flex `yyrestart(i)` is the same as setting the input
-`yyin=&i` or invoking `in(i)`.
+`yyin=&i` or invoking `in(i)` to set input to a file, stream, or string.
 
 Use **reflex** options `−−flex` and `−−bison` to enable global Flex actions and
 variables.  This makes Flex actions and variables globally accessible outside
@@ -1178,6 +1212,10 @@ The matcher type `m` is a Lexer class-specific `Matcher` type, which depends on
 the underlying matcher used by the scanner.  Therefore, `new_matcher(i)`
 instantiates a `reflex::Matcher` or `reflex::BoostPosixMatcher` depending on
 the `−−matcher` option.
+
+The Flex `yy_scan_string(string)` and `yy_scan_bytes(bytes, len)` functions are
+also supported with **reflex** option `−−flex` and are simply creating setting
+the matcher's `in(i)` input to a string.
 
 The generated scanner reads from the standard input by default or from an input
 source specified as a `reflex::Input` object, such as a string, wide string,
@@ -1819,7 +1857,8 @@ as `echo()` and `reflex::AbstractMatcher` class methods such as
 
 This generates a scanner that works with Bison parsers, by defining global
 (non-MT-safe and non-reentrant) `yy` variables and functions.  See
-\ref reflex-bison for more details.
+\ref reflex-bison for more details.  Use option `−−noyywrap` to remove the
+dependency on the global `yywrap()` function.
 
 ### `−−bison-bridge`
 
@@ -1895,7 +1934,8 @@ debug messages on `std::cerr` standard error and the `debug()` function returns
 nonzero.  To temporarily turn off debug messages, use `set_debug(0)` in your
 action code.  To turn debug messages back on, use `set_debug(1)`.  The
 `set_debug()` and `debug()` functions are virtual, so you can override their
-behavior in a derived lexer class.
+behavior in a derived lexer class.  Also enables assertions that check for
+errors.
 
 ### `-s`, `−−nodefault`
 
@@ -2092,7 +2132,13 @@ This sets the tab size to N, where N > 0 must be a power of 2.  The tab size is
 used internally to determine the column position in indent `\i` and dedent `\j`
 matching.  It has no effect otherwise.
 
-### `−−lineno`, `−−yymore` `−−yywrap`, `−−batch`
+### `−−yywrap` and `−−noyywrap`
+
+This generates a scanner that calls the global `int yywrap()` function when EOF
+is reached.  Only applies when option `−−flex` is used.  Use `−−noyywrap` to
+disable.
+
+### `−−lineno`, `−−yymore`, `−−batch`
 
 These options are enabled by default and have no effect.
 
@@ -2187,11 +2233,15 @@ To create a Lexer class instance that reads from a designated input source
 instead of standard input, pass the input source as the first argument to its
 constructor and use the second argument to optionally set an `std::ostream`:
 
-<div class="alt">
 ```cpp
 Lexer lexer(input, std::cout);
 ```
-</div>
+
+the same with the `−−flex` option becomes:
+
+```cpp
+yyFlexLexer lexer(input, std::cout);
+```
 
 where `input` is a `reflex::Input` object.  The `reflex::Input` constructor
 takes a `FILE*` descriptor, `std::istream`, a string `std::string` or `char*`,
@@ -2203,39 +2253,57 @@ To switch input to another source while using the scanner, use `in(input)`:
 // read from a file, this also decodes UTF-16/32 encodings automatically
 FILE *fd = fopen("cow.txt", "r");
 if (fd)
-  in(fd);
+  lexer.in(fd);
 
 // read from a stream (as is, can be ASCII or UTF-8)
 std::istream i = std::ifstream("file", std::ifstream::in);
-in(i);
+lexer.in(i);
 
 // read from a string (as is, can be ASCII or UTF-8)
-in("How now brown cow.");
+lexer.in("How now brown cow.");
 
 // read from a wide string, encoding it to UTF-8 for matching
-in(L"How now brown cow.");
+lexer.in(L"How now brown cow.");
 ```
 
-However, switching input this way discards the remaining input from a previous
+However, switching input this way discards all remaining input from a previous
 input source.  To switch input without affecting the current input source,
 switch matchers instead.  The matchers buffer the input and manage the input
 state, in addition to pattern matching the input.
 
-To switch a matcher that scans from another input source, use
+To switch to a matcher that scans from a new input source, use:
 
 ```cpp
+... // scanning etc.
 Matcher *oldmatcher = matcher();
 Matcher *newmatcher = new_matcher(input);
 matcher(newmatcher);
-...
+... // scan the new input
 del_matcher(newmatcher);
 matcher(oldmatcher);
+... // continue scanning the old input
 ```
-  
+
+the same with the `−−flex` option becomes:
+
+```cpp
+... // scanning etc.
+YY_BUFFER_STATE oldbuf = YY_CURRENT_BUFFER;
+YY_BUFFER_STATE newbuf = yy_create_buffer(input, YY_BUF_SIZE);
+yy_switch_to_buffer(newbuf);
+... // scan the new input
+yy_delete_buffer(newbuf);
+yy_switch_to_buffer(oldbuf);
+... // continue scanning the old input
+```
+
 This switches the scanner's input by switching to another matcher.  Note that
 `matcher(m)` may be used by the virtual `wrap()` method (or `yywrap()` when
 option `−−flex` is used) if you use input wrapping after EOF to set things up
 for continued scanning.
+
+Switching input sources (via either `matcher(m)` or `in(input)`) does not
+change the current start condition state.
 
 When the scanner reaches the end of the input, it will check the `int wrap()`
 method to detetermine if scanning should continue.  If `wrap()` returns one (1)
@@ -2264,11 +2332,11 @@ the `wrap()` (or `yywrap()`) method:
 ```
 </div>
 
-Switching input sources via either `matcher(m)` or `in(input)` does not change
-the current start condition state.
-
 You can use the `wrap()` method to set up a new input source when the current
 input is exhausted.
+
+With the `−−flex` and `−−bison` options you should define a global `yywrap()`
+function instead.
 
 A more typical scenario is to process an `include` directive in the source
 input that should include the source of another file before continuing with the
@@ -2329,9 +2397,13 @@ directives up to a depth of 99 files:
 ```
 </div>
 
+With option `−−flex`, the statement `push_matcher(new_matcher(fd))` above
+becomes `yypush_buffer_state(yy_create_buffer(fd, YY_BUF_SIZE))` and
+`pop_matcher()` becomes `yypop_buffer_state()`.
+
 To set the current input as interactive, such as input from a console, use
-`matcher().interactive()`.  This disables buffering of the input and makes the
-scanner responsive.
+`matcher().interactive()` (`yy_set_interactive(1)` with option `−−flex`).  This
+disables buffering of the input and makes the scanner responsive.
 
 To read from the input without pattern matching, use `matcher().input()` to
 read one character at a time (8-bit, ASCII or UTF-8).  This function returns
@@ -2371,15 +2443,22 @@ before using the matcher again.
 To read a number of bytes `n` into a string buffer `s[0..n-1]`, use
 `matcher().in.get(s, n)`.
 
-The Flex `YY_INPUT` macro is not supported by RE/flex.  To implement a custom
-input handler you can use a proper object-oriented approach: create a derived
-class of `reflex::Matcher` (or `reflex::BoostPosixMatcher`) and in the derived
-class override the `size_t reflex::Matcher::get(char *s, size_t n)` method for
-input handling.  This function is called with a string buffer `s` of size `n`
-bytes.  Fill the string buffer `s` up to `n` bytes and return the number of
-bytes stored in `s`.  Return zero upon EOF.  Use **reflex** options
-`−−matcher=NAME` and `−−pattern=reflex::Pattern` to use your new matcher class
-`NAME` (or leave out `−−pattern` for Boost.Regex derived matchers).
+The Flex `YY_INPUT` macro is not supported by RE/flex.  It is recommended to
+use `YY_BUFFER_STATE` (Flex), which is a `reflex::FlexLexer::Matcher` class in
+RE/flex that holds the matcher state and the state of the current input,
+including the line and column number positions (so unlike Flex, `yylineno` does
+not have to be saved and restored when switching buffers).  See also section
+\ref reflex-spec on the actions to use.
+
+To implement a custom input handler you can use a proper object-oriented
+approach: create a derived class of `reflex::Matcher` (or
+`reflex::BoostPosixMatcher`) and in the derived class override the
+`size_t reflex::Matcher::get(char *s, size_t n)` method for input handling.
+This function is called with a string buffer `s` of size `n` bytes.  Fill the
+string buffer `s` up to `n` bytes and return the number of bytes stored in `s`.
+Return zero upon EOF.  Use **reflex** options `−−matcher=NAME` and
+`−−pattern=reflex::Pattern` to use your new matcher class `NAME` (or leave out
+`−−pattern` for Boost.Regex derived matchers).
 
 The `FlexLexer` lexer class that is the base class of the `yyFlexLexer` lexer
 class generated with **reflex** option `−−flex` defines a virtual `size_t
@@ -2611,7 +2690,7 @@ specification to `extern "C"` to enable C linkage rules:
   #define YY_EXTERN_C extern "C"   /* yylex() must use C linkage rules */
 %}
 
-%option bison
+%option noyywrap bison
 
 %%
 
@@ -2623,6 +2702,9 @@ specification to `extern "C"` to enable C linkage rules:
 %%
 ```
 </div>
+
+Note that `noyywrap` is used to remove the dependency on the global `yywrap()`
+function that is not defined.
 
 This example sets the global `yylval.num` to the integer scanned or
 `yylval.str` to the string scanned.  It assumes that the yacc grammar
@@ -3111,8 +3193,8 @@ other methods that Flex does not support.
 ⇢ [Back to contents](#)
 
 
-Limitations and known issues                              {#reflex-limitations}
-----------------------------
+Limitations                                               {#reflex-limitations}
+-----------
 
 The RE/flex matcher engine uses an efficient FSM.  There are known limitations
 to FSM matching that apply to Lex/Flex and therefore also apply to RE/flex:
@@ -3133,7 +3215,8 @@ Current **reflex** tool limitations that may be removed in future versions:
 - Negative lists `[^...]` cannot contain Unicode characters.
 - The `REJECT` action is not supported.
 
-Boost.Regex issues that may be resolved in future versions:
+Boost.Regex issues to be resolved in future versions (this is not affecting the
+default use of the RE/flex regex engine by the **reflex** command-line tool):
 
 - Boost.Regex may fail to find the longest match when greedy repetition
   patterns such as `.*` are used.  Under certain conditions greedy repetitions
