@@ -28,8 +28,8 @@
 
 %class{
  protected:
-  double       number; // token value for '#' (number)
-  std::wstring string; // token value for '$' (string)
+  double       number; // token value for token '#' (number)
+  std::wstring string; // token value for token '$' (string)
 %}
 
 %o flex freespace dotall unicode
@@ -90,8 +90,8 @@ class JSONParser : public yyFlexLexer {
   JSON::Tag parse(JSON& data) {
     int token = yylex();
     switch (token) {
-      case '0': return data.tag = JSON::NUL;
-      case 't': data.boolean = true; return data.tag = JSON::BOO;
+      case '0':                       return data.tag = JSON::NUL;
+      case 't': data.boolean = true;  return data.tag = JSON::BOO;
       case 'f': data.boolean = false; return data.tag = JSON::BOO;
       case '#': data.number = number; return data.tag = JSON::NUM;
       case '$': data.string = string; return data.tag = JSON::STR;
@@ -166,8 +166,8 @@ class JSONParser : public yyFlexLexer {
       default : return JSON::ERR;
     }
   }
-  static const size_t MAXLEVEL = 100;
-  static const size_t MAXSIZE = 1000;
+  static const size_t MAXLEVEL = 100; // keep things secure: max JSON nesting level
+  static const size_t MAXSIZE = 1000; // keep things secure: max JSON array and object size
   size_t level;
 };
 

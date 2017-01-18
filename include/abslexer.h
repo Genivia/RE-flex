@@ -203,9 +203,15 @@ class AbstractLexer {
   }
   /// Matched text size (length in bytes).
   size_t size(void) const
-    /// @returns matched text size.
+    /// @returns size of the matched text.
   {
     return matcher().size();
+  }
+  /// Matched number of (wide) characters (length in multibyte UTF-8 chars).
+  size_t wsize(void) const
+    /// @returns number of (wide) characters matched.
+  {
+    return matcher().wsize();
   }
   /// Line number of matched text.
   size_t lineno(void) const

@@ -70,6 +70,10 @@ inline size_t utf8(
     return 1;
   }
   char *t = s;
+#ifndef WITH_UTF8_UNRESTRICTED
+  if (c > 0x10FFFF)
+    c = 0xFFFD;
+#endif
   if (c < 0x0800)
   {
     *s++ = static_cast<char>(0xC0 | ((c >> 6) & 0x1F));
@@ -108,7 +112,7 @@ inline size_t utf8(
   return s - t;
 }
 
-/// Convert UTF-8 to UCS.
+/// Convert UTF-8 to UCS, returns 0xFFFD for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED for lossless UTF-8).
 inline unicode_t utf8(const char *s) ///< points to the buffer with UTF-8 (1 to 6 bytes)
   /// @returns UCS character.
 {
@@ -116,19 +120,40 @@ inline unicode_t utf8(const char *s) ///< points to the buffer with UTF-8 (1 to 
   c = static_cast<unsigned char>(*s++);
   if (c < 0x80)
     return c;
-  unicode_t c1 = static_cast<unsigned char>(*s++) & 0x3F;
+  unicode_t c1 = static_cast<unsigned char>(*s++);
+#ifndef WITH_UTF8_UNRESTRICTED
+  // permit Modified UTF-8 (MUTF-8) U+0000, reject invalid UTF-8
+  if ((c == 0xC0 && c1 != 0x80) || c == 0xC1 || (c1 & 0xC0) != 0x80)
+    return 0xFFFD;
+#endif
+  c1 &= 0x3F;
   if (c < 0xE0)
     return (((c & 0x1F) << 6) | c1);
-  unicode_t c2 = static_cast<unsigned char>(*s++) & 0x3F;
+  unicode_t c2 = static_cast<unsigned char>(*s++);
+#ifndef WITH_UTF8_UNRESTRICTED
+  // reject invalid UTF-8
+  if ((c == 0xE0 && c1 < 0x20) || (c2 & 0xC0) != 0x80)
+    return 0xFFFD;
+#endif
+  c2 &= 0x3F;
   if (c < 0xF0)
     return (((c & 0x0F) << 12) | (c1 << 6) | c2);
-  unicode_t c3 = static_cast<unsigned char>(*s++) & 0x3F;
+  unicode_t c3 = static_cast<unsigned char>(*s++);
+#ifndef WITH_UTF8_UNRESTRICTED
+  // reject invalid UTF-8
+  if ((c == 0xF0 && c1 < 0x10) || (c == 0xF4 && c1 >= 0x10) || c >= 0xF5 || (c3 & 0xC0) != 0x80)
+    return 0xFFFD;
+  return (((c & 0x07) << 18) | (c1 << 12) | (c2 << 6) | (c3 & 0x3F));
+#else
+  c3 &= 0x3F;
   if (c < 0xF8)
     return (((c & 0x07) << 18) | (c1 << 12) | (c2 << 6) | c3);
-  unicode_t c4 = static_cast<unsigned char>(*s++) & 0x3F;
+  unicode_t c4 = static_cast<unsigned char>(*s++);
+  c4 &= 0x3F;
   if (c < 0xFC)
     return (((c & 0x03) << 24) | (c1 << 18) | (c2 << 12) | (c3 << 6) | c4);
   return (((c & 0x01) << 30) | (c1 << 24) | (c2 << 18) | (c3 << 12) | (c4 << 6) | (static_cast<unsigned char>(*s++) & 0x3F));
+#endif
 }
 
 } // namespace reflex

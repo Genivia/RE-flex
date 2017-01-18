@@ -341,17 +341,26 @@ class AbstractMatcher {
   {
     return cap_;
   }
-  /// Returns string with the text matched by one of the match methods of this matcher.
+  /// Returns string with the text matched.
   const char *text(void) const
     /// @returns NUL-terminated const char* string.
   {
     return txt_;
   }
-  /// Returns the length of the text matched by one of the match methods of this matcher.
+  /// Returns the length of the matched text in bytes.
   size_t size(void) const
-    /// @returns string length.
+    /// @returns match size in bytes.
   {
     return len_;
+  }
+  /// Returns the length of the matched text in number of (wide, multibyte UTF-8) characters.
+  size_t wsize(void) const
+    /// @returns the length of the match in number of (wide, multibyte UTF-8) characters.
+  {
+    size_t n = 0;
+    for (const char *t = txt_; *t; ++t)
+      n += (*t & 0xc0) != 0x80;
+    return n;
   }
   /// Returns the line number of the match in the input character sequence.
   size_t lineno(void) const
