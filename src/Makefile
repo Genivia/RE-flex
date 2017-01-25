@@ -1,6 +1,6 @@
 INSTALL=/usr/local/bin
 CPP=c++
-INCS=../include/debug.h ../include/input.h ../include/pattern.h ../include/utf8.h
+INCS=../include/reflex/debug.h ../include/reflex/input.h ../include/reflex/pattern.h ../include/reflex/utf8.h
 LIBS=../lib/libreflex.a
 REFLEX=./reflex
 COFLAGS=-O2
@@ -22,7 +22,6 @@ release:
 			-cp -f reflex ../bin
 
 install:		release
-			cd ../lib; $(MAKE) install
 			-cp -f reflex $(INSTALL)
 
 reflex:			$(reflex_incs) $(reflex_objs)

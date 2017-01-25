@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">flexlexer.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 15 2017</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -45,7 +45,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_bb8a7beb94a1b7afd52842cbf47ddd3e.html">reflex</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -60,15 +60,15 @@
 
 <p>RE/flex Flex-compatible FlexLexer base class and Lex/Flex-compatible macros.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="abslexer_8h.html">abslexer.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="abslexer_8h.html">reflex/abslexer.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for flexlexer.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="flexlexer_8h__incl.png" border="0" usemap="#flexlexer_8h" alt=""/></div>
 <map name="flexlexer_8h" id="flexlexer_8h">
-<area shape="rect" id="node2" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="151,80,235,107"/>
-<area shape="rect" id="node3" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="120,155,183,181"/>
-<area shape="rect" id="node4" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="58,229,114,256"/>
+<area shape="rect" id="node2" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="190,80,310,107"/>
+<area shape="rect" id="node3" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="151,155,250,181"/>
+<area shape="rect" id="node4" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="71,229,163,256"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -109,7 +109,7 @@ Macros</h2></td></tr>
 <tr class="memitem:aa9522b9e313cd74e4e688e358cbca836"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aa9522b9e313cd74e4e688e358cbca836">yy_size_t</a>&#160;&#160;&#160;size_t</td></tr>
 <tr class="memdesc:aa9522b9e313cd74e4e688e358cbca836"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: yy_size_t type of yyleng.  <a href="#aa9522b9e313cd74e4e688e358cbca836">More...</a><br /></td></tr>
 <tr class="separator:aa9522b9e313cd74e4e688e358cbca836"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acac4a8e151705f78bafbba1b91d1eaa0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#acac4a8e151705f78bafbba1b91d1eaa0">yy_buffer_state</a>&#160;&#160;&#160;FlexLexer::BaseLexer::Matcher</td></tr>
+<tr class="memitem:acac4a8e151705f78bafbba1b91d1eaa0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#acac4a8e151705f78bafbba1b91d1eaa0">yy_buffer_state</a>&#160;&#160;&#160;FlexLexer::AbstractBaseLexer::Matcher</td></tr>
 <tr class="memdesc:acac4a8e151705f78bafbba1b91d1eaa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the type of the scanner buffer.  <a href="#acac4a8e151705f78bafbba1b91d1eaa0">More...</a><br /></td></tr>
 <tr class="separator:acac4a8e151705f78bafbba1b91d1eaa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8ef002da9f9ba35951176ec0be7ab23"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#af8ef002da9f9ba35951176ec0be7ab23">YY_BUFFER_STATE</a>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#acac4a8e151705f78bafbba1b91d1eaa0">yy_buffer_state</a>*</td></tr>
@@ -314,7 +314,7 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define yy_buffer_state&#160;&#160;&#160;FlexLexer::BaseLexer::Matcher</td>
+          <td class="memname">#define yy_buffer_state&#160;&#160;&#160;FlexLexer::AbstractBaseLexer::Matcher</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -902,7 +902,7 @@ Macros</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 15 2017 16:13:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jan 25 2017 18:16:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

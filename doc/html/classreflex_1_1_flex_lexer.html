@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::FlexLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 15 2017</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -92,9 +92,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a037e7938cb95e20d0ad429d7b9918d5a"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a>&lt; M &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a037e7938cb95e20d0ad429d7b9918d5a">BaseLexer</a></td></tr>
-<tr class="memdesc:a037e7938cb95e20d0ad429d7b9918d5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Typedef for the abstract base class.  <a href="#a037e7938cb95e20d0ad429d7b9918d5a">More...</a><br /></td></tr>
-<tr class="separator:a037e7938cb95e20d0ad429d7b9918d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade0789c2a7b1a9415ea72b64070727ae"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a>&lt; M &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#ade0789c2a7b1a9415ea72b64070727ae">AbstractBaseLexer</a></td></tr>
+<tr class="memdesc:ade0789c2a7b1a9415ea72b64070727ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Typedef for the abstract base class.  <a href="#ade0789c2a7b1a9415ea72b64070727ae">More...</a><br /></td></tr>
+<tr class="separator:ade0789c2a7b1a9415ea72b64070727ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -184,13 +184,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a4adc8cccffbc846e0f8408ddadfed22f inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns string with the text matched.  <a href="#a4adc8cccffbc846e0f8408ddadfed22f">More...</a><br /></td></tr>
 <tr class="separator:a4adc8cccffbc846e0f8408ddadfed22f inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a981d20f5395a9d278cc7be9f8c8a50 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a8a981d20f5395a9d278cc7be9f8c8a50">size</a> (void) const </td></tr>
-<tr class="memdesc:a8a981d20f5395a9d278cc7be9f8c8a50 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matched text size (length in bytes).  <a href="#a8a981d20f5395a9d278cc7be9f8c8a50">More...</a><br /></td></tr>
+<tr class="memdesc:a8a981d20f5395a9d278cc7be9f8c8a50 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the matched text size in number of bytes.  <a href="#a8a981d20f5395a9d278cc7be9f8c8a50">More...</a><br /></td></tr>
 <tr class="separator:a8a981d20f5395a9d278cc7be9f8c8a50 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13cc5a6320d44382b1f1d825472749df inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a13cc5a6320d44382b1f1d825472749df">wsize</a> (void) const </td></tr>
+<tr class="memdesc:a13cc5a6320d44382b1f1d825472749df inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the matched text size in number of (wide) characters.  <a href="#a13cc5a6320d44382b1f1d825472749df">More...</a><br /></td></tr>
+<tr class="separator:a13cc5a6320d44382b1f1d825472749df inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36d6d30a2f3c8add23d379a1afa54e69 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a36d6d30a2f3c8add23d379a1afa54e69">lineno</a> (void) const </td></tr>
-<tr class="memdesc:a36d6d30a2f3c8add23d379a1afa54e69 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Line number of matched text.  <a href="#a36d6d30a2f3c8add23d379a1afa54e69">More...</a><br /></td></tr>
+<tr class="memdesc:a36d6d30a2f3c8add23d379a1afa54e69 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the line number of matched text.  <a href="#a36d6d30a2f3c8add23d379a1afa54e69">More...</a><br /></td></tr>
 <tr class="separator:a36d6d30a2f3c8add23d379a1afa54e69 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab802f6d0c624523a0a7f34cc4eebb139 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#ab802f6d0c624523a0a7f34cc4eebb139">columno</a> (void) const </td></tr>
-<tr class="memdesc:ab802f6d0c624523a0a7f34cc4eebb139 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Column number of matched text.  <a href="#ab802f6d0c624523a0a7f34cc4eebb139">More...</a><br /></td></tr>
+<tr class="memdesc:ab802f6d0c624523a0a7f34cc4eebb139 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the column number of matched text, counting wide characters.  <a href="#ab802f6d0c624523a0a7f34cc4eebb139">More...</a><br /></td></tr>
 <tr class="separator:ab802f6d0c624523a0a7f34cc4eebb139 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
@@ -267,14 +270,14 @@ class reflex::FlexLexer&lt; M &gt;</h3>
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a class="anchor" id="a037e7938cb95e20d0ad429d7b9918d5a"></a>
+<a class="anchor" id="ade0789c2a7b1a9415ea72b64070727ae"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename M &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a>&lt;M&gt; <a class="el" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer</a>&lt; M &gt;::<a class="el" href="classreflex_1_1_flex_lexer.html#a037e7938cb95e20d0ad429d7b9918d5a">BaseLexer</a></td>
+          <td class="memname">typedef <a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a>&lt;M&gt; <a class="el" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer</a>&lt; M &gt;::<a class="el" href="classreflex_1_1_flex_lexer.html#ade0789c2a7b1a9415ea72b64070727ae">AbstractBaseLexer</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -826,7 +829,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 15 2017 16:13:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jan 25 2017 18:16:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

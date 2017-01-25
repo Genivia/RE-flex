@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">input.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 15 2017</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -45,7 +45,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_bb8a7beb94a1b7afd52842cbf47ddd3e.html">reflex</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -59,17 +59,17 @@
 
 <p>RE/flex input character sequence class.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="utf8_8h.html">utf8.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="utf8_8h.html">reflex/utf8.h</a>&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;cstring&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
-<code>#include &lt;cstring&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for input.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="input_8h__incl.png" border="0" usemap="#input_8h" alt=""/></div>
 <map name="input_8h" id="input_8h">
-<area shape="rect" id="node2" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="58,80,114,107"/>
+<area shape="rect" id="node2" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="71,80,163,107"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -77,20 +77,21 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="input_8h__dep__incl.png" border="0" usemap="#input_8hdep" alt=""/></div>
 <map name="input_8hdep" id="input_8hdep">
-<area shape="rect" id="node2" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="11,80,95,107"/>
-<area shape="rect" id="node4" href="absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="122,80,225,107"/>
-<area shape="rect" id="node7" href="pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="253,80,328,107"/>
+<area shape="rect" id="node2" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="69,80,153,107"/>
+<area shape="rect" id="node4" href="absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="241,80,343,107"/>
+<area shape="rect" id="node8" href="pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="376,80,451,107"/>
 <area shape="rect" id="node3" href="flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Lex/Flex&#45;compatible macros. " alt="" coords="5,155,88,181"/>
-<area shape="rect" id="node5" href="boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="113,155,226,181"/>
-<area shape="rect" id="node6" href="matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="250,155,331,181"/>
-<area shape="rect" id="node8" href="reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="355,155,421,181"/>
-<area shape="rect" id="node9" href="language__scripts_8h.html" title="Unicode language scripts. " alt="" coords="171,229,304,256"/>
-<area shape="rect" id="node11" href="reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="301,304,381,331"/>
-<area shape="rect" id="node12" href="letter__scripts_8h.html" title="Unicode letter scripts. " alt="" coords="379,229,488,256"/>
-<area shape="rect" id="node14" href="pl__scripts_8h.html" title="Unicode programming language scripts. " alt="" coords="513,229,602,256"/>
-<area shape="rect" id="node10" href="language__scripts_8cpp.html" title="language_scripts.cpp" alt="" coords="129,304,277,331"/>
-<area shape="rect" id="node13" href="letter__scripts_8cpp.html" title="letter_scripts.cpp" alt="" coords="405,304,528,331"/>
-<area shape="rect" id="node15" href="pl__scripts_8cpp.html" title="Unicode programming language scripts. " alt="" coords="552,304,656,331"/>
+<area shape="rect" id="node5" href="boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="235,155,349,181"/>
+<area shape="rect" id="node6" href="matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="373,155,454,181"/>
+<area shape="rect" id="node7" href="stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="112,155,211,181"/>
+<area shape="rect" id="node9" href="reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="478,155,543,181"/>
+<area shape="rect" id="node10" href="language__scripts_8h.html" title="Unicode language scripts. " alt="" coords="293,229,427,256"/>
+<area shape="rect" id="node12" href="reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="424,304,504,331"/>
+<area shape="rect" id="node13" href="letter__scripts_8h.html" title="Unicode letter scripts. " alt="" coords="501,229,611,256"/>
+<area shape="rect" id="node15" href="pl__scripts_8h.html" title="Unicode programming language scripts. " alt="" coords="635,229,725,256"/>
+<area shape="rect" id="node11" href="language__scripts_8cpp.html" title="language_scripts.cpp" alt="" coords="251,304,399,331"/>
+<area shape="rect" id="node14" href="letter__scripts_8cpp.html" title="letter_scripts.cpp" alt="" coords="528,304,651,331"/>
+<area shape="rect" id="node16" href="pl__scripts_8cpp.html" title="Unicode programming language scripts. " alt="" coords="675,304,779,331"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -117,7 +118,7 @@ Namespaces</h2></td></tr>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 15 2017 16:13:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jan 25 2017 18:16:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

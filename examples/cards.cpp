@@ -1,5 +1,5 @@
-#include "pattern.h"
-#include "matcher.h"
+#include <reflex/pattern.h>
+#include <reflex/matcher.h>
 
 static reflex::Pattern card_patterns(
   "(?# MasterCard)(5[1-5]\\d{14})|"                    // 1st group = MC

@@ -34,7 +34,7 @@
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
-#include "input.h"
+#include <reflex/input.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -43,6 +43,8 @@
 # define off_t __int64
 # define ftello _ftelli64
 # define fseeko _fseeki64
+#else
+# include <unistd.h> // fstat()
 #endif
 
 namespace reflex {
@@ -55,19 +57,19 @@ void Input::file_init(void)
   if (_fstat(_fileno(file_), &st) == 0 && st.st_size <= 4294967295LL)
 #else
   struct stat st;
-  if ( ::fstat(::fileno(file_), &st) == 0 && st.st_size <= 4294967295LL)
+  if (::fstat(::fileno(file_), &st) == 0 && st.st_size <= 4294967295LL)
 #endif
     size_ = static_cast<size_t>(st.st_size);
 #endif
   utfx_ = Const::plain;
-  // if file size can be determined, check for a UTF BOM
+  // if file size can be determined, check for a UTF BOM in the file
   if (size_ > 3)
   {
-    std::fread(utf8_, 1, 2, file_);
+    ::fread(utf8_, 1, 2, file_);
     utf8_[2] = '\0';
     if (utf8_[0] == '\0' && utf8_[1] == '\0')  // UTF-32 big endian BOM?
     {
-      std::fread(utf8_ + 2, 1, 2, file_);
+      ::fread(utf8_ + 2, 1, 2, file_);
       utf8_[4] = '\0';
       if (utf8_[2] == '\xFE' && utf8_[3] == '\xFF')
       {
@@ -86,7 +88,7 @@ void Input::file_init(void)
     }
     else if (utf8_[0] == '\xFF' && utf8_[1] == '\xFE') // UTF-16 little endian BOM?
     {
-      std::fread(utf8_ + 2, 1, 2, file_);
+      ::fread(utf8_ + 2, 1, 2, file_);
       utf8_[4] = '\0';
       if (utf8_[2] == '\0' && utf8_[3] == '\0') // UTF-32 little endian BOM?
       {
@@ -97,14 +99,14 @@ void Input::file_init(void)
       {
         utfx_ = Const::utf16le;
         wchar_t c = static_cast<unsigned int>(utf8_[2] | utf8_[3] << 8);
-	size_ = utf8(c, utf8_);
-	utf8_[size_] = '\0';
-	uidx_ = 0;
+        size_ = utf8(c, utf8_);
+        utf8_[size_] = '\0';
+        uidx_ = 0;
       }
     }
     else if (utf8_[0] == '\xEF' && utf8_[1] == '\xBB') // UTF-8 BOM?
     {
-      std::fread(utf8_ + 2, 1, 1, file_);
+      ::fread(utf8_ + 2, 1, 1, file_);
       utf8_[3] = '\0';
       if (utf8_[2] == '\xBF')
         size_ -= 3;
@@ -140,7 +142,7 @@ size_t Input::file_get(char *s, size_t n)
     {
       unsigned char c2[2];
       size_t k = n;
-      while (k > 0 && std::fread(c2, 2, 1, file_) == 1)
+      while (k > 0 && ::fread(c2, 2, 1, file_) == 1)
       {
         wchar_t c = static_cast<unsigned int>(c2[0] << 8 | c2[1]);
         if (c < 0x80)
@@ -154,7 +156,7 @@ size_t Input::file_get(char *s, size_t n)
           if (k < l)
           {
             std::memcpy(s, utf8_, k);
-	    utf8_[l] = '\0';
+            utf8_[l] = '\0';
             uidx_ = static_cast<unsigned short>(k);
             s += k;
             k = 0;
@@ -173,7 +175,7 @@ size_t Input::file_get(char *s, size_t n)
     {
       unsigned char c2[2];
       size_t k = n;
-      while (k > 0 && std::fread(c2, 2, 1, file_) == 1)
+      while (k > 0 && ::fread(c2, 2, 1, file_) == 1)
       {
         wchar_t c = static_cast<unsigned int>(c2[0] | c2[1] << 8);
         if (c < 0x80)
@@ -187,7 +189,7 @@ size_t Input::file_get(char *s, size_t n)
           if (k < l)
           {
             std::memcpy(s, utf8_, k);
-	    utf8_[l] = '\0';
+            utf8_[l] = '\0';
             uidx_ = static_cast<unsigned short>(k);
             s += k;
             k = 0;
@@ -206,7 +208,7 @@ size_t Input::file_get(char *s, size_t n)
     {
       unsigned char c4[4];
       size_t k = n;
-      while (k > 0 && std::fread(c4, 4, 1, file_) == 1)
+      while (k > 0 && ::fread(c4, 4, 1, file_) == 1)
       {
         wchar_t c = static_cast<unsigned int>(c4[0] << 24 | c4[1] << 16 | c4[2] << 8 | c4[3]);
         if (c < 0x80)
@@ -220,7 +222,7 @@ size_t Input::file_get(char *s, size_t n)
           if (k < l)
           {
             std::memcpy(s, utf8_, k);
-	    utf8_[l] = '\0';
+            utf8_[l] = '\0';
             uidx_ = static_cast<unsigned short>(k);
             s += k;
             k = 0;
@@ -239,7 +241,7 @@ size_t Input::file_get(char *s, size_t n)
     {
       unsigned char c4[4];
       size_t k = n;
-      while (k > 0 && std::fread(c4, 4, 1, file_) == 1)
+      while (k > 0 && ::fread(c4, 4, 1, file_) == 1)
       {
         wchar_t c = static_cast<unsigned int>(c4[0] | c4[1] << 8 | c4[2] << 16 | c4[3] << 24);
         if (c < 0x80)
@@ -253,7 +255,7 @@ size_t Input::file_get(char *s, size_t n)
           if (k < l)
           {
             std::memcpy(s, utf8_, k);
-	    utf8_[l] = '\0';
+            utf8_[l] = '\0';
             uidx_ = static_cast<unsigned short>(k);
             s += k;
             k = 0;
@@ -271,11 +273,11 @@ size_t Input::file_get(char *s, size_t n)
   }
   if (n == 1)
   {
-    int c = std::fgetc(file_);
+    int c = ::fgetc(file_);
     *s = c;
     return k + (c != EOF);
   }
-  return k + std::fread(s, 1, n, file_);
+  return k + ::fread(s, 1, n, file_);
 }
 
 void Input::file_size(void)
@@ -289,49 +291,65 @@ void Input::file_size(void)
       {
         fseeko(file_, k, SEEK_END);
         off_t n = ftello(file_);
-        if (n >= 0)
-          size_ = static_cast<size_t>(n);
+        if (n >= k)
+          size_ = static_cast<size_t>(n - k);
       }
       else if (utfx_ == Const::utf16be)
       {
         unsigned char c2[2];
-        while (std::fread(c2, 2, 1, file_) == 1)
+        while (::fread(c2, 2, 1, file_) == 1)
         {
           wchar_t c = static_cast<unsigned>(c2[0] << 8 | c2[1]);
+#ifndef WITH_UTF8_UNRESTRICTED
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
+#else
           size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
+#endif
         }
       }
       else if (utfx_ == Const::utf32le)
       {
         unsigned char c2[2];
-        while (std::fread(c2, 2, 1, file_) == 1)
+        while (::fread(c2, 2, 1, file_) == 1)
         {
           wchar_t c = static_cast<unsigned>(c2[0] | c2[1] << 8);
+#ifndef WITH_UTF8_UNRESTRICTED
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
+#else
           size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
+#endif
         }
       }
       else if (utfx_ == Const::utf32be)
       {
         unsigned char c4[4];
-        while (std::fread(c4, 4, 1, file_) == 1)
+        while (::fread(c4, 4, 1, file_) == 1)
         {
           wchar_t c = static_cast<unsigned>(c4[0] << 24 | c4[1] << 16 | c4[2] << 8 | c4[3]);
+#ifndef WITH_UTF8_UNRESTRICTED
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
+#else
           size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
+#endif
         }
       }
       else if (utfx_ == Const::utf32le)
       {
         unsigned char c4[4];
-        while (std::fread(c4, 4, 1, file_) == 1)
+        while (::fread(c4, 4, 1, file_) == 1)
         {
           wchar_t c = static_cast<unsigned>(c4[0] | c4[1] << 8 | c4[2] << 16 | c4[3] << 24);
+#ifndef WITH_UTF8_UNRESTRICTED
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
+#else
           size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
+#endif
         }
       }
-      std::clearerr(file_);
+      ::clearerr(file_);
       fseeko(file_, k, SEEK_SET);
     }
-    std::clearerr(file_);
+    ::clearerr(file_);
   }
 }
 

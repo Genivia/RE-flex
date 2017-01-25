@@ -1,0 +1,5 @@
+<map id="reflex::StdPosixMatcher" name="reflex::StdPosixMatcher">
+<area shape="rect" id="node2" href="$classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="21,169,152,196"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; std::regex \&gt;" alt="" coords="10,80,163,121"/>
+<area shape="rect" id="node4" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="7,5,166,32"/>
+</map>

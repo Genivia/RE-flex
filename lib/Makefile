@@ -1,5 +1,5 @@
 INSTALL_LIB=/usr/local/lib
-INSTALL_INC=/usr/local/include/reflex
+INSTALL_INC=/usr/local/include
 CPP=c++
 AR=ar
 COFLAGS=-O3
@@ -14,7 +14,7 @@ release:		libreflex.a libreflex.so
 
 install:		release
 			cp -f libreflex.a $(INSTALL_LIB)
-			cp -f ../include/*.h $(INSTALL_INC)
+			cp -f ../include/reflex/*.h $(INSTALL_INC)/reflex
 
 libreflex.a:		debug.o input.o matcher.o pattern.o utf8.o
 			$(AR) -rsc libreflex.a debug.o input.o matcher.o pattern.o utf8.o
@@ -33,4 +33,4 @@ clean:
 distclean:
 			-rm -rf *.dSYM
 			-rm -f *.o *.gch *.log
-			-rm -f *.a *.so
+			-rm -f *.a *.la *.so *.dylib

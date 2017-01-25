@@ -1,6 +1,6 @@
 CPP=c++
-BOOST=$(HOME)/boost
-BOOSTLIB=$(BOOST)/stage/lib/libboost_regex.a
+BOOSTINC=/opt/local/include
+BOOSTLIB=/opt/local/lib/libboost_regex-mt.dylib
 REFLEX=../bin/reflex
 BISON=bison
 LIBS=../lib/libreflex.a
@@ -8,7 +8,7 @@ LIBS=../lib/libreflex.a
 REFLAGS=--matcher=reflex
 COFLAGS=-g -O2
 CWFLAGS=-Wall -Wunused -Wextra -Wno-unused-label
-CIFLAGS=-I. -I../include -I $(BOOST)
+CIFLAGS=-I. -I../include -I $(BOOSTINC)
 CMFLAGS=
 # CMFLAGS=-DDEBUG
 CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)

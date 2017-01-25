@@ -34,8 +34,9 @@
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
-#include "pattern.h"
+#include <reflex/pattern.h>
 #include <cstdlib>
+#include <cerrno>
 #include <cmath>
 
 #ifdef TIMED
@@ -82,9 +83,9 @@ static clock_t clock_time;
 namespace reflex {
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
-inline errno_t fopen_s(FILE **fd, const char *name, const char *mode) { return ::fopen_s(fd, name, mode); }
+inline int fopen_s(FILE **fd, const char *name, const char *mode) { return ::fopen_s(fd, name, mode); }
 #else
-inline errno_t fopen_s(FILE **fd, const char *name, const char *mode) { return (*fd = ::fopen(name, mode)) ? 0 : errno; }
+inline int fopen_s(FILE **fd, const char *name, const char *mode) { return (*fd = ::fopen(name, mode)) ? 0 : errno; }
 #endif
 
 static const char *posix_class[] = {
@@ -1791,7 +1792,7 @@ void Pattern::gencode_dfa(const State& start) const
      || (len > 3 && filename.compare(len - 3, 3, ".cc" ) == 0))
     {
       FILE *fd = NULL;
-      errno_t err = 0;
+      int err = 0;
       if (filename.compare(0, 7, "stdout.") == 0)
         fd = stdout;
       else if (filename.at(0) == '+')
@@ -1800,7 +1801,7 @@ void Pattern::gencode_dfa(const State& start) const
         err = reflex::fopen_s(&fd, filename.c_str(), "w");
       if (!err && fd)
       {
-        ::fprintf(fd, "#include \"matcher.h\"\n\nvoid reflex_code_%s(reflex::Matcher& m)\n{\n  int c0, c1;\n  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
+        ::fprintf(fd, "#include <reflex/matcher.h>\n\nvoid reflex_code_%s(reflex::Matcher& m)\n{\n  int c0, c1;\n  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
         for (const State *state = &start; state; state = state->next)
         {
           ::fprintf(fd, "\nS%u:\n", state->index);
@@ -1975,7 +1976,7 @@ void Pattern::export_dfa(const State& start) const
     if (len > 3 && filename.compare(len - 3, 3, ".gv") == 0)
     {
       FILE *fd = NULL;
-      errno_t err = 0;
+      int err = 0;
       if (filename.compare(0, 7, "stdout.") == 0)
         fd = stdout;
       else if (filename.at(0) == '+')
@@ -2119,7 +2120,7 @@ void Pattern::export_code() const
      || (len > 3 && filename.compare(len - 3, 3, ".cc" ) == 0))
     {
       FILE *fd = NULL;
-      errno_t err = 0;
+      int err = 0;
       if (filename.compare(0, 7, "stdout.") == 0)
         fd = stdout;
       else if (filename.at(0) == '+')
@@ -2128,7 +2129,7 @@ void Pattern::export_code() const
         err = reflex::fopen_s(&fd, filename.c_str(), "w");
       if (!err && fd)
       {
-        ::fprintf(fd, "#ifndef REFLEX_CODE_DECL\n#include \"pattern.h\"\n#define REFLEX_CODE_DECL const reflex::Pattern::Opcode\n#endif\n\nREFLEX_CODE_DECL reflex_code_%s[%hu] =\n{\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), nop_);
+        ::fprintf(fd, "#ifndef REFLEX_CODE_DECL\n#include <reflex/pattern.h>\n#define REFLEX_CODE_DECL const reflex::Pattern::Opcode\n#endif\n\nREFLEX_CODE_DECL reflex_code_%s[%hu] =\n{\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), nop_);
         for (Index i = 0; i < nop_; ++i)
         {
           Opcode opcode = opc_[i];

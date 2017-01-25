@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 15 2017</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -104,6 +104,15 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_ranges.html">Ranges</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">RE/flex <a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">Ranges</a> template class.  <a href="classreflex_1_1_ranges.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_std_ecma_matcher.html">StdEcmaMatcher</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">std matcher engine class, extends <a class="el" href="classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan...">reflex::StdMatcher</a> for ECMA std::regex::ECMAScript regex matching.  <a href="classreflex_1_1_std_ecma_matcher.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_std_matcher.html">StdMatcher</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">std matcher engine class implements <a class="el" href="classreflex_1_1_pattern_matcher.html" title="The pattern matcher class template extends abstract matcher base class. ">reflex::PatternMatcher</a> pattern matching interface with scan, find, split functors and iterators, using the C++11 std::regex library.  <a href="classreflex_1_1_std_matcher.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_std_posix_matcher.html">StdPosixMatcher</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">std matcher engine class, extends <a class="el" href="classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan...">reflex::StdMatcher</a> for POSIX ERE std::regex::awk regex matching.  <a href="classreflex_1_1_std_posix_matcher.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_type_op.html">TypeOp</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_type_op.html#a02e39f4769e38a61fc8e913f021630ca" title="TypeOp&lt;T&gt;::Type = T. ">TypeOp&lt;T&gt;::Type</a> = T, <a class="el" href="structreflex_1_1_type_op.html#a5d72c0bbda0b00fab2b38581a198f41d" title="TypeOp&lt;T&gt;::ConstType = const T. ">TypeOp&lt;T&gt;::ConstType</a> = const T, <a class="el" href="structreflex_1_1_type_op.html#a32e6baa1761b90ab91461d64f047693c" title="TypeOp&lt;T&gt;::NonConstType = non-const T. ">TypeOp&lt;T&gt;::NonConstType</a> = non-const T.  <a href="structreflex_1_1_type_op.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,6 +127,9 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:aa971e8de839b917d033769272aa992e7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#aa971e8de839b917d033769272aa992e7">regroup</a> (const std::string &amp;regex)</td></tr>
+<tr class="memdesc:aa971e8de839b917d033769272aa992e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Regroup: convert a string regex to a regex with group captures only for the outermost (top-level) choices. All outermost (top-level) choices <code>X1</code>, <code>X2</code>, ... <code>Xn</code> in a regex <code>X1|X2|...|Xn</code> are regrouped such that <code>X1|X2|...|Xn</code> =&gt; <code>(X1)|(X2)|...|(Xn)</code>. Innermost (nested) group captures <code>(Y)</code> are converted to non-captured <code>(Y)</code> =&gt; <code>(?:Y)</code>. All existing non-capturing groups are retained. For example, <code>a|b(c)|(?:d)</code> =&gt; <code>(a)|(b(?:c))|((?:d))</code>.  <a href="#aa971e8de839b917d033769272aa992e7">More...</a><br /></td></tr>
+<tr class="separator:aa971e8de839b917d033769272aa992e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">isword</a> (int c)</td></tr>
 <tr class="memdesc:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check word character.  <a href="#a10f9faa3bb7ef4d3cee8339b8e647875">More...</a><br /></td></tr>
 <tr class="separator:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,7 +160,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ad35cb60c1cec6faa2f862f4ef4f6351d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UCS to UTF-8.  <a href="#ad35cb60c1cec6faa2f862f4ef4f6351d">More...</a><br /></td></tr>
 <tr class="separator:ad35cb60c1cec6faa2f862f4ef4f6351d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add56c4bf6e67e4bfda162a541de2fe30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacereflex.html#ac99e95721f82307930f9c46737af8c39">unicode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#add56c4bf6e67e4bfda162a541de2fe30">utf8</a> (const char *s)</td></tr>
-<tr class="memdesc:add56c4bf6e67e4bfda162a541de2fe30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS.  <a href="#add56c4bf6e67e4bfda162a541de2fe30">More...</a><br /></td></tr>
+<tr class="memdesc:add56c4bf6e67e4bfda162a541de2fe30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS, returns 0xFFFD for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove this limit to support lossless UTF-8 encoding up to 6 bytes).  <a href="#add56c4bf6e67e4bfda162a541de2fe30">More...</a><br /></td></tr>
 <tr class="separator:add56c4bf6e67e4bfda162a541de2fe30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
@@ -296,6 +308,24 @@ template&lt;typename S1 , typename S2 &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="aa971e8de839b917d033769272aa992e7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string reflex::regroup </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>regex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Regroup: convert a string regex to a regex with group captures only for the outermost (top-level) choices. All outermost (top-level) choices <code>X1</code>, <code>X2</code>, ... <code>Xn</code> in a regex <code>X1|X2|...|Xn</code> are regrouped such that <code>X1|X2|...|Xn</code> =&gt; <code>(X1)|(X2)|...|(Xn)</code>. Innermost (nested) group captures <code>(Y)</code> are converted to non-captured <code>(Y)</code> =&gt; <code>(?:Y)</code>. All existing non-capturing groups are retained. For example, <code>a|b(c)|(?:d)</code> =&gt; <code>(a)|(b(?:c))|((?:d))</code>. </p>
 
 </div>
 </div>
@@ -483,7 +513,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Convert UTF-8 to UCS. </p>
+<p>Convert UTF-8 to UCS, returns 0xFFFD for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove this limit to support lossless UTF-8 encoding up to 6 bytes). </p>
 <dl class="section return"><dt>Returns</dt><dd>UCS character. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -497,7 +527,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 15 2017 16:13:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jan 25 2017 18:16:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -35,14 +35,18 @@ List of features
 - RE/flex generates lex.yy.cpp files while Flex generates lex.yy.cc files (in
   C++ mode with option -+), to distinguish the differences.
 - Generates MT-safe (reentrant) code by default.
-- Generates clean source code that defines a C++ Lexer class derived from an abstract lexer class.
-- Configurable Lexer class generation to customize the interface for various parsers, including Yacc and Bison.
+- Generates clean source code that defines a C++ Lexer class derived from an
+  abstract lexer class.
+- Configurable Lexer class generation to customize the interface for various
+  parsers, including Yacc and Bison.
 - Works with Bison and supports reentrant, bison-bridge and bison-locations.
-- Generates scanners for lexical analysis on files, C++ streams, and (wide) strings.
+- Generates scanners for lexical analysis on files, C++ streams, and (wide)
+  strings.
 - Generates Graphviz files to visualize FSMs with the Graphviz dot tool.
-- Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for Python code, a tokenizer for Java code, and more.
+- Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for
+  Python code, a tokenizer for Java code, and more.
 - Adds an extensible hierarchy of pattern matcher engines, with a choice of
-  regex engines, such as Boost.Regex and RE/flex regex.
+  regex engines, including the RE/flex regex engine and Boost.Regex.
 - Adds lazy quantifiers to the POSIX regular expression syntax, so not more
   hacks to work around the greedy repetitions in Flex.
 - Adds word boundary anchors to the POSIX regular expression syntax.
@@ -59,9 +63,9 @@ List of features
   UTF-8 patterns by applying a RE/flex scanner to convert these scripts to C++
   code.  Future Unicode standards can be automatically converted using these
   scanners that are written in RE/flex itself.
-- The RE/flex regex library makes Boost.Regex much easier to use in plain C++
-  code for pattern matching on (wide) strings, files, and streams of
-  potentially unlimited length (e.g. to search streaming data).
+- The RE/flex regex library makes C++11 std::regex and Boost.Regex much easier
+  to use in plain C++ code for pattern matching on (wide) strings, files, and
+  streams.
 
 
 Installation
@@ -69,18 +73,28 @@ Installation
 
     $ ./build.sh
 
-or use the make command:
+or use the 'make' command to do the same:
 
     $ cd src; make
 
-This compiles the **reflex** tool and installs it in reflex/bin.  You can add
-this location to your $PATH variable to enable the new reflex command:
+This compiles the **reflex** tool and installs it locally in reflex/bin.  You
+can add this location to your $PATH variable to enable the new reflex command:
 
     export PATH=$PATH:/reflex_install_path/bin
 
 The `libreflex.a` and `libreflex.so` libraries are saved in reflex/lib.  Link
 against one of these libraries when you use the RE/flex regex engine in your
-code.  Header files are located in reflex/include.
+code.  The RE/flex header files are located in reflex/include/reflex.
+
+To install the library and the 'reflex' command in /usr/local/lib and
+/usr/local/bin:
+
+    $ sudo ./install.sh
+
+or use the 'make' command to do the same:
+
+    $ cd lib; sudo make install
+    $ cd src; sudo make install
 
 Windows users: use reflex/bin/reflex.exe.
 
@@ -120,11 +134,31 @@ Several examples are included to get you started.  See the [manual][manual-url]
 for more details.
 
 For the second option, simply use the new RE/flex matcher classes to start
-pattern matching on strings, wide strings, files, and real streams (that are
-potentially of unlimited length):
+pattern matching on strings, wide strings, files, and streams.
+
+You can select matchers based on different engines:
+
+- RE/flex regex: `#include <reflex/matcher.h>` and use `reflex::Matcher`;
+- Boost.Regex: `#include <reflex/boostmatcher.h>` and use
+  `reflex::BoostMatcher` or `reflex::BoostPosixMatcher`;
+- C++11 std::regex: `#include <reflex/stdmatcher.h>` and use
+  `reflex::StdMatcher` or `reflex::StdPosixMatcher`.
+
+Each matcher may differ in regex syntax features (see the full documentation), 
+but they have the same methods and iterators:
+
+- `matches()` true if the input from begin to end matches the regex pattern;
+- `find()` search input and return true if a match was found;
+- `scan()` scan input and return true if input at current position matches;
+- `split()` split input at the next match;
+- `find.begin()`...`find.end()` filter iterator;
+- `scan.begin()`...`scan.end()` tokenizer iterator;
+- `split.begin()`...`split.end()` splitter iterator.
+
+For example:
 
 ```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to check if the birthdate string is a valid date
 if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
   std::cout << "Valid date!" << std::endl;
@@ -133,7 +167,7 @@ if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
 To search a string for words `\w+`:
 
 ```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to search for words in a sentence
 reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
 while (matcher.find() == true)
@@ -144,7 +178,7 @@ The `split` method is roughly the inverse of the `find` method and returns text
 located between matches.  For example using non-word matching `\W+`:
 
 ```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to search for words in a sentence
 reflex::BoostMatcher matcher("\\W+", "How now brown cow.");
 while (matcher.split() == true)
@@ -155,7 +189,7 @@ To pattern match the content of a file that may use UTF-8, 16, or 32
 encodings:
 
 ```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to search and display words from a FILE
 FILE *fd = fopen("somefile.txt", "r");
 if (fd == NULL)
@@ -169,7 +203,7 @@ fclose(fd);
 Same again, but this time with a C++ input stream:
 
 ```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to search and display words from a stream
 std::ifstream file("somefile.txt", std::ifstream::in);
 reflex::BoostMatcher matcher("\\w+", file);
@@ -181,7 +215,7 @@ file.close();
 Stuffing the search results into a container using RE/flex iterators:
 
 ```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 #include <vector>         // std::vector
 // use a BoostMatcher to convert words of a sentence into a string vector
 reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
@@ -191,9 +225,9 @@ std::vector<std::string> words(matcher.find.begin(), matcher.find.end());
 Use C++11 range-based loops with RE/flex iterators:
 
 ```{.cpp}
-#include "boostmatcher.h" // reflex::BoostMatcher, reflex::Input, boost::regex
-// use a BoostMatcher to to search for words in a sentence
-for (auto& match : reflex::BoostMatcher("\\w+", "How now brown cow.").find)
+#include <reflex/stdmatcher.h> // reflex::StdMatcher, reflex::Input, std::regex
+// use a StdMatcher to to search for words in a sentence
+for (auto& match : reflex::StdMatcher("\\w+", "How now brown cow.").find)
   std::cout << "Found " << match.text() << std::endl;
 ```
 
@@ -234,6 +268,7 @@ Changelog
 - Dec  9, 2016: 0.9.8  fixes minor issues, improved reflex tool options `--full` and `--fast`, generates scanner with FSM table or a fast scanner with FSM code, respectively
 - Jan  8, 2017: 0.9.9  bug fixes and improved Flex compatibility
 - Jan 15, 2017: 0.9.10 improved compatibility with Flex options, fixed critical issue with range unions
+- Jan 25, 2017: 0.9.11 added C++11 std::regex matching engine support, moved .h files to include/reflex, requires `#include <reflex/xyz.h>` from now on, fixed `errno_t` portability issue
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

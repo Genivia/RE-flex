@@ -1,0 +1,581 @@
+
+#include <reflex/stdmatcher.h>
+
+static void banner(FILE *fd, const char *title)
+{
+  int i;
+  fprintf(fd, "\n\n/");
+  for (i = 0; i < 78; i++)
+    fputc('*', fd);
+  fprintf(fd, "\\\n *%76s*\n * %-75s*\n *%76s*\n\\", "", title, "");
+  for (i = 0; i < 78; i++)
+    fputc('*', fd);
+  fprintf(fd, "/\n\n");
+}
+
+static void error(const char *text)
+{
+  std::cout << "FAILED: " << text << std::endl;
+  exit(EXIT_FAILURE);
+}
+
+using namespace reflex;
+
+struct Test {
+  const char *pattern;
+  const char *popts;
+  const char *mopts;
+  const char *cstring;
+  size_t accepts[32];
+};
+
+Test tests[] = {
+  { "ab", "", "", "ab", { 1 } },
+  { "ab", "", "", "abab", { 1, 1 } },
+  { "(ab)|(xy)", "", "", "abxy", { 1, 2 } },
+  { "a(p|q)z", "", "", "apzaqz", { 1, 1 } },
+  // () empty pattern
+#if 0 // std::regex POSIX ERE does not permit ()
+  { "a(b|())|c", "", "", "abc", { 1, 2 } },
+  // special cases of empty patterns, sometimes not permitted
+  { "a(b|)|c", "", "", "abc", { 1, 2 } },
+  { "a(b|(|))|c", "", "", "abc", { 1, 2 } },
+#endif
+  // DFA edge compaction test (only applicable to RE/flex)
+#if 1 // std::regex AWK is OK but POSIX ERE does not permit \n or \t
+  { "([a-cg-ik]z)|(d)|([e-g])|(j)|(y)|([x-z])|(.)|(\\n)", "", "", "azz", { 1, 6 } },
+#endif
+  // POSIX character classes
+  {
+#if 1 // std::regex POSIX AWK and ERE do not support \xXX MUST use \0177 but \0177 does not work (too long!)
+    "\\011-"
+#endif
+    "[[:space:]]-"
+    "[[:xdigit:]]-"
+    "[[:cntrl:]]-"
+    "[[:print:]]-"
+    "[[:alnum:]]-"
+    "[[:alpha:]]-"
+    "[[:blank:]]-"
+    "[[:digit:]]-"
+    "[[:graph:]]-"
+    "[[:lower:]]-"
+    "[[:punct:]]-"
+    "[[:upper:]]-"
+#if 0 // std::regex does not support [:word:] but [:w:]
+    "[[:word:]]", "", "", "\x7E-\r-F-\x01-&-0-A-\t-0-#-l-.-U-_", { 1 } },
+#endif
+    "[[:w:]]", "", "", "\t-\r-F-\x01-&-0-A-\t-0-#-l-.-U-_", { 1 } },
+#if 0 // std::regex does not support \p{}
+  {
+    "\\x7E-"
+    "\\p{Space}-"
+    "\\p{Xdigit}-"
+    "\\p{Cntrl}-"
+    "\\p{Print}-"
+    "\\p{Alnum}-"
+    "\\p{Alpha}-"
+    "\\p{Blank}-"
+    "\\p{Digit}-"
+    "\\p{Graph}-"
+    "\\p{Lower}-"
+    "\\p{Punct}-"
+    "\\p{Upper}-"
+    "\\p{Word}", "", "", "\x7E-\r-F-\x01-&-0-A-\t-0-#-l-.-U-_", { 1 } },
+#endif
+#if 0 // std::regex does not support modifiers (?isxm)
+  // Pattern option i
+  { "(?i:abc)", "", "", "abcABC", { 1, 1 } },
+  { "(?i)abc|xyz", "", "", "abcABCxyzXYZ", { 1, 1, 2, 2 } },
+  { "(?i:abc)|xyz", "", "", "abcABCxyz", { 1, 1, 2 } },
+  { "(?i:abc)|(?i:xyz)", "", "", "abcABCxyzXYZ", { 1, 1, 2, 2 } },
+  // Pattern option x
+  { "(?x) a\tb\n c | ( xy ) z ?", "", "", "abcxy", { 1, 2 } },
+  { "(?x: a b\n c)", "", "", "abc", { 1 } },
+  { "(?x) a b c\n|\n# COMMENT\n x y z", "", "", "abcxyz", { 1, 2 } },
+  // { "(?x) a b c\n|\n/* COMMENT\n*/ x y z", "", "", "abcxyz", { 1, 2 } }, // std::regex does not support /*...*/
+  { "(?# test option (?x:... )(?x: a b c)|x y z", "", "", "abcx y z", { 1, 2 } },
+  // Pattern option s
+  { "(?s).", "", "", "a\n", { 1, 1 } },
+  { "(?s:.)", "", "", "a\n", { 1, 1 } },
+  { "(?s).", "", "", "a\n", { 1, 1 } },
+#endif
+  // Anchors \A, \Z, ^, and $ with pattern option m (multiline, which is the default)
+#if 0 // std::regex does not support \A and \Z
+  { "\\Aa\\Z", "", "", "a", { 1 } },
+#endif
+  { "^a$", "", "", "a", { 1 } },
+#if 0 // std::regex does not support multiline mode
+  { "(^a$)|(\\n)", "m", "", "a\na", { 1, 2, 1 } },
+  { "(^a)|(a$)|(a)|(\\n)", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
+  { "\\Aa\\Z|\\Aa|a\\Z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },
+#endif
+  // Optional X?
+  { "a?z", "", "", "azz", { 1, 1 } },
+  // Closure X*
+  { "a*z", "", "", "azaazz", { 1, 1, 1 } },
+  // Positive closure X+
+  { "a+z", "", "", "azaaz", { 1, 1 } },
+  // Iterations {n,m}
+  { "ab{2}", "", "", "abbabb", { 1, 1 } },
+  { "ab{2,3}", "", "", "abbabbb", { 1, 1 } },
+  { "ab{2,}", "", "", "abbabbbabbbb", { 1, 1, 1 } },
+  { "ab{0,}", "", "", "a", { 1 } },
+  { "(ab{0,2}c){2}", "", "", "abbcacabcabc", { 1, 1 } },
+#if 0 // std::regex POSIX mode does not support lazy quantifiers
+  // Lazy optional X?
+  { "(a|b)?\?a", "", "", "aaba", { 1, 1, 1 } },
+  { "a(a|b)?\?(?=a|ab)|ac", "", "", "aababac", { 1, 1, 1, 2 } },
+  { "(a|b)?\?(a|b)?\?aa", "", "", "baaaabbaa", { 1, 1, 1 } },
+  { "(a|b)?\?(a|b)?\?(a|b)?\?aaa", "", "", "baaaaaa", { 1, 1 } },
+  { "a?\?b?a", "", "", "aba", { 1, 1 } }, // 'a' 'ba'
+  { "a?\?b?b", "", "", "abb", { 1, 1 } }, // 'ab' 'b'
+  // Lazy closure X*
+  { "a*?a", "", "", "aaaa", { 1, 1, 1, 1 } },
+  { "a*?|a|b", "", "", "aab", { 2, 2, 3 } },
+  { "(a|bb)*?abb", "", "", "abbbbabb", { 1, 1 } },
+  { "ab*?|b", "", "", "ab", { 1, 2 } },
+  { "(ab)*?|b", "", "", "b", { 2 } },
+  { "a(ab)*?|b", "", "", "ab", { 1, 2 } },
+  { "(a|b)*?a|c?", "", "", "bbaaac", { 1, 1, 1, 2 } },
+  { "a(a|b)*?a", "", "", "aaaba", { 1, 1 } },
+  { "a(a|b)*?a?\?|b", "", "", "aaaba", { 1, 1, 1, 2, 1 } },
+  { "a(a|b)*?a?", "", "", "aa", { 1 } },
+  { "a(a|b)*?a|a", "", "", "aaaba", { 1, 1 } },
+  { "a(a|b)*?a|a?", "", "", "aaaba", { 1, 1 } },
+  { "a(a|b)*?a|a?\?", "", "", "aaaba", { 1, 1 } },
+  { "a(a|b)*?a|aa?", "", "", "aaaba", { 1, 1 } },
+  { "a(a|b)*?a|aa?\?", "", "", "aaaba", { 1, 1 } },
+  { "ab(ab|cd)*?ab|ab", "", "", "abababcdabab", { 1, 1, 2 } },
+  { "(a|b)(a|b)*?a|a", "", "", "aaabaa", { 1, 1, 2 } },
+  { "(ab|cd)(ab|cd)*?ab|ab", "", "", "abababcdabab", { 1, 1, 2 } },
+  { "(ab)(ab)*?a|b", "", "", "abababa", { 1, 2, 1 } },
+  { "a?(a|b)*?a", "", "", "aaababa", { 1, 1, 1 } },
+  { "^(a|b)*?a", "", "", "bba", { 1 } },
+  { "(a|b)*?a$", "", "", "bba", { 1 } },
+  { "^(a|b)*?|b", "", "", "ab", { 1, 2 } },
+  // Lazy positive closure X+
+  { "a+?a", "", "", "aaaa", { 1, 1 } },
+  { "(a|b)+?", "", "", "ab", { 1, 1 } },
+  { "(a|b)+?a", "", "", "bbaaa", { 1, 1 } },
+  { "(a|b)+?a|c?", "", "", "bbaaa", { 1, 1 } },
+  { "(ab|cd)+?ab|d?", "", "", "cdcdababab", { 1, 1 } },
+  { "(ab)+?a|b", "", "", "abababa", { 1, 2, 1 } },
+  { "(ab)+?ac", "", "", "ababac", { 1 } },
+  { "ABB*?|ab+?|A|a", "", "", "ABab", { 1, 2 } },
+  { "(a|b)+?a|a", "", "", "bbaaa", { 1, 1 } },
+  { "^(a|b)+?a", "", "", "abba", { 1 } },
+  { "(a|b)+?a$", "", "", "abba", { 1 } },
+  // Lazy iterations {n,m}
+  { "(a|b){0,3}?aaa", "", "", "baaaaaa", { 1, 1 } },
+  { "(a|b){1,3}?aaa", "", "", "baaaaaaa", { 1, 1 } },
+  { "(a|b){1,3}?aaa", "", "", "bbbaaaaaaa", { 1, 1 } },
+  { "(ab|cd){0,3}?ababab", "", "", "cdabababababab", { 1, 1 } },
+  { "(ab|cd){1,3}?ababab", "", "", "cdababababababab", { 1, 1 } },
+  { "(a|b){1,}?a|a", "", "", "bbaaa", { 1, 1 } },
+  { "(a|b){2,}?a|aa", "", "", "bbbaaaa", { 1, 1 } },
+#endif
+  // Bracket lists
+  { "[a-z]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } },
+  { "[-z]", "", "", "-z", { 1, 1 } },
+  { "[z-]", "", "", "-z", { 1, 1 } },
+  { "[--z]", "", "", "-az", { 1, 1, 1 } },
+  { "[ --]", "", "", " +-", { 1, 1, 1 } },
+  { "[^a-z]", "", "", "A", { 1 } },
+  { "[[:alpha:]]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } },
+  // { "[\\p{Alpha}]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } }, // TODO no \p class support
+  { "[][]", "", "", "[]", { 1, 1 } },
+  // Lookahead
+#if 0 // std::regex does not support lookaheads
+  { "a(?=bc)|ab(?=d)|bc|d", "", "", "abcdabd", { 1, 3, 4, 2, 4 } },
+  // { "[ab]+(?=ab)|-|ab", "", "", "aaab-bbab", { 1, 3, 2, 1, 3 } }, // has trailing context (undefined as per POSIX)
+  { "a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
+  { "a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } },
+  { "^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
+  { "a(?=$)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
+  { "^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
+  // { "abc(?=\\w+|(?^def))|xyzabcdef", "", "", "abcxyzabcdef", { 1, 2 } }, // TODO check
+#endif
+  // Word boundaries \<, \>, \b, and \B
+#if 0 // std::regex does not support boundaries \b \w etc
+  { "\\<a\\>|\\<a|a\\>|a|-", "", "", "a-aaa", { 1, 5, 2, 4, 3 } },
+  { "\\<.*\\>", "", "", "abc def", { 1 } },
+  { "\\<.*\\>|-", "", "", "abc-", { 1, 2 } },
+  { "\\b.*\\b|-", "", "", "abc-", { 1, 2 } },
+  { "-|\\<.*\\>", "", "", "-abc-", { 1, 2, 1 } },
+  { "-|\\b.*\\b", "", "", "-abc-", { 1, 2, 1 } },
+  { "(-|a)\\<(-|a)\\>(-|a)", "", "", "-a-", { 1 } },
+  { "(-|a)\\b(-|a)\\b(-|a)", "", "", "-a-a-a", { 1, 1 } },
+  { "(-|a)\\B(-|a)\\B(-|a)", "", "", "---aaa", { 1, 1 } },
+  { "\\<(-|a)(-|a)\\>| ", "", "", "aa aa", { 1, 2, 1 } },
+  { "\\b(-|a)(-|a)\\b| ", "", "", "aa aa", { 1, 2, 1 } },
+  { "\\B(-|a)(-|a)\\B|b|#", "", "", "baab#--#", { 2, 1, 2, 3, 1, 3 } },
+  { "-\\b(-|a)(-|a)\\b", "", "", "-aa", { 1 } },
+  { "a\\b(-|a)(-|a)\\b", "", "", "a-a", { 1 } },
+  { "a?\\>(-|a)(-|a)\\b| ", "", "", "a-a-a", { 1, 1 } },
+  { "\\b(-|a)(-|a)\\bz?| ", "", "", "aa a-z", { 1, 2, 1 } },
+  { "(-|a)(-|a)\\bz?| ", "", "", "aa a-z", { 1, 2, 1 } },
+  { "a?\\b(-|a)(-|a)\\b| ", "", "", "a-a", { 1 } },
+  { "-(?=\\<a\\>)|-|a|b", "", "", "-a-ab", { 1, 3, 2, 3, 4 } },
+#endif
+  // Unicode (TODO: requires a flag and changes to the parser so that UTF-8 multibyte chars are parsed as ONE char)
+  { "(©)+", "", "", "©", { 1 } },
+  { NULL, NULL, NULL, NULL, { } }
+};
+
+int main()
+{
+  banner(stdout, "PATTERN TESTS");
+  for (const Test *test = tests; test->pattern != NULL; ++test)
+  {
+    std::cout << test->pattern << std::endl;
+    StdPosixMatcher matcher(test->pattern, test->cstring, test->mopts);
+    printf("Test \"%s\" against \"%s\"\n", test->pattern, test->cstring);
+    if (*test->popts)
+      printf("With pattern options \"%s\"\n", test->popts);
+    if (*test->mopts)
+      printf("With matcher options \"%s\"\n", test->mopts);
+    size_t i = 0;
+    while (matcher.scan())
+    {
+      printf("  At %zu,%zu;[%zu,%zu]: \"%s\" matches pattern %zu\n", matcher.lineno(), matcher.columno(), matcher.first(), matcher.last(), matcher.text(), matcher.accept());
+      if (matcher.accept() != test->accepts[i])
+        break;
+      ++i;
+    }
+    if (matcher.accept() != 0 || test->accepts[i] != 0 || !matcher.at_end())
+    {
+      if (!matcher.at_end())
+        printf("ERROR: remaining input rest = '%s'\n", matcher.rest());
+      else
+        printf("ERROR: accept = %zu text = '%s'\n", matcher.accept(), matcher.text());
+      exit(1);
+    }
+    printf("OK\n\n");
+  }
+  std::string pattern1("(\\w+)|(\\W)");
+  std::string pattern2("\\b.*\\b"); // \b instead of \< and \>
+  std::string pattern3(" ");
+  std::string pattern4("[ 	]+");
+  std::string pattern5("\\b"); // std::regex fails
+  std::string pattern6(""); // std::regex fails
+  std::string pattern7("[[:alpha:]]");
+  std::string pattern8("[[:w:]]+");
+
+  // Use ECMAScript syntax, std::regex POSIX is too restrictive!
+
+  StdMatcher matcher(pattern1);
+  std::string test;
+  //
+  banner(stdout, "TEST FIND");
+  //
+  matcher.pattern(pattern8);
+  matcher.input("an apple a day");
+  test = "";
+  while (matcher.find())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "an/apple/a/day/")
+    error("find results");
+  //
+#if 0 // std::regex fails to match properly with empty patterns such as \b
+  matcher.pattern(pattern5);
+  matcher.reset("N");
+  matcher.input("a a");
+  test = "";
+  while (matcher.find())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "//")
+    error("find with nullable results");
+  matcher.reset("");
+#endif
+  //
+  banner(stdout, "TEST SPLIT");
+  //
+  matcher.pattern(pattern3);
+  matcher.input("ab c  d");
+  test = "";
+  while (matcher.split())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "ab/c//d/")
+    error("split results");
+  //
+  matcher.pattern(pattern3);
+  matcher.input("ab c  d ");
+  test = "";
+  while (matcher.split())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "ab/c//d//")
+    error("split results");
+  //
+  matcher.pattern(pattern4);
+  matcher.input("ab c  d");
+  test = "";
+  while (matcher.split())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "ab/c/d/")
+    error("split results");
+  //
+#if 0 // std::regex fails to match properly with empty patterns such as \b
+  matcher.pattern(pattern5);
+  matcher.input("ab c  d");
+  test = "";
+  while (matcher.split())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "/ab/ /c/  /d//")
+    error("split results");
+#endif
+  //
+#if 0 // std::regex fails on empty patterns such as \b
+  matcher.pattern(pattern6);
+  matcher.input("ab c  d");
+  test = "";
+  while (matcher.split())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "/a/b/ /c/ / /d//")
+    error("split results");
+  //
+  matcher.pattern(pattern6);
+  matcher.input("");
+  test = "";
+  while (matcher.split())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "/")
+    error("split results");
+#endif
+  //
+  matcher.pattern(pattern7);
+  matcher.input("a-b");
+  test = "";
+  while (matcher.split())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "/-//")
+    error("split results");
+  //
+  matcher.pattern(pattern7);
+  matcher.input("a");
+  test = "";
+  while (matcher.split())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "//")
+    error("split results");
+  //
+  matcher.pattern(pattern7);
+  matcher.input("-");
+  test = "";
+  while (matcher.split())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "-/")
+    error("split results");
+  //
+  matcher.pattern(pattern4);
+  matcher.input("ab c  d");
+  int n = 2; // split 2
+  while (n-- && matcher.split())
+    std::cout << matcher.text() << "/";
+  std::cout << std::endl << "REST = " << matcher.rest() << std::endl;
+  //
+  banner(stdout, "TEST INPUT/UNPUT");
+  //
+  matcher.pattern(pattern2);
+  matcher.input("ab c  d");
+  while (!matcher.at_end())
+    std::cout << (char)matcher.input() << "/";
+  std::cout << std::endl;
+  //
+  matcher.pattern(pattern2);
+  matcher.input("ab c  d");
+  test = "";
+  while (true)
+  {
+    if (matcher.scan())
+    {
+      std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
+    }
+    else if (!matcher.at_end())
+    {
+      std::cout << (char)matcher.input() << "?/";
+      test.append("?/");
+    }
+    else
+    {
+      break;
+    }
+  }
+  std::cout << std::endl;
+  if (test != "ab c  d/")
+    error("input");
+  //
+  matcher.pattern(pattern7);
+  matcher.input("ab c  d");
+  test = "";
+  while (true)
+  {
+    if (matcher.scan())
+    {
+      std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
+    }
+    else if (!matcher.at_end())
+    {
+      std::cout << (char)matcher.input() << "?/";
+      test.append("?/");
+    }
+    else
+    {
+      break;
+    }
+  }
+  std::cout << std::endl;
+  if (test != "a/b/?/c/?/?/d/")
+    error("input");
+  //
+  matcher.pattern(pattern7);
+  matcher.input("ab c  d");
+  matcher.unput('a');
+  test = "";
+  while (true)
+  {
+    if (matcher.scan())
+    {
+      std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
+      if (*matcher.text() == 'b')
+        matcher.unput('c');
+    }
+    else if (!matcher.at_end())
+    {
+      std::cout << (char)matcher.input() << "?/";
+    }
+    else
+    {
+      break;
+    }
+  }
+  std::cout << std::endl;
+  if (test != "a/a/b/c/c/d/")
+    error("unput");
+  //
+  banner(stdout, "TEST MORE");
+  //
+  matcher.pattern(pattern7);
+  matcher.input("abc");
+  test = "";
+  while (matcher.scan())
+  {
+    std::cout << matcher.text() << "/";
+    matcher.more();
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "a/ab/abc/")
+    error("more");
+  //
+  banner(stdout, "TEST LESS");
+  //
+  matcher.pattern(pattern1);
+  matcher.input("abc");
+  test = "";
+  while (matcher.scan())
+  {
+    matcher.less(1);
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "a/b/c/")
+    error("less");
+  //
+  banner(stdout, "TEST MATCHES");
+  //
+  if (StdMatcher("\\w+", "hello").matches()) // on the fly string matching
+    std::cout << "OK";
+  else
+    error("match results");
+  std::cout << std::endl;
+  if (StdMatcher("\\d", "0").matches())
+    std::cout << "OK";
+  else
+    error("match results");
+  std::cout << std::endl;
+  //
+  matcher.pattern(pattern1);
+  matcher.input("abc");
+  if (matcher.matches())
+    std::cout << "OK";
+  else
+    error("match results");
+  std::cout << std::endl;
+  //
+  matcher.pattern(pattern2);
+  matcher.input("abc");
+  if (matcher.matches())
+    std::cout << "OK";
+  else
+    error("match results");
+  std::cout << std::endl;
+  //
+  matcher.pattern(pattern6);
+  matcher.input("");
+  if (matcher.matches())
+    std::cout << "OK";
+  else
+    error("match results");
+  std::cout << std::endl;
+  //
+  matcher.pattern(pattern2);
+  matcher.input("---");
+  if (!matcher.matches())
+    std::cout << "OK";
+  else
+    error("match results");
+  std::cout << std::endl;
+  //
+  banner(stdout, "DONE");
+  //
+  return 0;
+}

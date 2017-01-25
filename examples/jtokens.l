@@ -3,8 +3,8 @@
 // Converts Unicode Escapes \uxxxx first, prior to lexical analysis
 
 %{
+#include <reflex/utf8.h>
 #include <stdio.h>
-#include "utf8.h"
 static bool is_keyword(const char *);
 %}
 

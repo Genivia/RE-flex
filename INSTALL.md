@@ -3,22 +3,30 @@
 Installation
 ------------
 
-Build the RE/flex regex library and the **reflex** tool as follows:
+    $ ./build.sh
 
-    ./build.sh
+or use the 'make' command to do the same:
 
-or use the make command:
+    $ cd src; make
 
-    cd src; make
-
-This compiles the reflex tool and installs it locally in bin/reflex.  You can
-add this location to your $PATH variable to enable the new reflex command:
+This compiles the **reflex** tool and installs it locally in reflex/bin.  You
+can add this location to your $PATH variable to enable the new reflex command:
 
     export PATH=$PATH:/reflex_install_path/bin
 
 The `libreflex.a` and `libreflex.so` libraries are saved in reflex/lib.  Link
 against one of these libraries when you use the RE/flex regex engine in your
-code.
+code.  The RE/flex header files are located in reflex/include/reflex.
+
+To install the library and the 'reflex' command in /usr/local/lib and
+/usr/local/bin:
+
+    $ sudo ./install.sh
+
+or use the 'make' command to do the same:
+
+    $ cd lib; sudo make install
+    $ cd src; sudo make install
 
 Windows users: use reflex/bin/reflex.exe.
 
@@ -78,19 +86,21 @@ following files:
     |   |__ ...
     |
     |__ include/
-    |   |__ abslexer.h
-    |   |__ absmatcher.h
-    |   |__ bits.h
-    |   |__ boostmatcher.h
-    |   |__ debug.h
-    |   |__ flexlexer.h
-    |   |__ input.h
-    |   |__ matcher.h
-    |   |__ pattern.h
-    |   |__ ranges.h
-    |   |__ setop.h
-    |   |__ traits.h
-    |   |__ utf8.h
+    |   |__ reflex/
+    |       |__ abslexer.h
+    |       |__ absmatcher.h
+    |       |__ bits.h
+    |       |__ boostmatcher.h
+    |       |__ debug.h
+    |       |__ flexlexer.h
+    |       |__ input.h
+    |       |__ matcher.h
+    |       |__ pattern.h
+    |       |__ ranges.h
+    |       |__ setop.h
+    |       |__ stdmatcher.h
+    |       |__ traits.h
+    |       |__ utf8.h
     |
     |__ lib/
     |   |__ Makefile

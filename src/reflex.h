@@ -37,8 +37,8 @@
 #ifndef REFLEX_H
 #define REFLEX_H
 
-#include "pattern.h"
-#include "utf8.h"
+#include <reflex/pattern.h>
+#include <reflex/utf8.h>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
@@ -54,7 +54,7 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.10"
+#define REFLEX_VERSION "0.9.11"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**

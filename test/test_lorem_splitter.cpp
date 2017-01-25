@@ -1,4 +1,4 @@
-#include "matcher.h"
+#include <reflex/matcher.h>
 
 void reflex_code_splitter(reflex::Matcher& m)
 {

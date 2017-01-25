@@ -1,5 +1,7 @@
 // test ranges.h
 
+#include <reflex/ranges.h>
+#include <reflex/bits.h>
 #include <bitset>
 #include <map>
 #include <iostream>
@@ -7,8 +9,6 @@
 #include <sys/times.h>
 #include <unistd.h>
 #include <cassert>
-#include "ranges.h"
-#include "bits.h"
 
 enum Color { RED, GREEN, BLUE };
 

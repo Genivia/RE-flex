@@ -1,5 +1,5 @@
 
-#include "boostmatcher.h"
+#include <reflex/boostmatcher.h>
 
 // #define INTERACTIVE // for interactive mode testing
 
@@ -93,7 +93,7 @@ Test tests[] = {
   { "\\Aa\\Z", "", "", "a", { 1 } },
   { "^a$", "", "", "a", { 1 } },
   { "^a$|\\n", "m", "", "a\na", { 1, 2, 1 } },
-  { "^a|a$|a|\n", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
+  { "^a|a$|a|\\n", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
 #ifndef INTERACTIVE
   { "\\Aa\\Z|\\Aa|a\\Z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },  // FIXME boost has a bug when interactive() blk=1
 #endif
@@ -221,7 +221,7 @@ int main()
   banner(stdout, "PATTERN TESTS");
   for (const Test *test = tests; test->pattern != NULL; ++test)
   {
-    std::string regex = reflex::BoostMatcher::regroup(test->pattern);
+    std::string regex = reflex::regroup(test->pattern);
     std::cout << regex << std::endl;
     boost::regex pattern(regex);
     BoostPosixMatcher matcher(pattern, test->cstring, test->mopts);
@@ -251,14 +251,14 @@ int main()
     }
     printf("OK\n\n");
   }
-  boost::regex pattern1("(\\w+)|(\\W)");
-  boost::regex pattern2("\\<.*\\>");
-  boost::regex pattern3(" ");
-  boost::regex pattern4("[ \\t]+");
-  boost::regex pattern5("\\b");
-  boost::regex pattern6("");
-  boost::regex pattern7("[[:alpha:]]");
-  boost::regex pattern8("\\w+");
+  BoostPosixMatcher pattern1("(\\w+)|(\\W)");
+  BoostPosixMatcher pattern2("\\<.*\\>");
+  BoostPosixMatcher pattern3(" ");
+  BoostPosixMatcher pattern4("[ \\t]+");
+  BoostPosixMatcher pattern5("\\b");
+  BoostPosixMatcher pattern6("");
+  BoostPosixMatcher pattern7("[[:alpha:]]");
+  BoostPosixMatcher pattern8("\\w+");
 
   BoostPosixMatcher matcher(pattern1);
   std::string test;
@@ -278,8 +278,8 @@ int main()
     error("find results");
   //
   matcher.pattern(pattern5);
-  matcher.input("a a");
   matcher.reset("N");
+  matcher.input("a a");
   test = "";
   while (matcher.find())
   {
@@ -418,15 +418,18 @@ int main()
   //
   matcher.pattern(pattern2);
   matcher.input("ab c  d");
+  test = "";
   while (true)
   {
     if (matcher.scan())
     {
       std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
     }
     else if (!matcher.at_end())
     {
       std::cout << (char)matcher.input() << "?/";
+      test.append("?/");
     }
     else
     {
@@ -434,18 +437,23 @@ int main()
     }
   }
   std::cout << std::endl;
+  if (test != "ab c  d/")
+    error("input");
   //
   matcher.pattern(pattern7);
   matcher.input("ab c  d");
+  test = "";
   while (true)
   {
     if (matcher.scan())
     {
       std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
     }
     else if (!matcher.at_end())
     {
       std::cout << (char)matcher.input() << "?/";
+      test.append("?/");
     }
     else
     {
@@ -453,6 +461,8 @@ int main()
     }
   }
   std::cout << std::endl;
+  if (test != "a/b/?/c/?/?/d/")
+    error("input");
   //
   matcher.pattern(pattern7);
   matcher.input("ab c  d");

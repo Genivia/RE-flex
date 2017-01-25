@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 15 2017</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -74,13 +74,17 @@ Inheritance diagram for reflex::AbstractMatcher:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreflex_1_1_abstract_matcher__inherit__graph.png" border="0" usemap="#reflex_1_1_abstract_matcher_inherit__map" alt="Inheritance graph"/></div>
 <map name="reflex_1_1_abstract_matcher_inherit__map" id="reflex_1_1_abstract_matcher_inherit__map">
-<area shape="rect" id="node2" href="classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; boost::regex \&gt;" alt="" coords="228,23,381,65"/>
-<area shape="rect" id="node6" href="classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="228,89,381,130"/>
-<area shape="rect" id="node8" href="classreflex_1_1_pattern_matcher.html" title="The pattern matcher class template extends abstract matcher base class. " alt="" coords="212,155,397,181"/>
-<area shape="rect" id="node3" href="classreflex_1_1_boost_matcher.html" title="Boost matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="445,31,589,57"/>
+<area shape="rect" id="node2" href="classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; boost::regex \&gt;" alt="" coords="228,29,381,70"/>
+<area shape="rect" id="node6" href="classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="228,94,381,135"/>
+<area shape="rect" id="node8" href="classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; std::regex \&gt;" alt="" coords="228,159,381,201"/>
+<area shape="rect" id="node12" href="classreflex_1_1_pattern_matcher.html" title="The pattern matcher class template extends abstract matcher base class. " alt="" coords="212,225,397,252"/>
+<area shape="rect" id="node3" href="classreflex_1_1_boost_matcher.html" title="Boost matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="445,36,589,63"/>
 <area shape="rect" id="node4" href="classreflex_1_1_boost_perl_matcher.html" title="Boost matcher engine class, extends reflex::BoostMatcher for Boost Perl regex matching. " alt="" coords="642,5,810,32"/>
 <area shape="rect" id="node5" href="classreflex_1_1_boost_posix_matcher.html" title="Boost matcher engine class, extends reflex::BoostMatcher for Boost POSIX regex matching. " alt="" coords="637,56,815,83"/>
-<area shape="rect" id="node7" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="462,96,573,123"/>
+<area shape="rect" id="node7" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="462,101,573,128"/>
+<area shape="rect" id="node9" href="classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="452,167,583,193"/>
+<area shape="rect" id="node10" href="classreflex_1_1_std_ecma_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for ECMA std::regex::ECMAScript regex matching..." alt="" coords="644,127,808,153"/>
+<area shape="rect" id="node11" href="classreflex_1_1_std_posix_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for POSIX ERE std::regex::awk regex matching..." alt="" coords="645,177,807,204"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -123,7 +127,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a66f487ab96e7cef1a66e9780dc45e315"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this matcher's state to the initial state and set options (when provided).  <a href="#a66f487ab96e7cef1a66e9780dc45e315">More...</a><br /></td></tr>
 <tr class="separator:a66f487ab96e7cef1a66e9780dc45e315"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fb96965d228951194f0a2b9ee574dcf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a0fb96965d228951194f0a2b9ee574dcf">buffer</a> (size_t blk=0)</td></tr>
-<tr class="memdesc:a0fb96965d228951194f0a2b9ee574dcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set buffer block size for reading: use 1 for interactive input, 0 (or omit argument) to buffer all input (returns true if the size of the input source is determinable).  <a href="#a0fb96965d228951194f0a2b9ee574dcf">More...</a><br /></td></tr>
+<tr class="memdesc:a0fb96965d228951194f0a2b9ee574dcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set buffer block size for reading: use 1 for interactive input, 0 (or omit argument) to buffer all input in which case returns true if all the data could be read and false if a read error occurred.  <a href="#a0fb96965d228951194f0a2b9ee574dcf">More...</a><br /></td></tr>
 <tr class="separator:a0fb96965d228951194f0a2b9ee574dcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4d10ba8daa30b65de57226bee6df0f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae4d10ba8daa30b65de57226bee6df0f3">interactive</a> (void)</td></tr>
 <tr class="memdesc:ae4d10ba8daa30b65de57226bee6df0f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set buffer to 1 for interactive input.  <a href="#ae4d10ba8daa30b65de57226bee6df0f3">More...</a><br /></td></tr>
@@ -141,19 +145,22 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:af98766486be261692680505f56cb35ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a positive integer (true) indicating the capture index of the matched text in the pattern or zero (false) for a mismatch.  <a href="#af98766486be261692680505f56cb35ff">More...</a><br /></td></tr>
 <tr class="separator:af98766486be261692680505f56cb35ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76b286603775cb0bd4544dbc40daaa91"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91">text</a> (void) const </td></tr>
-<tr class="memdesc:a76b286603775cb0bd4544dbc40daaa91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns string with the text matched by one of the match methods of this matcher.  <a href="#a76b286603775cb0bd4544dbc40daaa91">More...</a><br /></td></tr>
+<tr class="memdesc:a76b286603775cb0bd4544dbc40daaa91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns string with the text matched.  <a href="#a76b286603775cb0bd4544dbc40daaa91">More...</a><br /></td></tr>
 <tr class="separator:a76b286603775cb0bd4544dbc40daaa91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade44eb287414fbbf1d4eb1f9ff19aa7d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ade44eb287414fbbf1d4eb1f9ff19aa7d">size</a> (void) const </td></tr>
-<tr class="memdesc:ade44eb287414fbbf1d4eb1f9ff19aa7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the text matched by one of the match methods of this matcher.  <a href="#ade44eb287414fbbf1d4eb1f9ff19aa7d">More...</a><br /></td></tr>
+<tr class="memdesc:ade44eb287414fbbf1d4eb1f9ff19aa7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the matched text in number of bytes.  <a href="#ade44eb287414fbbf1d4eb1f9ff19aa7d">More...</a><br /></td></tr>
 <tr class="separator:ade44eb287414fbbf1d4eb1f9ff19aa7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a816080e7bb5268abc6f2b0357c5c0512"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a816080e7bb5268abc6f2b0357c5c0512">wsize</a> (void) const </td></tr>
+<tr class="memdesc:a816080e7bb5268abc6f2b0357c5c0512"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the matched text in number of (wide) characters.  <a href="#a816080e7bb5268abc6f2b0357c5c0512">More...</a><br /></td></tr>
+<tr class="separator:a816080e7bb5268abc6f2b0357c5c0512"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af555fb757972246f5173cb72eb4de65e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#af555fb757972246f5173cb72eb4de65e">lineno</a> (void) const </td></tr>
 <tr class="memdesc:af555fb757972246f5173cb72eb4de65e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the line number of the match in the input character sequence.  <a href="#af555fb757972246f5173cb72eb4de65e">More...</a><br /></td></tr>
 <tr class="separator:af555fb757972246f5173cb72eb4de65e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9a824cc1e84521cc64954b0675223a6"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae9a824cc1e84521cc64954b0675223a6">columno</a> (void) const </td></tr>
-<tr class="memdesc:ae9a824cc1e84521cc64954b0675223a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the column number of the match in the input character sequence.  <a href="#ae9a824cc1e84521cc64954b0675223a6">More...</a><br /></td></tr>
+<tr class="memdesc:ae9a824cc1e84521cc64954b0675223a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the column number of matched text, counting wide characters (unless compiled with WITH_BYTE_COLUMNO).  <a href="#ae9a824cc1e84521cc64954b0675223a6">More...</a><br /></td></tr>
 <tr class="separator:ae9a824cc1e84521cc64954b0675223a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc573eafc849b275d21b114abe1ea570"><td class="memItemLeft" align="right" valign="top">std::pair&lt; size_t, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#abc573eafc849b275d21b114abe1ea570">pair</a> () const </td></tr>
-<tr class="memdesc:abc573eafc849b275d21b114abe1ea570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched by one of the match methods of this matcher. ...">text()</a>, useful for tokenizing input into containers of pairs.  <a href="#abc573eafc849b275d21b114abe1ea570">More...</a><br /></td></tr>
+<tr class="memdesc:abc573eafc849b275d21b114abe1ea570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched. ">text()</a>, useful for tokenizing input into containers of pairs.  <a href="#abc573eafc849b275d21b114abe1ea570">More...</a><br /></td></tr>
 <tr class="separator:abc573eafc849b275d21b114abe1ea570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1daf7211f9b3f35eb6d05caf40b79d69"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a1daf7211f9b3f35eb6d05caf40b79d69">first</a> (void) const </td></tr>
 <tr class="memdesc:a1daf7211f9b3f35eb6d05caf40b79d69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the position of the first character starting the match in the input character sequence.  <a href="#a1daf7211f9b3f35eb6d05caf40b79d69">More...</a><br /></td></tr>
@@ -189,10 +196,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a98cc69fb68bd0535d639bf1dbb57f78a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch the rest of the input as text, useful for searching/splitting up to n times after which the rest is needed.  <a href="#a98cc69fb68bd0535d639bf1dbb57f78a">More...</a><br /></td></tr>
 <tr class="separator:a98cc69fb68bd0535d639bf1dbb57f78a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4270e8e6d4dba6bf6c45fdc2a8eed29"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#af4270e8e6d4dba6bf6c45fdc2a8eed29">more</a> (void)</td></tr>
-<tr class="memdesc:af4270e8e6d4dba6bf6c45fdc2a8eed29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append the next match to the currently matched text returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched by one of the match methods of this matcher. ...">AbstractMatcher::text</a>, when the next match found is adjacent to the current match.  <a href="#af4270e8e6d4dba6bf6c45fdc2a8eed29">More...</a><br /></td></tr>
+<tr class="memdesc:af4270e8e6d4dba6bf6c45fdc2a8eed29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append the next match to the currently matched text returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched. ">AbstractMatcher::text</a>, when the next match found is adjacent to the current match.  <a href="#af4270e8e6d4dba6bf6c45fdc2a8eed29">More...</a><br /></td></tr>
 <tr class="separator:af4270e8e6d4dba6bf6c45fdc2a8eed29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12ca0aa2d6ff88ac26f565ec5660787a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a12ca0aa2d6ff88ac26f565ec5660787a">less</a> (size_t n)</td></tr>
-<tr class="memdesc:a12ca0aa2d6ff88ac26f565ec5660787a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Truncate the <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched by one of the match methods of this matcher. ...">AbstractMatcher::text</a> length of the match to n characters in length and reposition for next match.  <a href="#a12ca0aa2d6ff88ac26f565ec5660787a">More...</a><br /></td></tr>
+<tr class="memdesc:a12ca0aa2d6ff88ac26f565ec5660787a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Truncate the <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched. ">AbstractMatcher::text</a> length of the match to n characters in length and reposition for next match.  <a href="#a12ca0aa2d6ff88ac26f565ec5660787a">More...</a><br /></td></tr>
 <tr class="separator:a12ca0aa2d6ff88ac26f565ec5660787a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e8cd6c7fde713a5ac68ec168291e03e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a2e8cd6c7fde713a5ac68ec168291e03e">operator size_t</a> () const </td></tr>
 <tr class="memdesc:a2e8cd6c7fde713a5ac68ec168291e03e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to positive integer indicating the nonzero capture index of the matched text in the pattern, same as <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">AbstractMatcher::accept</a>.  <a href="#a2e8cd6c7fde713a5ac68ec168291e03e">More...</a><br /></td></tr>
@@ -201,7 +208,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a360028bf97e0da02f6ffbcae031f9f35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to a std::string of the text matched by this matcher.  <a href="#a360028bf97e0da02f6ffbcae031f9f35">More...</a><br /></td></tr>
 <tr class="separator:a360028bf97e0da02f6ffbcae031f9f35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aeee06821a94df33a8c531d3913a5d7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a6aeee06821a94df33a8c531d3913a5d7">operator std::pair&lt; size_t, std::string &gt;</a> () const </td></tr>
-<tr class="memdesc:a6aeee06821a94df33a8c531d3913a5d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched by one of the match methods of this matcher. ...">text()</a>, useful for tokenization into containers.  <a href="#a6aeee06821a94df33a8c531d3913a5d7">More...</a><br /></td></tr>
+<tr class="memdesc:a6aeee06821a94df33a8c531d3913a5d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched. ">text()</a>, useful for tokenization into containers.  <a href="#a6aeee06821a94df33a8c531d3913a5d7">More...</a><br /></td></tr>
 <tr class="separator:a6aeee06821a94df33a8c531d3913a5d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0ccba7e796bc4cbf0fca4ddca5c7435"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ac0ccba7e796bc4cbf0fca4ddca5c7435">operator==</a> (const char *rhs) const </td></tr>
 <tr class="memdesc:ac0ccba7e796bc4cbf0fca4ddca5c7435"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if matched text is equal to a string, useful for std::algorithm.  <a href="#ac0ccba7e796bc4cbf0fca4ddca5c7435">More...</a><br /></td></tr>
@@ -253,6 +260,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ae819087683f79701d88152383c386ff4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae819087683f79701d88152383c386ff4">AbstractMatcher</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;inp, const char *opt)</td></tr>
 <tr class="memdesc:ae819087683f79701d88152383c386ff4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a base abstract matcher.  <a href="#ae819087683f79701d88152383c386ff4">More...</a><br /></td></tr>
 <tr class="separator:ae819087683f79701d88152383c386ff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4359a6cc60d672cb6818551a104c82d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a4359a6cc60d672cb6818551a104c82d3">AbstractMatcher</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;inp, const <a class="el" href="structreflex_1_1_abstract_matcher_1_1_option.html">Option</a> &amp;opt)</td></tr>
+<tr class="memdesc:a4359a6cc60d672cb6818551a104c82d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a base abstract matcher.  <a href="#a4359a6cc60d672cb6818551a104c82d3">More...</a><br /></td></tr>
+<tr class="separator:a4359a6cc60d672cb6818551a104c82d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71fb1dd387d86aca1e49629aad94ae73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a71fb1dd387d86aca1e49629aad94ae73">init</a> (const char *opt)</td></tr>
 <tr class="memdesc:a71fb1dd387d86aca1e49629aad94ae73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the base abstract matcher at construction.  <a href="#a71fb1dd387d86aca1e49629aad94ae73">More...</a><br /></td></tr>
 <tr class="separator:a71fb1dd387d86aca1e49629aad94ae73"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -344,7 +354,7 @@ Private Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The abstract matcher base class template defines an interface for all pattern matcher engines. </p>
 <p>The buffer expands when matches do not fit. The buffer size is initially 2*BLOCK size.</p>
-<div class="fragment"><div class="line">      _________________</div><div class="line">     |  |    |    |    |</div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a>=|  |<a class="code" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91">text</a>|<a class="code" href="classreflex_1_1_abstract_matcher.html#a98cc69fb68bd0535d639bf1dbb57f78a">rest</a>|free|</div><div class="line">     |__|____|____|____|</div><div class="line">        ^    ^    ^    ^</div><div class="line">        <a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a></div><div class="line"></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a> <span class="comment">// points to buffered input, grows to fit long matches</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <span class="comment">// current position in buf_ while matching text, cur_ = pos_ afterwards</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <span class="comment">// position in buf_ to start the next match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <span class="comment">// position in buf_ that is free to fill with more input</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a> <span class="comment">// allocated size of buf_</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8f6c1781c265bafe81b8b147a3d20a04">txt_</a> <span class="comment">// buf_ + cur_ points to the match, \0-terminated</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a63c1bbabe9a7e0dd1a8b43b9bce58dfc">len_</a> <span class="comment">// length of the match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#ae712053969ae8fadeee28c1e08421cf5">chr_</a> <span class="comment">// buf_[pos_] character after this match, with buf_[pos_] replaced with \0</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a15e3fb0e851b132fd1e902de9ab56dba">got_</a> <span class="comment">// buf_[cur_-1] character before this match (assigned before each match)</span></div></div><!-- fragment --><p>More info TODO </p>
+<div class="fragment"><div class="line">      _________________</div><div class="line">     |  |    |    |    |</div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a>=|  |<a class="code" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91">text</a>|<a class="code" href="classreflex_1_1_abstract_matcher.html#a98cc69fb68bd0535d639bf1dbb57f78a">rest</a>|free|</div><div class="line">     |__|____|____|____|</div><div class="line">        ^    ^    ^    ^</div><div class="line">        <a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a></div><div class="line"></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a> <span class="comment">// points to buffered input, grows to fit long matches</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <span class="comment">// current position in buf_ while matching text, cur_ = pos_ afterwards, changed by more()</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <span class="comment">// position in buf_ to start the next match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <span class="comment">// position in buf_ that is free to fill with more input</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a> <span class="comment">// allocated size of buf_</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8f6c1781c265bafe81b8b147a3d20a04">txt_</a> <span class="comment">// buf_ + cur_ points to the match, \0-terminated</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a63c1bbabe9a7e0dd1a8b43b9bce58dfc">len_</a> <span class="comment">// length of the match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#ae712053969ae8fadeee28c1e08421cf5">chr_</a> <span class="comment">// buf_[pos_] character after this match, with buf_[pos_] replaced with \0</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a15e3fb0e851b132fd1e902de9ab56dba">got_</a> <span class="comment">// buf_[cur_-1] character before this match (assigned before each match)</span></div></div><!-- fragment --><p>More info TODO </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a24336f3d3f122aa0e904fc18954943f8"></a>
 <div class="memitem">
@@ -432,6 +442,49 @@ Private Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">inp</td><td>input character sequence for this matcher </td></tr>
     <tr><td class="paramname">opt</td><td>option string of the form <code>(A|N|T(=[[:digit:]])?|;)*</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a4359a6cc60d672cb6818551a104c82d3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">reflex::AbstractMatcher::AbstractMatcher </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;&#160;</td>
+          <td class="paramname"><em>inp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structreflex_1_1_abstract_matcher_1_1_option.html">Option</a> &amp;&#160;</td>
+          <td class="paramname"><em>opt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a base abstract matcher. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inp</td><td>input character sequence for this matcher </td></tr>
+    <tr><td class="paramname">opt</td><td>options </td></tr>
   </table>
   </dd>
 </dl>
@@ -569,7 +622,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Set buffer block size for reading: use 1 for interactive input, 0 (or omit argument) to buffer all input (returns true if the size of the input source is determinable). </p>
+<p>Set buffer block size for reading: use 1 for interactive input, 0 (or omit argument) to buffer all input in which case returns true if all the data could be read and false if a read error occurred. </p>
 <dl class="section return"><dt>Returns</dt><dd>true when successful to buffer all input when n=0. </dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Use this method before any matching is done and before any input is read since the last time input was (re)set. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -603,7 +656,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the column number of the match in the input character sequence. </p>
+<p>Returns the column number of matched text, counting wide characters (unless compiled with WITH_BYTE_COLUMNO). </p>
 <dl class="section return"><dt>Returns</dt><dd>column number. </dd></dl>
 
 </div>
@@ -860,6 +913,8 @@ Private Member Functions</h2></td></tr>
   </dd>
 </dl>
 
+<p>Reimplemented in <a class="el" href="classreflex_1_1_std_matcher.html#a4f1a7fa4798bc540ae2d5c796dbc9edc">reflex::StdMatcher</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a03caa10f1e6ef8fb07075c95bf44d028"></a>
@@ -965,7 +1020,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Truncate the <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched by one of the match methods of this matcher. ...">AbstractMatcher::text</a> length of the match to n characters in length and reposition for next match. </p>
+<p>Truncate the <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched. ">AbstractMatcher::text</a> length of the match to n characters in length and reposition for next match. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">n</td><td>truncated string length </td></tr>
@@ -1027,7 +1082,7 @@ Private Member Functions</h2></td></tr>
 <p>The abstract match operation implemented by pattern matching engines derived from <a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">AbstractMatcher</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>nonzero when input matched the pattern using method <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a57efdf6e79f50205036bc4d55e9908e7" title="AbstractMatcher::match method is to scan input (tokenizer) ">Const::SCAN</a>, <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#af03daba13cf299ee0e6be2e37ebe59b7" title="AbstractMatcher::match method is to find pattern in input. ">Const::FIND</a>, <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a48f6d3e22c2f018fef95b2367a2a9aa4" title="AbstractMatcher::match method is to split input at pattern matches. ">Const::SPLIT</a>, or <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#aa1fe9eb434ef5ff539b01a601977f9ee" title="AbstractMatcher::match method is to match the entire input. ">Const::MATCH</a>. </dd></dl>
 
-<p>Implemented in <a class="el" href="classreflex_1_1_matcher.html#ab8a1264b3ede06dbba853b1ca0baead5">reflex::Matcher</a>, and <a class="el" href="classreflex_1_1_boost_matcher.html#a90178f2e17c8dea08fcc8efc2b85339e">reflex::BoostMatcher</a>.</p>
+<p>Implemented in <a class="el" href="classreflex_1_1_matcher.html#ab8a1264b3ede06dbba853b1ca0baead5">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#abf3a32ee06cd50c2ec10c1825ea2aee7">reflex::StdMatcher</a>, and <a class="el" href="classreflex_1_1_boost_matcher.html#a90178f2e17c8dea08fcc8efc2b85339e">reflex::BoostMatcher</a>.</p>
 
 </div>
 </div>
@@ -1080,7 +1135,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Append the next match to the currently matched text returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched by one of the match methods of this matcher. ...">AbstractMatcher::text</a>, when the next match found is adjacent to the current match. </p>
+<p>Append the next match to the currently matched text returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched. ">AbstractMatcher::text</a>, when the next match found is adjacent to the current match. </p>
 
 </div>
 </div>
@@ -1131,8 +1186,8 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Cast this matcher to a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched by one of the match methods of this matcher. ...">text()</a>, useful for tokenization into containers. </p>
-<dl class="section return"><dt>Returns</dt><dd>a std::pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched by one of the match methods of this matcher. ...">text()</a>. </dd></dl>
+<p>Cast this matcher to a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched. ">text()</a>, useful for tokenization into containers. </p>
+<dl class="section return"><dt>Returns</dt><dd>a std::pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched. ">text()</a>. </dd></dl>
 
 </div>
 </div>
@@ -1447,8 +1502,8 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched by one of the match methods of this matcher. ...">text()</a>, useful for tokenizing input into containers of pairs. </p>
-<dl class="section return"><dt>Returns</dt><dd>a std::pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched by one of the match methods of this matcher. ...">text()</a>. </dd></dl>
+<p>Returns a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched. ">text()</a>, useful for tokenizing input into containers of pairs. </p>
+<dl class="section return"><dt>Returns</dt><dd>a std::pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af98766486be261692680505f56cb35ff" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a76b286603775cb0bd4544dbc40daaa91" title="Returns string with the text matched. ">text()</a>. </dd></dl>
 
 </div>
 </div>
@@ -1503,7 +1558,7 @@ Private Member Functions</h2></td></tr>
 
 <p>Reset this matcher's state to the initial state and set options (when provided). </p>
 
-<p>Reimplemented in <a class="el" href="classreflex_1_1_matcher.html#a641754cf7025a978c7dc672a563ac5c0">reflex::Matcher</a>, and <a class="el" href="classreflex_1_1_boost_matcher.html#a49d2b5f7c6261d57274447345b6c7c81">reflex::BoostMatcher</a>.</p>
+<p>Reimplemented in <a class="el" href="classreflex_1_1_matcher.html#a641754cf7025a978c7dc672a563ac5c0">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a49d2b5f7c6261d57274447345b6c7c81">reflex::BoostMatcher</a>, and <a class="el" href="classreflex_1_1_std_matcher.html#aeb6cb1ab8afe16437091c1e29af2b7e4">reflex::StdMatcher</a>.</p>
 
 </div>
 </div>
@@ -1640,8 +1695,8 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the length of the text matched by one of the match methods of this matcher. </p>
-<dl class="section return"><dt>Returns</dt><dd>string length. </dd></dl>
+<p>Returns the length of the matched text in number of bytes. </p>
+<dl class="section return"><dt>Returns</dt><dd>match size in bytes. </dd></dl>
 
 </div>
 </div>
@@ -1667,7 +1722,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns string with the text matched by one of the match methods of this matcher. </p>
+<p>Returns string with the text matched. </p>
 <dl class="section return"><dt>Returns</dt><dd>NUL-terminated const char* string. </dd></dl>
 
 </div>
@@ -1754,6 +1809,33 @@ Private Member Functions</h2></td></tr>
 
 <p>Returns true if wrapping of input after EOF is supported. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if input was succesfully wrapped. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a816080e7bb5268abc6f2b0357c5c0512"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::AbstractMatcher::wsize </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the length of the matched text in number of (wide) characters. </p>
+<dl class="section return"><dt>Returns</dt><dd>the length of the match in number of (wide, multibyte UTF-8) characters. </dd></dl>
 
 </div>
 </div>
@@ -2216,7 +2298,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 15 2017 16:13:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jan 25 2017 18:16:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

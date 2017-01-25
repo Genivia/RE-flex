@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">absmatcher.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 15 2017</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -45,13 +45,14 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_bb8a7beb94a1b7afd52842cbf47ddd3e.html">reflex</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">absmatcher.h File Reference</div>  </div>
@@ -60,9 +61,10 @@
 
 <p>RE/flex abstract matcher base class and pattern matcher class.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="debug_8h.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="input_8h.html">input.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="traits_8h.html">traits.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="debug_8h.html">reflex/debug.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="input_8h.html">reflex/input.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="traits_8h.html">reflex/traits.h</a>&gt;</code><br />
+<code>#include &lt;cstdlib&gt;</code><br />
 <code>#include &lt;cctype&gt;</code><br />
 <code>#include &lt;iterator&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -70,10 +72,10 @@ Include dependency graph for absmatcher.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="absmatcher_8h__incl.png" border="0" usemap="#absmatcher_8h" alt=""/></div>
 <map name="absmatcher_8h" id="absmatcher_8h">
-<area shape="rect" id="node2" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="57,80,128,107"/>
-<area shape="rect" id="node4" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="175,80,237,107"/>
-<area shape="rect" id="node10" href="traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="261,80,324,107"/>
-<area shape="rect" id="node5" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="146,155,202,181"/>
+<area shape="rect" id="node2" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="41,80,147,107"/>
+<area shape="rect" id="node4" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="185,80,283,107"/>
+<area shape="rect" id="node10" href="traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="307,80,406,107"/>
+<area shape="rect" id="node5" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="147,155,239,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -83,6 +85,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <map name="absmatcher_8hdep" id="absmatcher_8hdep">
 <area shape="rect" id="node2" href="boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="5,80,119,107"/>
 <area shape="rect" id="node3" href="matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="143,80,224,107"/>
+<area shape="rect" id="node4" href="stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="249,80,347,107"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -112,8 +115,16 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacereflex"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html">reflex</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a848ff944c984502c0739b440d647f0ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="absmatcher_8h.html#a848ff944c984502c0739b440d647f0ce">WITH_REALLOC</a></td></tr>
+<tr class="separator:a848ff944c984502c0739b440d647f0ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:aa971e8de839b917d033769272aa992e7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#aa971e8de839b917d033769272aa992e7">reflex::regroup</a> (const std::string &amp;regex)</td></tr>
+<tr class="memdesc:aa971e8de839b917d033769272aa992e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Regroup: convert a string regex to a regex with group captures only for the outermost (top-level) choices. All outermost (top-level) choices <code>X1</code>, <code>X2</code>, ... <code>Xn</code> in a regex <code>X1|X2|...|Xn</code> are regrouped such that <code>X1|X2|...|Xn</code> =&gt; <code>(X1)|(X2)|...|(Xn)</code>. Innermost (nested) group captures <code>(Y)</code> are converted to non-captured <code>(Y)</code> =&gt; <code>(?:Y)</code>. All existing non-capturing groups are retained. For example, <code>a|b(c)|(?:d)</code> =&gt; <code>(a)|(b(?:c))|((?:d))</code>.  <a href="namespacereflex.html#aa971e8de839b917d033769272aa992e7">More...</a><br /></td></tr>
+<tr class="separator:aa971e8de839b917d033769272aa992e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">reflex::isword</a> (int c)</td></tr>
 <tr class="memdesc:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check word character.  <a href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">More...</a><br /></td></tr>
 <tr class="separator:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,10 +135,23 @@ Functions</h2></td></tr>
 <dl class="section copyright"><dt>Copyright</dt><dd>(c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
 <dd>
 (c) BSD-3 License - see LICENSE.txt </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a848ff944c984502c0739b440d647f0ce"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define WITH_REALLOC</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 15 2017 16:13:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jan 25 2017 18:16:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

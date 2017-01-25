@@ -1,0 +1,7 @@
+<map id="stdmatcher.h" name="stdmatcher.h">
+<area shape="rect" id="node2" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="339,80,478,107"/>
+<area shape="rect" id="node3" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="41,155,147,181"/>
+<area shape="rect" id="node5" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="185,155,283,181"/>
+<area shape="rect" id="node11" href="$traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="307,155,406,181"/>
+<area shape="rect" id="node6" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="147,229,239,256"/>
+</map>

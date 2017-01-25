@@ -1,6 +1,6 @@
 // test bits.h
 
-#include "bits.h"
+#include <reflex/bits.h>
 #include <iostream>
 #include <cassert>
 

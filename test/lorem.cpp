@@ -1,6 +1,7 @@
-#include "boostmatcher.h"
-#include "pattern.h"
-#include "matcher.h"
+#include <reflex/matcher.h>
+#include <reflex/boostmatcher.h>
+#include <reflex/stdmatcher.h>
+#include <fstream>
 #include <sys/time.h>
 
 #ifndef DEBUG
@@ -199,8 +200,11 @@ void test_lorem(const char *title, AbstractMatcher &tokenizer, AbstractMatcher &
   {
     filter.input(lorem);
     std::vector<std::string> words(filter.find.begin(), filter.find.end());
+    hits = words.size();
   }
   timer("Populating a vector of lorem string words took");
+  if (hits != 1211)
+    printf("FAIL hits=%zu\n", hits);
 
   file = fopen("lorem.txt", "r");
   tokenizer.input(file);
@@ -280,6 +284,22 @@ void test_lorem(const char *title, AbstractMatcher &tokenizer, AbstractMatcher &
   timer("Scanning lorem string stream took");
   if (hits != 2682)
     printf("FAIL hits=%zu\n", hits);
+
+  std::ifstream ifs("lorem.txt", std::ifstream::in);
+  timer();
+  for (size_t run = 0; run < RUNS; ++run)
+  {
+    ifs.clear(); // always do this before seekg()
+    ifs.seekg(0);
+    tokenizer.input(ifs);
+    hits = 0;
+    while (tokenizer.scan())
+      ++hits;
+  }
+  timer("Scanning lorem file stream took");
+  ifs.close();
+  if (hits != 2682)
+    printf("FAIL hits=%zu\n", hits);
 }
 
 int main()
@@ -310,6 +330,11 @@ int main()
   BoostMatcher boost_filter("\\w+");
   BoostMatcher boost_splitter("\\s+");
   test_lorem("Boost.Regex", boost_tokenizer, boost_filter, boost_splitter);
+
+  StdMatcher std_tokenizer("(\\w+)|(\\W)");
+  StdMatcher std_filter("\\w+");
+  StdMatcher std_splitter("\\s+");
+  test_lorem("std::regex", std_tokenizer, std_filter, std_splitter);
 
   return 0;
 }

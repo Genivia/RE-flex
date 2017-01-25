@@ -36,6 +36,9 @@
 
 #include "reflex.h"
 
+/// Work around the Boost.Regex partial_match bug by forcing the generated scanner to buffer all input
+#define WITH_BOOST_PARTIAL_MATCH_BUG
+
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
 //  Unicode scripts                                                           //
@@ -1933,17 +1936,17 @@ void Reflex::write_class(void)
   write_banner("REGEX MATCHER");
   if (options["matcher"] == "boost")
   {
-    *out << "#include \"boostmatcher.h\"" << std::endl;
+    *out << "#include <reflex/boostmatcher.h>" << std::endl;
     matcher = "reflex::BoostPosixMatcher";
   }
   else if (options["matcher"] == "boost-perl")
   {
-    *out << "#include \"boostmatcher.h\"" << std::endl;
+    *out << "#include <reflex/boostmatcher.h>" << std::endl;
     matcher = "reflex::BoostPerlMatcher";
   }
   else if (options["matcher"].empty())
   {
-    *out << "#include \"matcher.h\"" << std::endl;
+    *out << "#include <reflex/matcher.h>" << std::endl;
     matcher = "reflex::Matcher";
   }
   else
@@ -1956,7 +1959,7 @@ void Reflex::write_class(void)
   if (!options["flex"].empty())
   {
     write_banner("FLEX-COMPATIBLE ABSTRACT LEXER CLASS AND FLEX DEFINITIONS");
-    *out << "#include \"flexlexer.h\"" << std::endl;
+    *out << "#include <reflex/flexlexer.h>" << std::endl;
     size_t num_rules = 0;
     for (Start start = 0; start < conditions.size(); ++start)
       num_rules += rules[start].size();
@@ -1978,7 +1981,7 @@ void Reflex::write_class(void)
   else
   {
     write_banner("ABSTRACT LEXER CLASS");
-    *out << "#include \"abslexer.h\"" << std::endl;
+    *out << "#include <reflex/abslexer.h>" << std::endl;
     base.append("reflex::AbstractLexer<").append(matcher).append(">");
   }
   write_banner("LEXER CLASS");
@@ -1993,7 +1996,7 @@ void Reflex::write_class(void)
     *out <<
       " public:\n"
       "  " << lexer << "(\n"
-      "      const reflex::Input& input = stdin,\n"
+      "      const reflex::Input& input = " << (options["nostdinit"].empty() ? "stdin" : "std::cin") << ",\n"
       "      std::ostream        *os    = NULL)\n"
       "    :\n"
       "      " << base << "(input, os)\n";
@@ -2037,7 +2040,8 @@ void Reflex::write_class(void)
         "      std::ostream        *os = NULL)\n"
         "  {\n"
         "    in(input);\n"
-        "    out(os ? *os : std::cout);\n"
+        "    if (os)\n"
+	"      out(*os);\n"
         "    return " << lex << "();\n"
         "  }"
         << std::endl;
@@ -2055,12 +2059,12 @@ void Reflex::write_class(void)
     write_section_class();
     *out <<
       " public:\n"
-      "  typedef " << base << " BaseLexer;\n"
+      "  typedef " << base << " AbstractBaseLexer;\n"
       "  " << lexer << "(\n"
       "      const reflex::Input& input = " << (options["nostdinit"].empty() ? "stdin" : "std::cin") << ",\n" <<
       "      std::ostream&        os    = std::cout)\n"
       "    :\n"
-      "      BaseLexer(input, os)\n";
+      "      AbstractBaseLexer(input, os)\n";
     write_section_init();
     for (Start start = 0; start < conditions.size(); ++start)
       *out <<
@@ -2079,10 +2083,11 @@ void Reflex::write_class(void)
       *out <<
         "  int " << lex << "(\n"
         "      const reflex::Input& input,\n"
-        "      std::ostream&        os = std::cout)\n"
+        "      std::ostream        *os = NULL)\n"
         "  {\n"
         "    in(input);\n"
-        "    out(os);\n"
+        "    if (os)\n"
+	"      out(*os);\n"
         "    return " << lex << "();\n"
         "  }\n";
     *out <<
@@ -2396,6 +2401,13 @@ void Reflex::write_lexer(void)
   else
     *out <<
       "    matcher(new Matcher(PATTERN_" << conditions[0] << ", in(), this));\n";
+#ifdef WITH_BOOST_PARTIAL_MATCH_BUG
+  if (options["matcher"] == "boost" || options["matcher"] == "boost-perl")
+    *out <<
+      "    if (!matcher().buffer()) // work around Boost.Regex match_partial bug\n"
+      "      return 0; // could not buffer: terminate\n";
+  else
+#endif
   if (!options["interactive"].empty() || !options["always_interactive"].empty())
     *out <<
       "    matcher().interactive();\n";
@@ -2625,7 +2637,7 @@ void Reflex::write_stats(void)
         for (size_t rule = 0; rule < rules[start].size(); ++rule)
           if (rules[start][rule].regex != "<<EOF>>")
             if (!pattern.reachable(accept++))
-              warning("rule cannot be matched", "", rules[start][rule].code.lineno);
+              warning("rule cannot be matched because a previous rule subsumes it, perhaps move this rule up?", "", rules[start][rule].code.lineno);
         reflex::Pattern::Index n = 0;
         if (!patterns[start].empty())
           n = pattern.size();

@@ -34,7 +34,7 @@
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
-#include "utf8.h"
+#include <reflex/utf8.h>
 
 namespace reflex {
 

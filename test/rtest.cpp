@@ -4,8 +4,7 @@
 // Or disable trigraphs by enabling the GNU standard:
 // c++ -std=gnu++11 -Wall test.cpp pattern.cpp matcher.cpp
 
-#include "pattern.h"
-#include "matcher.h"
+#include <reflex/matcher.h>
 
 // #define INTERACTIVE // for interactive mode testing
 
@@ -112,7 +111,7 @@ Test tests[] = {
   { "\\Aa\\Z", "", "", "a", { 1 } },
   { "^a$", "", "", "a", { 1 } },
   { "^a$|\\n", "m", "", "a\na", { 1, 2, 1 } },
-  { "^a|a$|a|\n", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
+  { "^a|a$|a|\\n", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
   { "\\Aa\\Z|\\Aa|a\\Z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },
   // Optional X?
   { "a?z", "", "", "azz", { 1, 1 } },
@@ -302,8 +301,8 @@ int main()
     error("find results");
   //
   matcher.pattern(pattern5);
-  matcher.input("a a");
   matcher.reset("N");
+  matcher.input("a a");
   test = "";
   while (matcher.find())
   {
@@ -442,15 +441,18 @@ int main()
   //
   matcher.pattern(pattern2);
   matcher.input("ab c  d");
+  test = "";
   while (true)
   {
     if (matcher.scan())
     {
       std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
     }
     else if (!matcher.at_end())
     {
       std::cout << (char)matcher.input() << "?/";
+      test.append("?/");
     }
     else
     {
@@ -458,18 +460,23 @@ int main()
     }
   }
   std::cout << std::endl;
+  if (test != "ab c  d/")
+    error("input");
   //
   matcher.pattern(pattern7);
   matcher.input("ab c  d");
+  test = "";
   while (true)
   {
     if (matcher.scan())
     {
       std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
     }
     else if (!matcher.at_end())
     {
       std::cout << (char)matcher.input() << "?/";
+      test.append("?/");
     }
     else
     {
@@ -477,6 +484,8 @@ int main()
     }
   }
   std::cout << std::endl;
+  if (test != "a/b/?/c/?/?/d/")
+    error("input");
   //
   matcher.pattern(pattern7);
   matcher.input("ab c  d");
