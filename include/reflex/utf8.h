@@ -42,26 +42,20 @@
 
 namespace reflex {
 
-#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
-typedef unsigned int unicode_t;
-#else
-typedef wchar_t unicode_t;
-#endif
-
-/// Convert a UCS range [a,b] to a UTF-8 regex pattern.
+/// Convert a UCS-4 range [a,b] to a UTF-8 regex pattern.
 std::string utf8(
-    unicode_t   a,             ///< lower bound of UCS range
-    unicode_t   b,             ///< upper bound of UCS range
-    bool        strict = true, ///< returned regex is strict UTF-8 (true) or permissive and lean UTF-8 (false)
-    const char *esc = NULL     ///< escape char(s), 0-3 chars limit, one backslash "\\" is the default
+    int  a,            ///< lower bound of UCS range
+    int  b,            ///< upper bound of UCS range
+    int  esc = 'x',    ///< escape char 'x' for hex \xXX, or '0' or '\0' for octal \0nnn and \nnn
+    bool strict = true ///< returned regex is strict UTF-8 (true) or permissive and lean UTF-8 (false)
     )
   /// @returns regex string to match the UCS range encoded in UTF-8.
   ;
 
-/// Convert UCS to UTF-8.
+/// Convert UCS-4 to UTF-8, unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED.
 inline size_t utf8(
-    unicode_t c, ///< UCS character
-    char     *s) ///< points to the buffer to populate with UTF-8 (1 to 6 bytes) not \0-terminated
+    int   c, ///< UCS-4 character U+0000 to U+10ffff (unless WITH_UTF8_UNRESTRICTED)
+    char *s) ///< points to the buffer to populate with UTF-8 (1 to 6 bytes) not \0-terminated
   /// @returns length (in bytes) of UTF-8 character sequence stored in s.
 {
   if (c < 0x80)
@@ -117,47 +111,87 @@ inline size_t utf8(
 }
 
 /// Convert UTF-8 to UCS, returns 0xFFFD for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove this limit to support lossless UTF-8 encoding up to 6 bytes).
-inline unicode_t utf8(const char *s) ///< points to the buffer with UTF-8 (1 to 6 bytes)
+inline int utf8(
+    const char *s,         ///< points to the buffer with UTF-8 (1 to 6 bytes)
+    const char **r = NULL) ///< points to pointer to set to the new position in s after the UTF-8 sequence, optional
   /// @returns UCS character.
 {
-  unicode_t c;
+  int c;
   c = static_cast<unsigned char>(*s++);
-  if (c < 0x80)
-    return c;
-  unicode_t c1 = static_cast<unsigned char>(*s++);
+  if (c >= 0x80)
+  {
+    int c1 = static_cast<unsigned char>(*s);
 #ifndef WITH_UTF8_UNRESTRICTED
-  // reject invalid UTF-8 but permit Modified UTF-8 (MUTF-8) U+0000
-  if (c < 0xC0 || (c == 0xC0 && c1 != 0x80) || c == 0xC1 || (c1 & 0xC0) != 0x80)
-    return 0xFFFD;
+    // reject invalid UTF-8 but permit Modified UTF-8 (MUTF-8) U+0000
+    if (c < 0xC0 || (c == 0xC0 && c1 != 0x80) || c == 0xC1 || (c1 & 0xC0) != 0x80)
+    {
+      c = 0xFFFD;
+    }
+    else
 #endif
-  c1 &= 0x3F;
-  if (c < 0xE0)
-    return (((c & 0x1F) << 6) | c1);
-  unicode_t c2 = static_cast<unsigned char>(*s++);
+    {
+      ++s;
+      c1 &= 0x3F;
+      if (c < 0xE0)
+      {
+        c = (((c & 0x1F) << 6) | c1);
+      }
+      else
+      {
+        int c2 = static_cast<unsigned char>(*s);
 #ifndef WITH_UTF8_UNRESTRICTED
-  // reject invalid UTF-8
-  if ((c == 0xE0 && c1 < 0x20) || (c2 & 0xC0) != 0x80)
-    return 0xFFFD;
+        // reject invalid UTF-8
+        if ((c == 0xE0 && c1 < 0x20) || (c2 & 0xC0) != 0x80)
+        {
+          c = 0xFFFD;
+        }
+        else
 #endif
-  c2 &= 0x3F;
-  if (c < 0xF0)
-    return (((c & 0x0F) << 12) | (c1 << 6) | c2);
-  unicode_t c3 = static_cast<unsigned char>(*s++);
+        {
+          ++s;
+          c2 &= 0x3F;
+          if (c < 0xF0)
+          {
+            c = (((c & 0x0F) << 12) | (c1 << 6) | c2);
+          }
+          else
+          {
+            int c3 = static_cast<unsigned char>(*s);
 #ifndef WITH_UTF8_UNRESTRICTED
-  // reject invalid UTF-8
-  if ((c == 0xF0 && c1 < 0x10) || (c == 0xF4 && c1 >= 0x10) || c >= 0xF5 || (c3 & 0xC0) != 0x80)
-    return 0xFFFD;
-  return (((c & 0x07) << 18) | (c1 << 12) | (c2 << 6) | (c3 & 0x3F));
+            // reject invalid UTF-8
+            if ((c == 0xF0 && c1 < 0x10) || (c == 0xF4 && c1 >= 0x10) || c >= 0xF5 || (c3 & 0xC0) != 0x80)
+            {
+              c = 0xFFFD;
+            }
+            else
+            {
+              ++s;
+              c = (((c & 0x07) << 18) | (c1 << 12) | (c2 << 6) | (c3 & 0x3F));
+            }
 #else
-  c3 &= 0x3F;
-  if (c < 0xF8)
-    return (((c & 0x07) << 18) | (c1 << 12) | (c2 << 6) | c3);
-  unicode_t c4 = static_cast<unsigned char>(*s++);
-  c4 &= 0x3F;
-  if (c < 0xFC)
-    return (((c & 0x03) << 24) | (c1 << 18) | (c2 << 12) | (c3 << 6) | c4);
-  return (((c & 0x01) << 30) | (c1 << 24) | (c2 << 18) | (c3 << 12) | (c4 << 6) | (static_cast<unsigned char>(*s++) & 0x3F));
+            ++s;
+            c3 &= 0x3F;
+            if (c < 0xF8)
+            {
+              c = (((c & 0x07) << 18) | (c1 << 12) | (c2 << 6) | c3);
+            }
+            else
+            {
+              int c4 = static_cast<unsigned char>(*s++) & 0x3F;
+              if (c < 0xFC)
+                c = (((c & 0x03) << 24) | (c1 << 18) | (c2 << 12) | (c3 << 6) | c4);
+              else
+                c = (((c & 0x01) << 30) | (c1 << 24) | (c2 << 18) | (c3 << 12) | (c4 << 6) | (static_cast<unsigned char>(*s++) & 0x3F));
+            }
 #endif
+          }
+        }
+      }
+    }
+  }
+  if (r != NULL)
+    *r = s;
+  return c;
 }
 
 } // namespace reflex

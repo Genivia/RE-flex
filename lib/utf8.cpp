@@ -38,39 +38,72 @@
 
 namespace reflex {
 
-static const char *hex_r(char *buf, int a, const char *esc, size_t *n = NULL)
+static const char *regex_char(char *buf, int a, int esc, size_t *n = NULL)
 {
-  size_t k = strlen(esc);
-  std::memcpy(buf, esc, k);
-  buf[k] = 'x';
-  buf[k + 1] = "0123456789abcdef"[a >> 4 & 0xf];
-  buf[k + 2] = "0123456789abcdef"[a & 0xf];
-  buf[k + 3] = '\0';
-  if (n)
-    *n = k + 3;
+  static const char digits[] = "0123456789abcdef";
+  if (a >= '!' && a <= '~' && a != '-' && a != '[' && a != '\\' && a != ']' && a != '^' &&
+      (n != NULL || (a <= 'z' && a != '$' && a != '(' && a != ')' && a != '*' && a != '+' && a != '.' && a != '?'))
+     )
+  {
+    buf[0] = a;
+    buf[1] = '\0';
+    if (n)
+      *n = 1;
+  }
+  else
+  {
+    buf[0] = '\\';
+    if (esc == 'x')
+    {
+      buf[1] = 'x';
+      buf[2] = digits[a >> 4 & 0xf];
+      buf[3] = digits[a & 0xf];
+      buf[4] = '\0';
+      if (n)
+	*n = 4;
+    }
+    else if (esc == '0')
+    {
+      buf[1] = '0';
+      buf[2] = digits[a >> 6 & 7];
+      buf[3] = digits[a >> 3 & 7];
+      buf[4] = digits[a & 7];
+      buf[5] = '\0';
+      if (n)
+	*n = 5;
+    }
+    else
+    {
+      buf[1] = digits[a >> 6 & 7];
+      buf[2] = digits[a >> 3 & 7];
+      buf[3] = digits[a & 7];
+      buf[4] = '\0';
+      if (n)
+	*n = 4;
+    }
+  }
   return buf;
 }
 
-static const char *hex_r(char *buf, int a, int b, const char *esc)
+static const char *regex_range(char *buf, int a, int b, int esc)
 {
   if (a == b)
-    return hex_r(buf, a, esc);
-  size_t n;
+    return regex_char(buf, a, esc);
+  size_t n, m;
   buf[0] = '[';
-  hex_r(buf + 1, a, esc, &n);
-  buf[n + 1] = '-';
-  hex_r(buf + n + 2, b, esc);
-  buf[2*n + 2] = ']';
-  buf[2*n + 3] = '\0';
+  regex_char(buf + 1, a, esc, &n);
+  if (b > a + 1)
+    buf[++n] = '-';
+  regex_char(buf + ++n, b, esc, &m);
+  buf[n + m] = ']';
+  buf[n + m + 1] = '\0';
   return buf;
 }
 
-std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
+std::string utf8(int a, int b, int esc, bool strict)
 {
-  if (esc == NULL || std::strlen(esc) > 3)
-    esc = "\\";
   if (a < 0)
-    return std::string(esc) + "x80"; // undefined
+    return ""; // undefined
   if (a > b)
     b = a;
   static const char *min_utf8_strict[6] = { // strict: exact UTF-8 validation
@@ -81,7 +114,7 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
     "\xf8\x88\x80\x80\x80",
     "\xfc\x84\x80\x80\x80\x80"
   };
-  static const char *min_utf8_lean[6] = { // lean: perimissive UTF-8 validation with more tightly compressed UTF-8
+  static const char *min_utf8_lean[6] = { // lean: permissive UTF-8 validation with more tightly compressed UTF-8
     "\x00",
     "\xc2\x80",
     "\xe0\x80\x80",
@@ -109,7 +142,7 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
   std::string regex;
   if (strict)
   {
-    hex_r(any, 0x80, 0xbf, esc);
+    regex_range(any, 0x80, 0xbf, esc);
   }
   else
   {
@@ -124,7 +157,7 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
       bs = reinterpret_cast<const unsigned char*>(bt);
     size_t i;
     for (i = 0; i < n && as[i] == bs[i]; ++i)
-      regex.append(hex_r(buf, as[i], esc));
+      regex.append(regex_char(buf, as[i], esc));
     int l = 0; // pattern compression: l == 0 -> as[i+1..n-1] == UTF-8 lower bound
     for (size_t k = i + 1; k < n && l == 0; ++k)
       if (as[k] != 0x80)
@@ -141,13 +174,13 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
       if (l != 0)
       {
         size_t p = 0;
-        regex.append(hex_r(buf, as[i], esc));
+        regex.append(regex_char(buf, as[i], esc));
         ++i;
         while (i + 1 < n)
         {
           if (as[i + 1] == 0x80) // pattern compression
           {
-            regex.append(hex_r(buf, as[i], 0xbf, esc));
+            regex.append(regex_range(buf, as[i], 0xbf, esc));
             for (++i; i < n && as[i] == 0x80; ++i)
               regex.append(any);
           }
@@ -156,17 +189,17 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
             if (as[i] != 0xbf)
             {
               ++p;
-              regex.append("(").append(hex_r(buf, as[i] + 1, 0xbf, esc));
+              regex.append("(").append(regex_range(buf, as[i] + 1, 0xbf, esc));
               for (size_t k = i + 1; k < n; ++k)
                 regex.append(any);
               regex.append("|");
             }
-            regex.append(hex_r(buf, as[i], esc));
+            regex.append(regex_char(buf, as[i], esc));
             ++i;
           }
         }
         if (i < n)
-          regex.append(hex_r(buf, as[i], 0xbf, esc));
+          regex.append(regex_range(buf, as[i], 0xbf, esc));
         for (size_t k = 0; k < p; ++k)
           regex.append(")");
         i = j;
@@ -175,20 +208,20 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
       {
         if (l != 0)
           regex.append("|");
-        regex.append(hex_r(buf, as[i] + l, bs[i] - h, esc));
+        regex.append(regex_range(buf, as[i] + l, bs[i] - h, esc));
         for (size_t k = i + 1; k < n; ++k)
           regex.append(any);
       }
       if (h != 0)
       {
         size_t p = 0;
-        regex.append("|").append(hex_r(buf, bs[i], esc));
+        regex.append("|").append(regex_char(buf, bs[i], esc));
         ++i;
         while (i + 1 < n)
         {
           if (bs[i + 1] == 0xbf) // pattern compression
           {
-            regex.append(hex_r(buf, 0x80, bs[i], esc));
+            regex.append(regex_range(buf, 0x80, bs[i], esc));
             for (++i; i < n && bs[i] == 0xbf; ++i)
               regex.append(any);
           }
@@ -197,17 +230,17 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
             if (bs[i] != 0x80)
             {
               ++p;
-              regex.append("(").append(hex_r(buf, 0x80, bs[i] - 1, esc));
+              regex.append("(").append(regex_range(buf, 0x80, bs[i] - 1, esc));
               for (size_t k = i + 1; k < n; ++k)
                 regex.append(any);
               regex.append("|");
             }
-            regex.append(hex_r(buf, bs[i], esc));
+            regex.append(regex_char(buf, bs[i], esc));
             ++i;
           }
         }
         if (i < n)
-          regex.append(hex_r(buf, 0x80, bs[i], esc));
+          regex.append(regex_range(buf, 0x80, bs[i], esc));
         for (size_t k = 0; k < p; ++k)
           regex.append(")");
       }
@@ -216,7 +249,7 @@ std::string utf8(unicode_t a, unicode_t b, bool strict, const char *esc)
     }
     else if (i < n)
     {
-      regex.append(hex_r(buf, as[i], bs[i], esc));
+      regex.append(regex_range(buf, as[i], bs[i], esc));
     }
     if (n < m)
     {

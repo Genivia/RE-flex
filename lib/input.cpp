@@ -62,7 +62,7 @@ void Input::file_init(void)
     size_ = static_cast<size_t>(st.st_size);
 #endif
   utfx_ = Const::plain;
-  // if file size can be determined, check for a UTF BOM in the file
+  // if file size could be determined, then check for a UTF BOM in the file
   if (size_ > 3)
   {
     ::fread(utf8_, 1, 2, file_);
@@ -125,11 +125,8 @@ size_t Input::file_get(char *s, size_t n)
   size_t k = 0;
   if (uidx_ < sizeof(utf8_))
   {
-    k = std::strlen(utf8_ + uidx_);
-    if (k > n)
-      k = n;
-    std::memcpy(s, utf8_ + uidx_, k);
-    s += k;
+    while (k < n && utf8_[uidx_ + k] != '\0')
+      *s++ = utf8_[uidx_ + k++];
     n -= k;
     uidx_ += static_cast<unsigned short>(k);
     if (n == 0)

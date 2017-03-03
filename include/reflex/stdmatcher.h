@@ -46,17 +46,16 @@ namespace reflex {
 /** More info TODO */
 class StdMatcher : public PatternMatcher<std::regex> {
  public:
-  /// Construct matcher engine from a std::regex object or string regex, and an input character sequence.
-  template<typename P> /// @tparam <P> pattern is a std::regex or a string regex
-  StdMatcher(
-      const P&     pat,           ///< a std::regex or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
-    :
-      PatternMatcher(pat, inp, opt)
+  /// Convert a regex to an acceptable form, given the specified regex library signature `"[decls:]escapes[?+]"`, see reflex::convert.
+  template<typename T>
+  static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
+  {
+    return reflex::convert(regex, "!=:bcdfnrstvwxBDSW?", flags);
+  }
+  /// Default constructor.
+  StdMatcher() : PatternMatcher<std::regex>()
   {
     reset();
-    buffer(); // no partial matching supported: buffer all input
   }
   /// Construct matcher engine from a std::regex object or string regex, and an input character sequence.
   template<typename P> /// @tparam <P> pattern is a std::regex or a string regex
@@ -68,7 +67,17 @@ class StdMatcher : public PatternMatcher<std::regex> {
       PatternMatcher(pat, inp, opt)
   {
     reset();
-    buffer(); // no partial matching supported: buffer all input
+  }
+  /// Construct matcher engine from a std::regex object or string regex, and an input character sequence.
+  template<typename P> /// @tparam <P> pattern is a std::regex or a string regex
+  StdMatcher(
+      const P&     pat,           ///< a std::regex or a string regex for this matcher
+      const Input& inp = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+    :
+      PatternMatcher(pat, inp, opt)
+  {
+    reset();
   }
   /// Reset this matcher's state to the initial state and when assigned new input.
   virtual void reset(const char *opt = NULL)
@@ -76,17 +85,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
     DBGLOG("StdMatcher::reset()");
     itr_ = fin_;
     PatternMatcher::reset(opt);
-  }
-  using PatternMatcher::input;
-  /// Set the input character sequence for this matcher and reset the matcher.
-  virtual AbstractMatcher& input(const Input& inp) ///< input character sequence for this matcher
-    /// @returns this matcher.
-  {
-    DBGLOG("StdMatcher::input()");
-    in = inp;
-    reset();
     buffer(); // no partial matching supported: buffer all input
-    return *this;
   }
   using PatternMatcher::pattern;
   /// Set the pattern to use with this matcher as a shared pointer to another matcher pattern.
@@ -111,21 +110,21 @@ class StdMatcher : public PatternMatcher<std::regex> {
     itr_ = fin_;
     return PatternMatcher::pattern(pat);
   }
-  /// Set the pattern from a regex string to use with this matcher, inherits the ECMA/POSIX syntax option.
+  /// Set the pattern from a regex string to use with this matcher.
   virtual PatternMatcher& pattern(const char *pat) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
     itr_ = fin_;
-    PatternMatcher::pattern(new std::regex(pat, pattern().flags()));
+    PatternMatcher::pattern(new std::regex(pat));
     own_ = true;
     return *this;
   }
-  /// Set the pattern from a regex string to use with this matcher, inherits the ECMA/POSIX syntax option.
+  /// Set the pattern from a regex string to use with this matcher.
   virtual PatternMatcher& pattern(const std::string& pat) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
     itr_ = fin_;
-    PatternMatcher::pattern(new std::regex(pat, pattern().flags()));
+    PatternMatcher::pattern(new std::regex(pat));
     own_ = true;
     return *this;
   }
@@ -176,6 +175,8 @@ class StdMatcher : public PatternMatcher<std::regex> {
       }
       if (pos_ == end_) // if pos_ is hitting the end_ then
       {
+        if (wrap())
+          continue; // continue after successful wrap
         if (method == Const::SPLIT)
         {
           DBGLOGN("Split end");
@@ -209,8 +210,12 @@ class StdMatcher : public PatternMatcher<std::regex> {
           return cap_;
         }
         eof_ = true;
-        if (method == Const::FIND && opt_.N)
+        if (pos_ == cur_ && method == Const::FIND && opt_.N)
+        {
+          DBGLOGN("No match, pos = %zu", pos_);
+          DBGLOG("END StdMatcher::match()");
           return 0;
+        }
         if (itr_ != fin_)
           break; // OK if iterator is still valid
       }
@@ -257,7 +262,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
       DBGLOG("END StdMatcher::match()");
       return cap_;
     }
-    else if (!(*itr_)[0].matched || (buf_ + cur_ != (*itr_)[0].first && method != Const::FIND)) // if no match at first and we're not searching then
+    else if ((cur_ == end_ && eof_ && method != Const::MATCH) || !(*itr_)[0].matched || (buf_ + cur_ != (*itr_)[0].first && method != Const::FIND)) // if no match at first and we're not searching then
     {
       itr_ = fin_;
       pos_ = cur_;
@@ -279,6 +284,8 @@ class StdMatcher : public PatternMatcher<std::regex> {
     len_ = cur_ - (txt_ - buf_); // size() spans txt_ to cur_ in buf_[]
     if (len_ == 0 && cap_ != 0 && opt_.N && pos_ + 1 == end_)
       set_current(end_);
+    if (len_ == 0 && (method == Const::SCAN || (method == Const::FIND && !opt_.N))) // work around std::regex match_not_null bug
+      return 0;
     DBGLOGN("Accept: act = %zu txt = '%s' len = %zu", cap_, txt_, len_);
     DBGCHK(len_ != 0 || method == Const::MATCH || (method == Const::FIND && opt_.N));
     DBGLOG("END StdMatcher::match()");
@@ -301,6 +308,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
       flg |= std::regex_constants::match_not_null;
     else if (method == Const::MATCH)
       flg |= std::regex_constants::match_continuous;
+    ASSERT(pat_ != NULL);
     itr_ = std::cregex_iterator(txt_, buf_ + end_, *pat_, flg);
   }
   std::regex_constants::match_flag_type flg_; ///< std::regex match flags
@@ -314,6 +322,9 @@ std::regex with ECMAScript std::regex::ECMAScript.
 */
 class StdEcmaMatcher : public StdMatcher {
  public:
+  /// Default constructor.
+  StdEcmaMatcher() : StdMatcher()
+  { }
   /// Construct an ECMA matcher engine from a std::regex pattern and an input character sequence.
   StdEcmaMatcher(
       const char  *pat,           ///< a string regex for this matcher
@@ -340,7 +351,6 @@ class StdEcmaMatcher : public StdMatcher {
     /// @returns this matcher.
   {
     ASSERT(!(pat.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
-    itr_ = fin_;
     return StdMatcher::pattern(pat);
   }
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a POSIX std::regex is given.
@@ -348,8 +358,25 @@ class StdEcmaMatcher : public StdMatcher {
     /// @returns this matcher.
   {
     ASSERT(!(pat.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
-    itr_ = fin_;
     return StdMatcher::pattern(pat);
+  }
+  /// Set the pattern from a regex string to use with this matcher.
+  virtual PatternMatcher& pattern(const char *pat) ///< regex string to instantiate internal pattern object
+    /// @returns this matcher.
+  {
+    itr_ = fin_;
+    PatternMatcher::pattern(new std::regex(pat, std::regex::ECMAScript));
+    own_ = true;
+    return *this;
+  }
+  /// Set the pattern from a regex string to use with this matcher.
+  virtual PatternMatcher& pattern(const std::string& pat) ///< regex string to instantiate internal pattern object
+    /// @returns this matcher.
+  {
+    itr_ = fin_;
+    PatternMatcher::pattern(new std::regex(pat, std::regex::ECMAScript));
+    own_ = true;
+    return *this;
   }
 };
 
@@ -359,6 +386,15 @@ std::regex with POSIX ERE std::regex::awk.
 */
 class StdPosixMatcher : public StdMatcher {
  public:
+  /// Convert a regex to an acceptable form, given the specified regex library signature `"[decls:]escapes[?+]"`, see reflex::convert.
+  template<typename T>
+  static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
+  {
+    return reflex::convert(regex, "fnrtv", flags);
+  }
+  /// Default constructor.
+  StdPosixMatcher() : StdMatcher()
+  { }
   /// Construct a POSIX matcher engine from a string regex pattern and an input character sequence.
   StdPosixMatcher(
       const char  *pat,           ///< a string regex for this matcher
@@ -385,7 +421,6 @@ class StdPosixMatcher : public StdMatcher {
     /// @returns this matcher.
   {
     ASSERT(pat.flags() & std::regex::awk);
-    itr_ = fin_;
     return StdMatcher::pattern(pat);
   }
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a non-POSIX ERE std::regex is given.
@@ -393,8 +428,25 @@ class StdPosixMatcher : public StdMatcher {
     /// @returns this matcher.
   {
     ASSERT(pat.flags() & std::regex::awk);
-    itr_ = fin_;
     return StdMatcher::pattern(pat);
+  }
+  /// Set the pattern from a regex string to use with this matcher.
+  virtual PatternMatcher& pattern(const char *pat) ///< regex string to instantiate internal pattern object
+    /// @returns this matcher.
+  {
+    itr_ = fin_;
+    PatternMatcher::pattern(new std::regex(pat, std::regex::awk));
+    own_ = true;
+    return *this;
+  }
+  /// Set the pattern from a regex string to use with this matcher.
+  virtual PatternMatcher& pattern(const std::string& pat) ///< regex string to instantiate internal pattern object
+    /// @returns this matcher.
+  {
+    itr_ = fin_;
+    PatternMatcher::pattern(new std::regex(pat, std::regex::awk));
+    own_ = true;
+    return *this;
   }
 };
 

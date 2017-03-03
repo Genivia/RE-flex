@@ -7,13 +7,13 @@ BOOSTLIB=/opt/local/lib/libboost_regex-mt.dylib
 REFLEX=../bin/reflex
 LIBS=../lib/libreflex.a
 COFLAGS=-g -O3
-CWFLAGS=-Wall -Wunused -Wextra -Wno-unused-label
+CWFLAGS=-Wall -Wunused -Wextra -Wno-unused-label -Wno-strict-overflow
 CIFLAGS=-I. -I../include -I $(BOOST)
 CMFLAGS=
 # CMFLAGS=-DDEBUG
 CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
 
-all:		lorem test rtest btest stest
+all:		test_ranges lorem test rtest btest stest
 
 lorem:		lorem.cpp
 		$(CPP) $(CFLAGS) -o $@ lorem.cpp $(OBJS) $(LIBS) $(BOOSTLIB)

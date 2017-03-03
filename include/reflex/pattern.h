@@ -39,6 +39,7 @@
 
 #include <reflex/bits.h>
 #include <reflex/debug.h>
+#include <reflex/error.h>
 #include <reflex/input.h>
 #include <reflex/ranges.h>
 #include <reflex/setop.h>
@@ -63,33 +64,6 @@ namespace reflex {
 class Pattern {
   friend class Matcher; ///< permit access by the reflex::Matcher engine
  public:
-  /// Throwable error structure reflex::Pattern::Error.
-  struct Error {
-    /// Error codes raised during Pattern object construction.
-    enum Code {
-      REGEX_SYNTAX,   ///< regex syntax error
-      REGEX_RANGE,    ///< regex `{n,m}` range error
-      REGEX_LIST,     ///< regex `[a-b]` list error
-      CODE_OVERFLOW   ///< compiled code is too large
-    };
-    /// Construct error structure
-    Error(
-        const Pattern *pattern, ///< points to the pattern object with this error
-        enum Code      code,    ///< the error code
-        const char    *message, ///< a human-readable error message (not NULL)
-        size_t         loc)     ///< location of the error in regex string Pattern::rex_ or 0
-      :
-        pattern(*pattern),
-        code(code),
-        message(message),
-        loc(loc)
-    { }
-    void display(std::ostream& os = std::cerr) const;
-    const Pattern& pattern; ///< the pattern object with this error
-    enum Code      code;    ///< the error code
-    const char    *message; ///< a human-readable error message (not NULL)
-    size_t         loc;     ///< location of the error in regex string Pattern::rex_ or 0
-  };
   typedef uint16_t Index;  ///< index into opcodes array Pattern::opc_ and subpattern indexing
   typedef uint32_t Opcode; ///< 32 bit opcode word
   typedef void (*FSM)(class Matcher&); ///< function pointer to FSM code
@@ -100,7 +74,7 @@ class Pattern {
   /// Construct a pattern object given a regex string.
   explicit Pattern(
       const char *regex,
-      const char *options = NULL) throw (Error)
+      const char *options = NULL) throw (regex_error)
     :
       rex_(regex),
       opc_(NULL),
@@ -111,7 +85,7 @@ class Pattern {
   /// Construct a pattern object given a regex string.
   explicit Pattern(
       const char        *regex,
-      const std::string& options) throw (Error)
+      const std::string& options) throw (regex_error)
     :
       rex_(regex),
       opc_(NULL),
@@ -122,7 +96,7 @@ class Pattern {
   /// Construct a pattern object given a regex string.
   explicit Pattern(
       const std::string& regex,
-      const char        *options = NULL) throw (Error)
+      const char        *options = NULL) throw (regex_error)
     :
       rex_(regex),
       opc_(NULL),
@@ -133,7 +107,7 @@ class Pattern {
   /// Construct a pattern object given a regex string.
   explicit Pattern(
       const std::string& regex,
-      const std::string& options) throw (Error)
+      const std::string& options) throw (regex_error)
     :
       rex_(regex),
       opc_(NULL),
@@ -142,7 +116,7 @@ class Pattern {
     init(options.c_str());
   }
   /// Construct a pattern object given an opcode table.
-  explicit Pattern(const Opcode *code) throw (Error)
+  explicit Pattern(const Opcode *code) throw (regex_error)
     :
       opc_(code),
       nop_(0),
@@ -151,7 +125,7 @@ class Pattern {
     init(NULL);
   }
   /// Construct a pattern object given a function pointer to FSM code.
-  explicit Pattern(FSM fsm) throw (Error)
+  explicit Pattern(FSM fsm) throw (regex_error)
     :
       opc_(NULL),
       nop_(0),
@@ -204,10 +178,9 @@ class Pattern {
  protected:
   /// Throw an error.
   virtual void error(
-      enum Error::Code code,    ///< error code
-      const char      *message, ///< a human-readable error message (not NULL)
-      size_t           loc = 0) ///< optional location of the error in regex string Pattern::rex_
-    const throw (Error);
+      regex_error_type code,    ///< error code
+      size_t           pos = 0) ///< optional location of the error in regex string Pattern::rex_
+    const throw (regex_error);
  private:
   typedef unsigned int         Char;
 #ifdef WITH_BITS
@@ -310,13 +283,13 @@ class Pattern {
     META_MAX          ///< max meta characters
   };
   /// Initialize the pattern at construction.
-  void init(const char *options) throw (Error);
+  void init(const char *options) throw (regex_error);
   void init_options(const char *options);
   void parse(
       Positions& startpos,
       Follow&    followpos,
       Map&       modifiers,
-      Map&       lookahead) throw (Error);
+      Map&       lookahead) throw (regex_error);
   void parse1(
       bool       begin,
       Location&  loc,
@@ -327,7 +300,7 @@ class Pattern {
       Positions& lazypos,
       Map&       modifiers,
       Ranges&    lookahead,
-      Index&     iter) throw (Error);
+      Index&     iter) throw (regex_error);
   void parse2(
       bool       begin,
       Location&  loc,
@@ -338,7 +311,7 @@ class Pattern {
       Positions& lazypos,
       Map&       modifiers,
       Ranges&    lookahead,
-      Index&     iter) throw (Error);
+      Index&     iter) throw (regex_error);
   void parse3(
       bool       begin,
       Location&  loc,
@@ -349,7 +322,7 @@ class Pattern {
       Positions& lazypos,
       Map&       modifiers,
       Ranges&    lookahead,
-      Index&     iter) throw (Error);
+      Index&     iter) throw (regex_error);
   void parse4(
       bool       begin,
       Location&  loc,
@@ -360,13 +333,13 @@ class Pattern {
       Positions& lazypos,
       Map&       modifiers,
       Ranges&    lookahead,
-      Index&     iter) throw (Error);
-  void parse_esc(Location& loc) const throw (Error);
+      Index&     iter) throw (regex_error);
+  void parse_esc(Location& loc) const throw (regex_error);
   void compile(
       State&     start,
       Follow&    followpos,
       const Map& modifiers,
-      const Map& lookahead) throw (Error);
+      const Map& lookahead) throw (regex_error);
   void lazy(
       const Positions& lazypos,
       Positions&       pos) const;
@@ -381,25 +354,25 @@ class Pattern {
       Follow&    followpos,
       const Map& modifiers,
       const Map& lookahead,
-      Moves&     moves) const throw (Error);
+      Moves&     moves) const throw (regex_error);
   void transition(
       Moves&           moves,
       const Chars&     chars,
       const Positions& follow) const;
   Char compile_esc(
       Location loc,
-      Chars&   chars) const throw (Error);
+      Chars&   chars) const throw (regex_error);
   void compile_list(
       Location   loc,
       Chars&     chars,
-      const Map& modifiers) const throw (Error);
+      const Map& modifiers) const throw (regex_error);
   void posix(
       size_t index,
       Chars& chars) const;
   void flip(Chars& chars) const;
-  void assemble(State& start) throw (Error);
+  void assemble(State& start) throw (regex_error);
   void compact_dfa(State& start);
-  void encode_dfa(State& start) throw (Error);
+  void encode_dfa(State& start) throw (regex_error);
   void gencode_dfa(const State& start) const;
   void gencode_dfa_closure(
       FILE *fd,

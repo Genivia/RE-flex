@@ -1,9 +1,11 @@
 <map id="reflex.h" name="reflex.h">
-<area shape="rect" id="node2" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="639,80,750,107"/>
-<area shape="rect" id="node9" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="1010,229,1102,256"/>
-<area shape="rect" id="node3" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="567,155,657,181"/>
-<area shape="rect" id="node6" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="732,155,839,181"/>
-<area shape="rect" id="node8" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="863,155,961,181"/>
-<area shape="rect" id="node13" href="$ranges_8h.html" title="RE/flex range set container. " alt="" coords="63,155,174,181"/>
-<area shape="rect" id="node16" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="198,155,301,181"/>
+<area shape="rect" id="node2" href="$convert_8h.html" title="RE/flex regex converter. " alt="" coords="16,80,129,107"/>
+<area shape="rect" id="node3" href="$error_8h.html" title="RE/flex regex errors. " alt="" coords="21,155,119,181"/>
+<area shape="rect" id="node7" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="736,80,847,107"/>
+<area shape="rect" id="node14" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="533,229,625,256"/>
+<area shape="rect" id="node8" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="877,155,967,181"/>
+<area shape="rect" id="node11" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="991,155,1098,181"/>
+<area shape="rect" id="node13" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="703,155,802,181"/>
+<area shape="rect" id="node17" href="$ranges_8h.html" title="RE/flex range set container. " alt="" coords="1123,155,1233,181"/>
+<area shape="rect" id="node20" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="419,155,521,181"/>
 </map>

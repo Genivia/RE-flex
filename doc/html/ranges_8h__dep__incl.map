@@ -1,12 +1,6 @@
 <map id="ranges.h" name="ranges.h">
-<area shape="rect" id="node2" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="177,80,251,107"/>
-<area shape="rect" id="node3" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="125,155,207,181"/>
-<area shape="rect" id="node4" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="231,155,296,181"/>
-<area shape="rect" id="node5" href="$language__scripts_8h.html" title="Unicode language scripts. " alt="" coords="47,229,181,256"/>
-<area shape="rect" id="node7" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="178,304,258,331"/>
-<area shape="rect" id="node8" href="$letter__scripts_8h.html" title="Unicode letter scripts. " alt="" coords="255,229,365,256"/>
-<area shape="rect" id="node10" href="$pl__scripts_8h.html" title="Unicode programming language scripts. " alt="" coords="389,229,479,256"/>
-<area shape="rect" id="node6" href="$language__scripts_8cpp.html" title="language_scripts.cpp" alt="" coords="5,304,153,331"/>
-<area shape="rect" id="node9" href="$letter__scripts_8cpp.html" title="letter_scripts.cpp" alt="" coords="282,304,405,331"/>
-<area shape="rect" id="node11" href="$pl__scripts_8cpp.html" title="Unicode programming language scripts. " alt="" coords="429,304,533,331"/>
+<area shape="rect" id="node2" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="57,80,131,107"/>
+<area shape="rect" id="node3" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="5,155,87,181"/>
+<area shape="rect" id="node4" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="111,155,176,181"/>
+<area shape="rect" id="node5" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="103,229,183,256"/>
 </map>

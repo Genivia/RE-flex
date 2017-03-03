@@ -91,36 +91,35 @@ following files:
     |       |__ absmatcher.h
     |       |__ bits.h
     |       |__ boostmatcher.h
+    |       |__ convert.h
     |       |__ debug.h
+    |       |__ error.h
     |       |__ flexlexer.h
     |       |__ input.h
     |       |__ matcher.h
     |       |__ pattern.h
+    |       |__ posix.h
     |       |__ ranges.h
     |       |__ setop.h
     |       |__ stdmatcher.h
     |       |__ traits.h
+    |       |__ unicode.h
     |       |__ utf8.h
     |
     |__ lib/
     |   |__ Makefile
+    |   |__ convert.cpp
     |   |__ debug.cpp
+    |   |__ error.cpp
     |   |__ input.cpp
     |   |__ matcher.cpp
     |   |__ pattern.cpp
+    |   |__ posix.cpp
+    |   |__ unicode.cpp
     |   |__ utf8.cpp
     |
     |__ src/
     |   |__ Makefile
-    |   |__ language_scripts.cpp
-    |   |__ language_scripts.h
-    |   |__ language_scripts.l
-    |   |__ letter_scripts.cpp
-    |   |__ letter_scripts.h
-    |   |__ letter_scripts.l
-    |   |__ pl_scripts.cpp
-    |   |__ pl_scripts.h
-    |   |__ pl_scripts.l
     |   |__ reflex.cpp
     |   |__ reflex.h
     |
@@ -129,15 +128,20 @@ following files:
     |   |__ ...
     |
     |__ unicode/
+        |__ Makefile
         |__ Scripts.txt
         |__ UnicodeData.txt
+        |__ language_scripts.cpp
+        |__ language_scripts.l
+        |__ letter_scripts.cpp
+        |__ letter_scripts.l
 
 
 License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2015-2016, All rights reserved.   
+Copyright (c) 2015-2017, All rights reserved.   
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.

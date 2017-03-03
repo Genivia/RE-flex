@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::ORanges&lt; T &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
+      <div style="float: right; font-size: 10px;">updated Thu Mar 2 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -163,6 +163,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad59deda9697985a3c07af43a6204e4fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_o_ranges.html#ad59deda9697985a3c07af43a6204e4fd">operator&amp;=</a> (const <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a> &amp;rs)</td></tr>
 <tr class="memdesc:ad59deda9697985a3c07af43a6204e4fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update ranges to intersect the ranges of the given range set.  <a href="#ad59deda9697985a3c07af43a6204e4fd">More...</a><br /></td></tr>
 <tr class="separator:ad59deda9697985a3c07af43a6204e4fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f2dc1305d1dc89e8043b1867d00e89c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_o_ranges.html#a4f2dc1305d1dc89e8043b1867d00e89c">operator|</a> (const <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a> &amp;rs) const </td></tr>
+<tr class="memdesc:a4f2dc1305d1dc89e8043b1867d00e89c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the union of two range sets.  <a href="#a4f2dc1305d1dc89e8043b1867d00e89c">More...</a><br /></td></tr>
+<tr class="separator:a4f2dc1305d1dc89e8043b1867d00e89c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36e2177782a200135ec63a4bc12df2c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_o_ranges.html#a36e2177782a200135ec63a4bc12df2c6">operator+</a> (const <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a> &amp;rs) const </td></tr>
+<tr class="memdesc:a36e2177782a200135ec63a4bc12df2c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the union of two range sets.  <a href="#a36e2177782a200135ec63a4bc12df2c6">More...</a><br /></td></tr>
+<tr class="separator:a36e2177782a200135ec63a4bc12df2c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa11bc3908554b1604f953d3001820a46"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_o_ranges.html#aa11bc3908554b1604f953d3001820a46">operator-</a> (const <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a> &amp;rs) const </td></tr>
 <tr class="memdesc:aa11bc3908554b1604f953d3001820a46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the difference of two open-ended range sets.  <a href="#aa11bc3908554b1604f953d3001820a46">More...</a><br /></td></tr>
 <tr class="separator:aa11bc3908554b1604f953d3001820a46"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -901,6 +907,41 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a36e2177782a200135ec63a4bc12df2c6"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a> <a class="el" href="classreflex_1_1_o_ranges.html">reflex::ORanges</a>&lt; T &gt;::operator+ </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rs</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the union of two range sets. </p>
+<dl class="section return"><dt>Returns</dt><dd>the union of this set and rs. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rs</td><td>ranges to merge </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="aa11bc3908554b1604f953d3001820a46"></a>
 <div class="memitem">
 <div class="memproto">
@@ -965,13 +1006,48 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a4f2dc1305d1dc89e8043b1867d00e89c"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a> <a class="el" href="classreflex_1_1_o_ranges.html">reflex::ORanges</a>&lt; T &gt;::operator| </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rs</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the union of two range sets. </p>
+<dl class="section return"><dt>Returns</dt><dd>the union of this set and rs. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rs</td><td>ranges to merge </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="ranges_8h.html">ranges.h</a></li>
 </ul>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Jan 25 2017 18:16:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Mar 2 2017 22:07:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

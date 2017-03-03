@@ -28,13 +28,14 @@ Features:
 - regular expressions may contain word boundary anchors;
 - regular expressions may contain indent/dedent markers for matching;
 - intuitive customization of the C++ lexer class code output;
-- efficient matching in direct code or by tables;
+- efficient matching in direct code or with finite state machine tables;
 - visualization of finite state machines;
 - generates scanners that are thread-safe by default;
 - works with Bison and supports reentrant, bison-bridge and bison-locations;
-- the regex library is extensible with abstract matcher class as base class;
+- includes a regex class library that is extensible;
 - Boost.Regex can be used as a regex engine;
 - C++11 std::regex can be used as a regex engine (but not with a scanner);
+- conversion of regex expressions, for regex engines that lack regex features;
 - released under a permissive open source license (BSD-3).
 
 RE/flex is not merely designed to fix the limitations of Flex and Lex!  RE/flex
@@ -294,7 +295,7 @@ A regex library for pattern matching in C++                           {#intro2}
 The RE/flex regex pattern matching classes include two classes for Boost.Regex,
 two classes for C++11 std::regex, and a RE/flex class:
 
-  Engine        | Header file to include  | `reflex` namespace matcher classes
+  Engine        | Header file to include  | reflex matcher classes
   ------------- | ----------------------- | -----------------------------------
   RE/flex regex | `reflex/matcher.h`      | `Matcher`
   Boost.Regex   | `reflex/boostmatcher.h` | `BoostMatcher`, `BoostPosixMatcher`
@@ -413,6 +414,34 @@ A matcher can be applied to strings and wide strings, such as `std::string` and
 `std::wstring`, `char*` and `wchar_t*`.  Wide strings are converted to UTF-8 to
 enable matching with regular expressions that contain Unicode patterns.
 
+To match Unicode patterns with regex library engines that are 8-bit based or do
+not support Unicode, you may want to convert your regex string first before you
+use it with a regex matcher engine as follows:
+
+```cpp
+#include <reflex/matcher.h> // reflex::Matcher, reflex::Input, reflex::Pattern
+
+// convert a regex with Unicode character classes to create a pattern FSM:
+static const std::string regex = reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+");
+static const reflex::Pattern pattern(regex);
+
+// use a Matcher to check if sentence is in Greek:
+if (reflex::Matcher(pattern, sentence).matches())
+  std::cout << "This is Greek" << std::endl;
+```
+
+This converts the Unicode character classes to UTF-8 for matching with an 8-bit
+regex engine.  The `convert` static method differs per matcher class.  An error
+`reflex::regex_error` is thrown as an exception if conversion was not possible,
+which is unlikely, or if the regex is syntactically incorrect.
+
+Conversion is fast (it runs in linear time in the size of the regex), but it is
+not without some overhead.  You can make the converted regex patterns `static`,
+as shown above, to eliminate the cost of repeated conversions.
+
+Use `convert` with option `reflex::convert_flag::unicode` to change the meaning
+of `.` (dot), `\w`, `\s`, `\l`, `\u`, `\W`, `\S`, `\L`, `\U` character classes.
+
 You can pattern match text in files.  File contents are streamed and not loaded
 as a whole into memory, meaning that the data stream is not limited in size and
 matching happens immediately.  Interactive mode permits matching the input from
@@ -467,7 +496,7 @@ containers by stuffing the iterator's text matches into it:
 
 ```cpp
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
-#include <vector>         // std::vector
+#include <vector>                // std::vector
 
 // use a BoostMatcher to convert words of a sentence into a string vector
 reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
@@ -507,7 +536,7 @@ example to compute a histogram of word frequencies:
 ```cpp
 // Requires C++11, compile with: cc -std=c++11
 #include <reflex/stdmatcher.h> // reflex::StdMatcher, reflex::Input, std::regex
-#include <algorithm>      // std::for_each
+#include <algorithm>           // std::for_each
 
 // use a StdMatcher to create a frequency histogram of group captures
 reflex::StdMatcher matcher("(now)|(cow)|(ow)", "How now brown cow.");
@@ -523,7 +552,7 @@ capturing all regex pattern groupings into a vector:
 
 ```cpp
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
-#include <vector>         // std::vector
+#include <vector>                // std::vector
 
 // use a BoostMatcher to convert captured groups into a numeric vector
 reflex::BoostMatcher matcher("(now)|(cow)|(ow)", "How now brown cow.");
@@ -586,6 +615,8 @@ change its pattern, you can use the following methods:
   --------------- | -----------------------------------------------------------
   `input(i)`      | set input to `reflex::Input i` (string, stream, or `FILE*`)
   `pattern(p)`    | set pattern `p` string, `reflex::Pattern` or `boost::regex`
+  `has_pattern()` | true if the matcher has a pattern assigned to it
+  `own_pattern()` | true if the matcher has a pattern to manage and delete
   `pattern()`     | get the pattern object, `reflex::Pattern` or `boost::regex`
   `buffer()`      | buffer all input at once, returns true if successful
   `buffer(n)`     | set the adaptive buffer size to `n` bytes to buffer input
@@ -1212,7 +1243,7 @@ actions are also supported:
   `matcher().buffer(n)`     | *n/a*                   | set buffer size to `n`
   `matcher().interactive()` | `yy_set_interactive(1)` | set interactive input
   `matcher().flush()`       | `YY_FLUSH_BUFFER`       | flush input buffer
-  `matcher().in.get(s, n)`  | `LexerInput(s, n)`      | read `s[0..n-1]`
+  `matcher().get(s, n)`     | `LexerInput(s, n)`      | read `s[0..n-1]`
   `matcher().set_bol(b)`    | `yy_set_bol(b)`         | set begin of line
   `matcher().set_eof(b)`    | *n/a*                   | set EOF flag to `b`
 
@@ -1313,7 +1344,7 @@ A pattern is an extended set of regular expressions, with nested sub-expression
 patterns `φ` and `ψ`:
 
   Pattern   | Matches
-  --------- | ------------------------------------------------------------------
+  --------- | -----------------------------------------------------------------
   `x`       | matches the character `x`, where `x` is not a special character
   `.`       | matches any single character except newline (unless in dotall mode)
   `\.`      | matches `.` (dot), special characters are escaped with a backslash
@@ -1325,8 +1356,8 @@ patterns `φ` and `ψ`:
   `\x{7f}`  | matches an 8-bit character with hexadecimal value `7f`
   `\p{C}`   | matches a character in class C (see below)
   `\Q..\E`  | matches the quoted content between `\Q` and `\E` literally
-  `[abc]`   | matches one of `a`, `b`, or `c` (bracket list)
-  `[0-9]`   | matches a digit `0` to `9` (range)
+  `[abc]`   | matches one of `a`, `b`, or `c` (character class in bracket list)
+  `[0-9]`   | matches a digit `0` to `9` (character class range)
   `[^0-9]`  | matches anything but a digit (negative list)
   `φ?`      | matches `φ` zero or one time (optional)
   `φ*`      | matches `φ` zero or more times (repetition)
@@ -1348,7 +1379,7 @@ patterns `φ` and `ψ`:
   `^φ`      | matches `φ` at the start of input or start of a line (multi-line mode)
   `φ$`      | matches `φ` at the end of input or end of a line (multi-line mode)
   `\Aφ`     | matches `φ` at the start of input
-  `φ\Z`     | matches `φ` at the end of input
+  `φ\z`     | matches `φ` at the end of input
   `\bφ`     | matches `φ` starting at a word boundary
   `φ\b`     | matches `φ` ending at a word boundary
   `\Bφ`     | matches `φ` starting at a non-word boundary
@@ -1363,22 +1394,37 @@ patterns `φ` and `ψ`:
   `(?x:φ)`  | *free space mode*: ignore all whitespace and comments in `φ`
   `(?#:..)` | *commenting*: all of `..` is skipped as a comment
 
+Character classes in bracket lists are sets and these sets can be inverted,
+subtracted, intersected, or merged as follows:
+
+  Pattern           | Matches
+  ----------------- | ---------------------------------------------------------
+  `[^a-zA-Z]`       | matches a non-letter (character class inversion)
+  `[a-z−−[aeiou]]`  | matches a consonant (character class subtraction)
+  `[a-z&&[^aeiou]]` | matches a consonant (character class intersection)
+  `[a-z⎮⎮[A-Z]]`    | matches a letter (character class union)
+
+The character sets can be Unicode character sets.  Use **reflex** option
+`−−unicode` or regex matcher converter flag `reflex::convert_flag::unicode`.
+
 In addition, the following patterns can be used in lex specifications for
 the **reflex** scanner generator:
 
-  Pattern       | Matches
-  ------------- | --------------------------------------------------------------
-  `x` (UTF-8)   | matches wide character `x` encoded in UTF-8, requires the `−−unicode` option
-  `\u{2318}`    | matches Unicode character U+2318, requires the `−−unicode` option
-  `\p{C}`       | matches a character in class C, ASCII or Unicode with the `−−unicode` option
-  `\177`        | matches an 8-bit character with octal value `177`
-  `".."`        | matches the quoted content literally
-  `φ/ψ`         | matches `φ` if followed by `ψ` (trailing context, same as lookahead)
-  `<S>φ`        | matches `φ` only if state `S` is enabled
-  `<S1,S2,S3>φ` | matches `φ` only if state `S1`, `S2`, or state `S3` is enabled
-  `<*>φ`        | matches `φ` in any state
-  `<<EOF>>`     | matches EOF in any state
-  `<S><<EOF>>`  | matches EOF only if state `S` is enabled
+  Pattern           | Matches
+  ----------------- | ---------------------------------------------------------
+  `x` (UTF-8)       | matches wide character `x` encoded in UTF-8, requires the `−−unicode` option
+  `\u{2318}`        | matches Unicode character U+2318, requires the `−−unicode` option
+  `\p{C}`           | matches a character in class C, ASCII or Unicode with the `−−unicode` option
+  `\177`            | matches an 8-bit character with octal value `177`
+  `".."`            | matches the quoted content literally
+  `φ/ψ`             | matches `φ` if followed by `ψ` (trailing context, same as lookahead)
+  `[a-z]{-}[aeiou]` | matches a consonant, same as `[a-z−−[aeiou]]`
+  `[a-z]{+}[A-Z]`   | matches a letter, same as `[a-z⎮⎮[A-Z]]`
+  `<S>φ`            | matches `φ` only if state `S` is enabled
+  `<S1,S2,S3>φ`     | matches `φ` only if state `S1`, `S2`, or state `S3` is enabled
+  `<*>φ`            | matches `φ` in any state
+  `<<EOF>>`         | matches EOF in any state
+  `<S><<EOF>>`      | matches EOF only if state `S` is enabled
 
 The order of precedence for composing larger patterns from sub-patterns is as
 follows, from high to low precedence:
@@ -1387,7 +1433,7 @@ follows, from high to low precedence:
 2. Grouping `(φ)`, `(?:φ)`, `(?=φ)`, and inline modifiers `(?imsx:φ)`
 3. Quantifiers `?`, `*`, `+`, `{n,m}`
 4. Concatenation (including lookahead)
-5. Anchoring `^`, `$`, `\<`, `\>`, `\b`, `\B`, `\A`, `\Z` 
+5. Anchoring `^`, `$`, `\<`, `\>`, `\b`, `\B`, `\A`, `\z` 
 6. Alternation `|`
 7. Global modifiers `(?imsx)φ`
 
@@ -1430,8 +1476,8 @@ compilers will warn about trigraph translation before causing trouble.
 The 7-bit ASCII character categories are:
 
   Category     | List form      | Matches
-  ------------ | -------------- | ----------------------------------------------
-  `\p{Space}`  | `[[:space:]]`  | matches a white space character `[ \t\n\v\f\r\x85]` same as `\s`
+  ------------ | -------------- | ---------------------------------------------
+  `\p{Space}`  | `[[:space:]]`  | matches a white space character `[ \t\n\v\f\r]` same as `\s`
   `\p{Xdigit}` | `[[:xdigit:]]` | matches a hex digit `[0-9A-Fa-f]`
   `\p{Cntrl}`  | `[[:cntrl:]]`  | matches a control character `[\x00-\0x1f\x7f]`
   `\p{Print}`  | `[[:print:]]`  | matches a printable character `[\x20-\x7e]`
@@ -1440,31 +1486,32 @@ The 7-bit ASCII character categories are:
   `\p{Blank}`  | `[[:blank:]]`  | matches a blank `[ \t]` same as `\h`
   `\p{Digit}`  | `[[:digit:]]`  | matches a digit `[0-9]` same as `\d`
   `\p{Graph}`  | `[[:graph:]]`  | matches a visible character `[\x21-\x7e]`
-  `\p{Lower}`  | `[[:lower:]]`  | matches a lower case letter `[a-z]`
+  `\p{Lower}`  | `[[:lower:]]`  | matches a lower case letter `[a-z]` same as `\l`
   `\p{Punct}`  | `[[:punct:]]`  | matches a punctuation character `[\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]`
-  `\p{Upper}`  | `[[:upper:]]`  | matches an upper case letter `[A-Z]`
-  `\p{Word}`   | `[[:word:]]`   | matches a word character `[0-9A-Za-z_]`
-  `\d`         | `[[:digit:]]`  | matches a digit
-  `\D`         | `[^[:digit:]]` | matches a non-digit
-  `\h`         | `[[:blank:]]`  | matches a blank character
-  `\H`         | `[^[:blank:]]` | matches a non-blank character
-  `\s`         | `[[:space:]]`  | matches a white space character
-  `\S`         | `[^[:space:]]` | matches a non-white space
+  `\p{Upper}`  | `[[:upper:]]`  | matches an upper case letter `[A-Z]` same as `\u`
+  `\p{Word}`   | `[[:word:]]`   | matches a word character `[0-9A-Za-z_]` same as `\w`
+  `\d`         | `[[:digit:]]`  | matches a digit `[0-9]`
+  `\D`         | `[^[:digit:]]` | matches a non-digit `[^0-9]`
+  `\h`         | `[[:blank:]]`  | matches a blank character `[ \t]`
+  `\H`         | `[^[:blank:]]` | matches a non-blank character `[^ \t]`
+  `\s`         | `[[:space:]]`  | matches a white space character `[ \t\n\v\f\r]`
+  `\S`         | `[^[:space:]]` | matches a non-white space `[^ \t\n\v\f\r]`
   `\l`         | `[[:lower:]]`  | matches a lower case letter `[a-z]`
   `\L`         | `[^[:lower:]]` | matches a non-lower case letter `[^a-z]`
   `\u`         | `[[:upper:]]`  | matches an upper case letter `[A-Z]`
   `\U`         | `[^[:upper:]]` | matches a nonupper case letter `[^A-Z]`
-  `\w`         | `[[:word:]]`   | matches a word character
-  `\W`         | `[^[:word:]]`  | matches a non-word character
+  `\w`         | `[[:word:]]`   | matches a word character `[0-9A-Za-z_]`
+  `\W`         | `[^[:word:]]`  | matches a non-word character `[^0-9A-Za-z_]`
 
 The following Unicode character categories are enabled with the **reflex**
-`−−unicode` option:
+`−−unicode` option and with the regex matcher converter flag
+`reflex::convert_flag::unicode` when using a regex library:
 
   Category                               | Matches
   -------------------------------------- | ------------------------------------
   `.`                                    | matches any Unicode character
-  `\X`                                   | matches any Unicode character with or without the `−−unicode` option enabled
-  `\s`                                   | matches a Unicode white space character
+  `\X`                                   | matches any Unicode character with or without the `−−unicode` option
+  `\s`, `\p{Zs}`                         | matches a Unicode white space character
   `\l`, `\p{Ll}`                         | matches a lower case letter with Unicode sub-property Ll
   `\u`, `\p{Lu}`                         | matches an upper case letter with Unicode sub-property Lu
   `\w`, `\p{Word}`                       | matches a Unicode word character with property L, Nd, or Pc
@@ -1546,6 +1593,9 @@ In addition, the `−−unicode` option enables Unicode language scripts:
   `\p{Tai_Le}`, `\p{Tai_Tham}`, `\p{Tai_Viet}`, `\p{Takri}`, `\p{Tamil}`,
   `\p{Telugu}`, `\p{Thaana}`, `\p{Thai}`, `\p{Tibetan}`, `\p{Tifinagh}`,
   `\p{Tirhuta}`, `\p{Ugaritic}`, `\p{Vai}`, `\p{Warang_Citi}`, `\p{Yi}`.
+
+You can also use the `\P{C}` form that is identical to `\p{^C}`, which is the
+inverted character class `C`.
 
 ### Indent and dedent matching
 
@@ -1695,7 +1745,7 @@ namespace NAMESPACE {
   };
   int NAMESPACE::LEXER::LEX()
   {
-    static const reflex::Pattern PATTERN_INITIAL("(REGEX)", "m");
+    static const reflex::Pattern PATTERN_INITIAL("(?m)(REGEX)");
     if (!has_matcher())
     {
       matcher(new Matcher(PATTERN_INITIAL, in(), this));
@@ -1755,7 +1805,7 @@ namespace NAMESPACE {
   };
   int NAMESPACE::LEXER::LEX()
   {
-    static const reflex::Pattern PATTERN_INITIAL("(REGEX)", "m");
+    static const reflex::Pattern PATTERN_INITIAL("(?m)(REGEX)");
     if (!has_matcher())
     {
       matcher(new Matcher(PATTERN_INITIAL, in(), this));
@@ -2148,8 +2198,13 @@ pattern matching.
 
 ### `−−pattern=NAME`
 
-This defines a custom pattern class NAME for a customer matcher defined with
+This defines a custom pattern class NAME for the custom matcher specified with
 option `-m`.
+
+### `−−include=FILE`
+
+This defines a custom include FILE.h to include for the custom matcher
+specified with option `-m`.
 
 ### `−−tabs=N`
 
@@ -2350,21 +2405,25 @@ the `wrap()` (or `yywrap()`) method:
 %{
   class Tokenizer : Lexer {
    public:
-    virtual int wrap()
+    virtual bool wrap()
     {
       in(std::in);
-      return in().good() ? 1 : 0; // 1 if stdin is OK (not EOF or error)
+      return in().good(); // true if stdin is still OK (not EOF or error)
     }
   };
 %}
 ```
 </div>
 
-You can use the `wrap()` method to set up a new input source when the current
-input is exhausted.
+You can override the `wrap()` method to set up a new input source when the
+current input is exhausted.  Do not use `matcher().input(i)` to set a new input
+source `i`, because that resets the internal matcher state.
+
+With the `−−flex` options your can override the `yyFlexLexer::yywrap()` method
+that returns an integer 0 (more input available) or 1 (we're done).
 
 With the `−−flex` and `−−bison` options you should define a global `yywrap()`
-function instead.
+function that returns an integer 0 (more input available) or 1 (we're done).  
 
 A more typical scenario is to process an `include` directive in the source
 input that should include the source of another file before continuing with the
@@ -2469,7 +2528,9 @@ a `const char*` string that points to an internal buffer.  Copy the string
 before using the matcher again.
 
 To read a number of bytes `n` into a string buffer `s[0..n-1]`, use
-`matcher().in.get(s, n)`.
+`matcher().in.get(s, n)`, which is the same as invoking the virtual method
+`matcher().get(s, n)`.  This matcher method can be overriden by a derived
+matcher class (to customize reading.
 
 The Flex `YY_INPUT` macro is not supported by RE/flex.  It is recommended to
 use `YY_BUFFER_STATE` (Flex), which is a `reflex::FlexLexer::Matcher` class in
@@ -3248,14 +3309,12 @@ to FSM matching that apply to Lex/Flex and therefore also apply to RE/flex:
   the pattern matches the beginning of the second part, such as `zx*/xy*`,
   where the `x*` matches the `x` at the beginning of the lookahead pattern.
 - Anchors must appear at the start or at the end of a pattern.  The begin of
-  buffer/line anchors `\A` and `^`, end of buffer/line anchors `\Z` and `$` and
+  buffer/line anchors `\A` and `^`, end of buffer/line anchors `\z` and `$` and
   the word boundary anchors must start or end a pattern.  For example,
   `\<cow\>` is permitted, but `.*\Bboy` is not.
 
 Current **reflex** tool limitations that may be removed in future versions:
 
-- Character set operations are not yet implemented, such as `[a-z]{-}[aeiou]`.
-- Negative lists `[^...]` cannot contain Unicode characters.
 - The `REJECT` action is not supported.
 - Translations `%T` are not supported.
 
@@ -3362,11 +3421,30 @@ For input you can specify a string, a wide string, a file, or a stream object.
 
 Use option `"N"` to permit empty matches (nullable results).
 
+You can convert an expressive regex of the form defined in \ref reflex-patterns
+to a regex that the boost::regex engine can handle:
+
+```cpp
+#include <reflex/boostmatcher.h>
+
+static const std::string regex = reflex::BoostMatcher::convert( string, [ flags ]);
+
+reflex::BoostMatcher matcher( regex, reflex::Input [, "options"] )
+```
+
+The converter is specific to the matcher selected, i.e.
+`reflex::BoostMatcher::convert`, `reflex::BoostPerlMatcher::convert`, and
+`reflex::BoostPosixMatcher::convert`.  The converters also translates Unicode
+`\p` character classes to UTF-8 patterns, converts bracket character classes
+containing Unicode, and groups UTF-8 multi-byte sequences in the regex string.
+
 See \ref reflex-patterns for more details on regex patterns.
 
 See \ref regex-input for more details on the `reflex::Input` class.
 
 See \ref regex-methods for more details on pattern matching methods.
+
+See \ref regex-convert for more details on regex converters.
 
 ⇢ [Back to contents](#)
 
@@ -3393,6 +3471,9 @@ match patterns on real streams with an adaptive internal buffer that grows when
 longer matches are made when more input becomes available.  Therefore all input
 is buffered with the C++11 std::regex class matchers.
 
+With respect to performance, as of this time of writing, std::regex matching is
+much slower than Boost.Regex, slower by a factor 10 or more.
+
 The std::regex syntax is more limited than Boost.Regex and RE/flex regex.  Also
 the matching behavior differs and cannot be controlled with mode modifiers:
 
@@ -3402,20 +3483,38 @@ the matching behavior differs and cannot be controlled with mode modifiers:
 - `\cX` is not supported in POSIX mode;
 - `\Q..\E` is not supported;
 - no mode modifiers `(?imsx:φ)`;
-- no `\A`, `\Z`, `\<` and `\>` anchors;
+- no `\A`, `\z`, `\<` and `\>` anchors;
 - no `\b` and `\B` anchors in POSIX mode;
 - no non-capturing groups `(?:φ)` in POSIX mode;
-- empty regex patterns and matcher option `"N"` (nullable) may cause issues;
-- buffering `interactive()` is not supported.
+- empty regex patterns and matcher option `"N"` (nullable) may cause issues
+  (std::regex `match_not_null` is buggy);
+- `interactive()` is not supported.
 
-With respect to performance, as of this time of writing, std::regex matching is
-much slower than Boost.Regex, slower by a factor 10 or more.
+To avoid these limitations on the std::regex syntax imposed, you can convert an
+expressive regex of the form defined in section \ref reflex-patterns to a regex
+that the std::regex engine can handle:
+
+```cpp
+#include <reflex/stdmatcher.h>
+
+static const std::string regex = reflex::StdMatcher::convert( string, [ flags ]);
+
+reflex::StdMatcher matcher( regex, reflex::Input [, "options"] )
+```
+
+The converter is specific to the matcher selected, i.e.
+`reflex::StdMatcher::convert`, `reflex::StdEcmaMatcher::convert`, and
+`reflex::StdPosixMatcher::convert`.  The converters also translates Unicode
+`\p` character classes to UTF-8 patterns, converts bracket character classes
+containing Unicode, and groups UTF-8 multi-byte sequences in the regex string.
 
 See \ref reflex-patterns for more details on regex patterns.
 
 See \ref regex-input for more details on the `reflex::Input` class.
 
 See \ref regex-methods for more details on pattern matching methods.
+
+See \ref regex-convert for more details on regex converters.
 
 ⇢ [Back to contents](#)
 
@@ -3443,10 +3542,28 @@ string regex, and some given input:
 reflex::Matcher matcher( reflex::Pattern or string, reflex::Input [, "options"] )
 ```
 
+The regex is specified as a string or a `reflex::Pattern` object, see \ref
+regex-pattern below.
+
 Use option `"N"` to permit empty matches (nullable results).  Option `"T=8"`
 sets the tab size to 8 for indent `\i` and dedent `\j` matching.
 
 For input you can specify a string, a wide string, a file, or a stream object.
+
+A regex string with Unicode patterns can be converted for Unicode matching as
+follows:
+
+```cpp
+#include <reflex/matcher.h>
+
+static const std::string regex = reflex::Matcher::convert( string, [ flags ]);
+
+reflex::Matcher matcher( regex, reflex::Input [, "options"] )
+```
+
+The converter is specific to the matcher and translates Unicode `\p` character
+classes to UTF-8 patterns, converts bracket character classes containing
+Unicode, and groups UTF-8 multi-byte sequences in the regex string.
 
 See \ref reflex-patterns for more details on regex patterns.
 
@@ -3454,8 +3571,17 @@ See \ref regex-input for more details on the `reflex::Input` class.
 
 See \ref regex-methods for more details on pattern matching methods.
 
-The `reflex::Pattern` class converts a regex pattern to an efficient FSM and
-takes a regex string and options to construct the FSM internally:
+See \ref regex-convert for more details on regex converters.
+
+⇢ [Back to contents](#)
+
+
+The RE/flex pattern class                                      {#regex-pattern}
+-------------------------
+
+The `reflex::Pattern` class is used by the `reflex::matcher` for pattern
+matching.  The `reflex::Pattern` class converts a regex pattern to an efficient
+FSM and takes a regex string and options to construct the FSM internally:
 
 ```cpp
 #include <reflex/matcher.h>
@@ -3466,7 +3592,8 @@ takes a regex string and options to construct the FSM internally:
 It is recommended to create a static instance of the pattern if the regex
 string is fixed.  This avoids repeated FSM construction.
 
-The following options are combined in a string and passed to the contructor:
+The following options are combined in a string and passed to the
+`reflex::Pattern` contructor:
 
   Option        | Effect
   ------------- | -------------------------------------------------------------
@@ -3487,8 +3614,75 @@ The following options are combined in a string and passed to the contructor:
 ⇢ [Back to contents](#)
 
 
-Pattern matching methods                                       {#regex-methods}
-------------------------
+Regex converters                                               {#regex-convert}
+----------------
+
+To work around limitations of regex libraries and to support Unicode matching,
+RE/flex offers converters to translate expressive regex syntax forms (with
+Unicode patterns defined in section \ref reflex-patterns) to regex strings
+that the selected regex engines can handle.
+
+The converters translate `\p` Unicode classes, translate character
+class set operations such as `[a-z−−[aeiou]]`, convert escapes such as `\X`,
+and enforce `(?imsx:φ)` mode modifiers to a regex string that the underlying
+regex library understands and can use.
+
+Each converter is specific to the regex engine.  Use a converter for the
+matcher of your choice:
+
+- `std::string reflex::BoostMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+- `std::string reflex::BoostPerlMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+- `std::string reflex::BoostPosixMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+- `std::string reflex::StdMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+- `std::string reflex::StdEcmaMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+- `std::string reflex::StdPosixMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+- `std::string reflex::Matcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+
+where `flags` is optional.  When specified, it can be a combination of the
+following `reflex::convert_flag` flags:
+
+  Flag        | Effect
+  ----------- | ---------------------------------------------------------------
+  `unicode`   | `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode
+  `recap`     | remove capturing groups, add capturing groups to the top level
+  `lex`       | convert Lex/Flex regular expression syntax
+  `u4`        | convert `\uXXXX` and UTF-16 surrogate pairs
+  `anycase`   | convert regex to ignore case, same as `(?i)`
+  `multiline` | regex has multiline anchors `^` and `$`, same as `(?m)`
+  `dotall`    | convert `.` (dot) to match all, same as `(?s)`
+  `freespace` | convert regex by removing spacing, same as `(?x)`
+
+For example:
+
+```cpp
+#include <reflex/matcher.h> // reflex::Matcher, reflex::Input, reflex::Pattern
+
+// use a Matcher to check if sentence is in Greek:
+static const reflex::Pattern pattern(reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+"));
+if (reflex::Matcher(pattern, sentence).matches())
+  std::cout << "This is Greek" << std::endl;
+```
+
+For example, the `unicode` flag and `dotall` flag can be used with a `.`
+regex pattern to count wide characters in some `example` input:
+
+```cpp
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
+
+// construct a Boost.Regex matcher to count wide characters:
+std::string regex = reflex::BoostMatcher::convert(".", reflex::convert_flag::unicode | reflex::convert_flag::dotall);
+reflex::BoostMatcher boostmatcher(regex, example);
+size_t n = std::distance(boostmatcher.scan.begin(), boostmatcher.scan.end());
+```
+
+You can also use the regex `"\X"` to match any wide character without using
+these flags.
+
+⇢ [Back to contents](#)
+
+
+Methods and iterators                                          {#regex-methods}
+---------------------
 
 The RE/flex abstract matcher offers four operations for matching with the regex
 engines that are derived from this base abstract class:
@@ -3552,6 +3746,8 @@ change its pattern, you can use the following methods:
   --------------- | -----------------------------------------------------------
   `input(i)`      | set input to `reflex::Input i` (string, stream, or `FILE*`)
   `pattern(p)`    | set pattern to `p` (string regex or `reflex::Pattern`)
+  `has_pattern()` | true if the matcher has a pattern assigned to it
+  `own_pattern()` | true if the matcher has a pattern to manage and delete
   `pattern()`     | get the pattern object, `reflex::Pattern` or `boost::regex`
   `buffer()`      | buffer all input at once, returns true if successful
   `buffer(n)`     | set the adaptive buffer size to `n` bytes to buffer input
@@ -3562,6 +3758,51 @@ change its pattern, you can use the following methods:
 
 The first two methods return a reference to the matcher, so multiple method
 invocations can be chained together.
+
+A matcher reads from the specified input source using its virtual method
+`size_t get(char *s, size_t n)` that simply returns `in.get(s, n)`.  This
+method can be overriden by a derived matcher class to customize reading.
+
+  Method      | Result
+  ----------- | ---------------------------------------------------------------
+  `get(s, n)` | fill `s[0..n-1]` with next input, returns number of bytes added
+  `wrap()`    | returns false (can be overriden to wrap input)
+
+When a matcher reaches the end of input, it invokes the virtual method `wrap()`
+to check if more input is available.  This method returns false by default, but
+this behavior can be changed by overring `wrap()` to set a new input source and
+return `true`, for example:
+
+```cpp
+class WrappedInputMatcher : public reflex::Matcher {
+ public:
+  WrappedInputMatcher() : reflex::Matcher(), source_select(0)
+  { }
+ private:
+  virtual bool wrap()
+  {
+    // read a string, a file, and a string:
+    switch (source_select++)
+    {
+      case 0: in = "Hello World!";
+              return true;
+      case 1: in = fopen("hello.txt", "r");
+              return in.file() != NULL;
+      case 2: fclose(in.file());
+              in = "Goodbye!";
+              return true;
+    }
+    return false;
+  }
+  int source_select;
+};
+```
+
+Note that the constructor in this example does not specify a pattern and input.
+We can set a pattern for the matcher after its instantiation, by using the
+`pattern(p)` method.  In this case the input does not need to be specified to
+immediately force reading the sources of input that we assigned in our
+`wrap()`.
 
 ⇢ [Back to contents](#)
 
@@ -3577,7 +3818,7 @@ An input object can be assigned `std::string` and `char*` strings, wide strings
 `std::wstring` and `wchar_t*`, a `FILE*`, or a `std::istream`.
 
 Wide strings are internally converted to UTF-8 for matching, which effectively
-normalizes the content.
+normalizes the input for matching.
 
 Conversion from wide string to UTF-8 is shown in the example below.  The
 copyright symbol `©` with Unicode U+00A9 is matched against its UTF-8 sequence
@@ -3908,3 +4149,4 @@ The Free Software Foundation maintains a
 
 ⇢ [Back to contents](#)
 
+Copyright (c) 2017, Robert van Engelen, Genivia Inc. All rights reserved.

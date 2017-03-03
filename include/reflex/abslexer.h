@@ -111,7 +111,7 @@ class AbstractLexer {
   {
     in_ = input;
     if (has_matcher())
-      matcher().in = input; // FIXME or should we also matcher().reset()?
+      matcher().in = input;
     return *this;
   }
   /// Returns the current input character sequence that is being scanned.

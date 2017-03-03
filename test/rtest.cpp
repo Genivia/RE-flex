@@ -28,6 +28,27 @@ static void error(const char *text)
 
 using namespace reflex;
 
+class WrappedMatcher : public Matcher {
+ public:
+  WrappedMatcher() : Matcher(), source(0)
+  { }
+ private:
+  virtual bool wrap()
+  {
+    switch (source++)
+    {
+      case 0: in = "Hello World!";
+              return true;
+      case 1: in = "How now brown cow.";
+              return true;
+      case 2: in = "An apple a day.";
+              return true;
+    }
+    return false;
+  }
+  int source;
+};
+
 struct Test {
   const char *pattern;
   const char *popts;
@@ -41,11 +62,6 @@ Test tests[] = {
   { "ab", "", "", "abab", { 1, 1 } },
   { "ab|xy", "", "", "abxy", { 1, 2 } },
   { "a(p|q)z", "", "", "apzaqz", { 1, 1 } },
-  // () empty pattern
-  { "a(b|())|c", "", "", "abc", { 1, 2 } },
-  // special cases of empty patterns, sometimes not permitted
-  { "a(b|)|c", "", "", "abc", { 1, 2 } },
-  { "a(b|(|))|c", "", "", "abc", { 1, 2 } },
   // DFA edge compaction test
   { "[a-cg-ik]z|d|[e-g]|j|y|[x-z]|.|\\n", "", "", "azz", { 1, 6 } },
   // POSIX character classes
@@ -67,7 +83,7 @@ Test tests[] = {
   {
     "\\p{ASCII}-"
     "\\p{Space}-"
-    "\\p{Xdigit}-"
+    "\\p{XDigit}-"
     "\\p{Cntrl}-"
     "\\p{Print}-"
     "\\p{Alnum}-"
@@ -107,12 +123,12 @@ Test tests[] = {
   { "(?s).", "", "", "a\n", { 1, 1 } },
   { "(?s:.)", "", "", "a\n", { 1, 1 } },
   { "(?s).", "", "", "a\n", { 1, 1 } },
-  // Anchors \A, \Z, ^, and $ with pattern option m (multiline)
-  { "\\Aa\\Z", "", "", "a", { 1 } },
+  // Anchors \A, \z, ^, and $ with pattern option m (multiline)
+  { "\\Aa\\z", "", "", "a", { 1 } },
   { "^a$", "", "", "a", { 1 } },
   { "^a$|\\n", "m", "", "a\na", { 1, 2, 1 } },
   { "^a|a$|a|\\n", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
-  { "\\Aa\\Z|\\Aa|a\\Z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },
+  { "\\Aa\\z|\\Aa|a\\z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },
   // Optional X?
   { "a?z", "", "", "azz", { 1, 1 } },
   // Closure X*
@@ -196,7 +212,7 @@ Test tests[] = {
   { "a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } },
   { "^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
   { "^a/b$|b|\\n", "ml", "", "ab\n", { 1, 2, 3 } },
-  { "a(?=$)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
+  { "a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
   { "^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
   { "^( +/a|b)|a|\\n", "ml", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
   { "abc(?=\\w+|(?^def))|xyzabcdef", "", "", "abcxyzabcdef", { 1, 2 } },
@@ -512,6 +528,20 @@ int main()
   std::cout << std::endl;
   if (test != "a/a/b/c/c/d/")
     error("unput");
+  //
+  banner("TEST WRAP");
+  //
+  WrappedMatcher wrapped_matcher;
+  wrapped_matcher.pattern(pattern8);
+  test = "";
+  while (wrapped_matcher.find())
+  {
+    std::cout << wrapped_matcher.text() << "/";
+    test.append(wrapped_matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "Hello/World/How/now/brown/cow/An/apple/a/day/")
+    error("wrap");
   //
   banner("TEST MORE");
   //

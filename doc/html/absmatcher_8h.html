@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">absmatcher.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
+      <div style="float: right; font-size: 10px;">updated Thu Mar 2 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -61,7 +61,8 @@
 
 <p>RE/flex abstract matcher base class and pattern matcher class.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="debug_8h.html">reflex/debug.h</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="convert_8h.html">reflex/convert.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="debug_8h.html">reflex/debug.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="input_8h.html">reflex/input.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="traits_8h.html">reflex/traits.h</a>&gt;</code><br />
 <code>#include &lt;cstdlib&gt;</code><br />
@@ -72,10 +73,12 @@ Include dependency graph for absmatcher.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="absmatcher_8h__incl.png" border="0" usemap="#absmatcher_8h" alt=""/></div>
 <map name="absmatcher_8h" id="absmatcher_8h">
-<area shape="rect" id="node2" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="41,80,147,107"/>
-<area shape="rect" id="node4" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="185,80,283,107"/>
-<area shape="rect" id="node10" href="traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="307,80,406,107"/>
-<area shape="rect" id="node5" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="147,155,239,181"/>
+<area shape="rect" id="node2" href="convert_8h.html" title="RE/flex regex converter. " alt="" coords="95,80,208,107"/>
+<area shape="rect" id="node7" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="245,80,351,107"/>
+<area shape="rect" id="node9" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="389,80,487,107"/>
+<area shape="rect" id="node14" href="traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="511,80,610,107"/>
+<area shape="rect" id="node3" href="error_8h.html" title="RE/flex regex errors. " alt="" coords="5,155,103,181"/>
+<area shape="rect" id="node10" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="392,155,484,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -122,11 +125,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa971e8de839b917d033769272aa992e7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#aa971e8de839b917d033769272aa992e7">reflex::regroup</a> (const std::string &amp;regex)</td></tr>
-<tr class="memdesc:aa971e8de839b917d033769272aa992e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Regroup: convert a string regex to a regex with group captures only for the outermost (top-level) choices. All outermost (top-level) choices <code>X1</code>, <code>X2</code>, ... <code>Xn</code> in a regex <code>X1|X2|...|Xn</code> are regrouped such that <code>X1|X2|...|Xn</code> =&gt; <code>(X1)|(X2)|...|(Xn)</code>. Innermost (nested) group captures <code>(Y)</code> are converted to non-captured <code>(Y)</code> =&gt; <code>(?:Y)</code>. All existing non-capturing groups are retained. For example, <code>a|b(c)|(?:d)</code> =&gt; <code>(a)|(b(?:c))|((?:d))</code>.  <a href="namespacereflex.html#aa971e8de839b917d033769272aa992e7">More...</a><br /></td></tr>
-<tr class="separator:aa971e8de839b917d033769272aa992e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">reflex::isword</a> (int c)</td></tr>
-<tr class="memdesc:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check word character.  <a href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">More...</a><br /></td></tr>
+<tr class="memdesc:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check ASCII word-like character <code>[A-Za-z0-9_]</code>.  <a href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">More...</a><br /></td></tr>
 <tr class="separator:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -151,7 +151,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Jan 25 2017 18:16:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Mar 2 2017 22:07:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

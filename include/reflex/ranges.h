@@ -59,8 +59,8 @@ struct range_compare {
 /// RE/flex Ranges template class.
 /**
 The `std::set` container is a base class of this Ranges class.  Value ranges
-[lo,hi] are stored in the underlying `std::set` container as `std::pair(lo,
-hi)` pairs of bounds.
+[lo,hi] are stored in the underlying `std::set` container as a pair of bounds
+`std::pair(lo, hi)`.
 
 Ranges in the set are mutually disjoint (i.e. non-overlapping).  This property
 is maintained by the `reflex::Ranges` methods.
@@ -106,8 +106,8 @@ inherited `std::set` methods:
 - `bool any() const` returns true if this set of ranges contains at least one
   range, i.e. is not empty.
 
-- `bool intersects(const Ranges& rs) const` returns true if ranges intersects
-   with ranges rs, i.e. has at least one range that overlaps with ranges rs.
+- `bool intersects(const Ranges& rs) const` returns true if this set of ranges
+  intersects ranges rs, i.e. has at least one range that overlaps with ranges rs.
 
 - `bool contains(const Ranges& rs) const` returns true if this set of ranges
   contains all ranges rs, i.e. ranges rs is a subset.
@@ -688,11 +688,11 @@ class ORanges : public Ranges<T> {
     const_iterator j = rs.begin();
     while (i != this->end() && j != rs.end())
     {
-      if (std::less<T>()(i->second, bump(j->first)))
+      if (std::less<bound_type>()(i->second, bump(j->first)))
       {
         ++i;
       }
-      else if (std::less<T>()(j->second, bump(i->first)))
+      else if (std::less<bound_type>()(j->second, bump(i->first)))
       {
         ++j;
       }
@@ -729,11 +729,11 @@ class ORanges : public Ranges<T> {
     while (i != this->end() && j != rs.end())
     {
       // remove ranges from this range set that are not in rs
-      if (std::less<T>()(i->second, bump(j->first)))
+      if (std::less<bound_type>()(i->second, bump(j->first)))
       {
         container_type::erase(i++);
       }
-      else if (std::less<T>()(j->second, bump(i->first)))
+      else if (std::less<bound_type>()(j->second, bump(i->first)))
       {
         ++j;
       }
@@ -785,6 +785,24 @@ class ORanges : public Ranges<T> {
       container_type::erase(i++);
     return *this;
   }
+  /// Returns the union of two range sets.
+  ORanges operator|(const ORanges& rs) ///< ranges to merge
+    const
+    /// @returns the union of this set and rs.
+  {
+    ORanges copy(*this);
+    copy.Ranges<T>::operator|=(rs);
+    return copy;
+  }
+  /// Returns the union of two range sets.
+  ORanges operator+(const ORanges& rs) ///< ranges to merge
+    const
+    /// @returns the union of this set and rs.
+  {
+    ORanges copy(*this);
+    copy.Ranges<T>::operator+=(rs);
+    return copy;
+  }
   /// Returns the difference of two open-ended range sets.
   ORanges operator-(const ORanges& rs) ///< ranges
     const
@@ -803,11 +821,11 @@ class ORanges : public Ranges<T> {
     iterator k = r.end();
     while (i != this->end() && j != rs.end())
     {
-      if (std::less<T>()(i->second, bump(j->first)))
+      if (std::less<bound_type>()(i->second, bump(j->first)))
       {
         ++i;
       }
-      else if (std::less<T>()(j->second, bump(i->first)))
+      else if (std::less<bound_type>()(j->second, bump(i->first)))
       {
         ++j;
       }
@@ -849,9 +867,9 @@ class ORanges : public Ranges<T> {
     const_iterator j = rs.begin();
     while (i != this->end() && j != rs.end())
     {
-      if (std::less<T>()(i->second, bump(j->first)))
+      if (std::less<bound_type>()(i->second, bump(j->first)))
         ++i;
-      else if (std::less<T>()(j->second, bump(i->first)))
+      else if (std::less<bound_type>()(j->second, bump(i->first)))
         ++j;
       else
         return true;
@@ -863,7 +881,7 @@ class ORanges : public Ranges<T> {
   static bound_type bump(bound_type val) ///< the value to bump
     /// @returns val + 1 or val when max.
   {
-    if (static_cast<bound_type>(val + 1) < val)
+    if (std::less<bound_type>()(val + 1, val)) // checks integer overflow (compile with -Wno-strict-overflow)
       return val;
     return val + 1;
   }

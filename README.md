@@ -13,17 +13,20 @@ Flex command-line tool.  RE/flex offers:
 
 * an *enhancement* of [Boost.Regex](www.boost.org/libs/regex) to use its engine
   for matching, seaching, splitting and for scanning of tokens on various types
-  of data sources, such as strings, files, and streams of unlimited length;
+  of data sources, such as strings, files, and streams;
 
 * a *regex library* for fast POSIX regular expression matching with extensions
   to POSIX such as lazy quantifiers, word boundary anchors, Unicode UTF-8, and
-  much more;
+  more;
 
 * a *flexible regex framework* that combines the above in a collection of C++
   class templates for pattern matching, searching, scanning, and splitting of
   strings, files, and streaming data.
 
-The repo includes tokenizers for Java, Python, and C/C++.
+The RE/flex repo includes tokenizers for Java, Python, and C/C++.
+
+The RE/flex software is fully self-contained.  No other libraries are required.
+Boost.Regex is optional to use as a regex engine.
 
 
 List of features
@@ -32,11 +35,11 @@ List of features
 - Fully compatible with Flex to eliminate a learning curve, making a transition
   to RE/flex frustration-free.
 - Extensive documentation in the online [manual][manual-url].
-- RE/flex generates lex.yy.cpp files while Flex generates lex.yy.cc files (in
-  C++ mode with option -+), to distinguish the differences.
 - Generates MT-safe (reentrant) code by default.
 - Generates clean source code that defines a C++ Lexer class derived from an
   abstract lexer class.
+- RE/flex generates lex.yy.cpp files while Flex generates lex.yy.cc files (in
+  C++ mode with flex option -+), to distinguish the differences.
 - Configurable Lexer class generation to customize the interface for various
   parsers, including Yacc and Bison.
 - Works with Bison and supports reentrant, bison-bridge and bison-locations.
@@ -57,12 +60,13 @@ List of features
   indentation, including `\t` (tab) adjustments.
 - Adds `%class` and `%init` to customize the generated Lexer classes.
 - Adds `%include` to modularize lex specifications.
-- Automatic internal conversion from UTF-16/32 to UTF-8 for matching Unicode on
+- Automatic internal conversion of UTF-16/32 to UTF-8 for matching Unicode on
   UTF-encoded input files, no need to define `YY_INPUT` for UTF conversions.
 - Converts the official Unicode scripts Scripts.txt and UnicodeData.txt to
   UTF-8 patterns by applying a RE/flex scanner to convert these scripts to C++
   code.  Future Unicode standards can be automatically converted using these
   scanners that are written in RE/flex itself.
+- Conversion of regex expressions, for regex engines that lack regex features.
 - The RE/flex regex library makes C++11 std::regex and Boost.Regex much easier
   to use in plain C++ code for pattern matching on (wide) strings, files, and
   streams.
@@ -98,7 +102,7 @@ or use the 'make' command to do the same:
 
 Windows users: use reflex/bin/reflex.exe.
 
-Optional:
+Optional libraries to install:
 
 - To use Boost.Regex as a regex engine with the RE/flex library and scanner
   generator, install [Boost][boost-url] and link your code against
@@ -136,7 +140,7 @@ for more details.
 For the second option, simply use the new RE/flex matcher classes to start
 pattern matching on strings, wide strings, files, and streams.
 
-You can select matchers based on different engines:
+You can select matchers that are based on different regex engines:
 
 - RE/flex regex: `#include <reflex/matcher.h>` and use `reflex::Matcher`;
 - Boost.Regex: `#include <reflex/boostmatcher.h>` and use
@@ -231,6 +235,32 @@ for (auto& match : reflex::StdMatcher("\\w+", "How now brown cow.").find)
   std::cout << "Found " << match.text() << std::endl;
 ```
 
+RE/flex also allows you to convert expressive regex syntax forms such as `\p`
+Unicode classes, character class set operations such as `[a-z--[aeiou]]`,
+escapes such as `\X`, and `(?x)` mode modifiers, to a regex string that the
+underlying regex library understands and can use:
+
+- `std::string reflex::Matcher::convert(const std::string& regex)`
+- `std::string reflex::BoostMatcher::convert(const std::string& regex)`
+- `std::string reflex::StdMatcher::convert(const std::string& regex)`
+
+For example:
+
+```{.cpp}
+    #include <reflex/matcher.h> // reflex::Matcher, reflex::Input, reflex::Pattern
+    // use a Matcher to check if sentence is in Greek:
+    static const reflex::Pattern pattern(reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+"));
+    if (reflex::Matcher(pattern, sentence).matches())
+      std::cout << "This is Greek" << std::endl;
+```
+
+Conversion is fast (it runs in linear time in the size of the regex), but it is
+not without some overhead.  Making converted regex patterns `static` as shown
+above saves the cost of conversion to just once to support many matchings.
+
+You can use `convert` with option `reflex::convert_flag::unicode` to make `.`
+(dot), `\w`, `\s` and so on match Unicode.
+
 
 Where do I find the documentation?
 ----------------------------------
@@ -269,6 +299,7 @@ Changelog
 - Jan  8, 2017: 0.9.9  bug fixes and improved Flex compatibility
 - Jan 15, 2017: 0.9.10 improved compatibility with Flex options, fixed critical issue with range unions
 - Jan 25, 2017: 0.9.11 added C++11 std::regex matching engine support, moved .h files to include/reflex, requires `#include <reflex/xyz.h>` from now on, fixed `errno_t` portability issue
+- Mar  3, 2017: 0.9.12 refactored and improved, includes new regex converters for regex engines that lack regex features such as Unicode character classes
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

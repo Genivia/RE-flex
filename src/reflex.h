@@ -37,8 +37,11 @@
 #ifndef REFLEX_H
 #define REFLEX_H
 
+#include <reflex/convert.h>
+#include <reflex/error.h>
 #include <reflex/pattern.h>
 #include <reflex/utf8.h>
+#include <cctype>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
@@ -54,7 +57,7 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.11"
+#define REFLEX_VERSION "0.9.12"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -69,6 +72,16 @@ class Reflex
  public:
   void main(int argc, char **argv);
 
+  /// A library entry to describe regex library properties
+  struct Library {
+    const char *name;      ///< the unique ID name of the regex library
+    const char *file;      ///< the header file to include
+    const char *pattern;   ///< the pattern type used by the matcher class
+    const char *matcher;   ///< the matcher class
+    const char *signature; ///< a regex library signature of the form "[decls:]escapes[?+]"
+  };
+
+  /// Line of code fragment in lex specifications
   struct Code {
     Code(
         const std::string& line,
@@ -84,8 +97,7 @@ class Reflex
     size_t      lineno;
   };
 
-  typedef std::vector<Code> Codes;
-
+  /// A regex pattern and action pair that forms a rule
   struct Rule {
     Rule(
         const std::string& regex,
@@ -98,61 +110,67 @@ class Reflex
     Code        code;
   };
 
-  typedef std::vector<Rule>                 Rules;
-  typedef std::vector<std::string>          Strings;
-  typedef std::map<std::string,std::string> Map;
-  typedef size_t                            Start;
-  typedef std::set<Start>                   Starts;
-  typedef std::map<Start,Codes>             CodesMap;
-  typedef std::map<Start,Rules>             RulesMap;
+  typedef std::map<std::string,Library>     LibraryMap; ///< Dictionary of regex libraries
+  typedef std::vector<Code>                 Codes;      ///< Collection of ordered lines of code
+  typedef std::vector<Rule>                 Rules;      ///< Collection of ordered rules
+  typedef std::vector<std::string>          Strings;    ///< Collection of ordered strings
+  typedef std::map<std::string,std::string> StringMap;  ///< Dictionary (std::string)
+  typedef std::map<std::string,const char*> Dictionary; ///< Dictionary (const char*)
+  typedef size_t                            Start;      ///< Start condition state type
+  typedef std::set<Start>                   Starts;     ///< Set of start conditions
+  typedef std::map<Start,Codes>             CodesMap;   ///< Map of start conditions to lines of code
+  typedef std::map<Start,Rules>             RulesMap;   ///< Map of start conditions to rules
 
  private:
-  void          init(int argc, char **argv);
-  void          parse(void);
-  void          parse_section_1(void);
-  void          parse_section_2(void);
-  void          parse_section_3(void);
-  void          include(const std::string& filename);
-  void          write(void);
-  void          write_banner(const char *title);
-  void          write_prelude(void);
-  void          write_class(void);
-  void          write_section_top();
-  void          write_section_class();
-  void          write_section_init();
-  void          write_section_1();
-  void          write_section_3();
-  void          write_code(const Codes& codes);
-  void          write_code(const Code& code);
-  void          write_lexer(void);
-  void          write_main(void);
-  void          write_stats(void);
-  void          write_regex(const std::string& regex);
-  bool          getline(void);
-  bool          skipcomment(size_t& pos);
-  bool          as(size_t& pos, const char *s);
-  bool          ws(size_t& pos);
-  bool          eq(size_t& pos);
-  bool          nl(size_t& pos);
-  bool          iscode(void);
-  bool          istopcode(void);
-  bool          isclasscode(void);
-  bool          isinitcode(void);
-  std::string   getname(size_t& pos);
-  std::string   getstring(size_t& pos);
-  std::string   getregex(size_t& pos);
-  Starts        getstarts(size_t& pos);
-  std::string   getcode(size_t& pos);
-  void          error(const char *message, const char *arg = NULL, size_t at_lineno = 0);
-  void          warning(const char *message, const char *arg = NULL, size_t at_lineno = 0);
+  void        init(int argc, char **argv);
+  void        version();
+  void        help(const char *message = NULL, const char *arg = NULL);
+  void        parse();
+  void        parse_section_1();
+  void        parse_section_2();
+  void        parse_section_3();
+  void        include(const std::string& filename);
+  void        write();
+  void        write_banner(const char *title);
+  void        write_prelude();
+  void        write_class();
+  void        write_section_top();
+  void        write_section_class();
+  void        write_section_init();
+  void        write_section_1();
+  void        write_section_3();
+  void        write_code(const Codes& codes);
+  void        write_code(const Code& code);
+  void        write_lexer();
+  void        write_main();
+  void        write_regex(const std::string& regex);
+  void        stats();
+  bool        get_line();
+  bool        skip_comment(size_t& pos);
+  bool        as(size_t& pos, const char *s);
+  bool        ws(size_t& pos);
+  bool        eq(size_t& pos);
+  bool        nl(size_t& pos);
+  bool        is_code();
+  bool        is_topcode();
+  bool        is_classcode();
+  bool        is_initcode();
+  std::string get_name(size_t& pos);
+  std::string get_string(size_t& pos);
+  std::string get_regex(size_t& pos);
+  Starts      get_starts(size_t& pos);
+  std::string get_code(size_t& pos);
+  void        error(const char *message, const char *arg = NULL, size_t at_lineno = 0);
+  void        warning(const char *message, const char *arg = NULL, size_t at_lineno = 0);
 
  protected:
-  Map           options;       ///< maps option name (from the options_table) to its option value
-  Map           scripts;       ///< maps Unicode script names to patterns
+  StringMap     options;       ///< maps option name (from the options_table) to its option value
+  LibraryMap    libraries;     ///< maps regex library name ("reflex", "boost", etc) to library info
+  Library      *library;       ///< the regex library selected
   Strings       conditions;    ///< "INITIAL" start condition etc. defined with %x name
   Strings       patterns;      ///< regex patterns for each start condition
   Starts        inclusive;     ///< inclusive start conditions
-  Map           definitions;   ///< map of {name} to regex
+  StringMap     definitions;   ///< map of {name} to regex
   RulesMap      rules;         ///< <Start_i>regex_j action for Start i Rule j
   Codes         section_top;   ///< %top{ user code %} in section 1 container
   Codes         section_class; ///< %class{ class code %} in section 1 container

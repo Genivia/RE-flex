@@ -5,7 +5,7 @@ REFLEX=../bin/reflex
 BISON=bison
 LIBS=../lib/libreflex.a
 # LIBS=../lib/libreflex.a $(BOOSTLIB)
-REFLAGS=--matcher=reflex
+REFLAGS=
 COFLAGS=-g -O2
 CWFLAGS=-Wall -Wunused -Wextra -Wno-unused-label
 CIFLAGS=-I. -I../include -I $(BOOSTINC)

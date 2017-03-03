@@ -369,7 +369,7 @@ class FlexLexer : public AbstractLexer<M> {
   int YYLeng(void) const
     /// @returns matched text length.
   {
-    return this->matcher().size();
+    return static_cast<int>(this->matcher().size());
   }
   /// Read one character, returns zero when EOF.
   int input(void)
@@ -428,7 +428,7 @@ class FlexLexer : public AbstractLexer<M> {
       const char *s, ///< points to text to output
       size_t      n) ///< length of text to output
   {
-    this->out().write(s, n);
+    this->out().write(s, static_cast<std::streamsize>(n));
   }
   /// Invoked by reflex-generated yyFlexLexer when an error occurs.
   virtual void LexerError(const char *s) ///< error message

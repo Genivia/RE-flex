@@ -2,5 +2,5 @@
 <area shape="rect" id="node3" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="190,117,349,143"/>
 <area shape="rect" id="node5" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="245,243,403,284"/>
 <area shape="rect" id="node4" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="115,5,274,47"/>
-<area shape="rect" id="node6" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. " alt="" coords="298,13,390,39"/>
+<area shape="rect" id="node6" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="298,13,390,39"/>
 </map>

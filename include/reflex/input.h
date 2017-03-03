@@ -45,13 +45,13 @@
 
 namespace reflex {
 
-/// Input character sequence class for unified access to sources of input.
+/// Input character sequence class for unified access to sources of input text.
 /**
 Description
 -----------
 
-The Input class unifies access to a source of input of a character sequence as
-follows:
+The Input class unifies access to a source of input text that constitutes a
+sequence of characters:
 
 - An Input object is instantiated and (re)assigned a (new) source input: either
   a `char*` string, a `wchar_t*` wide string, a `std::string`, a
@@ -59,7 +59,7 @@ follows:
 
 - When assigned a wide string source as input, the wide character content is
   automatically converted to an UTF-8 character sequence when reading with
-  get().
+  get().  Wide strings are UCS-2/UCS-4 and may contain UTF-16 surrogate pairs.
 
 - When assigned a `FILE*` source as input, the file is checked for the presence
   of a UTF-8 or a UTF-16 BOM (Byte Order Mark). A UTF-8 BOM is ignored and will
@@ -103,8 +103,8 @@ follows:
 Example
 -------
 
-The following example shows how to read a character sequence in blocks from a
-`std::ifstream`:
+The following example shows how to use the Input class to read a character
+sequence in blocks from a `std::ifstream` to copy to stdout:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
     std::ifstream ifs;
@@ -122,13 +122,14 @@ The following example shows how to read a character sequence in blocks from a
 Example
 -------
 
-The following example shows how to buffer the entire content of a file:
+The following example shows how to use the Input class to store the entire
+content of a file in a temporary buffer:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
     reflex::Input input(fopen("input.h", "r"));
     if (!input.file())
       abort();
-    size_t len = input.size();
+    size_t len = input.size(); // file size (minus any leading UTF BOM)
     char *buf = new char[len];
     input.get(buf, len);
     if (!input.eof())
@@ -138,14 +139,18 @@ The following example shows how to buffer the entire content of a file:
     fclose(input.file());
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Files with UTF-16 content are converted to UTF-8 by get(buf, len), where size()
-gives the total number of UTF-8 bytes that will be produced by get(buf, len).
+In the above, files with UTF-16 and UTF-32 content are converted to UTF-8 by
+`get(buf, len)`.  Also, `size()` returns the total number of UTF-8 bytes to
+copy in the buffer by `get(buf, len)`.  The size is computed depending on the
+UTF-8/16/32 file content encoding, i.e. given a leading UTF BOM in the file.
+This means that UTF-16/32 files are read twice, first internally with `size()`
+and then again with get(buf, len)`.
 
 Example
 -------
 
-The following example shows how to read a character sequence in blocks from a
-file:
+The following example shows how to use the Input class to read a character
+sequence in blocks from a file:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
     reflex::Input input(fopen("input.h", "r"));
@@ -159,8 +164,8 @@ file:
 Example
 -------
 
-The following example shows how to echo characters one by one from stdin
-(reading input from a tty):
+The following example shows how to use the Input class to echo characters one
+by one from stdin, e.g. reading input from a tty:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
     reflex::Input input(stdin);
@@ -172,8 +177,9 @@ The following example shows how to echo characters one by one from stdin
 Example
 -------
 
-The following example shows how to read a character sequence in blocks from a
-wide character string while converting it to UTF-8:
+The following example shows how to use the Input class to read a character
+sequence in blocks from a wide character string, converting it to UTF-8 to copy
+to stdout:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
     reflex::Input input(L"Copyright ©"); // © is unicode U+00A9 and UTF-8 C2 A9
@@ -186,14 +192,15 @@ wide character string while converting it to UTF-8:
 Example
 -------
 
-The following example shows how to convert a wide character string to UTF-8:
+The following example shows how to use the Input class to convert a wide
+character string to UTF-8:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
     reflex::Input input(L"Copyright ©"); // © is unicode U+00A9 and UTF-8 C2 A9
     size_t len = input.size(); // size of UTF-8 string
-    char *buf = new char[len];
+    char *buf = new char[len + 1];
     input.get(buf, len);
-    fwrite(buf, 1, len, stdout);
+    buf[len] = '\0'; // make \0-terminated
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example
@@ -287,7 +294,7 @@ class Input {
   {
     init();
   }
-  /// Construct input character sequence from a std::wstring.
+  /// Construct input character sequence from a std::wstring (may contain UTF-16 surrogate pairs).
   Input(const std::wstring& wstring) ///< input wide string
     :
       cstring_(NULL),
@@ -297,7 +304,7 @@ class Input {
   {
     init();
   }
-  /// Construct input character sequence from a pointer to a std::wstring.
+  /// Construct input character sequence from a pointer to a std::wstring (may contain UTF-16 surrogate pairs).
   Input(const std::wstring *wstring) ///< input wide string
     :
       cstring_(NULL),
@@ -394,7 +401,7 @@ class Input {
   /// Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a `FILE*` or `std::istream` source).
   size_t size(void)
     /// @returns the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable.
-    /// @warning This function SHOULD NOT be used after get().
+    /// @warning This function SHOULD NOT be used after get() as the "cursor" has moved it changes the result.
   {
     if (size_ > 0)
       return size_;
@@ -405,13 +412,22 @@ class Input {
     else if (wstring_)
     {
       wchar_t c;
+      for (const wchar_t *s = wstring_; (c = *s) != L'\0'; ++s)
+      {
+        if (c >= 0xD800 && c < 0xE000 && (s[1] & 0xFC00) == 0xDC00)
+        {
+          size_ += 4;
+          ++s;
+        }
+        else
+        {
 #ifndef WITH_UTF8_UNRESTRICTED
-      for (const wchar_t *s = wstring_; (c = *s) != L'\0'; ++s)
-        size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
 #else
-      for (const wchar_t *s = wstring_; (c = *s) != L'\0'; ++s)
-        size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
 #endif
+        }
+      }
     }
     else if (file_)
     {
@@ -500,6 +516,8 @@ class Input {
         }
         else
         {
+          if (c >= 0xD800 && c < 0xE000 && (wstring_[1] & 0xFC00) == 0xDC00)
+            c = 0x010000 - 0xDC00 + ((c - 0xD800) << 10) + *++wstring_;
           size_t l = utf8(c, utf8_);
           if (k < l)
           {

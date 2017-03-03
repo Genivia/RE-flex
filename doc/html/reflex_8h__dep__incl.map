@@ -1,9 +1,3 @@
 <map id="reflex.h" name="reflex.h">
-<area shape="rect" id="node2" href="$language__scripts_8h.html" title="Unicode language scripts. " alt="" coords="47,80,181,107"/>
-<area shape="rect" id="node4" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="178,155,258,181"/>
-<area shape="rect" id="node5" href="$letter__scripts_8h.html" title="Unicode letter scripts. " alt="" coords="255,80,365,107"/>
-<area shape="rect" id="node7" href="$pl__scripts_8h.html" title="Unicode programming language scripts. " alt="" coords="389,80,479,107"/>
-<area shape="rect" id="node3" href="$language__scripts_8cpp.html" title="language_scripts.cpp" alt="" coords="5,155,153,181"/>
-<area shape="rect" id="node6" href="$letter__scripts_8cpp.html" title="letter_scripts.cpp" alt="" coords="282,155,405,181"/>
-<area shape="rect" id="node8" href="$pl__scripts_8cpp.html" title="Unicode programming language scripts. " alt="" coords="429,155,533,181"/>
+<area shape="rect" id="node2" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="5,80,85,107"/>
 </map>

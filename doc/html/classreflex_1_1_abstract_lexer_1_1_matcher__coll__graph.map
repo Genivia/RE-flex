@@ -1,4 +1,4 @@
 <map id="reflex::AbstractLexer&lt; M &gt;::Matcher" name="reflex::AbstractLexer&lt; M &gt;::Matcher">
 <area shape="rect" id="node3" href="$classreflex_1_1_abstract_lexer.html" title="The abstract lexer class template that is the abstract root class of all reflex&#45;generated scanners..." alt="" coords="15,185,194,212"/>
-<area shape="rect" id="node4" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. " alt="" coords="5,89,97,115"/>
+<area shape="rect" id="node4" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="5,89,97,115"/>
 </map>

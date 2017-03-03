@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex.cpp File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
+      <div style="float: right; font-size: 10px;">updated Thu Mar 2 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -61,25 +61,21 @@
 <p>RE/flex scanner generator replacement for Flex/Lex.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="reflex_8h.html">reflex.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="letter__scripts_8h.html">letter_scripts.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="language__scripts_8h.html">language_scripts.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="pl__scripts_8h.html">pl_scripts.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for reflex.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="reflex_8cpp__incl.png" border="0" usemap="#reflex_8cpp" alt=""/></div>
 <map name="reflex_8cpp" id="reflex_8cpp">
-<area shape="rect" id="node2" href="reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="1222,155,1287,181"/>
-<area shape="rect" id="node26" href="letter__scripts_8h.html" title="Unicode letter scripts. " alt="" coords="1128,80,1237,107"/>
-<area shape="rect" id="node27" href="language__scripts_8h.html" title="Unicode language scripts. " alt="" coords="1261,80,1395,107"/>
-<area shape="rect" id="node28" href="pl__scripts_8h.html" title="Unicode programming language scripts. " alt="" coords="1419,80,1509,107"/>
-<area shape="rect" id="node3" href="pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="639,229,750,256"/>
-<area shape="rect" id="node10" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="1010,379,1102,405"/>
-<area shape="rect" id="node4" href="bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="567,304,657,331"/>
-<area shape="rect" id="node7" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="732,304,839,331"/>
-<area shape="rect" id="node9" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="863,304,961,331"/>
-<area shape="rect" id="node14" href="ranges_8h.html" title="RE/flex range set container. " alt="" coords="63,304,174,331"/>
-<area shape="rect" id="node17" href="setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="198,304,301,331"/>
+<area shape="rect" id="node2" href="reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="928,80,993,107"/>
+<area shape="rect" id="node3" href="convert_8h.html" title="RE/flex regex converter. " alt="" coords="16,155,129,181"/>
+<area shape="rect" id="node4" href="error_8h.html" title="RE/flex regex errors. " alt="" coords="21,229,119,256"/>
+<area shape="rect" id="node8" href="pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="736,155,847,181"/>
+<area shape="rect" id="node15" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="533,304,625,331"/>
+<area shape="rect" id="node9" href="bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="877,229,967,256"/>
+<area shape="rect" id="node12" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="991,229,1098,256"/>
+<area shape="rect" id="node14" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="703,229,802,256"/>
+<area shape="rect" id="node18" href="ranges_8h.html" title="RE/flex range set container. " alt="" coords="1123,229,1233,256"/>
+<area shape="rect" id="node21" href="setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="419,229,521,256"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -91,31 +87,27 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a37a885fe6664faf3e81cf4c65299a072"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#a37a885fe6664faf3e81cf4c65299a072">isword</a> (int c)</td></tr>
-<tr class="separator:a37a885fe6664faf3e81cf4c65299a072"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca8e18c08ca07d3f74f4f5cf549706b2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#aca8e18c08ca07d3f74f4f5cf549706b2">isalphaun</a> (int c)</td></tr>
-<tr class="separator:aca8e18c08ca07d3f74f4f5cf549706b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fbbbc8d035c85ce83c6f270a2e56012"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#a4fbbbc8d035c85ce83c6f270a2e56012">version</a> (void)</td></tr>
-<tr class="memdesc:a4fbbbc8d035c85ce83c6f270a2e56012"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display version information and exit.  <a href="#a4fbbbc8d035c85ce83c6f270a2e56012">More...</a><br /></td></tr>
-<tr class="separator:a4fbbbc8d035c85ce83c6f270a2e56012"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b92305c8ff695b625185fe3401aee5a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#a6b92305c8ff695b625185fe3401aee5a">help</a> (const char *message=NULL, const char *arg=NULL)</td></tr>
-<tr class="memdesc:a6b92305c8ff695b625185fe3401aee5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display help information with an optional diagnostic message and exit.  <a href="#a6b92305c8ff695b625185fe3401aee5a">More...</a><br /></td></tr>
-<tr class="separator:a6b92305c8ff695b625185fe3401aee5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebaa8f5abd10789858e7528e3465742a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#aebaa8f5abd10789858e7528e3465742a">abort</a> (const char *error, const char *arg=NULL)</td></tr>
-<tr class="memdesc:aebaa8f5abd10789858e7528e3465742a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abort with an error message.  <a href="#aebaa8f5abd10789858e7528e3465742a">More...</a><br /></td></tr>
-<tr class="separator:aebaa8f5abd10789858e7528e3465742a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd21dbba9aaf2944d477caa4caddd963"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#afd21dbba9aaf2944d477caa4caddd963">lower</a> (int c)</td></tr>
+<tr class="memdesc:afd21dbba9aaf2944d477caa4caddd963"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert to lower case.  <a href="#afd21dbba9aaf2944d477caa4caddd963">More...</a><br /></td></tr>
+<tr class="separator:afd21dbba9aaf2944d477caa4caddd963"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23c1dba2877c42e2d1c8ae48c8cebce0"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#a23c1dba2877c42e2d1c8ae48c8cebce0">file_ext</a> (std::string &amp;name, const char *ext)</td></tr>
 <tr class="memdesc:a23c1dba2877c42e2d1c8ae48c8cebce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add file extension if not present.  <a href="#a23c1dba2877c42e2d1c8ae48c8cebce0">More...</a><br /></td></tr>
 <tr class="separator:a23c1dba2877c42e2d1c8ae48c8cebce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebaa8f5abd10789858e7528e3465742a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#aebaa8f5abd10789858e7528e3465742a">abort</a> (const char *error, const char *arg=NULL)</td></tr>
+<tr class="memdesc:aebaa8f5abd10789858e7528e3465742a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abort with an error message.  <a href="#aebaa8f5abd10789858e7528e3465742a">More...</a><br /></td></tr>
+<tr class="separator:aebaa8f5abd10789858e7528e3465742a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
-<tr class="memdesc:a3c04138a5bfe5d72780bb7e82a18e627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main program instantiates <a class="el" href="class_reflex.html" title="RE/flex scanner generator class, a variation of the classic &quot;lex&quot; tool to generate scanners...">Reflex</a> class and runs Reflex::main(argc, argv).  <a href="#a3c04138a5bfe5d72780bb7e82a18e627">More...</a><br /></td></tr>
+<tr class="memdesc:a3c04138a5bfe5d72780bb7e82a18e627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main program instantiates <a class="el" href="class_reflex.html" title="RE/flex scanner generator class, a variation of the classic &quot;lex&quot; tool to generate scanners...">Reflex</a> class and runs <code>Reflex::main(argc, argv)</code>.  <a href="#a3c04138a5bfe5d72780bb7e82a18e627">More...</a><br /></td></tr>
 <tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a9c31d2a54eca975b5191bc05b27dad74"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#a9c31d2a54eca975b5191bc05b27dad74">options_table</a> []</td></tr>
-<tr class="memdesc:a9c31d2a54eca975b5191bc05b27dad74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command-line reflex options and .l spec options.  <a href="#a9c31d2a54eca975b5191bc05b27dad74">More...</a><br /></td></tr>
+<tr class="memdesc:a9c31d2a54eca975b5191bc05b27dad74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Table with command-line reflex options and lex specification %options.  <a href="#a9c31d2a54eca975b5191bc05b27dad74">More...</a><br /></td></tr>
 <tr class="separator:a9c31d2a54eca975b5191bc05b27dad74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0faec88dd369e00b7a1822514e13bd8"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="struct_reflex_1_1_library.html">Reflex::Library</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#ad0faec88dd369e00b7a1822514e13bd8">library_table</a> []</td></tr>
+<tr class="memdesc:ad0faec88dd369e00b7a1822514e13bd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Table with regex library properties.  <a href="#ad0faec88dd369e00b7a1822514e13bd8">More...</a><br /></td></tr>
+<tr class="separator:ad0faec88dd369e00b7a1822514e13bd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe7cadc32c6ceb7093a860073cba9aee"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#afe7cadc32c6ceb7093a860073cba9aee">newline</a> = &quot;\n&quot;</td></tr>
 <tr class="separator:afe7cadc32c6ceb7093a860073cba9aee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -210,10 +202,11 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Add file extension if not present. </p>
+<dl class="section return"><dt>Returns</dt><dd>copy of file <code>name</code> string with extension <code>ext</code> </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a6b92305c8ff695b625185fe3401aee5a"></a>
+<a class="anchor" id="afd21dbba9aaf2944d477caa4caddd963"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -221,43 +214,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void help </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>message</em> = <code>NULL</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>arg</em> = <code>NULL</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Display help information with an optional diagnostic message and exit. </p>
-
-</div>
-</div>
-<a class="anchor" id="aca8e18c08ca07d3f74f4f5cf549706b2"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int isalphaun </td>
+          <td class="memname">int lower </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>c</em></td><td>)</td>
@@ -270,32 +227,9 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Check alphabetical or underscore character. </p><dl class="section return"><dt>Returns</dt><dd>nonzero if argument c is in [A-Za-z_], zero otherwise. </dd></dl>
 
-</div>
-</div>
-<a class="anchor" id="a37a885fe6664faf3e81cf4c65299a072"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int isword </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>c</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Check word character. </p><dl class="section return"><dt>Returns</dt><dd>nonzero if argument c is in [A-Za-z0-9_], zero otherwise. </dd></dl>
+<p>Convert to lower case. </p>
+<dl class="section return"><dt>Returns</dt><dd>lower case char. </dd></dl>
 
 </div>
 </div>
@@ -323,11 +257,12 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Main program instantiates <a class="el" href="class_reflex.html" title="RE/flex scanner generator class, a variation of the classic &quot;lex&quot; tool to generate scanners...">Reflex</a> class and runs Reflex::main(argc, argv). </p>
+<p>Main program instantiates <a class="el" href="class_reflex.html" title="RE/flex scanner generator class, a variation of the classic &quot;lex&quot; tool to generate scanners...">Reflex</a> class and runs <code>Reflex::main(argc, argv)</code>. </p>
 
 </div>
 </div>
-<a class="anchor" id="a4fbbbc8d035c85ce83c6f270a2e56012"></a>
+<h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="ad0faec88dd369e00b7a1822514e13bd8"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -335,11 +270,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void version </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="memname">const <a class="el" href="struct_reflex_1_1_library.html">Reflex::Library</a> library_table[]</td>
         </tr>
       </table>
   </td>
@@ -348,12 +279,72 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Display version information and exit. </p>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">  {</div><div class="line">    <span class="stringliteral">&quot;reflex&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;reflex/matcher.h&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;reflex::Pattern&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;reflex::Matcher&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;imsx#=^:abcdefhijlnprstuvwxzABDHLPQSUW&lt;&gt;?+&quot;</span>,</div><div class="line">  },</div><div class="line">  {</div><div class="line">    <span class="stringliteral">&quot;boost&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;reflex/boostmatcher.h&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;boost::regex&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;reflex::BoostPosixMatcher&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;imsx#&lt;=!:abcdefghlnprstuvwxzABDHLPQSUWZ0&lt;&gt;&quot;</span>,</div><div class="line">  },</div><div class="line">  {</div><div class="line">    <span class="stringliteral">&quot;boost-perl&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;reflex/boostmatcher.h&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;boost::regex&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;reflex::BoostPerlMatcher&quot;</span>,</div><div class="line">    <span class="stringliteral">&quot;imsx#&lt;=!:abcdefghlnprstuvwxzABDHLPQSUWZ0&lt;&gt;?+&quot;</span>,</div><div class="line">  },</div><div class="line">  { NULL, NULL, NULL, NULL, NULL } </div><div class="line">}</div></div><!-- fragment -->
+<p>Table with regex library properties. </p>
+<p>This table is extensible and new regex libraries may be added. Each regex library is described by:</p>
+<ul>
+<li>a unique name that is used for specifying the <code>matcher=NAME</code> option</li>
+<li>the header file to be included</li>
+<li>the pattern type or class used by the matcher class</li>
+<li>the matcher class</li>
+<li>the regex library signature</li>
+</ul>
+<p>A regex library signature is a string of the form <code>"[decls:]escapes[?+]"</code>, see <a class="el" href="namespacereflex.html#a4f388dfde137fe178705346b44c56223" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.</p>
+<p>The optional <code>"decls:"</code> characters specify which modifiers and other special <code>(?...)</code> constructs are supported:</p><ul>
+<li>non-capturing group <code>(?:...)</code> is supported</li>
+<li>one or all of "imsx" specify which (?ismx:...) modifiers are supported</li>
+<li><code>#</code> specifies that <code>(?#...)</code> comments are supported</li>
+<li><code>=</code> specifies that <code>(?=...)</code> lookahead is supported</li>
+<li><code>&lt;</code> specifies that <code>(?&lt;...)</code> lookbehind is supported</li>
+<li><code>!</code> specifies that <code>(?!=...)</code> and <code>(?!&lt;...)</code> are supported</li>
+<li><code>^</code> specifies that <code>(?^...)</code> negative (reflex) patterns are supported</li>
+</ul>
+<p>The <code>"escapes"</code> characters specify which standard escapes are supported:</p><ul>
+<li><code>a</code> for <code>\a</code> (BEL U+0007)</li>
+<li><code>b</code> for <code>\b</code> (BS U+0008) in brackets <code>[\b]</code> only AND the <code>\b</code> word boundary</li>
+<li><code>c</code> for <code>\cX</code> control character specified by <code>X</code> modulo 32</li>
+<li><code>d</code> for <code>\d</code> ASCII digit <code>[0-9]</code></li>
+<li><code>e</code> for <code>\e</code> ESC U+001B</li>
+<li><code>f</code> for <code>\f</code> FF U+000C</li>
+<li><code>h</code> for <code>\h</code> ASCII blank <code>[ \t]</code> (SP U+0020 or TAB U+0009)</li>
+<li><code>i</code> for <code>\i</code> reflex indent boundary</li>
+<li><code>j</code> for <code>\j</code> reflex dedent boundary</li>
+<li><code>l</code> for <code>\l</code> ASCII lower case letter <code>[a-z]</code></li>
+<li><code>n</code> for <code>\n</code> LF U+000A</li>
+<li><code>p</code> for <code>\p{C}</code> ASCII POSIX character class specified by <code>C</code></li>
+<li><code>r</code> for <code>\r</code> CR U+000D</li>
+<li><code>s</code> for <code>\s</code> space (SP, TAB, LF, VT, FF, or CR)</li>
+<li><code>t</code> for <code>\t</code> TAB U+0009</li>
+<li><code>u</code> for <code>\u</code> ASCII upper case letter <code>[A-Z]</code> (when not followed by <code>{XXXX}</code>)</li>
+<li><code>v</code> for <code>\v</code> VT U+000B</li>
+<li><code>w</code> for <code>\w</code> ASCII word-like character <code>[0-9A-Z_a-z]</code></li>
+<li><code>x</code> for <code>\xXX</code> 8-bit character encoding in hexadecimal</li>
+<li><code>y</code> for <code>\y</code> word boundary</li>
+<li><code>z</code> for <code>\z</code> end of input anchor</li>
+<li><code>0</code> for <code>\0nnn</code> 8-bit character encoding in octal requires a leading <code>0</code></li>
+<li>`<code>for `\</code> begin of input anchor</li>
+<li><code>'</code> for <code>\'</code> end of input anchor</li>
+<li><code>&lt;</code> for <code>\&lt;</code> left word boundary</li>
+<li><code>&gt;</code> for <code>\&gt;</code> right word boundary</li>
+<li><code>A</code> for <code>\A</code> begin of input anchor</li>
+<li><code>B</code> for <code>\B</code> non-word boundary</li>
+<li><code>D</code> for <code>\D</code> ASCII non-digit <code>[^0-9]</code></li>
+<li><code>H</code> for <code>\H</code> ASCII non-blank <code>[^ \t]</code></li>
+<li><code>L</code> for <code>\L</code> ASCII non-lower case letter <code>[^a-z]</code></li>
+<li><code>P</code> for <code>\P{C}</code> ASCII POSIX inverse character class specified by <code>C</code></li>
+<li><code>Q</code> for <code>\Q...\E</code> quotations</li>
+<li><code>S</code> for <code>\S</code> ASCII non-space (no SP, TAB, LF, VT, FF, or CR)</li>
+<li><code>U</code> for <code>\U</code> ASCII non-upper case letter <code>[^A-Z]</code></li>
+<li><code>W</code> for <code>\W</code> ASCII non-word-like character <code>[^0-9A-Z_a-z]</code></li>
+<li><code>Z</code> for <code>\Z</code> end of input anchor, before the final line break</li>
+</ul>
+<p>The optional <code>"?+"</code> characters specify lazy and possessive support:</p><ul>
+<li><code>?</code> lazy repeats are supported</li>
+<li><code>+</code> possessive repeats are supported </li>
+</ul>
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
 <a class="anchor" id="afe7cadc32c6ceb7093a860073cba9aee"></a>
 <div class="memitem">
 <div class="memproto">
@@ -392,14 +383,15 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Command-line reflex options and .l spec options. </p>
+<p>Table with command-line reflex options and lex specification %options. </p>
+<p>The table consists of option names with hyphens replaced by underscores. </p>
 
 </div>
 </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Jan 25 2017 18:16:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Mar 2 2017 22:07:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

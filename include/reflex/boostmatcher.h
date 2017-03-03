@@ -46,10 +46,21 @@ namespace reflex {
 /** More info TODO */
 class BoostMatcher : public PatternMatcher<boost::regex> {
  public:
+  /// Convert a regex to an acceptable form, given the specified regex library signature `"[decls:]escapes[?+]"`, see reflex::convert.
+  template<typename T>
+  static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
+  {
+    return reflex::convert(regex, "imsx!#<=:abcdefghlnprstuvwxzABDHLPQSUWZ0<>?+", flags);
+  }
+  /// Default constructor.
+  BoostMatcher() : PatternMatcher<boost::regex>()
+  {
+    reset();
+  }
   /// Construct matcher engine from a boost::regex object or string regex, and an input character sequence.
   template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostMatcher(
-      const P&     pat,           ///< a boost::regex or a string regex for this matcher
+      const P     *pat,           ///< points to a boost::regex or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
       const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
@@ -61,7 +72,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   /// Construct matcher engine from a boost::regex object or string regex, and an input character sequence.
   template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostMatcher(
-      const P     *pat,           ///< points to a boost::regex or a string regex for this matcher
+      const P&     pat,           ///< a boost::regex or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
       const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
@@ -145,10 +156,12 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
       {
         if (grow()) // make sure we have enough storage to read input
           itr_ = fin_; // buffer shifting/growing invalidates iterator
-        end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_); // get() may also wrap()
+        end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
       }
       if (pos_ == end_) // if pos_ is hitting the end_ then
       {
+        if (wrap())
+          continue; // continue after successful wrap
         if (method == Const::SPLIT)
         {
           DBGLOGN("Split end");
@@ -184,8 +197,12 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
           return cap_;
         }
         eof_ = true;
-        if (method == Const::FIND && opt_.N)
+        if (pos_ == cur_ && method == Const::FIND && opt_.N)
+	{
+	  DBGLOGN("No match, pos = %zu", pos_);
+	  DBGLOG("END BoostMatcher::match()");
           return 0;
+	}
         if (itr_ != fin_)
           break; // OK if iterator is still valid
       }
@@ -240,7 +257,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
       DBGLOG("END BoostMatcher::match()");
       return cap_;
     }
-    else if (!(*itr_)[0].matched || (buf_ + cur_ != (*itr_)[0].first && method != Const::FIND)) // if no match at first and we're not searching then
+    else if ((cur_ == end_ && eof_ && method != Const::MATCH) || !(*itr_)[0].matched || (buf_ + cur_ != (*itr_)[0].first && method != Const::FIND)) // if no match at first and we're not searching then
     {
       itr_ = fin_;
       pos_ = cur_;
@@ -286,6 +303,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
       flg |= boost::regex_constants::match_not_null;
     else if (method == Const::MATCH)
       flg |= boost::regex_constants::match_continuous;
+    ASSERT(pat_ != NULL);
     itr_ = boost::cregex_iterator(txt_, buf_ + end_, *pat_, flg);
   }
   boost::match_flag_type flg_; ///< boost::regex match flags
@@ -301,10 +319,19 @@ engine.
 */
 class BoostPosixMatcher : public BoostMatcher {
  public:
+  /// Convert a regex to an acceptable form, given the specified regex library signature `"[decls:]escapes[?+]"`, see reflex::convert.
+  template<typename T>
+  static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
+  {
+    return reflex::convert(regex, "imsx!#<=:abcdefghlnprstuvwxzABDHLPQSUWZ0<>", flags);
+  }
+  /// Default constructor.
+  BoostPosixMatcher() : BoostMatcher()
+  { }
   /// Construct a POSIX matcher engine from a boost::regex pattern and an input character sequence.
-  template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
+  template<typename P>
   BoostPosixMatcher(
-      const P&     pat,           ///< a boost::regex or a string regex for this matcher
+      const P     *pat,           ///< points to a boost::regex or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
       const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
@@ -313,9 +340,9 @@ class BoostPosixMatcher : public BoostMatcher {
     flg_ |= boost::regex_constants::match_posix;
   }
   /// Construct a POSIX matcher engine from a boost::regex pattern and an input character sequence.
-  template<typename P>
+  template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostPosixMatcher(
-      const P     *pat,           ///< points to a boost::regex or a string regex for this matcher
+      const P&     pat,           ///< a boost::regex or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
       const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
@@ -332,10 +359,13 @@ Boost Perl regex matching enables Boost match flag `match_perl` and
 */
 class BoostPerlMatcher : public BoostMatcher {
  public:
+  /// Default constructor.
+  BoostPerlMatcher() : BoostMatcher()
+  { }
   /// Construct a Perl matcher engine from a boost::regex pattern and an input character sequence.
-  template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
+  template<typename P>
   BoostPerlMatcher(
-      const P&     pat,           ///< a boost::regex or a string regex for this matcher
+      const P     *pat,           ///< points to a boost::regex or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
       const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
@@ -344,9 +374,9 @@ class BoostPerlMatcher : public BoostMatcher {
     flg_ |= boost::regex_constants::match_perl;
   }
   /// Construct a Perl matcher engine from a boost::regex pattern and an input character sequence.
-  template<typename P>
+  template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostPerlMatcher(
-      const P     *pat,           ///< points to a boost::regex or a string regex for this matcher
+      const P&     pat,           ///< a boost::regex or a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
       const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :

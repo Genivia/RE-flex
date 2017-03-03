@@ -9,6 +9,8 @@
 #include <sys/times.h>
 #include <unistd.h>
 #include <cassert>
+#include <cstdlib>
+#include <cstdio>
 
 enum Color { RED, GREEN, BLUE };
 
@@ -96,7 +98,7 @@ int main()
   map[A] = B;
   map[B] = B;
   map[C] = D;
-  std::cout << map.size() << std::endl;
+  std::cout << "Map of " << map.size() << " ints to ints:" << std::endl;
   for (std::map<ints,ints>::iterator i = map.begin(); i != map.end(); ++i)
   {
     for (ints::iterator j = i->first.begin(); j != i->first.end(); ++j)
@@ -120,6 +122,7 @@ int main()
     std::cout << "'R' is in the set" << std::endl;
   for (Ranges<char>::const_iterator i = chars.find('0', 'Z'); i != chars.end() && !Ranges<char>::key_compare()(std::pair<char,char>('0', 'Z'), *i) /* i->first <= 'Z' */; ++i)
     std::cout << "[" << i->first << "," << i->second << "] overlaps [0,Z]" << std::endl;
+  assert(chars.size() == 4);
 
 /* displays:
 Set of 4 ranges:
@@ -131,6 +134,14 @@ Set of 4 ranges:
 [0,9] overlaps [0,Z]
 [A,Z] overlaps [0,Z]
 */
+
+  ORanges<char> bytes;
+  bytes.insert(32, 126);
+  bytes.insert(127);
+  std::cout << "Set of " << bytes.size() << " open-ended byte ranges up to max 127:" << std::endl;
+  for (ORanges<char>::const_iterator i = bytes.begin(); i != bytes.end(); ++i)
+    std::cout << "[" << (int)i->first << "," << (int)i->second << ")" << std::endl;
+  assert(bytes.size() == 1 && bytes.find(127) != bytes.end()); // fails if integer wrap fails to check overflow
 
   Ranges<Color> colors;
   colors.insert(GREEN, BLUE);
@@ -150,13 +161,14 @@ Set of 4 ranges:
     std::cout << "intersects [2.5,10.0]" << std::endl;
   if (intervals.contains(Ranges<float>(1.0, 2.5)))
     std::cout << "contains [1.0,2.5]" << std::endl;
+  assert(intervals.size() == 2);
 
   // example to use open-ended ranges over ordinal types to compress the set
   ORanges<int> ivals(0);
   ivals.insert(100, 200);
   ivals.insert(300, 400);
   ivals.insert(200, 300);
-  std::cout << "Set of " << ivals.size() << " open-ended ranges:" << std::endl;
+  std::cout << "Set of " << ivals.size() << " open-ended int ranges:" << std::endl;
   for (Ranges<int>::const_iterator i = ivals.begin(); i != ivals.end(); ++i)
     std::cout << "[" << i->first << "," << i->second << ")" << std::endl;
   if (ivals.find(200) != ivals.end())

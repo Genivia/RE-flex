@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Class Members</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
+      <div style="float: right; font-size: 10px;">updated Thu Mar 2 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -166,7 +166,8 @@
 , <a class="el" href="classreflex_1_1_ranges.html#a3d2feb520bce89afdf80f7d06d8c3bcd">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator()()
-: <a class="el" href="classreflex_1_1_abstract_matcher_1_1_operation.html#a138a1317d91e9be462f3fdf5c952c37e">reflex::AbstractMatcher::Operation</a>
+: <a class="el" href="classreflex_1_1_abstract_matcher_1_1_operation.html#aaf1aea2ec329162b0f13edf8bf7b52c1">reflex::AbstractMatcher::Operation</a>
+, <a class="el" href="structreflex_1_1_posix_1_1_tables_1_1lt.html#a3f39dac3d8fb5a5179539ac32dfd08a6">reflex::Posix::Tables::lt</a>
 , <a class="el" href="structreflex_1_1range__compare.html#a9fc96224411ac8552e0c69af40d702cd">reflex::range_compare&lt; T &gt;</a>
 </li>
 <li>operator*()
@@ -175,7 +176,8 @@
 , <a class="el" href="structreflex_1_1lazy__union_1_1iterator.html#a2d7928d2d6503516a10c2b975fc7d839">reflex::lazy_union&lt; S1, S2 &gt;::iterator</a>
 </li>
 <li>operator+()
-: <a class="el" href="classreflex_1_1_ranges.html#a14efc99f9c25db9e9b4ef0dbb72e3801">reflex::Ranges&lt; T &gt;</a>
+: <a class="el" href="classreflex_1_1_o_ranges.html#a36e2177782a200135ec63a4bc12df2c6">reflex::ORanges&lt; T &gt;</a>
+, <a class="el" href="classreflex_1_1_ranges.html#a14efc99f9c25db9e9b4ef0dbb72e3801">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator++()
 : <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a8418428ce1d67d765cd306a6cfc18e5d">reflex::AbstractMatcher::Iterator&lt; T &gt;</a>
@@ -210,7 +212,7 @@
 </li>
 <li>operator==()
 : <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a2d7c6df7433c5c81a827ffd6efe92dae">reflex::AbstractMatcher::Iterator&lt; T &gt;</a>
-, <a class="el" href="classreflex_1_1_abstract_matcher.html#aeca9e1c83a9e7ea32adc7dedcba8891e">reflex::AbstractMatcher</a>
+, <a class="el" href="classreflex_1_1_abstract_matcher.html#ad80d8b2a00e7e4342187f3e820aae4cc">reflex::AbstractMatcher</a>
 , <a class="el" href="classreflex_1_1_bits.html#ae877e24f5bd0dfb68a87c9b21f0c9859">reflex::Bits</a>
 , <a class="el" href="structreflex_1_1lazy__intersection_1_1iterator.html#acc19c0d84151f1280e2e6ddf46fc56b5">reflex::lazy_intersection&lt; S1, S2 &gt;::iterator</a>
 , <a class="el" href="structreflex_1_1lazy__union_1_1iterator.html#a80f693671a7135312befbe6ec88ead70">reflex::lazy_union&lt; S1, S2 &gt;::iterator</a>
@@ -236,6 +238,7 @@
 </li>
 <li>operator|()
 : <a class="el" href="classreflex_1_1_bits.html#ac4aa634abafed337ff54081ffc745f48">reflex::Bits</a>
+, <a class="el" href="classreflex_1_1_o_ranges.html#a4f2dc1305d1dc89e8043b1867d00e89c">reflex::ORanges&lt; T &gt;</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a658a2b69b4e435ecf079e0e5cc98c880">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator|=()
@@ -254,10 +257,10 @@
 : <a class="el" href="structreflex_1_1_abstract_matcher_1_1_option.html#a14822264dfdf1deef13d8bd5ff8e9796">reflex::AbstractMatcher::Option</a>
 </li>
 <li>options
-: <a class="el" href="class_reflex.html#a6fabb339162f6a5067af98981d296dd7">Reflex</a>
+: <a class="el" href="class_reflex.html#ac4d549aab5d74976912f9e21c03ec046">Reflex</a>
 </li>
 <li>ORanges()
-: <a class="el" href="classreflex_1_1_o_ranges.html#afcdf67ed7348a0181a8c0fd3090c45c1">reflex::ORanges&lt; T &gt;</a>
+: <a class="el" href="classreflex_1_1_o_ranges.html#a8469444d467ae43394579d59e2e5e892">reflex::ORanges&lt; T &gt;</a>
 </li>
 <li>os_
 : <a class="el" href="classreflex_1_1_abstract_lexer.html#a25646f2503ea4a20f5b73bc7da28545e">reflex::AbstractLexer&lt; M &gt;</a>
@@ -272,11 +275,14 @@
 <li>own_
 : <a class="el" href="classreflex_1_1_pattern_matcher.html#a609bef4919413b1448f4db3d4a1d0fd4">reflex::PatternMatcher&lt; P &gt;</a>
 </li>
+<li>own_pattern()
+: <a class="el" href="classreflex_1_1_pattern_matcher.html#a5f1e17bf52c960356ba7308015e98a49">reflex::PatternMatcher&lt; P &gt;</a>
+</li>
 </ul>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Jan 25 2017 18:16:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Mar 2 2017 22:07:19 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

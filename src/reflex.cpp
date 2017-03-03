@@ -41,21 +41,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
-//  Unicode scripts                                                           //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
-
-#include "letter_scripts.h"
-#include "language_scripts.h"
-#include "pl_scripts.h"
-
-////////////////////////////////////////////////////////////////////////////////
-//                                                                            //
 //  Static data                                                               //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-/// Command-line reflex options and .l spec %options
+/// @brief Table with command-line reflex options and lex specification %%options.
+///
+/// The table consists of option names with hyphens replaced by underscores.
 static const char *options_table[] = {
   "array",
   "always_interactive",
@@ -75,6 +67,7 @@ static const char *options_table[] = {
   "full",
   "graphs_file",
   "header_file",
+  "include",
   "input",
   "interactive",
   "lex",
@@ -122,7 +115,95 @@ static const char *options_table[] = {
   "yywrap",
   "7bit",
   "8bit",
-  NULL
+  NULL // end of table
+};
+
+/// @brief Table with regex library properties.
+///
+/// This table is extensible and new regex libraries may be added.  Each regex library is described by:
+///
+/// - a unique name that is used for specifying the `matcher=NAME` option
+/// - the header file to be included
+/// - the pattern type or class used by the matcher class
+/// - the matcher class
+/// - the regex library signature
+///
+/// A regex library signature is a string of the form `"[decls:]escapes[?+]"`, see reflex::convert.
+///
+/// The optional `"decls:"` characters specify which modifiers and other special `(?...)` constructs are supported:
+/// - non-capturing group `(?:...)` is supported
+/// - one or all of "imsx" specify which (?ismx:...) modifiers are supported
+/// - `#` specifies that `(?#...)` comments are supported
+/// - `=` specifies that `(?=...)` lookahead is supported
+/// - `<` specifies that `(?<...)` lookbehind is supported
+/// - `!` specifies that `(?!=...)` and `(?!<...)` are supported
+/// - `^` specifies that `(?^...)` negative (reflex) patterns are supported
+///
+/// The `"escapes"` characters specify which standard escapes are supported:
+/// - `a` for `\a` (BEL U+0007)
+/// - `b` for `\b` (BS U+0008) in brackets `[\b]` only AND the `\b` word boundary
+/// - `c` for `\cX` control character specified by `X` modulo 32
+/// - `d` for `\d` ASCII digit `[0-9]`
+/// - `e` for `\e` ESC U+001B
+/// - `f` for `\f` FF U+000C
+/// - `h` for `\h` ASCII blank `[ \t]` (SP U+0020 or TAB U+0009)
+/// - `i` for `\i` reflex indent boundary
+/// - `j` for `\j` reflex dedent boundary
+/// - `l` for `\l` ASCII lower case letter `[a-z]`
+/// - `n` for `\n` LF U+000A
+/// - `p` for `\p{C}` ASCII POSIX character class specified by `C`
+/// - `r` for `\r` CR U+000D
+/// - `s` for `\s` space (SP, TAB, LF, VT, FF, or CR)
+/// - `t` for `\t` TAB U+0009
+/// - `u` for `\u` ASCII upper case letter `[A-Z]` (when not followed by `{XXXX}`)
+/// - `v` for `\v` VT U+000B
+/// - `w` for `\w` ASCII word-like character `[0-9A-Z_a-z]`
+/// - `x` for `\xXX` 8-bit character encoding in hexadecimal
+/// - `y` for `\y` word boundary
+/// - `z` for `\z` end of input anchor
+/// - `0` for `\0nnn` 8-bit character encoding in octal requires a leading `0`
+/// - ``` for `\`` begin of input anchor
+/// - `'` for `\'` end of input anchor
+/// - `<` for `\<` left word boundary
+/// - `>` for `\>` right word boundary
+/// - `A` for `\A` begin of input anchor
+/// - `B` for `\B` non-word boundary
+/// - `D` for `\D` ASCII non-digit `[^0-9]`
+/// - `H` for `\H` ASCII non-blank `[^ \t]`
+/// - `L` for `\L` ASCII non-lower case letter `[^a-z]`
+/// - `P` for `\P{C}` ASCII POSIX inverse character class specified by `C`
+/// - `Q` for `\Q...\E` quotations
+/// - `S` for `\S` ASCII non-space (no SP, TAB, LF, VT, FF, or CR)
+/// - `U` for `\U` ASCII non-upper case letter `[^A-Z]`
+/// - `W` for `\W` ASCII non-word-like character `[^0-9A-Z_a-z]`
+/// - `Z` for `\Z` end of input anchor, before the final line break
+///
+/// The optional `"?+"` characters specify lazy and possessive support:
+/// - `?` lazy repeats are supported
+/// - `+` possessive repeats are supported
+static const Reflex::Library library_table[] = {
+  {
+    "reflex",
+    "reflex/matcher.h",
+    "reflex::Pattern",
+    "reflex::Matcher",
+    "imsx#=^:abcdefhijlnprstuvwxzABDHLPQSUW<>?+",
+  },
+  {
+    "boost",
+    "reflex/boostmatcher.h",
+    "boost::regex",
+    "reflex::BoostPosixMatcher",
+    "imsx#<=!:abcdefghlnprstuvwxzABDHLPQSUWZ0<>",
+  },
+  {
+    "boost-perl",
+    "reflex/boostmatcher.h",
+    "boost::regex",
+    "reflex::BoostPerlMatcher",
+    "imsx#<=!:abcdefghlnprstuvwxzABDHLPQSUWZ0<>?+",
+  },
+  { NULL, NULL, NULL, NULL, NULL } // end of table
 };
 
 #ifdef OS_WIN
@@ -133,39 +214,244 @@ static const char *newline = "\n";
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
-//  Inline helper functions                                                   //
+//  Helper functions                                                          //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-/// Check word character.
-/// @returns nonzero if argument c is in [A-Za-z0-9_], zero otherwise.
-inline int isword(int c)
+/// Convert to lower case.
+inline int lower(int c)
+  /// @returns lower case char.
 {
-  return isalnum(c) || c == '_';
+  return std::isalpha(c) ? (c | 0x20) : c;
 }
 
-/// Check alphabetical or underscore character.
-/// @returns nonzero if argument c is in [A-Za-z_], zero otherwise.
-inline int isalphaun(int c)
+/// Add file extension if not present.
+static std::string file_ext(std::string& name, const char *ext)
+  /// @returns copy of file `name` string with extension `ext`
 {
-  return isalpha(c) || c == '_';
+  size_t n = name.size();
+  size_t m = strlen(ext);
+  if (n > m && (name.at(n - m - 1) != '.' || name.compare(n - m, m, ext) != 0))
+    name.append(".").append(ext);
+  return name;
+}
+
+/// Abort with an error message.
+static void abort(const char *error, const char *arg = NULL)
+{
+  std::cerr
+    << "reflex: error "
+    << error
+    << (arg != NULL ? arg : "")
+    << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
-//  Static helper functions                                                   //
+//  Main                                                                      //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
+
+/// Main program instantiates Reflex class and runs `Reflex::main(argc, argv)`.
+int main(int argc, char **argv)
+{
+  Reflex().main(argc, argv);
+  return EXIT_SUCCESS;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+//  Reflex class public methods                                               //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+/// Main program.
+void Reflex::main(int argc, char **argv)
+{
+  init(argc, argv);
+  parse();
+  write();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+//  Reflex class private/protected methods                                    //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+/// Reflex initialization.
+void Reflex::init(int argc, char **argv)
+{
+  for (const char *const *i = options_table; *i != NULL; ++i)
+    options[*i] = "";
+  for (const Library *j = library_table; j->name != NULL; ++j)
+    libraries[j->name] = *j;
+  library = &libraries["reflex"];
+  conditions.push_back("INITIAL");
+  inclusive.insert(0);
+  in = &std::cin;
+  out = &std::cout;
+  lineno = 0;
+
+  for (int i = 1; i < argc; ++i)
+  {
+    const char *arg = argv[i];
+    if (*arg == '-'
+#ifdef OS_WIN
+     || *arg == '/'
+#endif
+     )
+    {
+      bool is_grouped = true;
+      while (is_grouped && *++arg)
+      {
+        switch (*arg)
+        {
+          case '-':
+            ++arg;
+            if (strcmp(arg, "help") == 0)
+              help();
+            if (strcmp(arg, "version") == 0)
+              version();
+            if (strcmp(arg, "c++") != 0)
+            {
+              const char *val = strchr(arg, '=');
+              size_t len = strlen(arg);
+              if (val != NULL)
+                len = val - arg;
+              std::string name(arg, len);
+              size_t pos;
+              while ((pos = name.find('-')) != std::string::npos)
+                name[pos] = '_';
+              StringMap::iterator i = options.find(name);
+              if (i == options.end())
+                help("unknown option --", arg);
+              if (val != NULL)
+                i->second = val + 1;
+              else
+                i->second = "true";
+            }
+            is_grouped = false;
+            break;
+          case '+':
+            options["flex"] = "true";
+            break;
+          case 'a':
+            options["dotall"] = "true";
+            break;
+          case 'B':
+            options["batch"] = "true";
+            break;
+          case 'c':
+            break;
+          case 'd':
+            options["debug"] = "true";
+            break;
+          case 'f':
+            options["full"] = "true";
+            break;
+          case 'F':
+            options["fast"] = "true";
+            break;
+          case '?':
+          case 'h':
+            help();
+            break;
+          case 'i':
+            options["case_insensitive"] = "true";
+            break;
+          case 'I':
+            options["interactive"] = "true";
+            break;
+          case 'l':
+            options["lex-compat"] = "true";
+            break;
+          case 'L':
+            options["noline"] = "true";
+            break;
+          case 'm':
+            ++arg;
+            if (*arg)
+              options["matcher"] = &arg[*arg == '='];
+            else if (i < argc && argv[++i] && *argv[i] != '-')
+              options["matcher"] = argv[i];
+            else
+              help("missing NAME with -m NAME");
+            is_grouped = false;
+            break;
+          case 'n':
+            break;
+          case 'o':
+            ++arg;
+            if (*arg)
+              options["outfile"] = &arg[*arg == '='];
+            else if (i < argc && argv[++i] && *argv[i] != '-')
+              options["outfile"] = argv[i];
+            else
+              help("missing FILE with -o FILE");
+            is_grouped = false;
+            break;
+          case 'P':
+            ++arg;
+            if (*arg)
+              options["prefix"] = &arg[*arg == '='];
+            else if (i < argc && argv[++i] && *argv[i] != '-')
+              options["prefix"] = argv[i];
+            else
+              help("missing NAME with -P NAME");
+            is_grouped = false;
+            break;
+          case 'R':
+            options["reentrant"] = "true";
+            break;
+          case 's':
+            options["nodefault"] = "true";
+            break;
+          case 't':
+            options["stdout"] = "true";
+            break;
+          case 'u':
+            options["unicode"] = "true";
+            break;
+          case 'v':
+            options["verbose"] = "true";
+            break;
+          case 'V':
+            version();
+            break;
+          case 'w':
+            options["nowarn"] = "true";
+            break;
+          case 'x':
+            options["freespace"] = "true";
+            break;
+          case 'X':
+            options["posix"] = "true";
+            break;
+          default:
+            help("unknown option -", arg);
+        }
+      }
+    }
+    else
+    {
+      if (!infile.empty())
+        help("one FILE, also found ", argv[i]);
+      infile = argv[i];
+    }
+  }
+}
 
 /// Display version information and exit.
-static void version(void)
+void Reflex::version()
 {
   std::cout << "reflex " REFLEX_VERSION " " PLATFORM << std::endl;
   exit(EXIT_SUCCESS);
 }
 
 /// Display help information with an optional diagnostic message and exit.
-static void help(const char *message = NULL, const char *arg = NULL)
+void Reflex::help(const char *message, const char *arg)
 {
   if (message)
     std::cerr
@@ -191,9 +477,14 @@ static void help(const char *message = NULL, const char *arg = NULL)
         -I, --interactive, --always-interactive\n\
                 generate interactive scanner\n\
         -m NAME, --matcher=NAME\n\
-                use matcher NAME library [reflex|boost|boost-perl|...]\n\
+                use matcher NAME library [";
+  for (LibraryMap::const_iterator i = libraries.begin(); i != libraries.end(); ++i)
+    std::cerr << i->first << "|";
+  std::cerr << "...]\n\
         --pattern=NAME\n\
                 use custom pattern class NAME with custom matcher option -m\n\
+        --include=FILE\"\n\
+                include header FILE.h with custom matcher option -m\n\
         -u, --unicode\n\
                 . (dot), \\s, and \\w match unicode, groups UTF-8 characters\n\
         -x, --freespace\n\
@@ -278,298 +569,8 @@ static void help(const char *message = NULL, const char *arg = NULL)
   exit(message ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
-/// Abort with an error message.
-static void abort(const char *error, const char *arg = NULL)
-{
-  std::cerr
-    << "reflex: error "
-    << error
-    << (arg != NULL ? arg : "")
-    << std::endl;
-  exit(EXIT_FAILURE);
-}
-
-/// Add file extension if not present.
-static std::string file_ext(std::string& name, const char *ext)
-{
-  size_t n = name.size();
-  size_t m = strlen(ext);
-  if (n > m && (name.at(n - m - 1) != '.' || name.compare(n - m, m, ext) != 0))
-    name.append(".").append(ext);
-  return name;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//                                                                            //
-//  Main                                                                      //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
-
-/// Main program instantiates Reflex class and runs Reflex::main(argc, argv).
-int main(int argc, char **argv)
-{
-  Reflex().main(argc, argv);
-  return EXIT_SUCCESS;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//                                                                            //
-//  Reflex class public methods                                               //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
-
-/// Main program.
-void Reflex::main(int argc, char **argv)
-{
-  init(argc, argv);
-  parse();
-  write();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//                                                                            //
-//  Reflex class private/protected methods                                    //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
-
-/// Reflex initialization.
-void Reflex::init(int argc, char **argv)
-{
-  for (const char *const *i = options_table; *i != NULL; ++i)
-    options[*i] = "";
-
-  // first add scripts for letters, languages, etc.
-  letter_scripts(scripts);
-  language_scripts(scripts);
-
-  // ASCII and Unicode ranges
-  scripts["ASCII"]                  = reflex::utf8(0x00, 0x7f);
-  scripts["Unicode"]                = reflex::utf8(0x00, 0x10ffff);
-  scripts["Non_ASCII_Unicode"]      = reflex::utf8(0x80, 0x10ffff);
-
-  // basic Unicode properties
-  scripts["Letter"]                 = scripts["L"]
-                                    = scripts["L&"] + "|"
-                                    + scripts["Lm"] + "|"
-                                    + scripts["Lo"];
-  scripts["Mark"]                   = scripts["M"]
-                                    = scripts["Mn"] + "|"
-                                    + scripts["Mc"] + "|"
-                                    + scripts["Me"];
-  scripts["Separator"]              = scripts["Z"]
-                                    = scripts["Zs"] + "|"
-                                    + scripts["Zl"] + "|"
-                                    + scripts["Zp"];
-  scripts["Symbol"]                 = scripts["S"]
-                                    = scripts["Sm"] + "|"
-                                    + scripts["Sc"] + "|"
-                                    + scripts["Sk"] + "|"
-                                    + scripts["So"];
-  scripts["Number"]                 = scripts["N"]
-                                    = scripts["Nd"] + "|"
-                                    + scripts["Nl"] + "|"
-                                    + scripts["No"];
-  scripts["Punctuation"]            = scripts["P"]
-                                    = scripts["Pd"] + "|"
-                                    + scripts["Ps"] + "|"
-                                    + scripts["Pe"] + "|"
-                                    + scripts["Pi"] + "|"
-                                    + scripts["Pf"] + "|"
-                                    + scripts["Pc"] + "|"
-                                    + scripts["Po"];
-  scripts["Other"]                  = scripts["C"] // do not include unassigned Cn
-                                    = scripts["Cc"] + "|"
-                                    + scripts["Cf"];
-
-  // basic Unicode sub-properties
-  scripts["Lowercase_Letter"]       = scripts["Ll"];
-  scripts["Uppercase_Letter"]       = scripts["Lu"];
-  scripts["Titlecase_Letter"]       = scripts["Lt"];
-  scripts["Modifier_Letter"]        = scripts["Lm"];
-  scripts["Other_Letter"]           = scripts["Lo"];
-  scripts["Non_Spacing_Mark"]       = scripts["Mn"];
-  scripts["Spacing_Combining_Mark"] = scripts["Mc"];
-  scripts["Enclosing_Mark"]         = scripts["Me"];
-  scripts["Space_Separator"]        = scripts["Zs"];
-  scripts["Line_Separator"]         = scripts["Zl"];
-  scripts["Paragraph_Separator"]    = scripts["Zp"];
-  scripts["Math_Symbol"]            = scripts["Sm"];
-  scripts["Currency_Symbol"]        = scripts["Sc"];
-  scripts["Modifier_Symbol"]        = scripts["Sk"];
-  scripts["Other_Symbol"]           = scripts["So"];
-  scripts["Decimal_Digit_Number"]   = scripts["Nd"];
-  scripts["Letter_Number"]          = scripts["Nl"];
-  scripts["Other_Number"]           = scripts["No"];
-  scripts["Dash_Punctuation"]       = scripts["Pd"];
-  scripts["Open_Punctuation"]       = scripts["Ps"];
-  scripts["Close_Punctuation"]      = scripts["Pe"];
-  scripts["Initial_Punctuation"]    = scripts["Pi"];
-  scripts["Final_Punctuation"]      = scripts["Pf"];
-  scripts["Connector_Punctuation"]  = scripts["Pc"];
-  scripts["Other_Punctuation"]      = scripts["Po"];
-  scripts["Control"]                = scripts["Cc"];
-  scripts["Format"]                 = scripts["Cf"];
-
-  // now add scripts for some common programming languages
-  pl_scripts(scripts);
-
-  conditions.push_back("INITIAL");
-  inclusive.insert(0);
-  in = &std::cin;
-  out = &std::cout;
-  lineno = 0;
-
-  for (int i = 1; i < argc; ++i)
-  {
-    const char *arg = argv[i];
-    if (*arg == '-'
-#ifdef OS_WIN
-     || *arg == '/'
-#endif
-     )
-    {
-      bool is_grouped = true;
-      while (is_grouped && *++arg)
-      {
-        switch (*arg)
-        {
-          case '-':
-            ++arg;
-            if (strcmp(arg, "help") == 0)
-              help();
-            if (strcmp(arg, "version") == 0)
-              version();
-            if (strcmp(arg, "c++") != 0)
-            {
-              const char *val = strchr(arg, '=');
-              size_t len = strlen(arg);
-              if (val != NULL)
-                len = val - arg;
-              std::string name(arg, len);
-              size_t pos;
-              while ((pos = name.find('-')) != std::string::npos)
-                name[pos] = '_';
-              Map::iterator i = options.find(name);
-              if (i == options.end())
-                help("unknown option --", arg);
-              if (val != NULL)
-                i->second = val + 1;
-              else
-                i->second = "true";
-            }
-            is_grouped = false;
-            break;
-          case '+':
-            options["flex"] = "true";
-            break;
-          case 'a':
-            options["dotall"] = "true";
-            break;
-          case 'B':
-            options["batch"] = "true";
-            break;
-          case 'c':
-            break;
-          case 'd':
-            options["debug"] = "true";
-            break;
-          case 'f':
-            options["full"] = "true";
-            break;
-          case 'F':
-            options["fast"] = "true";
-            break;
-          case '?':
-          case 'h':
-            help();
-            break;
-          case 'I':
-            options["interactive"] = "true";
-            break;
-          case 'i':
-            options["case_insensitive"] = "true";
-            break;
-          case 'l':
-            options["lex-compat"] = "true";
-            break;
-          case 'L':
-            options["noline"] = "true";
-            break;
-          case 'm':
-            ++arg;
-            if (*arg)
-              options["matcher"] = &arg[*arg == '='];
-            else if (i < argc && argv[++i] && *argv[i] != '-')
-              options["matcher"] = argv[i];
-            else
-              help("missing NAME with -m NAME");
-            is_grouped = false;
-            break;
-          case 'n':
-            break;
-          case 'o':
-            ++arg;
-            if (*arg)
-              options["outfile"] = &arg[*arg == '='];
-            else if (i < argc && argv[++i] && *argv[i] != '-')
-              options["outfile"] = argv[i];
-            else
-              help("missing FILE with -o FILE");
-            is_grouped = false;
-            break;
-          case 'P':
-            ++arg;
-            if (*arg)
-              options["prefix"] = &arg[*arg == '='];
-            else if (i < argc && argv[++i] && *argv[i] != '-')
-              options["prefix"] = argv[i];
-            else
-              help("missing NAME with -P NAME");
-            is_grouped = false;
-            break;
-          case 'R':
-            options["reentrant"] = "true";
-            break;
-          case 's':
-            options["nodefault"] = "true";
-            break;
-          case 't':
-            options["stdout"] = "true";
-            break;
-          case 'u':
-            options["unicode"] = "true";
-            break;
-          case 'V':
-            version();
-            break;
-          case 'v':
-            options["verbose"] = "true";
-            break;
-          case 'w':
-            options["nowarn"] = "true";
-            break;
-          case 'x':
-            options["freespace"] = "true";
-            break;
-          case 'X':
-            options["posix"] = "true";
-            break;
-          default:
-            help("unknown option -", arg);
-        }
-      }
-    }
-    else
-    {
-      if (!infile.empty())
-        help("one FILE, also found ", argv[i]);
-      infile = argv[i];
-    }
-  }
-}
-
 /// Parse lex specification input.
-void Reflex::parse(void)
+void Reflex::parse()
 {
   std::ifstream ifs;
   if (!infile.empty())
@@ -586,7 +587,7 @@ void Reflex::parse(void)
     ifs.close();
 }
 
-/// Parse %include file.
+/// Parse the specified %%include file.
 void Reflex::include(const std::string& filename)
 {
   std::ifstream ifs;
@@ -608,7 +609,7 @@ void Reflex::include(const std::string& filename)
 }
 
 /// Fetch next line from the input, return true if ok.
-bool Reflex::getline(void)
+bool Reflex::get_line()
 {
   if (in->eof())
     return false;
@@ -617,7 +618,7 @@ bool Reflex::getline(void)
   ++lineno;
   std::getline(*in, line);
   linelen = line.length();
-  while (linelen > 0 && isspace(line.at(linelen - 1)))
+  while (linelen > 0 && std::isspace(line.at(linelen - 1)))
     --linelen;
   line.resize(linelen);
   if (in->eof() && line.empty())
@@ -626,7 +627,7 @@ bool Reflex::getline(void)
 }
 
 /// Advance pos over white space and comments, return true if ok.
-bool Reflex::skipcomment(size_t& pos)
+bool Reflex::skip_comment(size_t& pos)
 {
   while (true)
   {
@@ -643,14 +644,14 @@ bool Reflex::skipcomment(size_t& pos)
           ++pos;
         if (pos + 1 < linelen)
           break;
-        if (!getline())
+        if (!get_line())
           return false;
         pos = 0;
       }
       pos += 2;
       if (pos >= linelen)
       {
-        if (!getline())
+        if (!get_line())
           return false;
         pos = 0;
       }
@@ -658,7 +659,7 @@ bool Reflex::skipcomment(size_t& pos)
     }
     if (pos < linelen)
       return true;
-    if (!getline())
+    if (!get_line())
       return false;
     pos = 0;
   }
@@ -667,20 +668,20 @@ bool Reflex::skipcomment(size_t& pos)
 /// Advance pos to match case-insensitive string s followed by whitespace, return true if OK.
 bool Reflex::as(size_t& pos, const char *s)
 {
-  if (pos >= linelen || std::tolower(line.at(pos)) != *s++)
+  if (pos >= linelen || lower(line.at(pos)) != *s++)
     return false;
   do
     ++pos;
-  while (pos < linelen && std::tolower(line.at(pos)) == *s++);
+  while (pos < linelen && lower(line.at(pos)) == *s++);
   return ws(pos);
 }
 
 /// Advance pos over whitespace, returns true if OK.
 bool Reflex::ws(size_t& pos)
 {
-  if (pos >= linelen || (pos > 0 && !isspace(line.at(pos))))
+  if (pos >= linelen || (pos > 0 && !std::isspace(line.at(pos))))
     return false;
-  while (pos < linelen && isspace(line.at(pos)))
+  while (pos < linelen && std::isspace(line.at(pos)))
     ++pos;
   return true;
 }
@@ -699,49 +700,49 @@ bool Reflex::eq(size_t& pos)
 /// Advance pos to end of line while skipping whitespace, return true if end of line.
 bool Reflex::nl(size_t& pos)
 {
-  while (pos < linelen && isspace(line.at(pos)))
+  while (pos < linelen && std::isspace(line.at(pos)))
     ++pos;
   return pos >= linelen;
 }
 
 /// Check if current line starts a block of code or a comment.
-bool Reflex::iscode(void)
+bool Reflex::is_code()
 {
-  return linelen > 0 && ((isspace(line.at(0)) && options["freespace"].empty()) || line == "%{" || !line.compare(0, 2, "//") || !line.compare(0, 2, "/*"));
+  return linelen > 0 && ((std::isspace(line.at(0)) && options["freespace"].empty()) || line == "%{" || !line.compare(0, 2, "//") || !line.compare(0, 2, "/*"));
 }
 
 /// Check if current line starts a block of %top code.
-bool Reflex::istopcode(void)
+bool Reflex::is_topcode()
 {
   size_t pos = 0;
   return line == "%top{" || (as(pos, "%top") && pos < linelen && line.at(pos) == '{');
 }
 
 /// Check if current line starts a block of %class code.
-bool Reflex::isclasscode(void)
+bool Reflex::is_classcode()
 {
   size_t pos = 0;
   return line == "%class{" || (as(pos, "%class") && pos < linelen && line.at(pos) == '{');
 }
 
 /// Check if current line starts a block of %init code.
-bool Reflex::isinitcode(void)
+bool Reflex::is_initcode()
 {
   size_t pos = 0;
   return line == "%init{" || (as(pos, "%init") && pos < linelen && line.at(pos) == '{');
 }
 
 /// Advance pos over name, return name.
-std::string Reflex::getname(size_t& pos)
+std::string Reflex::get_name(size_t& pos)
 {
-  if (pos >= linelen || !isword(line.at(pos)))
+  if (pos >= linelen || !std::isalnum(line.at(pos)))
     return "";
   size_t loc = pos++;
   while (pos < linelen)
   {
     if (line.at(pos) == '-') // convert - to _
       line[pos] = '_';
-    else if (!isword(line.at(pos)))
+    else if (!std::isalnum(line.at(pos)) && line.at(pos) != '_')
       break;
     ++pos;
   }
@@ -749,7 +750,7 @@ std::string Reflex::getname(size_t& pos)
 }
 
 /// Advance pos over quoted string, return string.
-std::string Reflex::getstring(size_t& pos)
+std::string Reflex::get_string(size_t& pos)
 {
   if (pos >= linelen || line.at(pos) != '"')
     return "";
@@ -763,539 +764,137 @@ std::string Reflex::getstring(size_t& pos)
   return line.substr(loc, pos - loc);
 }
 
-// convert (X) to (?:X) for regex engines to ignore groups
-// convert lookahead X/Y to X(?=Y)
-// convert . to UTF-8 (.|[\xc0-\xff][\x80-\xbf]+) if unicode flag is set
-// convert \s, \l, \u, \w to UTF-8 pattern if unicode flag is set
-// convert \X to UTF-8 pattern
-// convert UTF-8-sequence to (?:UTF-8-sequence) if unicode flag is set
-// convert \p{Script} to UTF-8
-// convert \p{IsScript} to UTF-8
-// convert \u{xxxx} and \x{xxxx} to UTF-8
-// convert [...\u{xxxx}...\p{Script}...] => [...]|\u{xxxx}|\p{Script}
-// convert # to \# if freespace flag is set
-// permit line continuation with \ and indent at end of regex
-std::string Reflex::getregex(size_t& pos)
+/// Get regex string, converted to a format understood by the selected regex engine library.
+std::string Reflex::get_regex(size_t& pos)
 {
   std::string regex;
+  (void)ws(pos); // skip indent, if any
   size_t loc = pos;
-  size_t lev = 0;
-  size_t lap = 0;
-  bool blk = pos == 0;
-  while (pos < linelen)
+  if (options["freespace"].empty())
   {
-    int c = line.at(pos);
-    if (isspace(c) && options["freespace"].empty())
+    while (pos < linelen && !std::isspace(line.at(pos)))
     {
-      if (!blk && lev == 0)
-        break;
-      if (blk)
-        warning("regular expression opens with white space");
-    }
-    else if (
-        !blk &&
-        !options["freespace"].empty() &&
-        ( (c == '{' && (pos + 1 == linelen || isspace(line.at(pos + 1)))) ||
-          (c == '|' && pos + 1 == linelen) ||
-          (c == '/' && pos + 1 < linelen && (line.at(pos + 1) == '/' || line.at(pos + 1) == '*'))
-        ))
-    {
-      --pos;
-      break;
-    }
-    else
-    {
-      switch (c)
+      int c = line.at(pos++);
+      if (c == '"')
       {
-        case '\\':
-          if (pos + 1 < linelen)
-          {
-            ++pos;
-            if (line.at(pos) == '"')
-            {
-              regex.append(line.substr(loc, pos - loc - 1)).append("\""); // translate \"
-              loc = pos + 1;
-            }
-            else if (line.at(pos) == 'Q')
-            {
-              while (pos + 2 < linelen && (line.at(++pos) != '\\' || line.at(pos + 1) != 'E'))
-                continue;
-              if (pos >= linelen || line.at(pos) != '\\')
-                error("missing closing \\E: ", line.substr(loc).c_str());
-            }
-            else if (pos + 2 < linelen && line.at(pos) == 'p' && line.at(pos + 1) == '{') // translate \p{X}
-            {
-              size_t k = pos;
-              while (k + 1 < linelen && line.at(++k) != '}')
-                continue;
-              std::string name;
-              if (pos + 4 < linelen && line.at(pos + 2) == 'I' && line.at(pos + 3) == 's')
-                name = line.substr(pos + 4, k - pos - 4);
-              else
-                name = line.substr(pos + 2, k - pos - 2);
-              if (name == "Word" && !options["unicode"].empty())
-              {
-                regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(scripts["L"]).append("|").append(scripts["Nd"]).append("|").append(scripts["Pc"]).append(")");
-                loc = k + 1;
-              }
-              else
-              {
-                Map::const_iterator i = scripts.find(name);
-                if (i != scripts.end())
-                {
-                  regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(i->second).append(")");
-                  loc = k + 1;
-                }
-              }
-              pos = k;
-            }
-            else if (pos + 2 < linelen && (line.at(pos) == 'u' || line.at(pos) == 'x') && line.at(pos + 1) == '{') // translate \u{X} and \x{X}
-            {
-              reflex::unicode_t wc = static_cast<reflex::unicode_t>(std::strtoul(line.c_str() + pos + 2, NULL, 16));
-              if (wc > 0x7f)
-              {
-                char buf[7];
-                buf[reflex::utf8(wc, buf)] = '\0';
-                regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(buf).append(")");
-                while (line.at(++pos) != '}')
-                  continue;
-                loc = pos + 1;
-              }
-            }
-            else if (line.at(pos) >= '1' && line.at(pos) <= '7') // translate octals \123 to \0123
-            {
-              regex.append(line.substr(loc, pos - loc)).append("0");
-              loc = pos;
-            }
-            else if (line.at(pos) == 's' && !options["unicode"].empty()) // translate \s to UTF-8 pattern
-            {
-              regex.append(line.substr(loc, pos - loc - 1)).append("(?:\\s|").append(scripts["Zs"]).append(")");
-              loc = pos + 1;
-            }
-            else if (line.at(pos) == 'l' && !options["unicode"].empty()) // translate \l to UTF-8 pattern
-            {
-              regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(scripts["Ll"]).append(")");
-              loc = pos + 1;
-            }
-            else if (line.at(pos) == 'u' && !options["unicode"].empty()) // translate \u to UTF-8 pattern
-            {
-              regex.append(line.substr(loc, pos - loc - 1)).append("(?:").append(scripts["Lu"]).append(")");
-              loc = pos + 1;
-            }
-            else if (line.at(pos) == 'w' && !options["unicode"].empty()) // translate \w to UTF-8 pattern
-            {
-              regex.append(line.substr(loc, pos - loc - 1)).append("(?:\\w|").append(scripts["L"]).append("|").append(scripts["Nd"]).append("|").append(scripts["Pc"]).append(")");
-              loc = pos + 1;
-            }
-            else if (line.at(pos) == 'X') // translate \X to match any UTF-8
-            {
-              regex.append(line.substr(loc, pos - loc)).append("(?:[\\x00-\\xbf]|[\\xc0-\\xff][\\x80-\\xbf]+)");
-              loc = pos + 1;
-            }
-            else if (isalpha(line.at(pos)))
-            {
-              if (((options["matcher"].empty() || options["matcher"] == "reflex") && strchr("ABDHLSUWZabcdefijhlnprstuvwx", line.at(pos)) == NULL)
-               || (!options["matcher"].empty() && options["matcher"] != "reflex" && strchr("ABDHLNPSUVWZabcdefghlnprstuvwxz", line.at(pos)) == NULL))
-                warning("unsupported escape sequence: ", line.substr(pos - 1, 2).c_str());
-            }
-          }
-          else
-          {
-            // line ends in \ and continues on the next line
-            regex.append(line.substr(loc, pos - loc));
-            if (!getline())
-              error("EOF encountered inside a pattern");
-            if (line == "%%")
-              error("%% section ending encountered inside a pattern");
-            pos = 0;
-            (void)ws(pos); // skip indent
-            loc = pos;
-          }
-          break;
-        case '/':
-          regex.append(line.substr(loc, pos - loc)).append("(?="); // translate / to (?=
-          lap = lev + 1;
-          loc = pos + 1;
-          break;
-        case '(':
-          if (pos + 1 < linelen && line.at(pos + 1) != '?')
-          {
-            regex.append(line.substr(loc, pos - loc)).append("(?:"); // translate ( to (?:
-            loc = pos + 1;
-          }
-          ++lev;
-          break;
-        case ')':
-          if (lap == lev + 1)
-          {
-            regex.append(line.substr(loc, pos - loc)).append(")"); // translate ) to ))
-            loc = pos;
-            lap = 0;
-          }
-          --lev;
-          break;
-        case '|':
-          if (lap == lev + 1)
-          {
-            regex.append(line.substr(loc, pos - loc)).append(")"); // translate | to )|
-            loc = pos;
-            lap = 0;
-          }
-          break;
-        case '[':
-          if (pos + 1 < linelen && line.at(pos + 1) == '^')
-          {
-            pos += 2;
-            while (pos + 1 < linelen)
-            {
-              if (line.at(pos) == '\\' && pos + 1 < linelen)
-              {
-                ++pos;
-              }
-              else if (line.at(pos) == '[' && pos + 1 < linelen && line.at(pos + 1) == ':')
-              {
-                pos += 2;
-                while (pos + 1 < linelen && (line.at(pos) != ':' || line.at(pos + 1) != ']'))
-                  ++pos;
-                ++pos;
-              }
-              ++pos;
-              if (pos >= linelen || line.at(pos) == ']')
-                break;
-            }
-          }
-          else
-          {
-            // collect UTF-8 chars, \p{X}, \u{X}, \x{X} and \u{X}-\u{Y}, translate, and append as alternations
-            regex.append(line.substr(loc, pos - loc));
-            loc = pos++;
-            std::string lifted;
-            reflex::unicode_t wc = -1;
-            bool range = false;
-            size_t size = regex.size();
-            size_t prev = pos;
-            while (pos + 1 < linelen)
-            {
-              if (line.at(pos) == '\\' && pos + 1 < linelen)
-              {
-                size_t k = pos + 1;
-                int c = line.at(k);
-                if (k + 1 < linelen && line.at(k + 1) == '{')
-                  while (++k < linelen && line.at(k) != '}')
-                    continue;
-                switch (c)
-                {
-                  case 'p':
-                    if (k > pos + 1) // translate and lift \p{X} from [ ]
-                    {
-                      std::string name;
-                      if (pos + 5 < linelen && line.at(pos + 3) == 'I' && line.at(pos + 4) == 's')
-                        name = line.substr(pos + 5, k - pos - 5);
-                      else
-                        name = line.substr(pos + 3, k - pos - 3);
-                      if (name == "Word" && !options["unicode"].empty())
-                      {
-                        if (lifted.empty())
-                          regex.append("(?:");
-                        regex.append(line.substr(loc, pos - loc));
-                        lifted.append("|").append(scripts["L"]).append("|").append(scripts["Nd"]).append("|").append(scripts["Pc"]);
-                        loc = k + 1;
-                      }
-                      else
-                      {
-                        Map::const_iterator i = scripts.find(name);
-                        if (i != scripts.end())
-                        {
-                          if (lifted.empty())
-                            regex.append("(?:");
-                          regex.append(line.substr(loc, pos - loc));
-                          lifted.append("|").append(i->second);
-                          loc = k + 1;
-                        }
-                      }
-                      pos = k;
-                    }
-                    wc = -1;
-                    break;
-                  case 'u':
-                  case 'x':
-                    if (k > pos + 1) // translate \u{X} and \x{X} and lift from [ ]
-                    {
-                      if (range)
-                      {
-                        if (lifted.empty())
-                          regex.append("(?:");
-                        regex.append(line.substr(loc, prev - loc));
-                        lifted.append("|").append(reflex::utf8(wc, static_cast<reflex::unicode_t>(std::strtoul(line.c_str() + pos + 3, NULL, 16))));
-                        pos = k;
-                        loc = k + 1;
-                        range = false;
-                      }
-                      else
-                      {
-                        wc = static_cast<reflex::unicode_t>(std::strtoul(line.c_str() + pos + 3, NULL, 16));
-                        if (k + 1 < linelen && line.at(k + 1) != '-')
-                        {
-                          if (wc > 0x7f)
-                          {
-                            char buf[7];
-                            buf[reflex::utf8(wc, buf)] = '\0';
-                            if (lifted.empty())
-                              regex.append("(?:");
-                            regex.append(line.substr(loc, pos - loc));
-                            lifted.append("|").append(buf);
-                            pos = k;
-                            loc = k + 1;
-                          }
-                        }
-                        else
-                        {
-                          prev = pos;
-                          pos = k;
-                        }
-                      }
-                    }
-                    else if (c == 'u' && !options["unicode"].empty()) // translate \u and lift from [ ]
-                    {
-                      if (lifted.empty())
-                        regex.append("(?:");
-                      regex.append(line.substr(loc, pos - loc));
-                      lifted.append("|").append(scripts["Lu"]);
-                      ++pos;
-                      loc = pos + 1;
-                      wc = -1;
-                    }
-                    break;
-                  case 's':
-                    if (!options["unicode"].empty()) // translate \s and lift from [ ]
-                    {
-                      if (lifted.empty())
-                        regex.append("(?:");
-                      regex.append(line.substr(loc, pos - loc));
-                      lifted.append("|\\s|").append(scripts["Zs"]);
-                      ++pos;
-                      loc = pos + 1;
-                    }
-                    wc = -1;
-                    break;
-                  case 'l':
-                    if (!options["unicode"].empty()) // translate \l and lift from [ ]
-                    {
-                      if (lifted.empty())
-                        regex.append("(?:");
-                      regex.append(line.substr(loc, pos - loc));
-                      lifted.append("|").append(scripts["Ll"]);
-                      ++pos;
-                      loc = pos + 1;
-                    }
-                    wc = -1;
-                    break;
-                  case 'w':
-                    if (!options["unicode"].empty()) // translate \w and lift from [ ]
-                    {
-                      if (lifted.empty())
-                        regex.append("(?:");
-                      regex.append(line.substr(loc, pos - loc));
-                      lifted.append("|\\w|").append(scripts["L"]).append("|").append(scripts["Nd"]).append("|").append(scripts["Pc"]);
-                      ++pos;
-                      loc = pos + 1;
-                    }
-                    wc = -1;
-                    break;
-                  case 'X': // translate \X and lift from [ ]
-                    if (lifted.empty())
-                      regex.append("(?:");
-                    regex.append(line.substr(loc, pos - loc));
-                    lifted.append("|[\\x00-\\xbf]|[\\xc0-\\xff][\\x80-\\xbf]+");
-                    ++pos;
-                    loc = pos + 1;
-                    wc = -1;
-                    break;
-                  default:
-                    if (c >= '0' && c <= '7')
-                    {
-                      if (c >= '1')
-                      {
-                        // translate octals \123 to \0123
-                        regex.append(line.substr(loc, pos - loc)).append("\\0");
-                        loc = pos + 1;
-                        ++pos;
-                      }
-                      wc = 0;
-                      while (wc < 0x20 && (c = line.at(pos)) >= '0' && c <= '7')
-                      {
-                        wc = 8*wc + c - '0';
-                        ++pos;
-                      }
-                    }
-                    else if (c == 'c') // \cA control
-                    {
-                      pos += 2;
-                      wc = line.at(pos) % 32;
-                    }
-                    else
-                    {
-                      static const char abtnvfr[] = "abtnvfr"; // \a \b \t etc
-                      const char *s = strchr(abtnvfr, c);
-                      if (s)
-                        wc = s - abtnvfr + '\a';
-                      else
-                        wc = -1;
-                      ++pos;
-                    }
-                    break;
-                }
-                range = false;
-              }
-              else if ((line.at(pos) & 0x80) == 0x80 && !options["unicode"].empty()) // lift UTF-8 char sequence from [ ]
-              {
-                if (lifted.empty())
-                  regex.append("(?:");
-                regex.append(line.substr(loc, pos - loc));
-                lifted.append("|");
-                lifted.push_back(line.at(pos));
-                int c;
-                while (++pos < linelen && ((c = line.at(pos)) & 0xc0) == 0x80)
-                  lifted.push_back(c);
-                loc = pos--;
-              }
-              else if (line.at(pos) == '[' && pos + 1 < linelen && line.at(pos + 1) == ':')
-              {
-                pos += 2;
-                while (pos + 1 < linelen && (line.at(pos) != ':' || line.at(pos + 1) != ']'))
-                  ++pos;
-                ++pos;
-              }
-              else if (wc >= 0 && line.at(pos) == '-')
-              {
-                range = true;
-              }
-              else
-              {
-                wc = line.at(pos);
-                range = false;
-                prev = pos;
-              }
-              ++pos;
-              if (pos >= linelen || line.at(pos) == ']')
-                break;
-            }
-            if (lifted.empty())
-              regex.append(line.substr(loc, pos - loc + 1));
-            else if (pos > loc || regex.size() > size + 4)
-              regex.append(line.substr(loc, pos - loc)).append("]").append(lifted).append(")");
-            else
-              regex = regex.substr(0, regex.size() - 1).append(lifted.substr(1)).append(")");
-            loc = pos + 1;
-          }
-          if (pos >= linelen || line.at(pos) != ']')
-            error("missing closing ]: ...", line.substr(loc).c_str());
-          break;
-        case '"':
-          regex.append(line.substr(loc, pos - loc)).append("\\Q"); // translate to \Q...\E
-          loc = ++pos;
-          while (pos < linelen && line.at(pos) != '"')
-          {
-            if (line.at(pos) == '\\' && pos + 1 < linelen && line.at(pos + 1) == '"')
-            {
-              regex.append(line.substr(loc, pos - loc));
-              loc = ++pos;
-            }
-            ++pos;
-          }
-          if (pos >= linelen || line.at(pos) != '"')
-            error("missing closing \": \"...", line.substr(loc).c_str());
-          regex.append(line.substr(loc, pos - loc)).append("\\E");
-          loc = pos + 1;
-          break;
-        case '{':
-          regex.append(line.substr(loc, pos - loc));
-          loc = pos;
-          if (pos + 1 < linelen && isalphaun(line.at(pos + 1)))
-          {
-            ++pos;
-            std::string name = getname(pos);
-            if (!name.empty() && pos < linelen && line.at(pos) == '}')
-            {
-              Map::const_iterator i = definitions.find(name);
-              if (i == definitions.end())
-                error("undefined name: ", name.c_str());
-              regex.append("(?:").append(i->second).append(")");
-              loc = pos + 1;
-            }
-          }
-          else
-          {
-            while (pos + 1 < linelen && line.at(++pos) != '}')
-              if (!isdigit(line.at(pos)) && line.at(pos) != ',')
-                break;
-            if (line.at(pos) != '}')
-            {
-              if (pos + 1 < linelen)
-                error("error in { }: ...", line.substr(loc).c_str());
-              else
-                error("missing closing }: ...", line.substr(loc).c_str());
-            }
-            if (pos + 1 < linelen && line.at(pos + 1) == '?' && options["matcher"] == "boost")
-              warning("unsupported lazy quantifier: ", line.substr(pos, 2).c_str());
-          }
-          break;
-        case '#':
-          if (!options["freespace"].empty()) // escape # in freespace mode, otherwise ends up as a comment
-          {
-            regex.append(line.substr(loc, pos - loc)).append("\\#");
-            loc = pos + 1;
-          }
-          break;
-        case '.':
-          if (!options["unicode"].empty())
-          {
-            regex.append(line.substr(loc, pos - loc)).append("(?:.|[\\xc0-\\xff][\\x80-\\xbf]+)");
-            loc = pos + 1;
-          }
-          break;
-        case '*':
-        case '+':
-        case '?':
-          if (pos + 1 < linelen && line.at(pos + 1) == '?' && options["matcher"] == "boost")
-            warning("unsupported lazy quantifier: ", line.substr(pos, 2).c_str());
-          break;
-        default:
-          if ((c & 0xc0) == 0xc0 && !options["unicode"].empty()) // group UTF-8 sequence
-          {
-            regex.append(line.substr(loc, pos - loc)).append("(?:").push_back(c);
-            while (((c = line.at(++pos)) & 0xc0) == 0x80)
-              regex.push_back(c);
-            regex.append(")");
-            loc = pos;
-          }
+        // eat "..."
+        while (pos < linelen && line.at(pos) != '"')
+          pos += 1 + (line.at(pos) == '\\');
+        ++pos;
       }
-      blk = false;
+      else if (c == '[')
+      {
+        // eat [...]
+        if (pos < linelen && line.at(pos) == '^')
+          ++pos;
+        ++pos;
+        while (pos < linelen && line.at(pos) != ']')
+          pos += 1 + (line.at(pos) == '\\');
+        ++pos;
+      }
+      else if (c == '(' && pos + 2 < linelen && line.at(pos + 1) == '?' && line.at(pos + 2) == '#')
+      {
+        // eat (?#...)
+        pos += 2; 
+        while (pos < linelen && line.at(pos) != ')')
+          pos += 1 + (line.at(pos) == '\\');
+        ++pos;
+      }
+      else if (c == '\\')
+      {
+        if (pos == linelen)
+        {
+          // line ends in \ and continues on the next line
+          regex.append(line.substr(loc, pos - loc));
+          if (!get_line())
+            error("EOF encountered inside a pattern");
+          if (line == "%%")
+            error("%% section ending encountered inside a pattern");
+          pos = 0;
+          (void)ws(pos); // skip indent, if any
+          loc = pos;
+        }
+        else if (line.at(pos) == 'Q')
+        {
+          // eat \Q...\E
+          while (pos + 1 < linelen && (line.at(pos) != '\\' || line.at(pos + 1) != 'E'))
+            ++pos;
+          pos += 2;
+        }
+        else
+        {
+          ++pos;
+        }
+      }
     }
-    ++pos;
   }
-  if (lev > 0)
-    error("missing closing )");
+  else
+  {
+    size_t nsp = pos;
+    while (pos < linelen)
+    {
+      int c = line.at(pos);
+      if ((c == '{' && (pos + 1 == linelen || std::isspace(line.at(pos + 1)))) ||
+          (c == '|' && pos + 1 == linelen) ||
+          (c == '/' && pos + 1 < linelen && (line.at(pos + 1) == '/' || line.at(pos + 1) == '*')))
+        break;
+      ++pos;
+      if (c == '\\')
+      {
+        if (pos == linelen)
+        {
+          // line ends in \ and continues on the next line
+          regex.append(line.substr(loc, nsp - loc));
+          if (!get_line())
+            error("EOF encountered inside a pattern");
+          if (line == "%%")
+            error("%% section ending encountered inside a pattern");
+          pos = 0;
+          (void)ws(pos); // skip indent, if any
+          loc = pos;
+        }
+        else
+        {
+          ++pos;
+        }
+      }
+      if (!std::isspace(c))
+        nsp = pos;
+    }
+    pos = nsp;
+  }
   regex.append(line.substr(loc, pos - loc));
-  loc = regex.size();
-  while (loc > 0 && isspace(regex.at(loc - 1)))
-    --loc;
-  regex.resize(loc);
-  if (lap)
-    regex.append(")");
+  reflex::convert_flag_type flags = reflex::convert_flag::lex;
+  if (!options["unicode"].empty())
+    flags |= reflex::convert_flag::unicode;
+  if (!options["case_insensitive"].empty())
+    flags |= reflex::convert_flag::anycase;
+  if (!options["dotall"].empty())
+    flags |= reflex::convert_flag::dotall;
+  if (!options["freespace"].empty())
+    flags |= reflex::convert_flag::freespace;
+  try
+  {
+    regex = reflex::convert(regex, library->signature, flags, &definitions); 
+  }
+  catch (reflex::regex_error& e)
+  {
+    error(e.what());
+  }
   return regex;
 }
 
-Reflex::Starts Reflex::getstarts(size_t& pos)
+/// Get start conditions <start1,start2,...> of a rule
+Reflex::Starts Reflex::get_starts(size_t& pos)
 {
   pos = 0;
   Starts starts;
-  if (linelen > 1 && line.at(0) == '<' && isalphaun(line.at(1)))
+  if (linelen > 1 && line.at(0) == '<' && (std::isalpha(line.at(1)) || line.at(1) == '_'))
   {
     do
     {
       ++pos;
-      std::string name = getname(pos);
+      std::string name = get_name(pos);
       Start start;
       for (start = 0; start < conditions.size() && name != conditions.at(start); ++start)
         continue;
@@ -1320,12 +919,13 @@ Reflex::Starts Reflex::getstarts(size_t& pos)
   return starts;
 }
 
-std::string Reflex::getcode(size_t& pos)
+/// Get line(s) of code, %{ %}, %%top{ %}, %%class{ %}, and %%init{ %}
+std::string Reflex::get_code(size_t& pos)
 {
   std::string code;
   size_t blk = 0, lev = 0;
   enum { CODE, STRING, CHAR, COMMENT } tok = CODE;
-  if (pos == 0 && (line == "%{" || istopcode() || isclasscode() || isinitcode()))
+  if (pos == 0 && (line == "%{" || is_topcode() || is_classcode() || is_initcode()))
   {
     ++blk;
     pos = linelen;
@@ -1340,7 +940,7 @@ std::string Reflex::getcode(size_t& pos)
   {
     while (pos >= linelen)
     {
-      if (!getline())
+      if (!get_line())
         error("EOF encountered inside an action");
       pos = 0;
       if (tok == CODE)
@@ -1359,14 +959,14 @@ std::string Reflex::getcode(size_t& pos)
             --blk;
           if (blk == 0 && lev == 0)
           {
-            if (!getline())
+            if (!get_line())
               error("EOF encountered inside an action");
             return code;
           }
         }
         else
         {
-          if (blk == 0 && lev == 0 && linelen > 0 && (!isspace(line.at(0)) || !options["freespace"].empty()))
+          if (blk == 0 && lev == 0 && linelen > 0 && (!std::isspace(line.at(0)) || !options["freespace"].empty()))
             return code;
           code.append(newline).append(line);
         }
@@ -1420,6 +1020,7 @@ std::string Reflex::getcode(size_t& pos)
   return code;
 }
 
+/// Report an error and exit.
 void Reflex::error(const char *message, const char *arg, size_t at_lineno)
 {
   std::cerr
@@ -1433,6 +1034,7 @@ void Reflex::error(const char *message, const char *arg, size_t at_lineno)
   exit(EXIT_FAILURE);
 }
 
+/// Report a warning.
 void Reflex::warning(const char *message, const char *arg, size_t at_lineno)
 {
   if (options["nowarn"].empty())
@@ -1446,45 +1048,46 @@ void Reflex::warning(const char *message, const char *arg, size_t at_lineno)
       << std::endl;
 }
 
-void Reflex::parse_section_1(void)
+/// Parse section 1 of a lex specification.
+void Reflex::parse_section_1()
 {
-  if (!getline())
+  if (!get_line())
     return;
   while (line != "%%")
   {
     if (linelen == 0)
     {
-      if (!getline())
+      if (!get_line())
         return;
     }
     else
     {
-      if (iscode())
+      if (is_code())
       {
         size_t pos = 0;
         size_t this_lineno = lineno;
-        std::string code = getcode(pos);
+        std::string code = get_code(pos);
         section_1.push_back(Code(code, infile, this_lineno));
       }
-      else if (istopcode())
+      else if (is_topcode())
       {
         size_t pos = 0;
         size_t this_lineno = lineno;
-        std::string code = getcode(pos);
+        std::string code = get_code(pos);
         section_top.push_back(Code(code, infile, this_lineno));
       }
-      else if (isclasscode())
+      else if (is_classcode())
       {
         size_t pos = 0;
         size_t this_lineno = lineno;
-        std::string code = getcode(pos);
+        std::string code = get_code(pos);
         section_class.push_back(Code(code, infile, this_lineno));
       }
-      else if (isinitcode())
+      else if (is_initcode())
       {
         size_t pos = 0;
         size_t this_lineno = lineno;
-        std::string code = getcode(pos);
+        std::string code = get_code(pos);
         section_init.push_back(Code(code, infile, this_lineno));
       }
       else
@@ -1496,7 +1099,7 @@ void Reflex::parse_section_1(void)
           {
             do
             {
-              std::string filename = getstring(pos);
+              std::string filename = get_string(pos);
               if (filename.empty())
                 error("bad file name");
               include(filename);
@@ -1509,7 +1112,7 @@ void Reflex::parse_section_1(void)
             {
               do
               {
-                std::string name = getname(pos);
+                std::string name = get_name(pos);
                 if (name.empty())
                   error("bad start condition name");
                 inclusive.insert(conditions.size());
@@ -1523,7 +1126,7 @@ void Reflex::parse_section_1(void)
               {
                 do
                 {
-                  std::string name = getname(pos);
+                  std::string name = get_name(pos);
                   if (name.empty())
                     error("bad start condition name");
                   conditions.push_back(name);
@@ -1539,19 +1142,19 @@ void Reflex::parse_section_1(void)
                   pos = 1;
                 do
                 {
-                  std::string name = getname(pos);
+                  std::string name = get_name(pos);
                   if (name.empty())
                     error("bad %option name");
-                  Map::iterator i = options.find(name);
+                  StringMap::iterator i = options.find(name);
                   if (i == options.end())
                     error("unrecognized %option: ", name.c_str());
                   (void)ws(pos);
-                  if (eq(pos) && pos < linelen) // %option OPTION = NAME
+                  if (eq(pos) && pos < linelen)
                   {
-                    if (line.at(pos) == '"') // %option OPTION = "NAME"
-                      i->second = getstring(pos);
+                    if (line.at(pos) == '"')
+                      i->second = get_string(pos); // %option OPTION = "NAME"
                     else
-                      i->second = getname(pos);
+                      i->second = get_name(pos); // %option OPTION = NAME
                     (void)ws(pos);
                   }
                   else
@@ -1570,40 +1173,41 @@ void Reflex::parse_section_1(void)
           size_t pos = 0;
           std::string name;
           std::string regex;
-          if ((name = getname(pos)).empty() || !ws(pos) || (regex = getregex(pos)).empty() || !nl(pos))
+          if ((name = get_name(pos)).empty() || !ws(pos) || (regex = get_regex(pos)).empty() || !nl(pos))
             error("bad line in section 1: ", line.c_str());
           if (definitions.find(name) != definitions.end())
             error("name defined twice: ", name.c_str());
           definitions[name] = regex;
         }
-        if (!getline())
+        if (!get_line())
           return;
       }
     }
   }
 }
 
-void Reflex::parse_section_2(void)
+/// Parse section 2 of a lex specification.
+void Reflex::parse_section_2()
 {
   if (in->eof())
     error("missing %% section 2");
   bool init = true;
   std::stack<Starts> scopes;
-  if (!getline())
+  if (!get_line())
     return;
   while (line != "%%")
   {
     if (linelen == 0)
     {
-      if (!getline())
+      if (!get_line())
         break;
     }
     else
     {
       size_t pos = 0;
-      if (init && iscode())
+      if (init && is_code())
       {
-        std::string code = getcode(pos);
+        std::string code = get_code(pos);
         if (scopes.empty())
         {
           section_2[0].push_back(Code(code, infile, lineno));
@@ -1617,29 +1221,29 @@ void Reflex::parse_section_2(void)
       else if (line == "}" && !scopes.empty())
       {
         scopes.pop();
-        if (!getline())
+        if (!get_line())
           break;
       }
       else
       {
-        if (!skipcomment(pos) || line == "%%")
+        if (!skip_comment(pos) || line == "%%")
           break;
-        Starts starts = getstarts(pos);
+        Starts starts = get_starts(pos);
         if (pos + 1 == linelen && line.at(pos) == '{')
         {
           scopes.push(starts);
-          if (!getline())
+          if (!get_line())
             error("EOF encountered inside an action");
           init = true;
         }
         else
         {
           bool no_starts = pos == 0;
-          std::string regex = getregex(pos);
+          std::string regex = get_regex(pos);
           if (regex.empty())
             error("bad line in section 2: ", line.c_str());
           size_t rule_lineno = lineno;
-          std::string code = getcode(pos);
+          std::string code = get_code(pos);
           if (no_starts && scopes.empty() && regex == "<<EOF>>")
           {
             for (Start start = 0; start < conditions.size(); ++start)
@@ -1665,27 +1269,47 @@ void Reflex::parse_section_2(void)
   patterns.resize(conditions.size());
   for (Start start = 0; start < conditions.size(); ++start)
   {
+    std::string& pattern = patterns[start];
+    pattern.assign("(?m");
+    if (!options["case_insensitive"].empty())
+      pattern.push_back('i');
+    if (!options["dotall"].empty())
+      pattern.push_back('s');
+    if (!options["freespace"].empty())
+      pattern.push_back('x');
+    pattern.append(")%");
+    try
+    {
+      pattern.assign(reflex::convert(pattern, library->signature, reflex::convert_flag::none));
+    }
+    catch (reflex::regex_error& e)
+    {
+      error(e.what());
+    }
+    pattern.resize(pattern.size() - 1); // remove dummy % from (?m...)%
     const char *sep = "";
     for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
     {
       if (rule->regex != "<<EOF>>")
       {
-        patterns[start].append(sep).append("(").append(rule->regex).append(")");
+        pattern.append(sep).append("(").append(rule->regex).append(")");
         sep = "|";
       }
     }
   }
 }
 
-void Reflex::parse_section_3(void)
+/// Parse section 3 of a lex specification.
+void Reflex::parse_section_3()
 {
   if (in->eof())
     error("missing %% section 3");
-  while (getline())
+  while (get_line())
     section_3.push_back(Code(line, infile, lineno));
 }
 
-void Reflex::write(void)
+/// Write lex.yy.cpp.
+void Reflex::write()
 {
   if (!options["yyclass"].empty())
     options["flex"] = "true";
@@ -1704,8 +1328,30 @@ void Reflex::write(void)
   }
   if (options["matcher"] == "reflex")
     options["matcher"].clear();
-  else if (!options["matcher"].empty() && options["matcher"] != "boost" && options["matcher"] != "boost-perl")
-    warning("using custom matcher ", options["matcher"].c_str());
+  else if (!options["matcher"].empty())
+  {
+    LibraryMap::iterator i = libraries.find(options["matcher"]);
+    if (i != libraries.end())
+    {
+      library = &i->second;
+    }
+    else
+    {
+      library = &libraries[options["matcher"]];
+      library->name = options["matcher"].c_str();
+      if (options["include"].empty())
+        library->file = file_ext(options["matcher"], "h").c_str();
+      else
+        library->file = file_ext(options["include"], "h").c_str();
+      if (options["pattern"].empty())
+        library->pattern = "char *";
+      else
+        library->pattern = options["pattern"].c_str();
+      library->matcher = options["matcher"].c_str();
+      library->signature = "m:";
+      warning("using custom matcher ", library->name);
+    }
+  }
   std::ofstream ofs;
   if (options["stdout"].empty())
   {
@@ -1735,7 +1381,7 @@ void Reflex::write(void)
     write_banner("TABLES");
   if (ofs.is_open())
     ofs.close();
-  write_stats();
+  stats();
   if (!options["regexp_file"].empty())
   {
     std::ofstream ofs;
@@ -1767,16 +1413,8 @@ void Reflex::write(void)
           out = &ofs;
         }
       }
-      *out << "\"(?m";
-      if (!options["case_insensitive"].empty())
-        *out << "i";
-      if (!options["dotall"].empty())
-        *out << "s";
-      if (!options["freespace"].empty())
-        *out << "x";
-      *out << ")";
       write_regex(patterns[start]);
-      *out << "\"" << std::endl;
+      *out << std::endl;
       if (!ofs.good())
         abort("in writing");
       if (!append && ofs.is_open())
@@ -1888,6 +1526,7 @@ void Reflex::write(void)
   }
 }
 
+/// Write a banner in lex.yy.cpp.
 void Reflex::write_banner(const char *title)
 {
   size_t i;
@@ -1909,12 +1548,13 @@ void Reflex::write_banner(const char *title)
   *out << std::endl << std::endl;
 }
 
-void Reflex::write_prelude(void)
+/// Write the prelude to lex.yy.cpp.
+void Reflex::write_prelude()
 {
   if (!out->good())
     return;
   write_banner("OPTIONS USED");
-  for (Map::const_iterator option = options.begin(); option != options.end(); ++option)
+  for (StringMap::const_iterator option = options.begin(); option != options.end(); ++option)
   {
     if (!option->second.empty())
     {
@@ -1928,32 +1568,14 @@ void Reflex::write_prelude(void)
     *out << "\n// debug option enables ASSERT\n#define ASSERT(c) assert(c)" << std::endl;
 }
 
-void Reflex::write_class(void)
+/// Write the lexer class to lex.yy.cpp.
+void Reflex::write_class()
 {
   if (!out->good())
     return;
-  std::string matcher;
   write_banner("REGEX MATCHER");
-  if (options["matcher"] == "boost")
-  {
-    *out << "#include <reflex/boostmatcher.h>" << std::endl;
-    matcher = "reflex::BoostPosixMatcher";
-  }
-  else if (options["matcher"] == "boost-perl")
-  {
-    *out << "#include <reflex/boostmatcher.h>" << std::endl;
-    matcher = "reflex::BoostPerlMatcher";
-  }
-  else if (options["matcher"].empty())
-  {
-    *out << "#include <reflex/matcher.h>" << std::endl;
-    matcher = "reflex::Matcher";
-  }
-  else
-  {
-    *out << "#include \"" << options["matcher"] << ".h\"" << std::endl;
-    matcher = options["matcher"];
-  }
+  *out << "#include <" << library->file << ">" << std::endl;
+  const char *matcher = library->matcher;
   std::string lex = options["lex"];
   std::string base;
   if (!options["flex"].empty())
@@ -2021,7 +1643,7 @@ void Reflex::write_class(void)
           "    return 0;\n"
           "  }\n";
       *out <<
-        "  virtual int " << lex << "(void)";
+        "  virtual int " << lex << "()";
     }
     if (options["yyclass"].empty())
       *out << ";\n";
@@ -2041,7 +1663,7 @@ void Reflex::write_class(void)
         "  {\n"
         "    in(input);\n"
         "    if (os)\n"
-	"      out(*os);\n"
+        "      out(*os);\n"
         "    return " << lex << "();\n"
         "  }"
         << std::endl;
@@ -2074,7 +1696,7 @@ void Reflex::write_class(void)
         "  virtual int " << lex << "(YYSTYPE& yylval)";
     else
       *out <<
-        "  virtual int " << lex << "(void)";
+        "  virtual int " << lex << "()";
     if (options["class"].empty())
       *out << ";\n";
     else
@@ -2087,7 +1709,7 @@ void Reflex::write_class(void)
         "  {\n"
         "    in(input);\n"
         "    if (os)\n"
-	"      out(*os);\n"
+        "      out(*os);\n"
         "    return " << lex << "();\n"
         "  }\n";
     *out <<
@@ -2097,7 +1719,8 @@ void Reflex::write_class(void)
   }
 }
 
-void Reflex::write_section_top(void)
+/// Write %%top{ %} code to lex.yy.cpp.
+void Reflex::write_section_top()
 {
   if (!section_top.empty())
   {
@@ -2106,13 +1729,15 @@ void Reflex::write_section_top(void)
   }
 }
 
-void Reflex::write_section_class(void)
+/// Write %%class{ %} code to lex.yy.cpp.
+void Reflex::write_section_class()
 {
   if (!section_class.empty())
     write_code(section_class);
 }
 
-void Reflex::write_section_init(void)
+/// Write %%init{ %} code to lex.yy.cpp.
+void Reflex::write_section_init()
 {
   *out << "  {\n";
   if (!section_init.empty())
@@ -2122,7 +1747,8 @@ void Reflex::write_section_init(void)
   *out << "  }" << std::endl;
 }
 
-void Reflex::write_section_1(void)
+/// Write section 1 user-defined code to lex.yy.cpp.
+void Reflex::write_section_1()
 {
   if (!section_1.empty())
   {
@@ -2131,7 +1757,8 @@ void Reflex::write_section_1(void)
   }
 }
 
-void Reflex::write_section_3(void)
+/// Write section 3 user-defined code to lex.yy.cpp.
+void Reflex::write_section_3()
 {
   if (!section_3.empty())
   {
@@ -2140,6 +1767,7 @@ void Reflex::write_section_3(void)
   }
 }
 
+/// Write lines of code to lex.yy.cpp annotated with #line source info.
 void Reflex::write_code(const Codes& codes)
 {
   if (!out->good())
@@ -2159,6 +1787,7 @@ void Reflex::write_code(const Codes& codes)
   }
 }
 
+/// Write a line(s) of code to lex.yy.cpp annotated with #line source info.
 void Reflex::write_code(const Code& code)
 {
   if (options["noline"].empty())
@@ -2172,7 +1801,8 @@ void Reflex::write_code(const Code& code)
     *out << code.line << std::endl;
 }
 
-void Reflex::write_lexer(void)
+/// Write lexer code and lex() method code.
+void Reflex::write_lexer()
 {
   if (!out->good())
     return;
@@ -2330,7 +1960,7 @@ void Reflex::write_lexer(void)
   if (!options["bison_bridge"].empty() || !options["bison_locations"].empty())
     *out << "::" << options["lex"] << "(YYSTYPE& yylval)\n{\n";
   else
-    *out << "::" << options["lex"] << "(void)\n{\n";
+    *out << "::" << options["lex"] << "()\n{\n";
   for (Start start = 0; start < conditions.size(); ++start)
   {
     if (options["matcher"].empty())
@@ -2341,55 +1971,16 @@ void Reflex::write_lexer(void)
       }
       else
       {
-        *out << "  static const reflex::Pattern PATTERN_" << conditions[start] << "(\"";
+        *out << "  static const reflex::Pattern PATTERN_" << conditions[start] << "(";
         write_regex(patterns[start]);
-        *out << "\", \"m";
-        if (!options["case_insensitive"].empty())
-          *out << ";i";
-        if (!options["dotall"].empty())
-          *out << ";s";
-        if (!options["freespace"].empty())
-          *out << ";x";
-        *out << "\");\n";
+        *out << ");\n";
       }
-    }
-    else if (options["matcher"] == "boost" || options["matcher"] == "boost-perl")
-    {
-      *out << "  static const boost::regex PATTERN_" << conditions[start] << "(\"";
-      if (!options["dotall"].empty())
-        *out << "(?s)";
-      write_regex(patterns[start]);
-      *out << "\", static_cast<boost::regex_constants::syntax_option_type>(";
-      *out << "boost::regex_constants::normal";
-      if (!options["case_insensitive"].empty())
-        *out << " | boost::regex_constants::icase";
-      if (!options["fast"].empty())
-        *out << " | boost::regex_constants::optimize";
-      *out << "));\n";
-    }
-    else if (!options["pattern"].empty())
-    {
-      *out << "  static const " << options["pattern"] << " PATTERN_" << conditions[start] << "(\"(?m";
-      if (!options["case_insensitive"].empty())
-        *out << "i";
-      if (!options["dotall"].empty())
-        *out << "s";
-      *out << ")";
-      write_regex(patterns[start]);
-      *out << "\");\n";
     }
     else
     {
-      *out << "  static const char *PATTERN_" << conditions[start] << " = \"(?m";
-      if (!options["case_insensitive"].empty())
-        *out << "i";
-      if (!options["dotall"].empty())
-        *out << "s";
-      if (!options["freespace"].empty())
-        *out << "x";
-      *out << ")";
+      *out << "  static const " << library->pattern << " PATTERN_" << conditions[start] << " = ";
       write_regex(patterns[start]);
-      *out << "\";";
+      *out << ";\n";
     }
   }
   *out <<
@@ -2552,7 +2143,8 @@ void Reflex::write_lexer(void)
     "}" << std::endl;
 }
 
-void Reflex::write_main(void)
+/// Write main() to lex.yy.cpp.
+void Reflex::write_main()
 {
   if (!out->good())
     return;
@@ -2580,12 +2172,29 @@ void Reflex::write_main(void)
   }
 }
 
-void Reflex::write_stats(void)
+/// Write regex string to lex.yy.cpp.
+void Reflex::write_regex(const std::string& regex)
+{
+  *out << "\"";
+  for (std::string::const_iterator i = regex.begin(); i != regex.end(); ++i)
+  {
+    if (*i == '\\')
+      *out << "\\\\";
+    else if (*i == '"')
+      *out << "\\\"";
+    else
+      *out << *i;
+  }
+  *out << "\"";
+}
+
+/// Display statistics.
+void Reflex::stats()
 {
   if (!options["verbose"].empty())
   {
     std::cout << "reflex " REFLEX_VERSION " usage statistics:\n" << "  options used:\n";
-    for (Map::const_iterator option = options.begin(); option != options.end(); ++option)
+    for (StringMap::const_iterator option = options.begin(); option != options.end(); ++option)
       if (!option->second.empty())
         std::cout << "    " << option->first << "=" << option->second << std::endl;
     if (!options["verbose"].empty())
@@ -2610,13 +2219,7 @@ void Reflex::write_stats(void)
   {
     for (Start start = 0; start < conditions.size(); ++start)
     {
-      std::string option = "m;r";
-      if (!options["case_insensitive"].empty())
-        option.append(";i");
-      if (!options["dotall"].empty())
-        option.append(";s");
-      if (!options["freespace"].empty())
-        option.append(";x");
+      std::string option = "r";
       option.append(";n=").append(conditions[start]);
       if (options["graphs_file"] == "true")
         option.append(";f=reflex.").append(conditions[start]).append(".gv");
@@ -2654,24 +2257,12 @@ void Reflex::write_stats(void)
           std::cout << " rules, " << pattern.nodes() << " nodes, " << pattern.edges() << " edges, " << pattern.words() << " code words\n";
         }
       }
-      catch (reflex::Pattern::Error& e)
+      catch (reflex::regex_error& e)
       {
-        e.display();
+        std::cerr << e.what();
         abort("in reading ", infile.c_str());
       }
     }
   }
 }
 
-void Reflex::write_regex(const std::string& regex)
-{
-  for (std::string::const_iterator i = regex.begin(); i != regex.end(); ++i)
-  {
-    if (*i == '\\')
-      *out << "\\\\";
-    else if (*i == '"')
-      *out << "\\\"";
-    else
-      *out << *i;
-  }
-}

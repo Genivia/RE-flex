@@ -4,7 +4,7 @@
 <area shape="rect" id="node3" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="472,71,631,98"/>
 <area shape="rect" id="node5" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="739,32,897,73"/>
 <area shape="rect" id="node4" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="232,5,391,47"/>
-<area shape="rect" id="node6" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. " alt="" coords="265,71,357,98"/>
+<area shape="rect" id="node6" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="265,71,357,98"/>
 <area shape="rect" id="node8" href="$structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="235,122,387,149"/>
 <area shape="rect" id="node9" href="$structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="5,193,151,219"/>
 </map>

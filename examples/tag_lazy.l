@@ -7,8 +7,8 @@
 
 pi		<\?.*?\?>
 comment		<!--.*?-->
-tag		<.+?\/>
-open		<[^/].*?>
+tag		<[^/][^>]*?\/>
+open		<[^/][^/]*?>
 close		<\/.+?>
 
 %o dotall main

@@ -46,15 +46,24 @@ namespace reflex {
 /// RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan, find, split functors and iterators.
 /** More info TODO */
 class Matcher : public PatternMatcher<reflex::Pattern> {
- protected:
-  typedef std::vector<size_t> Stops; ///< indent margin/tab stops
  public:
+  /// Convert a regex to an acceptable form, given the specified regex library signature `"[decls:]escapes[?+]"`, see reflex::convert.
+  template<typename T>
+  static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
+  {
+    return reflex::convert(regex, "imsx#=^:abcdefhijlnprstuvwxzABDHLPQSUW<>?+", flags);
+  }
+  /// Default constructor.
+  Matcher() : PatternMatcher<reflex::Pattern>()
+  {
+    reset();
+  }
   /// Construct matcher engine from a pattern or a string regex, and an input character sequence.
   template<typename P> /// @tparam <P> a reflex::Pattern or a string regex 
   Matcher(
-      const P&     pat,            ///< a reflex::Pattern or a string regex for this matcher
-      const Input& inp = Input(),  ///< input character sequence for this matcher
-      const char   *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P     *pat,           ///< points to a reflex::Pattern or a string regex for this matcher
+      const Input& inp = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
       PatternMatcher<reflex::Pattern>(pat, inp, opt)
   {
@@ -63,9 +72,9 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// Construct matcher engine from a pattern or a string regex, and an input character sequence.
   template<typename P> /// @tparam <P> a reflex::Pattern or a string regex 
   Matcher(
-      const P     *pat,           ///< points to a reflex::Pattern or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P&     pat,            ///< a reflex::Pattern or a string regex for this matcher
+      const Input& inp = Input(),  ///< input character sequence for this matcher
+      const char   *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
       PatternMatcher<reflex::Pattern>(pat, inp, opt)
   {
@@ -80,8 +89,8 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     tab_.resize(0);
   }
   /// Returns vector of tab stops.
-  /// @return vector of size_t.
   const std::vector<size_t>& stops(void) const
+    /// @returns vector of size_t.
   {
     return tab_;
   }
@@ -229,6 +238,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     return !fsm_.bow && !fsm_.eow;
   }
  protected:
+  typedef std::vector<size_t> Stops; ///< indent margin/tab stops
   /// FSM data for FSM code
   struct FSM {
     bool bob;

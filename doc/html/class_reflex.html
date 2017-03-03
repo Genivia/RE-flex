@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Reflex Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
+      <div style="float: right; font-size: 10px;">updated Thu Mar 2 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -62,31 +62,58 @@
  <a href="class_reflex.html#details">More...</a></p>
 
 <p><code>#include &lt;reflex.h&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for Reflex:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_reflex__coll__graph.png" border="0" usemap="#_reflex_coll__map" alt="Collaboration graph"/></div>
+<map name="_reflex_coll__map" id="_reflex_coll__map">
+<area shape="rect" id="node2" href="struct_reflex_1_1_library.html" title="A library entry to describe regex library properties. " alt="" coords="5,5,113,32"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_reflex_1_1_code.html">Code</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Line of code fragment in lex specifications.  <a href="struct_reflex_1_1_code.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_reflex_1_1_library.html">Library</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A library entry to describe regex library properties.  <a href="struct_reflex_1_1_library.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_reflex_1_1_rule.html">Rule</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A regex pattern and action pair that forms a rule.  <a href="struct_reflex_1_1_rule.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:aa8c4529578d0a64c49d765df6287b5dc"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; std::string, <a class="el" href="struct_reflex_1_1_library.html">Library</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#aa8c4529578d0a64c49d765df6287b5dc">LibraryMap</a></td></tr>
+<tr class="memdesc:aa8c4529578d0a64c49d765df6287b5dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dictionary of regex libraries.  <a href="#aa8c4529578d0a64c49d765df6287b5dc">More...</a><br /></td></tr>
+<tr class="separator:aa8c4529578d0a64c49d765df6287b5dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb6f49bd01810ba3f30747ee148f0389"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="struct_reflex_1_1_code.html">Code</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#abb6f49bd01810ba3f30747ee148f0389">Codes</a></td></tr>
+<tr class="memdesc:abb6f49bd01810ba3f30747ee148f0389"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collection of ordered lines of code.  <a href="#abb6f49bd01810ba3f30747ee148f0389">More...</a><br /></td></tr>
 <tr class="separator:abb6f49bd01810ba3f30747ee148f0389"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11eba19c13cb5dadc9ee92bdbef1742b"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="struct_reflex_1_1_rule.html">Rule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a11eba19c13cb5dadc9ee92bdbef1742b">Rules</a></td></tr>
+<tr class="memdesc:a11eba19c13cb5dadc9ee92bdbef1742b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collection of ordered rules.  <a href="#a11eba19c13cb5dadc9ee92bdbef1742b">More...</a><br /></td></tr>
 <tr class="separator:a11eba19c13cb5dadc9ee92bdbef1742b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a6e7a1fe6005818eb77148483d726b1"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a3a6e7a1fe6005818eb77148483d726b1">Strings</a></td></tr>
+<tr class="memdesc:a3a6e7a1fe6005818eb77148483d726b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collection of ordered strings.  <a href="#a3a6e7a1fe6005818eb77148483d726b1">More...</a><br /></td></tr>
 <tr class="separator:a3a6e7a1fe6005818eb77148483d726b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44b666ad0e2661678ad8bce4be764037"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a44b666ad0e2661678ad8bce4be764037">Map</a></td></tr>
-<tr class="separator:a44b666ad0e2661678ad8bce4be764037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d8d0a1e69254887bb449ccf2cf6f25c"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a6d8d0a1e69254887bb449ccf2cf6f25c">StringMap</a></td></tr>
+<tr class="memdesc:a6d8d0a1e69254887bb449ccf2cf6f25c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dictionary (std::string)  <a href="#a6d8d0a1e69254887bb449ccf2cf6f25c">More...</a><br /></td></tr>
+<tr class="separator:a6d8d0a1e69254887bb449ccf2cf6f25c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55e5a4bdb0ce1d6ccdec74d14cd06aac"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; std::string, const char * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a55e5a4bdb0ce1d6ccdec74d14cd06aac">Dictionary</a></td></tr>
+<tr class="memdesc:a55e5a4bdb0ce1d6ccdec74d14cd06aac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dictionary (const char*)  <a href="#a55e5a4bdb0ce1d6ccdec74d14cd06aac">More...</a><br /></td></tr>
+<tr class="separator:a55e5a4bdb0ce1d6ccdec74d14cd06aac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a848b594249e352aeb4fbb9b80625df50"><td class="memItemLeft" align="right" valign="top">typedef size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a848b594249e352aeb4fbb9b80625df50">Start</a></td></tr>
+<tr class="memdesc:a848b594249e352aeb4fbb9b80625df50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start condition state type.  <a href="#a848b594249e352aeb4fbb9b80625df50">More...</a><br /></td></tr>
 <tr class="separator:a848b594249e352aeb4fbb9b80625df50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c6779ef74206e028a5d08eeecfe785d"><td class="memItemLeft" align="right" valign="top">typedef std::set&lt; <a class="el" href="class_reflex.html#a848b594249e352aeb4fbb9b80625df50">Start</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Starts</a></td></tr>
+<tr class="memdesc:a8c6779ef74206e028a5d08eeecfe785d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set of start conditions.  <a href="#a8c6779ef74206e028a5d08eeecfe785d">More...</a><br /></td></tr>
 <tr class="separator:a8c6779ef74206e028a5d08eeecfe785d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbe4c8caf09edbddcca57963ec00a73f"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; <a class="el" href="class_reflex.html#a848b594249e352aeb4fbb9b80625df50">Start</a>, <a class="el" href="class_reflex.html#abb6f49bd01810ba3f30747ee148f0389">Codes</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#afbe4c8caf09edbddcca57963ec00a73f">CodesMap</a></td></tr>
+<tr class="memdesc:afbe4c8caf09edbddcca57963ec00a73f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of start conditions to lines of code.  <a href="#afbe4c8caf09edbddcca57963ec00a73f">More...</a><br /></td></tr>
 <tr class="separator:afbe4c8caf09edbddcca57963ec00a73f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7aef4c7aef224a4fa99ff256bc514e13"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; <a class="el" href="class_reflex.html#a848b594249e352aeb4fbb9b80625df50">Start</a>, <a class="el" href="class_reflex.html#a11eba19c13cb5dadc9ee92bdbef1742b">Rules</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a7aef4c7aef224a4fa99ff256bc514e13">RulesMap</a></td></tr>
+<tr class="memdesc:a7aef4c7aef224a4fa99ff256bc514e13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of start conditions to rules.  <a href="#a7aef4c7aef224a4fa99ff256bc514e13">More...</a><br /></td></tr>
 <tr class="separator:a7aef4c7aef224a4fa99ff256bc514e13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -97,12 +124,15 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a6fabb339162f6a5067af98981d296dd7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a44b666ad0e2661678ad8bce4be764037">Map</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a6fabb339162f6a5067af98981d296dd7">options</a></td></tr>
-<tr class="memdesc:a6fabb339162f6a5067af98981d296dd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">maps option name (from the options_table) to its option value  <a href="#a6fabb339162f6a5067af98981d296dd7">More...</a><br /></td></tr>
-<tr class="separator:a6fabb339162f6a5067af98981d296dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08745110a351db82371bfe79a53ecd0e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a44b666ad0e2661678ad8bce4be764037">Map</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a08745110a351db82371bfe79a53ecd0e">scripts</a></td></tr>
-<tr class="memdesc:a08745110a351db82371bfe79a53ecd0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">maps Unicode script names to patterns  <a href="#a08745110a351db82371bfe79a53ecd0e">More...</a><br /></td></tr>
-<tr class="separator:a08745110a351db82371bfe79a53ecd0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4d549aab5d74976912f9e21c03ec046"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a6d8d0a1e69254887bb449ccf2cf6f25c">StringMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ac4d549aab5d74976912f9e21c03ec046">options</a></td></tr>
+<tr class="memdesc:ac4d549aab5d74976912f9e21c03ec046"><td class="mdescLeft">&#160;</td><td class="mdescRight">maps option name (from the options_table) to its option value  <a href="#ac4d549aab5d74976912f9e21c03ec046">More...</a><br /></td></tr>
+<tr class="separator:ac4d549aab5d74976912f9e21c03ec046"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16a66e413d3c2f1f55c85935c05053fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#aa8c4529578d0a64c49d765df6287b5dc">LibraryMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a16a66e413d3c2f1f55c85935c05053fb">libraries</a></td></tr>
+<tr class="memdesc:a16a66e413d3c2f1f55c85935c05053fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">maps regex library name ("reflex", "boost", etc) to library info  <a href="#a16a66e413d3c2f1f55c85935c05053fb">More...</a><br /></td></tr>
+<tr class="separator:a16a66e413d3c2f1f55c85935c05053fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6576cd4dbb07cdf6e35a81d82f33458e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_reflex_1_1_library.html">Library</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a6576cd4dbb07cdf6e35a81d82f33458e">library</a></td></tr>
+<tr class="memdesc:a6576cd4dbb07cdf6e35a81d82f33458e"><td class="mdescLeft">&#160;</td><td class="mdescRight">the regex library selected  <a href="#a6576cd4dbb07cdf6e35a81d82f33458e">More...</a><br /></td></tr>
+<tr class="separator:a6576cd4dbb07cdf6e35a81d82f33458e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19a51b8e2bb114d8e237736464ac1110"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a3a6e7a1fe6005818eb77148483d726b1">Strings</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a19a51b8e2bb114d8e237736464ac1110">conditions</a></td></tr>
 <tr class="memdesc:a19a51b8e2bb114d8e237736464ac1110"><td class="mdescLeft">&#160;</td><td class="mdescRight">"INITIAL" start condition etc. defined with x name  <a href="#a19a51b8e2bb114d8e237736464ac1110">More...</a><br /></td></tr>
 <tr class="separator:a19a51b8e2bb114d8e237736464ac1110"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,11 +142,11 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a9e2717ffc89bd95b32b1a9d9dcdfc265"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Starts</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9e2717ffc89bd95b32b1a9d9dcdfc265">inclusive</a></td></tr>
 <tr class="memdesc:a9e2717ffc89bd95b32b1a9d9dcdfc265"><td class="mdescLeft">&#160;</td><td class="mdescRight">inclusive start conditions  <a href="#a9e2717ffc89bd95b32b1a9d9dcdfc265">More...</a><br /></td></tr>
 <tr class="separator:a9e2717ffc89bd95b32b1a9d9dcdfc265"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a769f9905e0a3c8c19fbec374c62fc36f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a44b666ad0e2661678ad8bce4be764037">Map</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a769f9905e0a3c8c19fbec374c62fc36f">definitions</a></td></tr>
-<tr class="memdesc:a769f9905e0a3c8c19fbec374c62fc36f"><td class="mdescLeft">&#160;</td><td class="mdescRight">map of {name} to regex  <a href="#a769f9905e0a3c8c19fbec374c62fc36f">More...</a><br /></td></tr>
-<tr class="separator:a769f9905e0a3c8c19fbec374c62fc36f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10c25500450853f1b764ffd84c3e5b5c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a6d8d0a1e69254887bb449ccf2cf6f25c">StringMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a10c25500450853f1b764ffd84c3e5b5c">definitions</a></td></tr>
+<tr class="memdesc:a10c25500450853f1b764ffd84c3e5b5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">map of {name} to regex  <a href="#a10c25500450853f1b764ffd84c3e5b5c">More...</a><br /></td></tr>
+<tr class="separator:a10c25500450853f1b764ffd84c3e5b5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8732c058a3371357b5a6a32c884d33ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a7aef4c7aef224a4fa99ff256bc514e13">RulesMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a8732c058a3371357b5a6a32c884d33ac">rules</a></td></tr>
-<tr class="memdesc:a8732c058a3371357b5a6a32c884d33ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt;Start_i&gt;regex_j action for Start i <a class="el" href="struct_reflex_1_1_rule.html">Rule</a> j  <a href="#a8732c058a3371357b5a6a32c884d33ac">More...</a><br /></td></tr>
+<tr class="memdesc:a8732c058a3371357b5a6a32c884d33ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt;Start_i&gt;regex_j action for Start i <a class="el" href="struct_reflex_1_1_rule.html" title="A regex pattern and action pair that forms a rule. ">Rule</a> j  <a href="#a8732c058a3371357b5a6a32c884d33ac">More...</a><br /></td></tr>
 <tr class="separator:a8732c058a3371357b5a6a32c884d33ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e50dfe560c191dd9bd3cde9c36256f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#abb6f49bd01810ba3f30747ee148f0389">Codes</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a6e50dfe560c191dd9bd3cde9c36256f8">section_top</a></td></tr>
 <tr class="memdesc:a6e50dfe560c191dd9bd3cde9c36256f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">top{ user code %} in section 1 container  <a href="#a6e50dfe560c191dd9bd3cde9c36256f8">More...</a><br /></td></tr>
@@ -160,54 +190,78 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:ad158e2c52fa9642e7d93a477db067032"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ad158e2c52fa9642e7d93a477db067032">init</a> (int argc, char **argv)</td></tr>
 <tr class="memdesc:ad158e2c52fa9642e7d93a477db067032"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_reflex.html" title="RE/flex scanner generator class, a variation of the classic &quot;lex&quot; tool to generate scanners...">Reflex</a> initialization.  <a href="#ad158e2c52fa9642e7d93a477db067032">More...</a><br /></td></tr>
 <tr class="separator:ad158e2c52fa9642e7d93a477db067032"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5c5f556f15fb3458941c0bc0eaa5cc3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ad5c5f556f15fb3458941c0bc0eaa5cc3">parse</a> (void)</td></tr>
-<tr class="memdesc:ad5c5f556f15fb3458941c0bc0eaa5cc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse lex specification input.  <a href="#ad5c5f556f15fb3458941c0bc0eaa5cc3">More...</a><br /></td></tr>
-<tr class="separator:ad5c5f556f15fb3458941c0bc0eaa5cc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3eaa4fb7c8c276cff09ea8ce5300b0a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a3eaa4fb7c8c276cff09ea8ce5300b0a6">parse_section_1</a> (void)</td></tr>
-<tr class="separator:a3eaa4fb7c8c276cff09ea8ce5300b0a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b0c259884e5b790c0f5e890ff7e7a57"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a0b0c259884e5b790c0f5e890ff7e7a57">parse_section_2</a> (void)</td></tr>
-<tr class="separator:a0b0c259884e5b790c0f5e890ff7e7a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23f1355a69713f777f8d65efaf0a2ec8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a23f1355a69713f777f8d65efaf0a2ec8">parse_section_3</a> (void)</td></tr>
-<tr class="separator:a23f1355a69713f777f8d65efaf0a2ec8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30485ab1c619a08756855152ec198508"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a30485ab1c619a08756855152ec198508">version</a> ()</td></tr>
+<tr class="memdesc:a30485ab1c619a08756855152ec198508"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display version information and exit.  <a href="#a30485ab1c619a08756855152ec198508">More...</a><br /></td></tr>
+<tr class="separator:a30485ab1c619a08756855152ec198508"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0520e61057161b9d56fa2fcec5399a7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a0520e61057161b9d56fa2fcec5399a7f">help</a> (const char *message=NULL, const char *arg=NULL)</td></tr>
+<tr class="memdesc:a0520e61057161b9d56fa2fcec5399a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display help information with an optional diagnostic message and exit.  <a href="#a0520e61057161b9d56fa2fcec5399a7f">More...</a><br /></td></tr>
+<tr class="separator:a0520e61057161b9d56fa2fcec5399a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41d530e5070b00d2bdbae9bed1a51945"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a41d530e5070b00d2bdbae9bed1a51945">parse</a> ()</td></tr>
+<tr class="memdesc:a41d530e5070b00d2bdbae9bed1a51945"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse lex specification input.  <a href="#a41d530e5070b00d2bdbae9bed1a51945">More...</a><br /></td></tr>
+<tr class="separator:a41d530e5070b00d2bdbae9bed1a51945"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a6888a1281e469b13ca902f114f93a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a4a6888a1281e469b13ca902f114f93a2">parse_section_1</a> ()</td></tr>
+<tr class="memdesc:a4a6888a1281e469b13ca902f114f93a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse section 1 of a lex specification.  <a href="#a4a6888a1281e469b13ca902f114f93a2">More...</a><br /></td></tr>
+<tr class="separator:a4a6888a1281e469b13ca902f114f93a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1484c3f64f893012187b4e34643b21d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a1484c3f64f893012187b4e34643b21d5">parse_section_2</a> ()</td></tr>
+<tr class="memdesc:a1484c3f64f893012187b4e34643b21d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse section 2 of a lex specification.  <a href="#a1484c3f64f893012187b4e34643b21d5">More...</a><br /></td></tr>
+<tr class="separator:a1484c3f64f893012187b4e34643b21d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1c87d2a855eabf92aebc995f0f4fa6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#af1c87d2a855eabf92aebc995f0f4fa6d">parse_section_3</a> ()</td></tr>
+<tr class="memdesc:af1c87d2a855eabf92aebc995f0f4fa6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse section 3 of a lex specification.  <a href="#af1c87d2a855eabf92aebc995f0f4fa6d">More...</a><br /></td></tr>
+<tr class="separator:af1c87d2a855eabf92aebc995f0f4fa6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e4f576217a1dd8ba8a0d94ed6814228"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a5e4f576217a1dd8ba8a0d94ed6814228">include</a> (const std::string &amp;filename)</td></tr>
-<tr class="memdesc:a5e4f576217a1dd8ba8a0d94ed6814228"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse include file.  <a href="#a5e4f576217a1dd8ba8a0d94ed6814228">More...</a><br /></td></tr>
+<tr class="memdesc:a5e4f576217a1dd8ba8a0d94ed6814228"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the specified %include file.  <a href="#a5e4f576217a1dd8ba8a0d94ed6814228">More...</a><br /></td></tr>
 <tr class="separator:a5e4f576217a1dd8ba8a0d94ed6814228"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d2bc980093ae5f8ccbecdcf28dfbc0f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a1d2bc980093ae5f8ccbecdcf28dfbc0f">write</a> (void)</td></tr>
-<tr class="separator:a1d2bc980093ae5f8ccbecdcf28dfbc0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af38a99517397df6f116985a31062366e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#af38a99517397df6f116985a31062366e">write</a> ()</td></tr>
+<tr class="memdesc:af38a99517397df6f116985a31062366e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write lex.yy.cpp.  <a href="#af38a99517397df6f116985a31062366e">More...</a><br /></td></tr>
+<tr class="separator:af38a99517397df6f116985a31062366e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5378b5a1eb6ef820137108103cde676e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a5378b5a1eb6ef820137108103cde676e">write_banner</a> (const char *title)</td></tr>
+<tr class="memdesc:a5378b5a1eb6ef820137108103cde676e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a banner in lex.yy.cpp.  <a href="#a5378b5a1eb6ef820137108103cde676e">More...</a><br /></td></tr>
 <tr class="separator:a5378b5a1eb6ef820137108103cde676e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afec89265a41d0c669963936634b759b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#afec89265a41d0c669963936634b759b7">write_prelude</a> (void)</td></tr>
-<tr class="separator:afec89265a41d0c669963936634b759b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bc0230c7a669f10418ab682a79eddc0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a3bc0230c7a669f10418ab682a79eddc0">write_class</a> (void)</td></tr>
-<tr class="separator:a3bc0230c7a669f10418ab682a79eddc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7cffdb537bbe9e813d50509bb8f6b77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ae7cffdb537bbe9e813d50509bb8f6b77">write_prelude</a> ()</td></tr>
+<tr class="memdesc:ae7cffdb537bbe9e813d50509bb8f6b77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the prelude to lex.yy.cpp.  <a href="#ae7cffdb537bbe9e813d50509bb8f6b77">More...</a><br /></td></tr>
+<tr class="separator:ae7cffdb537bbe9e813d50509bb8f6b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76892cdd57ac5aa8189daff17f751bc4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a76892cdd57ac5aa8189daff17f751bc4">write_class</a> ()</td></tr>
+<tr class="memdesc:a76892cdd57ac5aa8189daff17f751bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the lexer class to lex.yy.cpp.  <a href="#a76892cdd57ac5aa8189daff17f751bc4">More...</a><br /></td></tr>
+<tr class="separator:a76892cdd57ac5aa8189daff17f751bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af497f62c94622122f8ad2aaaeb68102a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#af497f62c94622122f8ad2aaaeb68102a">write_section_top</a> ()</td></tr>
+<tr class="memdesc:af497f62c94622122f8ad2aaaeb68102a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write %top{ %} code to lex.yy.cpp.  <a href="#af497f62c94622122f8ad2aaaeb68102a">More...</a><br /></td></tr>
 <tr class="separator:af497f62c94622122f8ad2aaaeb68102a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca10b84c4da54da34145b9cb92741e65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#aca10b84c4da54da34145b9cb92741e65">write_section_class</a> ()</td></tr>
+<tr class="memdesc:aca10b84c4da54da34145b9cb92741e65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write %class{ %} code to lex.yy.cpp.  <a href="#aca10b84c4da54da34145b9cb92741e65">More...</a><br /></td></tr>
 <tr class="separator:aca10b84c4da54da34145b9cb92741e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dcd1db4f416474695064d5b84dfb3d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9dcd1db4f416474695064d5b84dfb3d5">write_section_init</a> ()</td></tr>
+<tr class="memdesc:a9dcd1db4f416474695064d5b84dfb3d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write %init{ %} code to lex.yy.cpp.  <a href="#a9dcd1db4f416474695064d5b84dfb3d5">More...</a><br /></td></tr>
 <tr class="separator:a9dcd1db4f416474695064d5b84dfb3d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad63ffcc73cc1d67d82297e7594e1ac90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ad63ffcc73cc1d67d82297e7594e1ac90">write_section_1</a> ()</td></tr>
+<tr class="memdesc:ad63ffcc73cc1d67d82297e7594e1ac90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write section 1 user-defined code to lex.yy.cpp.  <a href="#ad63ffcc73cc1d67d82297e7594e1ac90">More...</a><br /></td></tr>
 <tr class="separator:ad63ffcc73cc1d67d82297e7594e1ac90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a126d6ab58a2f7f69baaa924ccfd323e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a126d6ab58a2f7f69baaa924ccfd323e4">write_section_3</a> ()</td></tr>
+<tr class="memdesc:a126d6ab58a2f7f69baaa924ccfd323e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write section 3 user-defined code to lex.yy.cpp.  <a href="#a126d6ab58a2f7f69baaa924ccfd323e4">More...</a><br /></td></tr>
 <tr class="separator:a126d6ab58a2f7f69baaa924ccfd323e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad97e7f90b8d79368875ab955798b1086"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ad97e7f90b8d79368875ab955798b1086">write_code</a> (const <a class="el" href="class_reflex.html#abb6f49bd01810ba3f30747ee148f0389">Codes</a> &amp;codes)</td></tr>
+<tr class="memdesc:ad97e7f90b8d79368875ab955798b1086"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write lines of code to lex.yy.cpp annotated with <a class="el" href="class_reflex.html#ac085e3b7ee325db6dd80547e4f3ff492" title="current line read from input ">line</a> source info.  <a href="#ad97e7f90b8d79368875ab955798b1086">More...</a><br /></td></tr>
 <tr class="separator:ad97e7f90b8d79368875ab955798b1086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21b0fa5d1c28f7b0d1d79aac7d7cd546"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a21b0fa5d1c28f7b0d1d79aac7d7cd546">write_code</a> (const <a class="el" href="struct_reflex_1_1_code.html">Code</a> &amp;code)</td></tr>
+<tr class="memdesc:a21b0fa5d1c28f7b0d1d79aac7d7cd546"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a line(s) of code to lex.yy.cpp annotated with <a class="el" href="class_reflex.html#ac085e3b7ee325db6dd80547e4f3ff492" title="current line read from input ">line</a> source info.  <a href="#a21b0fa5d1c28f7b0d1d79aac7d7cd546">More...</a><br /></td></tr>
 <tr class="separator:a21b0fa5d1c28f7b0d1d79aac7d7cd546"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36fadb8f46fc6c82f7890ad79d08d63c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a36fadb8f46fc6c82f7890ad79d08d63c">write_lexer</a> (void)</td></tr>
-<tr class="separator:a36fadb8f46fc6c82f7890ad79d08d63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a830675b5938ca143cc05935df34ed59c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a830675b5938ca143cc05935df34ed59c">write_main</a> (void)</td></tr>
-<tr class="separator:a830675b5938ca143cc05935df34ed59c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a821eff8767a0d10aeed90a595a3c34cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a821eff8767a0d10aeed90a595a3c34cc">write_stats</a> (void)</td></tr>
-<tr class="separator:a821eff8767a0d10aeed90a595a3c34cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2de02f859367c9edf019127d7e1017b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a2de02f859367c9edf019127d7e1017b7">write_lexer</a> ()</td></tr>
+<tr class="memdesc:a2de02f859367c9edf019127d7e1017b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write lexer code and <a class="el" href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805" title="convert Lex/Flex regular expression syntax ">lex()</a> method code.  <a href="#a2de02f859367c9edf019127d7e1017b7">More...</a><br /></td></tr>
+<tr class="separator:a2de02f859367c9edf019127d7e1017b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73708c3b7e0c165a4199abc159c6c2ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a73708c3b7e0c165a4199abc159c6c2ef">write_main</a> ()</td></tr>
+<tr class="memdesc:a73708c3b7e0c165a4199abc159c6c2ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write <a class="el" href="class_reflex.html#a27dfea948be151721bc24f15e1918a89" title="Main program. ">main()</a> to lex.yy.cpp.  <a href="#a73708c3b7e0c165a4199abc159c6c2ef">More...</a><br /></td></tr>
+<tr class="separator:a73708c3b7e0c165a4199abc159c6c2ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e6d38447a7f80104078f52437ca38f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a1e6d38447a7f80104078f52437ca38f8">write_regex</a> (const std::string &amp;regex)</td></tr>
+<tr class="memdesc:a1e6d38447a7f80104078f52437ca38f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write regex string to lex.yy.cpp.  <a href="#a1e6d38447a7f80104078f52437ca38f8">More...</a><br /></td></tr>
 <tr class="separator:a1e6d38447a7f80104078f52437ca38f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8650def336e6aae3e1929ccb575047f9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a8650def336e6aae3e1929ccb575047f9">getline</a> (void)</td></tr>
-<tr class="memdesc:a8650def336e6aae3e1929ccb575047f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch next line from the input, return true if ok.  <a href="#a8650def336e6aae3e1929ccb575047f9">More...</a><br /></td></tr>
-<tr class="separator:a8650def336e6aae3e1929ccb575047f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae28b095d8fb9c85a2a8fed5ffb1a0b1b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ae28b095d8fb9c85a2a8fed5ffb1a0b1b">skipcomment</a> (size_t &amp;pos)</td></tr>
-<tr class="memdesc:ae28b095d8fb9c85a2a8fed5ffb1a0b1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over white space and comments, return true if ok.  <a href="#ae28b095d8fb9c85a2a8fed5ffb1a0b1b">More...</a><br /></td></tr>
-<tr class="separator:ae28b095d8fb9c85a2a8fed5ffb1a0b1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18e27c7ca29d118601cb6a7a066f1300"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a18e27c7ca29d118601cb6a7a066f1300">stats</a> ()</td></tr>
+<tr class="memdesc:a18e27c7ca29d118601cb6a7a066f1300"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display statistics.  <a href="#a18e27c7ca29d118601cb6a7a066f1300">More...</a><br /></td></tr>
+<tr class="separator:a18e27c7ca29d118601cb6a7a066f1300"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ae5c152f9b2402ad52841e2bc6d7ed3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a5ae5c152f9b2402ad52841e2bc6d7ed3">get_line</a> ()</td></tr>
+<tr class="memdesc:a5ae5c152f9b2402ad52841e2bc6d7ed3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch next line from the input, return true if ok.  <a href="#a5ae5c152f9b2402ad52841e2bc6d7ed3">More...</a><br /></td></tr>
+<tr class="separator:a5ae5c152f9b2402ad52841e2bc6d7ed3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26985f4836c5235fc418b18bf7969f5e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a26985f4836c5235fc418b18bf7969f5e">skip_comment</a> (size_t &amp;pos)</td></tr>
+<tr class="memdesc:a26985f4836c5235fc418b18bf7969f5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over white space and comments, return true if ok.  <a href="#a26985f4836c5235fc418b18bf7969f5e">More...</a><br /></td></tr>
+<tr class="separator:a26985f4836c5235fc418b18bf7969f5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa74ce1f1d7fd97842a4ad42e0b7b02c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#afa74ce1f1d7fd97842a4ad42e0b7b02c">as</a> (size_t &amp;pos, const char *s)</td></tr>
 <tr class="memdesc:afa74ce1f1d7fd97842a4ad42e0b7b02c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos to match case-insensitive string s followed by whitespace, return true if OK.  <a href="#afa74ce1f1d7fd97842a4ad42e0b7b02c">More...</a><br /></td></tr>
 <tr class="separator:afa74ce1f1d7fd97842a4ad42e0b7b02c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,33 +274,38 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a9d231f33ec2a6c1626a1d7cd867a39ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9d231f33ec2a6c1626a1d7cd867a39ba">nl</a> (size_t &amp;pos)</td></tr>
 <tr class="memdesc:a9d231f33ec2a6c1626a1d7cd867a39ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos to end of line while skipping whitespace, return true if end of line.  <a href="#a9d231f33ec2a6c1626a1d7cd867a39ba">More...</a><br /></td></tr>
 <tr class="separator:a9d231f33ec2a6c1626a1d7cd867a39ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82c8e3be7e5c400904116dc77657f9d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a82c8e3be7e5c400904116dc77657f9d3">iscode</a> (void)</td></tr>
-<tr class="memdesc:a82c8e3be7e5c400904116dc77657f9d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of code or a comment.  <a href="#a82c8e3be7e5c400904116dc77657f9d3">More...</a><br /></td></tr>
-<tr class="separator:a82c8e3be7e5c400904116dc77657f9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a985bd4390131c6a00e3ff5c4f4835cbb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a985bd4390131c6a00e3ff5c4f4835cbb">istopcode</a> (void)</td></tr>
-<tr class="memdesc:a985bd4390131c6a00e3ff5c4f4835cbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of top code.  <a href="#a985bd4390131c6a00e3ff5c4f4835cbb">More...</a><br /></td></tr>
-<tr class="separator:a985bd4390131c6a00e3ff5c4f4835cbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9337c28fc81fb57f50a0e5b6c5db3b79"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9337c28fc81fb57f50a0e5b6c5db3b79">isclasscode</a> (void)</td></tr>
-<tr class="memdesc:a9337c28fc81fb57f50a0e5b6c5db3b79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of class code.  <a href="#a9337c28fc81fb57f50a0e5b6c5db3b79">More...</a><br /></td></tr>
-<tr class="separator:a9337c28fc81fb57f50a0e5b6c5db3b79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73980426f6f71ad16e103019907216c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a73980426f6f71ad16e103019907216c1">isinitcode</a> (void)</td></tr>
-<tr class="memdesc:a73980426f6f71ad16e103019907216c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of init code.  <a href="#a73980426f6f71ad16e103019907216c1">More...</a><br /></td></tr>
-<tr class="separator:a73980426f6f71ad16e103019907216c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a399fadaa6a224b2dd6b31c8bc673b7c5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a399fadaa6a224b2dd6b31c8bc673b7c5">getname</a> (size_t &amp;pos)</td></tr>
-<tr class="memdesc:a399fadaa6a224b2dd6b31c8bc673b7c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over name, return name.  <a href="#a399fadaa6a224b2dd6b31c8bc673b7c5">More...</a><br /></td></tr>
-<tr class="separator:a399fadaa6a224b2dd6b31c8bc673b7c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2eaff01ef354a3ef767316ce2b81723f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a2eaff01ef354a3ef767316ce2b81723f">getstring</a> (size_t &amp;pos)</td></tr>
-<tr class="memdesc:a2eaff01ef354a3ef767316ce2b81723f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over quoted string, return string.  <a href="#a2eaff01ef354a3ef767316ce2b81723f">More...</a><br /></td></tr>
-<tr class="separator:a2eaff01ef354a3ef767316ce2b81723f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad829a2670be59825f38d6a342c8d84d7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ad829a2670be59825f38d6a342c8d84d7">getregex</a> (size_t &amp;pos)</td></tr>
-<tr class="separator:ad829a2670be59825f38d6a342c8d84d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae292fb3d1d0a0b0fc7b85e785b07d030"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Starts</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ae292fb3d1d0a0b0fc7b85e785b07d030">getstarts</a> (size_t &amp;pos)</td></tr>
-<tr class="separator:ae292fb3d1d0a0b0fc7b85e785b07d030"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3699291172720a95a8859e068477472"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#aa3699291172720a95a8859e068477472">getcode</a> (size_t &amp;pos)</td></tr>
-<tr class="separator:aa3699291172720a95a8859e068477472"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfce12c468fbe5df7398eb6dbac42719"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#adfce12c468fbe5df7398eb6dbac42719">is_code</a> ()</td></tr>
+<tr class="memdesc:adfce12c468fbe5df7398eb6dbac42719"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of code or a comment.  <a href="#adfce12c468fbe5df7398eb6dbac42719">More...</a><br /></td></tr>
+<tr class="separator:adfce12c468fbe5df7398eb6dbac42719"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace9be5902d3fe803390afa2569dbd5f3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ace9be5902d3fe803390afa2569dbd5f3">is_topcode</a> ()</td></tr>
+<tr class="memdesc:ace9be5902d3fe803390afa2569dbd5f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of top code.  <a href="#ace9be5902d3fe803390afa2569dbd5f3">More...</a><br /></td></tr>
+<tr class="separator:ace9be5902d3fe803390afa2569dbd5f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcd116babf0d553aec76fdbc21b35e19"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#adcd116babf0d553aec76fdbc21b35e19">is_classcode</a> ()</td></tr>
+<tr class="memdesc:adcd116babf0d553aec76fdbc21b35e19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of class code.  <a href="#adcd116babf0d553aec76fdbc21b35e19">More...</a><br /></td></tr>
+<tr class="separator:adcd116babf0d553aec76fdbc21b35e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0963af89d24f447bf7abac97dbfc02fb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a0963af89d24f447bf7abac97dbfc02fb">is_initcode</a> ()</td></tr>
+<tr class="memdesc:a0963af89d24f447bf7abac97dbfc02fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of init code.  <a href="#a0963af89d24f447bf7abac97dbfc02fb">More...</a><br /></td></tr>
+<tr class="separator:a0963af89d24f447bf7abac97dbfc02fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a41d48dd0b0bc995cd1561d96a924fdb4">get_name</a> (size_t &amp;pos)</td></tr>
+<tr class="memdesc:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over name, return name.  <a href="#a41d48dd0b0bc995cd1561d96a924fdb4">More...</a><br /></td></tr>
+<tr class="separator:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a824806b4d8cf94a8173e95e675adb393"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a824806b4d8cf94a8173e95e675adb393">get_string</a> (size_t &amp;pos)</td></tr>
+<tr class="memdesc:a824806b4d8cf94a8173e95e675adb393"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over quoted string, return string.  <a href="#a824806b4d8cf94a8173e95e675adb393">More...</a><br /></td></tr>
+<tr class="separator:a824806b4d8cf94a8173e95e675adb393"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7e968de28376a4a4084bae5aea663ff"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ae7e968de28376a4a4084bae5aea663ff">get_regex</a> (size_t &amp;pos)</td></tr>
+<tr class="memdesc:ae7e968de28376a4a4084bae5aea663ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get regex string, converted to a format understood by the selected regex engine library.  <a href="#ae7e968de28376a4a4084bae5aea663ff">More...</a><br /></td></tr>
+<tr class="separator:ae7e968de28376a4a4084bae5aea663ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9853a89f918acd624f9a59553e93d54f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Starts</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9853a89f918acd624f9a59553e93d54f">get_starts</a> (size_t &amp;pos)</td></tr>
+<tr class="memdesc:a9853a89f918acd624f9a59553e93d54f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get start conditions &lt;start1,start2,...&gt; of a rule.  <a href="#a9853a89f918acd624f9a59553e93d54f">More...</a><br /></td></tr>
+<tr class="separator:a9853a89f918acd624f9a59553e93d54f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cace7a8eefcd0e9175880e4f4da9398"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9cace7a8eefcd0e9175880e4f4da9398">get_code</a> (size_t &amp;pos)</td></tr>
+<tr class="memdesc:a9cace7a8eefcd0e9175880e4f4da9398"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get line(s) of code, %{ %}, %top{ %}, %class{ %}, and %init{ %}.  <a href="#a9cace7a8eefcd0e9175880e4f4da9398">More...</a><br /></td></tr>
+<tr class="separator:a9cace7a8eefcd0e9175880e4f4da9398"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac67afdeb14ff6995dde676da0aaf4ff4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ac67afdeb14ff6995dde676da0aaf4ff4">error</a> (const char *message, const char *arg=NULL, size_t at_lineno=0)</td></tr>
+<tr class="memdesc:ac67afdeb14ff6995dde676da0aaf4ff4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Report an error and exit.  <a href="#ac67afdeb14ff6995dde676da0aaf4ff4">More...</a><br /></td></tr>
 <tr class="separator:ac67afdeb14ff6995dde676da0aaf4ff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa14629b6e98124e7b250b309f4c25253"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#aa14629b6e98124e7b250b309f4c25253">warning</a> (const char *message, const char *arg=NULL, size_t at_lineno=0)</td></tr>
+<tr class="memdesc:aa14629b6e98124e7b250b309f4c25253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Report a warning.  <a href="#aa14629b6e98124e7b250b309f4c25253">More...</a><br /></td></tr>
 <tr class="separator:aa14629b6e98124e7b250b309f4c25253"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -264,6 +323,8 @@ Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Collection of ordered lines of code. </p>
+
 </div>
 </div>
 <a class="anchor" id="afbe4c8caf09edbddcca57963ec00a73f"></a>
@@ -276,17 +337,35 @@ Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Map of start conditions to lines of code. </p>
+
 </div>
 </div>
-<a class="anchor" id="a44b666ad0e2661678ad8bce4be764037"></a>
+<a class="anchor" id="a55e5a4bdb0ce1d6ccdec74d14cd06aac"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::map&lt;std::string,std::string&gt; <a class="el" href="class_reflex.html#a44b666ad0e2661678ad8bce4be764037">Reflex::Map</a></td>
+          <td class="memname">typedef std::map&lt;std::string,const char*&gt; <a class="el" href="class_reflex.html#a55e5a4bdb0ce1d6ccdec74d14cd06aac">Reflex::Dictionary</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Dictionary (const char*) </p>
+
+</div>
+</div>
+<a class="anchor" id="aa8c4529578d0a64c49d765df6287b5dc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::map&lt;std::string,<a class="el" href="struct_reflex_1_1_library.html">Library</a>&gt; <a class="el" href="class_reflex.html#aa8c4529578d0a64c49d765df6287b5dc">Reflex::LibraryMap</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Dictionary of regex libraries. </p>
 
 </div>
 </div>
@@ -300,6 +379,8 @@ Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Collection of ordered rules. </p>
+
 </div>
 </div>
 <a class="anchor" id="a7aef4c7aef224a4fa99ff256bc514e13"></a>
@@ -311,6 +392,8 @@ Private Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Map of start conditions to rules. </p>
 
 </div>
 </div>
@@ -324,6 +407,8 @@ Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Start condition state type. </p>
+
 </div>
 </div>
 <a class="anchor" id="a8c6779ef74206e028a5d08eeecfe785d"></a>
@@ -336,6 +421,22 @@ Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Set of start conditions. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6d8d0a1e69254887bb449ccf2cf6f25c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::map&lt;std::string,std::string&gt; <a class="el" href="class_reflex.html#a6d8d0a1e69254887bb449ccf2cf6f25c">Reflex::StringMap</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Dictionary (std::string) </p>
+
 </div>
 </div>
 <a class="anchor" id="a3a6e7a1fe6005818eb77148483d726b1"></a>
@@ -347,6 +448,8 @@ Private Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Collection of ordered strings. </p>
 
 </div>
 </div>
@@ -451,9 +554,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Report an error and exit. </p>
+
 </div>
 </div>
-<a class="anchor" id="aa3699291172720a95a8859e068477472"></a>
+<a class="anchor" id="a9cace7a8eefcd0e9175880e4f4da9398"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -461,7 +566,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string Reflex::getcode </td>
+          <td class="memname">std::string Reflex::get_code </td>
           <td>(</td>
           <td class="paramtype">size_t &amp;&#160;</td>
           <td class="paramname"><em>pos</em></td><td>)</td>
@@ -475,9 +580,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Get line(s) of code, %{ %}, %top{ %}, %class{ %}, and %init{ %}. </p>
+
 </div>
 </div>
-<a class="anchor" id="a8650def336e6aae3e1929ccb575047f9"></a>
+<a class="anchor" id="a5ae5c152f9b2402ad52841e2bc6d7ed3"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -485,9 +592,8 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Reflex::getline </td>
+          <td class="memname">bool Reflex::get_line </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -503,7 +609,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a399fadaa6a224b2dd6b31c8bc673b7c5"></a>
+<a class="anchor" id="a41d48dd0b0bc995cd1561d96a924fdb4"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -511,7 +617,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string Reflex::getname </td>
+          <td class="memname">std::string Reflex::get_name </td>
           <td>(</td>
           <td class="paramtype">size_t &amp;&#160;</td>
           <td class="paramname"><em>pos</em></td><td>)</td>
@@ -529,7 +635,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ad829a2670be59825f38d6a342c8d84d7"></a>
+<a class="anchor" id="ae7e968de28376a4a4084bae5aea663ff"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -537,7 +643,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string Reflex::getregex </td>
+          <td class="memname">std::string Reflex::get_regex </td>
           <td>(</td>
           <td class="paramtype">size_t &amp;&#160;</td>
           <td class="paramname"><em>pos</em></td><td>)</td>
@@ -551,9 +657,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Get regex string, converted to a format understood by the selected regex engine library. </p>
+
 </div>
 </div>
-<a class="anchor" id="ae292fb3d1d0a0b0fc7b85e785b07d030"></a>
+<a class="anchor" id="a9853a89f918acd624f9a59553e93d54f"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -561,7 +669,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Reflex::Starts</a> Reflex::getstarts </td>
+          <td class="memname"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Reflex::Starts</a> Reflex::get_starts </td>
           <td>(</td>
           <td class="paramtype">size_t &amp;&#160;</td>
           <td class="paramname"><em>pos</em></td><td>)</td>
@@ -575,9 +683,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Get start conditions &lt;start1,start2,...&gt; of a rule. </p>
+
 </div>
 </div>
-<a class="anchor" id="a2eaff01ef354a3ef767316ce2b81723f"></a>
+<a class="anchor" id="a824806b4d8cf94a8173e95e675adb393"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -585,7 +695,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string Reflex::getstring </td>
+          <td class="memname">std::string Reflex::get_string </td>
           <td>(</td>
           <td class="paramtype">size_t &amp;&#160;</td>
           <td class="paramname"><em>pos</em></td><td>)</td>
@@ -600,6 +710,42 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Advance pos over quoted string, return string. </p>
+
+</div>
+</div>
+<a class="anchor" id="a0520e61057161b9d56fa2fcec5399a7f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Reflex::help </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>message</em> = <code>NULL</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>arg</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Display help information with an optional diagnostic message and exit. </p>
 
 </div>
 </div>
@@ -625,7 +771,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Parse include file. </p>
+<p>Parse the specified %include file. </p>
 
 </div>
 </div>
@@ -665,7 +811,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9337c28fc81fb57f50a0e5b6c5db3b79"></a>
+<a class="anchor" id="adcd116babf0d553aec76fdbc21b35e19"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -673,9 +819,8 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Reflex::isclasscode </td>
+          <td class="memname">bool Reflex::is_classcode </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -691,7 +836,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a82c8e3be7e5c400904116dc77657f9d3"></a>
+<a class="anchor" id="adfce12c468fbe5df7398eb6dbac42719"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -699,9 +844,8 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Reflex::iscode </td>
+          <td class="memname">bool Reflex::is_code </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -717,7 +861,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a73980426f6f71ad16e103019907216c1"></a>
+<a class="anchor" id="a0963af89d24f447bf7abac97dbfc02fb"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -725,9 +869,8 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Reflex::isinitcode </td>
+          <td class="memname">bool Reflex::is_initcode </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -743,7 +886,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a985bd4390131c6a00e3ff5c4f4835cbb"></a>
+<a class="anchor" id="ace9be5902d3fe803390afa2569dbd5f3"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -751,9 +894,8 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Reflex::istopcode </td>
+          <td class="memname">bool Reflex::is_topcode </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -823,7 +965,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ad5c5f556f15fb3458941c0bc0eaa5cc3"></a>
+<a class="anchor" id="a41d530e5070b00d2bdbae9bed1a51945"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -833,7 +975,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::parse </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -849,7 +990,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3eaa4fb7c8c276cff09ea8ce5300b0a6"></a>
+<a class="anchor" id="a4a6888a1281e469b13ca902f114f93a2"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -859,7 +1000,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::parse_section_1 </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -871,9 +1011,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Parse section 1 of a lex specification. </p>
+
 </div>
 </div>
-<a class="anchor" id="a0b0c259884e5b790c0f5e890ff7e7a57"></a>
+<a class="anchor" id="a1484c3f64f893012187b4e34643b21d5"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -883,7 +1025,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::parse_section_2 </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -895,9 +1036,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Parse section 2 of a lex specification. </p>
+
 </div>
 </div>
-<a class="anchor" id="a23f1355a69713f777f8d65efaf0a2ec8"></a>
+<a class="anchor" id="af1c87d2a855eabf92aebc995f0f4fa6d"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -907,7 +1050,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::parse_section_3 </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -919,9 +1061,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Parse section 3 of a lex specification. </p>
+
 </div>
 </div>
-<a class="anchor" id="ae28b095d8fb9c85a2a8fed5ffb1a0b1b"></a>
+<a class="anchor" id="a26985f4836c5235fc418b18bf7969f5e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -929,7 +1073,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Reflex::skipcomment </td>
+          <td class="memname">bool Reflex::skip_comment </td>
           <td>(</td>
           <td class="paramtype">size_t &amp;&#160;</td>
           <td class="paramname"><em>pos</em></td><td>)</td>
@@ -944,6 +1088,56 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Advance pos over white space and comments, return true if ok. </p>
+
+</div>
+</div>
+<a class="anchor" id="a18e27c7ca29d118601cb6a7a066f1300"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Reflex::stats </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Display statistics. </p>
+
+</div>
+</div>
+<a class="anchor" id="a30485ab1c619a08756855152ec198508"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Reflex::version </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Display version information and exit. </p>
 
 </div>
 </div>
@@ -985,9 +1179,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Report a warning. </p>
+
 </div>
 </div>
-<a class="anchor" id="a1d2bc980093ae5f8ccbecdcf28dfbc0f"></a>
+<a class="anchor" id="af38a99517397df6f116985a31062366e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -997,7 +1193,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1008,6 +1203,8 @@ Private Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Write lex.yy.cpp. </p>
 
 </div>
 </div>
@@ -1033,9 +1230,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Write a banner in lex.yy.cpp. </p>
+
 </div>
 </div>
-<a class="anchor" id="a3bc0230c7a669f10418ab682a79eddc0"></a>
+<a class="anchor" id="a76892cdd57ac5aa8189daff17f751bc4"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1045,7 +1244,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write_class </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1056,6 +1254,8 @@ Private Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Write the lexer class to lex.yy.cpp. </p>
 
 </div>
 </div>
@@ -1081,6 +1281,8 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Write lines of code to lex.yy.cpp annotated with <a class="el" href="class_reflex.html#ac085e3b7ee325db6dd80547e4f3ff492" title="current line read from input ">line</a> source info. </p>
+
 </div>
 </div>
 <a class="anchor" id="a21b0fa5d1c28f7b0d1d79aac7d7cd546"></a>
@@ -1105,9 +1307,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Write a line(s) of code to lex.yy.cpp annotated with <a class="el" href="class_reflex.html#ac085e3b7ee325db6dd80547e4f3ff492" title="current line read from input ">line</a> source info. </p>
+
 </div>
 </div>
-<a class="anchor" id="a36fadb8f46fc6c82f7890ad79d08d63c"></a>
+<a class="anchor" id="a2de02f859367c9edf019127d7e1017b7"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1117,7 +1321,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write_lexer </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1129,9 +1332,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Write lexer code and <a class="el" href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805" title="convert Lex/Flex regular expression syntax ">lex()</a> method code. </p>
+
 </div>
 </div>
-<a class="anchor" id="a830675b5938ca143cc05935df34ed59c"></a>
+<a class="anchor" id="a73708c3b7e0c165a4199abc159c6c2ef"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1141,7 +1346,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write_main </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1153,9 +1357,11 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Write <a class="el" href="class_reflex.html#a27dfea948be151721bc24f15e1918a89" title="Main program. ">main()</a> to lex.yy.cpp. </p>
+
 </div>
 </div>
-<a class="anchor" id="afec89265a41d0c669963936634b759b7"></a>
+<a class="anchor" id="ae7cffdb537bbe9e813d50509bb8f6b77"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1165,7 +1371,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write_prelude </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1176,6 +1381,8 @@ Private Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Write the prelude to lex.yy.cpp. </p>
 
 </div>
 </div>
@@ -1201,6 +1408,8 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Write regex string to lex.yy.cpp. </p>
+
 </div>
 </div>
 <a class="anchor" id="ad63ffcc73cc1d67d82297e7594e1ac90"></a>
@@ -1213,7 +1422,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write_section_1 </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1224,6 +1432,8 @@ Private Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Write section 1 user-defined code to lex.yy.cpp. </p>
 
 </div>
 </div>
@@ -1237,7 +1447,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write_section_3 </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1248,6 +1457,8 @@ Private Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Write section 3 user-defined code to lex.yy.cpp. </p>
 
 </div>
 </div>
@@ -1261,7 +1472,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write_section_class </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1272,6 +1482,8 @@ Private Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Write %class{ %} code to lex.yy.cpp. </p>
 
 </div>
 </div>
@@ -1285,7 +1497,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write_section_init </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1296,6 +1507,8 @@ Private Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Write %init{ %} code to lex.yy.cpp. </p>
 
 </div>
 </div>
@@ -1309,7 +1522,6 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write_section_top </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1321,29 +1533,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="a821eff8767a0d10aeed90a595a3c34cc"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Reflex::write_stats </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>Write %top{ %} code to lex.yy.cpp. </p>
 
 </div>
 </div>
@@ -1396,7 +1586,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a769f9905e0a3c8c19fbec374c62fc36f"></a>
+<a class="anchor" id="a10c25500450853f1b764ffd84c3e5b5c"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1404,7 +1594,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_reflex.html#a44b666ad0e2661678ad8bce4be764037">Map</a> Reflex::definitions</td>
+          <td class="memname"><a class="el" href="class_reflex.html#a6d8d0a1e69254887bb449ccf2cf6f25c">StringMap</a> Reflex::definitions</td>
         </tr>
       </table>
   </td>
@@ -1484,6 +1674,50 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a16a66e413d3c2f1f55c85935c05053fb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_reflex.html#aa8c4529578d0a64c49d765df6287b5dc">LibraryMap</a> Reflex::libraries</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>maps regex library name ("reflex", "boost", etc) to library info </p>
+
+</div>
+</div>
+<a class="anchor" id="a6576cd4dbb07cdf6e35a81d82f33458e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_reflex_1_1_library.html">Library</a>* Reflex::library</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>the regex library selected </p>
+
+</div>
+</div>
 <a class="anchor" id="ac085e3b7ee325db6dd80547e4f3ff492"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1550,7 +1784,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a6fabb339162f6a5067af98981d296dd7"></a>
+<a class="anchor" id="ac4d549aab5d74976912f9e21c03ec046"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1558,7 +1792,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_reflex.html#a44b666ad0e2661678ad8bce4be764037">Map</a> Reflex::options</td>
+          <td class="memname"><a class="el" href="class_reflex.html#a6d8d0a1e69254887bb449ccf2cf6f25c">StringMap</a> Reflex::options</td>
         </tr>
       </table>
   </td>
@@ -1634,29 +1868,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>&lt;Start_i&gt;regex_j action for Start i <a class="el" href="struct_reflex_1_1_rule.html">Rule</a> j </p>
-
-</div>
-</div>
-<a class="anchor" id="a08745110a351db82371bfe79a53ecd0e"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_reflex.html#a44b666ad0e2661678ad8bce4be764037">Map</a> Reflex::scripts</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>maps Unicode script names to patterns </p>
+<p>&lt;Start_i&gt;regex_j action for Start i <a class="el" href="struct_reflex_1_1_rule.html" title="A regex pattern and action pair that forms a rule. ">Rule</a> j </p>
 
 </div>
 </div>
@@ -1799,7 +2011,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Jan 25 2017 18:16:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Mar 2 2017 22:07:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -1,16 +1,16 @@
 
 #include <reflex/stdmatcher.h>
 
-static void banner(FILE *fd, const char *title)
+static void banner(const char *title)
 {
   int i;
-  fprintf(fd, "\n\n/");
+  printf("\n\n/");
   for (i = 0; i < 78; i++)
-    fputc('*', fd);
-  fprintf(fd, "\\\n *%76s*\n * %-75s*\n *%76s*\n\\", "", title, "");
+    putchar('*');
+  printf("\\\n *%76s*\n * %-75s*\n *%76s*\n\\", "", title, "");
   for (i = 0; i < 78; i++)
-    fputc('*', fd);
-  fprintf(fd, "/\n\n");
+    putchar('*');
+  printf("/\n\n");
 }
 
 static void error(const char *text)
@@ -20,6 +20,27 @@ static void error(const char *text)
 }
 
 using namespace reflex;
+
+class WrappedMatcher : public StdMatcher {
+ public:
+  WrappedMatcher() : StdMatcher(), source(0)
+  { }
+ private:
+  virtual bool wrap()
+  {
+    switch (source++)
+    {
+      case 0: in = "Hello World!";
+              return true;
+      case 1: in = "How now brown cow.";
+              return true;
+      case 2: in = "An apple a day.";
+              return true;
+    }
+    return false;
+  }
+  int source;
+};
 
 struct Test {
   const char *pattern;
@@ -192,7 +213,7 @@ Test tests[] = {
   { "a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
   { "a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } },
   { "^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
-  { "a(?=$)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
+  { "a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
   { "^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
   // { "abc(?=\\w+|(?^def))|xyzabcdef", "", "", "abcxyzabcdef", { 1, 2 } }, // TODO check
 #endif
@@ -225,7 +246,7 @@ Test tests[] = {
 
 int main()
 {
-  banner(stdout, "PATTERN TESTS");
+  banner("PATTERN TESTS");
   for (const Test *test = tests; test->pattern != NULL; ++test)
   {
     std::cout << test->pattern << std::endl;
@@ -267,7 +288,7 @@ int main()
   StdMatcher matcher(pattern1);
   std::string test;
   //
-  banner(stdout, "TEST FIND");
+  banner("TEST FIND");
   //
   matcher.pattern(pattern8);
   matcher.input("an apple a day");
@@ -297,7 +318,7 @@ int main()
   matcher.reset("");
 #endif
   //
-  banner(stdout, "TEST SPLIT");
+  banner("TEST SPLIT");
   //
   matcher.pattern(pattern3);
   matcher.input("ab c  d");
@@ -418,7 +439,7 @@ int main()
     std::cout << matcher.text() << "/";
   std::cout << std::endl << "REST = " << matcher.rest() << std::endl;
   //
-  banner(stdout, "TEST INPUT/UNPUT");
+  banner("TEST INPUT/UNPUT");
   //
   matcher.pattern(pattern2);
   matcher.input("ab c  d");
@@ -500,7 +521,21 @@ int main()
   if (test != "a/a/b/c/c/d/")
     error("unput");
   //
-  banner(stdout, "TEST MORE");
+  banner("TEST WRAP");
+  //
+  WrappedMatcher wrapped_matcher;
+  wrapped_matcher.pattern(pattern8);
+  test = "";
+  while (wrapped_matcher.find())
+  {
+    std::cout << wrapped_matcher.text() << "/";
+    test.append(wrapped_matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "Hello/World/How/now/brown/cow/An/apple/a/day/")
+    error("wrap");
+  //
+  banner("TEST MORE");
   //
   matcher.pattern(pattern7);
   matcher.input("abc");
@@ -515,7 +550,7 @@ int main()
   if (test != "a/ab/abc/")
     error("more");
   //
-  banner(stdout, "TEST LESS");
+  banner("TEST LESS");
   //
   matcher.pattern(pattern1);
   matcher.input("abc");
@@ -530,7 +565,7 @@ int main()
   if (test != "a/b/c/")
     error("less");
   //
-  banner(stdout, "TEST MATCHES");
+  banner("TEST MATCHES");
   //
   if (StdMatcher("\\w+", "hello").matches()) // on the fly string matching
     std::cout << "OK";
@@ -575,7 +610,7 @@ int main()
     error("match results");
   std::cout << std::endl;
   //
-  banner(stdout, "DONE");
+  banner("DONE");
   //
   return 0;
 }

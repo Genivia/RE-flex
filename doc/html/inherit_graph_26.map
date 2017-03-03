@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structreflex_1_1_type_op_3_01const_01_t_01_4.html" title="Template specialization of reflex::TypeOp. " alt="" coords="5,5,181,32"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_ranges.html" title="RE/flex Ranges template class. " alt="" coords="93,5,232,32"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_o_ranges.html" title="RE/flex ORanges (open&#45;ended, ordinal value range) template class. " alt="" coords="280,5,429,32"/>
 </map>

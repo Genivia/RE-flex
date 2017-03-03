@@ -69,7 +69,7 @@ void DBGOUT_(const char *log, const char *file, int line)
     DBGFD_ = stderr;
   gettimeofday(&tv, NULL);
   localtime_r(&tv.tv_sec, &tm);
-  ::fprintf(DBGFD_, "\n%02d%02d%02d/%02d%02d%02d.%06d%14.14s:%-5d", tm.tm_year%100, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, tv.tv_usec, name, line);
+  ::fprintf(DBGFD_, "\n%02d%02d%02d/%02d%02d%02d.%06u%14.14s:%-5d", tm.tm_year%100, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, static_cast<unsigned int>(tv.tv_usec), name, line);
 }
 
 #endif

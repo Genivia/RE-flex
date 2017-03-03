@@ -91,7 +91,7 @@ inline int fopen_s(FILE **fd, const char *name, const char *mode) { return (*fd 
 static const char *posix_class[] = {
   "ASCII",
   "Space",
-  "Xdigit",
+  "XDigit",
   "Cntrl",
   "Print",
   "Alnum",
@@ -136,16 +136,16 @@ const std::string Pattern::operator[](Index choice) const
   return "";
 }
 
-void Pattern::error(enum Error::Code code, const char *message, size_t loc) const throw (Error)
+void Pattern::error(regex_error_type code, size_t pos) const throw (regex_error)
 {
-  Error e(this, code, message, loc);
+  regex_error err(code, rex_.c_str(), pos);
   if (opt_.w)
-    e.display();
-  if (opt_.r || code == Error::CODE_OVERFLOW)
-    throw e;
+    std::cerr << err.what();
+  if (code == regex_error::exceeds_limits || opt_.r)
+    throw err;
 }
 
-void Pattern::init(const char *opt) throw (Error)
+void Pattern::init(const char *opt) throw (regex_error)
 {
   if (opc_)
   {
@@ -259,7 +259,7 @@ void Pattern::parse(
     Positions& startpos,
     Follow&    followpos,
     Map&       modifiers,
-    Map&       lookahead) throw (Error)
+    Map&       lookahead) throw (regex_error)
 {
   DBGLOG("BEGIN parse()");
   Location  loc = 0;
@@ -338,7 +338,7 @@ void Pattern::parse1(
     Positions& lazypos,
     Map&       modifiers,
     Ranges&    lookahead,
-    Index&     iter) throw (Error)
+    Index&     iter) throw (regex_error)
 {
   DBGLOG("BEGIN parse1(%zu)", loc);
   parse2(
@@ -392,7 +392,7 @@ void Pattern::parse2(
     Positions& lazypos,
     Map&       modifiers,
     Ranges&    lookahead,
-    Index&     iter) throw (Error)
+    Index&     iter) throw (regex_error)
 {
   DBGLOG("BEGIN parse2(%zu)", loc);
   Positions a_pos;
@@ -406,13 +406,13 @@ void Pattern::parse2(
       if (at(loc) == '^')
       {
         a_pos.insert(Position(loc++));
-        // begin = false; // FIXME 7/29 but does not allow ^ as a pattern
+        begin = false; // FIXME algorithmic options: 7/29 but does not allow ^ as a pattern
       }
       else if (escapes_at(loc, "ABb<>"))
       {
         a_pos.insert(Position(loc));
         loc += 2;
-        // begin = false; // FIXME 7/29 but does not allow \b as a pattern
+        begin = false; // FIXME algorithmic options: 7/29 but does not allow \b as a pattern
       }
       else
       {
@@ -459,12 +459,12 @@ void Pattern::parse2(
       firstpos1.insert(l_pos);
     if (!lazypos.empty()) // TODO this is an extra rule for + only and (may) not be needed for *
     {
-      // FIXME lazy(lazypos, firstpos1); does not work for (a|b)*?a*b+, below works
+      // FIXME algorithmic options: lazy(lazypos, firstpos1); does not work for (a|b)*?a*b+, below works
       Positions firstpos2;
       lazy(lazypos, firstpos1, firstpos2);
       set_insert(firstpos1, firstpos2);
       // if (lazypos1.empty())
-        // greedy(firstpos1); // FIXME 8/1 works except fails for ((a|b)*?b){2} and (a|b)??(a|b)??aa
+        // greedy(firstpos1); // FIXME algorithmic options: 8/1 works except fails for ((a|b)*?b){2} and (a|b)??(a|b)??aa
     }
     if (nullable)
       set_insert(firstpos, firstpos1);
@@ -518,7 +518,7 @@ void Pattern::parse3(
     Positions& lazypos,
     Map&       modifiers,
     Ranges&    lookahead,
-    Index&     iter) throw (Error)
+    Index&     iter) throw (regex_error)
 {
   DBGLOG("BEGIN parse3(%zu)", loc);
   Position b_pos(loc);
@@ -550,8 +550,8 @@ void Pattern::parse3(
     }
     else
     {
-      // FIXME 7/30 if (!nullable)
-        // FIXME 7/30 lazypos.clear();
+      // FIXME algorithmic options: 7/30 if (!nullable)
+      // FIXME algorithmic options: 7/30   lazypos.clear();
       greedy(firstpos);
     }
     if (c == '+' && !nullable && !lazypos.empty())
@@ -574,7 +574,7 @@ void Pattern::parse3(
     for (Location i = 0; i < 7 && std::isdigit(c = at(++loc)); ++i)
       k = 10 * k + (c - '0');
     if (k > IMAX)
-      error(Error::REGEX_RANGE, "{min,max} range overflow", loc);
+      error(regex_error::exceeds_limits, loc);
     Index n = static_cast<Index>(k);
     Index m = n;
     bool unlimited = false;
@@ -598,7 +598,7 @@ void Pattern::parse3(
       if (n == 0)
         nullable = true;
       if (n > m)
-        error(Error::REGEX_RANGE, "min > max in range {min,max}", loc);
+        error(regex_error::invalid_repeat, loc);
       if (at(++loc) == '?')
       {
         lazypos.insert(loc);
@@ -606,7 +606,7 @@ void Pattern::parse3(
         {
           lazy(lazypos, firstpos);
         }
-        /* FIXME 8/1 else
+        /* FIXME algorithmic options: 8/1 else
         {
           lazy(lazypos, firstpos, firstpos1);
           set_insert(firstpos, firstpos1);
@@ -616,14 +616,14 @@ void Pattern::parse3(
       }
       else
       {
-        // FIXME 7/30 if (!nullable)
-          // FIXME 7/30 lazypos.clear();
+        // FIXME algorithmic options 7/30 if (!nullable)
+        // FIXME algorithmic options 7/30   lazypos.clear();
         if (n < m && lazypos.empty())
           greedy(firstpos);
       }
       // FIXME added pfirstpos to point to updated firstpos with lazy quants
       Positions firstpos1, *pfirstpos = &firstpos;
-      if (!nullable && !lazypos.empty()) // FIXME 8/1 added to make ((a|b)*?b){2} work
+      if (!nullable && !lazypos.empty()) // FIXME algorithmic options 8/1 added to make ((a|b)*?b){2} work
       {
         lazy(lazypos, firstpos, firstpos1);
         pfirstpos = &firstpos1;
@@ -636,8 +636,8 @@ void Pattern::parse3(
       else if (m > 0)
       {
         if (iter * m >= IMAX)
-          error(Error::REGEX_RANGE, "{min,max} range overflow", loc);
-        // update followpos by virtually replicating sub-regex m-1 times
+          error(regex_error::exceeds_limits, loc);
+        // update followpos by virtually repeating sub-regex m-1 times
         Follow followpos1;
         for (Follow::const_iterator fp = followpos.begin(); fp != followpos.end(); ++fp)
           if (fp->first >= b_pos)
@@ -680,12 +680,12 @@ void Pattern::parse3(
     }
     else
     {
-      error(Error::REGEX_SYNTAX, "malformed range {min,max}", loc);
+      error(regex_error::invalid_repeat, loc);
     }
   }
   else if (c == '}')
   {
-    error(Error::REGEX_SYNTAX, "missing {", loc++);
+    error(regex_error::mismatched_braces, loc++);
   }
   DBGLOG("END parse3()");
 }
@@ -700,7 +700,7 @@ void Pattern::parse4(
     Positions& lazypos,
     Map&       modifiers,
     Ranges&    lookahead,
-    Index&     iter) throw (Error)
+    Index&     iter) throw (regex_error)
 {
   DBGLOG("BEGIN parse4(%zu)", loc);
   firstpos.clear();
@@ -804,7 +804,7 @@ void Pattern::parse4(
           else if (c == 'x')
             opt_.x = true;
           else
-            error(Error::REGEX_SYNTAX, "unrecognized modifier", loc);
+            error(regex_error::invalid_modifier, loc);
           c = at(++loc);
         } while (c != '\0' && c != ':' && c != ')');
         if (c != '\0')
@@ -869,7 +869,7 @@ void Pattern::parse4(
       if (at(loc) == ')')
         ++loc;
       else
-        error(Error::REGEX_SYNTAX, "missing )", loc);
+        error(regex_error::mismatched_parens, loc);
     }
   }
   else if (c == '[')
@@ -895,7 +895,7 @@ void Pattern::parse4(
         break;
     }
     if (c == '\0')
-      error(Error::REGEX_SYNTAX, "missing ]", loc);
+      error(regex_error::mismatched_brackets, loc);
     ++loc;
   }
   else if ((c == '"' && opt_.q) || escape_at(loc) == 'Q')
@@ -929,7 +929,7 @@ void Pattern::parse4(
     }
     else
     {
-      error(Error::REGEX_SYNTAX, quoted ? "missing \"" : "missing \\E", loc);
+      error(regex_error::mismatched_quotation, loc);
     }
   }
   else if (c == '#' && opt_.x)
@@ -948,7 +948,7 @@ void Pattern::parse4(
     if (c != '\0')
       loc += 2;
     else
-      error(Error::REGEX_SYNTAX, "missing */", loc);
+      error(regex_error::invalid_syntax, loc);
   }
   else if (std::isspace(c) && opt_.x)
   {
@@ -956,21 +956,19 @@ void Pattern::parse4(
   }
   else if (c != '\0' && c != '|' && c != ')' && c != '?' && c != '*' && c != '+')
   {
-    if (begin && (c == '$' || escapes_at(loc, "AZBb<>ij") != '\0'))
-      error(Error::REGEX_SYNTAX, "empty pattern", loc + 1);
     firstpos.insert(loc);
     lastpos.insert(loc);
     nullable = false;
     parse_esc(loc);
   }
-  else if (!begin || c != '\0') // permits empty regex pattern but not empty subpatterns
+  else if (begin && c != '\0') // permits empty regex pattern but not empty subpatterns
   {
-    error(Error::REGEX_SYNTAX, "empty pattern", loc);
+    error(regex_error::empty_expression, loc);
   }
   DBGLOG("END parse4()");
 }
 
-void Pattern::parse_esc(Location& loc) const throw (Error)
+void Pattern::parse_esc(Location& loc) const throw (regex_error)
 {
   Char c;
   if (at(loc++) == opt_.e && opt_.e != '\0' && (c = at(loc)) != '\0')
@@ -989,7 +987,7 @@ void Pattern::parse_esc(Location& loc) const throw (Error)
       if (at(loc) == '}')
         ++loc;
       else
-        error(Error::REGEX_SYNTAX, "malformed \\p{}", loc);
+        error(regex_error::invalid_escape, loc);
     }
     else if (c == 'u' && at(loc + 1) == '{')
     {
@@ -999,7 +997,7 @@ void Pattern::parse_esc(Location& loc) const throw (Error)
       if (at(loc) == '}')
         ++loc;
       else
-        error(Error::REGEX_SYNTAX, "malformed \\u{}", loc);
+        error(regex_error::invalid_escape, loc);
     }
     else if (c == 'x' && at(loc + 1) == '{')
     {
@@ -1009,7 +1007,7 @@ void Pattern::parse_esc(Location& loc) const throw (Error)
       if (at(loc) == '}')
         ++loc;
       else
-        error(Error::REGEX_SYNTAX, "malformed \\x{}", loc);
+        error(regex_error::invalid_escape, loc);
     }
     else if (c == 'x')
     {
@@ -1024,7 +1022,7 @@ void Pattern::parse_esc(Location& loc) const throw (Error)
       if (at(loc) != '\0')
         ++loc;
       else
-        error(Error::REGEX_SYNTAX, "malformed \\c", loc);
+        error(regex_error::invalid_escape, loc);
     }
   }
 }
@@ -1033,7 +1031,7 @@ void Pattern::compile(
     State&     start,
     Follow&    followpos,
     const Map& modifiers,
-    const Map& lookahead) throw (Error)
+    const Map& lookahead) throw (regex_error)
 {
   DBGLOG("BEGIN compile()");
   State *back_state = &start;
@@ -1138,7 +1136,7 @@ void Pattern::lazy(
 {
   for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
     for (Positions::const_iterator q = lazypos.begin(); q != lazypos.end(); ++q)
-      // pos1.insert(p->lazy() ? *p : p->lazy(q->loc())); // FIXME only if p is not already lazy??
+      // pos1.insert(p->lazy() ? *p : p->lazy(q->loc())); // FIXME algorithmic options: only if p is not already lazy??
       pos1.insert(p->lazy(q->loc())); // overrides lazyness even when p is already lazy
 }
 
@@ -1146,7 +1144,7 @@ void Pattern::greedy(Positions& pos) const
 {
   Positions pos1;
   for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
-    // pos1.insert(p->lazy() ? *p : p->greedy(true)); // FIXME 7/29 guard added: p->lazy() ? *p : p->greedy(true)
+    // pos1.insert(p->lazy() ? *p : p->greedy(true)); // FIXME algorithmic options: 7/29 guard added: p->lazy() ? *p : p->greedy(true)
     pos1.insert(p->lazy(0).greedy(true));
   pos.swap(pos1);
 }
@@ -1157,12 +1155,12 @@ void Pattern::trim_lazy(Positions& pos) const
   while (p != pos.rend() && p->lazy())
   {
     Location l = p->lazy();
-    if (p->accept() || p->anchor()) // FIXME 7/28 added p->anchor()
+    if (p->accept() || p->anchor()) // FIXME algorithmic options: 7/28 added p->anchor()
     {
       pos.insert(p->lazy(0)); // make lazy accept/anchor a non-lazy accept/anchor
       pos.erase(--p.base());
       while (p != pos.rend() && p->lazy() == l)
-#if 0 // FIXME set to 1 to turn lazy trimming off
+#if 0 // FIXME algorithmic options: set to 1 to turn lazy trimming off
         ++p;
 #else
         pos.erase(--p.base());
@@ -1170,7 +1168,7 @@ void Pattern::trim_lazy(Positions& pos) const
     }
     else
     {
-#if 0 // FIXME 7/31
+#if 0 // FIXME algorithmic options: 7/31
       if (p->greedy())
       {
         pos.insert(p->lazy(0).greedy(false));
@@ -1188,7 +1186,7 @@ void Pattern::trim_lazy(Positions& pos) const
 #endif
     }
   }
-#if 0 // FIXME 7/31 but results in more states
+#if 0 // FIXME algorithmic options: 7/31 but results in more states
   while (p != pos.rend() && p->greedy())
   {
     pos.insert(p->greedy(false));
@@ -1202,7 +1200,7 @@ void Pattern::compile_transition(
     Follow&    followpos,
     const Map& modifiers,
     const Map& lookahead,
-    Moves&     moves) const throw (Error)
+    Moves&     moves) const throw (regex_error)
 {
   DBGLOG("BEGIN compile_transition()");
   Positions::const_iterator end = state->end();
@@ -1234,7 +1232,7 @@ void Pattern::compile_transition(
           {
             if (!k->ticked())
               state->heads.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
-            else // FIXME 7/18 if (state->accept == i->first) no longer check for accept state, assume we are at an accept state
+            else // FIXME algorithmic options: 7/18 if (state->accept == i->first) no longer check for accept state, assume we are at an accept state
               state->tails.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
           }
           n = n + i->second.size();
@@ -1255,7 +1253,7 @@ void Pattern::compile_transition(
       }
       else if (c == ')' && !literal)
       {
-        /* FIXME 7/18 do no longer check for accept state, assume we are at an accept state
+        /* FIXME algorithmic options: 7/18 do no longer check for accept state, assume we are at an accept state
         if (state->accept > 0)
         */
         {
@@ -1265,7 +1263,7 @@ void Pattern::compile_transition(
           {
             Ranges::const_iterator j = i->second.find(loc);
             DBGLOGN("%d %d (%d) %lu", state->accept, i->first, j != i->second.end(), n.loc());
-            if (j != i->second.end() /* FIXME 7/18 && state->accept == i->first */ ) // only add lookstop when part of the proper accept state
+            if (j != i->second.end() /* FIXME algorithmic options: 7/18 && state->accept == i->first */ ) // only add lookstop when part of the proper accept state
               state->tails.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
             n = n + i->second.size();
           }
@@ -1278,7 +1276,7 @@ void Pattern::compile_transition(
         {
           if (k->lazy())
           {
-#if 1 // FIXME 7/31 this optimization works fine when trim_lazy adds non-lazy greedy state, but may increase the total number of states:
+#if 1 // FIXME algorithmic options: 7/31 this optimization works fine when trim_lazy adds non-lazy greedy state, but may increase the total number of states:
             if (k->greedy())
               continue;
 #endif
@@ -1288,7 +1286,7 @@ void Pattern::compile_transition(
               // followpos is not defined for lazy pos yet, so add lazy followpos (memoization)
               j = followpos.insert(std::pair<Position,Positions>(*k, Positions())).first;
               for (Positions::const_iterator p = i->second.begin(); p != i->second.end(); ++p)
-                j->second.insert(/* p->lazy() || FIXME 7/31 */ p->ticked() ? *p : /* FIXME 7/31 adds too many states p->greedy() ? p->lazy(0).greedy(false) : */ p->lazy(k->lazy())); // FIXME 7/18 ticked() preserves lookahead tail at '/' and ')'
+                j->second.insert(/* p->lazy() || FIXME algorithmic options: 7/31 */ p->ticked() ? *p : /* FIXME algorithmic options: 7/31 adds too many states p->greedy() ? p->lazy(0).greedy(false) : */ p->lazy(k->lazy())); // FIXME algorithmic options: 7/18 ticked() preserves lookahead tail at '/' and ')'
 #ifdef DEBUG
               DBGLOGN("lazy followpos(");
               DBGLOGPOS(*k);
@@ -1328,7 +1326,7 @@ void Pattern::compile_transition(
                 chars.insert(opt_.m || is_modified('m', modifiers, loc) ? META_EOL : META_EOB);
                 break;
               default:
-                if (c == '[' && escapes_at(loc, "AZBb<>ij") == '\0')
+                if (c == '[' && !escapes_at(loc, "AzBb<>ij"))
                 {
                   compile_list(loc + 1, chars, modifiers);
                 }
@@ -1345,7 +1343,7 @@ void Pattern::compile_transition(
                     case 'A':
                       chars.insert(META_BOB);
                       break;
-                    case 'Z':
+                    case 'z':
                       chars.insert(META_EOB);
                       break;
                     case 'B':
@@ -1400,7 +1398,6 @@ void Pattern::transition(
   {
     if (i->second == follow)
     {
-      // chars |= i->first; // FIXME ??? is this needed ??? NO! because ranges do not overlap so chars cannot intersect
       rest |= i->first;
       moves.erase(i++);
     }
@@ -1445,7 +1442,7 @@ void Pattern::transition(
     moves.push_back(Move(rest, follow)); // faster: C++11 move.emplace_back(rest, follow)
 }
 
-Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (Error)
+Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (regex_error)
 {
   Char c = at(loc);
   if (c == '0')
@@ -1481,7 +1478,7 @@ Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (Erro
     if (i < 14)
       posix(i, chars);
     else
-      error(Error::REGEX_SYNTAX, "unrecognized character class", loc);
+      error(regex_error::invalid_class, loc);
     return META_EOL;
   }
   else
@@ -1510,7 +1507,7 @@ Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (Erro
   return c;
 }
 
-void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) const throw (Error)
+void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) const throw (regex_error)
 {
   bool complement = (at(loc) == '^');
   if (complement)
@@ -1534,12 +1531,12 @@ void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) con
         {
           size_t i;
           for (i = 0; i < 14; ++i)
-            if (eq_at(loc + 3, posix_class[i] + 1)) // ignore first letter (upper/lower) when matching
+            if (eq_at(loc + 4, posix_class[i] + 2)) // ignore first two letters (upper/lower) when matching
               break;
           if (i < 14)
             posix(i, chars);
           else
-            error(Error::REGEX_SYNTAX, "unrecognized POSIX character class", loc);
+            error(regex_error::invalid_class, loc);
           c = META_EOL;
         }
         loc = c_loc + 1;
@@ -1557,7 +1554,7 @@ void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) con
           if (lo <= c)
             chars.insert(lo, c);
           else
-            error(Error::REGEX_LIST, "inverted character range in list", loc);
+            error(regex_error::invalid_class_range, loc);
           if (opt_.i || is_modified('i', modifiers, loc))
           {
             for (Char a = lo; a <= c; ++a)
@@ -1677,7 +1674,7 @@ void Pattern::flip(Chars& chars) const
 #endif
 }
 
-void Pattern::assemble(State& start) throw (Error)
+void Pattern::assemble(State& start) throw (regex_error)
 {
   DBGLOG("BEGIN assemble()");
   export_dfa(start);
@@ -1717,7 +1714,7 @@ void Pattern::compact_dfa(State& start)
   }
 }
 
-void Pattern::encode_dfa(State& start) throw (Error)
+void Pattern::encode_dfa(State& start) throw (regex_error)
 {
   nop_ = 0;
   for (State *state = &start; state; state = state->next)
@@ -1740,7 +1737,7 @@ void Pattern::encode_dfa(State& start) throw (Error)
     }
     nop_ += static_cast<Index>(state->heads.size() + state->tails.size() + (state->accept > 0 || state->redo));
     if (nop_ < state->index)
-      error(Error::CODE_OVERFLOW, "out of code memory");
+      throw regex_error(regex_error::exceeds_limits, rex_.c_str());
   }
   Opcode *opcode = new Opcode[nop_];
   opc_ = opcode;
@@ -1801,7 +1798,7 @@ void Pattern::gencode_dfa(const State& start) const
         err = reflex::fopen_s(&fd, filename.c_str(), "w");
       if (!err && fd)
       {
-        ::fprintf(fd, "#include <reflex/matcher.h>\n\nvoid reflex_code_%s(reflex::Matcher& m)\n{\n  int c0, c1;\n  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
+        ::fprintf(fd, "#include <reflex/matcher.h>\n\nvoid reflex_code_%s(reflex::Matcher& m)\n{\n  int c0 = 0, c1 = c0;\n  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
         for (const State *state = &start; state; state = state->next)
         {
           ::fprintf(fd, "\nS%u:\n", state->index);
@@ -2203,26 +2200,6 @@ void Pattern::export_code() const
       }
     }
   }
-}
-
-void Pattern::Error::display(std::ostream& os) const
-{
-  os << "reflex::Pattern error ";
-  if (loc)
-  {
-    size_t n = loc / 80;
-    unsigned short r = static_cast<unsigned short>(loc % 80);
-    os
-      << "at "
-      << loc
-      << std::endl
-      << pattern.rex_.substr(80*n, 79)
-      << std::endl
-      << std::setw(r + 4)
-      << std::right
-      << "^~~ ";
-  }
-  os << message << std::endl;
 }
 
 } // namespace reflex

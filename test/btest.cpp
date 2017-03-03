@@ -3,16 +3,16 @@
 
 // #define INTERACTIVE // for interactive mode testing
 
-static void banner(FILE *fd, const char *title)
+static void banner(const char *title)
 {
   int i;
-  fprintf(fd, "\n\n/");
+  printf("\n\n/");
   for (i = 0; i < 78; i++)
-    fputc('*', fd);
-  fprintf(fd, "\\\n *%76s*\n * %-75s*\n *%76s*\n\\", "", title, "");
+    putchar('*');
+  printf("\\\n *%76s*\n * %-75s*\n *%76s*\n\\", "", title, "");
   for (i = 0; i < 78; i++)
-    fputc('*', fd);
-  fprintf(fd, "/\n\n");
+    putchar('*');
+  printf("/\n\n");
 }
 
 static void error(const char *text)
@@ -22,6 +22,27 @@ static void error(const char *text)
 }
 
 using namespace reflex;
+
+class WrappedMatcher : public BoostPosixMatcher {
+ public:
+  WrappedMatcher() : BoostPosixMatcher(), source(0)
+  { }
+ private:
+  virtual bool wrap()
+  {
+    switch (source++)
+    {
+      case 0: in = "Hello World!";
+	      return true;
+      case 1: in = "How now brown cow.";
+	      return true;
+      case 2: in = "An apple a day.";
+	      return true;
+    }
+    return false;
+  }
+  int source;
+};
 
 struct Test {
   const char *pattern;
@@ -36,11 +57,6 @@ Test tests[] = {
   { "ab", "", "", "abab", { 1, 1 } },
   { "ab|xy", "", "", "abxy", { 1, 2 } },
   { "a(p|q)z", "", "", "apzaqz", { 1, 1 } },
-  // () empty pattern
-  { "a(b|())|c", "", "", "abc", { 1, 2 } },
-  // special cases of empty patterns, sometimes not permitted
-  { "a(b|)|c", "", "", "abc", { 1, 2 } },
-  { "a(b|(|))|c", "", "", "abc", { 1, 2 } },
   // DFA edge compaction test (only applicable to RE/flex)
   { "[a-cg-ik]z|d|[e-g]|j|y|[x-z]|.|\\n", "", "", "azz", { 1, 6 } },
   // POSIX character classes
@@ -62,7 +78,7 @@ Test tests[] = {
   {
     "\\x7E-"
     "\\p{Space}-"
-    "\\p{Xdigit}-"
+    "\\p{XDigit}-"
     "\\p{Cntrl}-"
     "\\p{Print}-"
     "\\p{Alnum}-"
@@ -180,7 +196,7 @@ Test tests[] = {
   { "a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } }, // FIXME boost has a bug when interactive() blk=1
 #endif
   { "^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
-  { "a(?=$)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
+  { "a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
   { "^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
   // { "abc(?=\\w+|(?^def))|xyzabcdef", "", "", "abcxyzabcdef", { 1, 2 } }, // TODO check
   // Word boundaries \<, \>, \b, and \B
@@ -218,10 +234,18 @@ Test tests[] = {
 
 int main()
 {
-  banner(stdout, "PATTERN TESTS");
+  banner("PATTERN TESTS");
   for (const Test *test = tests; test->pattern != NULL; ++test)
   {
-    std::string regex = reflex::regroup(test->pattern);
+    std::string regex;
+    try
+    {
+      regex = reflex::BoostPosixMatcher::convert(test->pattern, reflex::convert_flag::recap);
+    }
+    catch (const regex_error& e)
+    {
+      std::cerr << e.what();
+    }
     std::cout << regex << std::endl;
     boost::regex pattern(regex);
     BoostPosixMatcher matcher(pattern, test->cstring, test->mopts);
@@ -263,7 +287,7 @@ int main()
   BoostPosixMatcher matcher(pattern1);
   std::string test;
   //
-  banner(stdout, "TEST FIND");
+  banner("TEST FIND");
   //
   matcher.pattern(pattern8);
   matcher.input("an apple a day");
@@ -291,7 +315,7 @@ int main()
     error("find with nullable results");
   matcher.reset("");
   //
-  banner(stdout, "TEST SPLIT");
+  banner("TEST SPLIT");
   //
   matcher.pattern(pattern3);
   matcher.input("ab c  d");
@@ -408,7 +432,7 @@ int main()
     std::cout << matcher.text() << "/";
   std::cout << std::endl << "REST = " << matcher.rest() << std::endl;
   //
-  banner(stdout, "TEST INPUT/UNPUT");
+  banner("TEST INPUT/UNPUT");
   //
   matcher.pattern(pattern2);
   matcher.input("ab c  d");
@@ -490,7 +514,21 @@ int main()
   if (test != "a/a/b/c/c/d/")
     error("unput");
   //
-  banner(stdout, "TEST MORE");
+  banner("TEST WRAP");
+  //
+  WrappedMatcher wrapped_matcher;
+  wrapped_matcher.pattern(pattern8);
+  test = "";
+  while (wrapped_matcher.find())
+  {
+    std::cout << wrapped_matcher.text() << "/";
+    test.append(wrapped_matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "Hello/World/How/now/brown/cow/An/apple/a/day/")
+    error("wrap");
+  //
+  banner("TEST MORE");
   //
   matcher.pattern(pattern7);
   matcher.input("abc");
@@ -505,7 +543,7 @@ int main()
   if (test != "a/ab/abc/")
     error("more");
   //
-  banner(stdout, "TEST LESS");
+  banner("TEST LESS");
   //
   matcher.pattern(pattern1);
   matcher.input("abc");
@@ -520,7 +558,7 @@ int main()
   if (test != "a/b/c/")
     error("less");
   //
-  banner(stdout, "TEST MATCHES");
+  banner("TEST MATCHES");
   //
   if (BoostPosixMatcher("\\w+", "hello").matches()) // on the fly string matching
     std::cout << "OK";
@@ -565,7 +603,7 @@ int main()
     error("match results");
   std::cout << std::endl;
   //
-  banner(stdout, "DONE");
+  banner("DONE");
   //
   return 0;
 }

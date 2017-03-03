@@ -1,35 +1,45 @@
 INSTALL_LIB=/usr/local/lib
-INSTALL_INC=/usr/local/include
+INSTALL_INC=/usr/local/include/reflex
 CPP=c++
 AR=ar
 COFLAGS=-O3
-CWFLAGS=-Wall -Wunused -Wextra
+CWFLAGS=-Wall -Wunused -Wextra -Wno-strict-overflow
 CIFLAGS=-I. -I../include
 CMFLAGS=
-# CMFLAGS=-g -DWITH_BITS
-# CMFLAGS=-g -DDEBUG
+# CMFLAGS=-DDEBUG
+# CMFLAGS=-DWITH_BITS
 CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
+
+.PHONY:			release install clean distclean
 
 release:		libreflex.a libreflex.so
 
 install:		release
-			cp -f libreflex.a $(INSTALL_LIB)
-			cp -f ../include/reflex/*.h $(INSTALL_INC)/reflex
+			-cp -f libreflex.a $(INSTALL_LIB)
+			-mkdir -p $(INSTALL_INC)
+			-cp -f ../include/reflex/*.h $(INSTALL_INC)
 
-libreflex.a:		debug.o input.o matcher.o pattern.o utf8.o
-			$(AR) -rsc libreflex.a debug.o input.o matcher.o pattern.o utf8.o
-libreflex.so:		debug.cpp input.cpp matcher.cpp pattern.cpp utf8.cpp
-			$(CPP) $(CFLAGS) -shared -o libreflex.so -fPIC debug.cpp input.cpp matcher.cpp pattern.cpp utf8.cpp
+libreflex.a:		convert.o debug.o error.o input.o language_scripts.o letter_scripts.o matcher.o pattern.o posix.o unicode.o utf8.o
+			$(AR) -rsc $@ $^
+
+libreflex.so:		convert.cpp debug.cpp error.cpp input.cpp ../unicode/language_scripts.cpp ../unicode/letter_scripts.cpp matcher.cpp pattern.cpp posix.cpp unicode.cpp utf8.cpp
+			$(CPP) $(CFLAGS) -shared -o $@ -fPIC $^
+
+language_scripts.o:	../unicode/language_scripts.cpp
+			$(CPP) $(CFLAGS) -c $^
+
+letter_scripts.o:	../unicode/letter_scripts.cpp
+			$(CPP) $(CFLAGS) -c $^
 
 .cc.o:
 			$(CPP) $(CFLAGS) -c $<
 .cpp.o:
 			$(CPP) $(CFLAGS) -c $<
 
-.PHONY:			clean distclean
 clean:
 			-rm -rf *.dSYM
 			-rm -f *.o *.gch *.log
+
 distclean:
 			-rm -rf *.dSYM
 			-rm -f *.o *.gch *.log

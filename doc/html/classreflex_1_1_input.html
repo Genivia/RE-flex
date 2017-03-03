@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Jan 25 2017</div>
+      <div style="float: right; font-size: 10px;">updated Thu Mar 2 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -61,7 +61,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> character sequence class for unified access to sources of input.  
+<p><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> character sequence class for unified access to sources of input text.  
  <a href="classreflex_1_1_input.html#details">More...</a></p>
 
 <p><code>#include &lt;input.h&gt;</code></p>
@@ -93,10 +93,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a057e2908a65efbb3ba0c445b724fe100"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a NUL-terminated wide character string.  <a href="#a057e2908a65efbb3ba0c445b724fe100">More...</a><br /></td></tr>
 <tr class="separator:a057e2908a65efbb3ba0c445b724fe100"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c0d90a9095c8af1a09e6baa04710bc4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a4c0d90a9095c8af1a09e6baa04710bc4">Input</a> (const std::wstring &amp;<a class="el" href="classreflex_1_1_input.html#a0b1890722873d83bc651590c65fa87e3">wstring</a>)</td></tr>
-<tr class="memdesc:a4c0d90a9095c8af1a09e6baa04710bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a std::wstring.  <a href="#a4c0d90a9095c8af1a09e6baa04710bc4">More...</a><br /></td></tr>
+<tr class="memdesc:a4c0d90a9095c8af1a09e6baa04710bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a std::wstring (may contain UTF-16 surrogate pairs).  <a href="#a4c0d90a9095c8af1a09e6baa04710bc4">More...</a><br /></td></tr>
 <tr class="separator:a4c0d90a9095c8af1a09e6baa04710bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02c30dabe3972582d662517d42cf75a4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a02c30dabe3972582d662517d42cf75a4">Input</a> (const std::wstring *<a class="el" href="classreflex_1_1_input.html#a0b1890722873d83bc651590c65fa87e3">wstring</a>)</td></tr>
-<tr class="memdesc:a02c30dabe3972582d662517d42cf75a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a pointer to a std::wstring.  <a href="#a02c30dabe3972582d662517d42cf75a4">More...</a><br /></td></tr>
+<tr class="memdesc:a02c30dabe3972582d662517d42cf75a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a pointer to a std::wstring (may contain UTF-16 surrogate pairs).  <a href="#a02c30dabe3972582d662517d42cf75a4">More...</a><br /></td></tr>
 <tr class="separator:a02c30dabe3972582d662517d42cf75a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a13135ec6cf70ed5d16396ad2db5b0c7b">Input</a> (FILE *<a class="el" href="classreflex_1_1_input.html#ad96de320b73063857a6d8b84f300eaba">file</a>)</td></tr>
 <tr class="memdesc:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.  <a href="#a13135ec6cf70ed5d16396ad2db5b0c7b">More...</a><br /></td></tr>
@@ -108,30 +108,30 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:af5a96b263a02333550b1d7d6cd21d776"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a pointer to a std::istream, use stdin if istream == NULL.  <a href="#af5a96b263a02333550b1d7d6cd21d776">More...</a><br /></td></tr>
 <tr class="separator:af5a96b263a02333550b1d7d6cd21d776"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b104b28d7b9be8f7c43c7e79ffabb5e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a0b104b28d7b9be8f7c43c7e79ffabb5e">operator const char *</a> ()</td></tr>
-<tr class="memdesc:a0b104b28d7b9be8f7c43c7e79ffabb5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object to string.  <a href="#a0b104b28d7b9be8f7c43c7e79ffabb5e">More...</a><br /></td></tr>
+<tr class="memdesc:a0b104b28d7b9be8f7c43c7e79ffabb5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object to string.  <a href="#a0b104b28d7b9be8f7c43c7e79ffabb5e">More...</a><br /></td></tr>
 <tr class="separator:a0b104b28d7b9be8f7c43c7e79ffabb5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a032935b6b8f2a5f44036971bda9a1cbd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a032935b6b8f2a5f44036971bda9a1cbd">operator const wchar_t *</a> ()</td></tr>
-<tr class="memdesc:a032935b6b8f2a5f44036971bda9a1cbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object to wide character string.  <a href="#a032935b6b8f2a5f44036971bda9a1cbd">More...</a><br /></td></tr>
+<tr class="memdesc:a032935b6b8f2a5f44036971bda9a1cbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object to wide character string.  <a href="#a032935b6b8f2a5f44036971bda9a1cbd">More...</a><br /></td></tr>
 <tr class="separator:a032935b6b8f2a5f44036971bda9a1cbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28f2c1835f263ded23d2f262fbdf85c1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a28f2c1835f263ded23d2f262fbdf85c1">operator FILE *</a> ()</td></tr>
-<tr class="memdesc:a28f2c1835f263ded23d2f262fbdf85c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object to file descriptor FILE*.  <a href="#a28f2c1835f263ded23d2f262fbdf85c1">More...</a><br /></td></tr>
+<tr class="memdesc:a28f2c1835f263ded23d2f262fbdf85c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object to file descriptor FILE*.  <a href="#a28f2c1835f263ded23d2f262fbdf85c1">More...</a><br /></td></tr>
 <tr class="separator:a28f2c1835f263ded23d2f262fbdf85c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88d8c4d8c5105aa81138d3ea6a60c11d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a88d8c4d8c5105aa81138d3ea6a60c11d">operator std::istream *</a> ()</td></tr>
-<tr class="memdesc:a88d8c4d8c5105aa81138d3ea6a60c11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object to std::istream*.  <a href="#a88d8c4d8c5105aa81138d3ea6a60c11d">More...</a><br /></td></tr>
+<tr class="memdesc:a88d8c4d8c5105aa81138d3ea6a60c11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object to std::istream*.  <a href="#a88d8c4d8c5105aa81138d3ea6a60c11d">More...</a><br /></td></tr>
 <tr class="separator:a88d8c4d8c5105aa81138d3ea6a60c11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1911f432346e847695e868386ab6acbd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a1911f432346e847695e868386ab6acbd">operator bool</a> ()</td></tr>
 <tr class="separator:a1911f432346e847695e868386ab6acbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35426a06bf4b8928c8ee10b30de93c8b"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a35426a06bf4b8928c8ee10b30de93c8b">cstring</a> (void)</td></tr>
-<tr class="memdesc:a35426a06bf4b8928c8ee10b30de93c8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remaining string of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object.  <a href="#a35426a06bf4b8928c8ee10b30de93c8b">More...</a><br /></td></tr>
+<tr class="memdesc:a35426a06bf4b8928c8ee10b30de93c8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remaining string of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object.  <a href="#a35426a06bf4b8928c8ee10b30de93c8b">More...</a><br /></td></tr>
 <tr class="separator:a35426a06bf4b8928c8ee10b30de93c8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b1890722873d83bc651590c65fa87e3"><td class="memItemLeft" align="right" valign="top">const wchar_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a0b1890722873d83bc651590c65fa87e3">wstring</a> (void)</td></tr>
-<tr class="memdesc:a0b1890722873d83bc651590c65fa87e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remaining wide character string of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object.  <a href="#a0b1890722873d83bc651590c65fa87e3">More...</a><br /></td></tr>
+<tr class="memdesc:a0b1890722873d83bc651590c65fa87e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remaining wide character string of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object.  <a href="#a0b1890722873d83bc651590c65fa87e3">More...</a><br /></td></tr>
 <tr class="separator:a0b1890722873d83bc651590c65fa87e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad96de320b73063857a6d8b84f300eaba"><td class="memItemLeft" align="right" valign="top">FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#ad96de320b73063857a6d8b84f300eaba">file</a> (void)</td></tr>
-<tr class="memdesc:ad96de320b73063857a6d8b84f300eaba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the FILE* of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object.  <a href="#ad96de320b73063857a6d8b84f300eaba">More...</a><br /></td></tr>
+<tr class="memdesc:ad96de320b73063857a6d8b84f300eaba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the FILE* of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object.  <a href="#ad96de320b73063857a6d8b84f300eaba">More...</a><br /></td></tr>
 <tr class="separator:ad96de320b73063857a6d8b84f300eaba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add3aa2ba7a605bf45c5bdc3661f7cb55"><td class="memItemLeft" align="right" valign="top">std::istream *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#add3aa2ba7a605bf45c5bdc3661f7cb55">istream</a> (void)</td></tr>
-<tr class="memdesc:add3aa2ba7a605bf45c5bdc3661f7cb55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the std::istream of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object.  <a href="#add3aa2ba7a605bf45c5bdc3661f7cb55">More...</a><br /></td></tr>
+<tr class="memdesc:add3aa2ba7a605bf45c5bdc3661f7cb55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the std::istream of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object.  <a href="#add3aa2ba7a605bf45c5bdc3661f7cb55">More...</a><br /></td></tr>
 <tr class="separator:add3aa2ba7a605bf45c5bdc3661f7cb55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7adcaddc90acd4be7e521f5362d230d3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a7adcaddc90acd4be7e521f5362d230d3">size</a> (void)</td></tr>
 <tr class="memdesc:a7adcaddc90acd4be7e521f5362d230d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a <code>FILE*</code> or <code>std::istream</code> source).  <a href="#a7adcaddc90acd4be7e521f5362d230d3">More...</a><br /></td></tr>
@@ -201,12 +201,12 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a2e560a30d77f8c4bf277e60998e3c7db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> character sequence class for unified access to sources of input. </p>
+<div class="textblock"><p><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> character sequence class for unified access to sources of input text. </p>
 <h2>Description </h2>
-<p>The <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> class unifies access to a source of input of a character sequence as follows:</p>
+<p>The <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class unifies access to a source of input text that constitutes a sequence of characters:</p>
 <ul>
-<li>An <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object is instantiated and (re)assigned a (new) source input: either a <code>char*</code> string, a <code>wchar_t*</code> wide string, a <code>std::string</code>, a <code>std::wstring</code>, a <code>FILE*</code> descriptor, or a <code>std::istream</code> object.</li>
-<li>When assigned a wide string source as input, the wide character content is automatically converted to an UTF-8 character sequence when reading with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a>.</li>
+<li>An <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object is instantiated and (re)assigned a (new) source input: either a <code>char*</code> string, a <code>wchar_t*</code> wide string, a <code>std::string</code>, a <code>std::wstring</code>, a <code>FILE*</code> descriptor, or a <code>std::istream</code> object.</li>
+<li>When assigned a wide string source as input, the wide character content is automatically converted to an UTF-8 character sequence when reading with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a>. Wide strings are UCS-2/UCS-4 and may contain UTF-16 surrogate pairs.</li>
 <li>When assigned a <code>FILE*</code> source as input, the file is checked for the presence of a UTF-8 or a UTF-16 BOM (Byte Order Mark). A UTF-8 BOM is ignored and will not appear on the input character stream (and size is adjusted by 3 bytes). A UTF-16 BOM is intepreted, resulting in the conversion of the file content automatically to an UTF-8 character sequence when reading the file with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a>. Also, <a class="el" href="classreflex_1_1_input.html#a7adcaddc90acd4be7e521f5362d230d3" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> gives the content size in the number of UTF-8 bytes.</li>
 <li>An input object can be reassigned a new source of input for reading at any time.</li>
 <li>An input object obeys move semantics. That is, after assigning an input object to another, the former can no longer be used to read input. This prevents adding the overhead and complexity of file and stream duplication.</li>
@@ -217,19 +217,19 @@ Protected Attributes</h2></td></tr>
 <li>Compile with <code>WITH_UTF8_UNRESTRICTED</code> to enable unrestricted UTF-8 beyond U+10FFFF, permitting lossless UTF-8 encoding of 32 bit words without limits.</li>
 </ul>
 <h2>Example </h2>
-<p>The following example shows how to read a character sequence in blocks from a <code>std::ifstream</code>:</p>
+<p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to read a character sequence in blocks from a <code>std::ifstream</code> to copy to stdout:</p>
 <div class="fragment"><div class="line">std::ifstream ifs;</div><div class="line">ifs.open(<span class="stringliteral">&quot;input.h&quot;</span>, std::ifstream::in);</div><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(ifs);</div><div class="line"><span class="keywordtype">char</span> buf[1024];</div><div class="line"><span class="keywordtype">size_t</span> len;</div><div class="line"><span class="keywordflow">while</span> ((len = input.get(buf, <span class="keyword">sizeof</span>(buf))) &gt; 0)</div><div class="line">  fwrite(buf, 1, len, stdout);</div><div class="line"><span class="keywordflow">if</span> (!input.eof())</div><div class="line">  std::cerr &lt;&lt; <span class="stringliteral">&quot;An IO error occurred&quot;</span> &lt;&lt; std::endl;</div><div class="line">ifs.close();</div></div><!-- fragment --><h2>Example </h2>
-<p>The following example shows how to buffer the entire content of a file:</p>
-<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(fopen(<span class="stringliteral">&quot;input.h&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>));</div><div class="line"><span class="keywordflow">if</span> (!input.file())</div><div class="line">  <a class="code" href="reflex_8cpp.html#aebaa8f5abd10789858e7528e3465742a">abort</a>();</div><div class="line"><span class="keywordtype">size_t</span> len = input.size();</div><div class="line"><span class="keywordtype">char</span> *buf = <span class="keyword">new</span> <span class="keywordtype">char</span>[len];</div><div class="line">input.get(buf, len);</div><div class="line"><span class="keywordflow">if</span> (!input.eof())</div><div class="line">  std::cerr &lt;&lt; <span class="stringliteral">&quot;An IO error occurred&quot;</span> &lt;&lt; std::endl;</div><div class="line">fwrite(buf, 1, len, stdout);</div><div class="line"><span class="keyword">delete</span>[] buf;</div><div class="line">fclose(input.file());</div></div><!-- fragment --><p>Files with UTF-16 content are converted to UTF-8 by get(buf, len), where <a class="el" href="classreflex_1_1_input.html#a7adcaddc90acd4be7e521f5362d230d3" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> gives the total number of UTF-8 bytes that will be produced by get(buf, len).</p>
+<p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to store the entire content of a file in a temporary buffer:</p>
+<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(fopen(<span class="stringliteral">&quot;input.h&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>));</div><div class="line"><span class="keywordflow">if</span> (!input.file())</div><div class="line">  <a class="code" href="reflex_8cpp.html#aebaa8f5abd10789858e7528e3465742a">abort</a>();</div><div class="line"><span class="keywordtype">size_t</span> len = input.size(); <span class="comment">// file size (minus any leading UTF BOM)</span></div><div class="line"><span class="keywordtype">char</span> *buf = <span class="keyword">new</span> <span class="keywordtype">char</span>[len];</div><div class="line">input.get(buf, len);</div><div class="line"><span class="keywordflow">if</span> (!input.eof())</div><div class="line">  std::cerr &lt;&lt; <span class="stringliteral">&quot;An IO error occurred&quot;</span> &lt;&lt; std::endl;</div><div class="line">fwrite(buf, 1, len, stdout);</div><div class="line"><span class="keyword">delete</span>[] buf;</div><div class="line">fclose(input.file());</div></div><!-- fragment --><p>In the above, files with UTF-16 and UTF-32 content are converted to UTF-8 by <code>get(buf, len)</code>. Also, <code><a class="el" href="classreflex_1_1_input.html#a7adcaddc90acd4be7e521f5362d230d3" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a></code> returns the total number of UTF-8 bytes to copy in the buffer by <code>get(buf, len)</code>. The size is computed depending on the UTF-8/16/32 file content encoding, i.e. given a leading UTF BOM in the file. This means that UTF-16/32 files are read twice, first internally with <code><a class="el" href="classreflex_1_1_input.html#a7adcaddc90acd4be7e521f5362d230d3" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a></code> and then again with get(buf, len)`.</p>
 <h2>Example </h2>
-<p>The following example shows how to read a character sequence in blocks from a file:</p>
+<p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to read a character sequence in blocks from a file:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(fopen(<span class="stringliteral">&quot;input.h&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>));</div><div class="line"><span class="keywordtype">char</span> buf[1024];</div><div class="line"><span class="keywordtype">size_t</span> len;</div><div class="line"><span class="keywordflow">while</span> ((len = input.get(buf, <span class="keyword">sizeof</span>(buf))) &gt; 0)</div><div class="line">  fwrite(buf, 1, len, stdout);</div><div class="line">fclose(input);</div></div><!-- fragment --><h2>Example </h2>
-<p>The following example shows how to echo characters one by one from stdin (reading input from a tty):</p>
+<p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to echo characters one by one from stdin, e.g. reading input from a tty:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(stdin);</div><div class="line"><span class="keywordtype">char</span> c;</div><div class="line"><span class="keywordflow">while</span> (input.get(&amp;c, 1))</div><div class="line">  fputc(c, stdout);</div></div><!-- fragment --><h2>Example </h2>
-<p>The following example shows how to read a character sequence in blocks from a wide character string while converting it to UTF-8:</p>
+<p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to read a character sequence in blocks from a wide character string, converting it to UTF-8 to copy to stdout:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(L<span class="stringliteral">&quot;Copyright ©&quot;</span>); <span class="comment">// © is unicode U+00A9 and UTF-8 C2 A9</span></div><div class="line"><span class="keywordtype">char</span> buf[8];</div><div class="line"><span class="keywordtype">size_t</span> len;</div><div class="line"><span class="keywordflow">while</span> ((len = input.get(buf, <span class="keyword">sizeof</span>(buf))) &gt; 0)</div><div class="line">  fwrite(buf, 1, len, stdout);</div></div><!-- fragment --><h2>Example </h2>
-<p>The following example shows how to convert a wide character string to UTF-8:</p>
-<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(L<span class="stringliteral">&quot;Copyright ©&quot;</span>); <span class="comment">// © is unicode U+00A9 and UTF-8 C2 A9</span></div><div class="line"><span class="keywordtype">size_t</span> len = input.size(); <span class="comment">// size of UTF-8 string</span></div><div class="line"><span class="keywordtype">char</span> *buf = <span class="keyword">new</span> <span class="keywordtype">char</span>[len];</div><div class="line">input.get(buf, len);</div><div class="line">fwrite(buf, 1, len, stdout);</div></div><!-- fragment --><h2>Example </h2>
+<p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to convert a wide character string to UTF-8:</p>
+<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(L<span class="stringliteral">&quot;Copyright ©&quot;</span>); <span class="comment">// © is unicode U+00A9 and UTF-8 C2 A9</span></div><div class="line"><span class="keywordtype">size_t</span> len = input.size(); <span class="comment">// size of UTF-8 string</span></div><div class="line"><span class="keywordtype">char</span> *buf = <span class="keyword">new</span> <span class="keywordtype">char</span>[len + 1];</div><div class="line">input.get(buf, len);</div><div class="line">buf[len] = <span class="charliteral">&#39;\0&#39;</span>; <span class="comment">// make \0-terminated</span></div></div><!-- fragment --><h2>Example </h2>
 <p>The following example shows how to switch source inputs while reading input byte by byte (use a buffer as shown in other examples to improve efficiency):</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input = <span class="stringliteral">&quot;Hello&quot;</span>;</div><div class="line">std::string message;</div><div class="line"><span class="keywordtype">char</span> c;</div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div><div class="line">input = L<span class="stringliteral">&quot; world! To ∞ and beyond.&quot;</span>; <span class="comment">// switch input to a wide string</span></div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div></div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a7c6455e576c90b478789928db6066267"></a>
@@ -257,7 +257,7 @@ Protected Attributes</h2></td></tr>
 <p>Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>an <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object to share state with (undefined behavior results from using both objects at the same time) </td></tr>
+    <tr><td class="paramname">input</td><td>an <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object to share state with (undefined behavior results from using both objects at the same time) </td></tr>
   </table>
   </dd>
 </dl>
@@ -440,7 +440,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct input character sequence from a std::wstring. </p>
+<p>Construct input character sequence from a std::wstring (may contain UTF-16 surrogate pairs). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">wstring</td><td>input wide string </td></tr>
@@ -472,7 +472,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct input character sequence from a pointer to a std::wstring. </p>
+<p>Construct input character sequence from a pointer to a std::wstring (may contain UTF-16 surrogate pairs). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">wstring</td><td>input wide string </td></tr>
@@ -601,7 +601,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the remaining string of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object. </p>
+<p>Get the remaining string of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object. </p>
 <dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated string or NULL. </dd></dl>
 
 </div>
@@ -655,7 +655,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the FILE* of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object. </p>
+<p>Get the FILE* of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to current file descriptor or NULL. </dd></dl>
 
 </div>
@@ -985,7 +985,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the std::istream of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object. </p>
+<p>Get the std::istream of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to current std::istream or NULL. </dd></dl>
 
 </div>
@@ -1035,7 +1035,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object to string. </p>
+<p>Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object to string. </p>
 <dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated string or NULL. </dd></dl>
 
 </div>
@@ -1061,7 +1061,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object to wide character string. </p>
+<p>Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object to wide character string. </p>
 <dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated wide character string or NULL. </dd></dl>
 
 </div>
@@ -1087,7 +1087,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object to file descriptor FILE*. </p>
+<p>Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object to file descriptor FILE*. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to current file descriptor or NULL. </dd></dl>
 
 </div>
@@ -1113,7 +1113,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object to std::istream*. </p>
+<p>Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object to std::istream*. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to current std::istream or NULL. </dd></dl>
 
 </div>
@@ -1142,7 +1142,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a <code>FILE*</code> or <code>std::istream</code> source). </p>
 <dl class="section return"><dt>Returns</dt><dd>the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable. </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>This function SHOULD NOT be used after <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a>. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function SHOULD NOT be used after <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a> as the "cursor" has moved it changes the result. </dd></dl>
 
 </div>
 </div>
@@ -1168,7 +1168,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the remaining wide character string of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input. ">Input</a> object. </p>
+<p>Get the remaining wide character string of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object. </p>
 <dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated wide character string or NULL. </dd></dl>
 
 </div>
@@ -1356,7 +1356,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Jan 25 2017 18:16:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Mar 2 2017 22:07:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
