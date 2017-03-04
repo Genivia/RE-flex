@@ -300,6 +300,7 @@ Changelog
 - Jan 15, 2017: 0.9.10 improved compatibility with Flex options, fixed critical issue with range unions
 - Jan 25, 2017: 0.9.11 added C++11 std::regex matching engine support, moved .h files to include/reflex, requires `#include <reflex/xyz.h>` from now on, fixed `errno_t` portability issue
 - Mar  3, 2017: 0.9.12 refactored and improved, includes new regex converters for regex engines that lack regex features such as Unicode character classes
+- Mar  4, 2017: 0.9.13 improved warning and error messages
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

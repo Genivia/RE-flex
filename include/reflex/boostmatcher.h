@@ -125,6 +125,14 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
     itr_ = fin_;
     return PatternMatcher::pattern(pat);
   }
+  virtual std::pair<const char*,size_t> operator[](size_t n) const
+  {
+    if (n == 0)
+      return std::pair<const char*,size_t>(text(), size());
+    if (itr_ == fin_ || n >= (*itr_).size() || !(*itr_)[n].matched)
+      return std::pair<const char*,size_t>(NULL, 0);
+    return std::pair<const char*,size_t>((*itr_)[n].first, (*itr_)[n].second - (*itr_)[n].first);
+  }
  protected:
   /// The match method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH, implemented with boost::regex.
   virtual size_t match(Method method)

@@ -879,9 +879,10 @@ class ORanges : public Ranges<T> {
  private:
   /// Bump with clamping.
   static bound_type bump(bound_type val) ///< the value to bump
-    /// @returns val + 1 or val when max.
+    /// @returns val + 1 or val when signed or unsigned max integer.
   {
-    if (std::less<bound_type>()(val + 1, val)) // checks integer overflow (compile with -Wno-strict-overflow)
+    bound_type lav = ~val - 1; // trick to get around -Wstrict-overflow for signed types
+    if (std::less<bound_type>()(~lav, val)) // check integer overflow 
       return val;
     return val + 1;
   }

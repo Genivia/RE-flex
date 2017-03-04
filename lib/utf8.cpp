@@ -100,7 +100,7 @@ static const char *regex_range(char *buf, int a, int b, int esc)
   return buf;
 }
 
-std::string utf8(int a, int b, int esc, bool strict)
+std::string utf8(int a, int b, int esc, const char *par, bool strict)
 {
   if (a < 0)
     return ""; // undefined
@@ -170,7 +170,7 @@ std::string utf8(int a, int b, int esc, bool strict)
     {
       size_t j = i;
       if (i != 0)
-        regex.append("(");
+        regex.append(par);
       if (l != 0)
       {
         size_t p = 0;
@@ -189,7 +189,7 @@ std::string utf8(int a, int b, int esc, bool strict)
             if (as[i] != 0xbf)
             {
               ++p;
-              regex.append("(").append(regex_range(buf, as[i] + 1, 0xbf, esc));
+              regex.append(par).append(regex_range(buf, as[i] + 1, 0xbf, esc));
               for (size_t k = i + 1; k < n; ++k)
                 regex.append(any);
               regex.append("|");
@@ -230,7 +230,7 @@ std::string utf8(int a, int b, int esc, bool strict)
             if (bs[i] != 0x80)
             {
               ++p;
-              regex.append("(").append(regex_range(buf, 0x80, bs[i] - 1, esc));
+              regex.append(par).append(regex_range(buf, 0x80, bs[i] - 1, esc));
               for (size_t k = i + 1; k < n; ++k)
                 regex.append(any);
               regex.append("|");

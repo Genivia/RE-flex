@@ -127,7 +127,7 @@ inline int hex_or_octal_escape(const char *escapes)
   return '\0';
 }
 
-static void posix(const char *s, std::string& r, int esc)
+static void posix(const char *s, std::string& r, int esc, const char *par)
 {
   const int *wc = Posix::range(s + (s[0] == '^'));
   if (wc == NULL)
@@ -135,27 +135,27 @@ static void posix(const char *s, std::string& r, int esc)
   if (s[0] == '^')
   {
     if (wc[0] > 0x00)
-      r = utf8(0x00, wc[0] - 1, esc);
+      r = utf8(0x00, wc[0] - 1, esc, par);
     int last = wc[1] + 1;
     wc += 2;
     for (; wc[1] != 0; wc += 2)
     {
-      r.append("|").append(utf8(last, wc[0] - 1, esc));
+      r.append("|").append(utf8(last, wc[0] - 1, esc, par));
       last = wc[1] + 1;
     }
     if (last < 0x7F)
-      r.append("|").append(utf8(last, 0x7f, esc));
+      r.append("|").append(utf8(last, 0x7f, esc, par));
   }
   else
   {
-    r = utf8(wc[0], wc[1], esc);
+    r = utf8(wc[0], wc[1], esc, par);
     wc += 2;
     for (; wc[1] != 0; wc += 2)
-      r.append("|").append(utf8(wc[0], wc[1], esc));
+      r.append("|").append(utf8(wc[0], wc[1], esc, par));
   }
 }
 
-static void unicode(const char *s, std::string& r, int esc)
+static void unicode(const char *s, std::string& r, int esc, const char *par)
 {
   const int *wc = Unicode::range(s + (s[0] == '^'));
   if (wc == NULL)
@@ -163,23 +163,23 @@ static void unicode(const char *s, std::string& r, int esc)
   if (s[0] == '^')
   {
     if (wc[0] > 0x00)
-      r = utf8(0x00, wc[0] - 1, esc);
+      r = utf8(0x00, wc[0] - 1, esc, par);
     int last = wc[1] + 1;
     wc += 2;
     for (; wc[1] != 0; wc += 2)
     {
-      r.append("|").append(utf8(last, wc[0] - 1, esc));
+      r.append("|").append(utf8(last, wc[0] - 1, esc, par));
       last = wc[1] + 1;
     }
     if (last < 0x10FFFF)
-      r.append("|").append(utf8(last, 0x10FFFF, esc));
+      r.append("|").append(utf8(last, 0x10FFFF, esc, par));
   }
   else
   {
-    r = utf8(wc[0], wc[1], esc);
+    r = utf8(wc[0], wc[1], esc, par);
     wc += 2;
     for (; wc[1] != 0; wc += 2)
-      r.append("|").append(utf8(wc[0], wc[1], esc));
+      r.append("|").append(utf8(wc[0], wc[1], esc, par));
   }
 }
 
@@ -206,7 +206,7 @@ static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, c
     int esc = hex_or_octal_escape(escapes);
     if (!(flags & convert_flag::unicode))
     {
-      posix(name, translated, esc);
+      posix(name, translated, esc, par);
       if (!translated.empty() && supports_escape(escapes, c))
       {
         // assume regex lib supports this POSIX character class
@@ -214,12 +214,12 @@ static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, c
       }
       else if (translated.empty())
       {
-        unicode(name, translated, esc);
+        unicode(name, translated, esc, par);
       }
     }
     else
     {
-      unicode(name, translated, esc);
+      unicode(name, translated, esc, par);
     }
     if (!translated.empty())
     {
@@ -294,8 +294,8 @@ static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, c
         const char *s = std::strchr(regex_abtnvfr, c);
         if (s == NULL)
           throw regex_error(regex_error::invalid_escape, pattern, pos);
-        int wc = s - regex_abtnvfr + '\a';
-        regex.append(&pattern[loc], pos - loc - 1).append(utf8(wc, wc, esc));
+        int wc = static_cast<int>(s - regex_abtnvfr + '\a');
+        regex.append(&pattern[loc], pos - loc - 1).append(utf8(wc, wc, esc, par));
         loc = pos + 1;
       }
     }
@@ -360,7 +360,7 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
     {
       // translate \cX to \xXX
       int esc = hex_or_octal_escape(escapes);
-      regex.append(&pattern[loc], pos - loc - 2).append(utf8(c, c, esc));
+      regex.append(&pattern[loc], pos - loc - 2).append(utf8(c, c, esc, par));
       loc = pos + 1;
     }
   }
@@ -394,7 +394,7 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
     else
     {
       int esc = hex_or_octal_escape(escapes);
-      regex.append(&pattern[loc], pos - loc - 1).append(utf8(wc, wc, esc));
+      regex.append(&pattern[loc], pos - loc - 1).append(utf8(wc, wc, esc, par));
     }
     pos = k - 1;
     loc = pos + 1;
@@ -420,7 +420,7 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
         else
         {
 	  int esc = hex_or_octal_escape(escapes);
-          regex.append(&pattern[loc], pos - loc - 1).append(utf8(wc, wc, esc));
+          regex.append(&pattern[loc], pos - loc - 1).append(utf8(wc, wc, esc, par));
         }
       }
       else
@@ -478,7 +478,7 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
     int esc = hex_or_octal_escape(escapes);
     if (!(flags & convert_flag::unicode))
     {
-      posix(name.c_str(), translated, esc);
+      posix(name.c_str(), translated, esc, par);
       if (!translated.empty() && supports_escape(escapes, c))
       {
         // assume regex lib supports this POSIX character class
@@ -486,12 +486,12 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
       }
       else if (translated.empty())
       {
-        unicode(name.c_str(), translated, esc);
+        unicode(name.c_str(), translated, esc, par);
       }
     }
     else
     {
-      unicode(name.c_str(), translated, esc);
+      unicode(name.c_str(), translated, esc, par);
     }
     if (!translated.empty())
     {
@@ -647,7 +647,7 @@ static int insert_escape(const char *pattern, size_t len, size_t& pos, convert_f
       insert_escape_class(pattern, pos, flags, ranges);
       return -1;
     }
-    c = s - regex_abtnvfr + '\a';
+    c = static_cast<int>(s - regex_abtnvfr + '\a');
   }
   ranges.insert(c);
   return c;
@@ -898,20 +898,20 @@ static std::string convert_unicode_ranges(const ORanges<int>& ranges, const char
   int esc = hex_or_octal_escape(escapes);
   for (ORanges<int>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
   {
-    regex.append(sep).append(utf8(i->first, i->second - 1, esc));
+    regex.append(sep).append(utf8(i->first, i->second - 1, esc, par));
     sep = "|";
   }
   return regex.append(")");
 }
 
-static std::string convert_posix_ranges(const ORanges<int>& ranges, const char *escapes)
+static std::string convert_posix_ranges(const ORanges<int>& ranges, const char *escapes, const char *par)
 {
   std::string regex;
   std::string range;
   int esc = hex_or_octal_escape(escapes);
   for (ORanges<int>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
   {
-    range = utf8(i->first, i->second - 1, esc);
+    range = utf8(i->first, i->second - 1, esc, par);
     if (range[0] == '[')
       regex.append(range.c_str() + 1, range.size() - 2);
     else
@@ -1212,7 +1212,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           else
           {
             // ASCII: translate [^ ] to new [^ ] regex
-            regex.append("[^").append(convert_posix_ranges(ranges, esc));
+            regex.append("[^").append(convert_posix_ranges(ranges, esc, par));
           }
           loc = pos + 1;
         }
@@ -1233,7 +1233,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           else
           {
             // ASCII: translate [ ] to new regex
-            regex.append("[").append(convert_posix_ranges(ranges, esc));
+            regex.append("[").append(convert_posix_ranges(ranges, esc, par));
           }
           loc = pos + 1;
         }

@@ -633,6 +633,10 @@ class AbstractMatcher {
   {
     return static_cast<int>(accept()) != rhs;
   }
+  /// Returns captured text.
+  virtual std::pair<const char*,size_t> operator[](size_t n)
+    /// @returns std::pair of string pointer and its length in the captured text, where [0] returns std::pair(text(), size()).
+    const = 0;
   Operation scan;  ///< functor to scan input (to tokenize input)
   Operation find;  ///< functor to search input
   Operation split; ///< functor to split input
@@ -1051,5 +1055,19 @@ class PatternMatcher : public AbstractMatcher {
 };
 
 } // namespace reflex
+
+/// Write matched text to a stream.
+inline std::ostream& operator<<(std::ostream& os, const reflex::AbstractMatcher& matcher)
+{
+  os << matcher.text();
+  return os;
+}
+
+/// Read stream and store all content in the matcher's buffer.
+inline std::istream& operator>>(std::istream& is, reflex::AbstractMatcher& matcher)
+{
+  matcher.input(is).buffer();
+  return is;
+}
 
 #endif

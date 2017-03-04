@@ -567,7 +567,7 @@ You can use this method and other methods to obtain the details of a match:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
-  `accept()`  | returns group capture or zero if not captured/matched
+  `accept()`  | returns group capture index or zero if not captured/matched
   `text()`    | returns `\0`-terminated `const char*` string match
   `pair()`    | returns `std::pair<size_t,const char*>(accept(), text())`
   `size()`    | returns the length of the match in bytes
@@ -582,11 +582,44 @@ You can use this method and other methods to obtain the details of a match:
   `at_bol()`  | true if matcher reached the begin of a new line `\n`
   `at_bob()`  | true if matcher is at the start of input, no matches consumed
   `at_end()`  | true if matcher is at the end of input
+  `[0]`       | operator returns `std::pair<const char*,size_t>(text(),size())`
+  `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
 
 The first three methods return values that can also be obtained by type casting
 the matcher object to `size_t` (or to an integer type), to `const char*` (or to
 `std::string`), and to `std::pair<size_t,const char*>` (or to a type-compatible
-form such as `std::pair<uint64_t,std::string>`.
+form such as `std::pair<uint64_t,std::string>`).  The `operator[]` method takes
+a group capture number `n` and returns a pointer to the captured text with size
+of the matched text in bytes.  The pointer points to string in the buffer where
+the group match starts.  Use the size to determine the end of the group match.
+
+For example:
+
+```cpp
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
+
+// a BoostMatcher to capture name and number:
+reflex::BoostMatcher matcher("(\\w+)\\s+(\\d+)");
+
+// use the matcher on a string:
+if (matcher.input("cow 123").matches())
+  std::cout <<
+    "name: " << std::string(matcher[1].first, matcher[1].second) <<
+    ", number: " << std::string(matcher[2].first, matcher[2].second) << std::endl;
+```
+
+When executed this code prints:
+
+    name: cow, number: 123
+
+@warning The `text()` method returns the match by pointing to the `const char*`
+string that is stored in an internal buffer.  This pointer *should not be used*
+after matching continues and when the matcher object is deallocated.  To retain
+the `text()` string value we recommend to instantiate a `std::string`.
+
+@warning The `operator[]` method returns a pair with the match info of the n'th
+group, which is a string `const char*` (or NULL) and size in bytes.  The string
+*should not be used* after matching continues.
 
 @note When using the `reflex::Matcher` class, the `accept()` method returns the
 accepted pattern among the alternations in the regex that are specified only at
@@ -594,11 +627,6 @@ the top level in the regex.  For example, the regex `"(a(b)c)|([A-Z])"` has two
 groups, because only the outer top-level groups are recognized.  Because groups
 are specified at the top level only, the grouping parenthesis are optional.  We
 can simplify the regex to `"a(b)c|[A-Z]"` and still capture the two patterns.
-
-@warning The `text()` method returns the match by pointing to the `const char*`
-string that is stored in an internal buffer.  This pointer *should not be used*
-after matching continues and when the matcher object is deallocated.  To retain
-the `text()` string value we recommend to instantiate a `std::string`.
 
 Three special methods can be used to manipulate the input stream directly:
 
@@ -633,7 +661,7 @@ object is implicitly constructed from one of these input sources, for example:
 ```cpp
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 
-// set the input source to a string (or a stream or FILE*)
+// set the input source to a string (or a stream or a FILE*)
 reflex::Input source = "How now brown cow.";
 
 reflex::BoostMatcher matcher("\\w+", source);
@@ -641,12 +669,33 @@ reflex::BoostMatcher matcher("\\w+", source);
 while (matcher.find() == true)
   std::cout << "Found " << matcher.text() << std::endl;
 
-// use the same matcher with a new input source:
-source = std::ifstream("cows.txt", std::ifstream::in);
-matcher.input(source);
+// use the same matcher with a new source (an Input object):
+std::ifstream ifs("cows.txt", std::ifstream::in);
+source = ifs;           // Input source is reassignable
+matcher.input(source);  // can use ifs as parameter also
 
 while (matcher.find() == true)
   std::cout << "Found " << matcher.text() << std::endl;
+
+ifs.close();
+```
+
+The entire input is buffered in a matcher with `buffer()`, or is read piecemeal
+with `buffer(n)`, or is read interactively with `interactive()`.  These methods
+should be used after setting the input source.  Reading a stream with buffering
+all data is done with the `>>` operator as a shortcut:
+
+```cpp
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
+
+// read and buffer cows.txt file
+reflex::BoostMatcher matcher("\<cow\>");
+std::ifstream cows("cows.txt", std::ifstream::in);
+cows >> matcher;     // same as matcher.input(cows).buffer();
+cows.close();        // can already close now because stream content is stored
+
+// count number of 'cow' words:
+std::out << std::distance(matcher.find.begin(), matcher.find.end()) << " 'cow' in cows.txt\n";
 ```
 
 So far we explained how to use `reflex::BoostMatcher` for pattern matching.  We
@@ -3707,7 +3756,7 @@ To obtain details of a match use the following methods:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
-  `accept()`  | returns group capture or zero if not captured/matched
+  `accept()`  | returns group capture index or zero if not captured/matched
   `text()`    | returns `\0`-terminated `const char*` string match
   `pair()`    | returns `std::pair<size_t,const char*>(accept(), text())`
   `size()`    | returns the length of the text match in bytes
@@ -3722,6 +3771,8 @@ To obtain details of a match use the following methods:
   `at_bol()`  | true if matcher reached the begin of a new line `\n`
   `at_bob()`  | true if matcher is at the start of input, no matches consumed
   `at_end()`  | true if matcher is at the end of input
+  `[0]`       | operator returns `std::pair<const char*,size_t>(text(),size())`
+  `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
 
 Two special methods can be used to manipulate the input stream directly:
 

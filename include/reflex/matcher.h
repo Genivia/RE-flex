@@ -88,6 +88,12 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     ded_ = 0;
     tab_.resize(0);
   }
+  virtual std::pair<const char*,size_t> operator[](size_t n) const
+  {
+    if (n == 0)
+      return std::pair<const char*,size_t>(text(), size());
+    return std::pair<const char*,size_t>(NULL, 0);
+  }
   /// Returns vector of tab stops.
   const std::vector<size_t>& stops(void) const
     /// @returns vector of size_t.

@@ -21,16 +21,25 @@ int main(int argc, char **argv)
       std::string regex;
       try
       {
-        regex = reflex::BoostMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
+        regex = reflex::BoostPosixMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
         printf("\n** using converted regex: %s\n\n", regex.c_str());
         boost::regex boost_pattern(regex, boost::regex_constants::no_empty_expressions);
-        reflex::BoostMatcher boostmatcher(boost_pattern, argv[2], opts);
+        reflex::BoostPosixMatcher boostmatcher(boost_pattern, argv[2], opts);
         if (argc > 3)
           boostmatcher.buffer(strtoul(argv[3], NULL, 10));
         if (!boostmatcher.matches())
+	{
           printf("No match\n");
+	}
         else
-          printf("Match\n");
+	{
+          printf("Match:");
+	  for (size_t i = 1; boostmatcher[i].first; ++i)
+	    printf(" group[%zu]=(%zu,%zu)", i, boostmatcher[i].first - boostmatcher[0].first, boostmatcher[i].second);
+	  printf("\n");
+	  fflush(stdout);
+	  std::cout << boostmatcher << std::endl;
+	}
         boostmatcher.input(argv[2]);
         if (argc > 3)
           boostmatcher.buffer(strtoul(argv[3], NULL, 10));
@@ -61,9 +70,16 @@ int main(int argc, char **argv)
         if (argc > 3)
           stdmatcher.buffer(strtoul(argv[3], NULL, 10));
         if (!stdmatcher.matches())
+	{
           printf("No match\n");
+	}
         else
-          printf("Match\n");
+	{
+          printf("Match:");
+	  for (size_t i = 1; stdmatcher[i].first; ++i)
+	    printf(" group[%zu]=(%zu,%zu)", i, stdmatcher[i].first - stdmatcher[0].first, stdmatcher[i].second);
+	  printf("\n");
+	}
         stdmatcher.input(argv[2]);
         if (argc > 3)
           stdmatcher.buffer(strtoul(argv[3], NULL, 10));

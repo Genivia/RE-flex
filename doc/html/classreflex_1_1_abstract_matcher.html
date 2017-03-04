@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Mar 2 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Mar 4 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -234,6 +234,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7157e28939ecc094dca648b3bf9759a2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7157e28939ecc094dca648b3bf9759a2">operator!=</a> (int rhs) const </td></tr>
 <tr class="memdesc:a7157e28939ecc094dca648b3bf9759a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if capture index is not equal to a given int value, useful for std::algorithm.  <a href="#a7157e28939ecc094dca648b3bf9759a2">More...</a><br /></td></tr>
 <tr class="separator:a7157e28939ecc094dca648b3bf9759a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99e23c24c8e576f4f6463eda78539d05"><td class="memItemLeft" align="right" valign="top">virtual std::pair&lt; const char *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a99e23c24c8e576f4f6463eda78539d05">operator[]</a> (size_t n) const  =0</td></tr>
+<tr class="memdesc:a99e23c24c8e576f4f6463eda78539d05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns captured text.  <a href="#a99e23c24c8e576f4f6463eda78539d05">More...</a><br /></td></tr>
+<tr class="separator:a99e23c24c8e576f4f6463eda78539d05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -1463,6 +1466,35 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a99e23c24c8e576f4f6463eda78539d05"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::pair&lt;const char*,size_t&gt; reflex::AbstractMatcher::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns captured text. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::pair of string pointer and its length in the captured text, where [0] returns std::pair(<a class="el" href="classreflex_1_1_abstract_matcher.html#a8b7a345add39a481e8963cb04a4347b8" title="Returns string with the text matched. ">text()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#adb5fec59e6c6a86b8cf405c40f93d1de" title="Returns the length of the matched text in number of bytes. ">size()</a>). </dd></dl>
+
+<p>Implemented in <a class="el" href="classreflex_1_1_std_matcher.html#aa48c631145c803cbda9f3891eccc1b3e">reflex::StdMatcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#aafdb43bb11cab6eac43ba846e17ca33e">reflex::BoostMatcher</a>, and <a class="el" href="classreflex_1_1_matcher.html#acf0031339b3f8426b730a6860e5feba2">reflex::Matcher</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="abc573eafc849b275d21b114abe1ea570"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1663,6 +1695,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">size_t reflex::AbstractMatcher::size </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
@@ -2275,7 +2308,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Mar 2 2017 22:07:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Mar 4 2017 15:30:22 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

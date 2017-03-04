@@ -345,7 +345,7 @@ class FlexLexer : public AbstractLexer<M> {
       return lexer->LexerInput(s, n); // a nice trick to get input from LexerInput()
     }
     /// Check the Flex-compatible FlexLexer::yywrap method to determine if matcher should wrap input after EOF.
-    virtual bool wrap(void)
+    virtual bool wrap()
       /// @returns true if FlexLexer::yywrap() == 0
     {
       FlexLexer *lexer = dynamic_cast<FlexLexer*>(this->lexer_); // a safe cast
@@ -360,19 +360,19 @@ class FlexLexer : public AbstractLexer<M> {
       AbstractBaseLexer(input, os ? *os : std::cout)
   { }
   /// The matched text.
-  const char *YYText(void) const
+  const char *YYText() const
     /// @returns NUL-terminated string.
   {
     return this->matcher().text();
   }
   /// The matched text length.
-  int YYLeng(void) const
+  int YYLeng() const
     /// @returns matched text length.
   {
     return static_cast<int>(this->matcher().size());
   }
   /// Read one character, returns zero when EOF.
-  int input(void)
+  int input()
     /// @returns the character read.
   {
     int c = this->matcher().input();
@@ -396,7 +396,7 @@ class FlexLexer : public AbstractLexer<M> {
     this->in(input).out(*os);
   }
   /// Default yywrap operation at EOF: do not wrap input.
-  virtual int yywrap(void)
+  virtual int yywrap()
     /// @returns 1 (0 indicates that new input was set and wrap after EOF is OK).
   {
 #if (defined(REFLEX_OPTION_yywrap) || defined(REFLEX_OPTION_bison)) && !defined(REFLEX_OPTION_noyywrap)
@@ -410,7 +410,7 @@ class FlexLexer : public AbstractLexer<M> {
 #endif
   }
   /// Pure virtual lexer (implemented by a reflex-generated yyFlexLexer).
-  virtual int yylex(void) = 0;
+  virtual int yylex() = 0;
 #if defined(REFLEX_OPTION_reentrant) || defined(REFLEX_OPTION_bison_bridge)
   YY_EXTRA_TYPE yyextra;       ///< Flex-compatible reentrant YY_EXTRA_TYPE yyextra
 #endif
@@ -449,7 +449,7 @@ class FlexLexer : public AbstractLexer<M> {
     (self ? static_cast<FlexLexer*>(self) : this)->pop_state();
   }
   /// Returns the stack top start condition state.
-  int yy_top_state(void)
+  int yy_top_state()
     /// @returns start condition (integer).
   {
     return this->top_state();

@@ -81,12 +81,14 @@ static const char *options_table[] = {
   "nodebug",
   "nodefault",
   "nodotall",
+  "nofreespace",
   "noinput",
   "noline",
   "nomain",
   "nopointer",
   "nostack",
   "nostdinit",
+  "nounicode",
   "nounistd",
   "nounput",
   "nowarn",
@@ -179,8 +181,8 @@ static const char *options_table[] = {
 /// - `Z` for `\Z` end of input anchor, before the final line break
 ///
 /// The optional `"?+"` characters specify lazy and possessive support:
-/// - `?` lazy repeats are supported
-/// - `+` possessive repeats are supported
+/// - `?` lazy quantifiers for repeats are supported
+/// - `+` possessive quantifiers for repeats are supported
 static const Reflex::Library library_table[] = {
   {
     "reflex",
@@ -236,17 +238,6 @@ static std::string file_ext(std::string& name, const char *ext)
   return name;
 }
 
-/// Abort with an error message.
-static void abort(const char *error, const char *arg = NULL)
-{
-  std::cerr
-    << "reflex: error "
-    << error
-    << (arg != NULL ? arg : "")
-    << std::endl;
-  exit(EXIT_FAILURE);
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
 //  Main                                                                      //
@@ -283,6 +274,12 @@ void Reflex::main(int argc, char **argv)
 /// Reflex initialization.
 void Reflex::init(int argc, char **argv)
 {
+#ifdef OS_WIN
+  color_term = false;
+#else
+  const char *term = getenv("TERM");
+  color_term = term && (strstr(term, "ansi") || strstr(term, "xterm") || strstr(term, "color"));
+#endif
   for (const char *const *i = options_table; *i != NULL; ++i)
     options[*i] = "";
   for (const Library *j = library_table; j->name != NULL; ++j)
@@ -441,6 +438,8 @@ void Reflex::init(int argc, char **argv)
       infile = argv[i];
     }
   }
+
+  set_library();
 }
 
 /// Display version information and exit.
@@ -569,6 +568,39 @@ void Reflex::help(const char *message, const char *arg)
   exit(message ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
+/// Set/reset regex library matcher.
+void Reflex::set_library()
+{
+  if (!definitions.empty())
+    warning("%option matcher should be specified before the start of regular definitions");
+  if (options["matcher"] == "reflex")
+    options["matcher"].clear();
+  else if (!options["matcher"].empty())
+  {
+    LibraryMap::iterator i = libraries.find(options["matcher"]);
+    if (i != libraries.end())
+    {
+      library = &i->second;
+    }
+    else
+    {
+      library = &libraries[options["matcher"]];
+      library->name = options["matcher"].c_str();
+      if (options["include"].empty())
+        library->file = file_ext(options["matcher"], "h").c_str();
+      else
+        library->file = file_ext(options["include"], "h").c_str();
+      if (options["pattern"].empty())
+        library->pattern = "char *";
+      else
+        library->pattern = options["pattern"].c_str();
+      library->matcher = options["matcher"].c_str();
+      library->signature = "m:";
+      warning("using custom matcher ", library->name);
+    }
+  }
+}
+
 /// Parse lex specification input.
 void Reflex::parse()
 {
@@ -577,7 +609,7 @@ void Reflex::parse()
   {
     ifs.open(infile.c_str(), std::ifstream::in);
     if (!ifs.is_open())
-      abort("opening file ", infile.c_str());
+      abort("cannot open file ", infile.c_str());
     in = &ifs;
   }
   parse_section_1();
@@ -593,7 +625,7 @@ void Reflex::include(const std::string& filename)
   std::ifstream ifs;
   ifs.open(filename.c_str(), std::ifstream::in);
   if (!ifs.is_open())
-    abort("opening file ", infile.c_str());
+    abort("cannot open file ", infile.c_str());
   std::string save_infile = infile;
   infile = filename;
   std::istream *save_in = in;
@@ -614,7 +646,7 @@ bool Reflex::get_line()
   if (in->eof())
     return false;
   if (!in->good())
-    abort("in reading");
+    abort("error in reading");
   ++lineno;
   std::getline(*in, line);
   linelen = line.length();
@@ -879,7 +911,7 @@ std::string Reflex::get_regex(size_t& pos)
   }
   catch (reflex::regex_error& e)
   {
-    error(e.what());
+    error("malformed regular expression\n", e.what());
   }
   return regex;
 }
@@ -1020,16 +1052,39 @@ std::string Reflex::get_code(size_t& pos)
   return code;
 }
 
+/// Abort with an error message.
+void Reflex::abort(const char *message, const char *arg)
+{
+  std::cerr
+    << SGR("\033[1m")
+    << "reflex: "
+    << SGR("\033[1;31m")
+    << "error: "
+    << SGR("\033[0m")
+    << message
+    << SGR("\033[1m")
+    << (arg != NULL ? arg : "")
+    << SGR("\033[0m")
+    << std::endl;
+  exit(EXIT_FAILURE);
+}
+
 /// Report an error and exit.
 void Reflex::error(const char *message, const char *arg, size_t at_lineno)
 {
   std::cerr
+    << SGR("\033[1m")
     << infile
     << ":"
     << (at_lineno ? at_lineno : lineno)
     << ": "
+    << SGR("\033[1;31m")
+    << "error: "
+    << SGR("\033[0m")
     << message
+    << SGR("\033[1m")
     << (arg != NULL ? arg : "")
+    << SGR("\033[0m")
     << std::endl;
   exit(EXIT_FAILURE);
 }
@@ -1039,12 +1094,18 @@ void Reflex::warning(const char *message, const char *arg, size_t at_lineno)
 {
   if (options["nowarn"].empty())
     std::cerr
+      << SGR("\033[1m")
       << infile
       << ":"
       << (at_lineno ? at_lineno : lineno)
-      << ": warning, "
+      << ": "
+      << SGR("\033[1;35m")
+      << "warning: "
+      << SGR("\033[0m")
       << message
+      << SGR("\033[1m")
       << (arg != NULL ? arg : "")
+      << SGR("\033[0m")
       << std::endl;
 }
 
@@ -1151,18 +1212,43 @@ void Reflex::parse_section_1()
                   (void)ws(pos);
                   if (eq(pos) && pos < linelen)
                   {
+                    std::string value;
                     if (line.at(pos) == '"')
-                      i->second = get_string(pos); // %option OPTION = "NAME"
+                      value = get_string(pos); // %option OPTION = "NAME"
                     else
-                      i->second = get_name(pos); // %option OPTION = NAME
+                      value = get_name(pos); // %option OPTION = NAME
                     (void)ws(pos);
+                    if (!i->second.empty() && i->second.compare(value) != 0)
+                      warning("redefining %option ", name.c_str());
+                    i->second = value;
                   }
                   else
                   {
                     i->second = "true";
+                    if (name.compare(0, 2, "no") == 0)
+                    {
+                      StringMap::iterator j = options.find(name.substr(2));
+                      if (j != options.end() && j->second.compare("true") == 0)
+                      {
+                        warning("disabling an initially enabling %option ", name.c_str() + 2);
+                        j->second.clear();
+                      }
+                    }
+                    else
+                    {
+                      std::string noname("no");
+                      StringMap::iterator j = options.find(noname.append(name));
+                      if (j != options.end() && j->second.compare("true") == 0)
+                      {
+                        warning("enabling an initially disabling %option ", noname.c_str());
+                        j->second.clear();
+                      }
+                    }
                   }
                   if (!option && !nl(pos))
                     error("trailing text after %option: ", name.c_str());
+                  if (name.compare("matcher") == 0)
+                    set_library();
                 } while (!nl(pos));
               }
             }
@@ -1284,7 +1370,7 @@ void Reflex::parse_section_2()
     }
     catch (reflex::regex_error& e)
     {
-      error(e.what());
+      error("malformed regular expression\n", e.what());
     }
     pattern.resize(pattern.size() - 1); // remove dummy % from (?m...)%
     const char *sep = "";
@@ -1326,32 +1412,6 @@ void Reflex::write()
     else
       options["header_file"] = std::string("lex.").append(options["prefix"]).append(".h");
   }
-  if (options["matcher"] == "reflex")
-    options["matcher"].clear();
-  else if (!options["matcher"].empty())
-  {
-    LibraryMap::iterator i = libraries.find(options["matcher"]);
-    if (i != libraries.end())
-    {
-      library = &i->second;
-    }
-    else
-    {
-      library = &libraries[options["matcher"]];
-      library->name = options["matcher"].c_str();
-      if (options["include"].empty())
-        library->file = file_ext(options["matcher"], "h").c_str();
-      else
-        library->file = file_ext(options["include"], "h").c_str();
-      if (options["pattern"].empty())
-        library->pattern = "char *";
-      else
-        library->pattern = options["pattern"].c_str();
-      library->matcher = options["matcher"].c_str();
-      library->signature = "m:";
-      warning("using custom matcher ", library->name);
-    }
-  }
   std::ofstream ofs;
   if (options["stdout"].empty())
   {
@@ -1364,7 +1424,7 @@ void Reflex::write()
     }
     ofs.open(options["outfile"].c_str(), std::ofstream::out);
     if (!ofs.is_open())
-      abort("opening file ", options["outfile"].c_str());
+      abort("cannot open file ", options["outfile"].c_str());
     out = &ofs;
   }
   *out << "// " << options["outfile"] << " generated by reflex " REFLEX_VERSION " from " << infile << std::endl;
@@ -1376,7 +1436,7 @@ void Reflex::write()
   write_main();
   write_section_3();
   if (!out->good())
-    abort("in writing");
+    abort("error in writing");
   if (options["matcher"].empty() && (!options["full"].empty() || !options["fast"].empty()) && options["tables_file"].empty() && options["stdout"].empty())
     write_banner("TABLES");
   if (ofs.is_open())
@@ -1409,14 +1469,14 @@ void Reflex::write()
         {
           ofs.open(filename.c_str(), std::ofstream::out);
           if (!ofs.is_open())
-            abort("opening file ", filename.c_str());
+            abort("cannot open file ", filename.c_str());
           out = &ofs;
         }
       }
       write_regex(patterns[start]);
       *out << std::endl;
       if (!ofs.good())
-        abort("in writing");
+        abort("error in writing");
       if (!append && ofs.is_open())
         ofs.close();
     }
@@ -1427,7 +1487,7 @@ void Reflex::write()
   {
     ofs.open(options["header_file"].c_str(), std::ofstream::out);
     if (!ofs.is_open())
-      abort("opening file ", options["header_file"].c_str());
+      abort("cannot open file ", options["header_file"].c_str());
     out = &ofs;
     *out <<
       "// " << options["header_file"] << " generated by reflex " REFLEX_VERSION " from " << infile << std::endl << std::endl <<
@@ -1521,7 +1581,7 @@ void Reflex::write()
     }
     *out << std::endl << "#endif" << std::endl;
     if (!out->good())
-      abort("in writing");
+      abort("error in writing");
     ofs.close();
   }
 }
@@ -2259,8 +2319,7 @@ void Reflex::stats()
       }
       catch (reflex::regex_error& e)
       {
-        std::cerr << e.what();
-        abort("in reading ", infile.c_str());
+        abort("malformed regular expression\n", e.what());
       }
     }
   }

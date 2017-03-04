@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Reflex Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Mar 2 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Mar 4 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -184,6 +184,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a760ce32f11519792ae3e8ae39581321b"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a760ce32f11519792ae3e8ae39581321b">linelen</a></td></tr>
 <tr class="memdesc:a760ce32f11519792ae3e8ae39581321b"><td class="mdescLeft">&#160;</td><td class="mdescRight">current line length  <a href="#a760ce32f11519792ae3e8ae39581321b">More...</a><br /></td></tr>
 <tr class="separator:a760ce32f11519792ae3e8ae39581321b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7001f5dfc8f7df0d9d1a0206f6eeddd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ab7001f5dfc8f7df0d9d1a0206f6eeddd">color_term</a></td></tr>
+<tr class="memdesc:ab7001f5dfc8f7df0d9d1a0206f6eeddd"><td class="mdescLeft">&#160;</td><td class="mdescRight">terminal supports colors  <a href="#ab7001f5dfc8f7df0d9d1a0206f6eeddd">More...</a><br /></td></tr>
+<tr class="separator:ab7001f5dfc8f7df0d9d1a0206f6eeddd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -196,6 +199,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a0520e61057161b9d56fa2fcec5399a7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a0520e61057161b9d56fa2fcec5399a7f">help</a> (const char *message=NULL, const char *arg=NULL)</td></tr>
 <tr class="memdesc:a0520e61057161b9d56fa2fcec5399a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display help information with an optional diagnostic message and exit.  <a href="#a0520e61057161b9d56fa2fcec5399a7f">More...</a><br /></td></tr>
 <tr class="separator:a0520e61057161b9d56fa2fcec5399a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73dd4e0d6c5db21a2636f332e6e7bd02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a73dd4e0d6c5db21a2636f332e6e7bd02">set_library</a> ()</td></tr>
+<tr class="memdesc:a73dd4e0d6c5db21a2636f332e6e7bd02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set/reset regex library matcher.  <a href="#a73dd4e0d6c5db21a2636f332e6e7bd02">More...</a><br /></td></tr>
+<tr class="separator:a73dd4e0d6c5db21a2636f332e6e7bd02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41d530e5070b00d2bdbae9bed1a51945"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a41d530e5070b00d2bdbae9bed1a51945">parse</a> ()</td></tr>
 <tr class="memdesc:a41d530e5070b00d2bdbae9bed1a51945"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse lex specification input.  <a href="#a41d530e5070b00d2bdbae9bed1a51945">More...</a><br /></td></tr>
 <tr class="separator:a41d530e5070b00d2bdbae9bed1a51945"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -301,12 +307,17 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a9cace7a8eefcd0e9175880e4f4da9398"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9cace7a8eefcd0e9175880e4f4da9398">get_code</a> (size_t &amp;pos)</td></tr>
 <tr class="memdesc:a9cace7a8eefcd0e9175880e4f4da9398"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get line(s) of code, %{ %}, %top{ %}, %class{ %}, and %init{ %}.  <a href="#a9cace7a8eefcd0e9175880e4f4da9398">More...</a><br /></td></tr>
 <tr class="separator:a9cace7a8eefcd0e9175880e4f4da9398"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c000b6b962698eecec3c82e93f75bd2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9c000b6b962698eecec3c82e93f75bd2">abort</a> (const char *message, const char *arg=NULL)</td></tr>
+<tr class="memdesc:a9c000b6b962698eecec3c82e93f75bd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abort with an error message.  <a href="#a9c000b6b962698eecec3c82e93f75bd2">More...</a><br /></td></tr>
+<tr class="separator:a9c000b6b962698eecec3c82e93f75bd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac67afdeb14ff6995dde676da0aaf4ff4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ac67afdeb14ff6995dde676da0aaf4ff4">error</a> (const char *message, const char *arg=NULL, size_t at_lineno=0)</td></tr>
 <tr class="memdesc:ac67afdeb14ff6995dde676da0aaf4ff4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Report an error and exit.  <a href="#ac67afdeb14ff6995dde676da0aaf4ff4">More...</a><br /></td></tr>
 <tr class="separator:ac67afdeb14ff6995dde676da0aaf4ff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa14629b6e98124e7b250b309f4c25253"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#aa14629b6e98124e7b250b309f4c25253">warning</a> (const char *message, const char *arg=NULL, size_t at_lineno=0)</td></tr>
 <tr class="memdesc:aa14629b6e98124e7b250b309f4c25253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Report a warning.  <a href="#aa14629b6e98124e7b250b309f4c25253">More...</a><br /></td></tr>
 <tr class="separator:aa14629b6e98124e7b250b309f4c25253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9505d86eb28fc52b829aca616c5c6ec5"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9505d86eb28fc52b829aca616c5c6ec5">SGR</a> (const char *code)</td></tr>
+<tr class="separator:a9505d86eb28fc52b829aca616c5c6ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners. </p>
@@ -454,6 +465,42 @@ Private Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a9c000b6b962698eecec3c82e93f75bd2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Reflex::abort </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>message</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>arg</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Abort with an error message. </p>
+
+</div>
+</div>
 <a class="anchor" id="afa74ce1f1d7fd97842a4ad42e0b7b02c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1065,6 +1112,55 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a73dd4e0d6c5db21a2636f332e6e7bd02"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Reflex::set_library </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set/reset regex library matcher. </p>
+
+</div>
+</div>
+<a class="anchor" id="a9505d86eb28fc52b829aca616c5c6ec5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* Reflex::SGR </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>code</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a26985f4836c5235fc418b18bf7969f5e"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1564,6 +1660,28 @@ Private Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="ab7001f5dfc8f7df0d9d1a0206f6eeddd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Reflex::color_term</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>terminal supports colors </p>
+
+</div>
+</div>
 <a class="anchor" id="a19a51b8e2bb114d8e237736464ac1110"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2011,7 +2129,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Mar 2 2017 22:07:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Mar 4 2017 15:30:22 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

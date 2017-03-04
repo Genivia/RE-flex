@@ -57,7 +57,7 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.12"
+#define REFLEX_VERSION "0.9.13"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -125,6 +125,7 @@ class Reflex
   void        init(int argc, char **argv);
   void        version();
   void        help(const char *message = NULL, const char *arg = NULL);
+  void        set_library();
   void        parse();
   void        parse_section_1();
   void        parse_section_2();
@@ -160,8 +161,10 @@ class Reflex
   std::string get_regex(size_t& pos);
   Starts      get_starts(size_t& pos);
   std::string get_code(size_t& pos);
+  void        abort(const char *message, const char *arg = NULL);
   void        error(const char *message, const char *arg = NULL, size_t at_lineno = 0);
   void        warning(const char *message, const char *arg = NULL, size_t at_lineno = 0);
+  const char *SGR(const char *code) { return color_term ? code : ""; }
 
  protected:
   StringMap     options;       ///< maps option name (from the options_table) to its option value
@@ -184,6 +187,7 @@ class Reflex
   std::string   line;          ///< current line read from input
   size_t        lineno;        ///< current line number at input
   size_t        linelen;       ///< current line length
+  bool          color_term;    ///< terminal supports colors
 };
 
 #endif

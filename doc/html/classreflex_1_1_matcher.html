@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Mar 2 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Mar 4 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -114,6 +114,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a641754cf7025a978c7dc672a563ac5c0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a641754cf7025a978c7dc672a563ac5c0">reset</a> (const char *opt=NULL)</td></tr>
 <tr class="memdesc:a641754cf7025a978c7dc672a563ac5c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this matcher's state to the initial state.  <a href="#a641754cf7025a978c7dc672a563ac5c0">More...</a><br /></td></tr>
 <tr class="separator:a641754cf7025a978c7dc672a563ac5c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf0031339b3f8426b730a6860e5feba2"><td class="memItemLeft" align="right" valign="top">virtual std::pair&lt; const char *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#acf0031339b3f8426b730a6860e5feba2">operator[]</a> (size_t n) const </td></tr>
+<tr class="memdesc:acf0031339b3f8426b730a6860e5feba2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns captured text.  <a href="#acf0031339b3f8426b730a6860e5feba2">More...</a><br /></td></tr>
+<tr class="separator:acf0031339b3f8426b730a6860e5feba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43734e349aec75a4afd05302f6c5fbb0"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; size_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a43734e349aec75a4afd05302f6c5fbb0">stops</a> (void) const </td></tr>
 <tr class="memdesc:a43734e349aec75a4afd05302f6c5fbb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns vector of tab stops.  <a href="#a43734e349aec75a4afd05302f6c5fbb0">More...</a><br /></td></tr>
 <tr class="separator:a43734e349aec75a4afd05302f6c5fbb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1485,6 +1488,35 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="acf0031339b3f8426b730a6860e5feba2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::pair&lt;const char*,size_t&gt; reflex::Matcher::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns captured text. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::pair of string pointer and its length in the captured text, where [0] returns std::pair(<a class="el" href="classreflex_1_1_abstract_matcher.html#a8b7a345add39a481e8963cb04a4347b8" title="Returns string with the text matched. ">text()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#adb5fec59e6c6a86b8cf405c40f93d1de" title="Returns the length of the matched text in number of bytes. ">size()</a>). </dd></dl>
+
+<p>Implements <a class="el" href="classreflex_1_1_abstract_matcher.html#a99e23c24c8e576f4f6463eda78539d05">reflex::AbstractMatcher</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ad7736ffcc340ede12da1f9bbe8854a5f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1709,7 +1741,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Mar 2 2017 22:07:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Mar 4 2017 15:30:23 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

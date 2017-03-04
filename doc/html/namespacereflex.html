@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Mar 2 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Mar 4 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -172,9 +172,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a677294e5ecf35a97b41e72370672f3bc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a677294e5ecf35a97b41e72370672f3bc">set_delete</a> (S1 &amp;s1, const S2 &amp;s2)</td></tr>
 <tr class="memdesc:a677294e5ecf35a97b41e72370672f3bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete elements of set <code>s2</code> from set <code>s1</code>.  <a href="#a677294e5ecf35a97b41e72370672f3bc">More...</a><br /></td></tr>
 <tr class="separator:a677294e5ecf35a97b41e72370672f3bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7eb47ab7eb02b259596f06745233c004"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a7eb47ab7eb02b259596f06745233c004">utf8</a> (int a, int b, int esc= 'x', bool strict=true)</td></tr>
-<tr class="memdesc:a7eb47ab7eb02b259596f06745233c004"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS-4 range [a,b] to a UTF-8 regex pattern.  <a href="#a7eb47ab7eb02b259596f06745233c004">More...</a><br /></td></tr>
-<tr class="separator:a7eb47ab7eb02b259596f06745233c004"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bef462a65804089ae20c74dede75782"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a7bef462a65804089ae20c74dede75782">utf8</a> (int a, int b, int esc= 'x', const char *par=&quot;(&quot;, bool strict=true)</td></tr>
+<tr class="memdesc:a7bef462a65804089ae20c74dede75782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS-4 range [a,b] to a UTF-8 regex pattern.  <a href="#a7bef462a65804089ae20c74dede75782">More...</a><br /></td></tr>
+<tr class="separator:a7bef462a65804089ae20c74dede75782"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a225d16c59f5f54f400412ed6cd4f340a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a225d16c59f5f54f400412ed6cd4f340a">utf8</a> (int c, char *s)</td></tr>
 <tr class="memdesc:a225d16c59f5f54f400412ed6cd4f340a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UCS-4 to UTF-8, unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED.  <a href="#a225d16c59f5f54f400412ed6cd4f340a">More...</a><br /></td></tr>
 <tr class="separator:a225d16c59f5f54f400412ed6cd4f340a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -305,8 +305,8 @@ Functions</h2></td></tr>
 <li><code>Z</code> for <code>\Z</code> end of input anchor, before the final line break</li>
 </ul>
 <p>The optional <code>"?+"</code> characters specify lazy and possessive support:</p><ul>
-<li><code>?</code> lazy repeats are supported</li>
-<li><code>+</code> possessive repeats are supported </li>
+<li><code>?</code> lazy quantifiers for repeats are supported</li>
+<li><code>+</code> possessive quantifiers for repeats are supported </li>
 </ul>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -574,7 +574,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a7eb47ab7eb02b259596f06745233c004"></a>
+<a class="anchor" id="a7bef462a65804089ae20c74dede75782"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -599,6 +599,12 @@ template&lt;typename S1 , typename S2 &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>par</em> = <code>&quot;(&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>strict</em> = <code>true</code>&#160;</td>
         </tr>
@@ -617,6 +623,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
     <tr><td class="paramname">a</td><td>lower bound of UCS range </td></tr>
     <tr><td class="paramname">b</td><td>upper bound of UCS range </td></tr>
     <tr><td class="paramname">esc</td><td>escape char 'x' for hex , or '0' or '\0' for octal \0nnn and  </td></tr>
+    <tr><td class="paramname">par</td><td>capturing or non-capturing parenthesis "(?:" </td></tr>
     <tr><td class="paramname">strict</td><td>returned regex is strict UTF-8 (true) or permissive and lean UTF-8 (false) </td></tr>
   </table>
   </dd>
@@ -715,7 +722,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Mar 2 2017 22:07:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Mar 4 2017 15:30:22 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

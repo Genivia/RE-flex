@@ -297,6 +297,19 @@ void test_lorem(const char *title, AbstractMatcher &tokenizer, AbstractMatcher &
       ++hits;
   }
   timer("Scanning lorem file stream took");
+  if (hits != 2682)
+    printf("FAIL hits=%zu\n", hits);
+  timer();
+  for (size_t run = 0; run < RUNS; ++run)
+  {
+    ifs.clear(); // always do this before seekg()
+    ifs.seekg(0);
+    ifs >> tokenizer; // read and buffer the whole thing
+    hits = 0;
+    while (tokenizer.scan())
+      ++hits;
+  }
+  timer("Scanning lorem file stream with >> took");
   ifs.close();
   if (hits != 2682)
     printf("FAIL hits=%zu\n", hits);

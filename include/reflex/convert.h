@@ -121,8 +121,8 @@ namespace convert_flag {
 /// - `Z` for `\Z` end of input anchor, before the final line break
 ///
 /// The optional `"?+"` characters specify lazy and possessive support:
-/// - `?` lazy repeats are supported
-/// - `+` possessive repeats are supported
+/// - `?` lazy quantifiers for repeats are supported
+/// - `+` possessive quantifiers for repeats are supported
 std::string convert(
     const char                              *pattern,                    ///< regex string pattern to convert
     const char                              *signature = NULL,           ///< regex library signature
