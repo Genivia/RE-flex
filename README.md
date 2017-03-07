@@ -12,8 +12,8 @@ into 240 tokens took:
 <tr><td>flex -+ --full</td><td>Flex</td><td>18</td></tr>
 <tr><td>reflex -m=boost-perl</td><td>Boost.Regex</td><td>28</td></tr>
 <tr><td>reflex --full</td><td>RE/flex</td><td>39</td></tr>
-<tr><td>flex -+</td><td>Flex</td></td>3,968</tr>
-<tr><td>RE2::Consume</td><td>RE2</td><td></td>5,088</tr>
+<tr><td>flex -+</td><td>Flex</td></td>3,968</td></tr>
+<tr><td>RE2::Consume</td><td>RE2</td><td>5,088</td></tr>
 </table>
 
 Note: Best times of 10 tests with average time in micro seconds over 100 runs,
