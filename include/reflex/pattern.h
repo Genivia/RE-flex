@@ -175,6 +175,26 @@ class Pattern {
   {
     return nop_;
   }
+  /// Get elapsed regex parsing and analysis time.
+  float parse_time() const
+  {
+    return pms_;
+  }
+  /// Get elapsed DFA vertices construction time.
+  float nodes_time() const
+  {
+    return vms_;
+  }
+  /// Get elapsed DFA edges construction time.
+  float edges_time() const
+  {
+    return ems_;
+  }
+  /// Get elapsed code words assembly time.
+  float words_time() const
+  {
+    return wms_;
+  }
  protected:
   /// Throw an error.
   virtual void error(
@@ -514,6 +534,10 @@ class Pattern {
   const Opcode         *opc_; ///< points to the opcode table
   Index                 nop_; ///< number of opcodes generated
   FSM                   fsm_; ///< function pointer to FSM code
+  float                 pms_; ///< ms elapsed time to parse regex
+  float                 vms_; ///< ms elapsed time to compile DFA vertices
+  float                 ems_; ///< ms elapsed time to compile DFA edges
+  float                 wms_; ///< ms elapsed time to assemble code words
 };
 
 } // namespace reflex

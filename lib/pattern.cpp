@@ -35,23 +35,10 @@
 */
 
 #include <reflex/pattern.h>
+#include <reflex/timer.h>
 #include <cstdlib>
 #include <cerrno>
 #include <cmath>
-
-#ifdef TIMED
-// TODO consider adding a profiling API to obtain stats, just as nodes() and edges()
-#include <time.h>
-#include <sys/times.h>
-#include <unistd.h>
-static long clock_ratio = 1000/sysconf(_SC_CLK_TCK);
-static struct tms clock_buf;
-static clock_t clock_time;
-#define start_clock (clock_time = times(&clock_buf))
-#define stop_clock (clock_time = times(&clock_buf) - clock_time)
-#define show_timer(s, t) fprintf(stderr, "%s elapsed real time = %lu (ms)\n", s, clock_ratio*t)
-#define show_clock(s) show_timer(s, clock_time)
-#endif
 
 #ifdef DEBUG
 # define DBGLOGPOS(p) \
@@ -158,24 +145,10 @@ void Pattern::init(const char *opt) throw (regex_error)
     Map       modifiers;
     Map       lookahead;
     init_options(opt);
-#ifdef TIMED
-    start_clock;
-#endif
     parse(startpos, followpos, modifiers, lookahead);
-#ifdef TIMED
-    stop_clock;
-    show_clock("parse");
-#endif
     State start(startpos);
     compile(start, followpos, modifiers, lookahead);
-#ifdef TIMED
-    start_clock;
-#endif
     assemble(start);
-#ifdef TIMED
-    stop_clock;
-    show_clock("assemble");
-#endif
   }
 }
 
@@ -262,12 +235,14 @@ void Pattern::parse(
     Map&       lookahead) throw (regex_error)
 {
   DBGLOG("BEGIN parse()");
-  Location  loc = 0;
-  Index     choice = 1;
-  Positions firstpos;
-  Positions lastpos;
-  bool      nullable;
-  Index     iter;
+  Location   loc = 0;
+  Index      choice = 1;
+  Positions  firstpos;
+  Positions  lastpos;
+  bool       nullable;
+  Index      iter;
+  timer_type t;
+  timer_start(t);
   do
   {
     Positions lazypos;
@@ -310,6 +285,7 @@ void Pattern::parse(
     }
     ++choice;
   } while (at(loc++) == '|');
+  pms_ = timer_elapsed(t);
 #ifdef DEBUG
   DBGLOGN("startpos = {");
   for (Positions::const_iterator p = startpos.begin(); p != startpos.end(); ++p)
@@ -1035,30 +1011,24 @@ void Pattern::compile(
 {
   DBGLOG("BEGIN compile()");
   State *back_state = &start;
-#ifdef TIMED
-  clock_t timer1 = 0;
-  clock_t timer2 = 0;
-#endif
   vno_ = 0;
   eno_ = 0;
+  ems_ = 0.0;
+  timer_type vt, et;
+  timer_elapsed(vt);
   acc_.resize(end_.size(), false);
   trim_lazy(start);
   for (State *state = &start; state; state = state->next)
   {
     Moves moves;
-#ifdef TIMED
-    start_clock;
-#endif
+    timer_elapsed(et);
     compile_transition(
         state,
         followpos,
         modifiers,
         lookahead,
         moves);
-#ifdef TIMED
-    timer1 += stop_clock;
-    start_clock;
-#endif
+    ems_ += timer_elapsed(et);
     for (Moves::iterator i = moves.begin(); i != moves.end(); ++i)
     {
       Positions& pos = i->second;
@@ -1105,15 +1075,9 @@ void Pattern::compile(
     }
     if (state->accept > 0 && state->accept <= end_.size())
       acc_[state->accept - 1] = true;
-#ifdef TIMED
-    timer2 += stop_clock;
-#endif
     ++vno_;
   }
-#ifdef TIMED
-  show_timer("compile moves", timer1);
-  show_timer("compile edges", timer2);
-#endif
+  vms_ = timer_elapsed(vt) - ems_;
   DBGLOG("END compile()");
 }
 
@@ -1677,12 +1641,15 @@ void Pattern::flip(Chars& chars) const
 void Pattern::assemble(State& start) throw (regex_error)
 {
   DBGLOG("BEGIN assemble()");
+  timer_type t;
+  timer_start(t);
   export_dfa(start);
   compact_dfa(start);
   encode_dfa(start);
   gencode_dfa(start);
   delete_dfa(start);
   export_code();
+  wms_ = timer_elapsed(t);
   DBGLOG("END assemble()");
 }
 

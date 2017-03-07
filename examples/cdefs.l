@@ -1,13 +1,11 @@
 // C/C++ lexical structure w/o unicode
-// Requires RE/flex matcher for lazy quants
+// Requires RE/flex matcher or a Perl/ECMA matcher that supports lazy quants
 
-%o matcher=reflex
-
-WHITESPACE	\s+
+WHITESPACE	[[:space:]]+
 ILCOMMENT	"//"([^\n]|\\\n)*\n
 MLCOMMENT	"/*"(.|\n)*?"*/"
 DIRECTIVE	^[[:blank:]]*#(.|\\\r?\n)+
-NAME		[\u\l_]\w*
+NAME		[[:alpha:]_][[:alnum:]_]*
 UDEC		0|[1-9]\d*
 UHEX		0[Xx][[:xdigit:]]+
 UOCT		0[0-7]+

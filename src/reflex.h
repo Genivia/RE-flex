@@ -44,6 +44,7 @@
 #include <cctype>
 #include <cstdlib>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <map>
 #include <set>
@@ -57,7 +58,7 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.13"
+#define REFLEX_VERSION "0.9.14"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**

@@ -1265,6 +1265,15 @@ the classic Flex actions shown in the second column of this table:
 Note that Flex `switch_streams(i, o)` is the same as invoking the `in(i)` and
 `out(o)` methods.  Flex `yyrestart(i)` is the same as setting the input
 `yyin=&i` or invoking `in(i)` to set input to a file, stream, or string.
+However, when the end of input (EOF) was reached, you should clear the EOF
+state with `matcher().set_end(false)` or reset the matcher state with
+`matcher().reset()`.  A reset clears the line and column counters, resets the
+internal anchor and boundary flags for anchor and word boundary matching, and
+resets to standard buffered input mode.
+
+@warning Do not invoke `matcher()` before `lex()` (or `yylex()` with option
+`−−flex`) is invoked!  A matcher is not initially assigned to the lexer when it
+is constructed.
 
 Use **reflex** options `−−flex` and `−−bison` to enable global Flex actions and
 variables.  This makes Flex actions and variables globally accessible outside
@@ -1294,7 +1303,8 @@ actions are also supported:
   `matcher().flush()`       | `YY_FLUSH_BUFFER`       | flush input buffer
   `matcher().get(s, n)`     | `LexerInput(s, n)`      | read `s[0..n-1]`
   `matcher().set_bol(b)`    | `yy_set_bol(b)`         | set begin of line
-  `matcher().set_eof(b)`    | *n/a*                   | set EOF flag to `b`
+  `matcher().set_end(b)`    | *n/a*                   | set EOF flag to `b`
+  `matcher().reset()   `    | *n/a*                   | reset the state as new
 
 You can switch to a new matcher while scanning input, and use operations to
 create a new matcher, push/pop a matcher on/from a stack, and delete a matcher:
@@ -2398,10 +2408,18 @@ lexer.in("How now brown cow.");
 lexer.in(L"How now brown cow.");
 ```
 
-However, switching input this way discards all remaining input from a previous
-input source.  To switch input without affecting the current input source,
-switch matchers instead.  The matchers buffer the input and manage the input
-state, in addition to pattern matching the input.
+When the end of the input (EOF) is reached, and you want to switch to new
+input, then you should clear the EOF state first with
+`lexer.matcher().set_end(false)` to reset EOF.  This allows more input to be
+scanned with `lexer.in(i)`.  You can also use `lexer.matcher().reset()` to
+clear the state, which clears the line and column counters, resets the internal
+anchor and boundary flags for anchor and word boundary matching, and resets to
+standard buffered input mode.
+
+Switching input before the end of the input source is reached discards all
+remaining input from that source.  To switch input without affecting the
+current input source, switch matchers instead.  The matchers buffer the input
+and manage the input state, in addition to pattern matching the input.
 
 To switch to a matcher that scans from a new input source, use:
 
@@ -3949,6 +3967,7 @@ while (matcher.find() == true)
 
 // construct a Boost.Regex matcher to count the words (all non-spaces "\S+")
 BoostMatcher boostmatcher("\\S+", example);
+boostmatcher.buffer(); // because Boost.Regex partial_match is broken!
 std::cout << std::distance(boostmatcher.find.begin(), boostmatcher.find.end())
           << " words"
           << std::endl;
@@ -3959,7 +3978,7 @@ for (auto& split : boostmatcher.pattern("\\s+").input(example).split)
 std::cout << std::endl;
 
 // reuse the BoostMatcher to split on whitespace using an iterator, sort into a set, and print
-boostmatcher.input(example);
+boostmatcher.input(example).buffer();
 std::set<std::string> words(boostmatcher.split.begin(), boostmatcher.split.end());
 std::copy(words.begin(), words.end(), std::ostream_iterator<std::string>(std::cout, " "));
 std::cout << std::endl;
@@ -4099,6 +4118,28 @@ When executed this code prints:
 
 ### Example 6
 
+The RE/flex matcher engine `reflex::matcher` only recognizes group captures at
+the top level of the regex (i.e. among the top-level alternations), because it
+uses an efficient FSM for matching.
+
+By contrast, the Boost.Regex matcher can capture groups within a regex, but the
+matcher is slower.
+
+```cpp
+#include <reflex/boostmatcher.h>
+
+// a BoostMatcher to find 'TODO' lines on stdin and capture their content to display
+reflex::BoostMatcher matcher("TODO ([^\\n]+)", stdin);
+matcher.buffer(); // because Boost.Regex partial_match is broken!
+while (matcher.find())
+  std::cout
+    << matcher.lineno() << ": "
+    << std::string(matcher[1].first, matcher[1].second)
+    << std::endl;
+```
+
+### Example 7
+
 This example shows how a `FILE*` file descriptor is used as input.  The file
 encoding is obtained from the UTF BOM, when present in the file.  Note that the
 file's state is accessed through the matcher's member variable `in`:
@@ -4122,6 +4163,7 @@ if (matcher.in.file() && matcher.in.good())
     case Input::Const::utf32le: std::cout << "UTF-32 little endian"; break;
   }
   std::cout << " of " << matcher.in.size() << " converted bytes to read\n";
+  matcher.buffer(); // because Boost.Regex partial_match is broken!
   if (matcher.split() == true)
     std::cout << "Starts with: " << matcher.text() << std::endl;
   std::cout << "Rest of the file is: " << matcher.rest();
@@ -4129,7 +4171,7 @@ if (matcher.in.file() && matcher.in.good())
 }
 ```
 
-### Example 7
+### Example 8
 
 This example shows how to override the file encoding, such as in cases when a file
 with wide character content has no UTF BOM or when a binary file is read that

@@ -19,57 +19,57 @@
 {MLCOMMENT}
 {DIRECTIVE}	printf("DIRECTIVE %s\n", yytext);
 {NAME}		printf("NAME      %s\n", yytext);
-{INT}		printf("INT       %s\n", yytext);
 {FLOAT}		printf("FLOAT     %s\n", yytext);
+{INT}		printf("INT       %s\n", yytext);
 {CHAR}		printf("CHAR      %s\n", yytext);
 {STRING}	printf("STRING    %s\n", yytext);
-"+"		|
 "+="		|
 "++"		|
-"-"		|
+"+"		|
 "-="		|
 "--"		|
 "->"		|
-"="		|
+"-"		|
 "=="		|
-"<"		|
+"="		|
 "<="		|
-"<<"		|
 "<<="		|
-">"		|
+"<<"		|
+"<"		|
 ">="		|
-">>"		|
 ">>="		|
-"!"		|
+">>"		|
+">"		|
 "!="		|
+"!"		|
 ","		|
 ";"		|
-"."		|
 "..."		|
-"^"		|
+"."		|
 "^="		|
+"^"		|
 "~"		|
-"*"		|
 "*="		|
-"/"		|
+"*"		|
 "/="		|
-"%"		|
+"/"		|
 "%="		|
-"&"		|
+"%"		|
 "&="		|
 "&&"		|
-"|"		|
+"&"		|
 "|="		|
 "||"		|
+"|"		|
 "("		|
 ")"		|
 "["		|
 "]"		|
 "{"		|
 "}"		|
-"?"		|
+"::"		|
 ":"		|
-"::"		printf("PUNCT     %s\n", yytext);
+"?"		printf("PUNCT     %s\n", yytext);
 .		printf("*** ERROR '%s' at line %d\n", yytext, yylineno);
 
 %%

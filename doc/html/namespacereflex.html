@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Mar 4 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Mar 6 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -141,6 +141,8 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a776c689092282b15974a151328083b2d"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a776c689092282b15974a151328083b2d">regex_error_type</a></td></tr>
 <tr class="memdesc:a776c689092282b15974a151328083b2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Regex syntax error exception error code.  <a href="#a776c689092282b15974a151328083b2d">More...</a><br /></td></tr>
 <tr class="separator:a776c689092282b15974a151328083b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87040a2fe4499e9b735f2564a50c58b9"><td class="memItemLeft" align="right" valign="top">typedef timeval&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a87040a2fe4499e9b735f2564a50c58b9">timer_type</a></td></tr>
+<tr class="separator:a87040a2fe4499e9b735f2564a50c58b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -172,6 +174,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a677294e5ecf35a97b41e72370672f3bc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a677294e5ecf35a97b41e72370672f3bc">set_delete</a> (S1 &amp;s1, const S2 &amp;s2)</td></tr>
 <tr class="memdesc:a677294e5ecf35a97b41e72370672f3bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete elements of set <code>s2</code> from set <code>s1</code>.  <a href="#a677294e5ecf35a97b41e72370672f3bc">More...</a><br /></td></tr>
 <tr class="separator:a677294e5ecf35a97b41e72370672f3bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71864a441be594417621cd31599387fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a71864a441be594417621cd31599387fa">timer_start</a> (<a class="el" href="namespacereflex.html#a87040a2fe4499e9b735f2564a50c58b9">timer_type</a> &amp;t)</td></tr>
+<tr class="memdesc:a71864a441be594417621cd31599387fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start timer.  <a href="#a71864a441be594417621cd31599387fa">More...</a><br /></td></tr>
+<tr class="separator:a71864a441be594417621cd31599387fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf44e022201a15a81b11e2c13892176a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#adf44e022201a15a81b11e2c13892176a">timer_elapsed</a> (<a class="el" href="namespacereflex.html#a87040a2fe4499e9b735f2564a50c58b9">timer_type</a> &amp;t)</td></tr>
+<tr class="memdesc:adf44e022201a15a81b11e2c13892176a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return elapsed time in milliseconds (ms) with microsecond precision since the last call up to 1 minute (wraps if elapsed time exceeds 1 minute!)  <a href="#adf44e022201a15a81b11e2c13892176a">More...</a><br /></td></tr>
+<tr class="separator:adf44e022201a15a81b11e2c13892176a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bef462a65804089ae20c74dede75782"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a7bef462a65804089ae20c74dede75782">utf8</a> (int a, int b, int esc= 'x', const char *par=&quot;(&quot;, bool strict=true)</td></tr>
 <tr class="memdesc:a7bef462a65804089ae20c74dede75782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS-4 range [a,b] to a UTF-8 regex pattern.  <a href="#a7bef462a65804089ae20c74dede75782">More...</a><br /></td></tr>
 <tr class="separator:a7bef462a65804089ae20c74dede75782"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,6 +216,18 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Regex syntax error exception error code. </p>
+
+</div>
+</div>
+<a class="anchor" id="a87040a2fe4499e9b735f2564a50c58b9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef timeval <a class="el" href="namespacereflex.html#a87040a2fe4499e9b735f2564a50c58b9">reflex::timer_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -574,6 +594,70 @@ template&lt;typename S1 , typename S2 &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="adf44e022201a15a81b11e2c13892176a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float reflex::timer_elapsed </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacereflex.html#a87040a2fe4499e9b735f2564a50c58b9">timer_type</a> &amp;&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return elapsed time in milliseconds (ms) with microsecond precision since the last call up to 1 minute (wraps if elapsed time exceeds 1 minute!) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>timer to be updated </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a71864a441be594417621cd31599387fa"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::timer_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacereflex.html#a87040a2fe4499e9b735f2564a50c58b9">timer_type</a> &amp;&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Start timer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>timer to be initialized </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a7bef462a65804089ae20c74dede75782"></a>
 <div class="memitem">
 <div class="memproto">
@@ -722,7 +806,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Mar 4 2017 15:30:22 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Mar 6 2017 22:02:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

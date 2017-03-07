@@ -199,7 +199,7 @@ static const Reflex::Library library_table[] = {
     "imsx#<=!:abcdefghlnprstuvwxzABDHLPQSUWZ0<>",
   },
   {
-    "boost-perl",
+    "boost_perl",
     "reflex/boostmatcher.h",
     "boost::regex",
     "reflex::BoostPerlMatcher",
@@ -1230,7 +1230,7 @@ void Reflex::parse_section_1()
                       StringMap::iterator j = options.find(name.substr(2));
                       if (j != options.end() && j->second.compare("true") == 0)
                       {
-                        warning("disabling an initially enabling %option ", name.c_str() + 2);
+                        warning("disabling an initially enabled %option ", name.c_str() + 2);
                         j->second.clear();
                       }
                     }
@@ -1240,7 +1240,7 @@ void Reflex::parse_section_1()
                       StringMap::iterator j = options.find(noname.append(name));
                       if (j != options.end() && j->second.compare("true") == 0)
                       {
-                        warning("enabling an initially disabling %option ", noname.c_str());
+                        warning("enabling an initially disabled %option ", noname.c_str());
                         j->second.clear();
                       }
                     }
@@ -2038,9 +2038,9 @@ void Reflex::write_lexer()
     }
     else
     {
-      *out << "  static const " << library->pattern << " PATTERN_" << conditions[start] << " = ";
+      *out << "  static const " << library->pattern << " PATTERN_" << conditions[start] << "(";
       write_regex(patterns[start]);
-      *out << ";\n";
+      *out << ");\n";
     }
   }
   *out <<
@@ -2258,7 +2258,7 @@ void Reflex::stats()
       if (!option->second.empty())
         std::cout << "    " << option->first << "=" << option->second << std::endl;
     if (!options["verbose"].empty())
-      std::cout << "  inclusive (%s) and exclusive (%x) start conditions:\n";
+      std::cout << "  inclusive (%s) and exclusive (%x) start conditions (elaped construction time):\n";
   }
   if (!options["matcher"].empty())
   {
@@ -2311,10 +2311,15 @@ void Reflex::stats()
             std::cout << "%s ";
           else
             std::cout << "%x ";
-          std::cout << conditions[start] << ": " << n;
+          std::cout << conditions[start] << ":\n"
+            << std::setw(10) << n << " rules (" << pattern.parse_time() << " ms)";
           if (n < rules[start].size())
-            std::cout << "+1(EOF)";
-          std::cout << " rules, " << pattern.nodes() << " nodes, " << pattern.edges() << " edges, " << pattern.words() << " code words\n";
+            std::cout << " + <<EOF>> rule";
+          std::cout
+            << "\n"
+            << std::setw(10) << pattern.nodes() << " nodes (" << pattern.nodes_time() << " ms)\n"
+            << std::setw(10) << pattern.edges() << " edges (" << pattern.edges_time() << " ms)\n"
+            << std::setw(10) << pattern.words() << " words (" << pattern.words_time() << " ms)\n";
         }
       }
       catch (reflex::regex_error& e)

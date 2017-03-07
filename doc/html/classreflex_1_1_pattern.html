@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Mar 4 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Mar 6 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -154,6 +154,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7c9ba1077b1eaff8d23f48a3e471d463"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a7c9ba1077b1eaff8d23f48a3e471d463">words</a> (void) const </td></tr>
 <tr class="memdesc:a7c9ba1077b1eaff8d23f48a3e471d463"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the code size in number of words.  <a href="#a7c9ba1077b1eaff8d23f48a3e471d463">More...</a><br /></td></tr>
 <tr class="separator:a7c9ba1077b1eaff8d23f48a3e471d463"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa17c980b164a1fe4a94dc467d5eea18e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aa17c980b164a1fe4a94dc467d5eea18e">parse_time</a> () const </td></tr>
+<tr class="memdesc:aa17c980b164a1fe4a94dc467d5eea18e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get elapsed regex parsing and analysis time.  <a href="#aa17c980b164a1fe4a94dc467d5eea18e">More...</a><br /></td></tr>
+<tr class="separator:aa17c980b164a1fe4a94dc467d5eea18e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb30d9c021e6d3e6f9a92d235ccf2dfe"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aeb30d9c021e6d3e6f9a92d235ccf2dfe">nodes_time</a> () const </td></tr>
+<tr class="memdesc:aeb30d9c021e6d3e6f9a92d235ccf2dfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get elapsed DFA vertices construction time.  <a href="#aeb30d9c021e6d3e6f9a92d235ccf2dfe">More...</a><br /></td></tr>
+<tr class="separator:aeb30d9c021e6d3e6f9a92d235ccf2dfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaf861828898bec7dc5c19fbc4a44194"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#abaf861828898bec7dc5c19fbc4a44194">edges_time</a> () const </td></tr>
+<tr class="memdesc:abaf861828898bec7dc5c19fbc4a44194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get elapsed DFA edges construction time.  <a href="#abaf861828898bec7dc5c19fbc4a44194">More...</a><br /></td></tr>
+<tr class="separator:abaf861828898bec7dc5c19fbc4a44194"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc8cbdbe88fab10eccc2acf6719abd61"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#acc8cbdbe88fab10eccc2acf6719abd61">words_time</a> () const </td></tr>
+<tr class="memdesc:acc8cbdbe88fab10eccc2acf6719abd61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get elapsed code words assembly time.  <a href="#acc8cbdbe88fab10eccc2acf6719abd61">More...</a><br /></td></tr>
+<tr class="separator:acc8cbdbe88fab10eccc2acf6719abd61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -347,6 +359,18 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a8bc2f333f66f08463a9b5471ae7a1a7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#a6bd5471ccfee49021fd76a135bd52db0">FSM</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a8bc2f333f66f08463a9b5471ae7a1a7f">fsm_</a></td></tr>
 <tr class="memdesc:a8bc2f333f66f08463a9b5471ae7a1a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">function pointer to FSM code  <a href="#a8bc2f333f66f08463a9b5471ae7a1a7f">More...</a><br /></td></tr>
 <tr class="separator:a8bc2f333f66f08463a9b5471ae7a1a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94209f79e5409ae48e486b447cbc52b9"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a94209f79e5409ae48e486b447cbc52b9">pms_</a></td></tr>
+<tr class="memdesc:a94209f79e5409ae48e486b447cbc52b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">ms elapsed time to parse regex  <a href="#a94209f79e5409ae48e486b447cbc52b9">More...</a><br /></td></tr>
+<tr class="separator:a94209f79e5409ae48e486b447cbc52b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ba3c8c6c5dbb258a8a76e8369c12e3e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a0ba3c8c6c5dbb258a8a76e8369c12e3e">vms_</a></td></tr>
+<tr class="memdesc:a0ba3c8c6c5dbb258a8a76e8369c12e3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">ms elapsed time to compile DFA vertices  <a href="#a0ba3c8c6c5dbb258a8a76e8369c12e3e">More...</a><br /></td></tr>
+<tr class="separator:a0ba3c8c6c5dbb258a8a76e8369c12e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d899b37f34c588c6227b23d7bea0233"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a3d899b37f34c588c6227b23d7bea0233">ems_</a></td></tr>
+<tr class="memdesc:a3d899b37f34c588c6227b23d7bea0233"><td class="mdescLeft">&#160;</td><td class="mdescRight">ms elapsed time to compile DFA edges  <a href="#a3d899b37f34c588c6227b23d7bea0233">More...</a><br /></td></tr>
+<tr class="separator:a3d899b37f34c588c6227b23d7bea0233"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9a63c8a4a9e95e57ee53f83b748b187"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab9a63c8a4a9e95e57ee53f83b748b187">wms_</a></td></tr>
+<tr class="memdesc:ab9a63c8a4a9e95e57ee53f83b748b187"><td class="mdescLeft">&#160;</td><td class="mdescRight">ms elapsed time to assemble code words  <a href="#ab9a63c8a4a9e95e57ee53f83b748b187">More...</a><br /></td></tr>
+<tr class="separator:ab9a63c8a4a9e95e57ee53f83b748b187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -1271,6 +1295,31 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="abaf861828898bec7dc5c19fbc4a44194"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float reflex::Pattern::edges_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get elapsed DFA edges construction time. </p>
+
+</div>
+</div>
 <a class="anchor" id="a87ad6f65bf821d26564a23c4abba137c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2165,6 +2214,31 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aeb30d9c021e6d3e6f9a92d235ccf2dfe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float reflex::Pattern::nodes_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get elapsed DFA vertices construction time. </p>
+
+</div>
+</div>
 <a class="anchor" id="a74271267057251b4cd554b9092f44154"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2778,6 +2852,31 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa17c980b164a1fe4a94dc467d5eea18e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float reflex::Pattern::parse_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get elapsed regex parsing and analysis time. </p>
+
+</div>
+</div>
 <a class="anchor" id="a0eda441aecb46e765fe91c7abe64e259"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2957,6 +3056,31 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="acc8cbdbe88fab10eccc2acf6719abd61"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float reflex::Pattern::words_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get elapsed code words assembly time. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Friends And Related Function Documentation</h2>
 <a class="anchor" id="a516355df9ce1c7333bdc6d42e0cf89ef"></a>
 <div class="memitem">
@@ -3000,6 +3124,28 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>true if subpattern n is acceptable (state is reachable) </p>
+
+</div>
+</div>
+<a class="anchor" id="a3d899b37f34c588c6227b23d7bea0233"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float reflex::Pattern::ems_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ms elapsed time to compile DFA edges </p>
 
 </div>
 </div>
@@ -3135,6 +3281,28 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a94209f79e5409ae48e486b447cbc52b9"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float reflex::Pattern::pms_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ms elapsed time to parse regex </p>
+
+</div>
+</div>
 <a class="anchor" id="a613e2abf7a545bf78889be3f04aa36e1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3154,6 +3322,28 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>regular expression string </p>
+
+</div>
+</div>
+<a class="anchor" id="a0ba3c8c6c5dbb258a8a76e8369c12e3e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float reflex::Pattern::vms_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ms elapsed time to compile DFA vertices </p>
 
 </div>
 </div>
@@ -3179,13 +3369,35 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ab9a63c8a4a9e95e57ee53f83b748b187"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float reflex::Pattern::wms_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ms elapsed time to assemble code words </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="pattern_8h.html">pattern.h</a></li>
 </ul>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Mar 4 2017 15:30:23 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Mar 6 2017 22:02:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

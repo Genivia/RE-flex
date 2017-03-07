@@ -1,13 +1,11 @@
 // test ranges.h
 
-#include <reflex/ranges.h>
 #include <reflex/bits.h>
+#include <reflex/ranges.h>
+#include <reflex/timer.h>
 #include <bitset>
 #include <map>
 #include <iostream>
-#include <time.h>
-#include <sys/times.h>
-#include <unistd.h>
 #include <cassert>
 #include <cstdlib>
 #include <cstdio>
@@ -218,17 +216,13 @@ Set of 1 open-ended ranges:
 401 is not in the set
 */
 
-  struct tms buf1, buf2;
-  clock_t t = 0;
-  long r = 1000/sysconf(_SC_CLK_TCK);
-
-  std::cerr << "Random 256 range insertions timings" << std::endl;
-
   unsigned int seed = 1; // time(0);
   int len1, len2;
   int sum = 0;
+  timer_type t;
 
-  t = times(&buf1);
+  std::cerr << "Random 256 range insertions timings" << std::endl;
+  timer_start(t);
   for (int run = 0; run < 5000; ++run)
   {
     Ranges<int> ints1, ints2;
@@ -243,10 +237,11 @@ Set of 1 open-ended ranges:
     len1 = ints1.size();
     len2 = ints2.size();
   }
-  t = times(&buf2)-t;
-  fprintf(stderr, "%d+%d ranges, elapsed real time = %lu (ms) CPU time = %lu user = %lu system = %lu\n", len1, len2, r*t, r*(buf2.tms_utime+buf2.tms_stime-buf1.tms_utime-buf1.tms_stime), r*(buf2.tms_utime-buf1.tms_utime), r*(buf2.tms_stime-buf1.tms_stime));
+  float dt = timer_elapsed(t);
+  fprintf(stderr, "%d+%d ranges, elapsed real time = %g ms\n", len1, len2, dt);
 
-  t = times(&buf1);
+  std::cerr << "Random 256 o-range insertions timings" << std::endl;
+  timer_start(t);
   for (int run = 0; run < 5000; ++run)
   {
     ORanges<int> ints1, ints2;
@@ -263,60 +258,63 @@ Set of 1 open-ended ranges:
     len1 = ints1.size();
     len2 = ints2.size();
   }
-  t = times(&buf2)-t;
-  fprintf(stderr, "%d+%d ranges, elapsed real time = %lu (ms) CPU time = %lu user = %lu system = %lu\n", len1, len2, r*t, r*(buf2.tms_utime+buf2.tms_stime-buf1.tms_utime-buf1.tms_stime), r*(buf2.tms_utime-buf1.tms_utime), r*(buf2.tms_stime-buf1.tms_stime));
+  dt = timer_elapsed(t);
+  fprintf(stderr, "%d+%d ranges, elapsed real time = %g ms\n", len1, len2, dt);
 
-  std::cerr << "Raw 0..255 insertion timings" << std::endl;
-
-  t = times(&buf1);
+  std::cerr << "Raw 0..255 range insertion timings" << std::endl;
+  timer_start(t);
   for (int run = 0; run < 10000; ++run)
   {
     Ranges<int> ints;
     for (int i = 0; i < 256; ++i)
       ints.insert(i);
   }
-  t = times(&buf2)-t;
-  fprintf(stderr, "Elapsed real time = %lu (ms) CPU time = %lu user = %lu system = %lu\n", r*t, r*(buf2.tms_utime+buf2.tms_stime-buf1.tms_utime-buf1.tms_stime), r*(buf2.tms_utime-buf1.tms_utime), r*(buf2.tms_stime-buf1.tms_stime));
+  dt = timer_elapsed(t);
+  fprintf(stderr, "elapsed real time = %g ms\n", dt);
 
-  t = times(&buf1);
+  std::cerr << "Raw 0..255 o-range insertion timings" << std::endl;
+  timer_start(t);
   for (int run = 0; run < 10000; ++run)
   {
     ORanges<int> ints;
     for (int i = 0; i < 256; ++i)
       ints.insert(i);
   }
-  t = times(&buf2)-t;
-  fprintf(stderr, "Elapsed real time = %lu (ms) CPU time = %lu user = %lu system = %lu\n", r*t, r*(buf2.tms_utime+buf2.tms_stime-buf1.tms_utime-buf1.tms_stime), r*(buf2.tms_utime-buf1.tms_utime), r*(buf2.tms_stime-buf1.tms_stime));
+  dt = timer_elapsed(t);
+  fprintf(stderr, "elapsed real time = %g ms\n", dt);
 
-  t = times(&buf1);
-  for (int run = 0; run < 10000; ++run)
-  {
-    std::set<int> ints;
-    for (int i = 0; i < 256; ++i)
-      ints.insert(i);
-  }
-  t = times(&buf2)-t;
-  fprintf(stderr, "Elapsed real time = %lu (ms) CPU time = %lu user = %lu system = %lu\n", r*t, r*(buf2.tms_utime+buf2.tms_stime-buf1.tms_utime-buf1.tms_stime), r*(buf2.tms_utime-buf1.tms_utime), r*(buf2.tms_stime-buf1.tms_stime));
-
-  t = times(&buf1);
+  std::cerr << "Raw 0..255 bits insertion timings" << std::endl;
+  timer_start(t);
   for (int run = 0; run < 10000; ++run)
   {
     Bits bits;
     for (int i = 0; i < 256; ++i)
       bits[i] = true;
   }
-  t = times(&buf2)-t;
-  fprintf(stderr, "Elapsed real time = %lu (ms) CPU time = %lu user = %lu system = %lu\n", r*t, r*(buf2.tms_utime+buf2.tms_stime-buf1.tms_utime-buf1.tms_stime), r*(buf2.tms_utime-buf1.tms_utime), r*(buf2.tms_stime-buf1.tms_stime));
+  dt = timer_elapsed(t);
+  fprintf(stderr, "elapsed real time = %g ms\n", dt);
 
-  t = times(&buf1);
+  std::cerr << "Raw 0..255 std::set insertion timings" << std::endl;
+  timer_start(t);
+  for (int run = 0; run < 10000; ++run)
+  {
+    std::set<int> ints;
+    for (int i = 0; i < 256; ++i)
+      ints.insert(i);
+  }
+  dt = timer_elapsed(t);
+  fprintf(stderr, "elapsed real time = %g ms\n", dt);
+
+  std::cerr << "Raw 0..255 std::bitset<256> insertion timings" << std::endl;
+  timer_start(t);
   for (int run = 0; run < 10000; ++run)
   {
     std::bitset<256> ints;
     for (int i = 0; i < 256; ++i)
       ints[i] = true;
   }
-  t = times(&buf2)-t;
-  fprintf(stderr, "Elapsed real time = %lu (ms) CPU time = %lu user = %lu system = %lu\n", r*t, r*(buf2.tms_utime+buf2.tms_stime-buf1.tms_utime-buf1.tms_stime), r*(buf2.tms_utime-buf1.tms_utime), r*(buf2.tms_stime-buf1.tms_stime));
+  dt = timer_elapsed(t);
+  fprintf(stderr, "elapsed real time = %g ms\n", dt);
 
   return 0;
 }

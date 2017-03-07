@@ -102,6 +102,7 @@ following files:
     |       |__ ranges.h
     |       |__ setop.h
     |       |__ stdmatcher.h
+    |       |__ timer.h
     |       |__ traits.h
     |       |__ unicode.h
     |       |__ utf8.h

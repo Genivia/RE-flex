@@ -1,8 +1,8 @@
 #include <reflex/matcher.h>
 #include <reflex/boostmatcher.h>
 #include <reflex/stdmatcher.h>
+#include <reflex/timer.h>
 #include <fstream>
-#include <sys/time.h>
 
 #ifndef DEBUG
 #define RUNS 100
@@ -30,18 +30,10 @@ void banner(const char *title)
 
 void timer(const char *text = NULL)
 {
-  static suseconds_t usec = 0;
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
+  static timer_type t;
+  float ms = timer_elapsed(t);
   if (text)
-  {
-    suseconds_t diff = tv.tv_usec - usec;
-    if (diff < 0)
-      diff += 1000000;
-    printf("%s %d micro seconds\n", text, diff);
-    gettimeofday(&tv, NULL);
-  }
-  usec = tv.tv_usec;
+    printf("%s %g ms\n", text, ms);
 }
 
 // http://www.lipsum.com
