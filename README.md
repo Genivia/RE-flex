@@ -4,7 +4,7 @@
 Flex reimagined.  Fast, flexible, adds Boost.
 
 RE/flex is as fast or faster than Flex.  For example, tokenizing a 2K C file
-into 240 tokens took:
+into 240 tokens takes:
 
 <table>
 <tr><th>Tool/library</th><th>Matcher</th><th>time (μs)</th></tr>
@@ -12,12 +12,12 @@ into 240 tokens took:
 <tr><td>flex -+ --full</td><td>Flex</td><td>18</td></tr>
 <tr><td>reflex -m=boost-perl</td><td>Boost.Regex</td><td>28</td></tr>
 <tr><td>reflex --full</td><td>RE/flex</td><td>39</td></tr>
-<tr><td>flex -+</td><td>Flex</td></td>3,968</td></tr>
+<tr><td>flex -+</td><td>Flex</td><td>3,968</td></tr>
 <tr><td>RE2::Consume</td><td>RE2</td><td>5,088</td></tr>
 </table>
 
-Note: Best times of 10 tests with average time in micro seconds over 100 runs,
-(clang-800.0.42.1 with -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz LPDDR3).
+Note: *Best times of 10 tests with average time in micro seconds over 100 runs,
+(clang-800.0.42.1 with -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz LPDDR3).*
 
 RE/flex is a flexible scanner-generator framework for generating regex-centric,
 Flex-compatible scanners.  The RE/flex command-line tool is compatible with the
