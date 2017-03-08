@@ -981,7 +981,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
     if (k < len && pattern[k] == ')')
     {
       // preserve (?imsx) at start of regex
-      if (can)
+      if (can && !mods.empty())
         regex.append("(?").append(mods).append(")");
       pos = k + 1;
       loc = pos;

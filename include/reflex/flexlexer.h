@@ -328,12 +328,23 @@ class FlexLexer : public AbstractLexer<M> {
   /// Extends reflex::AbstractLexer<M>::Matcher for Flex-compatibility.
   class Matcher : public AbstractBaseLexer::Matcher {
    public:
+    /// Construct a FlexLexer matcher from a matcher's pattern type.
     Matcher(
         const typename M::Pattern& pattern, ///< regex pattern to instantiate matcher class M(pattern, input)
         const Input&               input,   ///< the reflex::Input to instantiate matcher class M(pattern, input)
-        FlexLexer                 *lexer)   ///< points to the instantiating lexer class
+        FlexLexer                 *lexer,   ///< points to the instantiating lexer class
+        const char                *opt = NULL) ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
       :
-        AbstractBaseLexer::Matcher(pattern, input, lexer)
+        AbstractBaseLexer::Matcher(pattern, input, lexer, opt)
+    { }
+    /// Construct a FlexLexer matcher from a string pattern.
+    Matcher(
+        const char    *pattern,    ///< regex pattern to instantiate matcher class M(pattern, input)
+        const Input&   input,      ///< the reflex::Input to instantiate matcher class M(pattern, input)
+        FlexLexer     *lexer,      ///< points to the instantiating lexer class
+        const char    *opt = NULL) ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      :
+        AbstractBaseLexer::Matcher(pattern, input, lexer, opt)
     { }
    protected:
     /// Read character sequences via a Flex-compatible virtual FlexLexer::LexerInput method.

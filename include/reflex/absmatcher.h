@@ -98,7 +98,7 @@ class AbstractMatcher {
     static const int UNK      = 256;    ///< unknown meta-char marker
     static const int BOB      = 257;    ///< begin of buffer meta-char marker
     static const int EOB      = EOF;    ///< end of buffer meta-char marker
-    static const size_t EMPTY = 0xffff; ///< accept() returns empty last split at end of input
+    static const size_t EMPTY = 0xFFFF; ///< accept() returns empty last split at end of input
     static const size_t BLOCK = 4096;   ///< buffer growth factor, buffer is initially 2*BLOCK size
   };
   /// AbstractMatcher::Options for matcher engines.
@@ -354,19 +354,53 @@ class AbstractMatcher {
   {
     return txt_;
   }
+  /// Returns wide string converted from the UTF-8 text matched.
+  std::wstring wtext() const
+    /// @returns wide string.
+  {
+    const char *t = text();
+    int wc;
+    std::wstring ws;
+#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
+    // std::wstring is UTF-16
+    while ((wc = utf8(t, &t)) != '\0')
+    {
+      if (wc > 0xFFFF)
+      {
+        if (wc <= 0x10FFFF)
+        {
+          ws.push_back(0xD800 | (wc - 0x010000) >> 10); // first half of UTF-16 surrogate pair
+          ws.push_back(0xDC00 | (wc & 0x03FF)); // second half of UTF-16 surrogate pair
+        }
+        else
+        {
+          ws.push_back(0xFFFD);
+        }
+      }
+      else
+      {
+        ws.push_back(wc);
+      }
+    }
+#else
+    while ((wc = utf8(t, &t)) != '\0')
+      ws.push_back(wc);
+#endif
+    return ws;
+  }
   /// Returns the length of the matched text in number of bytes.
   size_t size() const
     /// @returns match size in bytes.
   {
     return len_;
   }
-  /// Returns the length of the matched text in number of (wide) characters.
+  /// Returns the length of the matched text in number of wide characters.
   size_t wsize() const
     /// @returns the length of the match in number of (wide, multibyte UTF-8) characters.
   {
     size_t n = 0;
     for (const char *t = txt_; *t; ++t)
-      n += (*t & 0xc0) != 0x80;
+      n += (*t & 0xC0) != 0x80;
     return n;
   }
   /// Returns the line number of the match in the input character sequence.
@@ -392,7 +426,7 @@ class AbstractMatcher {
     // count column offset in UTF-8 chars
     size_t n = cno_;
     for (const char *t = buf_; t < txt_; ++t)
-      n += (*t & 0xc0) != 0x80;
+      n += (*t & 0xC0) != 0x80;
     return n;
 #endif
   }
@@ -401,6 +435,12 @@ class AbstractMatcher {
     /// @returns a std::pair of size_t accept() and std::string text().
   {
     return std::pair<size_t,std::string>(accept(), std::string(text(), size()));
+  }
+  /// Returns a pair of size_t accept() and std::wstring wtext(), useful for tokenizing input into containers of pairs.
+  std::pair<size_t,std::wstring> wpair() const
+    /// @returns a std::pair of size_t accept() and wtext().
+  {
+    return std::pair<size_t,std::wstring>(accept(), wtext());
   }
   /// Returns the position of the first character starting the match in the input character sequence.
   size_t first() const
@@ -453,7 +493,7 @@ class AbstractMatcher {
     else if (got_ == '\n')
       got_ = Const::UNK;
   }
-  /// Returns the next character from the input character sequence while preserving the current text match.
+  /// Returns the next 8-bit character from the input character sequence, while preserving the current text match.
   int input()
     /// @returns the character read (unsigned char 0..255) read or EOF (-1).
   {
@@ -479,8 +519,25 @@ class AbstractMatcher {
     cur_ = pos_;
     return got_;
   }
-  /// Put back one character on the input character sequence for matching, invalidating the current match info and text.
-  void unput(char c) ///< character to put back
+  /// Returns the next wide character from the input character sequence, while preserving the current text match.
+  int winput()
+    /// @returns the wide character read or EOF (-1).
+  {
+    DBGLOG("AbstractMatcher::winput() pos = %zu end = %zu chr = %c", pos_, end_, chr_);
+    char tmp[6], *s = tmp;
+    int c;
+    if ((c = input()) == EOF)
+      return EOF;
+    if (static_cast<unsigned char>(*s++ = c) >= 0x80)
+    {
+      while (((++*s = (pos_ < end_ ? buf_[pos_++] : get())) & 0xC0) == 0x80)
+        continue;
+      got_ = chr_ = static_cast<unsigned char>(buf_[cur_ = --pos_]);
+    }
+    return utf8(tmp);
+  }
+  /// Put back one character (8-bit) on the input character sequence for matching, invalidating the current match info and text.
+  void unput(char c) ///< 8-bit character to put back
   {
     DBGLOG("AbstractMatcher::unput()");
     if (pos_ < end_)
@@ -567,9 +624,15 @@ class AbstractMatcher {
   }
   /// Cast this matcher to a std::string of the text matched by this matcher.
   operator std::string() const
-    /// @returns std::string allocated from NUL-terminated matched text.
+    /// @returns std::string with matched text.
   {
     return std::string(text(), size());
+  }
+  /// Cast this matcher to a std::wstring of the text matched by this matcher.
+  operator std::wstring() const
+    /// @returns std::wstring converted to UCS from the NUL-terminated matched UTF-8 text.
+  {
+    return wtext();
   }
   /// Cast this matcher to a pair of size_t accept() and std::string text(), useful for tokenization into containers.
   operator std::pair<size_t,std::string>() const
@@ -740,7 +803,7 @@ class AbstractMatcher {
     }
     return true;
   }
-  /// Returns the next character from the buffered input character sequence.
+  /// Returns the next character read from the current input source.
   int get()
     /// @returns the character read (unsigned char 0..255) or EOF (-1).
   {
@@ -768,7 +831,7 @@ class AbstractMatcher {
     }
 #endif
   }
-  /// Peek at the next character in the buffered input without consuming it.
+  /// Peek at the next character available for reading from the current input source.
   int peek()
     /// @returns the character (unsigned char 0..255) or EOF (-1).
   {
@@ -901,7 +964,7 @@ class AbstractMatcher {
       else
       {
         // count column offset in UTF-8 chars
-        cno_ += (*s & 0xc0) != 0x80;
+        cno_ += (*s & 0xC0) != 0x80;
       }
     }
     num_ += txt_ - buf_;

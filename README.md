@@ -1,54 +1,30 @@
 
 [![logo][logo-url]][reflex-url]
 
-Flex reimagined.  Fast, flexible, adds Boost.
+Flex reimagined.  Fast, flexible, adds Boost 💪
 
-RE/flex is as fast, or even faster than Flex.  For example, tokenizing a 2K C
-file into 240 tokens takes:
+RE/flex is as fast as Flex.  For example, tokenizing a representative C source
+code file into 240 tokens takes:
 
 <table>
-<tr><th>Tool / Library</th><th>Matcher</th><th>Time (μs)</th></tr>
-<tr><td><b>reflex --fast</b></td><td><b>RE/flex</b></td><td></b>17</td></tr>
+<tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
+<tr><td><b>reflex --fast</b></td><td><b>RE/flex</b></td><td><b>17</b></td></tr>
 <tr><td>flex -+ --full</td><td>Flex</td><td>18</td></tr>
 <tr><td><b>reflex --full</b></td><td><b>RE/flex</b></td><td><b>39</b></td></tr>
 <tr><td>reflex -m=boost-perl</td><td>Boost.Regex (Perl mode)</td><td>288</td></tr>
 <tr><td>pcre2_match()</td><td>PCRE2 (pre-compiled)</td><td>318</td></tr>
 <tr><td>reflex -m=boost</td><td>Boost.Regex (POSIX mode)</td><td>486</td></tr>
-<tr><td>flex -+</td><td>Flex</td><td>3,968</td></tr>
-<tr><td>RE2::Consume()</td><td>RE2 (pre-compiled)</td><td>5,088</td></tr>
+<tr><td>flex -+</td><td>Flex</td><td>3968</td></tr>
+<tr><td>RE2::Consume()</td><td>RE2 (pre-compiled)</td><td>5088</td></tr>
+<tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>14784</td></tr>
 </table>
 
 Note: *Best times of 10 tests with average time in micro seconds over 100 runs
 (using clang 8.0.0 with -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz LPDDR3).*
 
-RE/flex is a flexible scanner-generator framework for generating regex-centric,
-Flex-compatible scanners.  The RE/flex command-line tool is compatible with the
-Flex command-line tool.  RE/flex offers:
 
-* a *feature-rich replacement* of both [Flex](dinosaur.compilertools.net/#flex)
-  and [Lex](dinosaur.compilertools.net/#lex), preserving the compatibility with
-  the Bison (Yacc) parser generators (see the feature list below).
-
-* an *enhancement* of [Boost.Regex](www.boost.org/libs/regex) to use its engine
-  for matching, seaching, splitting and for scanning of tokens on various types
-  of data sources, such as strings, files, and streams;
-
-* a *regex library* for fast POSIX regular expression matching with extensions
-  to POSIX such as lazy quantifiers, word boundary anchors, Unicode UTF-8, and
-  more;
-
-* a *flexible regex framework* that combines the above in a collection of C++
-  class templates for pattern matching, searching, scanning, and splitting of
-  strings, files, and streaming data.
-
-The RE/flex repo includes tokenizers for Java, Python, and C/C++.
-
-The RE/flex software is fully self-contained.  No other libraries are required.
-Boost.Regex is optional to use as a regex engine.
-
-
-List of features
-----------------
+Features
+--------
 
 - Fully compatible with Flex to eliminate a learning curve, making a transition
   to RE/flex frustration-free.
@@ -57,7 +33,7 @@ List of features
 - Generates clean source code that defines a C++ Lexer class derived from an
   abstract lexer class.
 - RE/flex generates lex.yy.cpp files while Flex generates lex.yy.cc files (in
-  C++ mode with flex option -+), to distinguish the differences.
+  C++ mode with flex option -+), to distinguish the generated files.
 - Configurable Lexer class generation to customize the interface for various
   parsers, including Yacc and Bison.
 - Works with Bison and supports reentrant, bison-bridge and bison-locations.
@@ -89,13 +65,21 @@ List of features
   to use in plain C++ code for pattern matching on (wide) strings, files, and
   streams.
 
+The RE/flex software is fully self-contained.  No other libraries are required.
+Boost.Regex is optional to use as a regex engine.
+
+The RE/flex repo includes tokenizers for Java, Python, and C/C++.
+
 
 Installation
 ------------
 
+A clean build:
+
+    $ ./clean.sh
     $ ./build.sh
 
-or use the 'make' command to do the same:
+or use the 'make' command:
 
     $ cd src; make
 
@@ -130,8 +114,8 @@ Optional libraries to install:
   install [Graphviz dot][dot-url].
 
 
-How do I use RE/flex?
----------------------
+Usage
+-----
 
 There are two ways you can use this project:
 
@@ -184,6 +168,16 @@ For example:
 // use a BoostMatcher to check if the birthdate string is a valid date
 if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
   std::cout << "Valid date!" << std::endl;
+```
+
+With a group capture to fetch the year:
+
+```{.cpp}
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
+// use a BoostMatcher to check if the birthdate string is a valid date
+reflex::BoostMatcher matcher("(\\d{4})-\\d{2}-\\d{2}", birthdate);
+if (matcher.matches())
+  std::cout << std::string(matcher[1].first, matcher[1].second) << " was a good year!" << std::endl;
 ```
 
 To search a string for words `\w+`:
@@ -265,11 +259,11 @@ underlying regex library understands and can use:
 For example:
 
 ```{.cpp}
-    #include <reflex/matcher.h> // reflex::Matcher, reflex::Input, reflex::Pattern
-    // use a Matcher to check if sentence is in Greek:
-    static const reflex::Pattern pattern(reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+"));
-    if (reflex::Matcher(pattern, sentence).matches())
-      std::cout << "This is Greek" << std::endl;
+#include <reflex/matcher.h> // reflex::Matcher, reflex::Input, reflex::Pattern
+// use a Matcher to check if sentence is in Greek:
+static const reflex::Pattern pattern(reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+"));
+if (reflex::Matcher(pattern, sentence).matches())
+  std::cout << "This is Greek" << std::endl;
 ```
 
 Conversion is fast (it runs in linear time in the size of the regex), but it is
@@ -319,7 +313,8 @@ Changelog
 - Jan 25, 2017: 0.9.11 added C++11 std::regex matching engine support, moved .h files to include/reflex, requires `#include <reflex/xyz.h>` from now on, fixed `errno_t` portability issue
 - Mar  3, 2017: 0.9.12 refactored and improved, includes new regex converters for regex engines that lack regex features such as Unicode character classes
 - Mar  4, 2017: 0.9.13 improved warning and error messages
-- Mar  6, 2017: 0.9.14 option -v stats with execution timings, bug fixes
+- Mar  6, 2017: 0.9.14 reflex option -v shows stats with execution timings, bug fixes
+- Mar  8, 2017: 0.9.15 added `wtext()`, `wpair()`, `winput()` methods, other improvements
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

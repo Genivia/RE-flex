@@ -205,6 +205,13 @@ static const Reflex::Library library_table[] = {
     "reflex::BoostPerlMatcher",
     "imsx#<=!:abcdefghlnprstuvwxzABDHLPQSUWZ0<>?+",
   },
+  {
+    "std_ecma", // this is an experimental option, not recommended
+    "reflex/stdmatcher.h",
+    "char *",
+    "/* EXPERIMENTAL OPTION, NOT RECOMMENDED */ reflex::StdEcmaMatcher",
+    "!=:bcdfnrstvwxBDSW?"
+  },
   { NULL, NULL, NULL, NULL, NULL } // end of table
 };
 
@@ -911,7 +918,7 @@ std::string Reflex::get_regex(size_t& pos)
   }
   catch (reflex::regex_error& e)
   {
-    error("malformed regular expression\n", e.what());
+    error("malformed regular expression or unsupported syntax\n", e.what());
   }
   return regex;
 }

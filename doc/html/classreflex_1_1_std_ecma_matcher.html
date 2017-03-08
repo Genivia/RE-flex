@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::StdEcmaMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Mar 6 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Mar 8 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -58,7 +58,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p>std matcher engine class, extends <a class="el" href="classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan...">reflex::StdMatcher</a> for ECMA std::regex::ECMAScript regex matching.  
+<p>std matcher engine class, extends <a class="el" href="classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan...">reflex::StdMatcher</a> for ECMA std::regex::ECMAScript syntax and regex matching.  
  <a href="classreflex_1_1_std_ecma_matcher.html#details">More...</a></p>
 
 <p><code>#include &lt;stdmatcher.h&gt;</code></p>
@@ -97,11 +97,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a142248792f728bd945568d4e6e199c1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <a href="#a142248792f728bd945568d4e6e199c1e">More...</a><br /></td></tr>
 <tr class="separator:a142248792f728bd945568d4e6e199c1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cc60cb658f8c6565c222073f37808cc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_std_ecma_matcher.html#a4cc60cb658f8c6565c222073f37808cc">StdEcmaMatcher</a> (const char *pat, const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;inp=<a class="el" href="classreflex_1_1_input.html">Input</a>(), const char *opt=NULL)</td></tr>
-<tr class="memdesc:a4cc60cb658f8c6565c222073f37808cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an ECMA matcher engine from a std::regex pattern and an input character sequence.  <a href="#a4cc60cb658f8c6565c222073f37808cc">More...</a><br /></td></tr>
+<tr class="memdesc:a4cc60cb658f8c6565c222073f37808cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an ECMA matcher engine from a string pattern and an input character sequence.  <a href="#a4cc60cb658f8c6565c222073f37808cc">More...</a><br /></td></tr>
 <tr class="separator:a4cc60cb658f8c6565c222073f37808cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a668e5eb65d21d34693981d1b08c378ea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_std_ecma_matcher.html#a668e5eb65d21d34693981d1b08c378ea">StdEcmaMatcher</a> (const std::string &amp;pat, const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;inp=<a class="el" href="classreflex_1_1_input.html">Input</a>(), const char *opt=NULL)</td></tr>
-<tr class="memdesc:a668e5eb65d21d34693981d1b08c378ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an ECMA matcher engine from a std::regex pattern and an input character sequence.  <a href="#a668e5eb65d21d34693981d1b08c378ea">More...</a><br /></td></tr>
+<tr class="memdesc:a668e5eb65d21d34693981d1b08c378ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an ECMA matcher engine from a string pattern and an input character sequence.  <a href="#a668e5eb65d21d34693981d1b08c378ea">More...</a><br /></td></tr>
 <tr class="separator:a668e5eb65d21d34693981d1b08c378ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3456dfe369a2e2426367338d1688e51c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_std_ecma_matcher.html#a3456dfe369a2e2426367338d1688e51c">StdEcmaMatcher</a> (const <a class="el" href="classreflex_1_1_pattern_matcher.html#a56c667f62f9d60ccfe3caf16bbc2a9fc">Pattern</a> &amp;pat, const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;inp=<a class="el" href="classreflex_1_1_input.html">Input</a>(), const char *opt=NULL)</td></tr>
+<tr class="memdesc:a3456dfe369a2e2426367338d1688e51c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an ECMA matcher engine from a std::regex pattern and an input character sequence.  <a href="#a3456dfe369a2e2426367338d1688e51c">More...</a><br /></td></tr>
+<tr class="separator:a3456dfe369a2e2426367338d1688e51c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68178375040612b38584c86bf055cbf3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classreflex_1_1_pattern_matcher.html">PatternMatcher</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_std_ecma_matcher.html#a68178375040612b38584c86bf055cbf3">pattern</a> (const <a class="el" href="classreflex_1_1_pattern_matcher.html#a56c667f62f9d60ccfe3caf16bbc2a9fc">Pattern</a> &amp;pat)</td></tr>
 <tr class="memdesc:a68178375040612b38584c86bf055cbf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a POSIX std::regex is given.  <a href="#a68178375040612b38584c86bf055cbf3">More...</a><br /></td></tr>
 <tr class="separator:a68178375040612b38584c86bf055cbf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -176,11 +179,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8b7a345add39a481e8963cb04a4347b8 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a8b7a345add39a481e8963cb04a4347b8">text</a> () const </td></tr>
 <tr class="memdesc:a8b7a345add39a481e8963cb04a4347b8 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns string with the text matched.  <a href="#a8b7a345add39a481e8963cb04a4347b8">More...</a><br /></td></tr>
 <tr class="separator:a8b7a345add39a481e8963cb04a4347b8 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a003143fc09dccca6fd54c245a19ca767 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a003143fc09dccca6fd54c245a19ca767">wtext</a> () const </td></tr>
+<tr class="memdesc:a003143fc09dccca6fd54c245a19ca767 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns wide string converted from the UTF-8 text matched.  <a href="#a003143fc09dccca6fd54c245a19ca767">More...</a><br /></td></tr>
+<tr class="separator:a003143fc09dccca6fd54c245a19ca767 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb5fec59e6c6a86b8cf405c40f93d1de inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#adb5fec59e6c6a86b8cf405c40f93d1de">size</a> () const </td></tr>
 <tr class="memdesc:adb5fec59e6c6a86b8cf405c40f93d1de inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the matched text in number of bytes.  <a href="#adb5fec59e6c6a86b8cf405c40f93d1de">More...</a><br /></td></tr>
 <tr class="separator:adb5fec59e6c6a86b8cf405c40f93d1de inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4bcff50974291fa01d4f7f7db4c77f5 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#af4bcff50974291fa01d4f7f7db4c77f5">wsize</a> () const </td></tr>
-<tr class="memdesc:af4bcff50974291fa01d4f7f7db4c77f5 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the matched text in number of (wide) characters.  <a href="#af4bcff50974291fa01d4f7f7db4c77f5">More...</a><br /></td></tr>
+<tr class="memdesc:af4bcff50974291fa01d4f7f7db4c77f5 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the matched text in number of wide characters.  <a href="#af4bcff50974291fa01d4f7f7db4c77f5">More...</a><br /></td></tr>
 <tr class="separator:af4bcff50974291fa01d4f7f7db4c77f5 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36ddaede89eef2b9b85f13dcb8c32008 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a36ddaede89eef2b9b85f13dcb8c32008">lineno</a> () const </td></tr>
 <tr class="memdesc:a36ddaede89eef2b9b85f13dcb8c32008 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the line number of the match in the input character sequence.  <a href="#a36ddaede89eef2b9b85f13dcb8c32008">More...</a><br /></td></tr>
@@ -191,6 +197,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc573eafc849b275d21b114abe1ea570 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">std::pair&lt; size_t, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#abc573eafc849b275d21b114abe1ea570">pair</a> () const </td></tr>
 <tr class="memdesc:abc573eafc849b275d21b114abe1ea570 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a8b7a345add39a481e8963cb04a4347b8" title="Returns string with the text matched. ">text()</a>, useful for tokenizing input into containers of pairs.  <a href="#abc573eafc849b275d21b114abe1ea570">More...</a><br /></td></tr>
 <tr class="separator:abc573eafc849b275d21b114abe1ea570 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae51a6d149b4147a1ac7d64b2d6587bd3 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">std::pair&lt; size_t, std::wstring &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae51a6d149b4147a1ac7d64b2d6587bd3">wpair</a> () const </td></tr>
+<tr class="memdesc:ae51a6d149b4147a1ac7d64b2d6587bd3 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::wstring <a class="el" href="classreflex_1_1_abstract_matcher.html#a003143fc09dccca6fd54c245a19ca767" title="Returns wide string converted from the UTF-8 text matched. ">wtext()</a>, useful for tokenizing input into containers of pairs.  <a href="#ae51a6d149b4147a1ac7d64b2d6587bd3">More...</a><br /></td></tr>
+<tr class="separator:ae51a6d149b4147a1ac7d64b2d6587bd3 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a112117a78682b9634806158e018dc6b4 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a112117a78682b9634806158e018dc6b4">first</a> () const </td></tr>
 <tr class="memdesc:a112117a78682b9634806158e018dc6b4 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the position of the first character starting the match in the input character sequence.  <a href="#a112117a78682b9634806158e018dc6b4">More...</a><br /></td></tr>
 <tr class="separator:a112117a78682b9634806158e018dc6b4 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,10 +225,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0860fa58e41f5a0d7e74d1fe33559df3 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the begin of a new line state.  <a href="#a0860fa58e41f5a0d7e74d1fe33559df3">More...</a><br /></td></tr>
 <tr class="separator:a0860fa58e41f5a0d7e74d1fe33559df3 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a827817fd1ed8edbe8eec84eeefa8a88e inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a827817fd1ed8edbe8eec84eeefa8a88e">input</a> ()</td></tr>
-<tr class="memdesc:a827817fd1ed8edbe8eec84eeefa8a88e inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next character from the input character sequence while preserving the current text match.  <a href="#a827817fd1ed8edbe8eec84eeefa8a88e">More...</a><br /></td></tr>
+<tr class="memdesc:a827817fd1ed8edbe8eec84eeefa8a88e inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next 8-bit character from the input character sequence, while preserving the current text match.  <a href="#a827817fd1ed8edbe8eec84eeefa8a88e">More...</a><br /></td></tr>
 <tr class="separator:a827817fd1ed8edbe8eec84eeefa8a88e inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ee94acd13edc05acfa087499d650a8f inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a6ee94acd13edc05acfa087499d650a8f">winput</a> ()</td></tr>
+<tr class="memdesc:a6ee94acd13edc05acfa087499d650a8f inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next wide character from the input character sequence, while preserving the current text match.  <a href="#a6ee94acd13edc05acfa087499d650a8f">More...</a><br /></td></tr>
+<tr class="separator:a6ee94acd13edc05acfa087499d650a8f inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fb536d7812fcf52017e9d452e96381a inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a5fb536d7812fcf52017e9d452e96381a">unput</a> (char c)</td></tr>
-<tr class="memdesc:a5fb536d7812fcf52017e9d452e96381a inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put back one character on the input character sequence for matching, invalidating the current match info and text.  <a href="#a5fb536d7812fcf52017e9d452e96381a">More...</a><br /></td></tr>
+<tr class="memdesc:a5fb536d7812fcf52017e9d452e96381a inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put back one character (8-bit) on the input character sequence for matching, invalidating the current match info and text.  <a href="#a5fb536d7812fcf52017e9d452e96381a">More...</a><br /></td></tr>
 <tr class="separator:a5fb536d7812fcf52017e9d452e96381a inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab39dc592de42a7e044296f03bee4fdb3 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ab39dc592de42a7e044296f03bee4fdb3">rest</a> ()</td></tr>
 <tr class="memdesc:ab39dc592de42a7e044296f03bee4fdb3 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch the rest of the input as text, useful for searching/splitting up to n times after which the rest is needed.  <a href="#ab39dc592de42a7e044296f03bee4fdb3">More...</a><br /></td></tr>
@@ -236,6 +248,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a360028bf97e0da02f6ffbcae031f9f35 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a360028bf97e0da02f6ffbcae031f9f35">operator std::string</a> () const </td></tr>
 <tr class="memdesc:a360028bf97e0da02f6ffbcae031f9f35 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to a std::string of the text matched by this matcher.  <a href="#a360028bf97e0da02f6ffbcae031f9f35">More...</a><br /></td></tr>
 <tr class="separator:a360028bf97e0da02f6ffbcae031f9f35 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab1c0ee67ce2062f8c1c518170cd2a74 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#aab1c0ee67ce2062f8c1c518170cd2a74">operator std::wstring</a> () const </td></tr>
+<tr class="memdesc:aab1c0ee67ce2062f8c1c518170cd2a74 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to a std::wstring of the text matched by this matcher.  <a href="#aab1c0ee67ce2062f8c1c518170cd2a74">More...</a><br /></td></tr>
+<tr class="separator:aab1c0ee67ce2062f8c1c518170cd2a74 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aeee06821a94df33a8c531d3913a5d7 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a6aeee06821a94df33a8c531d3913a5d7">operator std::pair&lt; size_t, std::string &gt;</a> () const </td></tr>
 <tr class="memdesc:a6aeee06821a94df33a8c531d3913a5d7 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a8b7a345add39a481e8963cb04a4347b8" title="Returns string with the text matched. ">text()</a>, useful for tokenization into containers.  <a href="#a6aeee06821a94df33a8c531d3913a5d7">More...</a><br /></td></tr>
 <tr class="separator:a6aeee06821a94df33a8c531d3913a5d7 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -335,10 +350,10 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:a450e338dc97b63c595ae3b583ccc9037 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shift or expand the internal buffer when it is too small to accommodate more input, where the buffer size is doubled when needed.  <a href="#a450e338dc97b63c595ae3b583ccc9037">More...</a><br /></td></tr>
 <tr class="separator:a450e338dc97b63c595ae3b583ccc9037 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33cea639acc9ea8ff0afba554432ba64 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a33cea639acc9ea8ff0afba554432ba64">get</a> ()</td></tr>
-<tr class="memdesc:a33cea639acc9ea8ff0afba554432ba64 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next character from the buffered input character sequence.  <a href="#a33cea639acc9ea8ff0afba554432ba64">More...</a><br /></td></tr>
+<tr class="memdesc:a33cea639acc9ea8ff0afba554432ba64 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next character read from the current input source.  <a href="#a33cea639acc9ea8ff0afba554432ba64">More...</a><br /></td></tr>
 <tr class="separator:a33cea639acc9ea8ff0afba554432ba64 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb8a8eff9fc980c7028c9399a1310849 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#acb8a8eff9fc980c7028c9399a1310849">peek</a> ()</td></tr>
-<tr class="memdesc:acb8a8eff9fc980c7028c9399a1310849 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character in the buffered input without consuming it.  <a href="#acb8a8eff9fc980c7028c9399a1310849">More...</a><br /></td></tr>
+<tr class="memdesc:acb8a8eff9fc980c7028c9399a1310849 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character available for reading from the current input source.  <a href="#acb8a8eff9fc980c7028c9399a1310849">More...</a><br /></td></tr>
 <tr class="separator:acb8a8eff9fc980c7028c9399a1310849 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f8d28fc8c5326d5f05f84aaa588d564 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a5f8d28fc8c5326d5f05f84aaa588d564">set_current</a> (size_t loc)</td></tr>
 <tr class="memdesc:a5f8d28fc8c5326d5f05f84aaa588d564 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current position to advance to the next match.  <a href="#a5f8d28fc8c5326d5f05f84aaa588d564">More...</a><br /></td></tr>
@@ -417,7 +432,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a4fdfd4999a13a782643d33da7bd2b5cf inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>std matcher engine class, extends <a class="el" href="classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan...">reflex::StdMatcher</a> for ECMA std::regex::ECMAScript regex matching. </p>
+<div class="textblock"><p>std matcher engine class, extends <a class="el" href="classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan...">reflex::StdMatcher</a> for ECMA std::regex::ECMAScript syntax and regex matching. </p>
 <p>std::regex with ECMAScript std::regex::ECMAScript. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a142248792f728bd945568d4e6e199c1e"></a>
@@ -483,7 +498,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct an ECMA matcher engine from a std::regex pattern and an input character sequence. </p>
+<p>Construct an ECMA matcher engine from a string pattern and an input character sequence. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pat</td><td>a string regex for this matcher </td></tr>
@@ -533,10 +548,60 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct an ECMA matcher engine from a std::regex pattern and an input character sequence. </p>
+<p>Construct an ECMA matcher engine from a string pattern and an input character sequence. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pat</td><td>a string regex for this matcher </td></tr>
+    <tr><td class="paramname">inp</td><td>input character sequence for this matcher </td></tr>
+    <tr><td class="paramname">opt</td><td>option string of the form <code>(A|N|T(=[[:digit:]])?|;)*</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a3456dfe369a2e2426367338d1688e51c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">reflex::StdEcmaMatcher::StdEcmaMatcher </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern_matcher.html#a56c667f62f9d60ccfe3caf16bbc2a9fc">Pattern</a> &amp;&#160;</td>
+          <td class="paramname"><em>pat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;&#160;</td>
+          <td class="paramname"><em>inp</em> = <code><a class="el" href="classreflex_1_1_input.html">Input</a>()</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>opt</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct an ECMA matcher engine from a std::regex pattern and an input character sequence. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pat</td><td>a std::regex for this matcher </td></tr>
     <tr><td class="paramname">inp</td><td>input character sequence for this matcher </td></tr>
     <tr><td class="paramname">opt</td><td>option string of the form <code>(A|N|T(=[[:digit:]])?|;)*</code> </td></tr>
   </table>
@@ -692,7 +757,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Mar 6 2017 22:02:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Mar 8 2017 13:11:43 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

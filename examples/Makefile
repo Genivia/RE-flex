@@ -4,7 +4,6 @@ BOOSTLIB=/opt/local/lib/libboost_regex-mt.dylib
 REFLEX=../bin/reflex
 BISON=bison
 LIBS=../lib/libreflex.a
-# LIBS=../lib/libreflex.a $(BOOSTLIB)
 REFLAGS=
 COFLAGS=-g -O2
 CWFLAGS=-Wall -Wunused -Wextra -Wno-unused-label
@@ -154,6 +153,9 @@ json:		json.l
 cards:		cards.cpp
 		$(CPP) $(CFLAGS) -o $@ cards.cpp $(LIBS)
 
+url:		url.cpp
+		$(CPP) $(CFLAGS) -I $(BOOSTINC) -o $@ url.cpp $(LIBS) $(BOOSTLIB)
+
 lexer:		lex.yy.cpp
 		$(CPP) $(CFLAGS) -o $@ lex.yy.cpp $(LIBS)
 
@@ -164,4 +166,4 @@ clean:
 		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample1 flexexample2 flexexample3 flexexample4 flexexample5 flexexample6 flexexample7 flexexample8
 		-rm -f reflexexample3 reflexexample4 reflexexample5 reflexexample6
-		-rm -f ctokens jtokens ptokens echo wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_tidy cow cows indent json cards lexer
+		-rm -f ctokens jtokens ptokens echo wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_tidy cow cows indent json cards url lexer

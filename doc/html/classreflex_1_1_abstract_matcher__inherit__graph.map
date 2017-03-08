@@ -8,6 +8,6 @@
 <area shape="rect" id="node5" href="$classreflex_1_1_boost_posix_matcher.html" title="Boost matcher engine class, extends reflex::BoostMatcher for Boost POSIX regex matching. " alt="" coords="637,56,815,83"/>
 <area shape="rect" id="node7" href="$classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="462,101,573,128"/>
 <area shape="rect" id="node9" href="$classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="452,167,583,193"/>
-<area shape="rect" id="node10" href="$classreflex_1_1_std_ecma_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for ECMA std::regex::ECMAScript regex matching..." alt="" coords="644,127,808,153"/>
-<area shape="rect" id="node11" href="$classreflex_1_1_std_posix_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for POSIX ERE std::regex::awk regex matching..." alt="" coords="645,177,807,204"/>
+<area shape="rect" id="node10" href="$classreflex_1_1_std_ecma_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for ECMA std::regex::ECMAScript syntax and regex..." alt="" coords="644,127,808,153"/>
+<area shape="rect" id="node11" href="$classreflex_1_1_std_posix_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for POSIX ERE std::regex::awk syntax and regex m..." alt="" coords="645,177,807,204"/>
 </map>

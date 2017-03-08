@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Mar 6 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Mar 8 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -83,8 +83,8 @@ Inheritance diagram for reflex::AbstractMatcher:</div>
 <area shape="rect" id="node5" href="classreflex_1_1_boost_posix_matcher.html" title="Boost matcher engine class, extends reflex::BoostMatcher for Boost POSIX regex matching. " alt="" coords="637,56,815,83"/>
 <area shape="rect" id="node7" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="462,101,573,128"/>
 <area shape="rect" id="node9" href="classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="452,167,583,193"/>
-<area shape="rect" id="node10" href="classreflex_1_1_std_ecma_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for ECMA std::regex::ECMAScript regex matching..." alt="" coords="644,127,808,153"/>
-<area shape="rect" id="node11" href="classreflex_1_1_std_posix_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for POSIX ERE std::regex::awk regex matching..." alt="" coords="645,177,807,204"/>
+<area shape="rect" id="node10" href="classreflex_1_1_std_ecma_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for ECMA std::regex::ECMAScript syntax and regex..." alt="" coords="644,127,808,153"/>
+<area shape="rect" id="node11" href="classreflex_1_1_std_posix_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for POSIX ERE std::regex::awk syntax and regex m..." alt="" coords="645,177,807,204"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -147,11 +147,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8b7a345add39a481e8963cb04a4347b8"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a8b7a345add39a481e8963cb04a4347b8">text</a> () const </td></tr>
 <tr class="memdesc:a8b7a345add39a481e8963cb04a4347b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns string with the text matched.  <a href="#a8b7a345add39a481e8963cb04a4347b8">More...</a><br /></td></tr>
 <tr class="separator:a8b7a345add39a481e8963cb04a4347b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a003143fc09dccca6fd54c245a19ca767"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a003143fc09dccca6fd54c245a19ca767">wtext</a> () const </td></tr>
+<tr class="memdesc:a003143fc09dccca6fd54c245a19ca767"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns wide string converted from the UTF-8 text matched.  <a href="#a003143fc09dccca6fd54c245a19ca767">More...</a><br /></td></tr>
+<tr class="separator:a003143fc09dccca6fd54c245a19ca767"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb5fec59e6c6a86b8cf405c40f93d1de"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#adb5fec59e6c6a86b8cf405c40f93d1de">size</a> () const </td></tr>
 <tr class="memdesc:adb5fec59e6c6a86b8cf405c40f93d1de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the matched text in number of bytes.  <a href="#adb5fec59e6c6a86b8cf405c40f93d1de">More...</a><br /></td></tr>
 <tr class="separator:adb5fec59e6c6a86b8cf405c40f93d1de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4bcff50974291fa01d4f7f7db4c77f5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#af4bcff50974291fa01d4f7f7db4c77f5">wsize</a> () const </td></tr>
-<tr class="memdesc:af4bcff50974291fa01d4f7f7db4c77f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the matched text in number of (wide) characters.  <a href="#af4bcff50974291fa01d4f7f7db4c77f5">More...</a><br /></td></tr>
+<tr class="memdesc:af4bcff50974291fa01d4f7f7db4c77f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the matched text in number of wide characters.  <a href="#af4bcff50974291fa01d4f7f7db4c77f5">More...</a><br /></td></tr>
 <tr class="separator:af4bcff50974291fa01d4f7f7db4c77f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36ddaede89eef2b9b85f13dcb8c32008"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a36ddaede89eef2b9b85f13dcb8c32008">lineno</a> () const </td></tr>
 <tr class="memdesc:a36ddaede89eef2b9b85f13dcb8c32008"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the line number of the match in the input character sequence.  <a href="#a36ddaede89eef2b9b85f13dcb8c32008">More...</a><br /></td></tr>
@@ -162,6 +165,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc573eafc849b275d21b114abe1ea570"><td class="memItemLeft" align="right" valign="top">std::pair&lt; size_t, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#abc573eafc849b275d21b114abe1ea570">pair</a> () const </td></tr>
 <tr class="memdesc:abc573eafc849b275d21b114abe1ea570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a8b7a345add39a481e8963cb04a4347b8" title="Returns string with the text matched. ">text()</a>, useful for tokenizing input into containers of pairs.  <a href="#abc573eafc849b275d21b114abe1ea570">More...</a><br /></td></tr>
 <tr class="separator:abc573eafc849b275d21b114abe1ea570"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae51a6d149b4147a1ac7d64b2d6587bd3"><td class="memItemLeft" align="right" valign="top">std::pair&lt; size_t, std::wstring &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae51a6d149b4147a1ac7d64b2d6587bd3">wpair</a> () const </td></tr>
+<tr class="memdesc:ae51a6d149b4147a1ac7d64b2d6587bd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::wstring <a class="el" href="classreflex_1_1_abstract_matcher.html#a003143fc09dccca6fd54c245a19ca767" title="Returns wide string converted from the UTF-8 text matched. ">wtext()</a>, useful for tokenizing input into containers of pairs.  <a href="#ae51a6d149b4147a1ac7d64b2d6587bd3">More...</a><br /></td></tr>
+<tr class="separator:ae51a6d149b4147a1ac7d64b2d6587bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a112117a78682b9634806158e018dc6b4"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a112117a78682b9634806158e018dc6b4">first</a> () const </td></tr>
 <tr class="memdesc:a112117a78682b9634806158e018dc6b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the position of the first character starting the match in the input character sequence.  <a href="#a112117a78682b9634806158e018dc6b4">More...</a><br /></td></tr>
 <tr class="separator:a112117a78682b9634806158e018dc6b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,10 +193,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0860fa58e41f5a0d7e74d1fe33559df3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the begin of a new line state.  <a href="#a0860fa58e41f5a0d7e74d1fe33559df3">More...</a><br /></td></tr>
 <tr class="separator:a0860fa58e41f5a0d7e74d1fe33559df3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a827817fd1ed8edbe8eec84eeefa8a88e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a827817fd1ed8edbe8eec84eeefa8a88e">input</a> ()</td></tr>
-<tr class="memdesc:a827817fd1ed8edbe8eec84eeefa8a88e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next character from the input character sequence while preserving the current text match.  <a href="#a827817fd1ed8edbe8eec84eeefa8a88e">More...</a><br /></td></tr>
+<tr class="memdesc:a827817fd1ed8edbe8eec84eeefa8a88e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next 8-bit character from the input character sequence, while preserving the current text match.  <a href="#a827817fd1ed8edbe8eec84eeefa8a88e">More...</a><br /></td></tr>
 <tr class="separator:a827817fd1ed8edbe8eec84eeefa8a88e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ee94acd13edc05acfa087499d650a8f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a6ee94acd13edc05acfa087499d650a8f">winput</a> ()</td></tr>
+<tr class="memdesc:a6ee94acd13edc05acfa087499d650a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next wide character from the input character sequence, while preserving the current text match.  <a href="#a6ee94acd13edc05acfa087499d650a8f">More...</a><br /></td></tr>
+<tr class="separator:a6ee94acd13edc05acfa087499d650a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fb536d7812fcf52017e9d452e96381a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a5fb536d7812fcf52017e9d452e96381a">unput</a> (char c)</td></tr>
-<tr class="memdesc:a5fb536d7812fcf52017e9d452e96381a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put back one character on the input character sequence for matching, invalidating the current match info and text.  <a href="#a5fb536d7812fcf52017e9d452e96381a">More...</a><br /></td></tr>
+<tr class="memdesc:a5fb536d7812fcf52017e9d452e96381a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put back one character (8-bit) on the input character sequence for matching, invalidating the current match info and text.  <a href="#a5fb536d7812fcf52017e9d452e96381a">More...</a><br /></td></tr>
 <tr class="separator:a5fb536d7812fcf52017e9d452e96381a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab39dc592de42a7e044296f03bee4fdb3"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ab39dc592de42a7e044296f03bee4fdb3">rest</a> ()</td></tr>
 <tr class="memdesc:ab39dc592de42a7e044296f03bee4fdb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch the rest of the input as text, useful for searching/splitting up to n times after which the rest is needed.  <a href="#ab39dc592de42a7e044296f03bee4fdb3">More...</a><br /></td></tr>
@@ -207,6 +216,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a360028bf97e0da02f6ffbcae031f9f35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a360028bf97e0da02f6ffbcae031f9f35">operator std::string</a> () const </td></tr>
 <tr class="memdesc:a360028bf97e0da02f6ffbcae031f9f35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to a std::string of the text matched by this matcher.  <a href="#a360028bf97e0da02f6ffbcae031f9f35">More...</a><br /></td></tr>
 <tr class="separator:a360028bf97e0da02f6ffbcae031f9f35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab1c0ee67ce2062f8c1c518170cd2a74"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#aab1c0ee67ce2062f8c1c518170cd2a74">operator std::wstring</a> () const </td></tr>
+<tr class="memdesc:aab1c0ee67ce2062f8c1c518170cd2a74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to a std::wstring of the text matched by this matcher.  <a href="#aab1c0ee67ce2062f8c1c518170cd2a74">More...</a><br /></td></tr>
+<tr class="separator:aab1c0ee67ce2062f8c1c518170cd2a74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aeee06821a94df33a8c531d3913a5d7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a6aeee06821a94df33a8c531d3913a5d7">operator std::pair&lt; size_t, std::string &gt;</a> () const </td></tr>
 <tr class="memdesc:a6aeee06821a94df33a8c531d3913a5d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::string <a class="el" href="classreflex_1_1_abstract_matcher.html#a8b7a345add39a481e8963cb04a4347b8" title="Returns string with the text matched. ">text()</a>, useful for tokenization into containers.  <a href="#a6aeee06821a94df33a8c531d3913a5d7">More...</a><br /></td></tr>
 <tr class="separator:a6aeee06821a94df33a8c531d3913a5d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,10 +294,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a450e338dc97b63c595ae3b583ccc9037"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shift or expand the internal buffer when it is too small to accommodate more input, where the buffer size is doubled when needed.  <a href="#a450e338dc97b63c595ae3b583ccc9037">More...</a><br /></td></tr>
 <tr class="separator:a450e338dc97b63c595ae3b583ccc9037"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33cea639acc9ea8ff0afba554432ba64"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a33cea639acc9ea8ff0afba554432ba64">get</a> ()</td></tr>
-<tr class="memdesc:a33cea639acc9ea8ff0afba554432ba64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next character from the buffered input character sequence.  <a href="#a33cea639acc9ea8ff0afba554432ba64">More...</a><br /></td></tr>
+<tr class="memdesc:a33cea639acc9ea8ff0afba554432ba64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next character read from the current input source.  <a href="#a33cea639acc9ea8ff0afba554432ba64">More...</a><br /></td></tr>
 <tr class="separator:a33cea639acc9ea8ff0afba554432ba64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb8a8eff9fc980c7028c9399a1310849"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#acb8a8eff9fc980c7028c9399a1310849">peek</a> ()</td></tr>
-<tr class="memdesc:acb8a8eff9fc980c7028c9399a1310849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character in the buffered input without consuming it.  <a href="#acb8a8eff9fc980c7028c9399a1310849">More...</a><br /></td></tr>
+<tr class="memdesc:acb8a8eff9fc980c7028c9399a1310849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character available for reading from the current input source.  <a href="#acb8a8eff9fc980c7028c9399a1310849">More...</a><br /></td></tr>
 <tr class="separator:acb8a8eff9fc980c7028c9399a1310849"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f8d28fc8c5326d5f05f84aaa588d564"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a5f8d28fc8c5326d5f05f84aaa588d564">set_current</a> (size_t loc)</td></tr>
 <tr class="memdesc:a5f8d28fc8c5326d5f05f84aaa588d564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current position to advance to the next match.  <a href="#a5f8d28fc8c5326d5f05f84aaa588d564">More...</a><br /></td></tr>
@@ -779,7 +791,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the next character from the buffered input character sequence. </p>
+<p>Returns the next character read from the current input source. </p>
 <dl class="section return"><dt>Returns</dt><dd>the character read (unsigned char 0..255) or EOF (-1). </dd></dl>
 
 </div>
@@ -929,7 +941,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the next character from the input character sequence while preserving the current text match. </p>
+<p>Returns the next 8-bit character from the input character sequence, while preserving the current text match. </p>
 <dl class="section return"><dt>Returns</dt><dd>the character read (unsigned char 0..255) read or EOF (-1). </dd></dl>
 
 </div>
@@ -1198,7 +1210,33 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Cast this matcher to a std::string of the text matched by this matcher. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::string allocated from NUL-terminated matched text. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::string with matched text. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aab1c0ee67ce2062f8c1c518170cd2a74"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">reflex::AbstractMatcher::operator std::wstring </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Cast this matcher to a std::wstring of the text matched by this matcher. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::wstring converted to UCS from the NUL-terminated matched UTF-8 text. </dd></dl>
 
 </div>
 </div>
@@ -1542,7 +1580,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Peek at the next character in the buffered input without consuming it. </p>
+<p>Peek at the next character available for reading from the current input source. </p>
 <dl class="section return"><dt>Returns</dt><dd>the character (unsigned char 0..255) or EOF (-1). </dd></dl>
 
 </div>
@@ -1761,10 +1799,10 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Put back one character on the input character sequence for matching, invalidating the current match info and text. </p>
+<p>Put back one character (8-bit) on the input character sequence for matching, invalidating the current match info and text. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">c</td><td>character to put back </td></tr>
+    <tr><td class="paramname">c</td><td>8-bit character to put back </td></tr>
   </table>
   </dd>
 </dl>
@@ -1793,6 +1831,58 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Update the newline count, column count, and character count when shifting the buffer. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6ee94acd13edc05acfa087499d650a8f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int reflex::AbstractMatcher::winput </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the next wide character from the input character sequence, while preserving the current text match. </p>
+<dl class="section return"><dt>Returns</dt><dd>the wide character read or EOF (-1). </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae51a6d149b4147a1ac7d64b2d6587bd3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt;size_t,std::wstring&gt; reflex::AbstractMatcher::wpair </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and std::wstring <a class="el" href="classreflex_1_1_abstract_matcher.html#a003143fc09dccca6fd54c245a19ca767" title="Returns wide string converted from the UTF-8 text matched. ">wtext()</a>, useful for tokenizing input into containers of pairs. </p>
+<dl class="section return"><dt>Returns</dt><dd>a std::pair of size_t <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> and <a class="el" href="classreflex_1_1_abstract_matcher.html#a003143fc09dccca6fd54c245a19ca767" title="Returns wide string converted from the UTF-8 text matched. ">wtext()</a>. </dd></dl>
 
 </div>
 </div>
@@ -1844,8 +1934,34 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the length of the matched text in number of (wide) characters. </p>
+<p>Returns the length of the matched text in number of wide characters. </p>
 <dl class="section return"><dt>Returns</dt><dd>the length of the match in number of (wide, multibyte UTF-8) characters. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a003143fc09dccca6fd54c245a19ca767"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::wstring reflex::AbstractMatcher::wtext </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns wide string converted from the UTF-8 text matched. </p>
+<dl class="section return"><dt>Returns</dt><dd>wide string. </dd></dl>
 
 </div>
 </div>
@@ -2308,7 +2424,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Mar 6 2017 22:02:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Mar 8 2017 13:11:43 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

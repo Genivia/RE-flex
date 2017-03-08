@@ -60,10 +60,10 @@ class regex_error : public std::runtime_error {
   static const regex_error_type invalid_anchor       = 9;  ///< invalid anchor
   static const regex_error_type invalid_repeat       = 10; ///< invalid repeat range, e.g. `{10,1}`
   static const regex_error_type invalid_quantifier   = 11; ///< invalid lazy/possessive quantifier
-  static const regex_error_type invalid_modifier     = 12; ///< invalid `(?m:)` modifier
+  static const regex_error_type invalid_modifier     = 12; ///< invalid `(?ismx:)` modifier
   static const regex_error_type invalid_syntax       = 13; ///< invalid regex syntax
-  static const regex_error_type undefined_name       = 14; ///< undefined macro name
-  static const regex_error_type exceeds_limits       = 15; ///< regex exceeds complexity limits
+  static const regex_error_type exceeds_limits       = 14; ///< regex exceeds complexity limits (reflex::Pattern class only)
+  static const regex_error_type undefined_name       = 15; ///< undefined macro name (reflex tool only)
   regex_error(
       regex_error_type code,
       const char      *pattern,

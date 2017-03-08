@@ -324,7 +324,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
   std::cregex_iterator                  fin_; ///< const std::regex iterator final end
 };
 
-/// std matcher engine class, extends reflex::StdMatcher for ECMA std::regex::ECMAScript regex matching.
+/// std matcher engine class, extends reflex::StdMatcher for ECMA std::regex::ECMAScript syntax and regex matching.
 /**
 std::regex with ECMAScript std::regex::ECMAScript.
 */
@@ -333,7 +333,7 @@ class StdEcmaMatcher : public StdMatcher {
   /// Default constructor.
   StdEcmaMatcher() : StdMatcher()
   { }
-  /// Construct an ECMA matcher engine from a std::regex pattern and an input character sequence.
+  /// Construct an ECMA matcher engine from a string pattern and an input character sequence.
   StdEcmaMatcher(
       const char  *pat,           ///< a string regex for this matcher
       const Input& inp = Input(), ///< input character sequence for this matcher
@@ -343,7 +343,7 @@ class StdEcmaMatcher : public StdMatcher {
   {
     own_ = true;
   }
-  /// Construct an ECMA matcher engine from a std::regex pattern and an input character sequence.
+  /// Construct an ECMA matcher engine from a string pattern and an input character sequence.
   StdEcmaMatcher(
       const std::string& pat,           ///< a string regex for this matcher
       const Input&       inp = Input(), ///< input character sequence for this matcher
@@ -352,6 +352,17 @@ class StdEcmaMatcher : public StdMatcher {
       StdMatcher(new std::regex(pat, std::regex::ECMAScript), inp, opt)
   {
     own_ = true;
+  }
+  /// Construct an ECMA matcher engine from a std::regex pattern and an input character sequence.
+  StdEcmaMatcher(
+      const Pattern& pat,           ///< a std::regex for this matcher
+      const Input&   inp = Input(), ///< input character sequence for this matcher
+      const char    *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+    :
+      StdMatcher(&pat, inp, opt)
+  {
+    ASSERT(!(pat.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
+    own_ = false;
   }
   using StdMatcher::pattern;
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a POSIX std::regex is given.
@@ -388,7 +399,7 @@ class StdEcmaMatcher : public StdMatcher {
   }
 };
 
-/// std matcher engine class, extends reflex::StdMatcher for POSIX ERE std::regex::awk regex matching.
+/// std matcher engine class, extends reflex::StdMatcher for POSIX ERE std::regex::awk syntax and regex matching.
 /**
 std::regex with POSIX ERE std::regex::awk.
 */
@@ -422,6 +433,17 @@ class StdPosixMatcher : public StdMatcher {
       StdMatcher(new std::regex(pat, std::regex::awk), inp, opt)
   {
     own_ = true;
+  }
+  /// Construct a matcher engine from a std::regex pattern and an input character sequence.
+  StdPosixMatcher(
+      const Pattern& pat,           ///< a std::regex for this matcher
+      const Input&   inp = Input(), ///< input character sequence for this matcher
+      const char    *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+    :
+      StdMatcher(&pat, inp, opt)
+  {
+    ASSERT(pat.flags() & std::regex::awk);
+    own_ = false;
   }
   using StdMatcher::pattern;
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a non-POSIX ERE std::regex is given.

@@ -322,7 +322,7 @@ engines that are derived from this base abstract class:
   ----------- | ---------------------------------------------------------------
   `matches()` | true if the input from begin to end matches the regex pattern
   `find()`    | search input and return true if a match was found
-  `scan()`    | scan input and return true if input at current position matches
+  `scan()`    | return true if input at current position matches partially
   `split()`   | split input at the next match
 
 These methods are repeatable, where the last three return additional matches.
@@ -356,9 +356,9 @@ When executed this code prints:
     Found cow
 
 The `scan` method is similar to the `find` method, but `scan` matches only from
-the current position in the input.  It fails when the next match does not start
-from the current position.  Scanning an input source means that matches must be
-continuous in this input source.
+the current position in the input.  It fails when no partial match was possible
+at the current position.  Repeately scanning an input source means that matches
+must be continuous, otherwise `scan` returns zero (no match).
 
 The `split` method is roughly the inverse of the `find` method and returns text
 located between matches.  For example using non-word matching `\W+`:
@@ -439,6 +439,9 @@ Conversion is fast (it runs in linear time in the size of the regex), but it is
 not without some overhead.  You can make the converted regex patterns `static`,
 as shown above, to eliminate the cost of repeated conversions.
 
+A `reflex::Pattern` object is immutable (it stores a constant table) and can be
+shared among threads.
+
 Use `convert` with option `reflex::convert_flag::unicode` to change the meaning
 of `.` (dot), `\w`, `\s`, `\l`, `\u`, `\W`, `\S`, `\L`, `\U` character classes.
 
@@ -505,12 +508,10 @@ std::vector<std::string> words(matcher.find.begin(), matcher.find.end());
 
 As a result, the `words` vector contains "How", "now", "brown", "cow".
 
-Casting a matcher object to `const char*` is the same as invoking `text()`, and
-the cast is implicitly applied in the example above where the matcher object is
-cast to the matched text that is then used to instantiate `std::string` for the
-`words` vector.  Beware that `text()` or a cast to `const char*` simply returns
-a pointer to an internal buffer.  Because this pointer is no longer valid after
-the matcher continued, we should store the matched text in a `std::string`.
+Casting a matcher object to `std::string` is the same as converting `text()` to
+a string with `std::string(text(), size())`, which in the example above is done
+to construct the `words` vector.  Casting a matcher object to `std::wstring` is
+similar, but also converts the UTF-8 `text()` match to a wide string.
 
 RE/flex iterators are useful in C++11 range-based loops.  For example:
 
@@ -569,9 +570,11 @@ You can use this method and other methods to obtain the details of a match:
   ----------- | ---------------------------------------------------------------
   `accept()`  | returns group capture index or zero if not captured/matched
   `text()`    | returns `\0`-terminated `const char*` string match
-  `pair()`    | returns `std::pair<size_t,const char*>(accept(), text())`
+  `wtext()`   | returns `std::wstring` wide string match (converted from UTF-8)
+  `pair()`    | returns `std::pair<size_t,std::string>(accept(), text())`
+  `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(), wtext())`
   `size()`    | returns the length of the match in bytes
-  `wsize()`   | returns the length of the match in number of (wide) characters
+  `wsize()`   | returns the length of the match in number of wide characters
   `rest()`    | returns `\0`-terminated `const char*` of the rest of the input
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
@@ -585,13 +588,14 @@ You can use this method and other methods to obtain the details of a match:
   `[0]`       | operator returns `std::pair<const char*,size_t>(text(),size())`
   `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
 
-The first three methods return values that can also be obtained by type casting
-the matcher object to `size_t` (or to an integer type), to `const char*` (or to
-`std::string`), and to `std::pair<size_t,const char*>` (or to a type-compatible
-form such as `std::pair<uint64_t,std::string>`).  The `operator[]` method takes
-a group capture number `n` and returns a pointer to the captured text with size
-of the matched text in bytes.  The pointer points to string in the buffer where
-the group match starts.  Use the size to determine the end of the group match.
+The first five methods in the table return values that can also be obtained via
+casting the matcher object to the return types of these methods.
+
+The `operator[]` takes a group capture number `n` and returns the group capture
+match in a pair with a `const char*` pointer to the group-matching text and the
+size of the matched text in bytes.  Because the pointer points to a string that
+is not `\0`-terminated, you should use the size to determine the matching part.
+The pointer is NULL when the group capture has no match.
 
 For example:
 
@@ -605,7 +609,8 @@ reflex::BoostMatcher matcher("(\\w+)\\s+(\\d+)");
 if (matcher.input("cow 123").matches())
   std::cout <<
     "name: " << std::string(matcher[1].first, matcher[1].second) <<
-    ", number: " << std::string(matcher[2].first, matcher[2].second) << std::endl;
+    ", number: " << std::string(matcher[2].first, matcher[2].second) <<
+    std::endl;
 ```
 
 When executed this code prints:
@@ -632,9 +637,10 @@ Three special methods can be used to manipulate the input stream directly:
 
   Method     | Result
   ---------- | ----------------------------------------------------------------
-  `input()`  | returns the next character from the input, matcher then skips it
-  `unput(c)` | put character `c` back unto the stream, matcher then takes it
-  `peek()`   | returns the next character on the input without consuming it
+  `input()`  | returns next char 0..255 from the input, matcher then skips it
+  `winput()` | returns the next wide character from the input, matcher skips it
+  `unput(c)` | put char `c` back unto the stream, matcher then takes it
+  `peek()`   | returns the next char 0..255 from the input without consuming it
 
 To initialize a matcher for interactive use, to assign a new input source or to
 change its pattern, you can use the following methods:
@@ -721,6 +727,9 @@ while (matcher.find() == true)
   std::cout << "Found " << matcher.text() << std::endl;
 ```
 
+A `reflex::Pattern` object is immutable (it stores a constant table) and can be
+shared among threads.
+
 The RE/flex matcher only supports POSIX mode matching and does not support Perl
 mode matching.  See \ref reflex-posix-perl for more information.
 
@@ -786,7 +795,7 @@ for the finite state machine:
 ```cpp
 void reflex_code_FSM(reflex::Matcher& m)
 {
-  int c0, c1;
+  int c0 = 0, c1 = c0;
   m.FSM_INIT(c1);
 
 S0:
@@ -1248,9 +1257,14 @@ the classic Flex actions shown in the second column of this table:
   `out().write(s, n)`   | `LexerOutput(s, n)`  | output chars `s[0..n-1]`
   `out().put(c)`        | `output(c)`          | output char `c`
   `matcher().accept()`  | `yy_act`             | number of the matched rule
-  `matcher().input()`   | `yyinput()`          | get next character from input
-  `matcher().unput(c)`  | `unput(c)`           | put back character `c`
-  `matcher().peek()`    | *n/a*                | peek at character on input
+  `matcher().text()`    | `YYText()`, `yytext` | same as `text()`
+  `matcher().wtext()`   | *n/a*                | `std::wstring` match
+  `matcher().size()`    | `YYLeng()`, `yyleng` | same as `size()`
+  `matcher().wsize()`   | *n/a*                | size of wide string match
+  `matcher().input()`   | `yyinput()`          | get next char from input
+  `matcher().winput()`  | *n/a*                | get wide character from input
+  `matcher().unput(c)`  | `unput(c)`           | put back char `c`
+  `matcher().peek()`    | *n/a*                | peek at next char on input
   `matcher().more()`    | `yymore()`           | concat next match to the match
   `matcher().less(n)`   | `yyless(n)`          | shrink match's length to `n`
   `matcher().first()`   | *n/a*                | first pos of match in input
@@ -3505,6 +3519,9 @@ The converter is specific to the matcher selected, i.e.
 `\p` character classes to UTF-8 patterns, converts bracket character classes
 containing Unicode, and groups UTF-8 multi-byte sequences in the regex string.
 
+The converter throws a `reflex::regex_error` exception if conversion fails,
+for example when the regex syntax is invalid.
+
 See \ref reflex-patterns for more details on regex patterns.
 
 See \ref regex-input for more details on the `reflex::Input` class.
@@ -3574,6 +3591,9 @@ The converter is specific to the matcher selected, i.e.
 `reflex::StdPosixMatcher::convert`.  The converters also translates Unicode
 `\p` character classes to UTF-8 patterns, converts bracket character classes
 containing Unicode, and groups UTF-8 multi-byte sequences in the regex string.
+
+The converter throws a `reflex::regex_error` exception if conversion fails,
+for example when the regex syntax is invalid.
 
 See \ref reflex-patterns for more details on regex patterns.
 
@@ -3678,6 +3698,41 @@ The following options are combined in a string and passed to the
   `x`           | inline comments, same as `(?x)X`
   `w`           | display regex syntax errors before raising them as exceptions
 
+The compilation of a `reflex::Pattern` object into a FSM may throw an exception
+when the regex string has problems:
+
+```cpp
+try
+{
+  reflex::Pattern pattern(argv[1]);
+  ...
+  // code that uses the pattern object
+  ...
+}
+catch (reflex::regex_error& e)
+{
+  std::cerr << e.what();
+  switch (e)
+  {
+    case reflex::regex_error::mismatched_parens:    std::cerr << "mismatched ( )"; break;
+    case reflex::regex_error::mismatched_braces:    std::cerr << "mismatched { }"; break;
+    case reflex::regex_error::mismatched_brackets:  std::cerr << "mismatched [ ]"; break;
+    case reflex::regex_error::mismatched_quotation: std::cerr << "mismatched \Q...\E quotation"; break;
+    case reflex::regex_error::empty_expression:     std::cerr << "regex (sub)expression should not be empty"; break;
+    case reflex::regex_error::empty_class:          std::cerr << "class [...] is empty, e.g. [a&&[b]]"; break;
+    case reflex::regex_error::invalid_class:        std::cerr << "invalid character class name"; break;
+    case reflex::regex_error::invalid_class_range:  std::cerr << "invalid class range, e.g. [Z-A]"; break;
+    case reflex::regex_error::invalid_escape:       std::cerr << "invalid escape character"; break;
+    case reflex::regex_error::invalid_anchor:       std::cerr << "invalid anchor"; break;
+    case reflex::regex_error::invalid_repeat:       std::cerr << "invalid repeat range, e.g. {10,1}"; break;
+    case reflex::regex_error::invalid_quantifier:   std::cerr << "invalid lazy/possessive quantifier"; break;
+    case reflex::regex_error::invalid_modifier:     std::cerr << "invalid (?ismx:) modifier"; break;
+    case reflex::regex_error::invalid_syntax:       std::cerr << "invalid regex syntax"; break;
+    case reflex::regex_error::exceeds_limits:       std::cerr << "exceeds complexity limits: {n,m} range too large"; break;
+  }
+}
+```
+
 ⇢ [Back to contents](#)
 
 
@@ -3745,6 +3800,38 @@ size_t n = std::distance(boostmatcher.scan.begin(), boostmatcher.scan.end());
 You can also use the regex `"\X"` to match any wide character without using
 these flags.
 
+A converter throws a `reflex::regex_error` exception if conversion fails, for
+example when the regex syntax is invalid:
+
+```cpp
+std::string regex;
+try
+{
+  regex = reflex::BoostMatcher::convert(argv[1]));
+}
+catch (reflex::regex_error& e)
+{
+  std::cerr << e.what();
+  switch (e)
+  {
+    case reflex::regex_error::mismatched_parens:    std::cerr << "mismatched ( )"; break;
+    case reflex::regex_error::mismatched_braces:    std::cerr << "mismatched { }"; break;
+    case reflex::regex_error::mismatched_brackets:  std::cerr << "mismatched [ ]"; break;
+    case reflex::regex_error::mismatched_quotation: std::cerr << "mismatched \Q...\E quotation"; break;
+    case reflex::regex_error::empty_expression:     std::cerr << "regex (sub)expression should not be empty"; break;
+    case reflex::regex_error::empty_class:          std::cerr << "class [...] is empty, e.g. [a&&[b]]"; break;
+    case reflex::regex_error::invalid_class:        std::cerr << "invalid character class name"; break;
+    case reflex::regex_error::invalid_class_range:  std::cerr << "invalid class range, e.g. [Z-A]"; break;
+    case reflex::regex_error::invalid_escape:       std::cerr << "invalid escape character"; break;
+    case reflex::regex_error::invalid_anchor:       std::cerr << "invalid anchor"; break;
+    case reflex::regex_error::invalid_repeat:       std::cerr << "invalid repeat range, e.g. {10,1}"; break;
+    case reflex::regex_error::invalid_quantifier:   std::cerr << "invalid lazy/possessive quantifier"; break;
+    case reflex::regex_error::invalid_modifier:     std::cerr << "invalid (?ismx:) modifier"; break;
+    case reflex::regex_error::invalid_syntax:       std::cerr << "invalid regex syntax"; break;
+  }
+}
+```
+
 ⇢ [Back to contents](#)
 
 
@@ -3776,9 +3863,11 @@ To obtain details of a match use the following methods:
   ----------- | ---------------------------------------------------------------
   `accept()`  | returns group capture index or zero if not captured/matched
   `text()`    | returns `\0`-terminated `const char*` string match
-  `pair()`    | returns `std::pair<size_t,const char*>(accept(), text())`
+  `wtext()`   | returns `std::wstring` wide string match (converted from UTF-8)
+  `pair()`    | returns `std::pair<size_t,std::string>(accept(), text())`
+  `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(), wtext())`
   `size()`    | returns the length of the text match in bytes
-  `wsize()`   | returns the length of the match in number of (wide) characters
+  `wsize()`   | returns the length of the match in number of wide characters
   `rest()`    | returns `\0`-terminated `const char*` of the rest of the input
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
@@ -3792,12 +3881,29 @@ To obtain details of a match use the following methods:
   `[0]`       | operator returns `std::pair<const char*,size_t>(text(),size())`
   `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
 
-Two special methods can be used to manipulate the input stream directly:
+Note: the `wtext()` and `wsize()` methods are more expensive to invoke and take
+more than constant time to compute, whereas `text()` and `size()` take constant
+time.
+
+In addition, type casts of matcher objects and iterators are available:
+
+- Casting to `size_t` gives the matcher's `accept()` index.
+- Casting to `std::string` is the same as storing `text()` in a string with
+  `std::string(text(), size())`.
+- Casting to `std::wstring` is the same as invoking `wtext()`.
+- Casting to a `std::pair<size_t,std::string>` is the same as invoking the
+  `pair()` method.
+- Casting to a `std::pair<size_t,std::wstring>` is the same as invoking the
+  `wpair()` method.
+
+Four special methods can be used to manipulate the input stream directly:
 
   Method     | Result
   ---------- | ----------------------------------------------------------------
-  `input()`  | returns the next character from the input, matcher then skips it
-  `unput(c)` | put character `c` back unto the stream, matcher then takes it
+  `input()`  | returns next char 0..255 from the input, matcher then skips it
+  `winput()` | returns the next wide character from the input, matcher skips it
+  `unput(c)` | put char `c` back unto the stream, matcher then takes it
+  `peek()`   | returns the next char 0..255 from the input without consuming it
 
 These methods operate on the `in` public instance variable of a matcher:
 

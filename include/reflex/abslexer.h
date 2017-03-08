@@ -50,11 +50,22 @@ class AbstractLexer {
   /// Extend matcher class M with a member pointing to the instantiating lexer class.
   class Matcher : public M {
    public:
+    /// Construct a lexer matcher from a matcher's pattern type.
     Matcher(
         const typename M::Pattern& pattern,    ///< regex pattern to instantiate matcher class M(pattern, input)
         const Input&               input,      ///< the reflex::Input to instantiate matcher class M(pattern, input)
         AbstractLexer             *lexer,      ///< points to the instantiating lexer class
         const char                *opt = NULL) ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      :
+        M(pattern, input, opt),
+        lexer_(lexer)
+    { }
+    /// Construct a lexer matcher from a string pattern.
+    Matcher(
+        const char    *pattern,    ///< regex pattern to instantiate matcher class M(pattern, input)
+        const Input&   input,      ///< the reflex::Input to instantiate matcher class M(pattern, input)
+        AbstractLexer *lexer,      ///< points to the instantiating lexer class
+        const char    *opt = NULL) ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
       :
         M(pattern, input, opt),
         lexer_(lexer)

@@ -2,8 +2,8 @@
 
 The examples with Bison require the installation of [Bison][bison-url].
 
-Flex-compatible scanner examples
---------------------------------
+Flex syntax scanner examples
+----------------------------
 
 - `ctokens.l` and `cdefs.l` a C/C++ tokenizer
 - `jtokens.l` and `jdefs.l` a Java tokenizer, meets Java Lexical Structure requirements
@@ -22,8 +22,8 @@ Flex-compatible scanner examples
 - `echo.l` interactive scanner to echo input
 - `json.l` JSON parser (verified with <http://seriot.ch/parsing_json.php>)
 
-RE/flex scanner examples
-------------------------
+RE/flex syntax scanner examples
+-------------------------------
 
 - `ptokens.l` and `pdefs.l` a Python tokenizer
 - `cow.l` scanner to convert cows
@@ -42,6 +42,7 @@ Stand-alone C++ regex matching example
 --------------------------------------
 
 - `cards.cpp` matches credit card numbers
+- `url.cpp` capture domain, path, and query keys from URLs (requires Boost.Regex for captures)
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html
