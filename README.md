@@ -3,8 +3,9 @@
 
 Flex reimagined.  Fast, flexible, adds Boost 💪
 
-RE/flex is as fast as Flex.  For example, tokenizing a representative C source
-code file into 240 tokens takes:
+RE/flex is as fast as Flex (in some cases faster), and much faster than regex
+libraries such as Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example,
+tokenizing a representative C source code file into 240 tokens takes:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
@@ -28,7 +29,7 @@ Features
 
 - Fully compatible with Flex to eliminate a learning curve, making a transition
   to RE/flex frustration-free.
-- Extensive documentation in the online [manual][manual-url].
+- Extensive documentation in the online [User Guide][manual-url].
 - Generates MT-safe (reentrant) code by default.
 - Generates clean source code that defines a C++ Lexer class derived from an
   abstract lexer class.
@@ -317,7 +318,7 @@ Changelog
 - Mar  8, 2017: 0.9.15 added `wtext()`, `wpair()`, `winput()` methods, other improvements
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
-[reflex-url]: https://www.genivia.com/get-reflex.html
+[reflex-url]: https://www.genivia.com/reflex.html
 [manual-url]: https://www.genivia.com/doc/reflex/html
 [flex-url]: http://dinosaur.compilertools.net/#flex
 [lex-url]: http://dinosaur.compilertools.net/#lex
