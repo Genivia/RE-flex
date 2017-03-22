@@ -70,9 +70,9 @@ namespace convert_flag {
 
 /// @brief Returns the converted regex string given a regex library signature and conversion flags, throws regex_error.
 ///
-/// A regex library signature is a string of the form `"[decls:]escapes[?+]"`.
+/// A regex library signature is a string of the form `"decls:escapes?+."`.
 ///
-/// The optional `"decls:"` characters specify which modifiers and other special `(?...)` constructs are supported:
+/// The optional `"decls:"` part specifies which modifiers and other special `(?...)` constructs are supported:
 /// - non-capturing group `(?:...)` is supported
 /// - one or all of "imsx" specify which (?ismx:...) modifiers are supported
 /// - `#` specifies that `(?#...)` comments are supported
@@ -120,9 +120,11 @@ namespace convert_flag {
 /// - `W` for `\W` ASCII non-word-like character `[^0-9A-Z_a-z]`
 /// - `Z` for `\Z` end of input anchor, before the final line break
 ///
-/// The optional `"?+"` characters specify lazy and possessive support:
+/// The optional `"?+"` specify lazy and possessive support:
 /// - `?` lazy quantifiers for repeats are supported
 /// - `+` possessive quantifiers for repeats are supported
+///
+/// The optional `"."` (dot) specifies that dot matches any character except newline.
 std::string convert(
     const char                              *pattern,                    ///< regex string pattern to convert
     const char                              *signature = NULL,           ///< regex library signature

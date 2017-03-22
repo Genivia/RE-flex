@@ -1,16 +1,18 @@
 // Python 3.x lexical structure
 // https://docs.python.org/3.6/reference/lexical_analysis.html
 // Requires RE/flex matcher for lazy quants
-// Enables dotall and unicode matching
+// Enables unicode matching
 
-%o matcher=reflex dotall unicode
+%o matcher=reflex unicode
+
+any                     \p{Unicode}
 
 identifier              \p{PythonIdentifierStart}\p{PythonIdentifierPart}*
 
 stringprefix            (r|u|R|U|f|F|fr|Fr|fR|FR|rf|rF|Rf|RF)
-qshortchar              [^\\\n']|\\.
-dshortchar              [^\\\n"]|\\.
-longchar                [^\\]|\\.
+qshortchar              [^\\\n']|\\{any}
+dshortchar              [^\\\n"]|\\{any}
+longchar                [^\\]|\\{any}
 shortstring             '{qshortchar}*'|\"{dshortchar}*\"
 longstring              '''{longchar}*?'''|\"\"\"{longchar}*?\"\"\"
 stringliteral           {stringprefix}?({shortstring}|{longstring})

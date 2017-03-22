@@ -5498,7 +5498,8 @@ void reflex::Unicode::Tables::language_scripts(void)
   };
   range["No"] = No;
   static const int Non_ASCII_Unicode[] = {
-    128, 1114111,
+    128, 55295,
+    57344, 1114111,
     0, 0
   };
   range["Non_ASCII_Unicode"] = Non_ASCII_Unicode;
@@ -8027,7 +8028,8 @@ void reflex::Unicode::Tables::language_scripts(void)
   };
   range["Ugaritic"] = Ugaritic;
   static const int Unicode[] = {
-    0, 1114111,
+    0, 55295,
+    57344, 1114111,
     0, 0
   };
   range["Unicode"] = Unicode;

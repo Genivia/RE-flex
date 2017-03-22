@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">absmatcher.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Mar 8 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Mar 22 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -121,7 +121,11 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a848ff944c984502c0739b440d647f0ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="absmatcher_8h.html#a848ff944c984502c0739b440d647f0ce">WITH_REALLOC</a></td></tr>
+<tr class="memdesc:a848ff944c984502c0739b440d647f0ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">This compile-time option speeds up buffer reallocation.  <a href="#a848ff944c984502c0739b440d647f0ce">More...</a><br /></td></tr>
 <tr class="separator:a848ff944c984502c0739b440d647f0ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52b73659b2f527a60c6b59f43b8e511a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="absmatcher_8h.html#a52b73659b2f527a60c6b59f43b8e511a">WITH_FAST_GET</a></td></tr>
+<tr class="memdesc:a52b73659b2f527a60c6b59f43b8e511a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This compile-time option speeds up matching, but slows input().  <a href="#a52b73659b2f527a60c6b59f43b8e511a">More...</a><br /></td></tr>
+<tr class="separator:a52b73659b2f527a60c6b59f43b8e511a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -142,6 +146,20 @@ Functions</h2></td></tr>
 <dd>
 (c) BSD-3 License - see LICENSE.txt </dd></dl>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a52b73659b2f527a60c6b59f43b8e511a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define WITH_FAST_GET</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This compile-time option speeds up matching, but slows input(). </p>
+
+</div>
+</div>
 <a class="anchor" id="a848ff944c984502c0739b440d647f0ce"></a>
 <div class="memitem">
 <div class="memproto">
@@ -151,6 +169,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>This compile-time option speeds up buffer reallocation. </p>
 
 </div>
 </div>
@@ -230,7 +250,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Mar 8 2017 13:11:43 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Mar 22 2017 19:12:30 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

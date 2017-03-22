@@ -23,7 +23,7 @@ supports Flex options.
 Features:
 
 - integrated support for Unicode, auto-detects BOM in files (UTF-8/16/32);
-- optional "free space mode" improves readability of lex specifications;
+- optional "free space mode" improves readability of lexer specifications;
 - regular expressions may contain lazy quantifiers;
 - regular expressions may contain word boundary anchors;
 - regular expressions may contain indent/dedent markers for matching;
@@ -94,7 +94,7 @@ Yet another scanner generator                                         {#intro1}
 -----------------------------
 
 Lex, Flex and variants are powerful *scanner generators* that generate scanners
-(a.k.a. *lexical analyzers* and *lexers*) from *lex specifications*.  These lex
+(a.k.a. *lexical analyzers* and *lexers*) from lexer specifications.  The lexer
 specifications define patterns with user-defined actions that are executed when
 their patterns match the input stream.  The scanner repeatedly matches patterns
 and triggers these actions until the end of the input stream is reached.
@@ -107,7 +107,7 @@ patterns in a tokenizer define the make-up of identifiers, constants, keywords,
 punctuation, and to skip over white space in the source code that is scanned.
 
 Consider for example the following patterns and associated actions defined in a
-lex specification:
+lexer specification:
 
 <div class="alt">
 ```cpp
@@ -226,7 +226,7 @@ difference is important as we saw earlier and even more so when we consider the
 problems with Perl mode matching when specifying patterns to tokenize input, as
 we will explain next.
 
-Consider the lex specification at the start of this section.  Suppose the input
+Consider the lexer specification example shown earlier.  Suppose the input text 
 to tokenize is `iflag = 1`.  In POSIX mode we return `ASCII_IDENTIFIER` for the
 name `iflag`, `OP_ASSIGN` for `=`, and `NUMBER` for `1`.  In Perl mode, we find
 that `iflag` matches `if` and the rest of the name is not consumed, which gives
@@ -234,8 +234,8 @@ that `iflag` matches `if` and the rest of the name is not consumed, which gives
 `NUMBER` for `1`.  Perl mode matching greedely returns leftmost matches.
 
 Using Perl mode in a scanner requires all overlapping patterns to be defined in
-a lex specification with longer patterns defined first to avoid partial matches
-of tokens as demonstrated.  By contrast, POSIX mode is *declarative* and allows
+a lexer specification such that all longest matching patterns are defined first
+to ensure longest matches.  By contrast, POSIX mode is *declarative* and allows
 you to define the patterns in the specification in any order.  Perhaps the only
 ordering constraint on patterns is for patterns that match the same input, such
 such as matching the keyword `if` in the example:  `KEYWORD_IF` must be matched
@@ -248,7 +248,7 @@ In summary, the advantages that RE/flex has to offer include:
 - RE/flex is fully compatible with Flex and Bison, by using the `−−flex` and/or
   `−−bison` options.  This eliminates a learning curve to use RE/flex.
 
-- The RE/flex scanner generator takes a lex specification that is compatible to
+- The RE/flex scanner generator accepts specifications that are compatible with
   [Flex](dinosaur.compilertools.net/#flex), with additional options to select a
   matcher engine and to specify names and options for C++ class generation.
   
@@ -256,9 +256,9 @@ In summary, the advantages that RE/flex has to offer include:
   with [Bison](dinosaur.compilertools.net/#bison).  RE/flex also supports Bison
   bridge (pure reentrant and MT-safe) parsers.
 
-- The regular expression syntax of patterns in lex specifications is restricted
-  to POSIX ERE.  By contrast, the RE/flex scanner generator is regex-centric by
-  design and offers a rich pattern syntax including lazy quantifiers.
+- The regular expression syntax in Flex and Lex specifications is restricted to
+  POSIX ERE.  By contrast, the RE/flex specification syntax is regex-centric by
+  design and offers a much richer pattern syntax, including lazy quantifiers.
 
 - A matcher engine for a lexer class has a common interface API declared by the
   abstract base matcher class template.
@@ -569,13 +569,16 @@ You can use this method and other methods to obtain the details of a match:
   Method      | Result
   ----------- | ---------------------------------------------------------------
   `accept()`  | returns group capture index or zero if not captured/matched
-  `text()`    | returns `\0`-terminated `const char*` string match
-  `wtext()`   | returns `std::wstring` wide string match (converted from UTF-8)
-  `pair()`    | returns `std::pair<size_t,std::string>(accept(), text())`
-  `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(), wtext())`
-  `size()`    | returns the length of the match in bytes
+  `text()`    | returns `const char*` to `\0`-terminated match
+  `str()`     | returns `std::string` copy of `text()` (but preserves `\0`s)
+  `wstr()`    | returns `std::wstring` copy of `text()`, converted from UTF-8
+  `pair()`    | returns `std::pair<size_t,std::string>(accept(),str())`
+  `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
+  `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
-  `rest()`    | returns `\0`-terminated `const char*` of the rest of the input
+  `begin()`   | returns `const char*` to non-`\0`-terminated match begin
+  `end()`     | returns `const char*` to non-`\0`-terminated match end
+  `rest()`    | returns `const char*` to `\0`-terminated rest of input
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
   `lineno()`  | returns line number of the match, starting with line 1
@@ -585,11 +588,8 @@ You can use this method and other methods to obtain the details of a match:
   `at_bol()`  | true if matcher reached the begin of a new line `\n`
   `at_bob()`  | true if matcher is at the start of input, no matches consumed
   `at_end()`  | true if matcher is at the end of input
-  `[0]`       | operator returns `std::pair<const char*,size_t>(text(),size())`
+  `[0]`       | operator returns `std::pair<const char*,size_t>(begin(),size())`
   `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
-
-The first five methods in the table return values that can also be obtained via
-casting the matcher object to the return types of these methods.
 
 The `operator[]` takes a group capture number `n` and returns the group capture
 match in a pair with a `const char*` pointer to the group-matching text and the
@@ -620,11 +620,12 @@ When executed this code prints:
 @warning The `text()` method returns the match by pointing to the `const char*`
 string that is stored in an internal buffer.  This pointer *should not be used*
 after matching continues and when the matcher object is deallocated.  To retain
-the `text()` string value we recommend to instantiate a `std::string`.
+the `text()` value use the `str()` method that returns a copy of `text()`.
 
 @warning The `operator[]` method returns a pair with the match info of the n'th
-group, which is a string `const char*` (or NULL) and size in bytes.  The string
-*should not be used* after matching continues.
+group, which is a non-`\0`-terminated `const char*` pointer (or NULL) with size
+in bytes of the captured match.  The string *should not be used* after matching
+continues.
 
 @note When using the `reflex::Matcher` class, the `accept()` method returns the
 accepted pattern among the alternations in the regex that are specified only at
@@ -878,7 +879,7 @@ In summary:
 The RE/flex scanner generator                                         {#reflex}
 =============================
 
-The RE/flex scanner generator tool takes a lex specification and generates a
+The RE/flex scanner generator takes a lexer specification and generates a
 regex-based C++ lexer class that is saved in lex.yy.cpp, or saved to the file
 specified by the `-o` command-line option.  This file is then compiled and
 linked with a regex-library to produce a scanner.  A scanner can be a
@@ -888,7 +889,7 @@ stand-alone application or part of a larger program such as a compiler:
 digraph build {
   ranksep=.25;
   node     [ shape=box, fontname=Helvetica, fontsize=11 ];
-  spec     [ label="lex specification\n(.l, .lex)", peripheries=0 ];
+  spec     [ label="lexer specification\n(.l, .lex)", peripheries=0 ];
   reflex   [ label="reflex scanner generator" ];
   lexyycpp [ label="lexer class\n(lex.yy.cpp)", peripheries=0 ];
   cpp      [ label="C++ compiler & linker" ];
@@ -942,7 +943,7 @@ The reflex command line tool                                  {#reflex-command}
 ----------------------------
 
 The **reflex** command generates a C++ scanner class in a source code file
-given a lex specification.  The **reflex** command accepts `−−flex` and
+given a lexer specification.  The **reflex** command accepts `−−flex` and
 `−−bison` options for compatibility.  These options allow **reflex** to be used
 as a replacement of the classic Flex and Lex tools:
 
@@ -962,10 +963,10 @@ readable, and reusable.
 ⇢ [Back to contents](#)
 
 
-Lex specifications                                               {#reflex-spec}
-------------------
+RE/flex lexer specifications                                     {#reflex-spec}
+----------------------------
 
-A lex specification consists of three sections that are divided by `%%`
+A lexer specification consists of three sections that are divided by `%%`
 delimiters:
 
 <div class="alt">
@@ -984,7 +985,7 @@ for the scanner, and for including C++ declarations.
 The Rules section is the main workhorse of the scanner and consists of patterns
 and actions, where patterns may use named regex patterns that are defined in
 the definitions section.  The actions are executed when patterns match.  For
-example, the following lex specification replaces all occurrences of `cow` by
+example, the following lexer specification replaces all occurrences of `cow` by
 `chick`:
 
 <div class="alt">
@@ -1097,6 +1098,12 @@ The Definition section may also contain one or more options with `%%option` (or
 Multiple options can be grouped on the same line as is shown above.  See
 \ref reflex-options for a list of available options.
 
+@note Options `freespace`, `case_insensitive`, `dotall`, and `unicode` affect
+the named patterns defined in the Definitions section.  Therefore, we should
+place these options ahead of all named patterns.  If a regex pattern
+specifically requires one or more of these options, use the `(?isx:φ)`
+modifier(s), see \ref reflex-patterns.
+
 Consider the following example.  Say we want to count the number of occurrences
 of the word "cow" in some text.  We declare a global counter, increment the
 counter when we see a "cow", and finally report the total tally when we reach
@@ -1181,9 +1188,8 @@ Note that nothing else needed to be changed, because the actions are part of
 the generated Lexer class and can access the Lexer class members, in this
 example the member variable `herd`.
 
-To modularize lex specifications use `%%include` (or `%%i` for short) to
-include files into the definitions section of a lex specification.  For
-example:
+To modularize specifications of lexers, use `%%include` (or `%%i` for short) to
+include files into the definitions section of a specification.  For example:
 
 <div class="alt">
 ```cpp
@@ -1258,7 +1264,8 @@ the classic Flex actions shown in the second column of this table:
   `out().put(c)`        | `output(c)`          | output char `c`
   `matcher().accept()`  | `yy_act`             | number of the matched rule
   `matcher().text()`    | `YYText()`, `yytext` | same as `text()`
-  `matcher().wtext()`   | *n/a*                | `std::wstring` match
+  `matcher().str()`     | *n/a*                | `std::string` of `text()`
+  `matcher().wstr()`    | *n/a*                | `std::wstring` of `text()`
   `matcher().size()`    | `YYLeng()`, `yyleng` | same as `size()`
   `matcher().wsize()`   | *n/a*                | size of wide string match
   `matcher().input()`   | `yyinput()`          | get next char from input
@@ -1427,11 +1434,11 @@ patterns `φ` and `ψ`:
   `\0177`   | matches an 8-bit character with octal value `177` (see below)
   `\x7f`    | matches an 8-bit character with hexadecimal value `7f`
   `\x{7f}`  | matches an 8-bit character with hexadecimal value `7f`
-  `\p{C}`   | matches a character in class C (see below)
+  `\p{C}`   | matches a character in category C
   `\Q..\E`  | matches the quoted content between `\Q` and `\E` literally
   `[abc]`   | matches one of `a`, `b`, or `c` (character class in bracket list)
   `[0-9]`   | matches a digit `0` to `9` (character class range)
-  `[^0-9]`  | matches anything but a digit (negative list)
+  `[^0-9]`  | matches any character but a digit (negative list)
   `φ?`      | matches `φ` zero or one time (optional)
   `φ*`      | matches `φ` zero or more times (repetition)
   `φ+`      | matches `φ` one or more times (repetition)
@@ -1462,10 +1469,11 @@ patterns `φ` and `ψ`:
   `φ\<`     | matches `φ` that ends as a non-word
   `φ\>`     | matches `φ` that ends as a word
   `(?i:φ)`  | *case insensitive mode*: matches `φ` ignoring case
-  `(?m:φ)`  | *multi-line mode*: `^` and `$` in `φ` match begin and end of a line
+  `(?m:φ)`  | *multi-line mode*: `^` and `$` in `φ` match begin and end of a line (default in lexer specifications)
   `(?s:φ)`  | *dotall mode*: `.` (dot) in `φ` matches newline
+  `(?u:φ)`  | *unicode mode*: `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode
   `(?x:φ)`  | *free space mode*: ignore all whitespace and comments in `φ`
-  `(?#:..)` | *commenting*: all of `..` is skipped as a comment
+  `(?#:..)` | *comment*: all of `..` is skipped as a comment
 
 Character classes in bracket lists are sets and these sets can be inverted,
 subtracted, intersected, or merged as follows:
@@ -1478,41 +1486,60 @@ subtracted, intersected, or merged as follows:
   `[a-z⎮⎮[A-Z]]`    | matches a letter (character class union)
 
 The character sets can be Unicode character sets.  Use **reflex** option
-`−−unicode` or regex matcher converter flag `reflex::convert_flag::unicode`.
+`−−unicode` (or `%%option unicode`) to globally enable Unicode.  Use `(?u:φ)`
+to locally enable Unicode in a pattern `φ`.
 
-In addition, the following patterns can be used in lex specifications for
-the **reflex** scanner generator:
+Use regex matcher converter flag `reflex::convert_flag::unicode` to convert
+Unicode patterns for use with the 8-bit based RE/flex, Boost.Regex, and
+std::regex regex libraries, see \ref regex-convert.
 
-  Pattern           | Matches
-  ----------------- | ---------------------------------------------------------
-  `x` (UTF-8)       | matches wide character `x` encoded in UTF-8, requires the `−−unicode` option
-  `\u{2318}`        | matches Unicode character U+2318, requires the `−−unicode` option
-  `\p{C}`           | matches a character in class C, ASCII or Unicode with the `−−unicode` option
-  `\177`            | matches an 8-bit character with octal value `177`
-  `".."`            | matches the quoted content literally
-  `φ/ψ`             | matches `φ` if followed by `ψ` (trailing context, same as lookahead)
-  `[a-z]{-}[aeiou]` | matches a consonant, same as `[a-z−−[aeiou]]`
-  `[a-z]{+}[A-Z]`   | matches a letter, same as `[a-z⎮⎮[A-Z]]`
-  `<S>φ`            | matches `φ` only if state `S` is enabled
-  `<S1,S2,S3>φ`     | matches `φ` only if state `S1`, `S2`, or state `S3` is enabled
-  `<*>φ`            | matches `φ` in any state
-  `<<EOF>>`         | matches EOF in any state
-  `<S><<EOF>>`      | matches EOF only if state `S` is enabled
+Unicode mode enables the following patterns:
+
+  Pattern            | Matches
+  ------------------ | --------------------------------------------------------
+  `.`                | matches any Unicode character (beware of \ref invalid-utf)
+  `€` (UTF-8)        | matches wide character `€`, encoded in UTF-8
+  `[€¥£]` (UTF-8)    | matches wide character `€`, `¥` or `£`, encoded in UTF-8
+  `\u{20AC}`         | matches Unicode character U+20AC
+  `\p{C}`            | matches a character in category C
+  `\p{^C}`,`\P{C}`   | matches any character except in category C
+  `\s`               | matches a white space character with Unicode sub-property Zs
+  `\l`               | matches a lower case letter with Unicode sub-property Ll
+  `\u`               | matches an upper case letter with Unicode sub-property Lu
+  `\w`               | matches a Unicode word character with property L, Nd, or Pc
+
+The following patterns use Flex/Lex syntax that is specific to lexer
+specifications and should only be used as such:
+
+  Pattern            | Matches
+  ------------------ | --------------------------------------------------------
+  `\177`             | matches an 8-bit character with octal value `177`
+  `".."`             | matches the quoted content literally
+  `φ/ψ`              | matches `φ` if followed by `ψ` (trailing context)
+  `<S>φ`             | matches `φ` only if state `S` is enabled
+  `<S1,S2,S3>φ`      | matches `φ` only if state `S1`, `S2`, or state `S3` is enabled
+  `<*>φ`             | matches `φ` in any state
+  `<<EOF>>`          | matches EOF in any state
+  `<S><<EOF>>`       | matches EOF only if state `S` is enabled
+  `[a-z]{+}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]`
+  `[a-z]{-}[aeiou]`  | matches a consonant, same as `[a-z−−[aeiou]]`
+  `[a-z]{&}[^aeiou]` | matches a consonant, same as `[a-z&&[^aeiou]]`
+  `[a-z]{⎮}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]`
 
 The order of precedence for composing larger patterns from sub-patterns is as
 follows, from high to low precedence:
 
 1. Characters, character classes, bracket expressions, escapes, quotation
-2. Grouping `(φ)`, `(?:φ)`, `(?=φ)`, and inline modifiers `(?imsx:φ)`
+2. Grouping `(φ)`, `(?:φ)`, `(?=φ)`, and inline modifiers `(?imsux:φ)`
 3. Quantifiers `?`, `*`, `+`, `{n,m}`
 4. Concatenation (including lookahead)
 5. Anchoring `^`, `$`, `\<`, `\>`, `\b`, `\B`, `\A`, `\z` 
 6. Alternation `|`
-7. Global modifiers `(?imsx)φ`
+7. Global modifiers `(?imsux)φ`
 
 Note that the characters `.` (dot), `\`, `?`, `*`, `+`, `|`, `(`, `)`, `[`,
 `]`, `{`, `}`, `^`, and `$` are meta-characters and should be escaped to match.
-Lex specifications also include the `"` and `/` as meta-characters and these
+Lexer specifications also include the `"` and `/` as meta-characters and these
 should be escaped to match.
 
 Bracket lists cannot be empty, so `[]` and `[^]` are invalid.  In fact, the
@@ -1520,13 +1547,13 @@ first character after the bracket is always part of the list.  So `[][]` is a
 list that matches a `]` and a `[`, `[^][]` is a list that matches anything but
 `]` and `[`, and `[-^]` is a list that matches a `-` and a `^`.
 
-Multi-line mode is the default mode in lex specifications.  Free space mode can
-be useful to improve readability.  To enable free space mode in **reflex** use
-the `−−freespace` option.  Be warned that this requires all actions in lex
+Multi-line mode is the default mode in lexer specifications.  Free space mode
+can be useful to improve readability.  To enable free space mode in **reflex**
+use the `−−freespace` option.  Be warned that this requires all actions in lex
 specifications to be placed within `{` and `}` blocks and other code to be
 placed in `%{` and `%}` blocks.
 
-Patterns ending in an escape `\` in lex specifications continue on the next
+Patterns ending in an escape `\` in lexer specifications continue on the next
 line.  This permits layout out long patterns, for example in free space mode.
 
 @note We need the "regex escapes to be escaped" in C++ literal strings, so we
@@ -1582,15 +1609,15 @@ The following Unicode character categories are enabled with the **reflex**
 
   Category                               | Matches
   -------------------------------------- | ------------------------------------
-  `.`                                    | matches any Unicode character
-  `\X`                                   | matches any Unicode character with or without the `−−unicode` option
-  `\s`, `\p{Zs}`                         | matches a Unicode white space character
+  `.`                                    | matches any Unicode character (beware of \ref invalid-utf)
+  `\X`                                   | matches any ISO-8859-1 or Unicode character (with or without the `−−unicode` option)
+  `\s`, `\p{Zs}`                         | matches a white space character with Unicode sub-propert Zs
   `\l`, `\p{Ll}`                         | matches a lower case letter with Unicode sub-property Ll
   `\u`, `\p{Lu}`                         | matches an upper case letter with Unicode sub-property Lu
   `\w`, `\p{Word}`                       | matches a Unicode word character with property L, Nd, or Pc
-  `\p{Unicode}`                          | matches any character (Unicode U+0000 to U+10FFFF)
-  `\p{ASCII}`                            | matches an ASCII character U+0000 to U+007F)
-  `\p{Non_ASCII_Unicode}`                | matches a non-ASCII Unicode character U+0080 to U+10FFFF)
+  `\p{Unicode}`                          | matches any Unicode character (U+00 to U+10FFFF minus U+D800 to U+DFFF)
+  `\p{ASCII}`                            | matches an ASCII character U+00 to U+007F)
+  `\p{Non_ASCII_Unicode}`                | matches a non-ASCII character U+80 to U+10FFFF minus U+D800 to U+DFFF)
   `\p{Letter}`                           | matches a character with Unicode property Letter
   `\p{Mark}`                             | matches a character with Unicode property Mark
   `\p{Separator}`                        | matches a character with Unicode property Separator
@@ -1667,8 +1694,8 @@ In addition, the `−−unicode` option enables Unicode language scripts:
   `\p{Telugu}`, `\p{Thaana}`, `\p{Thai}`, `\p{Tibetan}`, `\p{Tifinagh}`,
   `\p{Tirhuta}`, `\p{Ugaritic}`, `\p{Vai}`, `\p{Warang_Citi}`, `\p{Yi}`.
 
-You can also use the `\P{C}` form that is identical to `\p{^C}`, which is the
-inverted character class `C`.
+You can also use the `\P{C}` form that is identical to `\p{^C}` that matches
+any character except characters in the class `C`.
 
 ### Indent and dedent matching
 
@@ -1946,7 +1973,7 @@ Command-line options                                          {#reflex-options}
 --------------------
 
 To control the output of the **reflex** scanner generator, use command-line
-options.  These options can also be specified in the lex specification with
+options.  These options can also be specified in the lexer specification with
 `%%option` (or `%%o` for short):
 
 <div class="alt">
@@ -1995,7 +2022,7 @@ The **reflex** command-line options are listed below.
 This generates a `yyFlexLexer` scanner class that is compatible with the
 Flex-generated `yyFlexLexer` scanner class (assuming Flex with option `−+` for
 C++).  The generated `yyFlexLexer` class has the usual `yytext` and other "yy"
-variables and functions, as defined by the lex specification standard.  Without
+variables and functions, as defined by the Flex specification standard.  Without
 this option, RE/flex actions should be used that are lexer class methods such
 as `echo()` and `reflex::AbstractMatcher` class methods such as
 `matcher.more()`, see \ref reflex-spec for more details.
@@ -2039,19 +2066,18 @@ decoding.
 
 ### `-u`, `−−unicode`
 
-This makes `.` (dot), `\s`, `\w`, `\l`, and `\u` match Unicode and also groups
-UTF-8 sequences in the regex, such that each UTF-8 encoded character in a regex
-is properly matched as one wide character.  Note that `\S` and `\W` are *not
-affected* by this switch.
+This makes `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode.
+Also groups UTF-8 sequences in the regex, such that each UTF-8 encoded
+character in a regex is properly matched as one wide character.
 
 ### `-x`, `−−freespace`
 
-This switches the **reflex** scanner generator to *free space mode*.  Regular
-expressions in free space mode may contain spacing to improve readability.
-Spacing within regular expressions is ignored, so use `" "` or `[ ]` to match a
-space and `\h` to match a space or a tab character.  Actions in free space mode
-MUST be placed in `{` and `}` blocks and all other code must be placed in `%{`
-and `%}` blocks.  Patterns ending in an escape `\` continue on the next line.
+This switches the **reflex** scanner to *free space mode*.  Regular expressions
+in free space mode may contain spacing to improve readability.  Spacing within
+regular expressions is ignored, so use `" "` or `[ ]` to match a space and `\h`
+to match a space or a tab character.  Actions in free space mode MUST be placed
+in `{` and `}` blocks and all other code must be placed in `%{` and `%}`
+blocks.  Patterns ending in an escape `\` continue on the next line.
 
 ### `-a`, `−−dotall`
 
@@ -2145,7 +2171,7 @@ name `lex()` (and `yylex()` when option `−−flex` is used).
 This defines the NAME of the scanner class that should be derived from the
 generated base `Lexer` class.  Use this option when defining your own scanner
 class named NAME.  You can declare a custom lexer class in the first section of
-the lex specification.  Because the custom lexer class is user-defined,
+the lexer specification.  Because the custom lexer class is user-defined,
 **reflex** generates the implementation of the `lex()` scanner function for
 this specified class.
 
@@ -2196,10 +2222,10 @@ option.
 
 (RE/flex matcher only).  This generates a Graphviz file FILE.gv, where FILE is
 optional.  When FILE is omitted the **reflex** command generates the file
-reflex.S.gv for each start condition state S defined in the lex specification.
-This includes reflex.INITIAL.gv for the INITIAL start condition state.  This
-option can be used to visualize the RE/flex matcher's finite state machine with
-the [Graphviz dot](http://www.graphviz.org) tool.  For example:
+reflex.S.gv for each start condition state S defined in the lexer
+specification.  This includes reflex.INITIAL.gv for the INITIAL start condition
+state.  This option can be used to visualize the RE/flex matcher's finite state
+machine with the [Graphviz dot](http://www.graphviz.org) tool.  For example:
 
 @dot
 digraph INITIAL {
@@ -2265,7 +2291,7 @@ is omitted the **reflex** command generates lex.yy.h.
 This generates a text file FILE.txt that contains the scanner's regular
 expression patterns, where FILE is optional.  When FILE is omitted the
 **reflex** command generates reflex.S.txt for each start condition state S.
-The regular expression patterns are converted from the lex specification and
+The regular expression patterns are converted from the lexer specification and
 translated into valid C++ strings that can be used with a regex library for
 pattern matching.
 
@@ -2327,7 +2353,7 @@ does not matter as long as the length of the matches differ.  When matches are
 of the same length because multiple patterns match, then the first rule is
 selected.
 
-Consider for example the following lex specification with rules that are
+Consider for example the following specification if a lexer with rules that are
 intended to match keywords and identifiers in some input text:
 
 <div class="alt">
@@ -2356,7 +2382,7 @@ up to the top we cannot match `int` any longer!
 
 @note To prevent a Perl matcher from matching a keyword when an identifier
 starts with the name of that keyword, we could use a lookahead pattern such as
-`int(?=[^A-Za-z0-9_])` which is written in a lex specification as
+`int(?=[^A-Za-z0-9_])` which is written in a lexer specification as
 `int/[^A-Za-z0-9_]` with the `/` lookahead meta symbol.
 
 Basically, a Perl matcher works in an *operational* mode by working the regex
@@ -2510,9 +2536,9 @@ A more typical scenario is to process an `include` directive in the source
 input that should include the source of another file before continuing with the
 current input.
 
-For example, the following lex specification processes `#include` directives by
-switching matchers and using the stack of matchers to permit nested `#include`
-directives up to a depth of 99 files:
+For example, the following specification defines a lexer that processes
+`#include` directives by switching matchers and using the stack of matchers to
+permit nested `#include` directives up to a depth of 99 files:
 
 <div class="alt">
 ```cpp
@@ -2649,8 +2675,9 @@ input from some source of text:
 ```
 </div>
 
-The `LexerInput` method may be invoked multiple times until it returns zero
-indicating EOF.
+The `LexerInput` method may be invoked multiple times by the matcher engine
+and should eventually return zero to indicate the end of input is reached (e.g.
+when at EOF).
 
 ⇢ [Back to contents](#)
 
@@ -2678,7 +2705,7 @@ When the scanner is in state `A` rules 1 and 2 are active. When the scanner
 is in state `B` rules 1 and 3 are active.
 
 Start conditions are declared in the definitions section (the first section) of
-the lex specification using `%%state` or `%%xstate` (or `%%s` and `%%x` for
+the lexer specification using `%%state` or `%%xstate` (or `%%s` and `%%x` for
 short) followed by a list of names called *start symbols*.  Start conditions
 declared with `%%s` are *inclusive start conditions*.  Start conditions
 declared with `%%x` are *exclusive start conditions*.
@@ -2906,7 +2933,7 @@ specification defines the tokens `CONST_NUMBER` and `CONST_STRING` and the type
 When option `−−flex` is used with `−−bison`, the `yytext`, `yyleng`,
 and `yylineno` globals are accessible to the Bison/Yacc parser.  In fact, all
 Flex actions and variables are globally accessible (outside the rules section
-of the lex specification) with the exception of `yy_push_state`,
+of the lexer specification) with the exception of `yy_push_state`,
 `yy_pop_state`, and `yy_top_state` that are class methods.  Furthermore, `yyin`
 and `yyout` are macros and cannot be (re)declared or accessed as global
 variables, but these can be used as if they are variables to assign a new input
@@ -3129,7 +3156,7 @@ pure-parsers.
 can be used as such in the scanner's rules.
 
 @note Because `YYSTYPE` is declared by the parser, do not forget to add a
-`#include "y.tab.h"` to the top of your lex specification:
+`#include "y.tab.h"` to the top of the specification of your lexer:
 
 <div class="alt">
 ```cpp
@@ -3145,7 +3172,7 @@ can be used as such in the scanner's rules.
 Examples                                                     {#reflex-examples}
 --------
 
-Some lex specification examples to generate scanners with RE/flex.
+Some lexer specification examples to generate scanners with RE/flex.
 
 ### Example 1
 
@@ -3183,7 +3210,7 @@ wd      [^ \t\r\n]+
 
 To generate a scanner with a global `yylex()` function similar to Flex in C
 mode (i.e. without Flex option `-+`), use **reflex** option `−−bison` with the
-lex specification above.  This option when combined with `−−flex` produces the
+specification shown above.  This option when combined with `−−flex` produces the
 global "yy" functions and variables.  This means that you can use RE/flex
 scanners with Bison (Yacc) and with any other C code, assuming everything is
 compiled together with a C++ compiler.
@@ -3321,8 +3348,8 @@ ignores it.  We could also have used a lookahead pattern `"</"{name}/">"` where
 
 ### Example 4
 
-This example lex specification in Flex syntax scans C/C++ source code.  It uses
-free space mode to enhance readability.
+This example Flex specification scans C/C++ source code.  It uses free space
+mode to enhance readability.
 
 <div class="alt">
 ```cpp
@@ -3566,7 +3593,7 @@ the matching behavior differs and cannot be controlled with mode modifiers:
 - `\x7f` is not supported in POSIX mode;
 - `\cX` is not supported in POSIX mode;
 - `\Q..\E` is not supported;
-- no mode modifiers `(?imsx:φ)`;
+- no mode modifiers `(?imsux:φ)`;
 - no `\A`, `\z`, `\<` and `\>` anchors;
 - no `\b` and `\B` anchors in POSIX mode;
 - no non-capturing groups `(?:φ)` in POSIX mode;
@@ -3746,7 +3773,7 @@ that the selected regex engines can handle.
 
 The converters translate `\p` Unicode classes, translate character
 class set operations such as `[a-z−−[aeiou]]`, convert escapes such as `\X`,
-and enforce `(?imsx:φ)` mode modifiers to a regex string that the underlying
+and enforce `(?imsux:φ)` mode modifiers to a regex string that the underlying
 regex library understands and can use.
 
 Each converter is specific to the regex engine.  Use a converter for the
@@ -3765,7 +3792,7 @@ following `reflex::convert_flag` flags:
 
   Flag        | Effect
   ----------- | ---------------------------------------------------------------
-  `unicode`   | `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode
+  `unicode`   | `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode, same as `(?u)`
   `recap`     | remove capturing groups, add capturing groups to the top level
   `lex`       | convert Lex/Flex regular expression syntax
   `u4`        | convert `\uXXXX` and UTF-16 surrogate pairs
@@ -3862,13 +3889,16 @@ To obtain details of a match use the following methods:
   Method      | Result
   ----------- | ---------------------------------------------------------------
   `accept()`  | returns group capture index or zero if not captured/matched
-  `text()`    | returns `\0`-terminated `const char*` string match
-  `wtext()`   | returns `std::wstring` wide string match (converted from UTF-8)
-  `pair()`    | returns `std::pair<size_t,std::string>(accept(), text())`
-  `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(), wtext())`
+  `text()`    | returns `const char*` to `\0`-terminated match
+  `str()`     | returns `std::string` copy of `text()` (but preserves `\0`s)
+  `wstr()`    | returns `std::wstring` copy of `text()`, converted from UTF-8
+  `pair()`    | returns `std::pair<size_t,std::string>(accept(),str())`
+  `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
-  `rest()`    | returns `\0`-terminated `const char*` of the rest of the input
+  `begin()`   | returns `const char*` to non-`\0`-terminated match begin
+  `end()`     | returns `const char*` to non-`\0`-terminated match end
+  `rest()`    | returns `const char*` to `\0`-terminated rest of input
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
   `lineno()`  | returns line number of the match, starting with line 1
@@ -3878,23 +3908,20 @@ To obtain details of a match use the following methods:
   `at_bol()`  | true if matcher reached the begin of a new line `\n`
   `at_bob()`  | true if matcher is at the start of input, no matches consumed
   `at_end()`  | true if matcher is at the end of input
-  `[0]`       | operator returns `std::pair<const char*,size_t>(text(),size())`
+  `[0]`       | operator returns `std::pair<const char*,size_t>(begin(),size())`
   `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
 
-Note: the `wtext()` and `wsize()` methods are more expensive to invoke and take
+Note: the `wstr()` and `wsize()` methods are more expensive to invoke and take
 more than constant time to compute, whereas `text()` and `size()` take constant
 time.
 
 In addition, type casts of matcher objects and iterators are available:
 
 - Casting to `size_t` gives the matcher's `accept()` index.
-- Casting to `std::string` is the same as storing `text()` in a string with
-  `std::string(text(), size())`.
-- Casting to `std::wstring` is the same as invoking `wtext()`.
-- Casting to a `std::pair<size_t,std::string>` is the same as invoking the
-  `pair()` method.
-- Casting to a `std::pair<size_t,std::wstring>` is the same as invoking the
-  `wpair()` method.
+- Casting to `std::string` is the same as invoking `str()`
+- Casting to `std::wstring` is the same as invoking `wstr()`.
+- Casting to `std::pair<size_t,std::string>` is the same as `pair()`.
+- Casting to `std::pair<size_t,std::wstring>` is the same as `wpair()`.
 
 Four special methods can be used to manipulate the input stream directly:
 
@@ -3989,26 +4016,15 @@ A matcher may accept several types of input, but can only read from one input
 source at a time.  Input to a matcher is represented by a single
 `reflex::Input` class instance that the matcher uses internally.
 
-An input object can be assigned `std::string` and `char*` strings, wide strings
-`std::wstring` and `wchar_t*`, a `FILE*`, or a `std::istream`.
-
-Wide strings are internally converted to UTF-8 for matching, which effectively
-normalizes the input for matching.
-
-Conversion from wide string to UTF-8 is shown in the example below.  The
-copyright symbol `©` with Unicode U+00A9 is matched against its UTF-8 sequence
-`C2 A9`:
-
-```cpp
-if (reflex::Matcher("\xc2\xa9", L"©").matches())
-  std::cout << "copyright symbol matches\n";
-```
+An input object can be instantiated and assigned `std::string` and `char*`
+strings, wide strings `std::wstring` and `wchar_t*`, a `FILE*`, or a
+`std::istream`.
 
 To obtain the properties of an input object use the following methods:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
-  `size()`    | size of the input in (UTF-encoded) bytes, or zero when unknown
+  `size()`    | size of the input in total bytes (encoded) or zero when unknown
   `good()`    | input is available to read (no error and not EOF)
   `eof()`     | end of input (but use only `at_end()` with matchers!)
   `cstring()` | the current `const char*` (of a `std::string`) or NULL
@@ -4026,17 +4042,27 @@ the content of a file by the matcher, which enables UTF-8 normalization of the
 input automatically.
 
 The file encoding is obtained with the `file_encoding()` method of a
-`reflex::Input` object and it returns one of:
+`reflex::Input` object and returns an `reflex::Input::file_encoding` constant:
 
-  Encoding constant       | Effect when set
-  ----------------------- | ---------------------------------------------------
-  `Input::Const::plain`   | plain octets with ASCII, binary, or UTF-8
-  `Input::Const::utf16be` | UCS-2/UTF-16 big endian
-  `Input::Const::utf16le` | UCS-2/UTF-16 little endian
-  `Input::Const::utf32be` | UCS-4/UTF-32 big endian
-  `Input::Const::utf32le` | UCS-4/UTF-32 little endian
+  Constant                                | File encoding
+  --------------------------------------- | -----------------------------------
+  `reflex::Input::file_encoding::plain`   | plain octets, ASCII/binary/UTF-8
+  `reflex::Input::file_encoding::utf16be` | UCS-2/UTF-16 big endian
+  `reflex::Input::file_encoding::utf16le` | UCS-2/UTF-16 little endian
+  `reflex::Input::file_encoding::utf32be` | UCS-4/UTF-32 big endian
+  `reflex::Input::file_encoding::utf32le` | UCS-4/UTF-32 little endian
 
-To override the file encoding, use `file_encoding(encoding constant)`.
+To override the file encoding, use `file_encoding(enc)`.
+
+Wide strings are internally converted to UTF-8 for matching, which effectively
+normalizes the input for matching.  This conversion is illustrated below.  The
+copyright symbol `©` with Unicode U+00A9 is matched against its UTF-8 sequence
+`C2 A9`:
+
+```cpp
+if (reflex::Matcher("\xc2\xa9", L"©").matches())
+  std::cout << "copyright symbol matches\n";
+```
 
 ⇢ [Back to contents](#)
 
@@ -4049,7 +4075,7 @@ Some examples to demonstrate the concepts discussed.
 ### Example 1
 
 This example illustrates the `find` and `split` methods and iterators with a
-RE/flex `reflex::Matcher` and `reflex::BoostMatcher`:
+RE/flex `reflex::Matcher` and a `reflex::BoostMatcher`:
 
 ```cpp
 #include <reflex/matcher.h>
@@ -4098,7 +4124,70 @@ When executed this code prints:
     Monty Python's Flying Circus
     Circus Flying Monty Python's
 
+
 ### Example 2
+
+This example shows how a URL can be matched by using two patterns: one pattern
+to extract the host:port/path parts and another pattern to extract the query
+string key-value pairs in a loop.
+
+```cpp
+#include <reflex/boostmatcher.h>
+#include <iostream>
+
+using namespace reflex;
+
+const char *URL = "...";
+
+// match URL host:port/path using group captures for these
+BoostMatcher re("https?://([^:/]*):?(\\d*)/?([^?#]*)", URL);
+
+if (re.scan())
+{
+  // found a partial match at start, now check if we have a host
+  if (re[1].first != NULL)
+  {
+    std::string host(re[1].first, re[1].second);
+    std::cout << "host: " << host << std::endl;
+
+    // check of we have a port
+    if (re[2].first != NULL && re[2].second != 0)
+    {
+      std::string port(re[2].first, re[2].second);
+      std::cout << "port: " << port << std::endl;
+    }
+
+    // check of we have a path
+    if (re[3].first != NULL && re[3].second != 0)
+    {
+      std::string path(re[3].first, re[3].second);
+      std::cout << "path: " << path << std::endl;
+    }
+  }
+
+  // check if we have a query string
+  if (re.input() == '?')
+  {
+    // now switch patterns to match the query string
+    re.pattern("([^=&]*)=?([^&]*)&?");
+    while (re.scan())
+      std::cout <<
+	"query key: " << std::string(re[1].first, re[1].second) <<
+	", value: " << std::string(re[2].first, re[2].second) << std::endl;
+  }
+  else if (!re.at_end())
+  {
+    // not a query string and not the end, we expect an # anchor
+    std::cout << "anchor: " << re.rest() << std::endl;
+  }
+}
+else
+{
+  std::cout << "Error, not a http/s URL: " << re.rest() << std::endl;
+}
+```
+
+### Example 3
 
 This example shows how input can be reassigned in each iteration of a loop that
 matches wide strings against a word pattern `\w+`:
@@ -4124,7 +4213,7 @@ When executed this code prints:
 
     Monty, Flying, Circus, 
 
-### Example 3
+### Example 4
 
 This example counts the number of words, lines, and chars from the `std::cin`
 stream:
@@ -4144,7 +4233,7 @@ size_t chars = word.last();
 std::cout << lines << " " << words << " " << chars << std::endl;
 ```
 
-### Example 4
+### Example 5
 
 This example tokenizes a string by grouping the subpatterns in a regex and by
 using the group index of the capture obtained with `accept()`:
@@ -4178,7 +4267,7 @@ When executed this code prints:
     Token = 2: matched 'hotdogs' with '(\\w*dog\\w*)'
     Token = 4: matched '!' with '(.)'
 
-### Example 5
+### Example 6
 
 This example reads a file with embedded credit card numbers to extract.  The
 numbers are sorted into five sets for each type of major credit card:
@@ -4222,7 +4311,7 @@ When executed this code prints:
     3: 601112345678901234
     4: 38812345678901
 
-### Example 6
+### Example 7
 
 The RE/flex matcher engine `reflex::matcher` only recognizes group captures at
 the top level of the regex (i.e. among the top-level alternations), because it
@@ -4244,7 +4333,7 @@ while (matcher.find())
     << std::endl;
 ```
 
-### Example 7
+### Example 8
 
 This example shows how a `FILE*` file descriptor is used as input.  The file
 encoding is obtained from the UTF BOM, when present in the file.  Note that the
@@ -4261,12 +4350,11 @@ if (matcher.in.file() && matcher.in.good())
 {
   switch (matcher.in.file_encoding())
   {
-    case Input::Const::plain:   std::cout << "ASCII or binary file"; break;
-    case Input::Const::utf8:    std::cout << "UTF-8 file";           break;
-    case Input::Const::utf16be: std::cout << "UTF-16 big endian";    break;
-    case Input::Const::utf16le: std::cout << "UTF-16 little endian"; break;
-    case Input::Const::utf32be: std::cout << "UTF-32 big endian";    break;
-    case Input::Const::utf32le: std::cout << "UTF-32 little endian"; break;
+    case Input::file_encoding::plain:   std::cout << "plain, including UTF-8"; break;
+    case Input::file_encoding::utf16be: std::cout << "UTF-16 big endian";      break;
+    case Input::file_encoding::utf16le: std::cout << "UTF-16 little endian";   break;
+    case Input::file_encoding::utf32be: std::cout << "UTF-32 big endian";      break;
+    case Input::file_encoding::utf32le: std::cout << "UTF-32 little endian";   break;
   }
   std::cout << " of " << matcher.in.size() << " converted bytes to read\n";
   matcher.buffer(); // because Boost.Regex partial_match is broken!
@@ -4277,7 +4365,7 @@ if (matcher.in.file() && matcher.in.good())
 }
 ```
 
-### Example 8
+### Example 9
 
 This example shows how to override the file encoding, such as in cases when a file
 with wide character content has no UTF BOM or when a binary file is read that
@@ -4292,11 +4380,64 @@ BoostMatcher matcher("\\s+", fopen("filename", "r"));
 
 if (matcher.in.file() && matcher.in.good())
 {
-  matcher.in.file_encoding(Input::Const::plain);
+  matcher.in.file_encoding(Input::file_encoding::plain);
   ...
   fclose(matcher.in.file());
 }
 ```
+
+⇢ [Back to contents](#)
+
+
+Tips, Tricks and Gotchas                                              {#tricks}
+========================
+
+Invalid UTF encodings                                            {#invalid-utf}
+---------------------
+
+It may be tempting to write a pattern with `.` (dot) as a wildcard in a lexer
+specification, but beware that in Unicode mode with `%%option unicode` the dot
+matches any code point, including code points outside of the valid Unicode
+character range.  The reason for this design decision is that a lexer should
+support a "catch all else" rule to report errors in the input:
+
+<div class="alt">
+```cpp
+.    std::cerr << "lexical error, full stop." << std::endl;
+```
+</div>
+
+If dot is restrictive (which it is not), the action above will never be
+triggered when invalid input is encountered.  Because all non-dot regex
+patterns are valid Unicode in RE/flex, it would be impossible to write a "catch
+all else" rule!
+
+To reject invalid UTF-8 input in regex patterns, make sure to avoid `.` (dot)
+and use `\p{Unicode}` or `\X` instead.
+
+Invalid UTF-16 is detected automatically and replaced with the `REFLEX_NONCHAR`
+code point U+200000 that lies outside the valid Unicode range.  This code point
+is never matched by non-dot regex patterns and is easy to detect by a regex
+pattern with a dot.
+
+Note that character classes written as bracket lists may produce invalid
+Unicode ranges when not used properly.  This is not a problem for matching, but
+for rejecting surrogate halves that are invalid Unicode.  For example,
+`[\u{00}-\u{10FFFF}]` obviously includes the invalid range of surrogate halves
+`[\u{D800}-\u{DFFF}]`.  You can always remove surrogate halves from any
+character class by intersecting the class with `[\p{Unicode}]`, that is
+`[...&&[\p{Unicode}]]`.
+
+⇢ [Back to contents](#)
+
+
+Lazy repetitions                                                        {#lazy}
+----------------
+
+Repetitions (`*`, `+`, and `{n,m}`) are greedy, unless marked with an extra `?`
+to make them lazy.  Lazy repetitions are useless when the regex pattern after
+the lazy repetitions permits empty input.  For example, `.*?a?` only
+matches one `a` or nothing at all, because `a?` permits an empty match.
 
 ⇢ [Back to contents](#)
 
@@ -4310,7 +4451,7 @@ and visit the GitHub [RE/flex repository](https://github.com/Genivia/RE-flex).
 ⇢ [Back to contents](#)
 
 
-License and copyright                                                 {#license}
+License and copyright                                                {#license}
 =====================
 
 RE/flex software is released under the BSD-3 license.  All parts of the

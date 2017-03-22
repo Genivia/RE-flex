@@ -1,17 +1,17 @@
-// A simple lexer to print out all HTML tags.
+// A simple lexer to print out all XML/HTML tags.
 // Uses lazy quantifiers for compact expressions.
 // Too simple: does not allow > in attribute values!
 
   #include <stdio.h>
   int level = 0;
 
+%o dotall main
+
 pi		<\?.*?\?>
 comment		<!--.*?-->
 tag		<[^/][^>]*?\/>
 open		<[^/][^/]*?>
 close		<\/.+?>
-
-%o dotall main
 
 %%
 

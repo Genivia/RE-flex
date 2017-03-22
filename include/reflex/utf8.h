@@ -37,10 +37,33 @@
 #ifndef REFLEX_UTF8_H
 #define REFLEX_UTF8_H
 
-#include <string>
 #include <cstring>
+#include <string>
+
+#ifdef WITH_STANDARD_REPLACEMENT_CHARACTER
+
+/// Replace invalid UTF-8 with the standard replacement character.
+# define REFLEX_NONCHAR      (0xFFFD)
+# define REFLEX_NONCHAR_UTF8 "\xef\xbf\xbd"
+
+#else
+
+/// Replace invalid UTF-8 with the non-character U+200000 code point for guaranteed error detection (the U+FFFD code point makes error detection harder and possible to miss).
+# define REFLEX_NONCHAR      (0x200000)
+# define REFLEX_NONCHAR_UTF8 "\xf8\x88\x80\x80\x80"
+
+#endif
 
 namespace reflex {
+
+/// Convert an 8-bit ASCII + Latin-1 Supplement range [a,b] to a regex pattern.
+std::string latin1(
+    int  a,               ///< lower bound of UCS range
+    int  b,               ///< upper bound of UCS range
+    int  esc = 'x',       ///< escape char 'x' for hex \xXX, or '0' or '\0' for octal \0nnn and \nnn
+    bool brackets = true) ///< place in [ brackets ]
+  /// @returns regex string to match the UCS range encoded in UTF-8.
+  ;
 
 /// Convert a UCS-4 range [a,b] to a UTF-8 regex pattern.
 std::string utf8(
@@ -48,15 +71,14 @@ std::string utf8(
     int  b,                ///< upper bound of UCS range
     int  esc = 'x',        ///< escape char 'x' for hex \xXX, or '0' or '\0' for octal \0nnn and \nnn
     const char *par = "(", ///< capturing or non-capturing parenthesis "(?:"
-    bool strict = true     ///< returned regex is strict UTF-8 (true) or permissive and lean UTF-8 (false)
-    )
+    bool strict = true)    ///< returned regex is strict UTF-8 (true) or permissive and lean UTF-8 (false)
   /// @returns regex string to match the UCS range encoded in UTF-8.
   ;
 
-/// Convert UCS-4 to UTF-8, unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED.
+/// Convert UCS-4 to UTF-8, fills with REFLEX_NONCHAR_UTF8 when out of range, or unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED.
 inline size_t utf8(
     int   c, ///< UCS-4 character U+0000 to U+10ffff (unless WITH_UTF8_UNRESTRICTED)
-    char *s) ///< points to the buffer to populate with UTF-8 (1 to 6 bytes) not \0-terminated
+    char *s) ///< points to the buffer to populate with UTF-8 (1 to 6 bytes) not NUL-terminated
   /// @returns length (in bytes) of UTF-8 character sequence stored in s.
 {
   if (c < 0x80)
@@ -64,11 +86,15 @@ inline size_t utf8(
     *s++ = static_cast<char>(c);
     return 1;
   }
-  char *t = s;
 #ifndef WITH_UTF8_UNRESTRICTED
   if (c > 0x10FFFF)
-    c = 0xFFFD;
+  {
+    static const size_t n = sizeof(REFLEX_NONCHAR_UTF8) - 1;
+    std::memcpy(s, REFLEX_NONCHAR_UTF8, n);
+    return n;
+  }
 #endif
+  char *t = s;
   if (c < 0x0800)
   {
     *s++ = static_cast<char>(0xC0 | ((c >> 6) & 0x1F));
@@ -111,7 +137,7 @@ inline size_t utf8(
   return s - t;
 }
 
-/// Convert UTF-8 to UCS, returns 0xFFFD for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove this limit to support lossless UTF-8 encoding up to 6 bytes).
+/// Convert UTF-8 to UCS, returns REFLEX_NONCHAR for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove any limits on UTF-8 encodings up to 6 bytes).
 inline int utf8(
     const char *s,         ///< points to the buffer with UTF-8 (1 to 6 bytes)
     const char **r = NULL) ///< points to pointer to set to the new position in s after the UTF-8 sequence, optional
@@ -126,7 +152,7 @@ inline int utf8(
     // reject invalid UTF-8 but permit Modified UTF-8 (MUTF-8) U+0000
     if (c < 0xC0 || (c == 0xC0 && c1 != 0x80) || c == 0xC1 || (c1 & 0xC0) != 0x80)
     {
-      c = 0xFFFD;
+      c = REFLEX_NONCHAR;
     }
     else
 #endif
@@ -144,7 +170,7 @@ inline int utf8(
         // reject invalid UTF-8
         if ((c == 0xE0 && c1 < 0x20) || (c2 & 0xC0) != 0x80)
         {
-          c = 0xFFFD;
+          c = REFLEX_NONCHAR;
         }
         else
 #endif
@@ -162,7 +188,7 @@ inline int utf8(
             // reject invalid UTF-8
             if ((c == 0xF0 && c1 < 0x10) || (c == 0xF4 && c1 >= 0x10) || c >= 0xF5 || (c3 & 0xC0) != 0x80)
             {
-              c = 0xFFFD;
+              c = REFLEX_NONCHAR;
             }
             else
             {

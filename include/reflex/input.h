@@ -79,18 +79,18 @@ sequence of characters:
   with up to `len` bytes, returning the number of bytes read or zero when a
   stream or file is bad or when EOF is reached.
 
-- `size_t Input::size(void);` returns the number of ASCII/UTF-8 bytes available
+- `size_t Input::size();` returns the number of ASCII/UTF-8 bytes available
   to read from the source input or zero (zero is also returned when the size is
   not determinable). Use this function only before reading input with get().
   Wide character strings and UTF-16 `FILE*` content is counted as the total
   number of UTF-8 bytes that will be produced by get(). The size of a
   `std::istream` cannot be determined.
 
-- `bool Input::good(void);` returns true if the input is readable and has no
+- `bool Input::good();` returns true if the input is readable and has no
   EOF or error state.  Returns false on EOF or if an error condition is
   present.
 
-- `bool Input::eof(void);` returns true if the input reached EOF. Note that
+- `bool Input::eof();` returns true if the input reached EOF. Note that
   good() == ! eof() for string source input only, since files and streams may
   have error conditions that prevent reading. That is, for files and streams
   eof() implies good() == false, but not vice versa. Thus, an error is
@@ -127,7 +127,7 @@ content of a file in a temporary buffer:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
     reflex::Input input(fopen("input.h", "r"));
-    if (!input.file())
+    if (input.file() == NULL)
       abort();
     size_t len = input.size(); // file size (minus any leading UTF BOM)
     char *buf = new char[len];
@@ -224,12 +224,12 @@ byte by byte (use a buffer as shown in other examples to improve efficiency):
 class Input {
  public:
   /// Common constants.
-  struct Const {
-    static const short plain   = 0; ///< plain ASCII/UTF-8 file_encoding
-    static const short utf16be = 1; ///< UTF-16 big endian file_encoding
-    static const short utf16le = 2; ///< UTF-16 little endian file_encoding
-    static const short utf32be = 3; ///< UTF-32 big endian file_encoding
-    static const short utf32le = 4; ///< UTF-32 little endian file_encoding
+  struct file_encoding {
+    static const unsigned short plain   = 0; ///< plain octets, including UTF-8 with and without BOM
+    static const unsigned short utf16be = 2; ///< UTF-16 big endian
+    static const unsigned short utf16le = 3; ///< UTF-16 little endian
+    static const unsigned short utf32be = 4; ///< UTF-32 big endian
+    static const unsigned short utf32le = 5; ///< UTF-32 little endian
   };
   /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
   Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects at the same time)
@@ -245,7 +245,7 @@ class Input {
     std::memcpy(utf8_, input.utf8_, sizeof(utf8_));
   }
   /// Construct empty input character sequence.
-  Input(void)
+  Input()
     :
       cstring_(NULL),
       wstring_(NULL),
@@ -319,7 +319,7 @@ class Input {
     :
       cstring_(NULL),
       wstring_(NULL),
-      file_(file ? file : stdin),
+      file_(file),
       istream_(NULL)
   {
     init();
@@ -339,7 +339,7 @@ class Input {
     :
       cstring_(NULL),
       wstring_(NULL),
-      file_(istream ? NULL : stdin),
+      file_(NULL),
       istream_(istream)
   {
     init();
@@ -375,31 +375,31 @@ class Input {
     return good();
   }
   /// Get the remaining string of this Input object.
-  const char *cstring(void)
+  const char *cstring()
     /// @returns remaining unbuffered part of the NUL-terminated string or NULL.
   {
     return cstring_;
   }
   /// Get the remaining wide character string of this Input object.
-  const wchar_t *wstring(void)
+  const wchar_t *wstring()
     /// @returns remaining unbuffered part of the NUL-terminated wide character string or NULL.
   {
     return wstring_;
   }
   /// Get the FILE* of this Input object.
-  FILE *file(void)
+  FILE *file()
     /// @returns pointer to current file descriptor or NULL.
   {
     return file_;
   }
   /// Get the std::istream of this Input object.
-  std::istream *istream(void)
+  std::istream *istream()
     /// @returns pointer to current std::istream or NULL.
   {
     return istream_;
   }
   /// Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a `FILE*` or `std::istream` source).
-  size_t size(void)
+  size_t size()
     /// @returns the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable.
     /// @warning This function SHOULD NOT be used after get() as the "cursor" has moved it changes the result.
   {
@@ -414,10 +414,11 @@ class Input {
       wchar_t c;
       for (const wchar_t *s = wstring_; (c = *s) != L'\0'; ++s)
       {
-        if (c >= 0xD800 && c < 0xE000 && (s[1] & 0xFC00) == 0xDC00)
+        if (c >= 0xD800 && c < 0xE000)
         {
           size_ += 4;
-          ++s;
+          if (c < 0xDC00 && (s[1] & 0xFC00) == 0xDC00)
+            ++s;
         }
         else
         {
@@ -448,7 +449,7 @@ class Input {
     return size_;
   }
   /// Check if input is available.
-  bool good(void)
+  bool good()
     /// @returns true if a non-empty sequence of characters is available to get.
   {
     if (cstring_)
@@ -462,7 +463,7 @@ class Input {
     return false;
   }
   /// Check if input reached EOF.
-  bool eof(void)
+  bool eof()
     /// @returns true if input is at EOF and no characters are available.
   {
     if (cstring_)
@@ -516,9 +517,19 @@ class Input {
         }
         else
         {
-          if (c >= 0xD800 && c < 0xE000 && (wstring_[1] & 0xFC00) == 0xDC00)
-            c = 0x010000 - 0xDC00 + ((c - 0xD800) << 10) + *++wstring_;
-          size_t l = utf8(c, utf8_);
+	  size_t l;
+          if (c >= 0xD800 && c < 0xE000)
+          {
+            // UTF-16 surrogate pair
+            if (c < 0xDC00 && (wstring_[1] & 0xFC00) == 0xDC00)
+              l = utf8(0x010000 - 0xDC00 + ((c - 0xD800) << 10) + *++wstring_, utf8_);
+            else
+              l = utf8(REFLEX_NONCHAR, utf8_);
+          }
+	  else
+	  {
+	    l = utf8(c, utf8_);
+	  }
           if (k < l)
           {
             utf8_[l] = '\0';
@@ -544,8 +555,8 @@ class Input {
       return static_cast<size_t>(n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, static_cast<std::streamsize>(n)).gcount());
     return 0;
   }
-  /// Set encoding for `FILE*` input to Const::plain, Const::utf16be, Const::utf16le, Const::utf32be, or Const::utf32le. File encodings are automatically detected by the presence of a UTF BOM in the file. This function may be used when a BOM is not present and file encoding is known or to override the BOM.
-  void file_encoding(short enc) ///< Const::plain, Const::utf16be, Const::utf16le, Const::utf32be, or Const::utf32le
+  /// Set encoding for `FILE*` input to file_encoding::plain, file_encoding::utf8, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le. File encodings are automatically detected by the presence of a UTF BOM in the file. This function may be used when a BOM is not present and file encoding is known or to override the BOM.
+  void file_encoding(short enc) ///< file_encoding::plain, file_encoding::utf8, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le
   {
     if (file_ && utfx_ != enc)
     {
@@ -554,15 +565,15 @@ class Input {
       utfx_ = enc;
     }
   }
-  /// Get encoding of the current `FILE*` input, Const::plain, Const::utf16be, Const::utf16le, Const::utf32be, or Const::utf32le.
-  short file_encoding(void) const
-    /// @returns Const::plain, Const::utf16be, Const::utf16le, Const::utf32be, or Const::utf32le.
+  /// Get encoding of the current `FILE*` input, file_encoding::plain, file_encoding::utf8, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le.
+  short file_encoding() const
+    /// @returns file_encoding::plain, file_encoding::utf8, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le.
   {
     return utfx_;
   }
  protected:
   /// Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the file size is known.
-  void init(void)
+  void init()
   {
     size_ = 0;
     uidx_ = sizeof(utf8_);
@@ -570,21 +581,21 @@ class Input {
       file_init();
   }
   /// Implements init() on a FILE*.
-  void file_init(void);
+  void file_init();
   /// Implements get() on a FILE*.
   size_t file_get(
       char  *s, ///< points to the string buffer to fill with input
       size_t n) ///< size of buffer pointed to by s
       ;
   /// Implements size() on a FILE*.
-  void file_size(void);
+  void file_size();
   /// Implements good() operation on a FILE*.
-  bool file_good(void)
+  bool file_good()
   {
     return !::feof(file_) && !::ferror(file_);
   }
   /// Implements eof() on a FILE*.
-  bool file_eof(void)
+  bool file_eof()
   {
     return ::feof(file_) != 0;
   }

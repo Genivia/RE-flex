@@ -1,16 +1,16 @@
-// A simple lexer to print out all HTML tags.
+// A simple lexer to print out all XML/HTML tags.
 // Too simple: does not allow / and > in attribute values!
 
   #include <stdio.h>
   int level = 0;
+
+%o main
 
 pi		<\?([^?]|\?[^>])*\?>
 comment		<!--([^-]|-[^-]|--+[^->])*-*-->
 tag		<[^/][^/>]*\/>
 open		<[^/][^/>]*>
 close		<\/[^>]+>
-
-%o main
 
 %%
 

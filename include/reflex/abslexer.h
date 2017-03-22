@@ -205,7 +205,7 @@ class AbstractLexer {
   /// Echo the matched text to the current output.
   void echo(void) const
   {
-    out().write(matcher().text(), matcher().size());
+    out().write(matcher().begin(), matcher().size());
   }
   /// Returns string with the text matched.
   const char *text(void) const

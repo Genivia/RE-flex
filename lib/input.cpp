@@ -61,7 +61,7 @@ void Input::file_init(void)
 #endif
     size_ = static_cast<size_t>(st.st_size);
 #endif
-  utfx_ = Const::plain;
+  utfx_ = file_encoding::plain;
   // if file size could be determined, then check for a UTF BOM in the file
   if (size_ > 3)
   {
@@ -73,7 +73,7 @@ void Input::file_init(void)
       utf8_[4] = '\0';
       if (utf8_[2] == '\xFE' && utf8_[3] == '\xFF')
       {
-        utfx_ = Const::utf32be;
+        utfx_ = file_encoding::utf32be;
         size_ = 0;
       }
       else
@@ -83,7 +83,7 @@ void Input::file_init(void)
     }
     else if (utf8_[0] == '\xFE' && utf8_[1] == '\xFF') // UTF-16 big endian BOM?
     {
-      utfx_ = Const::utf16be;
+      utfx_ = file_encoding::utf16be;
       size_ = 0;
     }
     else if (utf8_[0] == '\xFF' && utf8_[1] == '\xFE') // UTF-16 little endian BOM?
@@ -92,12 +92,12 @@ void Input::file_init(void)
       utf8_[4] = '\0';
       if (utf8_[2] == '\0' && utf8_[3] == '\0') // UTF-32 little endian BOM?
       {
-        utfx_ = Const::utf32le;
+        utfx_ = file_encoding::utf32le;
         size_ = 0;
       }
       else
       {
-        utfx_ = Const::utf16le;
+        utfx_ = file_encoding::utf16le;
         wchar_t c = static_cast<unsigned int>(utf8_[2] | utf8_[3] << 8);
         size_ = utf8(c, utf8_);
         utf8_[size_] = '\0';
@@ -133,9 +133,9 @@ size_t Input::file_get(char *s, size_t n)
       return k;
     uidx_ = sizeof(utf8_);
   }
-  if (utfx_)
+  if (utfx_ != file_encoding::plain)
   {
-    if (utfx_ == Const::utf16be)
+    if (utfx_ == file_encoding::utf16be)
     {
       unsigned char c2[2];
       size_t k = n;
@@ -168,7 +168,7 @@ size_t Input::file_get(char *s, size_t n)
       }
       return n - k;
     }
-    if (utfx_ == Const::utf16le)
+    if (utfx_ == file_encoding::utf16le)
     {
       unsigned char c2[2];
       size_t k = n;
@@ -201,7 +201,7 @@ size_t Input::file_get(char *s, size_t n)
       }
       return n - k;
     }
-    if (utfx_ == Const::utf32be)
+    if (utfx_ == file_encoding::utf32be)
     {
       unsigned char c4[4];
       size_t k = n;
@@ -234,7 +234,7 @@ size_t Input::file_get(char *s, size_t n)
       }
       return n - k;
     }
-    if (utfx_ == Const::utf32le)
+    if (utfx_ == file_encoding::utf32le)
     {
       unsigned char c4[4];
       size_t k = n;
@@ -284,14 +284,14 @@ void Input::file_size(void)
     off_t k = ftello(file_);
     if (k >= 0)
     {
-      if (utfx_ == Const::plain)
+      if (utfx_ == file_encoding::plain)
       {
         fseeko(file_, k, SEEK_END);
         off_t n = ftello(file_);
         if (n >= k)
           size_ = static_cast<size_t>(n - k);
       }
-      else if (utfx_ == Const::utf16be)
+      else if (utfx_ == file_encoding::utf16be)
       {
         unsigned char c2[2];
         while (::fread(c2, 2, 1, file_) == 1)
@@ -304,7 +304,7 @@ void Input::file_size(void)
 #endif
         }
       }
-      else if (utfx_ == Const::utf32le)
+      else if (utfx_ == file_encoding::utf32le)
       {
         unsigned char c2[2];
         while (::fread(c2, 2, 1, file_) == 1)
@@ -317,7 +317,7 @@ void Input::file_size(void)
 #endif
         }
       }
-      else if (utfx_ == Const::utf32be)
+      else if (utfx_ == file_encoding::utf32be)
       {
         unsigned char c4[4];
         while (::fread(c4, 4, 1, file_) == 1)
@@ -330,7 +330,7 @@ void Input::file_size(void)
 #endif
         }
       }
-      else if (utfx_ == Const::utf32le)
+      else if (utfx_ == file_encoding::utf32le)
       {
         unsigned char c4[4];
         while (::fread(c4, 4, 1, file_) == 1)

@@ -78,6 +78,7 @@ static const char *options_table[] = {
   "namespace",
   "never_interactive",
   "noarray",
+  "nocase_insensitive",
   "nodebug",
   "nodefault",
   "nodotall",
@@ -130,9 +131,9 @@ static const char *options_table[] = {
 /// - the matcher class
 /// - the regex library signature
 ///
-/// A regex library signature is a string of the form `"[decls:]escapes[?+]"`, see reflex::convert.
+/// A regex library signature is a string of the form `"decls:escapes?+."`, see reflex::convert.
 ///
-/// The optional `"decls:"` characters specify which modifiers and other special `(?...)` constructs are supported:
+/// The optional `"decls:"` part specifies which modifiers and other special `(?...)` constructs are supported:
 /// - non-capturing group `(?:...)` is supported
 /// - one or all of "imsx" specify which (?ismx:...) modifiers are supported
 /// - `#` specifies that `(?#...)` comments are supported
@@ -180,30 +181,32 @@ static const char *options_table[] = {
 /// - `W` for `\W` ASCII non-word-like character `[^0-9A-Z_a-z]`
 /// - `Z` for `\Z` end of input anchor, before the final line break
 ///
-/// The optional `"?+"` characters specify lazy and possessive support:
+/// The optional `"?+"` specify lazy and possessive support:
 /// - `?` lazy quantifiers for repeats are supported
 /// - `+` possessive quantifiers for repeats are supported
+///
+/// The optional `"."` (dot) specifies that dot matches any character except newline.
 static const Reflex::Library library_table[] = {
   {
     "reflex",
     "reflex/matcher.h",
     "reflex::Pattern",
     "reflex::Matcher",
-    "imsx#=^:abcdefhijlnprstuvwxzABDHLPQSUW<>?+",
+    "imsx#=^:abcdefhijlnprstuvwxzABDHLPQSUW<>?+.",
   },
   {
     "boost",
     "reflex/boostmatcher.h",
     "boost::regex",
     "reflex::BoostPosixMatcher",
-    "imsx#<=!:abcdefghlnprstuvwxzABDHLPQSUWZ0<>",
+    "imsx#<=!:abcdefghlnprstuvwxzABDHLPQSUWZ0<>.",
   },
   {
     "boost_perl",
     "reflex/boostmatcher.h",
     "boost::regex",
     "reflex::BoostPerlMatcher",
-    "imsx#<=!:abcdefghlnprstuvwxzABDHLPQSUWZ0<>?+",
+    "imsx#<=!:abcdefghlnprstuvwxzABDHLPQSUWZ0<>?+.",
   },
   {
     "std_ecma", // this is an experimental option, not recommended
@@ -771,17 +774,17 @@ bool Reflex::is_initcode()
   return line == "%init{" || (as(pos, "%init") && pos < linelen && line.at(pos) == '{');
 }
 
-/// Advance pos over name, return name.
+/// Advance pos over name (letters, hyphen/underscore, or any non-ASCII character), return name.
 std::string Reflex::get_name(size_t& pos)
 {
-  if (pos >= linelen || !std::isalnum(line.at(pos)))
+  if (pos >= linelen || (!std::isalnum(line.at(pos)) && (line.at(pos) & 0x80) != 0x80))
     return "";
   size_t loc = pos++;
   while (pos < linelen)
   {
-    if (line.at(pos) == '-') // convert - to _
+    if (line.at(pos) == '-') // normalize - to _
       line[pos] = '_';
-    else if (!std::isalnum(line.at(pos)) && line.at(pos) != '_')
+    else if (!std::isalnum(line.at(pos)) && line.at(pos) != '_' && (line.at(pos) & 0x80) != 0x80)
       break;
     ++pos;
   }
@@ -809,109 +812,91 @@ std::string Reflex::get_regex(size_t& pos)
   std::string regex;
   (void)ws(pos); // skip indent, if any
   size_t loc = pos;
-  if (options["freespace"].empty())
+  bool fsp = !options["freespace"].empty();
+  size_t nsp = pos;
+  while (pos < linelen)
   {
-    while (pos < linelen && !std::isspace(line.at(pos)))
+    int c = line.at(pos);
+    if (fsp)
     {
-      int c = line.at(pos++);
-      if (c == '"')
+      if (nsp < pos && (
+            (c == '{' && (pos + 1 == linelen || std::isspace(line.at(pos + 1)))) ||
+            (c == '|' && pos + 1 == linelen) ||
+            (c == '/' && pos + 1 < linelen && (line.at(pos + 1) == '/' || line.at(pos + 1) == '*'))))
       {
-        // eat "..."
-        while (pos < linelen && line.at(pos) != '"')
-          pos += 1 + (line.at(pos) == '\\');
-        ++pos;
-      }
-      else if (c == '[')
-      {
-        // eat [...]
-        if (pos < linelen && line.at(pos) == '^')
-          ++pos;
-        ++pos;
-        while (pos < linelen && line.at(pos) != ']')
-          pos += 1 + (line.at(pos) == '\\');
-        ++pos;
-      }
-      else if (c == '(' && pos + 2 < linelen && line.at(pos + 1) == '?' && line.at(pos + 2) == '#')
-      {
-        // eat (?#...)
-        pos += 2; 
-        while (pos < linelen && line.at(pos) != ')')
-          pos += 1 + (line.at(pos) == '\\');
-        ++pos;
-      }
-      else if (c == '\\')
-      {
-        if (pos == linelen)
-        {
-          // line ends in \ and continues on the next line
-          regex.append(line.substr(loc, pos - loc));
-          if (!get_line())
-            error("EOF encountered inside a pattern");
-          if (line == "%%")
-            error("%% section ending encountered inside a pattern");
-          pos = 0;
-          (void)ws(pos); // skip indent, if any
-          loc = pos;
-        }
-        else if (line.at(pos) == 'Q')
-        {
-          // eat \Q...\E
-          while (pos + 1 < linelen && (line.at(pos) != '\\' || line.at(pos + 1) != 'E'))
-            ++pos;
-          pos += 2;
-        }
-        else
-        {
-          ++pos;
-        }
-      }
-    }
-  }
-  else
-  {
-    size_t nsp = pos;
-    while (pos < linelen)
-    {
-      int c = line.at(pos);
-      if ((c == '{' && (pos + 1 == linelen || std::isspace(line.at(pos + 1)))) ||
-          (c == '|' && pos + 1 == linelen) ||
-          (c == '/' && pos + 1 < linelen && (line.at(pos + 1) == '/' || line.at(pos + 1) == '*')))
+        pos = nsp;
         break;
-      ++pos;
-      if (c == '\\')
-      {
-        if (pos == linelen)
-        {
-          // line ends in \ and continues on the next line
-          regex.append(line.substr(loc, nsp - loc));
-          if (!get_line())
-            error("EOF encountered inside a pattern");
-          if (line == "%%")
-            error("%% section ending encountered inside a pattern");
-          pos = 0;
-          (void)ws(pos); // skip indent, if any
-          loc = pos;
-        }
-        else
-        {
-          ++pos;
-        }
       }
-      if (!std::isspace(c))
-        nsp = pos;
     }
-    pos = nsp;
+    else if (std::isspace(c))
+    {
+      break;
+    }
+    ++pos;
+    if (c == '"')
+    {
+      // eat "..."
+      while (pos < linelen && line.at(pos) != '"')
+        pos += 1 + (line.at(pos) == '\\');
+      ++pos;
+    }
+    else if (c == '[')
+    {
+      // eat [...]
+      if (pos < linelen && line.at(pos) == '^')
+        ++pos;
+      ++pos;
+      while (pos < linelen && line.at(pos) != ']')
+        pos += 1 + (line.at(pos) == '\\');
+      ++pos;
+    }
+    else if (c == '(' && pos + 2 < linelen && line.at(pos + 1) == '?' && line.at(pos + 2) == '#')
+    {
+      // eat (?#...)
+      pos += 2; 
+      while (pos < linelen && line.at(pos) != ')')
+        pos += 1 + (line.at(pos) == '\\');
+      ++pos;
+    }
+    else if (c == '\\')
+    {
+      if (pos == linelen)
+      {
+        // line ends in \ and continues on the next line
+        regex.append(line.substr(loc, pos - loc));
+        if (!get_line())
+          error("EOF encountered inside a pattern");
+        if (line == "%%")
+          error("%% section ending encountered inside a pattern");
+        pos = 0;
+        (void)ws(pos); // skip indent, if any
+        loc = pos;
+      }
+      else if (line.at(pos) == 'Q')
+      {
+        // eat \Q...\E
+        while (pos + 1 < linelen && (line.at(pos) != '\\' || line.at(pos + 1) != 'E'))
+          ++pos;
+        pos += 2;
+      }
+      else
+      {
+        ++pos;
+      }
+    }
+    if (fsp && !std::isspace(c))
+      nsp = pos;
   }
   regex.append(line.substr(loc, pos - loc));
-  reflex::convert_flag_type flags = reflex::convert_flag::lex;
-  if (!options["unicode"].empty())
-    flags |= reflex::convert_flag::unicode;
+  reflex::convert_flag_type flags = reflex::convert_flag::lex | reflex::convert_flag::multiline;
   if (!options["case_insensitive"].empty())
     flags |= reflex::convert_flag::anycase;
   if (!options["dotall"].empty())
     flags |= reflex::convert_flag::dotall;
   if (!options["freespace"].empty())
     flags |= reflex::convert_flag::freespace;
+  if (!options["unicode"].empty())
+    flags |= reflex::convert_flag::unicode;
   try
   {
     regex = reflex::convert(regex, library->signature, flags, &definitions); 
@@ -1269,7 +1254,7 @@ void Reflex::parse_section_1()
           if ((name = get_name(pos)).empty() || !ws(pos) || (regex = get_regex(pos)).empty() || !nl(pos))
             error("bad line in section 1: ", line.c_str());
           if (definitions.find(name) != definitions.end())
-            error("name defined twice: ", name.c_str());
+            error("attempt to redefine ", name.c_str());
           definitions[name] = regex;
         }
         if (!get_line())
@@ -1358,7 +1343,13 @@ void Reflex::parse_section_2()
     }
   }
   if (!scopes.empty())
-    error("missing closing } of start condition scope in section 2");
+  {
+    const char *name = conditions.at(*scopes.top().begin()).c_str();
+    if (in->eof())
+      error("EOF encountered inside scope ", name);
+    else
+      error("%% section ending encountered inside scope ", name);
+  }
   patterns.resize(conditions.size());
   for (Start start = 0; start < conditions.size(); ++start)
   {

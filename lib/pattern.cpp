@@ -69,11 +69,39 @@
 
 namespace reflex {
 
+inline char lower(int c)
+{
+  return c | 0x20;
+}
+
+inline char upper(int c)
+{
+  return c & ~0x20;
+}
+
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
 inline int fopen_s(FILE **fd, const char *name, const char *mode) { return ::fopen_s(fd, name, mode); }
 #else
 inline int fopen_s(FILE **fd, const char *name, const char *mode) { return (*fd = ::fopen(name, mode)) ? 0 : errno; }
 #endif
+
+static void print_char(FILE *fd, int c, bool h = false)
+{
+  if (c >= '\a' && c <= '\r')
+    ::fprintf(fd, "'\\%c'", "abtnvfr"[c - '\a']);
+  else if (c == '\\')
+    ::fprintf(fd, "'\\\\'");
+  else if (c == '\'')
+    ::fprintf(fd, "'\\''");
+  else if (std::isprint(c))
+    ::fprintf(fd, "'%c'", c);
+  else if (c < 8)
+    ::fprintf(fd, "'\\%u'", c);
+  else if (h)
+    ::fprintf(fd, "%2.2X", c);
+  else
+    ::fprintf(fd, "%u", c);
+}
 
 static const char *posix_class[] = {
   "ASCII",
@@ -955,7 +983,7 @@ void Pattern::parse_esc(Location& loc) const throw (regex_error)
       for (int i = 0; i < 3 && std::isdigit(at(loc)); ++i)
         ++loc;
     }
-    else if (c == 'p' && at(loc + 1) == '{')
+    else if ((c == 'p' || c == 'P') && at(loc + 1) == '{')
     {
       ++loc;
       while (std::isalnum(at(++loc)))
@@ -1275,12 +1303,12 @@ void Pattern::compile_transition(
               case '.':
                 if (opt_.s || is_modified('s', modifiers, loc))
                 {
-                  chars.insert(0, 0xff);
+                  chars.insert(0, 0xFF);
                 }
                 else
                 {
                   chars.insert(0, 9);
-                  chars.insert(11, 0xff);
+                  chars.insert(11, 0xFF);
                 }
                 break;
               case '^':
@@ -1328,8 +1356,8 @@ void Pattern::compile_transition(
                     case '\0': // no escape at current loc
                       if (std::isalpha(c) && (opt_.i || is_modified('i', modifiers, loc)))
                       {
-                        chars.insert(std::toupper(c));
-                        chars.insert(std::tolower(c));
+                        chars.insert(upper(c));
+                        chars.insert(lower(c));
                       }
                       else
                       {
@@ -1337,7 +1365,12 @@ void Pattern::compile_transition(
                       }
                       break;
                     default:
-                      compile_esc(loc + 1, chars);
+                      c = compile_esc(loc + 1, chars);
+                      if (std::isalpha(c) && (opt_.i || is_modified('i', modifiers, loc)))
+		      {
+                        chars.insert(upper(c));
+                        chars.insert(lower(c));
+		      }
                   }
                 }
             }
@@ -1427,13 +1460,13 @@ Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (rege
   }
   else if (c == 'e')
   {
-    c = 0x1b;
+    c = 0x1B;
   }
   else if (c == '_')
   {
     posix(6 /* alpha */, chars);
   }
-  else if (c == 'p' && at(loc + 1) == '{')
+  else if ((c == 'p' || c == 'P') && at(loc + 1) == '{')
   {
     size_t i;
     for (i = 0; i < 14; ++i)
@@ -1443,12 +1476,14 @@ Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (rege
       posix(i, chars);
     else
       error(regex_error::invalid_class, loc);
+    if (c == 'P')
+      flip(chars);
     return META_EOL;
   }
   else
   {
     static const char abtnvfr[] = "abtnvfr";
-    const char *s = strchr(abtnvfr, c);
+    const char *s = std::strchr(abtnvfr, c);
     if (s)
     {
       c = static_cast<Char>(s - abtnvfr + '\a');
@@ -1456,7 +1491,7 @@ Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (rege
     else
     {
       static const char escapes[] = "__sSxX________hHdD__lL__uUwW";
-      s = strchr(escapes, c);
+      s = std::strchr(escapes, c);
       if (s)
       {
         posix((s - escapes) / 2, chars);
@@ -1466,8 +1501,9 @@ Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (rege
       }
     }
   }
-  if (c <= 0xff)
-    chars.insert(c);
+  if (c > 0xFF)
+    error(regex_error::invalid_escape, loc);
+  chars.insert(c);
   return c;
 }
 
@@ -1524,9 +1560,9 @@ void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) con
             for (Char a = lo; a <= c; ++a)
             {
               if (std::isupper(a))
-                chars.insert(std::tolower(a));
+                chars.insert(lower(a));
               else if (std::islower(a))
-                chars.insert(std::toupper(a));
+                chars.insert(upper(a));
             }
           }
           c = META_EOL;
@@ -1535,8 +1571,8 @@ void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) con
         {
           if (std::isalpha(c) && (opt_.i || is_modified('i', modifiers, loc)))
           {
-            chars.insert(std::toupper(c));
-            chars.insert(std::tolower(c));
+            chars.insert(upper(c));
+            chars.insert(lower(c));
           }
           else
           {
@@ -1560,12 +1596,11 @@ void Pattern::posix(size_t index, Chars& chars) const
   switch (index)
   {
     case 0:
-      chars.insert(0x00, 0x7f);
+      chars.insert(0x00, 0x7F);
       break;
     case 1:
       chars.insert('\t', '\r');
       chars.insert(' ');
-      chars.insert(0x85);
       break;
     case 2:
       chars.insert('0', '9');
@@ -1573,8 +1608,8 @@ void Pattern::posix(size_t index, Chars& chars) const
       chars.insert('a', 'f');
       break;
     case 3:
-      chars.insert(0x00, 0x1f);
-      chars.insert(0x7f);
+      chars.insert(0x00, 0x1F);
+      chars.insert(0x7F);
       break;
     case 4:
       chars.insert(' ', '~');
@@ -1632,8 +1667,8 @@ void Pattern::flip(Chars& chars) const
       flip.insert(c, i->first - 1);
     c = i->second;
   }
-  if (c <= 0xff)
-    flip.insert(c, 0xff);
+  if (c <= 0xFF)
+    flip.insert(c, 0xFF);
   chars.swap(flip);
 #endif
 }
@@ -1660,7 +1695,7 @@ void Pattern::compact_dfa(State& start)
     for (State::Edges::iterator i = state->edges.begin(); i != state->edges.end(); ++i)
     {
       Char hi = i->second.first;
-      if (hi >= 0xff)
+      if (hi >= 0xFF)
         break;
       State::Edges::iterator j = i;
       ++j;
@@ -1697,9 +1732,9 @@ void Pattern::encode_dfa(State& start) throw (regex_error)
         nop_ += i->second.first - i->first;
     }
     // add dead state only when needed
-    if (hi <= 0xff)
+    if (hi <= 0xFF)
     {
-      state->edges[hi] = std::pair<Char,State*>(0xff, NULL);
+      state->edges[hi] = std::pair<Char,State*>(0xFF, NULL);
       ++nop_;
     }
     nop_ += static_cast<Index>(state->heads.size() + state->tails.size() + (state->accept > 0 || state->redo));
@@ -1788,36 +1823,51 @@ void Pattern::gencode_dfa(const State& start) const
             Index target_index = IMAX;
             if (i->second.second)
               target_index = i->second.second->index;
+            if (!read)
+            {
+              ::fprintf(fd, "  c0 = c1, c1 = m.FSM_CHAR();\n");
+              read = true;
+            }
             if (!is_meta(lo))
             {
-              if (lo != 0x00 || hi != 0xff || target_index != IMAX)
+              State::Edges::const_reverse_iterator j = i;
+              if ((lo == 0x00 && hi == 0xFF) || ++j == state->edges.rend())
               {
-                if (!read)
-                {
-                  ::fprintf(fd, "  c0 = c1, c1 = m.FSM_CHAR();\n");
-                  read = true;
-                }
-                if (lo == hi && target_index == IMAX)
-                  ::fprintf(fd, "  if (c1 == %u) return m.FSM_HALT(c1);\n", lo);
-                else if (hi == 0xff && target_index == IMAX)
-                  ::fprintf(fd, "  if (%u <= c1) return m.FSM_HALT(c1);\n", lo);
-                else if (target_index == IMAX)
-                  ::fprintf(fd, "  if (%u <= c1 && c1 <= %u) return m.FSM_HALT(c1);\n", lo, hi);
-                else if (lo == hi)
-                  ::fprintf(fd, "  if (c1 == %u) goto S%u;\n", lo, target_index);
-                else if (hi == 0xff)
-                  ::fprintf(fd, "  if (%u <= c1) goto S%u;\n", lo, target_index);
-                else
-                  ::fprintf(fd, "  if (%u <= c1 && c1 <= %u) goto S%u;\n", lo, hi, target_index);
+                ::fprintf(fd, " ");
               }
+              else if (lo == hi)
+              {
+                ::fprintf(fd, "  if (c1 == ");
+                print_char(fd, lo);
+                ::fprintf(fd, ")");
+              }
+              else if (lo == 0x00)
+              {
+                ::fprintf(fd, "  if (c1 <= ");
+                print_char(fd, hi);
+                ::fprintf(fd, ")");
+              }
+              else if (hi == 0xFF)
+              {
+                ::fprintf(fd, "  if (");
+                print_char(fd, lo);
+                ::fprintf(fd, " <= c1)");
+              }
+              else
+              {
+                ::fprintf(fd, "  if (");
+                print_char(fd, lo);
+                ::fprintf(fd, " <= c1 && c1 <= ");
+                print_char(fd, hi);
+                ::fprintf(fd, ")");
+              }
+              if (target_index == IMAX)
+                ::fprintf(fd, " return m.FSM_HALT(c1);\n");
+              else
+                ::fprintf(fd, " goto S%u;\n", target_index);
             }
             else
             {
-              if (!read)
-              {
-                ::fprintf(fd, "  c0 = c1, c1 = m.FSM_CHAR();\n");
-                read = true;
-              }
               do
               {
                 switch (lo)
@@ -1855,7 +1905,6 @@ void Pattern::gencode_dfa(const State& start) const
               } while (++lo <= hi);
             }
           }
-          ::fprintf(fd, "  return m.FSM_HALT(c1);\n");
         }
         ::fprintf(fd, "}\n\n");
         if (fd != stdout)
@@ -2128,30 +2177,12 @@ void Pattern::export_code() const
             Char lo = lo_of(opcode);
             if (!is_meta(lo))
             {
-              if (lo >= '\a' && lo <= '\r')
-                ::fprintf(fd, "\\%c", "abtnvfr"[lo - '\a']);
-              else if (lo == '\\')
-                ::fprintf(fd, "'\\'");
-              else if (std::isgraph(lo))
-                ::fprintf(fd, "%c", lo);
-              else if (lo < 8)
-                ::fprintf(fd, "\\%u", lo);
-              else
-                ::fprintf(fd, "\\x%2.2x", lo);
+              print_char(fd, lo, true);
               Char hi = hi_of(opcode);
               if (lo != hi)
               {
                 ::fprintf(fd, "-");
-                if (hi >= '\a' && hi <= '\r')
-                  ::fprintf(fd, "\\%c", "abtnvfr"[hi - '\a']);
-                else if (hi == '\\')
-                  ::fprintf(fd, "'\\'");
-                else if (std::isgraph(hi))
-                  ::fprintf(fd, "%c", hi);
-                else if (hi < 8)
-                  ::fprintf(fd, "\\%u", hi);
-                else
-                  ::fprintf(fd, "\\x%2.2x", hi);
+                print_char(fd, hi, true);
               }
             }
             else

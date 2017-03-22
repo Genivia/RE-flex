@@ -1,9 +1,9 @@
 // Python tokenizer
 // Conforms to the Python 3.x language reference lexical structure:
 // https://docs.python.org/3.6/reference/lexical_analysis.html
-// Uses RE/flex matcher for lazy quants and indent/dedent matching
+// Uses RE/flex matcher for lazy quants and for indent/dedent matching.
 
-// inject code for the scanner state and auxiliary methods into the Lexer class
+// inject code into the Lexer class for the scanner state and auxiliary methods
 %class{
   // emit token to Lexer's current stream out()
   void emit(const char *token, const char *what = NULL)
@@ -17,18 +17,25 @@
 // import Python 3.x token definitions
 %i "pdefs.l"
 
-// use full option to eliminate tokenizer startup time, set indent tabs=8
-%o full tabs=8
-
 // implicit line joining is done with the JOINING start condition state
 %x JOINING
+
+// use fast option to eliminate tokenizer startup time, set indent tabs=8
+%o fast tabs=8
+
+// dot matches \n
+%o dotall
+// warning: in unicode mode dot is a "catch all" and also matches invalid UTF-8
+// so we use {any} to match anything that is valid Unicode/UTF-8, where {any}
+// is defined in pdefs.l as all Unicode planes without the surrogate halves:
+// any  \p{Unicode}
 
 %%
 
 ^\f?\h*                 // eat nodent margin space
 
 \r?\n                   |
-#.*?\r?\n               emit("NEWLINE");
+#{any}*?\r?\n           emit("NEWLINE");
 
 ^\f?\h*\i               emit("INDENT");
 
@@ -37,7 +44,7 @@
 
 (?^\h+)                 // eat space and tabs
 
-(?^^(\f?\h*(#.*?)?\r?\n)+)
+(?^^(\f?\h*(#{any}*?)?\r?\n)+)
                         // eat blank lines and comments, anchor ^ in (?^X)
 
 (?^\\\r?\n\f?\h*)       // explicit line joining by eating \ \n ...
@@ -52,7 +59,7 @@
 
 \s+                     // eat all white space
 
-#.*?\r?\n               // eat comments
+#{any}*?\r?\n           // eat comments
 
 [[({]                   ++join;
                         emit("DELIMITER  ", text());
@@ -155,7 +162,7 @@ yield                   emit("KEYWORD    ", text());
 "."                     |
 ";"                     emit("DELIMITER  ", text());
 
-.                       std::cerr << "Error: unexpected character " << text() << " at line " << lineno() << " column " << columno() << std::endl;
+.                       std::cerr << "Error: invalid input at line " << lineno() << " column " << columno() << std::endl;
                         return 0;
 
 }

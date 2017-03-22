@@ -2,9 +2,13 @@
 // https://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html
 // Note: place IntegerLiteral before FloatingPointLiteral since the latter also matches the former
 
-InputCharacter                  [\x00-\x09\x0B\x0C\x0E-\x7F]|\p{Non_ASCII_Unicode}
-SingleCharacter                 [\x00-\x09\x0B\x0C\x0E-\x26\x28-\x5B\x5D-\x7F]|\p{Non_ASCII_Unicode}
-StringCharacter                 [\x00-\x09\x0B\x0C\x0E-\x21\x23-\x5B\x5D-\x7F]|\p{Non_ASCII_Unicode}
+%o unicode
+
+NonASCIICodePoint               \p{Non_ASCII_Unicode}
+
+InputCharacter                  [\x00-\x09\x0B\x0C\x0E-\x7F]|{NonASCIICodePoint}
+SingleCharacter                 [\x00-\x09\x0B\x0C\x0E-\x26\x28-\x5B\x5D-\x7F]|{NonASCIICodePoint}
+StringCharacter                 [\x00-\x09\x0B\x0C\x0E-\x21\x23-\x5B\x5D-\x7F]|{NonASCIICodePoint}
 OctalEscape                     \\([0-7]{1,2}|[0-3][0-7]{2})
 EscapeSequence                  \\[btnfr"'\\]|{OctalEscape}
 LineTerminator                  \n|\r\n?

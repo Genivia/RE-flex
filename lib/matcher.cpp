@@ -41,8 +41,7 @@ namespace reflex {
 size_t Matcher::match(Method method)
 {
   DBGLOG("BEGIN Matcher::match()");
-  if (pos_ < end_)
-    buf_[pos_] = chr_;
+  reset_text();
 scan:
   txt_ = buf_ + cur_;
   len_ = 0;
@@ -52,7 +51,6 @@ scan:
     if (method == Const::SPLIT && !bob && cap_ != 0 && cap_ != Const::EMPTY)
     {
       cap_ = Const::EMPTY;
-      buf_[pos_] = '\0';
       DBGLOG("Split empty at end, cap = %zu", cap_);
       DBGLOG("END Matcher::match()");
       return cap_;
@@ -330,7 +328,6 @@ done:
       }
       cap_ = Const::EMPTY;
       set_current(pos_); // chr_ = static_cast<unsigned char>(buf_[pos_]);
-      buf_[pos_] = '\0';
       DBGLOG("Split at eof: cap = %zu txt = '%s' len = %zu", cap_, txt_, len_);
       DBGLOG("END Matcher::match()");
       return cap_;
@@ -338,7 +335,6 @@ done:
     if (bob && cur_ == 0 && hit_end())
       cap_ = Const::EMPTY;
     set_current(cur_);
-    buf_[txt_ - buf_ + len_] = '\0';
     DBGLOG("Split: txt = '%s' len = %zu", txt_, len_);
     DBGLOG("END Matcher::match()");
     return cap_;
@@ -356,12 +352,11 @@ done:
     }
     else if (method == Const::FIND)
     {
-      set_current(++cur_); // skip one unrecognized char
+      set_current(++cur_); // skip one char to ensure we're advancing later
       DBGLOG("Reject and continue?");
       if (cap_ == 0 || !opt_.N)
         goto scan;
       DBGLOG("Accept empty match");
-      buf_[pos_ - 1] = '\0';
     }
     else
     {
@@ -393,7 +388,6 @@ done:
       }
     }
   }
-  buf_[pos_] = '\0';
   DBGLOG("Return: cap = %zu txt = '%s' len = %zu got = %d", cap_, txt_, len_, got_);
   DBGLOG("END match()");
   return cap_;

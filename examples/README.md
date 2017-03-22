@@ -33,10 +33,11 @@ RE/flex syntax scanner examples
 - `reflexexample4.l` example modified from the Flex documentation with bison-bridge
 - `reflexexample5.l` example modified from the Flex documentation with bison-bridge
 - `reflexexample6.l` example reentrant scanner with state stacks
-- `tag.l` simple lexer to print out all HTML tags
-- `tag_lazy.l` simple lexer to print HTML tags, uses lazy quants
-- `tag_lazystates.l` simple lexer to print HTML tags, uses lazy quants and states
-- `tag_tidy.l` example lexer to tidy and normalize HTML
+- `tag.l` simple lexer to print out all XML/HTML tags
+- `tag_lazy.l` simple lexer to print XML/HTML tags, uses lazy quants
+- `tag_lazystates.l` lexer to print XML tags, uses lazy quants and states
+- `tag_unicode.l` lexer to print XML tags, uses lazy quants and states, checks UTF-8 validity
+- `tag_tidy.l` lexer to tidy and normalize HTML
 
 Stand-alone C++ regex matching example
 --------------------------------------

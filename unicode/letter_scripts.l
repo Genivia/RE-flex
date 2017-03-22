@@ -66,8 +66,6 @@ int main()
 {
   Lexer().lex();
 
-  Chars unicode(0x00, 0x10ffff);
-
   std::cout <<
     "// Converted from http://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt by letter_scripts.l\n"
     "#include <reflex/unicode.h>\n"

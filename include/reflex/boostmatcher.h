@@ -128,7 +128,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   virtual std::pair<const char*,size_t> operator[](size_t n) const
   {
     if (n == 0)
-      return std::pair<const char*,size_t>(text(), size());
+      return std::pair<const char*,size_t>(txt_, len_);
     if (itr_ == fin_ || n >= (*itr_).size() || !(*itr_)[n].matched)
       return std::pair<const char*,size_t>(NULL, 0);
     return std::pair<const char*,size_t>((*itr_)[n].first, (*itr_)[n].second - (*itr_)[n].first);
@@ -139,11 +139,10 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
     /// @returns nonzero when input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
   {
     DBGLOG("BEGIN BoostMatcher::match(%d)", method);
+    reset_text();
     bool bob = at_bob();
     txt_ = buf_ + cur_; // set first of text(), cur_ was last pos_, or cur_ was set with more()
-    cur_ = pos_; // reset cur_ when changed in more()
-    if (pos_ < end_) // if next pos_ is not hitting the end_ then
-      buf_[pos_] = chr_; // last of text() was set to NUL in buf_[], set it back
+    cur_ = pos_;
     if (itr_ != fin_) // if regex iterator is still valid then
     {
       if ((*itr_)[0].second == buf_ + pos_) // if last of regex iterator is still valid in buf_[] then
@@ -198,7 +197,6 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
             }
             itr_ = fin_;
             cur_ = pos_;
-            buf_[txt_ - buf_ + len_] = '\0';
             DBGLOGN("Split: act = %zu txt = '%s' len = %zu pos = %zu eof = %d", cap_, txt_, len_, pos_, eof_ == true);
           }
           DBGLOG("END BoostMatcher::match()");
@@ -235,8 +233,6 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
           pos_ = cur_;
           len_ = 0;
           cap_ = 0;
-          chr_ = static_cast<unsigned char>(buf_[pos_]);
-          buf_[pos_] = '\0';
           DBGLOGN("No (partial) match, pos = %zu", pos_);
           DBGLOG("END BoostMatcher::match()");
           return 0;
@@ -260,7 +256,6 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
         continue; // set cap_ to the capture index
       len_ = (*itr_)[0].first - txt_; // cur_ - (txt_ - buf_); // size() spans txt_ to cur_ in buf_[]
       set_current(pos_);
-      buf_[txt_ - buf_ + len_] = '\0';
       DBGLOGN("Split: act = %zu txt = '%s' len = %zu pos = %zu", cap_, txt_, len_, pos_);
       DBGLOG("END BoostMatcher::match()");
       return cap_;
@@ -271,8 +266,6 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
       pos_ = cur_;
       len_ = 0;
       cap_ = 0;
-      chr_ = static_cast<unsigned char>(buf_[pos_]);
-      buf_[pos_] = '\0';
       DBGLOGN("No match, pos = %zu", pos_);
       DBGLOG("END BoostMatcher::match()");
       return 0;
@@ -283,7 +276,6 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
     for (cap_ = 1; cap_ < n && !(*itr_)[cap_].matched; ++cap_)
       continue; // set cap_ to the capture group index
     set_current(pos_);
-    buf_[pos_] = '\0';
     len_ = cur_ - (txt_ - buf_); // size() spans txt_ to cur_ in buf_[]
     if (len_ == 0 && cap_ != 0 && opt_.N && pos_ + 1 == end_)
       set_current(end_);

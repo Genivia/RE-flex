@@ -85,19 +85,34 @@ static const char *regex_char(char *buf, int a, int esc, size_t *n = NULL)
   return buf;
 }
 
-static const char *regex_range(char *buf, int a, int b, int esc)
+static const char *regex_range(char *buf, int a, int b, int esc, bool brackets = true)
 {
   if (a == b)
     return regex_char(buf, a, esc);
-  size_t n, m;
-  buf[0] = '[';
-  regex_char(buf + 1, a, esc, &n);
+  char *s = buf;
+  if (brackets)
+    *s++ = '[';
+  size_t n;
+  regex_char(s, a, esc, &n);
+  s += n;
   if (b > a + 1)
-    buf[++n] = '-';
-  regex_char(buf + ++n, b, esc, &m);
-  buf[n + m] = ']';
-  buf[n + m + 1] = '\0';
+    *s++ = '-';
+  regex_char(s, b, esc, &n);
+  s += n;
+  if (brackets)
+    *s++ = ']';
+  *s++ = '\0';
   return buf;
+}
+
+std::string latin1(int a, int b, int esc, bool brackets)
+{
+  if (a < 0)
+    return ""; // undefined
+  if (a > b)
+    b = a;
+  char buf[16];
+  return regex_range(buf, a, b, esc, brackets);
 }
 
 std::string utf8(int a, int b, int esc, const char *par, bool strict)

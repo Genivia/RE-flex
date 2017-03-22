@@ -12,14 +12,15 @@
     std::deque<std::string> tags;
   };
 
-pi                      <!|<\?
-comment                 <!--.*?-->
-open                    <[^!/>\s]+
-close                   <\/.+?>
-string                  \".*?\"|'.*?'
-value                   =\s*[^/>\s'"]+
+%o dotall main unicode class=Tidy
 
-%o dotall main class=Tidy
+dot                     \p{Unicode}
+pi                      <!|<\?
+comment                 <!--{dot}*?-->
+open                    <[^!/>\s]+
+close                   <\/{dot}+?>
+string                  \"{dot}*?\"|'{dot}*?'
+value                   =\s*[^/>\s'"]+
 
 %x ATTRIBUTES
 
@@ -53,7 +54,7 @@ value                   =\s*[^/>\s'"]+
                           }
                         }
 
-.                       echo();
+{dot}                   echo();
 
 <ATTRIBUTES>"/>"        echo();
                         tags.pop_back();
@@ -75,4 +76,6 @@ value                   =\s*[^/>\s'"]+
 
 <ATTRIBUTES>[^'"]       echo();
 
+<*>.                    fprintf(stderr, "Invalid XML encoding\n");
+                        return 0;
 %%

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">utf8.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Mar 8 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Mar 22 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -51,6 +51,7 @@
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">utf8.h File Reference</div>  </div>
@@ -59,12 +60,14 @@
 
 <p>RE/flex UCS to UTF-8 converters.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;string&gt;</code><br />
-<code>#include &lt;cstring&gt;</code><br />
+<div class="textblock"><code>#include &lt;cstring&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for utf8.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="utf8_8h__incl.png" border="0" usemap="#utf8_8h" alt=""/></div>
+<map name="utf8_8h" id="utf8_8h">
+</map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -89,16 +92,27 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacereflex"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html">reflex</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a75f9fce49b2f30fb97235c76cd70d32f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utf8_8h.html#a75f9fce49b2f30fb97235c76cd70d32f">REFLEX_NONCHAR</a>&#160;&#160;&#160;(0x200000)</td></tr>
+<tr class="memdesc:a75f9fce49b2f30fb97235c76cd70d32f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace invalid UTF-8 with the non-character U+200000 code point for guaranteed error detection (the U+FFFD code point makes error detection harder and possible to miss).  <a href="#a75f9fce49b2f30fb97235c76cd70d32f">More...</a><br /></td></tr>
+<tr class="separator:a75f9fce49b2f30fb97235c76cd70d32f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac61199d73e7584c66092f847db38470a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utf8_8h.html#ac61199d73e7584c66092f847db38470a">REFLEX_NONCHAR_UTF8</a>&#160;&#160;&#160;&quot;\xf8\x88\x80\x80\x80&quot;</td></tr>
+<tr class="separator:ac61199d73e7584c66092f847db38470a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a5cc2e91b0f3e1b8bb2611304c8c0e6ee"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a5cc2e91b0f3e1b8bb2611304c8c0e6ee">reflex::latin1</a> (int a, int b, int esc= 'x', bool brackets=true)</td></tr>
+<tr class="memdesc:a5cc2e91b0f3e1b8bb2611304c8c0e6ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert an 8-bit ASCII + Latin-1 Supplement range [a,b] to a regex pattern.  <a href="namespacereflex.html#a5cc2e91b0f3e1b8bb2611304c8c0e6ee">More...</a><br /></td></tr>
+<tr class="separator:a5cc2e91b0f3e1b8bb2611304c8c0e6ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bef462a65804089ae20c74dede75782"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a7bef462a65804089ae20c74dede75782">reflex::utf8</a> (int a, int b, int esc= 'x', const char *par=&quot;(&quot;, bool strict=true)</td></tr>
 <tr class="memdesc:a7bef462a65804089ae20c74dede75782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS-4 range [a,b] to a UTF-8 regex pattern.  <a href="namespacereflex.html#a7bef462a65804089ae20c74dede75782">More...</a><br /></td></tr>
 <tr class="separator:a7bef462a65804089ae20c74dede75782"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a225d16c59f5f54f400412ed6cd4f340a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a225d16c59f5f54f400412ed6cd4f340a">reflex::utf8</a> (int c, char *s)</td></tr>
-<tr class="memdesc:a225d16c59f5f54f400412ed6cd4f340a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UCS-4 to UTF-8, unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED.  <a href="namespacereflex.html#a225d16c59f5f54f400412ed6cd4f340a">More...</a><br /></td></tr>
+<tr class="memdesc:a225d16c59f5f54f400412ed6cd4f340a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UCS-4 to UTF-8, fills with REFLEX_NONCHAR_UTF8 when out of range, or unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED.  <a href="namespacereflex.html#a225d16c59f5f54f400412ed6cd4f340a">More...</a><br /></td></tr>
 <tr class="separator:a225d16c59f5f54f400412ed6cd4f340a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fe93907a6b71a3e0b7688bec72638e4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a2fe93907a6b71a3e0b7688bec72638e4">reflex::utf8</a> (const char *s, const char **r=NULL)</td></tr>
-<tr class="memdesc:a2fe93907a6b71a3e0b7688bec72638e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS, returns 0xFFFD for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove this limit to support lossless UTF-8 encoding up to 6 bytes).  <a href="namespacereflex.html#a2fe93907a6b71a3e0b7688bec72638e4">More...</a><br /></td></tr>
+<tr class="memdesc:a2fe93907a6b71a3e0b7688bec72638e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS, returns REFLEX_NONCHAR for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove any limits on UTF-8 encodings up to 6 bytes).  <a href="namespacereflex.html#a2fe93907a6b71a3e0b7688bec72638e4">More...</a><br /></td></tr>
 <tr class="separator:a2fe93907a6b71a3e0b7688bec72638e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -107,10 +121,37 @@ Functions</h2></td></tr>
 <dl class="section copyright"><dt>Copyright</dt><dd>(c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
 <dd>
 (c) BSD-3 License - see LICENSE.txt </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a75f9fce49b2f30fb97235c76cd70d32f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define REFLEX_NONCHAR&#160;&#160;&#160;(0x200000)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Replace invalid UTF-8 with the non-character U+200000 code point for guaranteed error detection (the U+FFFD code point makes error detection harder and possible to miss). </p>
+
+</div>
+</div>
+<a class="anchor" id="ac61199d73e7584c66092f847db38470a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define REFLEX_NONCHAR_UTF8&#160;&#160;&#160;&quot;\xf8\x88\x80\x80\x80&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Mar 8 2017 13:11:43 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Mar 22 2017 19:12:30 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -71,14 +71,6 @@ Tables::Tables()
   range["Upper"]  = range["u"] = Upper;
   range["Word"]   = range["w"] = Word;
   range["XDigit"] = range["x"] = XDigit;
-
-  range["h"] = range["Blank"];
-  range["d"] = range["Digit"];
-  range["l"] = range["Lower"];
-  range["s"] = range["Space"];
-  range["u"] = range["Upper"];
-  range["w"] = range["Word"];
-  range["x"] = range["XDigit"];
 }
 
 static const Tables tables;

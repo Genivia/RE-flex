@@ -50,7 +50,6 @@ void get_card_numbers(void)
 int main()
 {
   get_card_numbers();
-
   return EXIT_SUCCESS;
 }
 

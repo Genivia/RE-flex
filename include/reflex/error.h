@@ -54,7 +54,7 @@ class regex_error : public std::runtime_error {
   static const regex_error_type mismatched_quotation = 3;  ///< mismatched `\Q...\E` or `"..."` quotation
   static const regex_error_type empty_expression     = 4;  ///< regex (sub)expression should not be empty
   static const regex_error_type empty_class          = 5;  ///< class `[...]` is empty, e.g. `[a&&[b]]`
-  static const regex_error_type invalid_class        = 6;  ///< invalid character class name
+  static const regex_error_type invalid_class        = 6;  ///< invalid character class name or code point
   static const regex_error_type invalid_class_range  = 7;  ///< invalid class range, e.g. `[Z-A]`
   static const regex_error_type invalid_escape       = 8;  ///< invalid escape character
   static const regex_error_type invalid_anchor       = 9;  ///< invalid anchor

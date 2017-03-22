@@ -101,10 +101,11 @@ int main(int argc, char **argv)
         std::cerr << e.what();
       }
     }
-    printf("\n** Reflex regex = %s\n\n", argv[1]);
     try
     {
-      reflex::Pattern reflex_pattern(argv[1], "mr;o;f=dump.gv,dump.cpp");
+      std::string regex = reflex::Matcher::convert(argv[1], reflex::convert_flag::unicode);
+      printf("\n** RE/flex converted regex = %s\n\n", regex.c_str());
+      reflex::Pattern reflex_pattern(regex, "mr;o;f=dump.gv,dump.cpp");
       if (argc > 2)
       {
         reflex::Matcher matcher(reflex_pattern, argv[2], opts);

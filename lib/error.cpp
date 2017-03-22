@@ -77,7 +77,7 @@ std::string regex_error::regex_error_message(regex_error_type code, const char *
     if ((p[i] & 0xc0) == 0x80)
       --r;
 
-  std::string what("syntax error in regex at position ");
+  std::string what("error in regex at position ");
   char buf[24];
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
   sprintf_s(buf, sizeof(buf), "%zu\n", pos);

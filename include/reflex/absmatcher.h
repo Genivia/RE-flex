@@ -37,10 +37,10 @@
 #ifndef REFLEX_ABSMATCHER_H
 #define REFLEX_ABSMATCHER_H
 
-// this option speeds up buffer reallocation
+/// This compile-time option speeds up buffer reallocation.
 #define WITH_REALLOC
-// this option speeds up matching somewhat, but slows down input() a lot
-// #define WITH_FAST_GET
+/// This compile-time option speeds up matching, but slows input().
+#define WITH_FAST_GET
 
 #include <reflex/convert.h>
 #include <reflex/debug.h>
@@ -73,13 +73,13 @@ buf_=|  |text|rest|free|
         cur_ pos_ end_ max_
 
 buf_ // points to buffered input, grows to fit long matches
-cur_ // current position in buf_ while matching text, cur_ = pos_ afterwards, changed by more()
+cur_ // current position in buf_ while matching text, cur_ = pos_ afterwards, can be changed by more()
 pos_ // position in buf_ to start the next match
 end_ // position in buf_ that is free to fill with more input
 max_ // allocated size of buf_
-txt_ // buf_ + cur_ points to the match, \0-terminated
+txt_ // buf_ + cur_ points to the match, NUL-terminated
 len_ // length of the match
-chr_ // buf_[pos_] character after this match, with buf_[pos_] replaced with \0
+chr_ // char located at txt_[len_] when txt_[len_] is set to NUL
 got_ // buf_[cur_-1] character before this match (assigned before each match)
 ```
  
@@ -95,7 +95,7 @@ class AbstractMatcher {
     static const Method SPLIT = 2;      ///< AbstractMatcher::match method is to split input at pattern matches
     static const Method MATCH = 3;      ///< AbstractMatcher::match method is to match the entire input
     static const int NUL      = '\0';   ///< NUL string terminator
-    static const int UNK      = 256;    ///< unknown meta-char marker
+    static const int UNK      = 256;    ///< unknown/undefined character meta-char marker
     static const int BOB      = 257;    ///< begin of buffer meta-char marker
     static const int EOB      = EOF;    ///< end of buffer meta-char marker
     static const size_t EMPTY = 0xFFFF; ///< accept() returns empty last split at end of input
@@ -116,9 +116,9 @@ class AbstractMatcher {
   /// AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences.
   template<typename T> /// @tparam <T> AbstractMatcher or const AbstractMatcher
   class Iterator : public std::iterator<std::input_iterator_tag,T> {
-   friend class AbstractMatcher;
-   friend class Iterator<typename reflex::TypeOp<T>::ConstType>;
-   friend class Iterator<typename reflex::TypeOp<T>::NonConstType>;
+    friend class AbstractMatcher;
+    friend class Iterator<typename reflex::TypeOp<T>::ConstType>;
+    friend class Iterator<typename reflex::TypeOp<T>::NonConstType>;
    public:
     /// Construct an AbstractMatcher::Iterator such that Iterator() == AbstractMatcher::Operation(*this, method).end().
     Iterator()
@@ -195,7 +195,7 @@ class AbstractMatcher {
   typedef AbstractMatcher::Iterator<const AbstractMatcher> const_iterator; ///< std::input_iterator for scanning, searching, and splitting input character sequences
   /// AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatcher::iterator to iterate over matches.
   class Operation {
-   friend class AbstractMatcher;
+    friend class AbstractMatcher;
    public:
     /// AbstractMatcher::Operation() matches input to a pattern using method Const::SCAN, Const::FIND, or Const::SPLIT.
     size_t operator()() const
@@ -280,7 +280,7 @@ class AbstractMatcher {
     cno_ = 0;
     num_ = 0;
     got_ = Const::BOB;
-    chr_ = Const::UNK;
+    chr_ = '\0';
     eof_ = false;
     mat_ = false;
     blk_ = 0;
@@ -305,11 +305,10 @@ class AbstractMatcher {
     }
     while (in.good()) // there is more to get while good(), e.g. via wrap()
     {
-      grow();
+      (void)grow();
       end_ += get(buf_ + end_, max_ - end_);
     }
-    if (end_ > pos_)
-      chr_ = static_cast<unsigned char>(buf_[pos_]);
+    (void)grow(1); // we need space for a final NUL
     return in.eof();
   }
   /// Set buffer to 1 for interactive input.
@@ -348,23 +347,46 @@ class AbstractMatcher {
   {
     return cap_;
   }
-  /// Returns string with the text matched.
-  const char *text() const
-    /// @returns NUL-terminated const char* string.
+  /// Returns pointer to the begin of the matched text (not NUL-terminated), a fast constant-time operation, use with end() or use size() for text end/length.
+  const char *begin() const
+    /// @returns const char* pointer to the matched text in the buffer.
   {
     return txt_;
   }
-  /// Returns wide string converted from the UTF-8 text matched.
-  std::wstring wtext() const
-    /// @returns wide string.
+  /// Returns pointer to the end of the matched text, a fast constant-time operation.
+  const char *end() const
+    /// @returns const char* pointer to the end of the matched text in the buffer.
   {
-    const char *t = text();
-    int wc;
+    return txt_ + len_;
+  }
+  /// Returns NUL-terminated string of the text matched, a constant-time operation.
+  const char *text()
+    /// @returns NUL-terminated const char* string with text matched.
+  {
+    if (chr_ == '\0')
+    {
+      chr_ = txt_[len_];
+      const_cast<char*>(txt_)[len_] = '\0'; // cast is ugly, but OK since txt_ points in non-const buf_[]
+    }
+    return txt_;
+  }
+  /// Returns the text matched as a string, a copy of text().
+  std::string str() const
+    /// @returns string with text matched.
+  {
+    return std::string(txt_, len_);
+  }
+  /// Returns the match as a wide string, converted from UTF-8 text().
+  std::wstring wstr() const
+    /// @returns wide string with text matched.
+  {
+    const char *t = txt_;
     std::wstring ws;
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
-    // std::wstring is UTF-16
-    while ((wc = utf8(t, &t)) != '\0')
+    // store wide string in std::wstring encoded in UTF-16
+    while (t < txt_ + len_)
     {
+      int wc = utf8(t, &t);
       if (wc > 0xFFFF)
       {
         if (wc <= 0x10FFFF)
@@ -383,12 +405,12 @@ class AbstractMatcher {
       }
     }
 #else
-    while ((wc = utf8(t, &t)) != '\0')
-      ws.push_back(wc);
+    while (t < txt_ + len_)
+      ws.push_back(utf8(t, &t));
 #endif
     return ws;
   }
-  /// Returns the length of the matched text in number of bytes.
+  /// Returns the length of the matched text in number of bytes, a constant-time operation.
   size_t size() const
     /// @returns match size in bytes.
   {
@@ -399,7 +421,7 @@ class AbstractMatcher {
     /// @returns the length of the match in number of (wide, multibyte UTF-8) characters.
   {
     size_t n = 0;
-    for (const char *t = txt_; *t; ++t)
+    for (const char *t = txt_; t < txt_ + len_; ++t)
       n += (*t & 0xC0) != 0x80;
     return n;
   }
@@ -430,25 +452,25 @@ class AbstractMatcher {
     return n;
 #endif
   }
-  /// Returns a pair of size_t accept() and std::string text(), useful for tokenizing input into containers of pairs.
+  /// Returns std::pair<size_t,std::string>(accept(), str()), useful for tokenizing input into containers of pairs.
   std::pair<size_t,std::string> pair() const
-    /// @returns a std::pair of size_t accept() and std::string text().
+    /// @returns std::pair<size_t,std::string>(accept(), str()).
   {
-    return std::pair<size_t,std::string>(accept(), std::string(text(), size()));
+    return std::pair<size_t,std::string>(accept(), str());
   }
-  /// Returns a pair of size_t accept() and std::wstring wtext(), useful for tokenizing input into containers of pairs.
+  /// Returns std::pair<size_t,std::wstring>(accept(), wstr()), useful for tokenizing input into containers of pairs.
   std::pair<size_t,std::wstring> wpair() const
-    /// @returns a std::pair of size_t accept() and wtext().
+    /// @returns std::pair<size_t,std::wstring>(accept(), wstr()).
   {
-    return std::pair<size_t,std::wstring>(accept(), wtext());
+    return std::pair<size_t,std::wstring>(accept(), wstr());
   }
-  /// Returns the position of the first character starting the match in the input character sequence.
+  /// Returns the position of the first character of the match in the input character sequence, a constant-time operation.
   size_t first() const
     /// @returns position in the input character sequence.
   {
     return num_ + txt_ - buf_;
   }
-  /// Returns the position of the last character + 1 after of the match in the input character sequence.
+  /// Returns the position of the last character + 1 of the match in the input character sequence, a constant-time operation.
   size_t last() const
     /// @returns position in the input character sequence.
   {
@@ -497,10 +519,10 @@ class AbstractMatcher {
   int input()
     /// @returns the character read (unsigned char 0..255) read or EOF (-1).
   {
-    DBGLOG("AbstractMatcher::input() pos = %zu end = %zu chr = %c", pos_, end_, chr_);
+    DBGLOG("AbstractMatcher::input() pos = %zu end = %zu", pos_, end_);
     if (pos_ < end_)
     {
-      if (chr_ != Const::UNK)
+      if (chr_ != '\0' && buf_ + pos_ == txt_ + len_)
         got_ = chr_;
       else
         got_ = static_cast<unsigned char>(buf_[pos_]);
@@ -514,8 +536,6 @@ class AbstractMatcher {
       got_ = get();
 #endif
     }
-    if (pos_ < end_)
-      chr_ = static_cast<unsigned char>(buf_[pos_]);
     cur_ = pos_;
     return got_;
   }
@@ -523,7 +543,7 @@ class AbstractMatcher {
   int winput()
     /// @returns the wide character read or EOF (-1).
   {
-    DBGLOG("AbstractMatcher::winput() pos = %zu end = %zu chr = %c", pos_, end_, chr_);
+    DBGLOG("AbstractMatcher::winput()");
     char tmp[6], *s = tmp;
     int c;
     if ((c = input()) == EOF)
@@ -532,7 +552,7 @@ class AbstractMatcher {
     {
       while (((++*s = (pos_ < end_ ? buf_[pos_++] : get())) & 0xC0) == 0x80)
         continue;
-      got_ = chr_ = static_cast<unsigned char>(buf_[cur_ = --pos_]);
+      got_ = static_cast<unsigned char>(buf_[cur_ = --pos_]);
     }
     return utf8(tmp);
   }
@@ -540,8 +560,7 @@ class AbstractMatcher {
   void unput(char c) ///< 8-bit character to put back
   {
     DBGLOG("AbstractMatcher::unput()");
-    if (pos_ < end_)
-      buf_[pos_] = chr_;
+    reset_text();
     if (pos_ > 0)
     {
       --pos_;
@@ -555,19 +574,18 @@ class AbstractMatcher {
       std::memmove(buf_ + 1, buf_, end_);
       ++end_;
     }
-    chr_ = static_cast<unsigned char>(c);
+    buf_[pos_] = c;
     cur_ = pos_;
   }
   /// Fetch the rest of the input as text, useful for searching/splitting up to n times after which the rest is needed.
   const char *rest()
-    /// @returns const char* string of the remaining input (wrapped when AbstractMatcher::wrap is defined).
+    /// @returns const char* string of the remaining input (wrapped with more input when AbstractMatcher::wrap is defined).
   {
     DBGLOG("AbstractMatcher::rest()");
-    if (pos_ < end_)
-      buf_[pos_] = chr_;
+    reset_text();
     if (pos_ > 0)
     {
-      DBGLOGN("Shift buffer to close gap of %lu", pos_);
+      DBGLOGN("Shift buffer to close gap of %zu bytes", pos_);
       txt_ = buf_ + pos_;
       update();
       end_ -= pos_;
@@ -590,11 +608,9 @@ class AbstractMatcher {
       }
     }
     cur_ = pos_ = 0;
-    chr_ = static_cast<unsigned char>(buf_[0]);
     len_ = end_;
-    buf_[len_] = '\0';
     DBGLOGN("rest() length = %zu", len_);
-    return txt_;
+    return text();
   }
   /// Append the next match to the currently matched text returned by AbstractMatcher::text, when the next match found is adjacent to the current match.
   void more()
@@ -607,11 +623,9 @@ class AbstractMatcher {
     if (n < len_)
     {
       DBGCHK(pos_ < max_);
-      buf_[pos_] = chr_;
+      reset_text();
       pos_ = txt_ - buf_ + n;
       DBGCHK(pos_ < max_);
-      chr_ = static_cast<unsigned char>(buf_[pos_]);
-      buf_[pos_] = '\0';
       len_ = n;
       cur_ = pos_;
     }
@@ -626,17 +640,17 @@ class AbstractMatcher {
   operator std::string() const
     /// @returns std::string with matched text.
   {
-    return std::string(text(), size());
+    return str();
   }
   /// Cast this matcher to a std::wstring of the text matched by this matcher.
   operator std::wstring() const
     /// @returns std::wstring converted to UCS from the NUL-terminated matched UTF-8 text.
   {
-    return wtext();
+    return wstr();
   }
-  /// Cast this matcher to a pair of size_t accept() and std::string text(), useful for tokenization into containers.
+  /// Cast the match to std::pair<size_t,std::wstring>(accept(), wstr()), useful for tokenization into containers.
   operator std::pair<size_t,std::string>() const
-    /// @returns a std::pair of size_t accept() and std::string text().
+    /// @returns std::pair<size_t,std::wstring>(accept(), wstr()).
   {
     return pair();
   }
@@ -645,14 +659,14 @@ class AbstractMatcher {
     /// @returns true if matched text is equal to rhs string.
     const
   {
-    return std::strcmp(rhs, text()) == 0;
+    return std::strncmp(rhs, txt_, len_) == 0 && rhs[len_] == '\0';
   }
   /// Returns true if matched text is equalt to a string, useful for std::algorithm.
   bool operator==(const std::string& rhs) ///< rhs string to compare to
     /// @returns true if matched text is equal to rhs string.
     const
   {
-    return rhs.compare(0, rhs.size(), text(), size()) == 0;
+    return rhs.size() == len_ && rhs.compare(0, std::string::npos, txt_, len_) == 0;
   }
   /// Returns true if capture index is equal to a given size_t value, useful for std::algorithm.
   bool operator==(size_t rhs) ///< capture index to compare accept() to
@@ -673,14 +687,14 @@ class AbstractMatcher {
     /// @returns true if matched text is not equal to rhs string.
     const
   {
-    return std::strcmp(rhs, text()) != 0;
+    return std::strncmp(rhs, txt_, len_) != 0 || rhs[len_] != '\0'; // if static checkers complain here, they are wrong
   }
   /// Returns true if matched text is not equal to a string, useful for std::algorithm.
   bool operator!=(const std::string& rhs) ///< rhs string to compare to
     /// @returns true if matched text is not equal to rhs string.
     const
   {
-    return rhs.compare(0, rhs.size(), text(), size()) != 0;
+    return rhs.size() > len_ || rhs.compare(0, std::string::npos, txt_, len_) != 0;
   }
   /// Returns true if capture index is not equal to a given size_t value, useful for std::algorithm.
   bool operator!=(size_t rhs) ///< capture index to compare accept() to
@@ -696,9 +710,9 @@ class AbstractMatcher {
   {
     return static_cast<int>(accept()) != rhs;
   }
-  /// Returns captured text.
+  /// Returns captured text as a std::pair<const char*,size_t> with string pointer (not NUL-terminated) and length.
   virtual std::pair<const char*,size_t> operator[](size_t n)
-    /// @returns std::pair of string pointer and its length in the captured text, where [0] returns std::pair(text(), size()).
+    /// @returns std::pair of string pointer and length in the captured text, where [0] returns std::pair(begin(), size()).
     const = 0;
   Operation scan;  ///< functor to scan input (to tokenize input)
   Operation find;  ///< functor to search input
@@ -741,7 +755,7 @@ class AbstractMatcher {
 #endif
     reset(opt);
   }
-  /// Returns more input (method can be overriden as by reflex::FlexLexer::get to invoke reflex::FlexLexer::LexerInput).
+  /// Returns more input (method can be overriden, as by reflex::FlexLexer::get(s, n) for example that invokes reflex::FlexLexer::LexerInput(s, n)).
   virtual size_t get(
       /// @returns the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF.
       char  *s, ///< points to the string buffer to fill with input
@@ -768,7 +782,7 @@ class AbstractMatcher {
     size_t gap = txt_ - buf_;
     if (gap >= need)
     {
-      DBGLOGN("Shift buffer to close gap of %lu", gap);
+      DBGLOGN("Shift buffer to close gap of %zu bytes", gap);
       update();
       cur_ -= gap;
       ind_ -= gap;
@@ -785,7 +799,7 @@ class AbstractMatcher {
         max_ *= 2;
       if (oldmax < max_)
       {
-        DBGLOGN("Expand buffer from %lu to %lu", oldmax, max_);
+        DBGLOGN("Expand buffer from %zu to %zu bytes", oldmax, max_);
         update();
         cur_ -= gap;
         ind_ -= gap;
@@ -859,19 +873,22 @@ class AbstractMatcher {
     }
 #endif
   }
-  /// Set the current position to advance to the next match.
+  /// Reset the matched text, this operation is needed to search for a new match.
+  void reset_text()
+  {
+    if (chr_ != '\0')
+    {
+      const_cast<char*>(txt_)[len_] = chr_;
+      chr_ = '\0';
+      txt_ = NULL;
+    }
+  }
+  /// Set the current position in the buffer for the next match.
   void set_current(size_t loc) ///< new location in buffer
   {
     DBGCHK(loc <= end_);
     pos_ = cur_ = loc;
-    if (cur_ > 0)
-      got_ = static_cast<unsigned char>(buf_[loc - 1]);
-    else
-      got_ = Const::UNK;
-    if (loc < end_)
-      chr_ = static_cast<unsigned char>(buf_[loc]);
-    else
-      chr_ = peek();
+    got_ = loc > 0 ? static_cast<unsigned char>(buf_[loc - 1]) : Const::UNK;
   }
   Option         opt_; ///< options for matcher engines
   char          *buf_; ///< input character sequence buffer
@@ -885,7 +902,7 @@ class AbstractMatcher {
   size_t         ind_; ///< current indent position
   size_t         blk_; ///< block size for block-based input reading, as set by AbstractMatcher::buffer
   int            got_; ///< last unsigned character we looked at (to determine anchors and boundaries)
-  int            chr_; ///< the character located at AbstractMatcher::buf_[AbstractMatcher::pos_]
+  int            chr_; ///< the character located at AbstractMatcher::txt_[AbstractMatcher::len_]
   size_t         lno_; ///< line number count (prior to this buffered input)
   size_t         cno_; ///< column number count (prior to this buffered input)
   size_t         num_; ///< character count (number of characters flushed prior to this buffered input)
@@ -906,7 +923,7 @@ class AbstractMatcher {
       end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_++]);
-      DBGLOGN("get(): EOF");
+      DBGLOGN("get_more(): EOF");
       if (!wrap())
       {
         eof_ = true;
@@ -927,7 +944,7 @@ class AbstractMatcher {
       end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_]);
-      DBGLOGN("peek(): EOF");
+      DBGLOGN("peek_more(): EOF");
       if (!wrap())
       {
         eof_ = true;
@@ -1122,7 +1139,7 @@ class PatternMatcher : public AbstractMatcher {
 /// Write matched text to a stream.
 inline std::ostream& operator<<(std::ostream& os, const reflex::AbstractMatcher& matcher)
 {
-  os << matcher.text();
+  os.write(matcher.begin(), matcher.size());
   return os;
 }
 

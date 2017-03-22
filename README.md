@@ -316,6 +316,7 @@ Changelog
 - Mar  4, 2017: 0.9.13 improved warning and error messages
 - Mar  6, 2017: 0.9.14 reflex option -v shows stats with execution timings, bug fixes
 - Mar  8, 2017: 0.9.15 added `wtext()`, `wpair()`, `winput()` methods, other improvements
+- Mar 22, 2017: 0.9.16 bug fixes, speed improvements, improved option `--unicode` regex conversion, also with `(?u:)`, changed `wtext()` to `wstr()` and added a `str()` method
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

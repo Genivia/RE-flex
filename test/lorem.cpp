@@ -31,9 +31,15 @@ void banner(const char *title)
 void timer(const char *text = NULL)
 {
   static timer_type t;
-  float ms = timer_elapsed(t);
   if (text)
-    printf("%s %g ms\n", text, ms);
+  {
+    float ms = timer_elapsed(t);
+    printf("%s %g micro seconds\n", text, 1000*ms/RUNS);
+  }
+  else
+  {
+    timer_start(t);
+  }
 }
 
 // http://www.lipsum.com

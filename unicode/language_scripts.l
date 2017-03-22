@@ -72,8 +72,6 @@ int main()
 {
   Lexer().lex();
 
-  Chars unicode(0x00, 0x10ffff);
-
   (     p["C"] = p["Cc"]) |= p["Cf"]; // |= p["Cn"]; omitted: do not include unassigned Cn
   ((    p["L"] = p["L&"]) |= p["Lm"]) |= p["Lo"];
   ((    p["M"] = p["Mn"]) |= p["Mc"]) |= p["Me"];
@@ -82,19 +80,19 @@ int main()
   (((   p["S"] = p["Sm"]) |= p["Sc"]) |= p["Sk"]) |= p["So"];
   ((    p["Z"] = p["Zs"]) |= p["Zl"]) |= p["Zp"];
 
-  // Add ASCII/Unicode character ranges
-  p["Unicode"]           = unicode;
-  p["ASCII"]             = Chars(0x00, 0x7f);
-  p["Non_ASCII_Unicode"] = Chars(0x80, 0x10ffff);
+  // Add ASCII and Unicode character range U+00 to U+10FFFF minus the UTF-16 surrogate halves
+   p["ASCII"]             = Chars(0x00, 0x7F);
+  (p["Unicode"]           = Chars(0x00, 0x10FFFF)) -= Chars(0xD800, 0xDFFF);
+  (p["Non_ASCII_Unicode"] = p["Unicode"])          -= p["ASCII"];
 
   // Add Unicode Space, includes blank characters HT (9), LF (10), VT (11), FF (12), CR (13)
-  (p["Space"] = p["Zs"]) |= Chars(0x09, 0x0d);
+  (p["Space"] = p["Zs"]) |= Chars(0x09, 0x0D);
 
   // Add Unicode Word
   ((p["Word"]  = p["L"]) |= p["Nd"]) |= p["Pc"];
 
   // Add Unicode identifier properties
-  (((    p["IdentifierIgnorable"]    = Chars(0x00, 0x08)) |= Chars(0x0e, 0x1b)) |= Chars(0x7f)) |= Chars(0x80, 0x9f);
+  (((    p["IdentifierIgnorable"]    = Chars(0x00, 0x08)) |= Chars(0x0E, 0x1B)) |= Chars(0x7F)) |= Chars(0x80, 0x9F);
   (      p["UnicodeIdentifierStart"] = p["L"]) |= p["Nl"];
   (((((((p["UnicodeIdentifierPart"]  = p["L"]) |= p["Nl"]) |= p["Pc"]) |= p["Mn"]) |= p["Mc"]) |= p["Nd"]) |= p["Cf"]) |= p["IdentifierIgnorable"];
 
@@ -107,8 +105,8 @@ int main()
   ((((((p["CsIdentifierPart"]  = p["L"]) |= p["Nl"]) |= p["Pc"]) |= p["Mn"]) |= p["Mc"]) |= p["Nd"]) |= p["Cf"];
 
   // Add Python 3.x identifier properties, includes Other_ID_Start and Other_ID_Continue
-  (((((    p["PythonIdentifierStart"] = p["L"]) |= p["Nl"]) |= Chars(0x1885, 0x1886)) |= Chars(0x2118)) |= Chars(0x212e)) |= Chars(0x309b, 0x309c);
-  (((((((((p["PythonIdentifierPart"]  = p["L"]) |= p["Nl"]) |= p["Pc"]) |= p["Mn"]) |= p["Mc"]) |= p["Nd"]) |= Chars(0xb7)) |= Chars(0x0387)) |= Chars(0x1369, 0x1371)) |= Chars(0x19da);
+  (((((    p["PythonIdentifierStart"] = p["L"]) |= p["Nl"]) |= Chars(0x1885, 0x1886)) |= Chars(0x2118)) |= Chars(0x212E)) |= Chars(0x309B, 0x309C);
+  (((((((((p["PythonIdentifierPart"]  = p["L"]) |= p["Nl"]) |= p["Pc"]) |= p["Mn"]) |= p["Mc"]) |= p["Nd"]) |= Chars(0xB7)) |= Chars(0x0387)) |= Chars(0x1369, 0x1371)) |= Chars(0x19DA);
 
   std::cout <<
     "// Converted from http://www.unicode.org/Public/UCD/latest/ucd/Scripts.txt by language_scripts.l\n"

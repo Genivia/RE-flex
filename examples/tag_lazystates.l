@@ -1,8 +1,11 @@
-// A simple lexer to print out all XML/HTML/XHTML tags in a file.
+// A lexer to print out all XML tags in a file.
 // Uses lazy quantifiers for compact expressions.
+// Does not check UTF-8 encoding validity.
 
   #include <stdio.h>
   int level = 0;
+
+%o dotall main
 
 name                    [A-Za-z_:\x80-\xFF][-.0-9A-Za-z_:\x80-\xFF]*
 pi                      <\?{name}
@@ -12,7 +15,6 @@ close                   <\/{name}>
 cdata                   <!\[CDATA\[.*?]]>
 string                  \".*?\"|'.*?'
 
-%o dotall main
 %x ATTRIBUTES
 
 %%

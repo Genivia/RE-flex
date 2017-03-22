@@ -1,5 +1,5 @@
 // Java tokenizer, standardized to meet Java lexical structure requirements
-// Reads UTF-8 files (with or without UTF-8 BOM) and UTF16 files (with UTF-16 BOM)
+// Reads UTF-8 files (with or without UTF-8 BOM) and UTF-16/32 files (with UTF-16/32 BOM)
 // Converts Unicode Escapes \uxxxx first, prior to lexical analysis
 
 %{
@@ -10,7 +10,7 @@ static bool is_keyword(const char *);
 
 %i "jdefs.l"
 %o dotall unicode
-%o fast
+%o full
 
 %%
 
@@ -30,7 +30,7 @@ static bool is_keyword(const char *);
 {EndOfLineComment}
 {WhiteSpace}
 {Sub}
-. printf("** ERROR ** '%s' at line %zu\n", text(), lineno());
+.                      printf("** ERROR ** '%s' at line %zu\n", text(), lineno());
 
 %%
 
@@ -95,6 +95,10 @@ static bool is_keyword(const char *text)
   return keywordset.find(text) != end;
 }
 
+// Read the file and convert \uxxxx (including UTF-16 surrogate pairs) to UTF-8.
+// This is a simple way to do it, by reading the entire input into a buffer.
+// Another way to do this more elegantly is to override the
+// reflex::Matcher::input(s, n) method that passes text to the matcher engine.
 static size_t convert_unicode_escapes(char *buf, size_t len)
 {
   char *t = buf;
@@ -102,10 +106,31 @@ static size_t convert_unicode_escapes(char *buf, size_t len)
   {
     if (s[0] == '\\' && len >= 2)
     {
-      if (s[1] == 'u' && len >= 6 )
+      if (s[1] == 'u')
       {
         unsigned int c;
-        sscanf(s + 2, "%4x", &c);
+        if (len < 6 || sscanf(s + 2, "%4x", &c) == 0)
+        {
+          printf("Error in \\uxxxx format\n");
+          exit(EXIT_FAILURE);
+        }
+        if (c >= 0xD800 && c < 0xE000)
+        {
+          s += 6;
+          unsigned int d;
+          if (len < 6 ||
+              s[0] != '\\' ||
+              s[1] != 'u' ||
+              c > 0xDBFF ||
+              sscanf(s + 2, "%4x", &d) == 0 ||
+              (d & 0xFC00) != 0xDC00)
+          {
+            printf("Error in \\uxxxx surrogates\n");
+            exit(EXIT_FAILURE);
+          }
+          c = 0x010000 - 0xDC00 + ((c - 0xD800) << 10) + d;
+          len -= 6;
+        }
         t += reflex::utf8(c, t);
         s += 6;
         len -= 6;

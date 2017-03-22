@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Mar 8 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Mar 22 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -180,14 +180,17 @@ Functions</h2></td></tr>
 <tr class="memitem:adf44e022201a15a81b11e2c13892176a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#adf44e022201a15a81b11e2c13892176a">timer_elapsed</a> (<a class="el" href="namespacereflex.html#a87040a2fe4499e9b735f2564a50c58b9">timer_type</a> &amp;t)</td></tr>
 <tr class="memdesc:adf44e022201a15a81b11e2c13892176a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return elapsed time in milliseconds (ms) with microsecond precision since the last call up to 1 minute (wraps if elapsed time exceeds 1 minute!)  <a href="#adf44e022201a15a81b11e2c13892176a">More...</a><br /></td></tr>
 <tr class="separator:adf44e022201a15a81b11e2c13892176a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cc2e91b0f3e1b8bb2611304c8c0e6ee"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a5cc2e91b0f3e1b8bb2611304c8c0e6ee">latin1</a> (int a, int b, int esc= 'x', bool brackets=true)</td></tr>
+<tr class="memdesc:a5cc2e91b0f3e1b8bb2611304c8c0e6ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert an 8-bit ASCII + Latin-1 Supplement range [a,b] to a regex pattern.  <a href="#a5cc2e91b0f3e1b8bb2611304c8c0e6ee">More...</a><br /></td></tr>
+<tr class="separator:a5cc2e91b0f3e1b8bb2611304c8c0e6ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bef462a65804089ae20c74dede75782"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a7bef462a65804089ae20c74dede75782">utf8</a> (int a, int b, int esc= 'x', const char *par=&quot;(&quot;, bool strict=true)</td></tr>
 <tr class="memdesc:a7bef462a65804089ae20c74dede75782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS-4 range [a,b] to a UTF-8 regex pattern.  <a href="#a7bef462a65804089ae20c74dede75782">More...</a><br /></td></tr>
 <tr class="separator:a7bef462a65804089ae20c74dede75782"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a225d16c59f5f54f400412ed6cd4f340a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a225d16c59f5f54f400412ed6cd4f340a">utf8</a> (int c, char *s)</td></tr>
-<tr class="memdesc:a225d16c59f5f54f400412ed6cd4f340a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UCS-4 to UTF-8, unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED.  <a href="#a225d16c59f5f54f400412ed6cd4f340a">More...</a><br /></td></tr>
+<tr class="memdesc:a225d16c59f5f54f400412ed6cd4f340a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UCS-4 to UTF-8, fills with REFLEX_NONCHAR_UTF8 when out of range, or unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED.  <a href="#a225d16c59f5f54f400412ed6cd4f340a">More...</a><br /></td></tr>
 <tr class="separator:a225d16c59f5f54f400412ed6cd4f340a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fe93907a6b71a3e0b7688bec72638e4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a2fe93907a6b71a3e0b7688bec72638e4">utf8</a> (const char *s, const char **r=NULL)</td></tr>
-<tr class="memdesc:a2fe93907a6b71a3e0b7688bec72638e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS, returns 0xFFFD for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove this limit to support lossless UTF-8 encoding up to 6 bytes).  <a href="#a2fe93907a6b71a3e0b7688bec72638e4">More...</a><br /></td></tr>
+<tr class="memdesc:a2fe93907a6b71a3e0b7688bec72638e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS, returns REFLEX_NONCHAR for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove any limits on UTF-8 encodings up to 6 bytes).  <a href="#a2fe93907a6b71a3e0b7688bec72638e4">More...</a><br /></td></tr>
 <tr class="separator:a2fe93907a6b71a3e0b7688bec72638e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
@@ -275,8 +278,8 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the converted regex string given a regex library signature and conversion flags, throws <a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">regex_error</a>. </p>
-<p>A regex library signature is a string of the form <code>"[decls:]escapes[?+]"</code>.</p>
-<p>The optional <code>"decls:"</code> characters specify which modifiers and other special <code>(?...)</code> constructs are supported:</p><ul>
+<p>A regex library signature is a string of the form <code>"decls:escapes?+."</code>.</p>
+<p>The optional <code>"decls:"</code> part specifies which modifiers and other special <code>(?...)</code> constructs are supported:</p><ul>
 <li>non-capturing group <code>(?:...)</code> is supported</li>
 <li>one or all of "imsx" specify which (?ismx:...) modifiers are supported</li>
 <li><code>#</code> specifies that <code>(?#...)</code> comments are supported</li>
@@ -324,10 +327,11 @@ Functions</h2></td></tr>
 <li><code>W</code> for <code>\W</code> ASCII non-word-like character <code>[^0-9A-Z_a-z]</code></li>
 <li><code>Z</code> for <code>\Z</code> end of input anchor, before the final line break</li>
 </ul>
-<p>The optional <code>"?+"</code> characters specify lazy and possessive support:</p><ul>
+<p>The optional <code>"?+"</code> specify lazy and possessive support:</p><ul>
 <li><code>?</code> lazy quantifiers for repeats are supported</li>
-<li><code>+</code> possessive quantifiers for repeats are supported </li>
+<li><code>+</code> possessive quantifiers for repeats are supported</li>
 </ul>
+<p>The optional <code>"."</code> (dot) specifies that dot matches any character except newline. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pattern</td><td>regex string pattern to convert </td></tr>
@@ -520,6 +524,56 @@ template&lt;typename S1 , typename S2 &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">c</td><td>Character to check </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a5cc2e91b0f3e1b8bb2611304c8c0e6ee"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string reflex::latin1 </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>esc</em> = <code>'x'</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>brackets</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert an 8-bit ASCII + Latin-1 Supplement range [a,b] to a regex pattern. </p>
+<dl class="section return"><dt>Returns</dt><dd>regex string to match the UCS range encoded in UTF-8. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>lower bound of UCS range </td></tr>
+    <tr><td class="paramname">b</td><td>upper bound of UCS range </td></tr>
+    <tr><td class="paramname">esc</td><td>escape char 'x' for hex , or '0' or '\0' for octal \0nnn and  </td></tr>
+    <tr><td class="paramname">brackets</td><td>place in [ brackets ] </td></tr>
   </table>
   </dd>
 </dl>
@@ -747,12 +801,12 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Convert UCS-4 to UTF-8, unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED. </p>
+<p>Convert UCS-4 to UTF-8, fills with REFLEX_NONCHAR_UTF8 when out of range, or unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED. </p>
 <dl class="section return"><dt>Returns</dt><dd>length (in bytes) of UTF-8 character sequence stored in s. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">c</td><td>UCS-4 character U+0000 to U+10ffff (unless WITH_UTF8_UNRESTRICTED) </td></tr>
-    <tr><td class="paramname">s</td><td>points to the buffer to populate with UTF-8 (1 to 6 bytes) not \0-terminated </td></tr>
+    <tr><td class="paramname">s</td><td>points to the buffer to populate with UTF-8 (1 to 6 bytes) not NUL-terminated </td></tr>
   </table>
   </dd>
 </dl>
@@ -791,7 +845,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Convert UTF-8 to UCS, returns 0xFFFD for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove this limit to support lossless UTF-8 encoding up to 6 bytes). </p>
+<p>Convert UTF-8 to UCS, returns REFLEX_NONCHAR for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove any limits on UTF-8 encodings up to 6 bytes). </p>
 <dl class="section return"><dt>Returns</dt><dd>UCS character. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -806,7 +860,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Mar 8 2017 13:11:43 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Mar 22 2017 19:12:30 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
