@@ -61,6 +61,7 @@ void Input::file_init(void)
 #endif
     size_ = static_cast<size_t>(st.st_size);
 #endif
+  // assume plain (ASCII or UTF-8 without BOM) content by default
   utfx_ = file_encoding::plain;
   // if file size could be determined, then check for a UTF BOM in the file
   if (size_ > 3)
@@ -109,9 +110,14 @@ void Input::file_init(void)
       ::fread(utf8_ + 2, 1, 1, file_);
       utf8_[3] = '\0';
       if (utf8_[2] == '\xBF')
+      {
+        utfx_ = file_encoding::utf8;
         size_ -= 3;
+      }
       else
+      {
         uidx_ = 0;
+      }
     }
     else
     {
@@ -133,15 +139,119 @@ size_t Input::file_get(char *s, size_t n)
       return k;
     uidx_ = sizeof(utf8_);
   }
-  if (utfx_ != file_encoding::plain)
+  unsigned char buf[4];
+  switch (utfx_)
   {
-    if (utfx_ == file_encoding::utf16be)
-    {
-      unsigned char c2[2];
-      size_t k = n;
-      while (k > 0 && ::fread(c2, 2, 1, file_) == 1)
+    case file_encoding::latin:
+      k = n;
+      while (k > 0 && ::fread(s, 1, 1, file_) == 1)
       {
-        wchar_t c = static_cast<unsigned int>(c2[0] << 8 | c2[1]);
+	int c = static_cast<unsigned char>(*s);
+	if (c < 0x80)
+        {
+          s++;
+          --k;
+        }
+        else
+        {
+          utf8(c, utf8_);
+          if (k < 2)
+          {
+            *s++ = utf8_[0];
+            utf8_[2] = '\0';
+            uidx_ = 1;
+            k = 0;
+          }
+          else
+          {
+            *s++ = utf8_[0];
+            *s++ = utf8_[1];
+            k -= 2;
+          }
+        }
+      }
+      return n - k;
+    case file_encoding::utf16be:
+      k = n;
+      while (k > 0 && ::fread(buf, 2, 1, file_) == 1)
+      {
+        int c = buf[0] << 8 | buf[1];
+        if (c < 0x80)
+        {
+          *s++ = static_cast<char>(c);
+          --k;
+        }
+        else
+	{
+	  if (c >= 0xD800 && c < 0xE000)
+	  {
+	    // UTF-16 surrogate pair
+	    if (c < 0xDC00 && ::fread(buf + 2, 2, 1, file_) == 1 && (buf[2] & 0xFC) == 0xDC)
+	      c = 0x010000 - 0xDC00 + ((c - 0xD800) << 10) + (buf[2] << 8 | buf[3]);
+	    else
+	      c = REFLEX_NONCHAR;
+	  }
+          size_t l = utf8(c, utf8_);
+          if (k < l)
+          {
+            std::memcpy(s, utf8_, k);
+            utf8_[l] = '\0';
+            uidx_ = static_cast<unsigned short>(k);
+            s += k;
+            k = 0;
+          }
+          else
+          {
+            std::memcpy(s, utf8_, l);
+            s += l;
+            k -= l;
+          }
+        }
+      }
+      return n - k;
+    case file_encoding::utf16le:
+      k = n;
+      while (k > 0 && ::fread(buf, 2, 1, file_) == 1)
+      {
+        int c = buf[0] | buf[1] << 8;
+        if (c < 0x80)
+        {
+          *s++ = static_cast<char>(c);
+          --k;
+        }
+        else
+        {
+	  if (c >= 0xD800 && c < 0xE000)
+	  {
+	    // UTF-16 surrogate pair
+	    if (c < 0xDC00 && ::fread(buf + 2, 2, 1, file_) == 1 && (buf[3] & 0xFC) == 0xDC)
+	      c = 0x010000 - 0xDC00 + ((c - 0xD800) << 10) + (buf[2] | buf[3] << 8);
+	    else
+	      c = REFLEX_NONCHAR;
+	  }
+          size_t l = utf8(c, utf8_);
+          if (k < l)
+          {
+            std::memcpy(s, utf8_, k);
+            utf8_[l] = '\0';
+            uidx_ = static_cast<unsigned short>(k);
+            s += k;
+            k = 0;
+          }
+          else
+          {
+            std::memcpy(s, utf8_, l);
+            s += l;
+            k -= l;
+          }
+        }
+      }
+      return n - k;
+    case file_encoding::utf32be:
+      k = n;
+      while (k > 0 && ::fread(buf, 4, 1, file_) == 1)
+      {
+        int c = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3];
         if (c < 0x80)
         {
           *s++ = static_cast<char>(c);
@@ -167,14 +277,11 @@ size_t Input::file_get(char *s, size_t n)
         }
       }
       return n - k;
-    }
-    if (utfx_ == file_encoding::utf16le)
-    {
-      unsigned char c2[2];
-      size_t k = n;
-      while (k > 0 && ::fread(c2, 2, 1, file_) == 1)
+    case file_encoding::utf32le:
+      k = n;
+      while (k > 0 && ::fread(buf, 4, 1, file_) == 1)
       {
-        wchar_t c = static_cast<unsigned int>(c2[0] | c2[1] << 8);
+        int c = buf[0] | buf[1] << 8 | buf[2] << 16 | buf[3] << 24;
         if (c < 0x80)
         {
           *s++ = static_cast<char>(c);
@@ -200,81 +307,15 @@ size_t Input::file_get(char *s, size_t n)
         }
       }
       return n - k;
-    }
-    if (utfx_ == file_encoding::utf32be)
-    {
-      unsigned char c4[4];
-      size_t k = n;
-      while (k > 0 && ::fread(c4, 4, 1, file_) == 1)
+    default:
+      if (n == 1)
       {
-        wchar_t c = static_cast<unsigned int>(c4[0] << 24 | c4[1] << 16 | c4[2] << 8 | c4[3]);
-        if (c < 0x80)
-        {
-          *s++ = static_cast<char>(c);
-          --k;
-        }
-        else
-        {
-          size_t l = utf8(c, utf8_);
-          if (k < l)
-          {
-            std::memcpy(s, utf8_, k);
-            utf8_[l] = '\0';
-            uidx_ = static_cast<unsigned short>(k);
-            s += k;
-            k = 0;
-          }
-          else
-          {
-            std::memcpy(s, utf8_, l);
-            s += l;
-            k -= l;
-          }
-        }
+	int c = ::fgetc(file_);
+	*s = c;
+	return k + (c != EOF);
       }
-      return n - k;
-    }
-    if (utfx_ == file_encoding::utf32le)
-    {
-      unsigned char c4[4];
-      size_t k = n;
-      while (k > 0 && ::fread(c4, 4, 1, file_) == 1)
-      {
-        wchar_t c = static_cast<unsigned int>(c4[0] | c4[1] << 8 | c4[2] << 16 | c4[3] << 24);
-        if (c < 0x80)
-        {
-          *s++ = static_cast<char>(c);
-          --k;
-        }
-        else
-        {
-          size_t l = utf8(c, utf8_);
-          if (k < l)
-          {
-            std::memcpy(s, utf8_, k);
-            utf8_[l] = '\0';
-            uidx_ = static_cast<unsigned short>(k);
-            s += k;
-            k = 0;
-          }
-          else
-          {
-            std::memcpy(s, utf8_, l);
-            s += l;
-            k -= l;
-          }
-        }
-      }
-      return n - k;
-    }
+      return k + ::fread(s, 1, n, file_);
   }
-  if (n == 1)
-  {
-    int c = ::fgetc(file_);
-    *s = c;
-    return k + (c != EOF);
-  }
-  return k + ::fread(s, 1, n, file_);
 }
 
 void Input::file_size(void)
@@ -284,6 +325,7 @@ void Input::file_size(void)
     off_t k = ftello(file_);
     if (k >= 0)
     {
+      unsigned char buf[4];
       if (utfx_ == file_encoding::plain)
       {
         fseeko(file_, k, SEEK_END);
@@ -293,10 +335,9 @@ void Input::file_size(void)
       }
       else if (utfx_ == file_encoding::utf16be)
       {
-        unsigned char c2[2];
-        while (::fread(c2, 2, 1, file_) == 1)
+        while (::fread(buf, 2, 1, file_) == 1)
         {
-          wchar_t c = static_cast<unsigned>(c2[0] << 8 | c2[1]);
+          wchar_t c = static_cast<unsigned>(buf[0] << 8 | buf[1]);
 #ifndef WITH_UTF8_UNRESTRICTED
           size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
 #else
@@ -306,10 +347,9 @@ void Input::file_size(void)
       }
       else if (utfx_ == file_encoding::utf32le)
       {
-        unsigned char c2[2];
-        while (::fread(c2, 2, 1, file_) == 1)
+        while (::fread(buf, 2, 1, file_) == 1)
         {
-          wchar_t c = static_cast<unsigned>(c2[0] | c2[1] << 8);
+          wchar_t c = static_cast<unsigned>(buf[0] | buf[1] << 8);
 #ifndef WITH_UTF8_UNRESTRICTED
           size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
 #else
@@ -319,10 +359,9 @@ void Input::file_size(void)
       }
       else if (utfx_ == file_encoding::utf32be)
       {
-        unsigned char c4[4];
-        while (::fread(c4, 4, 1, file_) == 1)
+        while (::fread(buf, 4, 1, file_) == 1)
         {
-          wchar_t c = static_cast<unsigned>(c4[0] << 24 | c4[1] << 16 | c4[2] << 8 | c4[3]);
+          wchar_t c = static_cast<unsigned>(buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3]);
 #ifndef WITH_UTF8_UNRESTRICTED
           size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
 #else
@@ -332,10 +371,9 @@ void Input::file_size(void)
       }
       else if (utfx_ == file_encoding::utf32le)
       {
-        unsigned char c4[4];
-        while (::fread(c4, 4, 1, file_) == 1)
+        while (::fread(buf, 4, 1, file_) == 1)
         {
-          wchar_t c = static_cast<unsigned>(c4[0] | c4[1] << 8 | c4[2] << 16 | c4[3] << 24);
+          wchar_t c = static_cast<unsigned>(buf[0] | buf[1] << 8 | buf[2] << 16 | buf[3] << 24);
 #ifndef WITH_UTF8_UNRESTRICTED
           size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
 #else

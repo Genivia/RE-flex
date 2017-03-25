@@ -1526,7 +1526,7 @@ void Reflex::write()
         *out << "YY_EXTERN_C int yylex(yyscan_t);\n";
       *out << "YY_EXTERN_C void yylex_init(yyscan_t*);\n";
       if (!options["flex"].empty())
-        *out << "YY_EXTERN_C void yylex_init_extra(YY_EXTRA_TYPE, yyscan_t*);\n";
+        *out << "YY_EXTERN_C void yylex_init_extra(" << (options["extra_type"].empty() ? "YY_EXTRA_TYPE" : options["extra_type"].c_str()) << ", yyscan_t*);\n";
       *out << "YY_EXTERN_C void yylex_destroy(yyscan_t);\n";
     }
     else if (!options["bison_locations"].empty())
@@ -1917,7 +1917,7 @@ void Reflex::write_lexer()
       "}\n\n";
     if (!options["flex"].empty())
       *out <<
-        "YY_EXTERN_C void yylex_init_extra(YY_EXTRA_TYPE extra, yyscan_t *scanner)\n"
+        "YY_EXTERN_C void yylex_init_extra(" << (options["extra_type"].empty() ? "YY_EXTRA_TYPE" : options["extra_type"].c_str()) << " extra, yyscan_t *scanner)\n"
         "{\n"
         "  *scanner = static_cast<yyscan_t>(new yyscanner_t);\n"
         "  yyset_extra(extra, *scanner);\n"
@@ -2110,16 +2110,24 @@ void Reflex::write_lexer()
       if (rule->regex == "<<EOF>>")
       {
         if (!options["debug"].empty())
-          *out <<
-            "              if (debug()) std::cerr << \"--EOF rule at line " << rule->code.lineno << " (start condition \" << start() << \")\\n\";\n";
+          *out
+            << "              if (debug()) std::cerr << \"--"
+            << SGR("\\033[1;35m")
+            << "EOF rule at line " << rule->code.lineno
+            << SGR("\\033[0m")
+            << " (start condition \" << start() << \")\\n\";\n";
         write_code(rule->code);
         has_eof = true;
         break;
       }
     }
     if (!has_eof && !options["debug"].empty())
-      *out <<
-        "              if (debug()) std::cerr << \"--EOF (start condition \" << start() << \")\\n\";\n";
+      *out
+        << "              if (debug()) std::cerr << \"--"
+        << SGR("\\033[1;35m")
+        << "EOF"
+        << SGR("\\033[0m")
+        << " (start condition \" << start() << \")\\n\";\n";
     if (!has_eof)
       *out <<
         "              return 0;\n";
@@ -2128,8 +2136,12 @@ void Reflex::write_lexer()
       "            else\n"
       "            {\n";
     if (!options["debug"].empty())
-      *out <<
-        "              if (debug()) std::cerr << \"--accepting default rule\\n\";\n";
+      *out
+        << "              if (debug()) std::cerr << \"--"
+        << SGR("\\033[1;31m")
+        << "accepting default rule"
+        << SGR("\\033[0m")
+        << "\\n\";\n";
     if (!options["nodefault"].empty())
     {
       if (!options["flex"].empty())
@@ -2137,8 +2149,12 @@ void Reflex::write_lexer()
           "              LexerError(\"scanner jammed\");\n"
           "              return 0;\n";
       else if (!options["debug"].empty())
-        *out <<
-          "              if (debug()) std::cerr << \"--suppressing (\\\"\" << (char)matcher().input() << \"\\\")\\n\";\n";
+        *out
+          << "              if (debug()) std::cerr << \"--"
+          << SGR("\\033[1;31m")
+          << "suppressing default rule"
+          << SGR("\\033[0m")
+          << " (\\\"\" << (char)matcher().input() << \"\\\")\\n\";\n";
       else
         *out <<
           "              matcher().input();\n";
@@ -2171,8 +2187,12 @@ void Reflex::write_lexer()
         if (rule->code.line != "|")
         {
           if (!options["debug"].empty())
-            *out <<
-              "            if (debug()) std::cerr << \"--accepting rule at line " << rule->code.lineno << " (\\\"\" << matcher().text() << \"\\\")\\n\";\n";
+            *out
+              << "            if (debug()) std::cerr << \"--"
+              << SGR("\\033[1;35m")
+              << "accepting rule at line " << rule->code.lineno
+              << SGR("\\033[0m")
+              << " (\\\"\" << matcher().text() << \"\\\")\\n\";\n";
           if (!options["flex"].empty())
             *out <<
               "            YY_USER_ACTION\n";

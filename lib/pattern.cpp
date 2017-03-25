@@ -410,13 +410,13 @@ void Pattern::parse2(
       if (at(loc) == '^')
       {
         a_pos.insert(Position(loc++));
-        begin = false; // FIXME algorithmic options: 7/29 but does not allow ^ as a pattern
+        begin = false; // CHECKED algorithmic options: 7/29 but does not allow ^ as a pattern
       }
       else if (escapes_at(loc, "ABb<>"))
       {
         a_pos.insert(Position(loc));
         loc += 2;
-        begin = false; // FIXME algorithmic options: 7/29 but does not allow \b as a pattern
+        begin = false; // CHECKED algorithmic options: 7/29 but does not allow \b as a pattern
       }
       else
       {
@@ -461,14 +461,14 @@ void Pattern::parse2(
         iter1);
     if (c == '/' && l_pos != Position::NPOS)
       firstpos1.insert(l_pos);
-    if (!lazypos.empty()) // TODO this is an extra rule for + only and (may) not be needed for *
+    if (!lazypos.empty()) // CHECKED this is an extra rule for + only and (may) not be needed for *
     {
-      // FIXME algorithmic options: lazy(lazypos, firstpos1); does not work for (a|b)*?a*b+, below works
+      // CHECKED algorithmic options: lazy(lazypos, firstpos1); does not work for (a|b)*?a*b+, below works
       Positions firstpos2;
       lazy(lazypos, firstpos1, firstpos2);
       set_insert(firstpos1, firstpos2);
       // if (lazypos1.empty())
-        // greedy(firstpos1); // FIXME algorithmic options: 8/1 works except fails for ((a|b)*?b){2} and (a|b)??(a|b)??aa
+        // greedy(firstpos1); // CHECKED algorithmic options: 8/1 works except fails for ((a|b)*?b){2} and (a|b)??(a|b)??aa
     }
     if (nullable)
       set_insert(firstpos, firstpos1);
@@ -554,8 +554,8 @@ void Pattern::parse3(
     }
     else
     {
-      // FIXME algorithmic options: 7/30 if (!nullable)
-      // FIXME algorithmic options: 7/30   lazypos.clear();
+      // CHECKED algorithmic options: 7/30 if (!nullable)
+      // CHECKED algorithmic options: 7/30   lazypos.clear();
       greedy(firstpos);
     }
     if (c == '+' && !nullable && !lazypos.empty())
@@ -610,7 +610,7 @@ void Pattern::parse3(
         {
           lazy(lazypos, firstpos);
         }
-        /* FIXME algorithmic options: 8/1 else
+        /* CHECKED algorithmic options: 8/1 else
         {
           lazy(lazypos, firstpos, firstpos1);
           set_insert(firstpos, firstpos1);
@@ -620,14 +620,14 @@ void Pattern::parse3(
       }
       else
       {
-        // FIXME algorithmic options 7/30 if (!nullable)
-        // FIXME algorithmic options 7/30   lazypos.clear();
+        // CHECKED algorithmic options 7/30 if (!nullable)
+        // CHECKED algorithmic options 7/30   lazypos.clear();
         if (n < m && lazypos.empty())
           greedy(firstpos);
       }
-      // FIXME added pfirstpos to point to updated firstpos with lazy quants
+      // CHECKED added pfirstpos to point to updated firstpos with lazy quants
       Positions firstpos1, *pfirstpos = &firstpos;
-      if (!nullable && !lazypos.empty()) // FIXME algorithmic options 8/1 added to make ((a|b)*?b){2} work
+      if (!nullable && !lazypos.empty()) // CHECKED algorithmic options 8/1 added to make ((a|b)*?b){2} work
       {
         lazy(lazypos, firstpos, firstpos1);
         pfirstpos = &firstpos1;
@@ -1128,7 +1128,7 @@ void Pattern::lazy(
 {
   for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
     for (Positions::const_iterator q = lazypos.begin(); q != lazypos.end(); ++q)
-      // pos1.insert(p->lazy() ? *p : p->lazy(q->loc())); // FIXME algorithmic options: only if p is not already lazy??
+      // pos1.insert(p->lazy() ? *p : p->lazy(q->loc())); // CHECKED algorithmic options: only if p is not already lazy??
       pos1.insert(p->lazy(q->loc())); // overrides lazyness even when p is already lazy
 }
 
@@ -1136,7 +1136,7 @@ void Pattern::greedy(Positions& pos) const
 {
   Positions pos1;
   for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
-    // pos1.insert(p->lazy() ? *p : p->greedy(true)); // FIXME algorithmic options: 7/29 guard added: p->lazy() ? *p : p->greedy(true)
+    // pos1.insert(p->lazy() ? *p : p->greedy(true)); // CHECKED algorithmic options: 7/29 guard added: p->lazy() ? *p : p->greedy(true)
     pos1.insert(p->lazy(0).greedy(true));
   pos.swap(pos1);
 }
@@ -1147,12 +1147,12 @@ void Pattern::trim_lazy(Positions& pos) const
   while (p != pos.rend() && p->lazy())
   {
     Location l = p->lazy();
-    if (p->accept() || p->anchor()) // FIXME algorithmic options: 7/28 added p->anchor()
+    if (p->accept() || p->anchor()) // CHECKED algorithmic options: 7/28 added p->anchor()
     {
       pos.insert(p->lazy(0)); // make lazy accept/anchor a non-lazy accept/anchor
       pos.erase(--p.base());
       while (p != pos.rend() && p->lazy() == l)
-#if 0 // FIXME algorithmic options: set to 1 to turn lazy trimming off
+#if 0 // CHECKED algorithmic options: set to 1 to turn lazy trimming off
         ++p;
 #else
         pos.erase(--p.base());
@@ -1160,7 +1160,7 @@ void Pattern::trim_lazy(Positions& pos) const
     }
     else
     {
-#if 0 // FIXME algorithmic options: 7/31
+#if 0 // CHECKED algorithmic options: 7/31
       if (p->greedy())
       {
         pos.insert(p->lazy(0).greedy(false));
@@ -1178,7 +1178,7 @@ void Pattern::trim_lazy(Positions& pos) const
 #endif
     }
   }
-#if 0 // FIXME algorithmic options: 7/31 but results in more states
+#if 0 // CHECKED algorithmic options: 7/31 but results in more states
   while (p != pos.rend() && p->greedy())
   {
     pos.insert(p->greedy(false));
@@ -1224,7 +1224,7 @@ void Pattern::compile_transition(
           {
             if (!k->ticked())
               state->heads.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
-            else // FIXME algorithmic options: 7/18 if (state->accept == i->first) no longer check for accept state, assume we are at an accept state
+            else // CHECKED algorithmic options: 7/18 if (state->accept == i->first) no longer check for accept state, assume we are at an accept state
               state->tails.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
           }
           n = n + i->second.size();
@@ -1245,7 +1245,7 @@ void Pattern::compile_transition(
       }
       else if (c == ')' && !literal)
       {
-        /* FIXME algorithmic options: 7/18 do no longer check for accept state, assume we are at an accept state
+        /* CHECKED algorithmic options: 7/18 do no longer check for accept state, assume we are at an accept state
         if (state->accept > 0)
         */
         {
@@ -1255,7 +1255,7 @@ void Pattern::compile_transition(
           {
             Ranges::const_iterator j = i->second.find(loc);
             DBGLOGN("%d %d (%d) %lu", state->accept, i->first, j != i->second.end(), n.loc());
-            if (j != i->second.end() /* FIXME algorithmic options: 7/18 && state->accept == i->first */ ) // only add lookstop when part of the proper accept state
+            if (j != i->second.end() /* CHECKED algorithmic options: 7/18 && state->accept == i->first */ ) // only add lookstop when part of the proper accept state
               state->tails.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
             n = n + i->second.size();
           }
@@ -1268,7 +1268,7 @@ void Pattern::compile_transition(
         {
           if (k->lazy())
           {
-#if 1 // FIXME algorithmic options: 7/31 this optimization works fine when trim_lazy adds non-lazy greedy state, but may increase the total number of states:
+#if 1 // CHECKED algorithmic options: 7/31 this optimization works fine when trim_lazy adds non-lazy greedy state, but may increase the total number of states:
             if (k->greedy())
               continue;
 #endif
@@ -1278,7 +1278,7 @@ void Pattern::compile_transition(
               // followpos is not defined for lazy pos yet, so add lazy followpos (memoization)
               j = followpos.insert(std::pair<Position,Positions>(*k, Positions())).first;
               for (Positions::const_iterator p = i->second.begin(); p != i->second.end(); ++p)
-                j->second.insert(/* p->lazy() || FIXME algorithmic options: 7/31 */ p->ticked() ? *p : /* FIXME algorithmic options: 7/31 adds too many states p->greedy() ? p->lazy(0).greedy(false) : */ p->lazy(k->lazy())); // FIXME algorithmic options: 7/18 ticked() preserves lookahead tail at '/' and ')'
+                j->second.insert(/* p->lazy() || CHECKED algorithmic options: 7/31 */ p->ticked() ? *p : /* CHECKED algorithmic options: 7/31 adds too many states p->greedy() ? p->lazy(0).greedy(false) : */ p->lazy(k->lazy())); // CHECKED algorithmic options: 7/18 ticked() preserves lookahead tail at '/' and ')'
 #ifdef DEBUG
               DBGLOGN("lazy followpos(");
               DBGLOGPOS(*k);
@@ -1772,7 +1772,7 @@ void Pattern::encode_dfa(State& start) throw (regex_error)
           opcode[pc++] = opcode_goto(lo, lo, target_index);
         } while (++lo <= hi);
       }
-      // else TODO in the future: unicode wide char opcode??
+      // CHECKED could handle wide character opcodes for future extensions
     }
   }
 }

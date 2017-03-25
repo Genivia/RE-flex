@@ -11,8 +11,10 @@
 "//"                 yy_push_state( COMMENT, yyscanner);
 .|\n
 
-<COMMENT>\n          yy_pop_state( yyscanner );
-<COMMENT>[^\n]+      *yyout << yytext << std::endl;
+<COMMENT>{
+\n                   pop_state();
+([^\n]|\\\n)+        out() << text() << std::endl;
+}
 
 %%
 

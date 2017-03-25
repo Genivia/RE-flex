@@ -1246,6 +1246,8 @@ the classic Flex actions shown in the second column of this table:
   RE/flex action        | Flex action          | Result
   --------------------- | -------------------- | ------------------------------
   `text()`              | `YYText()`, `yytext` | `\0`-terminated text match
+  `str()`               | *n/a*                | `std::string` of `text()`
+  `wstr()`              | *n/a*                | `std::wstring` of `text()`
   `size()`              | `YYLeng()`, `yyleng` | size of the match in bytes
   `wsize()`             | *n/a*                | number of wide chars matched
   `lineno()`            | `yylineno`           | line number of match (>=1)
@@ -1308,10 +1310,12 @@ can be used as if these were variables.  To avoid compilation errors, use
 include in your code to use the global use Flex actions and variables.
 See \ref reflex-bison for more details on the `−−bison` options to use.
 
-From the first entries in the table shown above you may have guessed correctly
-that `text()` is just a shorthand for `matcher().text()`, since `matcher()` is
-the matcher object associated with the generated Lexer class.  The same
-shorthands apply to `size()`, `wsize()`, `lineno()` and `columno()`.
+From the first couple of entries in the table shown above you may have guessed
+correctly that `text()` is just a shorthand for `matcher().text()`, since
+`matcher()` is the matcher object associated with the generated Lexer class.
+The same shorthands apply to `str()`, `wstr()`, `size()`, `wsize()`, `lineno()`
+and `columno()`.  Use `text()` for fast access to the matched text.  The
+`str()` method returns a string copy of the match and is less efficient.
 
 Because `matcher()` returns the current matcher object, the following Flex-like
 actions are also supported:
@@ -4047,12 +4051,21 @@ The file encoding is obtained with the `file_encoding()` method of a
   Constant                                | File encoding
   --------------------------------------- | -----------------------------------
   `reflex::Input::file_encoding::plain`   | plain octets, ASCII/binary/UTF-8
-  `reflex::Input::file_encoding::utf16be` | UCS-2/UTF-16 big endian
-  `reflex::Input::file_encoding::utf16le` | UCS-2/UTF-16 little endian
-  `reflex::Input::file_encoding::utf32be` | UCS-4/UTF-32 big endian
-  `reflex::Input::file_encoding::utf32le` | UCS-4/UTF-32 little endian
+  `reflex::Input::file_encoding::latin`   | ASCII and Latin-1, ISO-8859-1
+  `reflex::Input::file_encoding::utf8`    | UTF-8 (BOM detected)
+  `reflex::Input::file_encoding::utf16be` | UTF-16 big endian (BOM detected)
+  `reflex::Input::file_encoding::utf16le` | UTF-16 little endian (BOM detected)
+  `reflex::Input::file_encoding::utf32be` | UTF-32 big endian (BOM detected)
+  `reflex::Input::file_encoding::utf32le` | UTF-32 little endian (BOM detected)
 
-To override the file encoding, use `file_encoding(enc)`.
+To override the file encoding, use `reflex::Input::file_encoding(enc)`, for
+example to override the encoding as ISO-8859-1 for matching with Unicode
+patterns (i.e. internally normalizes ISO-8859-1 to UTF-8):
+
+```cpp
+if (matcher.in.file_encoding() == Input::file_encoding::plain)
+  matcher.in.file_encoding(Input::file_encoding::latin);
+```
 
 Wide strings are internally converted to UTF-8 for matching, which effectively
 normalizes the input for matching.  This conversion is illustrated below.  The
@@ -4350,11 +4363,13 @@ if (matcher.in.file() && matcher.in.good())
 {
   switch (matcher.in.file_encoding())
   {
-    case Input::file_encoding::plain:   std::cout << "plain, including UTF-8"; break;
-    case Input::file_encoding::utf16be: std::cout << "UTF-16 big endian";      break;
-    case Input::file_encoding::utf16le: std::cout << "UTF-16 little endian";   break;
-    case Input::file_encoding::utf32be: std::cout << "UTF-32 big endian";      break;
-    case Input::file_encoding::utf32le: std::cout << "UTF-32 little endian";   break;
+    case Input::file_encoding::plain:   std::cout << "plain ASCII/binary/UTF-8"; break;
+    case Input::file_encoding::latin:   std::cout << "ASCII and Latin-1";        break;
+    case Input::file_encoding::utf8:    std::cout << "UTF-8 with BOM";           break;
+    case Input::file_encoding::utf16be: std::cout << "UTF-16 big endian";        break;
+    case Input::file_encoding::utf16le: std::cout << "UTF-16 little endian";     break;
+    case Input::file_encoding::utf32be: std::cout << "UTF-32 big endian";        break;
+    case Input::file_encoding::utf32le: std::cout << "UTF-32 little endian";     break;
   }
   std::cout << " of " << matcher.in.size() << " converted bytes to read\n";
   matcher.buffer(); // because Boost.Regex partial_match is broken!
@@ -4363,6 +4378,16 @@ if (matcher.in.file() && matcher.in.good())
   std::cout << "Rest of the file is: " << matcher.rest();
   fclose(matcher.in.file());
 }
+```
+
+The default encoding is `Input::file_encoding::plain` when no UTF BOM is
+detected in the file, meaning that `Input::file_encoding::latin` is never
+detected automatically as UTF-8 encoding is assumed.  If you expect the source
+file to contain ISO-8859-1 then check and set the file encoding as follows:
+
+```cpp
+if (matcher.in.file_encoding() == Input::file_encoding::plain)
+  matcher.in.file_encoding(Input::file_encoding::latin);
 ```
 
 ### Example 9
@@ -4396,10 +4421,11 @@ Invalid UTF encodings                                            {#invalid-utf}
 ---------------------
 
 It may be tempting to write a pattern with `.` (dot) as a wildcard in a lexer
-specification, but beware that in Unicode mode with `%%option unicode` the dot
-matches any code point, including code points outside of the valid Unicode
-character range.  The reason for this design decision is that a lexer should
-support a "catch all else" rule to report errors in the input:
+specification, but beware that in Unicode mode with option `−−unicode` (global
+`%%option unicode` or local `(?u:φ)`) the dot matches any code point, including
+code points outside of the valid Unicode character range.  The reason for this
+design decision is that a lexer should support a "catch all else" rule to
+report errors in the input:
 
 <div class="alt">
 ```cpp
@@ -4442,11 +4468,11 @@ matches one `a` or nothing at all, because `a?` permits an empty match.
 ⇢ [Back to contents](#)
 
 
-Where to download                                                   {#download}
-=================
+Getting RE/flex                                                     {#download}
+===============
 
 [Download RE/flex](https://sourceforge.net/projects/re-flex) from SourceForge
-and visit the GitHub [RE/flex repository](https://github.com/Genivia/RE-flex).
+or visit [RE/flex GitHub repository](https://github.com/Genivia/RE-flex).
 
 ⇢ [Back to contents](#)
 

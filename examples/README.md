@@ -2,8 +2,8 @@
 
 The examples with Bison require the installation of [Bison][bison-url].
 
-Flex syntax scanner examples
-----------------------------
+Flex scanner examples
+---------------------
 
 - `ctokens.l` and `cdefs.l` a C/C++ tokenizer
 - `jtokens.l` and `jdefs.l` a Java tokenizer, meets Java Lexical Structure requirements
@@ -22,10 +22,11 @@ Flex syntax scanner examples
 - `echo.l` interactive scanner to echo input
 - `json.l` JSON parser (verified with <http://seriot.ch/parsing_json.php>)
 
-RE/flex syntax scanner examples
--------------------------------
+RE/flex scanner examples
+------------------------
 
 - `ptokens.l` and `pdefs.l` a Python tokenizer
+- `calc.l` and `calc.y` calculator, supports Unicode identifier variables
 - `cow.l` scanner to convert cows
 - `cows.l` scanner to convert cows, uses word boundary anchors
 - `indent.l` indentation detection and reformatting example

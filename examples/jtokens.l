@@ -1,6 +1,17 @@
 // Java tokenizer, standardized to meet Java lexical structure requirements
 // Reads UTF-8 files (with or without UTF-8 BOM) and UTF-16/32 files (with UTF-16/32 BOM)
 // Converts Unicode Escapes \uxxxx first, prior to lexical analysis
+//
+// Note that identifiers may contain IdentifierIgnorable chars. To remove these
+// use condition states to collect the identifier in a wstring:
+// %class{
+// std::wstring id;
+// %}
+// %x ID
+// {JavaIdentifierStart}     id.assign(wstr()); start(ID);
+// <ID>{JavaIdentifierPart}  id.append(wstr());
+// <ID>{IdentifierIgnorable} ;
+// <ID>.                     less(size()); start(INITIAL);
 
 %{
 #include <reflex/utf8.h>
@@ -158,12 +169,14 @@ int main(int argc, char **argv)
     printf("Usage: jtokens FILE\n");
     exit(EXIT_FAILURE);
   }
+  // open en read the Java source code file
   reflex::Input in(fopen(argv[1], "r"));
   if (in.file() == NULL)
   {
     perror("Cannot open file for reading");
     exit(EXIT_FAILURE);
   }
+  // store the Java source code file (UTF-8/16/32 encoded) in a buffer, normalized as UTF-8
   size_t len = in.size();
   if (len == 0)
   {
@@ -176,8 +189,10 @@ int main(int argc, char **argv)
     perror("Error in reading");
     exit(EXIT_FAILURE);
   }
+  // convert the \uxxxx to UTF-8
   len = convert_unicode_escapes(buf, len);
   buf[len] = '\0';
+  // scan the Java source code
   Lexer(buf).lex();
   delete[] buf;
   fclose(in.file());

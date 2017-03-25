@@ -213,6 +213,18 @@ class AbstractLexer {
   {
     return matcher().text();
   }
+  /// Returns string with a copy of the text matched.
+  std::string str(void) const
+    /// @returns matched text.
+  {
+    return matcher().str();
+  }
+  /// Returns wide string with a copy of the text matched.
+  std::wstring wstr(void) const
+    /// @returns matched text.
+  {
+    return matcher().wstr();
+  }
   /// Returns the matched text size in number of bytes.
   size_t size(void) const
     /// @returns size of the matched text.

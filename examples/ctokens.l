@@ -19,8 +19,8 @@
 {MLCOMMENT}
 {DIRECTIVE}	printf("DIRECTIVE %s\n", yytext);
 {NAME}		printf("NAME      %s\n", yytext);
-{FLOAT}		printf("FLOAT     %s\n", yytext);
-{INT}		printf("INT       %s\n", yytext);
+{UFLT}		printf("FLOAT     %s\n", yytext);
+{UINT}		printf("INT       %s\n", yytext);
 {CHAR}		printf("CHAR      %s\n", yytext);
 {STRING}	printf("STRING    %s\n", yytext);
 "{"|"<%"	|

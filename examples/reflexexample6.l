@@ -9,8 +9,10 @@
 "//"                 push_state(COMMENT);
 .|\n
 
-<COMMENT>\n          pop_state();
-<COMMENT>[^\n]+      out() << text() << std::endl;
+<COMMENT>{
+\n                   pop_state();
+([^\n]|\\\n)+        out() << text() << std::endl;
+}
 
 %%
 

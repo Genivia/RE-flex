@@ -9,7 +9,7 @@ NAME		[[:alpha:]_][[:alnum:]_]*
 UDEC		0|[1-9]\d*
 UHEX		0[Xx][[:xdigit:]]+
 UOCT		0[0-7]+
-INT		[-+]?({UDEC}|{UHEX})([Ll]{0,2}[Uu]?|[Uu][Ll]{0,2})
-FLOAT		[-+]\d*(\d|\.\d|\d\.)\d*([Ee][-+]?\d+)?[FfLl]?
+UINT		({UDEC}|{UHEX})([Ll]{0,2}[Uu]?|[Uu][Ll]{0,2})
+UFLT		\d*(\d|\.\d|\d\.)\d*([Ee][-+]?\d+)?[FfLl]?
 CHAR		L?'(\\.|[^\\\n'])*'
 STRING		L?\"(\\.|\\\r?\n|[^\\\n"])*\"
