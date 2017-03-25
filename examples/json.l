@@ -18,7 +18,7 @@
 // 13. The main() program reads a FILE* for automatic UTF-16/32 conversion
 // 14. JSON class stores parsed JSON data
 // 15. JSON class instances are printable on std::ostream
-// 16. Use reflex::utf8() to convert UCS character to/from UTF-8
+// 16. Use wstr() to obtain wide string matched
 
 %top{
   #include <stdlib.h> // strtoul(), strtod()
@@ -64,7 +64,7 @@ false           { return 'f'; }
   \\ t                  { string.push_back('\t'); }
   \\ u [[:xdigit:]]{4}  { string.push_back(strtoul(yytext + 2, NULL, 16)); }
   []-\x7f\x20-[]        { string.push_back(yytext[0]); }
-  \p{Non_ASCII_Unicode} { string.push_back(reflex::utf8(yytext)); }
+  \p{Non_ASCII_Unicode} { string.push_back(wstr().at(0)); }
 }
 
 <*> .                   { return '!'; /* error */ }
@@ -225,7 +225,7 @@ std::ostream& operator<<(std::ostream& os, const JSON& data) {
 
 // The main program parses JSON from stdin and prints it
 int main(int argc, char **argv) {
-  FILE *fd = NULL;
+  FILE *fd = stdin;
   if (argc > 1 && (fd = fopen(argv[1], "r")) == NULL)
     exit(EXIT_FAILURE);
   JSON data;
@@ -237,7 +237,7 @@ int main(int argc, char **argv) {
       std::endl;
     exit(EXIT_FAILURE);
   }
-  if (fd)
+  if (fd != stdin)
     fclose(fd);
   // print JSON value
   std::cout << data;
