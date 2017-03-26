@@ -186,7 +186,7 @@ int main(int argc, char **argv)
 
   Lexer(input).lex();
 
-  if (input.file() != NULL)
+  if (input.file() != stdin)
     fclose(input.file());
 
   return 0;

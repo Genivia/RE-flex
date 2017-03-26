@@ -5,7 +5,7 @@ REFLEX=../bin/reflex
 BISON=bison
 LIBS=../lib/libreflex.a
 REFLAGS=
-COFLAGS=-g -O2
+COFLAGS=-O3
 CWFLAGS=-Wall -Wunused -Wextra -Wno-unused-label
 CIFLAGS=-I. -I../include -I $(BOOSTINC)
 CMFLAGS=
@@ -100,6 +100,10 @@ echo:		echo.l
 		$(REFLEX) $(REFLAGS) --flex echo.l
 		$(CPP) $(CFLAGS) -o $@ lex.yy.cpp $(LIBS)
 
+readline:	readline.l
+		$(REFLEX) $(REFLAGS) --flex readline.l
+		$(CPP) $(CFLAGS) -o $@ lex.yy.cpp $(LIBS) -lreadline
+
 calc:		calc.l calc.y
 		$(REFLEX) $(REFLAGS) calc.l
 		$(BISON) -d -y calc.y
@@ -175,4 +179,4 @@ clean:
 		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample1 flexexample2 flexexample3 flexexample4 flexexample5 flexexample6 flexexample7 flexexample8
 		-rm -f reflexexample3 reflexexample4 reflexexample5 reflexexample6
-		-rm -f ctokens jtokens ptokens echo calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json cards url lexer
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json cards url lexer

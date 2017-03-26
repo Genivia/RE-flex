@@ -78,8 +78,9 @@ following files:
     |   |__ header.html
     |   |__ reflex-logo.png
     |   |__ html/
-    |       |__ index.html
-    |       |__ ...
+    |   |   |__ index.html
+    |   |__ man/
+    |       |__ reflex.1
     |
     |__ examples/
     |   |__ Makefile

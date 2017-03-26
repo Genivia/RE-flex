@@ -1,6 +1,8 @@
 
 [![logo][logo-url]][reflex-url]
 
+"The regex-centric fast and flexible lexical analyzer generator for C++"
+
 Flex reimagined.  Fast, flexible, adds Boost 💪
 
 RE/flex is as fast as Flex (in some cases faster), and much faster than regex
@@ -318,6 +320,7 @@ Changelog
 - Mar  8, 2017: 0.9.15 added `wtext()`, `wpair()`, `winput()` methods, other improvements
 - Mar 22, 2017: 0.9.16 bug fixes, speed improvements, improved option `--unicode` regex conversion, also with `(?u:)`, changed `wtext()` to `wstr()` and added a `str()` method
 - Mar 24, 2017: 0.9.17 minor improvements
+- Mar 26, 2017: 0.9.18 added reflex option `-p` (`--perf-report`) for performance debugging, added doc/man/reflex.1 man page, added interactive readline example
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

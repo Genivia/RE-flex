@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Reflex Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Mar 24 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Mar 26 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -238,6 +238,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a9dcd1db4f416474695064d5b84dfb3d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9dcd1db4f416474695064d5b84dfb3d5">write_section_init</a> ()</td></tr>
 <tr class="memdesc:a9dcd1db4f416474695064d5b84dfb3d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write %init{ %} code to lex.yy.cpp.  <a href="#a9dcd1db4f416474695064d5b84dfb3d5">More...</a><br /></td></tr>
 <tr class="separator:a9dcd1db4f416474695064d5b84dfb3d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e6b770dad76d0e321d1ac3ac94fd1dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a7e6b770dad76d0e321d1ac3ac94fd1dc">write_perf_report</a> ()</td></tr>
+<tr class="memdesc:a7e6b770dad76d0e321d1ac3ac94fd1dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write perf_report code to lex.yy.cpp.  <a href="#a7e6b770dad76d0e321d1ac3ac94fd1dc">More...</a><br /></td></tr>
+<tr class="separator:a7e6b770dad76d0e321d1ac3ac94fd1dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad63ffcc73cc1d67d82297e7594e1ac90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ad63ffcc73cc1d67d82297e7594e1ac90">write_section_1</a> ()</td></tr>
 <tr class="memdesc:ad63ffcc73cc1d67d82297e7594e1ac90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write section 1 user-defined code to lex.yy.cpp.  <a href="#ad63ffcc73cc1d67d82297e7594e1ac90">More...</a><br /></td></tr>
 <tr class="separator:ad63ffcc73cc1d67d82297e7594e1ac90"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -260,7 +263,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a1e6d38447a7f80104078f52437ca38f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write regex string to lex.yy.cpp.  <a href="#a1e6d38447a7f80104078f52437ca38f8">More...</a><br /></td></tr>
 <tr class="separator:a1e6d38447a7f80104078f52437ca38f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18e27c7ca29d118601cb6a7a066f1300"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a18e27c7ca29d118601cb6a7a066f1300">stats</a> ()</td></tr>
-<tr class="memdesc:a18e27c7ca29d118601cb6a7a066f1300"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display statistics.  <a href="#a18e27c7ca29d118601cb6a7a066f1300">More...</a><br /></td></tr>
+<tr class="memdesc:a18e27c7ca29d118601cb6a7a066f1300"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display usage report.  <a href="#a18e27c7ca29d118601cb6a7a066f1300">More...</a><br /></td></tr>
 <tr class="separator:a18e27c7ca29d118601cb6a7a066f1300"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ae5c152f9b2402ad52841e2bc6d7ed3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a5ae5c152f9b2402ad52841e2bc6d7ed3">get_line</a> ()</td></tr>
 <tr class="memdesc:a5ae5c152f9b2402ad52841e2bc6d7ed3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch next line from the input, return true if ok.  <a href="#a5ae5c152f9b2402ad52841e2bc6d7ed3">More...</a><br /></td></tr>
@@ -293,8 +296,11 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a0963af89d24f447bf7abac97dbfc02fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of init code.  <a href="#a0963af89d24f447bf7abac97dbfc02fb">More...</a><br /></td></tr>
 <tr class="separator:a0963af89d24f447bf7abac97dbfc02fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a41d48dd0b0bc995cd1561d96a924fdb4">get_name</a> (size_t &amp;pos)</td></tr>
-<tr class="memdesc:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over name (letters, hyphen/underscore, or any non-ASCII character), return name.  <a href="#a41d48dd0b0bc995cd1561d96a924fdb4">More...</a><br /></td></tr>
+<tr class="memdesc:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over name (letters, digits, hyphen/underscore, or any non-ASCII character), return name.  <a href="#a41d48dd0b0bc995cd1561d96a924fdb4">More...</a><br /></td></tr>
 <tr class="separator:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1beee21471a50d0a4c3412971cd2f48"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ad1beee21471a50d0a4c3412971cd2f48">get_start</a> (size_t &amp;pos)</td></tr>
+<tr class="memdesc:ad1beee21471a50d0a4c3412971cd2f48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over start condition name (an ASCII C++ identifier or C++11 Unicode identifier), return name.  <a href="#ad1beee21471a50d0a4c3412971cd2f48">More...</a><br /></td></tr>
+<tr class="separator:ad1beee21471a50d0a4c3412971cd2f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a824806b4d8cf94a8173e95e675adb393"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a824806b4d8cf94a8173e95e675adb393">get_string</a> (size_t &amp;pos)</td></tr>
 <tr class="memdesc:a824806b4d8cf94a8173e95e675adb393"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over quoted string, return string.  <a href="#a824806b4d8cf94a8173e95e675adb393">More...</a><br /></td></tr>
 <tr class="separator:a824806b4d8cf94a8173e95e675adb393"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -678,7 +684,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Advance pos over name (letters, hyphen/underscore, or any non-ASCII character), return name. </p>
+<p>Advance pos over name (letters, digits, hyphen/underscore, or any non-ASCII character), return name. </p>
 
 </div>
 </div>
@@ -705,6 +711,32 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get regex string, converted to a format understood by the selected regex engine library. </p>
+
+</div>
+</div>
+<a class="anchor" id="ad1beee21471a50d0a4c3412971cd2f48"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Reflex::get_start </td>
+          <td>(</td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Advance pos over start condition name (an ASCII C++ identifier or C++11 Unicode identifier), return name. </p>
 
 </div>
 </div>
@@ -1208,7 +1240,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Display statistics. </p>
+<p>Display usage report. </p>
 
 </div>
 </div>
@@ -1454,6 +1486,31 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Write <a class="el" href="class_reflex.html#a27dfea948be151721bc24f15e1918a89" title="Main program. ">main()</a> to lex.yy.cpp. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7e6b770dad76d0e321d1ac3ac94fd1dc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Reflex::write_perf_report </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Write perf_report code to lex.yy.cpp. </p>
 
 </div>
 </div>
@@ -2129,7 +2186,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Mar 24 2017 20:08:54 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Mar 26 2017 14:41:02 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::FlexLexer&lt; M &gt;::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Mar 24 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Mar 26 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -104,7 +104,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:afffa075dc38c4193b821cc9610745a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read character sequences via a Flex-compatible virtual <a class="el" href="classreflex_1_1_flex_lexer.html#a2b2600310dd893711df5b357b4c79d9e" title="Invoked by FlexLexer::Matcher to read input character sequence. ">FlexLexer::LexerInput</a> method.  <a href="#afffa075dc38c4193b821cc9610745a40">More...</a><br /></td></tr>
 <tr class="separator:afffa075dc38c4193b821cc9610745a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac292168844d3bcf6d4d6a9d16d27d56a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer_1_1_matcher.html#ac292168844d3bcf6d4d6a9d16d27d56a">wrap</a> ()</td></tr>
-<tr class="memdesc:ac292168844d3bcf6d4d6a9d16d27d56a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the Flex-compatible <a class="el" href="classreflex_1_1_flex_lexer.html#a9f16202eb1ef5b9199ad824d7f3ba7bc" title="Default yywrap operation at EOF: do not wrap input. ">FlexLexer::yywrap</a> method to determine if matcher should wrap input after EOF.  <a href="#ac292168844d3bcf6d4d6a9d16d27d56a">More...</a><br /></td></tr>
+<tr class="memdesc:ac292168844d3bcf6d4d6a9d16d27d56a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the Flex-compatible <a class="el" href="classreflex_1_1_flex_lexer.html#a9f16202eb1ef5b9199ad824d7f3ba7bc" title="Default yywrap operation at EOF: do not wrap input. ">FlexLexer::yywrap</a> method to determine if matcher should wrap input after EOF (lexer <a class="el" href="classreflex_1_1_flex_lexer.html#a9f16202eb1ef5b9199ad824d7f3ba7bc" title="Default yywrap operation at EOF: do not wrap input. ">yywrap()</a> should return 0 to wrap input after EOF).  <a href="#ac292168844d3bcf6d4d6a9d16d27d56a">More...</a><br /></td></tr>
 <tr class="separator:ac292168844d3bcf6d4d6a9d16d27d56a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
@@ -289,7 +289,6 @@ template&lt;typename M &gt; </div>
         <tr>
           <td class="memname">virtual bool <a class="el" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer</a>&lt; M &gt;::Matcher::wrap </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -301,10 +300,10 @@ template&lt;typename M &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Check the Flex-compatible <a class="el" href="classreflex_1_1_flex_lexer.html#a9f16202eb1ef5b9199ad824d7f3ba7bc" title="Default yywrap operation at EOF: do not wrap input. ">FlexLexer::yywrap</a> method to determine if matcher should wrap input after EOF. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if <a class="el" href="classreflex_1_1_flex_lexer.html#a9f16202eb1ef5b9199ad824d7f3ba7bc" title="Default yywrap operation at EOF: do not wrap input. ">FlexLexer::yywrap()</a> == 0 </dd></dl>
+<p>Check the Flex-compatible <a class="el" href="classreflex_1_1_flex_lexer.html#a9f16202eb1ef5b9199ad824d7f3ba7bc" title="Default yywrap operation at EOF: do not wrap input. ">FlexLexer::yywrap</a> method to determine if matcher should wrap input after EOF (lexer <a class="el" href="classreflex_1_1_flex_lexer.html#a9f16202eb1ef5b9199ad824d7f3ba7bc" title="Default yywrap operation at EOF: do not wrap input. ">yywrap()</a> should return 0 to wrap input after EOF). </p>
+<dl class="section return"><dt>Returns</dt><dd>true if <a class="el" href="classreflex_1_1_flex_lexer.html#a9f16202eb1ef5b9199ad824d7f3ba7bc" title="Default yywrap operation at EOF: do not wrap input. ">FlexLexer::yywrap()</a> == 0 indicating that input is wrapped after EOF </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html#a35618139b96f6550654b47c5bd4949f2">reflex::AbstractLexer&lt; M &gt;::Matcher</a>.</p>
+<p>Reimplemented from <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html#a050695708d774a28d42be878e7729666">reflex::AbstractLexer&lt; M &gt;::Matcher</a>.</p>
 
 </div>
 </div>
@@ -314,7 +313,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Mar 24 2017 20:08:54 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Mar 26 2017 14:41:02 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

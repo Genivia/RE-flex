@@ -1145,13 +1145,19 @@ Lexers can be instantiated given some input to scan.  Lexers can run in
 parallel in threads without requiring synchronization when their state is part
 of the instance and not managed by global variables.
 
-To inject Lexer class member declarations, place the declarations within
-`%%class{` and `%}`.  The `%%class{` and `%}` should be placed at the start of
-a new line.
+To inject Lexer class member declarations such as variables and methods, place
+the declarations within `%%class{` and `%}`.  The `%%class{` and `%}` should be
+placed at the start of a new line.
 
 Likewise, to inject Lexer class constructor code, for example to initialize
 members, place the code within `%%init{` and `%}`.  The `%%init{` and `%}`
 should be placed at the start of a new line.
+
+Additional constructors and/or a destructor may be placed in `%%class{` and
+`%}`, using the class name `Lexer` (or `yyFlexLexer` with option `−−flex`),
+unless the class is renamed with option `−−lexer=NAME` (`%%option lexer=NAME`).
+Or for convenience you can simply use the `REFLEX_OPTION_lexer` macro that
+expands to the class name in your code.
 
 For example, we use these code injectors to make our cow counter `herd` part of
 the Lexer class state:
@@ -1408,7 +1414,8 @@ int main(int argc, char **argv)
     exit(EXIT_FAILURE);
   Lexer(fd, of).lex();
   of.close();
-  fclose(fd);
+  if (fd != stdin)
+    fclose(fd);
   return 0;
 }
 ```
@@ -2114,6 +2121,15 @@ action code.  To turn debug messages back on, use `set_debug(1)`.  The
 behavior in a derived lexer class.  Also enables assertions that check for
 errors.
 
+### `-p`, `−−perf-report`
+
+This enables the collection and reporting of statistics by the generated
+scanner.  The scanner reports the performance statistics on `std::cerr` when
+EOF is reached.  If your scanner does not reach EOF, then invoke the lexer's
+`perf_report()` method explicitly in your code.  Invoking this method also
+resets the statistics and timers, meaning that this method will report the
+statistics collected since its last call.
+
 ### `-s`, `−−nodefault`
 
 This suppresses the default rule that ECHOs all unmatched text when no rule
@@ -2505,21 +2521,36 @@ the scanner terminates and returns zero to its caller.  If `wrap()` returns
 zero (0) then the scanner continues.  In this case `wrap()` should set up a new
 input source to scan.
 
-To implement a `wrap()` (and `yywrap()` when option `−−flex` is used), create a
-derived Lexer class using option `class=NAME` (or `yyclass=NAME`) and override
-the `wrap()` (or `yywrap()`) method:
+For example, continuing reading from `std:in` after some other input source
+reached EOF:
+
+<div class="alt">
+```cpp
+%class{
+  virtual int wrap() // note: yywrap() when option −−flex is used
+  {
+    in(std::in);
+    return in().good() ? 0 : 1;
+  }
+%}
+```
+</div>
+
+To implement a `wrap()` (and `yywrap()` when option `−−flex` is used) in a
+derived lexer class with option `class=NAME` (or `yyclass=NAME`), override the
+`wrap()` (or `yywrap()`) method as follows:
 
 <div class="alt">
 ```cpp
 %option class=Tokenizer
 
 %{
-  class Tokenizer : Lexer {
+  class Tokenizer : Lexer { // note: yyFlexLexer when option −−flex is used
    public:
-    virtual bool wrap()
+    virtual int wrap() // note: yywrap() when option −−flex is used
     {
       in(std::in);
-      return in().good(); // true if stdin is still OK (not EOF or error)
+      return in().good() ? 0 : 1;
     }
   };
 %}
@@ -3972,7 +4003,7 @@ method can be overriden by a derived matcher class to customize reading.
   Method      | Result
   ----------- | ---------------------------------------------------------------
   `get(s, n)` | fill `s[0..n-1]` with next input, returns number of bytes added
-  `wrap()`    | returns false (can be overriden to wrap input)
+  `wrap()`    | returns false (can be overriden to wrap input after EOF)
 
 When a matcher reaches the end of input, it invokes the virtual method `wrap()`
 to check if more input is available.  This method returns false by default, but
@@ -4464,6 +4495,82 @@ Repetitions (`*`, `+`, and `{n,m}`) are greedy, unless marked with an extra `?`
 to make them lazy.  Lazy repetitions are useless when the regex pattern after
 the lazy repetitions permits empty input.  For example, `.*?a?` only
 matches one `a` or nothing at all, because `a?` permits an empty match.
+
+⇢ [Back to contents](#)
+
+
+Interactive input with GNU readline                                 {#readline}
+-----------------------------------
+
+Option `-I` for interactive input generates a scanner that uses `fgetc()` to
+read input from a `FILE*` descriptor (stdin by default).  Interactive input is
+made more user-friendly with the GNU readline library that provides basic line
+editing and a history mechanism.
+
+To use `readline()` in your lexer, call `readline()` in your Lexer's
+constructor and in the `wrap()` method as follows:
+
+<div class="alt">
+```cpp
+%top{
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <readline/readline.h>
+  #include <readline/history.h>
+%}
+
+%class{
+  const char *prompt;
+  // we use wrap() to read the next line
+  virtual int wrap() {
+    if (line)
+    {
+      free((void*)line);
+      line = readline(prompt);
+      if (line != NULL)
+      {
+        if (*line)
+          add_history(line);
+        linen.assign(line).push_back('\n');
+        in(linen);
+      }
+    }
+    // wrap() == 0 means OK: wrapped after EOF
+    return line == NULL ? 1 : 0;
+  }
+  // the line returned by readline() without \n
+  char *line;
+  // the line with \n appended
+  std::string linen;
+%}
+
+%init{
+  prompt = NULL;
+  line = readline(prompt);
+  if (line != NULL)
+  {
+    if (*line)
+      add_history(line);
+    linen.assign(line).push_back('\n');
+  }
+  in(linen);
+%}
+```
+
+With option `−−flex` you will need to replace `wrap()` by `yywrap()`.
+
+The rules can be matched as usual, where `\n` matches the end of a line, for
+example:
+
+<div class="alt">
+```cpp
+%%
+
+.+  echo(); // ECHO the entire line
+\n  echo(); // ECHO end of the line
+
+%%
+```
 
 ⇢ [Back to contents](#)
 

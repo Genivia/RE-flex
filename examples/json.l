@@ -22,6 +22,8 @@
 
 %top{
   #include <stdlib.h> // strtoul(), strtod()
+  #include <iostream> // std::cout etc.
+  #include <iomanip>  // std::setw
   #include <vector>   // for JSON arrays
   #include <map>      // for JSON objects
 %}
@@ -46,7 +48,7 @@ number  {int} {frac}? {exp}?
 
 %%
 
-[ \t\r\n]       { /* ignore white space */ }
+[ \t\r\n]+      { /* ignore white space */ }
 [][}{,:]        { return yytext[0]; }
 null            { return '0'; }
 true            { return 't'; }
@@ -64,7 +66,7 @@ false           { return 'f'; }
   \\ t                  { string.push_back('\t'); }
   \\ u [[:xdigit:]]{4}  { string.push_back(strtoul(yytext + 2, NULL, 16)); }
   []-\x7f\x20-[]        { string.push_back(yytext[0]); }
-  \p{Non_ASCII_Unicode} { string.push_back(wstr().at(0)); }
+  \p{Non_ASCII_Unicode} { string.append(wstr()); }
 }
 
 <*> .                   { return '!'; /* error */ }
@@ -226,6 +228,7 @@ std::ostream& operator<<(std::ostream& os, const JSON& data) {
 // The main program parses JSON from stdin and prints it
 int main(int argc, char **argv) {
   FILE *fd = stdin;
+  // open file if a file name is given on the command line
   if (argc > 1 && (fd = fopen(argv[1], "r")) == NULL)
     exit(EXIT_FAILURE);
   JSON data;
@@ -237,6 +240,9 @@ int main(int argc, char **argv) {
       std::endl;
     exit(EXIT_FAILURE);
   }
+  // see the user guide on reflex option -p
+  parser.perf_report();
+  // close the file, if not stdin
   if (fd != stdin)
     fclose(fd);
   // print JSON value

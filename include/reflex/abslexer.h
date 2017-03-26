@@ -71,9 +71,9 @@ class AbstractLexer {
         lexer_(lexer)
     { }
    protected:
-    /// Returns true if matcher should wrap input after EOF.
-    virtual bool wrap(void)
-      /// @returns true if reflex::AbstractLexer::wrap() == 0
+    /// Returns true if matcher should wrap input after EOF (lexer wrap() should return 0 to wrap input after EOF).
+    virtual bool wrap()
+      /// @returns true if reflex::AbstractLexer::wrap() == 0 indicating that input is wrapped after EOF
     {
       return lexer_->wrap() == 0;
     }
@@ -93,8 +93,8 @@ class AbstractLexer {
       stack_(),
       state_()
   { }
-  /// Delete lexer and its current matcher and input.
-  virtual ~AbstractLexer(void)
+  /// Delete lexer and its current matcher with its associated input.
+  virtual ~AbstractLexer()
   {
     if (matcher_)
       delete matcher_;
@@ -105,13 +105,16 @@ class AbstractLexer {
     debug_ = flag;
   }
   /// Get debug flag value.
-  virtual int debug(void) const
+  virtual int debug() const
     /// @returns debug flag value.
   {
     return debug_;
   }
+  /// Dummy performance reporter, to prevent link errors when reflex option -p is omitted.
+  void perf_report()
+  { }
   /// The default wrap operation at EOF: do not wrap input.
-  virtual int wrap(void)
+  virtual int wrap()
     /// @returns 1 (override to return 0 to indicate that new input is available after this invocation so that wrap after EOF is OK).
   {
     return 1;
@@ -126,7 +129,7 @@ class AbstractLexer {
     return *this;
   }
   /// Returns the current input character sequence that is being scanned.
-  Input& in(void)
+  Input& in()
     /// @returns reference to the current reflex::Input object.
   {
     if (has_matcher())
@@ -141,14 +144,14 @@ class AbstractLexer {
     return *this;
   }
   /// Returns the current output stream used to echo text matches to.
-  std::ostream& out(void) const
+  std::ostream& out() const
     /// @returns reference to the current std::ostream object.
   {
     ASSERT(os_ != NULL);
     return *os_;
   }
   /// Returns true if a matcher was assigned to this lexer for scanning.
-  bool has_matcher(void) const
+  bool has_matcher() const
     /// @returns true if a matcher was assigned.
   {
     return matcher_ != NULL;
@@ -161,14 +164,14 @@ class AbstractLexer {
     return *this;
   }
   /// Returns a reference to the current matcher.
-  Matcher& matcher(void) const
+  Matcher& matcher() const
     /// @returns reference to the current matcher.
   {
     ASSERT(matcher_ != NULL);
     return *matcher_;
   }
   /// Returns a pointer to the current matcher, NULL if none was set.
-  Matcher *ptr_matcher(void) const
+  Matcher *ptr_matcher() const
     /// @returns pointer to the current matcher or NULL if no matcher was set.
   {
     return matcher_;
@@ -194,7 +197,7 @@ class AbstractLexer {
     matcher_ = matcher;
   }
   /// Pop matcher from the stack and continue scanning where it left off, delete the current matcher.
-  void pop_matcher(void)
+  void pop_matcher()
   {
     ASSERT(!stack_.empty());
     if (matcher_)
@@ -203,48 +206,48 @@ class AbstractLexer {
     stack_.pop();
   }
   /// Echo the matched text to the current output.
-  void echo(void) const
+  void echo() const
   {
     out().write(matcher().begin(), matcher().size());
   }
   /// Returns string with the text matched.
-  const char *text(void) const
+  const char *text() const
     /// @returns matched text.
   {
     return matcher().text();
   }
   /// Returns string with a copy of the text matched.
-  std::string str(void) const
+  std::string str() const
     /// @returns matched text.
   {
     return matcher().str();
   }
   /// Returns wide string with a copy of the text matched.
-  std::wstring wstr(void) const
+  std::wstring wstr() const
     /// @returns matched text.
   {
     return matcher().wstr();
   }
   /// Returns the matched text size in number of bytes.
-  size_t size(void) const
+  size_t size() const
     /// @returns size of the matched text.
   {
     return matcher().size();
   }
   /// Returns the matched text size in number of (wide) characters.
-  size_t wsize(void) const
+  size_t wsize() const
     /// @returns number of (wide) characters matched.
   {
     return matcher().wsize();
   }
   /// Returns the line number of matched text.
-  size_t lineno(void) const
+  size_t lineno() const
     /// @returns line number.
   {
     return matcher().lineno();
   }
   /// Returns the column number of matched text, counting wide characters.
-  size_t columno(void) const
+  size_t columno() const
     /// @returns column number.
   {
     return matcher().columno();
@@ -258,7 +261,7 @@ class AbstractLexer {
     return *this;
   }
   /// Returns the current start condition state.
-  int start(void) const
+  int start() const
     /// @returns start condition (integer).
   {
     return start_;
@@ -270,14 +273,14 @@ class AbstractLexer {
      start_ = state;
   }
   /// Pop the stack start condition state and transition to that state.
-  void pop_state(void)
+  void pop_state()
   {
     ASSERT(!state_.empty());
     start_ = state_.top();
     state_.pop();
   }
   /// Returns the stack top start condition state.
-  int top_state(void) const
+  int top_state() const
     /// @returns start condition (integer).
   {
     ASSERT(!state_.empty());

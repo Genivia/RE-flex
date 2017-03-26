@@ -99,6 +99,7 @@ static const char *options_table[] = {
   "outfile",
   "pattern",
   "pointer",
+  "perf_report",
   "posix",
   "prefix",
   "reentrant",
@@ -399,6 +400,9 @@ void Reflex::init(int argc, char **argv)
               help("missing FILE with -o FILE");
             is_grouped = false;
             break;
+          case 'p':
+            options["perf_report"] = "true";
+            break;
           case 'P':
             ++arg;
             if (*arg)
@@ -463,12 +467,12 @@ void Reflex::version()
 void Reflex::help(const char *message, const char *arg)
 {
   if (message)
-    std::cerr
+    std::cout
       << "reflex: "
       << message
       << (arg != NULL ? arg : "")
       << std::endl;
-  std::cerr << "Usage: reflex [OPTIONS] [FILE]\n\
+  std::cout << "Usage: reflex [OPTIONS] [FILE]\n\
 \n\
    Scanner:\n\
         -+, --flex\n\
@@ -476,7 +480,7 @@ void Reflex::help(const char *message, const char *arg)
         -a, --dotall\n\
                 dot in patterns match newline\n\
         -B, --batch\n\
-                generate scanner for batch input by reading the entire input\n\
+                generate scanner for batch input by buffering the entire input\n\
         -f, --full\n\
                 generate full scanner with FSM opcode tables\n\
         -F, --fast\n\
@@ -485,53 +489,22 @@ void Reflex::help(const char *message, const char *arg)
                 ignore case in patterns\n\
         -I, --interactive, --always-interactive\n\
                 generate interactive scanner\n\
-        -m NAME, --matcher=NAME\n\
+        -m, --matcher=NAME\n\
                 use matcher NAME library [";
-  for (LibraryMap::const_iterator i = libraries.begin(); i != libraries.end(); ++i)
-    std::cerr << i->first << "|";
-  std::cerr << "...]\n\
+  for (LibraryMap::const_iterator i = libraries.cbegin(); i != libraries.cend(); ++i)
+    std::cout << i->first << "|";
+  std::cout << "...]\n\
         --pattern=NAME\n\
-                use custom pattern class NAME with custom matcher option -m\n\
-        --include=FILE\"\n\
-                include header FILE.h with custom matcher option -m\n\
+                use custom pattern class NAME for custom matcher option -m\n\
+        --include=FILE\n\
+                include header FILE.h for custom matcher option -m\n\
         -u, --unicode\n\
-                . (dot), \\s, and \\w match unicode, groups UTF-8 characters\n\
+                match Unicode . (dot), \\p, \\s, \\w, ..., and group UTF-8\n\
         -x, --freespace\n\
                 ignore space in patterns\n\
 \n\
-   Generated code:\n\
-        --namespace=NAME\n\
-                namespace NAME for generated scanner class\n\
-        --lexer=NAME\n\
-                lexer class NAME instead of Lexer or yyFlexLexer\n\
-        --lex=NAME\n\
-                lex function NAME instead of lex or yylex\n\
-        --class=NAME\n\
-                user-defined class NAME\n\
-        --yyclass=NAME\n\
-                generate Flex-compatible scanner with user-defined class NAME\n\
-        --main\n\
-                generate main() to invoke lex() or yylex()\n\
-        -L, --noline\n\
-                suppress #line directives in scanner\n\
-        -P NAME, --prefix=NAME\n\
-                use NAME as prefix to FlexLexer class name and its members\n\
-        --nostdinit\n\
-                initialize input to std::cin instead of stdin\n\
-        --bison\n\
-                generate global yylex() scanner for bison\n\
-        --bison-bridge\n\
-                generate reentrant yylex() scanner for bison pure parser\n\
-        --bison-locations\n\
-                include bison yylloc support\n\
-        -R, --reentrant\n\
-                generate Flex-compatible yylex() reentrant scanner functions\n\
-                NOTE: adds functions only, reflex scanners are always reentrant\n\
-        --[no]yywrap\n\
-                [do not] call global yywrap() on EOF, requires option --flex\n\
-\n\
    Files:\n\
-        -o FILE, --outfile=FILE\n\
+        -o, --outfile=FILE\n\
                 specify output FILE instead of lex.yy.cpp\n\
         -t, --stdout\n\
                 write scanner on stdout instead of lex.yy.cpp\n\
@@ -544,25 +517,58 @@ void Reflex::help(const char *message, const char *arg)
         --tables-file[=FILE]\n\
                 write the scanner's FSM opcode tables or FSM code to FILE.cpp\n\
 \n\
+   Generated code:\n\
+        --namespace=NAME\n\
+                use C++ namespace NAME for the generated scanner class\n\
+        --lexer=NAME\n\
+                use lexer class NAME instead of Lexer or yyFlexLexer\n\
+        --lex=NAME\n\
+                use lex function NAME instead of lex or yylex\n\
+        --class=NAME\n\
+                declare a user-defined scanner class NAME\n\
+        --yyclass=NAME\n\
+                generate Flex-compatible scanner with user-defined class NAME\n\
+        --main\n\
+                generate main() to invoke lex() or yylex()\n\
+        -L, --noline\n\
+                suppress #line directives in scanner\n\
+        -P, --prefix=NAME\n\
+                use NAME as prefix to FlexLexer class name and its members\n\
+        --nostdinit\n\
+                initialize input to std::cin instead of stdin\n\
+        --bison\n\
+                generate global yylex() scanner for bison\n\
+        --bison-bridge\n\
+                generate reentrant yylex() scanner for bison pure parser\n\
+        --bison-locations\n\
+                include bison yylloc support\n\
+        -R, --reentrant\n\
+                generate Flex-compatible yylex() reentrant scanner functions\n\
+                NOTE: adds functions only, reflex scanners are always reentrant\n\
+        --noyywrap\n\
+                do not call global yywrap() on EOF, requires option --flex\n\
+\n\
    Debugging:\n\
         -d, --debug\n\
                 enable debug mode in scanner\n\
+        -p, --perf-report\n\
+                scanner reports performance statistics to stderr\n\
         -s, --nodefault\n\
-                suppress default rule that ECHOs unmatched text\n\
+                suppress default rule in scanner to ECHO unmatched text\n\
         -v, --verbose\n\
-                display a summary of scanner statistics to stdout\n\
+                report summary of scanner statistics to stdout\n\
         -w, --nowarn\n\
                 do not generate warnings\n\
 \n\
    Miscellaneous:\n\
-        -c      do-nothing POSIX option\n\
-        -n      do-nothing POSIX option\n\
+        -c, -n\n\
+                do-nothing POSIX options\n\
         -?, -h, --help\n\
                 display this help message\n\
         -V, --version\n\
                 display reflex release version\n\
 \n\
-   Lex/Flex-compatible options that are enabled by default or have no effect:\n\
+   Lex/Flex-like options that are enabled by default or have no effect:\n\
         --c++                  default\n\
         --lex-compat           n/a\n\
         --never-interactive    default\n\
@@ -573,7 +579,7 @@ void Reflex::help(const char *message, const char *arg)
         --yylineno             default\n\
         --yymore               default\n\
         --7bit                 n/a\n\
-        --8bit                 n/a\n\
+        --8bit                 default\n\
 " << std::endl;
   exit(message ? EXIT_FAILURE : EXIT_SUCCESS);
 }
@@ -774,10 +780,27 @@ bool Reflex::is_initcode()
   return line == "%init{" || (as(pos, "%init") && pos < linelen && line.at(pos) == '{');
 }
 
-/// Advance pos over name (letters, hyphen/underscore, or any non-ASCII character), return name.
+/// Advance pos over name (letters, digits, hyphen/underscore, or any non-ASCII character), return name.
 std::string Reflex::get_name(size_t& pos)
 {
   if (pos >= linelen || (!std::isalnum(line.at(pos)) && (line.at(pos) & 0x80) != 0x80))
+    return "";
+  size_t loc = pos++;
+  while (pos < linelen)
+  {
+    if (line.at(pos) == '-') // normalize - to _
+      line[pos] = '_';
+    else if (!std::isalnum(line.at(pos)) && line.at(pos) != '_' && (line.at(pos) & 0x80) != 0x80)
+      break;
+    ++pos;
+  }
+  return line.substr(loc, pos - loc);
+}
+
+/// Advance pos over start condition name (an ASCII C++ identifier or C++11 Unicode identifier), return name.
+std::string Reflex::get_start(size_t& pos)
+{
+  if (pos >= linelen || (!std::isalpha(line.at(pos)) && line.at(pos) != '_' && (line.at(pos) & 0x80) != 0x80))
     return "";
   size_t loc = pos++;
   while (pos < linelen)
@@ -918,7 +941,7 @@ Reflex::Starts Reflex::get_starts(size_t& pos)
     do
     {
       ++pos;
-      std::string name = get_name(pos);
+      std::string name = get_start(pos);
       Start start;
       for (start = 0; start < conditions.size() && name != conditions.at(start); ++start)
         continue;
@@ -1047,37 +1070,24 @@ std::string Reflex::get_code(size_t& pos)
 /// Abort with an error message.
 void Reflex::abort(const char *message, const char *arg)
 {
-  std::cerr
-    << SGR("\033[1m")
-    << "reflex: "
-    << SGR("\033[1;31m")
-    << "error: "
-    << SGR("\033[0m")
-    << message
-    << SGR("\033[1m")
-    << (arg != NULL ? arg : "")
-    << SGR("\033[0m")
-    << std::endl;
+  std::cerr <<
+    SGR("\033[1m") << "reflex: " <<
+    SGR("\033[1;31m") << "error: " << SGR("\033[0m") <<
+    message <<
+    SGR("\033[1m") << (arg != NULL ? arg : "") << SGR("\033[0m") <<
+    std::endl;
   exit(EXIT_FAILURE);
 }
 
 /// Report an error and exit.
 void Reflex::error(const char *message, const char *arg, size_t at_lineno)
 {
-  std::cerr
-    << SGR("\033[1m")
-    << infile
-    << ":"
-    << (at_lineno ? at_lineno : lineno)
-    << ": "
-    << SGR("\033[1;31m")
-    << "error: "
-    << SGR("\033[0m")
-    << message
-    << SGR("\033[1m")
-    << (arg != NULL ? arg : "")
-    << SGR("\033[0m")
-    << std::endl;
+  std::cerr <<
+    SGR("\033[1m") << infile << ":" << (at_lineno ? at_lineno : lineno) << ": " <<
+    SGR("\033[1;31m") << "error: " << SGR("\033[0m") <<
+    message <<
+    SGR("\033[1m") << (arg != NULL ? arg : "") << SGR("\033[0m") <<
+    std::endl;
   exit(EXIT_FAILURE);
 }
 
@@ -1085,20 +1095,12 @@ void Reflex::error(const char *message, const char *arg, size_t at_lineno)
 void Reflex::warning(const char *message, const char *arg, size_t at_lineno)
 {
   if (options["nowarn"].empty())
-    std::cerr
-      << SGR("\033[1m")
-      << infile
-      << ":"
-      << (at_lineno ? at_lineno : lineno)
-      << ": "
-      << SGR("\033[1;35m")
-      << "warning: "
-      << SGR("\033[0m")
-      << message
-      << SGR("\033[1m")
-      << (arg != NULL ? arg : "")
-      << SGR("\033[0m")
-      << std::endl;
+    std::cerr <<
+      SGR("\033[1m") << infile << ":" << (at_lineno ? at_lineno : lineno) << ": " <<
+      SGR("\033[1;35m") << "warning: " << SGR("\033[0m") <<
+      message <<
+      SGR("\033[1m") << (arg != NULL ? arg : "") << SGR("\033[0m") <<
+      std::endl;
 }
 
 /// Parse section 1 of a lex specification.
@@ -1165,7 +1167,7 @@ void Reflex::parse_section_1()
             {
               do
               {
-                std::string name = get_name(pos);
+                std::string name = get_start(pos);
                 if (name.empty())
                   error("bad start condition name");
                 inclusive.insert(conditions.size());
@@ -1179,7 +1181,7 @@ void Reflex::parse_section_1()
               {
                 do
                 {
-                  std::string name = get_name(pos);
+                  std::string name = get_start(pos);
                   if (name.empty())
                     error("bad start condition name");
                   conditions.push_back(name);
@@ -1292,7 +1294,7 @@ void Reflex::parse_section_2()
         }
         else
         {
-          for (Starts::const_iterator i = scopes.top().begin(); i != scopes.top().end(); ++i)
+          for (Starts::const_iterator i = scopes.top().cbegin(); i != scopes.top().cend(); ++i)
             section_2[*i].push_back(Code(code, infile, lineno));
         }
       }
@@ -1329,12 +1331,12 @@ void Reflex::parse_section_2()
           }
           else if (no_starts && !scopes.empty())
           {
-            for (Starts::const_iterator start = scopes.top().begin(); start != scopes.top().end(); ++start)
+            for (Starts::const_iterator start = scopes.top().cbegin(); start != scopes.top().cend(); ++start)
               rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
           }
           else
           {
-            for (Starts::const_iterator start = starts.begin(); start != starts.end(); ++start)
+            for (Starts::const_iterator start = starts.cbegin(); start != starts.cend(); ++start)
               rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
           }
           init = false;
@@ -1344,7 +1346,7 @@ void Reflex::parse_section_2()
   }
   if (!scopes.empty())
   {
-    const char *name = conditions.at(*scopes.top().begin()).c_str();
+    const char *name = conditions.at(*scopes.top().cbegin()).c_str();
     if (in->eof())
       error("EOF encountered inside scope ", name);
     else
@@ -1372,7 +1374,7 @@ void Reflex::parse_section_2()
     }
     pattern.resize(pattern.size() - 1); // remove dummy % from (?m...)%
     const char *sep = "";
-    for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
+    for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
     {
       if (rule->regex != "<<EOF>>")
       {
@@ -1612,7 +1614,7 @@ void Reflex::write_prelude()
   if (!out->good())
     return;
   write_banner("OPTIONS USED");
-  for (StringMap::const_iterator option = options.begin(); option != options.end(); ++option)
+  for (StringMap::const_iterator option = options.cbegin(); option != options.cend(); ++option)
   {
     if (!option->second.empty())
     {
@@ -1623,7 +1625,9 @@ void Reflex::write_prelude()
     }
   }
   if (!options["debug"].empty())
-    *out << "\n// debug option enables ASSERT\n#define ASSERT(c) assert(c)" << std::endl;
+    *out << "\n// --debug option enables ASSERT:\n#define ASSERT(c) assert(c)" << std::endl;
+  if (!options["perf_report"].empty())
+    *out << "\n// --perf-report option requires a timer:\n#include <reflex/timer.h>" << std::endl;
 }
 
 /// Write the lexer class to lex.yy.cpp.
@@ -1666,13 +1670,13 @@ void Reflex::write_class()
   }
   write_banner("LEXER CLASS");
   std::string lexer = options["lexer"];
+  if (!options["namespace"].empty())
+    *out << "namespace " << options["namespace"] << " {" << std::endl << std::endl;
+  *out <<
+    "class " << lexer << " : public " << base << " {\n";
+  write_section_class();
   if (!options["flex"].empty())
   {
-    if (!options["namespace"].empty())
-      *out << "namespace " << options["namespace"] << " {" << std::endl << std::endl;
-    *out <<
-      "class " << lexer << " : public " << base << " {\n";
-    write_section_class();
     *out <<
       " public:\n"
       "  " << lexer << "(\n"
@@ -1725,18 +1729,9 @@ void Reflex::write_class()
         "    return " << lex << "();\n"
         "  }"
         << std::endl;
-    *out <<
-      "};" << std::endl;
-    if (!options["namespace"].empty())
-      *out << std::endl << "}" << std::endl;
   }
   else
   {
-    if (!options["namespace"].empty())
-      *out << "namespace " << options["namespace"] << " {" << std::endl << std::endl;
-    *out <<
-      "class " << lexer << " : public " << base << " {\n";
-    write_section_class();
     *out <<
       " public:\n"
       "  typedef " << base << " AbstractBaseLexer;\n"
@@ -1770,11 +1765,12 @@ void Reflex::write_class()
         "      out(*os);\n"
         "    return " << lex << "();\n"
         "  }\n";
-    *out <<
-      "};" << std::endl;
-    if (!options["namespace"].empty())
-      *out << std::endl << "}" << std::endl;
   }
+  write_perf_report();
+  *out <<
+    "};" << std::endl;
+  if (!options["namespace"].empty())
+    *out << std::endl << "}" << std::endl;
 }
 
 /// Write %%top{ %} code to lex.yy.cpp.
@@ -1802,7 +1798,90 @@ void Reflex::write_section_init()
     write_code(section_init);
   if (!options["debug"].empty())
     *out << "    set_debug(" << options["debug"] << ");\n";
+  if (!options["perf_report"].empty())
+    *out << "    set_perf_report();\n";
   *out << "  }" << std::endl;
+}
+
+/// Write perf_report code to lex.yy.cpp.
+void Reflex::write_perf_report()
+{
+  if (!options["perf_report"].empty())
+  {
+    *out <<
+      "  void perf_report()\n"
+      "  {\n"
+      "    if (perf_report_time_pointer != NULL)\n"
+      "      *perf_report_time_pointer += reflex::timer_elapsed(perf_report_timer);\n"
+      "    std::cerr << \"reflex " REFLEX_VERSION " " << infile << " performance report:\\n\";\n";
+    for (Start start = 0; start < conditions.size(); ++start)
+    {
+      *out <<
+        "    std::cerr << \"  " << conditions[start] << " rules matched:\\n\"";
+      size_t report = 0;
+      for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
+      {
+        if (rule->regex != "<<EOF>>" && rule->code.line != "|")
+        {
+          *out <<
+            "\n      \"    rule at line " << rule->code.lineno << " accepted \" << perf_report_" << conditions[start] << "_rule[" << report << "] << \" times matching \" << perf_report_" << conditions[start] << "_size[" << report << "] << \" bytes total in \" << perf_report_" << conditions[start] << "_time[" << report << "] << \" ms\\n\"";
+          ++report;
+        }
+      }
+      if (options["nodefault"].empty())
+        *out <<
+          "\n      \"    default rule matched \" << perf_report_" << conditions[start] << "_default << \" time(s)\\n\"";
+      *out <<
+        ";\n";
+    }
+    *out <<
+      "    std::cerr << \"  WARNING: execution times are relative:\\n    1) includes caller's execution time between matches when " << options["lex"] << "() returns\\n    2) perf-report instrumentation adds overhead and increases execution times\\n\" << std::endl;\n"
+      "    set_perf_report();\n"
+      "  }\n";
+    *out <<
+      "  void set_perf_report()\n"
+      "  {\n";
+    for (Start start = 0; start < conditions.size(); ++start)
+    {
+      size_t report = 0;
+      for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
+      {
+        if (rule->regex != "<<EOF>>" && rule->code.line != "|")
+        {
+          *out <<
+            "    perf_report_" << conditions[start] << "_rule[" << report << "] = 0;\n"
+            "    perf_report_" << conditions[start] << "_size[" << report << "] = 0;\n"
+            "    perf_report_" << conditions[start] << "_time[" << report << "] = 0;\n";
+          ++report;
+        }
+      }
+      if (options["nodefault"].empty())
+        *out <<
+          "    perf_report_" << conditions[start] << "_default = 0;\n";
+    }
+    *out <<
+      "    perf_report_time_pointer = NULL;\n"
+      "    reflex::timer_start(perf_report_timer);\n"
+      "  }\n"
+      " protected:\n";
+    for (Start start = 0; start < conditions.size(); ++start)
+    {
+      size_t report = 0;
+      for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
+        if (rule->regex != "<<EOF>>" && rule->code.line != "|")
+          ++report;
+      *out <<
+        "  size_t perf_report_" << conditions[start] << "_rule[" << report << "];\n"
+        "  size_t perf_report_" << conditions[start] << "_size[" << report << "];\n"
+        "  float  perf_report_" << conditions[start] << "_time[" << report << "];\n";
+      if (options["nodefault"].empty())
+        *out <<
+          "  size_t perf_report_" << conditions[start] << "_default;\n";
+    }
+    *out <<
+      "  float *perf_report_time_pointer;\n"
+      "  reflex::timer_type perf_report_timer;\n";
+  }
 }
 
 /// Write section 1 user-defined code to lex.yy.cpp.
@@ -1831,7 +1910,7 @@ void Reflex::write_code(const Codes& codes)
   if (!out->good())
     return;
   size_t this_lineno = 0;
-  for (Codes::const_iterator code = codes.begin(); code != codes.end(); ++code)
+  for (Codes::const_iterator code = codes.cbegin(); code != codes.cend(); ++code)
   {
     if (code->lineno != this_lineno && options["noline"].empty())
     {
@@ -2077,7 +2156,7 @@ void Reflex::write_lexer()
   else if (!section_2.empty())
   {
     *out << "  switch (start())" << std::endl << "  {" << std::endl;
-    for (CodesMap::const_iterator i = section_2.begin(); i != section_2.end(); ++i)
+    for (CodesMap::const_iterator i = section_2.cbegin(); i != section_2.cend(); ++i)
     {
       *out << "    case " << conditions[i->first] << ":" << std::endl;
       write_code(i->second);
@@ -2088,6 +2167,10 @@ void Reflex::write_lexer()
   *out <<
     "  while (true)\n"
     "  {\n";
+  if (!options["perf_report"].empty())
+    *out <<
+      "    if (perf_report_time_pointer != NULL)\n"
+      "      *perf_report_time_pointer += reflex::timer_elapsed(perf_report_timer);\n";
   if (conditions.size() > 1)
     *out <<
       "    switch (start())\n"
@@ -2105,29 +2188,27 @@ void Reflex::write_lexer()
       "            if (matcher().at_end())\n"
       "            {\n";
     bool has_eof = false;
-    for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
+    for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
     {
       if (rule->regex == "<<EOF>>")
       {
         if (!options["debug"].empty())
-          *out
-            << "              if (debug()) std::cerr << \"--"
-            << SGR("\\033[1;35m")
-            << "EOF rule at line " << rule->code.lineno
-            << SGR("\\033[0m")
-            << " (start condition \" << start() << \")\\n\";\n";
+          *out <<
+            "              if (debug()) std::cerr << \"--" <<
+            SGR("\\033[1;35m") << "EOF rule at line " << rule->code.lineno << SGR("\\033[0m") <<
+            " (start condition \" << start() << \")\\n\";\n";
         write_code(rule->code);
         has_eof = true;
         break;
       }
     }
     if (!has_eof && !options["debug"].empty())
-      *out
-        << "              if (debug()) std::cerr << \"--"
-        << SGR("\\033[1;35m")
-        << "EOF"
-        << SGR("\\033[0m")
-        << " (start condition \" << start() << \")\\n\";\n";
+      *out <<
+        "              if (debug()) std::cerr << \"--" <<
+        SGR("\\033[1;35m") << "EOF" << SGR("\\033[0m") <<
+        " (start condition \" << start() << \")\\n\";\n";
+    if (!options["perf_report"].empty())
+      *out << "              perf_report();\n";
     if (!has_eof)
       *out <<
         "              return 0;\n";
@@ -2136,12 +2217,10 @@ void Reflex::write_lexer()
       "            else\n"
       "            {\n";
     if (!options["debug"].empty())
-      *out
-        << "              if (debug()) std::cerr << \"--"
-        << SGR("\\033[1;31m")
-        << "accepting default rule"
-        << SGR("\\033[0m")
-        << "\\n\";\n";
+      *out <<
+        "              if (debug()) std::cerr << \"--" <<
+        SGR("\\033[1;31m") << "accepting default rule" << SGR("\\033[0m") <<
+        "\\n\";\n";
     if (!options["nodefault"].empty())
     {
       if (!options["flex"].empty())
@@ -2149,25 +2228,25 @@ void Reflex::write_lexer()
           "              LexerError(\"scanner jammed\");\n"
           "              return 0;\n";
       else if (!options["debug"].empty())
-        *out
-          << "              if (debug()) std::cerr << \"--"
-          << SGR("\\033[1;31m")
-          << "suppressing default rule"
-          << SGR("\\033[0m")
-          << " (\\\"\" << (char)matcher().input() << \"\\\")\\n\";\n";
+        *out <<
+          "              if (debug()) std::cerr << \"--" <<
+          SGR("\\033[1;31m") << "suppressing default rule" << SGR("\\033[0m") <<
+          " (\\\"\" << (char)matcher().input() << \"\\\")\\n\";\n";
       else
         *out <<
           "              matcher().input();\n";
     }
-    else if (!options["flex"].empty())
-    {
-      *out <<
-        "              output(matcher().input());\n";
-    }
     else
     {
-      *out <<
-        "              out().put(matcher().input());\n";
+      if (!options["perf_report"].empty())
+        *out <<
+          "              ++perf_report_" << conditions[start] << "_default;\n";
+      if (!options["flex"].empty())
+        *out <<
+          "              output(matcher().input());\n";
+      else
+        *out <<
+          "              out().put(matcher().input());\n";
     }
     *out <<
       "            }\n";
@@ -2178,7 +2257,8 @@ void Reflex::write_lexer()
       *out <<
         "            break;\n";
     size_t accept = 1;
-    for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
+    size_t report = 0;
+    for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
     {
       if (rule->regex != "<<EOF>>")
       {
@@ -2186,13 +2266,19 @@ void Reflex::write_lexer()
           "          case " << accept << ": // rule at line " << rule->code.lineno << ": " << rule->regex << std::endl;
         if (rule->code.line != "|")
         {
+          if (!options["perf_report"].empty())
+          {
+            *out <<
+              "            ++perf_report_" << conditions[start] << "_rule[" << report << "];\n"
+              "            perf_report_" << conditions[start] << "_size[" << report << "] += size();\n"
+              "            perf_report_time_pointer = &perf_report_" << conditions[start] << "_time[" << report << "];\n";
+            ++report;
+          }
           if (!options["debug"].empty())
-            *out
-              << "            if (debug()) std::cerr << \"--"
-              << SGR("\\033[1;35m")
-              << "accepting rule at line " << rule->code.lineno
-              << SGR("\\033[0m")
-              << " (\\\"\" << matcher().text() << \"\\\")\\n\";\n";
+            *out <<
+              "            if (debug()) std::cerr << \"--" <<
+              SGR("\\033[1;35m") << "accepting rule at line " << rule->code.lineno << SGR("\\033[0m") <<
+              " (\\\"\" << matcher().text() << \"\\\")\\n\";\n";
           if (!options["flex"].empty())
             *out <<
               "            YY_USER_ACTION\n";
@@ -2254,7 +2340,7 @@ void Reflex::write_main()
 void Reflex::write_regex(const std::string& regex)
 {
   *out << "\"";
-  for (std::string::const_iterator i = regex.begin(); i != regex.end(); ++i)
+  for (std::string::const_iterator i = regex.cbegin(); i != regex.cend(); ++i)
   {
     if (*i == '\\')
       *out << "\\\\";
@@ -2266,17 +2352,17 @@ void Reflex::write_regex(const std::string& regex)
   *out << "\"";
 }
 
-/// Display statistics.
+/// Display usage report.
 void Reflex::stats()
 {
   if (!options["verbose"].empty())
   {
-    std::cout << "reflex " REFLEX_VERSION " usage statistics:\n" << "  options used:\n";
-    for (StringMap::const_iterator option = options.begin(); option != options.end(); ++option)
+    std::cout << "reflex " REFLEX_VERSION " " << infile << " usage report:\n" << "  options used:\n";
+    for (StringMap::const_iterator option = options.cbegin(); option != options.cend(); ++option)
       if (!option->second.empty())
         std::cout << "    " << option->first << "=" << option->second << std::endl;
     if (!options["verbose"].empty())
-      std::cout << "  inclusive (%s) and exclusive (%x) start conditions (elaped construction time):\n";
+      std::cout << "  inclusive (%s) and exclusive (%x) start conditions (with construction time):\n";
   }
   if (!options["matcher"].empty())
   {
@@ -2291,6 +2377,7 @@ void Reflex::stats()
           std::cout << "%x ";
         std::cout << conditions[start] << ": " << rules[start].size() << " rules\n";
       }
+      std::cout << std::endl;
     }
   }
   else
@@ -2345,6 +2432,8 @@ void Reflex::stats()
         abort("malformed regular expression\n", e.what());
       }
     }
+    if (!options["verbose"].empty())
+      std::cout << std::endl;
   }
 }
 

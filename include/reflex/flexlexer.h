@@ -355,9 +355,9 @@ class FlexLexer : public AbstractLexer<M> {
       FlexLexer *lexer = dynamic_cast<FlexLexer*>(this->lexer_); // a safe cast
       return lexer->LexerInput(s, n); // a nice trick to get input from LexerInput()
     }
-    /// Check the Flex-compatible FlexLexer::yywrap method to determine if matcher should wrap input after EOF.
+    /// Check the Flex-compatible FlexLexer::yywrap method to determine if matcher should wrap input after EOF (lexer yywrap() should return 0 to wrap input after EOF).
     virtual bool wrap()
-      /// @returns true if FlexLexer::yywrap() == 0
+      /// @returns true if FlexLexer::yywrap() == 0 indicating that input is wrapped after EOF
     {
       FlexLexer *lexer = dynamic_cast<FlexLexer*>(this->lexer_); // a safe cast
       return lexer->yywrap() == 0;
