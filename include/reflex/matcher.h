@@ -61,22 +61,22 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// Construct matcher engine from a pattern or a string regex, and an input character sequence.
   template<typename P> /// @tparam <P> a reflex::Pattern or a string regex 
   Matcher(
-      const P     *pat,           ///< points to a reflex::Pattern or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P     *pattern,         ///< points to a reflex::Pattern or a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      PatternMatcher<reflex::Pattern>(pat, inp, opt)
+      PatternMatcher<reflex::Pattern>(pattern, input, opt)
   {
     reset(opt);
   }
   /// Construct matcher engine from a pattern or a string regex, and an input character sequence.
   template<typename P> /// @tparam <P> a reflex::Pattern or a string regex 
   Matcher(
-      const P&     pat,            ///< a reflex::Pattern or a string regex for this matcher
-      const Input& inp = Input(),  ///< input character sequence for this matcher
-      const char   *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P&     pattern,          ///< a reflex::Pattern or a string regex for this matcher
+      const Input& input = Input(),  ///< input character sequence for this matcher
+      const char   *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      PatternMatcher<reflex::Pattern>(pat, inp, opt)
+      PatternMatcher<reflex::Pattern>(pattern, input, opt)
   {
     reset(opt);
   }

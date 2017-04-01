@@ -40,18 +40,14 @@
 #include <cstring>
 #include <string>
 
-#ifdef WITH_STANDARD_REPLACEMENT_CHARACTER
-
+#if defined(WITH_STANDARD_REPLACEMENT_CHARACTER)
 /// Replace invalid UTF-8 with the standard replacement character.
 # define REFLEX_NONCHAR      (0xFFFD)
 # define REFLEX_NONCHAR_UTF8 "\xef\xbf\xbd"
-
 #else
-
 /// Replace invalid UTF-8 with the non-character U+200000 code point for guaranteed error detection (the U+FFFD code point makes error detection harder and possible to miss).
 # define REFLEX_NONCHAR      (0x200000)
 # define REFLEX_NONCHAR_UTF8 "\xf8\x88\x80\x80\x80"
-
 #endif
 
 namespace reflex {

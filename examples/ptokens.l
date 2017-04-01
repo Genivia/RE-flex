@@ -20,7 +20,7 @@
 // implicit line joining is done with the JOINING start condition state
 %x JOINING
 
-// use fast option to eliminate tokenizer startup time, set indent tabs=8
+// use full/fast option to eliminate tokenizer startup time, set indent tabs=8
 %o fast tabs=8
 
 // dot matches \n

@@ -365,8 +365,8 @@ class FlexLexer : public AbstractLexer<M> {
   };
   /// Construct Flex-compatible lexer to read from a std::istream (and echo the text matches to a std::ostream).
   FlexLexer(
-      const Input&  input = stdin, ///< std::istream (stdin by default) to read a character sequence from
-      std::ostream *os    = NULL)  ///< echo the text matches to this std::ostream (std::cout by default)
+      const Input&  input, ///< input to read from
+      std::ostream *os)    ///< echo the text matches to this std::ostream (std::cout by default)
     :
       AbstractBaseLexer(input, os ? *os : std::cout)
   { }
@@ -401,10 +401,13 @@ class FlexLexer : public AbstractLexer<M> {
   }
   /// Switch input and output streams.
   virtual void switch_streams(
-      const Input&  input = stdin,      ///< input to read from
-      std::ostream *os    = &std::cout) ///< echo the text matches to this std::ostream
+      const Input&  input = Input(), ///< new input to read from
+      std::ostream *os    = NULL)    ///< echo the text matches to this std::ostream or std::cout by default
   {
-    this->in(input).out(*os);
+    if (input.assigned())
+      this->in(input);
+    if (os)
+      this->out(*os);
   }
   /// Default yywrap operation at EOF: do not wrap input.
   virtual int yywrap()

@@ -234,7 +234,7 @@ class Input {
     static const unsigned short utf32le = 6; ///< UTF-32 little endian
   };
   /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
-  Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects at the same time)
+  Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects)
     :
       cstring_(input.cstring_),
       wstring_(input.wstring_),
@@ -346,25 +346,25 @@ class Input {
   {
     init();
   }
-  /// Cast this Input object to string.
+  /// Cast this Input object to a string, returns NULL when this Input is not a string.
   operator const char *()
     /// @returns remaining unbuffered part of the NUL-terminated string or NULL.
   {
     return cstring_;
   }
-  /// Cast this Input object to wide character string.
+  /// Cast this Input object to a wide character string, returns NULL when this Input is not a wide string.
   operator const wchar_t *()
     /// @returns remaining unbuffered part of the NUL-terminated wide character string or NULL.
   {
     return wstring_;
   }
-  /// Cast this Input object to file descriptor FILE*.
+  /// Cast this Input object to a file descriptor FILE*, returns NULL when this Input is not a FILE*.
   operator FILE *()
     /// @returns pointer to current file descriptor or NULL.
   {
     return file_;
   }
-  /// Cast this Input object to std::istream*.
+  /// Cast this Input object to a std::istream*, returns NULL when this Input is not a std::istream.
   operator std::istream *()
     /// @returns pointer to current std::istream or NULL.
   {
@@ -376,25 +376,25 @@ class Input {
   {
     return good();
   }
-  /// Get the remaining string of this Input object.
+  /// Get the remaining string of this Input object, returns NULL when this Input is not a string.
   const char *cstring()
     /// @returns remaining unbuffered part of the NUL-terminated string or NULL.
   {
     return cstring_;
   }
-  /// Get the remaining wide character string of this Input object.
+  /// Get the remaining wide character string of this Input object, returns NULL when this Input is not a wide string.
   const wchar_t *wstring()
     /// @returns remaining unbuffered part of the NUL-terminated wide character string or NULL.
   {
     return wstring_;
   }
-  /// Get the FILE* of this Input object.
+  /// Get the FILE* of this Input object, returns NULL when this Input is not a FILE*.
   FILE *file()
     /// @returns pointer to current file descriptor or NULL.
   {
     return file_;
   }
-  /// Get the std::istream of this Input object.
+  /// Get the std::istream of this Input object, returns NULL when this Input is not a std::istream.
   std::istream *istream()
     /// @returns pointer to current std::istream or NULL.
   {
@@ -449,6 +449,20 @@ class Input {
       }
     }
     return size_;
+  }
+  /// Check if this Input object was assigned a character sequence.
+  bool assigned() const
+    /// @returns true if this Input object was assigned (not default constructed or cleared).
+  {
+    return cstring_ || wstring_ || file_ || istream_;
+  }
+  /// Clear this Input by unassigning it.
+  void clear()
+  {
+    cstring_ = NULL;
+    wstring_ = NULL;
+    file_ = NULL;
+    istream_ = NULL;
   }
   /// Check if input is available.
   bool good()

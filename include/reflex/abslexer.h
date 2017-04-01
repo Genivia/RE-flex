@@ -119,13 +119,13 @@ class AbstractLexer {
   {
     return 1;
   }
-  /// Start scanning from the given input character sequence.
+  /// Reset the matcher and start scanning from the given input character sequence.
   AbstractLexer& in(const Input& input) ///< reflex::Input character sequence to scan
     /// @returns reference to *this.
   {
     in_ = input;
     if (has_matcher())
-      matcher().in = input;
+      matcher().input(input); // reset and assign new input
     return *this;
   }
   /// Returns the current input character sequence that is being scanned.
@@ -134,6 +134,22 @@ class AbstractLexer {
   {
     if (has_matcher())
       return matcher().in;
+    return in_;
+  }
+  /// Returns the current input character sequence that is being scanned, if none assign stdin.
+  Input& stdinit()
+    /// @returns reference to the current reflex::Input object with input assigned.
+  {
+    if (!in_.assigned())
+      in_ = stdin;
+    return in_;
+  }
+  /// Returns the current input character sequence that is being scanned, if none assign std::cin.
+  Input& nostdinit()
+    /// @returns reference to the current reflex::Input object with input assigned.
+  {
+    if (!in_.assigned())
+      in_ = std::cin;
     return in_;
   }
   /// Set the current output to the given output stream to echo text matches to.
@@ -252,7 +268,6 @@ class AbstractLexer {
   {
     return matcher().columno();
   }
- protected:
   /// Transition to the given start condition state.
   AbstractLexer& start(int state) ///< start condition state to transition to
     /// @returns reference to *this.
@@ -286,6 +301,7 @@ class AbstractLexer {
     ASSERT(!state_.empty());
     return state_.top();
   }
+ protected:
   Matcher             *matcher_; ///< the matcher used for scanning
   Input                in_;      ///< the input character sequence to scan
   std::ostream        *os_;      ///< the output stream to echo text matches to

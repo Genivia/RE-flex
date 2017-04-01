@@ -1,4 +1,4 @@
-.TH REFLEX "1" "March 26, 2017" "reflex 0.9.18" "User Commands"
+.TH REFLEX "1" "March 31, 2017" "reflex 0.9.19" "User Commands"
 .SH NAME
 reflex \- the regex\-centric fast and flexible lexical analyzer generator
 .SH SYNOPSIS
@@ -159,8 +159,8 @@ display reflex release version
 .TP
 \fB\-\-8bit\fR                 default
 .SH DEPENDENCIES
-None, except when specified with option \fB-m\fR to use a pattern\-matcher
-engine such as boost that requires the Boost.Regex library installed.
+None, except when option \fB-m\fR specifies an external pattern\-matcher engine
+such as boost that requires the Boost.Regex library installed.
 .SH "DOCUMENTATION"
 The full documentation for \fBreflex\fR is maintained as a Doxygen\-generated
 manual reflex/doc/html/index.html located in the source directory of the reflex
@@ -170,7 +170,7 @@ installation.  Or visit:
 .PP
 to browse the reflex user guide.
 .SH BUGS
-REJECT is not supported.
+REJECT is not functional and not available.
 
 Report bugs at:
 .IP

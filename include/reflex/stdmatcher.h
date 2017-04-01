@@ -60,22 +60,22 @@ class StdMatcher : public PatternMatcher<std::regex> {
   /// Construct matcher engine from a std::regex object or string regex, and an input character sequence.
   template<typename P> /// @tparam <P> pattern is a std::regex or a string regex
   StdMatcher(
-      const P     *pat,           ///< points to a std::regex or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P     *pattern,         ///< points to a std::regex or a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      PatternMatcher(pat, inp, opt)
+      PatternMatcher(pattern, input, opt)
   {
     reset();
   }
   /// Construct matcher engine from a std::regex object or string regex, and an input character sequence.
   template<typename P> /// @tparam <P> pattern is a std::regex or a string regex
   StdMatcher(
-      const P&     pat,           ///< a std::regex or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P&     pattern,         ///< a std::regex or a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      PatternMatcher(pat, inp, opt)
+      PatternMatcher(pattern, input, opt)
   {
     reset();
   }
@@ -97,34 +97,34 @@ class StdMatcher : public PatternMatcher<std::regex> {
     return this->pattern(matcher.pattern());
   }
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), overrides the ECMA/POSIX/AWK syntax option.
-  virtual PatternMatcher& pattern(const Pattern *pat) ///< std::regex for this matcher
+  virtual PatternMatcher& pattern(const Pattern *pattern) ///< std::regex for this matcher
     /// @returns this matcher.
   {
     itr_ = fin_;
-    return PatternMatcher::pattern(pat);
+    return PatternMatcher::pattern(pattern);
   }
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), overrides the ECMA/POSIX/AWK syntax option.
-  virtual PatternMatcher& pattern(const Pattern& pat) ///< std::regex for this matcher
+  virtual PatternMatcher& pattern(const Pattern& pattern) ///< std::regex for this matcher
     /// @returns this matcher.
   {
     itr_ = fin_;
-    return PatternMatcher::pattern(pat);
+    return PatternMatcher::pattern(pattern);
   }
   /// Set the pattern from a regex string to use with this matcher.
-  virtual PatternMatcher& pattern(const char *pat) ///< regex string to instantiate internal pattern object
+  virtual PatternMatcher& pattern(const char *pattern) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
     itr_ = fin_;
-    PatternMatcher::pattern(new std::regex(pat));
+    PatternMatcher::pattern(new std::regex(pattern));
     own_ = true;
     return *this;
   }
   /// Set the pattern from a regex string to use with this matcher.
-  virtual PatternMatcher& pattern(const std::string& pat) ///< regex string to instantiate internal pattern object
+  virtual PatternMatcher& pattern(const std::string& pattern) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
     itr_ = fin_;
-    PatternMatcher::pattern(new std::regex(pat));
+    PatternMatcher::pattern(new std::regex(pattern));
     own_ = true;
     return *this;
   }
@@ -327,65 +327,65 @@ class StdEcmaMatcher : public StdMatcher {
   { }
   /// Construct an ECMA matcher engine from a string pattern and an input character sequence.
   StdEcmaMatcher(
-      const char  *pat,           ///< a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const char  *pattern,         ///< a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      StdMatcher(new std::regex(pat, std::regex::ECMAScript), inp, opt)
+      StdMatcher(new std::regex(pattern, std::regex::ECMAScript), input, opt)
   {
     own_ = true;
   }
   /// Construct an ECMA matcher engine from a string pattern and an input character sequence.
   StdEcmaMatcher(
-      const std::string& pat,           ///< a string regex for this matcher
-      const Input&       inp = Input(), ///< input character sequence for this matcher
-      const char        *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const std::string& pattern,         ///< a string regex for this matcher
+      const Input&       input = Input(), ///< input character sequence for this matcher
+      const char        *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      StdMatcher(new std::regex(pat, std::regex::ECMAScript), inp, opt)
+      StdMatcher(new std::regex(pattern, std::regex::ECMAScript), input, opt)
   {
     own_ = true;
   }
   /// Construct an ECMA matcher engine from a std::regex pattern and an input character sequence.
   StdEcmaMatcher(
-      const Pattern& pat,           ///< a std::regex for this matcher
-      const Input&   inp = Input(), ///< input character sequence for this matcher
-      const char    *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const Pattern& pattern,         ///< a std::regex for this matcher
+      const Input&   input = Input(), ///< input character sequence for this matcher
+      const char    *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      StdMatcher(&pat, inp, opt)
+      StdMatcher(&pattern, input, opt)
   {
-    ASSERT(!(pat.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
+    ASSERT(!(pattern.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
     own_ = false;
   }
   using StdMatcher::pattern;
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a POSIX std::regex is given.
-  virtual PatternMatcher& pattern(const Pattern& pat) ///< std::regex for this matcher
+  virtual PatternMatcher& pattern(const Pattern& pattern) ///< std::regex for this matcher
     /// @returns this matcher.
   {
-    ASSERT(!(pat.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
-    return StdMatcher::pattern(pat);
+    ASSERT(!(pattern.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
+    return StdMatcher::pattern(pattern);
   }
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a POSIX std::regex is given.
-  virtual PatternMatcher& pattern(const Pattern *pat) ///< std::regex for this matcher
+  virtual PatternMatcher& pattern(const Pattern *pattern) ///< std::regex for this matcher
     /// @returns this matcher.
   {
-    ASSERT(!(pat.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
-    return StdMatcher::pattern(pat);
+    ASSERT(!(pattern.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
+    return StdMatcher::pattern(pattern);
   }
   /// Set the pattern from a regex string to use with this matcher.
-  virtual PatternMatcher& pattern(const char *pat) ///< regex string to instantiate internal pattern object
+  virtual PatternMatcher& pattern(const char *pattern) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
     itr_ = fin_;
-    PatternMatcher::pattern(new std::regex(pat, std::regex::ECMAScript));
+    PatternMatcher::pattern(new std::regex(pattern, std::regex::ECMAScript));
     own_ = true;
     return *this;
   }
   /// Set the pattern from a regex string to use with this matcher.
-  virtual PatternMatcher& pattern(const std::string& pat) ///< regex string to instantiate internal pattern object
+  virtual PatternMatcher& pattern(const std::string& pattern) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
     itr_ = fin_;
-    PatternMatcher::pattern(new std::regex(pat, std::regex::ECMAScript));
+    PatternMatcher::pattern(new std::regex(pattern, std::regex::ECMAScript));
     own_ = true;
     return *this;
   }
@@ -408,65 +408,65 @@ class StdPosixMatcher : public StdMatcher {
   { }
   /// Construct a POSIX matcher engine from a string regex pattern and an input character sequence.
   StdPosixMatcher(
-      const char  *pat,           ///< a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const char  *pattern,         ///< a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      StdMatcher(new std::regex(pat, std::regex::awk), inp, opt)
+      StdMatcher(new std::regex(pattern, std::regex::awk), input, opt)
   {
     own_ = true;
   }
   /// Construct a POSIX ERE matcher engine from a string regex pattern and an input character sequence.
   StdPosixMatcher(
-      const std::string& pat,           ///< a string regex for this matcher
-      const Input&       inp = Input(), ///< input character sequence for this matcher
-      const char        *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const std::string& pattern,         ///< a string regex for this matcher
+      const Input&       input = Input(), ///< input character sequence for this matcher
+      const char        *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      StdMatcher(new std::regex(pat, std::regex::awk), inp, opt)
+      StdMatcher(new std::regex(pattern, std::regex::awk), input, opt)
   {
     own_ = true;
   }
   /// Construct a matcher engine from a std::regex pattern and an input character sequence.
   StdPosixMatcher(
-      const Pattern& pat,           ///< a std::regex for this matcher
-      const Input&   inp = Input(), ///< input character sequence for this matcher
-      const char    *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const Pattern& pattern,         ///< a std::regex for this matcher
+      const Input&   input = Input(), ///< input character sequence for this matcher
+      const char    *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      StdMatcher(&pat, inp, opt)
+      StdMatcher(&pattern, input, opt)
   {
-    ASSERT(pat.flags() & std::regex::awk);
+    ASSERT(pattern.flags() & std::regex::awk);
     own_ = false;
   }
   using StdMatcher::pattern;
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a non-POSIX ERE std::regex is given.
-  virtual PatternMatcher& pattern(const Pattern& pat) ///< std::regex for this matcher
+  virtual PatternMatcher& pattern(const Pattern& pattern) ///< std::regex for this matcher
     /// @returns this matcher.
   {
-    ASSERT(pat.flags() & std::regex::awk);
-    return StdMatcher::pattern(pat);
+    ASSERT(pattern.flags() & std::regex::awk);
+    return StdMatcher::pattern(pattern);
   }
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a non-POSIX ERE std::regex is given.
-  virtual PatternMatcher& pattern(const Pattern *pat) ///< std::regex for this matcher
+  virtual PatternMatcher& pattern(const Pattern *pattern) ///< std::regex for this matcher
     /// @returns this matcher.
   {
-    ASSERT(pat.flags() & std::regex::awk);
-    return StdMatcher::pattern(pat);
+    ASSERT(pattern.flags() & std::regex::awk);
+    return StdMatcher::pattern(pattern);
   }
   /// Set the pattern from a regex string to use with this matcher.
-  virtual PatternMatcher& pattern(const char *pat) ///< regex string to instantiate internal pattern object
+  virtual PatternMatcher& pattern(const char *pattern) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
     itr_ = fin_;
-    PatternMatcher::pattern(new std::regex(pat, std::regex::awk));
+    PatternMatcher::pattern(new std::regex(pattern, std::regex::awk));
     own_ = true;
     return *this;
   }
   /// Set the pattern from a regex string to use with this matcher.
-  virtual PatternMatcher& pattern(const std::string& pat) ///< regex string to instantiate internal pattern object
+  virtual PatternMatcher& pattern(const std::string& pattern) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
     itr_ = fin_;
-    PatternMatcher::pattern(new std::regex(pat, std::regex::awk));
+    PatternMatcher::pattern(new std::regex(pattern, std::regex::awk));
     own_ = true;
     return *this;
   }

@@ -197,7 +197,8 @@ static std::string unicode_class(const char *s, int esc, const char *par)
           regex.append(utf8(last, 0x10FFFF, esc, par)).push_back('|');
         }
       }
-      regex.resize(regex.size() - 1);
+      if (!regex.empty())
+        regex.resize(regex.size() - 1);
     }
     else
     {
@@ -281,6 +282,22 @@ static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, c
         if (!supports_escape(escapes, 'b'))
           throw regex_error(regex_error::invalid_anchor, pattern, pos);
         // translate \y to \b
+        regex.append(&pattern[loc], pos - loc - 1).append("\\b");
+        loc = pos + 1;
+      }
+      else if (c == 'B')
+      {
+        if (!supports_escape(escapes, 'Y'))
+          throw regex_error(regex_error::invalid_anchor, pattern, pos);
+        // translate \B to \Y
+        regex.append(&pattern[loc], pos - loc - 1).append("\\y");
+        loc = pos + 1;
+      }
+      else if (c == 'Y')
+      {
+        if (!supports_escape(escapes, 'B'))
+          throw regex_error(regex_error::invalid_anchor, pattern, pos);
+        // translate \Y to \B
         regex.append(&pattern[loc], pos - loc - 1).append("\\b");
         loc = pos + 1;
       }
@@ -1284,12 +1301,16 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
             ORanges<int> inverse(0x00, 0x10FFFF);
             inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
             inverse -= ranges;
+            if (inverse.empty())
+              throw regex_error(regex_error::empty_class, pattern, loc);
             regex.append(convert_unicode_ranges(inverse, esc, par));
           }
           else
           {
             ORanges<int>::const_reverse_iterator i = ranges.rbegin();
-            if (i != ranges.rend() && i->second - 1 > 0xFF)
+            if (i == ranges.rend())
+              throw regex_error(regex_error::empty_class, pattern, loc);
+            if (i->second - 1 > 0xFF)
               throw regex_error(regex_error::invalid_class, pattern, pos);
             // ASCII: translate [^ ] to new [^ ] regex
             regex.append("[^").append(convert_posix_ranges(ranges, esc));
@@ -1306,13 +1327,17 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
             convert_anycase_ranges(ranges);
           if (is_modified(mod, 'u'))
           {
+            if (ranges.empty())
+              throw regex_error(regex_error::empty_class, pattern, loc);
             // Unicode: translate [ ] to new regex
             regex.append(convert_unicode_ranges(ranges, esc, par));
           }
           else
           {
             ORanges<int>::const_reverse_iterator i = ranges.rbegin();
-            if (i != ranges.rend() && i->second - 1 > 0xFF)
+            if (i == ranges.rend())
+              throw regex_error(regex_error::empty_class, pattern, loc);
+            if (i->second - 1 > 0xFF)
               throw regex_error(regex_error::invalid_class, pattern, pos);
             // ASCII: translate [ ] to new regex
             regex.append("[").append(convert_posix_ranges(ranges, esc));
@@ -1378,6 +1403,10 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           if (pos >= len || pattern[pos] != '"')
             throw regex_error(regex_error::mismatched_quotation, pattern, loc);
           loc = pos + 1;
+        }
+        else
+        {
+          beg = false;
         }
         anc = false;
         break;

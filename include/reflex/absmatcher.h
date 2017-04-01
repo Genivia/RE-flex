@@ -324,12 +324,12 @@ class AbstractMatcher {
     DBGLOG("AbstractMatcher::flush()");
     pos_ = end_;
   }
-  /// Set the input character sequence for this matcher and reset the matcher.
-  virtual AbstractMatcher& input(const Input& inp) ///< input character sequence for this matcher
+  /// Set the input character sequence for this matcher and reset/restart the matcher.
+  virtual AbstractMatcher& input(const Input& input) ///< input character sequence for this matcher
     /// @returns this matcher.
   {
     DBGLOG("AbstractMatcher::input()");
-    in = inp;
+    in = input;
     reset();
     return *this;
   }
@@ -441,7 +441,7 @@ class AbstractMatcher {
     for (const char *s = txt_ - 1; s >= buf_; --s)
       if (*s == '\n')
         return txt_ - s - 1;
-#ifdef WITH_BYTE_COLUMNO
+#if defined(WITH_BYTE_COLUMNO)
     // count column offset in bytes
     return cno_ + txt_ - buf_;
 #else
@@ -530,7 +530,7 @@ class AbstractMatcher {
     }
     else
     {
-#ifdef WITH_FAST_GET
+#if defined(WITH_FAST_GET)
       got_ = get_more();
 #else
       got_ = get();
@@ -721,26 +721,26 @@ class AbstractMatcher {
  protected:
   /// Construct a base abstract matcher.
   AbstractMatcher(
-      const Input& inp, ///< input character sequence for this matcher
-      const char  *opt) ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const Input& input, ///< input character sequence for this matcher
+      const char  *opt)   ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
       scan(this, Const::SCAN),
       find(this, Const::FIND),
       split(this, Const::SPLIT)
   {
-    in = inp;
+    in = input;
     init(opt);
   }
   /// Construct a base abstract matcher.
   AbstractMatcher(
-      const Input&  inp, ///< input character sequence for this matcher
-      const Option& opt) ///< options
+      const Input&  input, ///< input character sequence for this matcher
+      const Option& opt)   ///< options
     :
       scan(this, Const::SCAN),
       find(this, Const::FIND),
       split(this, Const::SPLIT)
   {
-    in = inp;
+    in = input;
     init();
     opt_ = opt;
   }
@@ -748,7 +748,7 @@ class AbstractMatcher {
   void init(const char *opt = NULL) ///< options
   {
     DBGLOG("AbstractMatcher::init(%s)", opt ? opt : "");
-#ifdef WITH_REALLOC
+#if defined(WITH_REALLOC)
     buf_ = static_cast<char*>(std::malloc(max_ = 2 * Const::BLOCK));
 #else
     buf_ = new char[max_ = 2 * Const::BLOCK];
@@ -805,7 +805,7 @@ class AbstractMatcher {
         ind_ -= gap;
         pos_ -= gap;
         end_ -= gap;
-#ifdef WITH_REALLOC
+#if defined(WITH_REALLOC)
         txt_ = buf_ = static_cast<char*>(std::realloc(static_cast<void*>(buf_), max_));
 #else
         char *newbuf = new char[max_];
@@ -822,7 +822,7 @@ class AbstractMatcher {
     /// @returns the character read (unsigned char 0..255) or EOF (-1).
   {
     DBGLOG("AbstractMatcher::get()");
-#ifdef WITH_FAST_GET
+#if defined(WITH_FAST_GET)
     return pos_ < end_ ? static_cast<unsigned char>(buf_[pos_++]) : get_more();
 #else
     if (pos_ < end_)
@@ -850,7 +850,7 @@ class AbstractMatcher {
     /// @returns the character (unsigned char 0..255) or EOF (-1).
   {
     DBGLOG("AbstractMatcher::peek()");
-#ifdef WITH_FAST_GET
+#if defined(WITH_FAST_GET)
     return pos_ < end_ ? static_cast<unsigned char>(buf_[pos_]) : peek_more();
 #else
     if (pos_ < end_)
@@ -909,7 +909,7 @@ class AbstractMatcher {
   bool           eof_; ///< input has reached EOF
   bool           mat_; ///< true if AbstractMatcher::matches() was successful
  private:
-#ifdef WITH_FAST_GET
+#if defined(WITH_FAST_GET)
   /// Get the next character if not currently buffered.
   int get_more()
     /// @returns the character read (unsigned char 0..255) or EOF (-1).
@@ -956,7 +956,7 @@ class AbstractMatcher {
   /// Update the newline count, column count, and character count when shifting the buffer. 
   void update()
   {
-#ifdef WITH_BYTE_COLUMNO
+#if defined(WITH_BYTE_COLUMNO)
     const char *t = buf_;
     for (const char *s = buf_; s < txt_; ++s)
     {
@@ -1008,7 +1008,7 @@ class PatternMatcher : public AbstractMatcher {
     DBGLOG("PatternMatcher::~PatternMatcher()");
     if (own_ && pat_ != NULL)
       delete pat_;
-#ifdef WITH_REALLOC
+#if defined(WITH_REALLOC)
     std::free(static_cast<void*>(buf_));
 #else
     delete[] buf_;
@@ -1022,52 +1022,52 @@ class PatternMatcher : public AbstractMatcher {
     return this->pattern(matcher.pattern());
   }
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent).
-  virtual PatternMatcher& pattern(const Pattern& pat) ///< pattern object for this matcher
+  virtual PatternMatcher& pattern(const Pattern& pattern) ///< pattern object for this matcher
     /// @returns this matcher.
   {
     DBGLOG("Patternatcher::pattern()");
-    if (pat_ != &pat)
+    if (pat_ != &pattern)
     {
       if (own_ && pat_ != NULL)
         delete pat_;
-      pat_ = &pat;
+      pat_ = &pattern;
       own_ = false;
     }
     return *this;
   }
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent).
-  virtual PatternMatcher& pattern(const Pattern *pat) ///< pattern object for this matcher
+  virtual PatternMatcher& pattern(const Pattern *pattern) ///< pattern object for this matcher
     /// @returns this matcher.
   {
     DBGLOG("Patternatcher::pattern()");
-    if (pat_ != pat)
+    if (pat_ != pattern)
     {
       if (own_ && pat_ != NULL)
         delete pat_;
-      pat_ = pat;
+      pat_ = pattern;
       own_ = false;
     }
     return *this;
   }
   /// Set the pattern from a regex string to use with this matcher.
-  virtual PatternMatcher& pattern(const char *pat) ///< regex string to instantiate internal pattern object
+  virtual PatternMatcher& pattern(const char *pattern) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
-    DBGLOG("Patternatcher::pattern(\"%s\")", pat);
+    DBGLOG("Patternatcher::pattern(\"%s\")", pattern);
     if (own_ && pat_ != NULL)
       delete pat_;
-    pat_ = new Pattern(pat);
+    pat_ = new Pattern(pattern);
     own_ = true;
     return *this;
   }
   /// Set the pattern from a regex string to use with this matcher.
-  virtual PatternMatcher& pattern(const std::string& pat) ///< regex string to instantiate internal pattern object
+  virtual PatternMatcher& pattern(const std::string& pattern) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
-    DBGLOG("Patternatcher::pattern(\"%s\")", pat.c_str());
+    DBGLOG("Patternatcher::pattern(\"%s\")", pattern.c_str());
     if (own_ && pat_ != NULL)
       delete pat_;
-    pat_ = new Pattern(pat);
+    pat_ = new Pattern(pattern);
     own_ = true;
     return *this;
   }
@@ -1093,42 +1093,42 @@ class PatternMatcher : public AbstractMatcher {
  protected:
   /// Construct a base abstract matcher from a pointer to a persistent pattern object (that is shared with this class) and an input character sequence.
   PatternMatcher(
-      const Pattern *pat = NULL,    ///< points to pattern object for this matcher
-      const Input&   inp = Input(), ///< input character sequence for this matcher
-      const char    *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const Pattern *pattern = NULL,  ///< points to pattern object for this matcher
+      const Input&   input = Input(), ///< input character sequence for this matcher
+      const char    *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      AbstractMatcher(inp, opt),
+      AbstractMatcher(input, opt),
       own_(false),
-      pat_(pat)
+      pat_(pattern)
   { }
   PatternMatcher(
-      const Pattern& pat,           ///< pattern object for this matcher
-      const Input&   inp = Input(), ///< input character sequence for this matcher
-      const char    *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const Pattern& pattern,         ///< pattern object for this matcher
+      const Input&   input = Input(), ///< input character sequence for this matcher
+      const char    *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      AbstractMatcher(inp, opt),
+      AbstractMatcher(input, opt),
       own_(false),
-      pat_(&pat)
+      pat_(&pattern)
   { }
   /// Construct a base abstract matcher from a regex pattern string and an input character sequence.
   PatternMatcher(
-      const char  *pat,           ///< regex string instantiates pattern object for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const char  *pattern,         ///< regex string instantiates pattern object for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      AbstractMatcher(inp, opt),
+      AbstractMatcher(input, opt),
       own_(true),
-      pat_(new Pattern(pat))
+      pat_(new Pattern(pattern))
   { }
   /// Construct a base abstract matcher from a regex pattern string and an input character sequence.
   PatternMatcher(
-      const std::string& pat,           ///< regex string instantiates pattern object for this matcher
-      const Input&       inp = Input(), ///< input character sequence for this matcher
-      const char        *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const std::string& pattern,         ///< regex string instantiates pattern object for this matcher
+      const Input&       input = Input(), ///< input character sequence for this matcher
+      const char        *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      AbstractMatcher(inp, opt),
+      AbstractMatcher(input, opt),
       own_(true),
-      pat_(new Pattern(pat))
+      pat_(new Pattern(pattern))
   { }
   bool           own_; ///< true if PatternMatcher::pat_ was internally allocated
   const Pattern *pat_; ///< points to the pattern object used by the matcher

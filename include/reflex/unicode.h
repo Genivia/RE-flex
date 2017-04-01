@@ -34,8 +34,8 @@
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
-#ifndef UNICODE_H
-#define UNICODE_H
+#ifndef REFLEX_UNICODE_H
+#define REFLEX_UNICODE_H
 
 #include "posix.h"
 

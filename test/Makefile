@@ -51,5 +51,5 @@ clean:
 		-rm -rf *.dSYM
 		-rm -f *.o *.gch *.log
 		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv reflex.*.txt
-		-rm -f test_regex_history dump.gv dump.pdf dump.cpp
+		-rm -f a.out test_regex_history dump.gv dump.pdf dump.cpp
 		-rm -f lorem test rtest btest stest test_bits test_ranges

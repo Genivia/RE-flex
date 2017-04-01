@@ -33,8 +33,8 @@ END
 | sed -e 's/-/\\-/g' >> doc/man/reflex.1
 cat >> doc/man/reflex.1 << END
 .SH DEPENDENCIES
-None, except when specified with option \fB-m\fR to use a pattern\-matcher
-engine such as boost that requires the Boost.Regex library installed.
+None, except when option \fB-m\fR specifies an external pattern\-matcher engine
+such as boost that requires the Boost.Regex library installed.
 .SH "DOCUMENTATION"
 The full documentation for \fBreflex\fR is maintained as a Doxygen\-generated
 manual reflex/doc/html/index.html located in the source directory of the reflex
@@ -44,7 +44,7 @@ installation.  Or visit:
 .PP
 to browse the reflex user guide.
 .SH BUGS
-REJECT is not supported.
+REJECT is not functional and not available.
 
 Report bugs at:
 .IP
@@ -59,6 +59,8 @@ the ability to reuse all or parts of the reflex source tree.
 .SH "SEE ALSO"
 lex(1), flex(1), flex++(1).
 END
+
+echo "reflex $1 manual page created and saved in doc/man/reflex.1"
 
 else
 

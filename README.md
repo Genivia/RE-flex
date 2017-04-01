@@ -7,16 +7,16 @@ Flex reimagined.  Fast, flexible, adds Boost 💪
 
 RE/flex is as fast as Flex (in some cases faster), and much faster than regex
 libraries such as Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example,
-tokenizing a representative C source code file into 240 tokens takes:
+tokenizing a representative C source code file into 244 tokens takes:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
-<tr><td><b>reflex --fast</b></td><td><b>RE/flex</b></td><td><b>17</b></td></tr>
-<tr><td>flex -+ --full</td><td>Flex</td><td>18</td></tr>
-<tr><td><b>reflex --full</b></td><td><b>RE/flex</b></td><td><b>39</b></td></tr>
-<tr><td>reflex -m=boost-perl</td><td>Boost.Regex (Perl mode)</td><td>288</td></tr>
+<tr><td><b>reflex --fast</b></td><td><b>RE/flex</b></td><td><b>13</b></td></tr>
+<tr><td>flex -+ --full</td><td>Flex</td><td>17</td></tr>
+<tr><td><b>reflex --full</b></td><td><b>RE/flex</b></td><td><b>29</b></td></tr>
+<tr><td>reflex -m=boost-perl</td><td>Boost.Regex (Perl mode)</td><td>230</td></tr>
 <tr><td>pcre2_match()</td><td>PCRE2 (pre-compiled)</td><td>318</td></tr>
-<tr><td>reflex -m=boost</td><td>Boost.Regex (POSIX mode)</td><td>486</td></tr>
+<tr><td>reflex -m=boost</td><td>Boost.Regex (POSIX mode)</td><td>450</td></tr>
 <tr><td>flex -+</td><td>Flex</td><td>3968</td></tr>
 <tr><td>RE2::Consume()</td><td>RE2 (pre-compiled)</td><td>5088</td></tr>
 <tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>14784</td></tr>
@@ -29,40 +29,35 @@ Note: *Best times of 10 tests with average time in micro seconds over 100 runs
 Features
 --------
 
-- Fully compatible with Flex to eliminate a learning curve, making a transition
-  to RE/flex frustration-free.
+- Compatible with Flex to eliminate a learning curve, making a transition to
+  RE/flex frustration-free.
+- Works with Bison and supports reentrant, bison-bridge and bison-locations.
 - Extensive documentation in the online [User Guide][manual-url].
-- Generates MT-safe (reentrant) code by default.
-- Generates clean source code that defines a C++ Lexer class derived from an
-  abstract lexer class.
-- RE/flex generates lex.yy.cpp files while Flex generates lex.yy.cc files (in
-  C++ mode with flex option -+), to distinguish the generated files.
+- Adds Unicode support with Unicode property matching `\p{C}` and C++11, Java,
+  C#, and Python Unicode properties for identifier name matching.
+- Adds indent/nodent/dedent anchors to match text with indentation, including
+  `\t` (tab) adjustments.
+- Adds lazy quantifiers to the POSIX regular expression syntax, so hacks are
+  no longer needed to work around greedy repetitions in Flex.
+- Adds word boundary anchors to the POSIX regular expression syntax.
+- Adds an extensible hierarchy of pattern matcher engines, with a choice of
+  regex engines, including the RE/flex regex engine and Boost.Regex.
+- Adds freespace mode option to improve readability of lexer specifications.
+- Adds `%class` and `%init` to customize the generated Lexer classes.
+- Adds `%include` to modularize lex specifications.
+- Generates clean source code that defines an MT-safe (reentrant) C++ Lexer
+  class derived from an abstract lexer class template, parameterized by matcher
+  class type.
 - Configurable Lexer class generation to customize the interface for various
   parsers, including Yacc and Bison.
-- Works with Bison and supports reentrant, bison-bridge and bison-locations.
 - Generates scanners for lexical analysis on files, C++ streams, and (wide)
-  strings.
+  strings, with automatic fast conversion of UTF-16/32 to UTF-8 for matching
+  Unicode on UTF-encoded input files.
+- Generates lex.yy.cpp files while Flex generates lex.yy.cc files (in C++ mode
+  with flex option -+), to distinguish the generated files.
 - Generates Graphviz files to visualize FSMs with the Graphviz dot tool.
 - Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for
   Python code, a tokenizer for Java code, and more.
-- Adds an extensible hierarchy of pattern matcher engines, with a choice of
-  regex engines, including the RE/flex regex engine and Boost.Regex.
-- Adds lazy quantifiers to the POSIX regular expression syntax, so not more
-  hacks to work around the greedy repetitions in Flex.
-- Adds word boundary anchors to the POSIX regular expression syntax.
-- Adds Unicode support, which is integrated with UTF-8 pattern matching.
-- Adds Unicode property matching `\p{C}` and C++11, Java, C#, and Python
-  Unicode properties for identifier name matching.
-- Adds indent `\i` and dedent `\j` regex patterns to match rules on text with
-  indentation, including `\t` (tab) adjustments.
-- Adds `%class` and `%init` to customize the generated Lexer classes.
-- Adds `%include` to modularize lex specifications.
-- Automatic internal conversion of UTF-16/32 to UTF-8 for matching Unicode on
-  UTF-encoded input files, no need to define `YY_INPUT` for UTF conversions.
-- Converts the official Unicode scripts Scripts.txt and UnicodeData.txt to
-  UTF-8 patterns by applying a RE/flex scanner to convert these scripts to C++
-  code.  Future Unicode standards can be automatically converted using these
-  scanners that are written in RE/flex itself.
 - Conversion of regex expressions, for regex engines that lack regex features.
 - The RE/flex regex library makes C++11 std::regex and Boost.Regex much easier
   to use in plain C++ code for pattern matching on (wide) strings, files, and
@@ -319,8 +314,9 @@ Changelog
 - Mar  6, 2017: 0.9.14 reflex option -v shows stats with execution timings, bug fixes
 - Mar  8, 2017: 0.9.15 added `wtext()`, `wpair()`, `winput()` methods, other improvements
 - Mar 22, 2017: 0.9.16 bug fixes, speed improvements, improved option `--unicode` regex conversion, also with `(?u:)`, changed `wtext()` to `wstr()` and added a `str()` method
-- Mar 24, 2017: 0.9.17 minor improvements
+- Mar 24, 2017: 0.9.17 improvements
 - Mar 26, 2017: 0.9.18 added reflex option `-p` (`--perf-report`) for performance debugging, added doc/man/reflex.1 man page, added interactive readline example
+- Mar 31, 2017: 0.9.19 fixed reflex option `-m`, `lexer.in(i)` now resets the lexer, fixed reassigning the same input to the lexer that caused UTF BOM to be read twice
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

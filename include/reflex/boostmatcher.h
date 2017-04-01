@@ -60,11 +60,11 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   /// Construct matcher engine from a boost::regex object or string regex, and an input character sequence.
   template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostMatcher(
-      const P     *pat,           ///< points to a boost::regex or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P     *pattern,         ///< points to a boost::regex or a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      PatternMatcher(pat, inp, opt),
+      PatternMatcher(pattern, input, opt),
       flg_(boost::regex_constants::match_partial | boost::regex_constants::match_not_dot_newline)
   {
     reset();
@@ -72,11 +72,11 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   /// Construct matcher engine from a boost::regex object or string regex, and an input character sequence.
   template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostMatcher(
-      const P&     pat,           ///< a boost::regex or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P&     pattern,         ///< a boost::regex or a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      PatternMatcher(pat, inp, opt),
+      PatternMatcher(pattern, input, opt),
       flg_(boost::regex_constants::match_partial | boost::regex_constants::match_not_dot_newline)
   {
     reset();
@@ -98,32 +98,32 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
     return this->pattern(matcher.pattern());
   }
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent).
-  virtual PatternMatcher& pattern(const Pattern& pat) ///< boost::regex for this matcher
+  virtual PatternMatcher& pattern(const Pattern& pattern) ///< boost::regex for this matcher
     /// @returns this matcher.
   {
     itr_ = fin_;
-    return PatternMatcher::pattern(pat);
+    return PatternMatcher::pattern(pattern);
   }
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent).
-  virtual PatternMatcher& pattern(const Pattern *pat) ///< boost::regex for this matcher
+  virtual PatternMatcher& pattern(const Pattern *pattern) ///< boost::regex for this matcher
     /// @returns this matcher.
   {
     itr_ = fin_;
-    return PatternMatcher::pattern(pat);
+    return PatternMatcher::pattern(pattern);
   }
   /// Set the pattern from a regex string to use with this matcher.
-  virtual PatternMatcher& pattern(const char *pat) ///< regex string to instantiate internal pattern object
+  virtual PatternMatcher& pattern(const char *pattern) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
     itr_ = fin_;
-    return PatternMatcher::pattern(pat);
+    return PatternMatcher::pattern(pattern);
   }
   /// Set the pattern from a regex string to use with this matcher.
-  virtual PatternMatcher& pattern(const std::string& pat) ///< regex string to instantiate internal pattern object
+  virtual PatternMatcher& pattern(const std::string& pattern) ///< regex string to instantiate internal pattern object
     /// @returns this matcher.
   {
     itr_ = fin_;
-    return PatternMatcher::pattern(pat);
+    return PatternMatcher::pattern(pattern);
   }
   virtual std::pair<const char*,size_t> operator[](size_t n) const
   {
@@ -331,22 +331,22 @@ class BoostPosixMatcher : public BoostMatcher {
   /// Construct a POSIX matcher engine from a boost::regex pattern and an input character sequence.
   template<typename P>
   BoostPosixMatcher(
-      const P     *pat,           ///< points to a boost::regex or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P     *pattern,         ///< points to a boost::regex or a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      BoostMatcher(pat, inp, opt)
+      BoostMatcher(pattern, input, opt)
   {
     flg_ |= boost::regex_constants::match_posix;
   }
   /// Construct a POSIX matcher engine from a boost::regex pattern and an input character sequence.
   template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostPosixMatcher(
-      const P&     pat,           ///< a boost::regex or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P&     pattern,         ///< a boost::regex or a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      BoostMatcher(pat, inp, opt)
+      BoostMatcher(pattern, input, opt)
   {
     flg_ |= boost::regex_constants::match_posix;
   }
@@ -365,22 +365,22 @@ class BoostPerlMatcher : public BoostMatcher {
   /// Construct a Perl matcher engine from a boost::regex pattern and an input character sequence.
   template<typename P>
   BoostPerlMatcher(
-      const P     *pat,           ///< points to a boost::regex or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P     *pattern,         ///< points to a boost::regex or a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      BoostMatcher(pat, inp, opt)
+      BoostMatcher(pattern, input, opt)
   {
     flg_ |= boost::regex_constants::match_perl;
   }
   /// Construct a Perl matcher engine from a boost::regex pattern and an input character sequence.
   template<typename P> /// @tparam <P> pattern is a boost::regex or a string regex
   BoostPerlMatcher(
-      const P&     pat,           ///< a boost::regex or a string regex for this matcher
-      const Input& inp = Input(), ///< input character sequence for this matcher
-      const char  *opt = NULL)    ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+      const P&     pattern,         ///< a boost::regex or a string regex for this matcher
+      const Input& input = Input(), ///< input character sequence for this matcher
+      const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      BoostMatcher(pat, inp, opt)
+      BoostMatcher(pattern, input, opt)
   {
     flg_ |= boost::regex_constants::match_perl;
   }

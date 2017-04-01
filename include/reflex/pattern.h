@@ -69,7 +69,7 @@ class Pattern {
   typedef void (*FSM)(class Matcher&); ///< function pointer to FSM code
   /// Common constants.
   enum Const {
-    IMAX = 0xffff, ///< max index, also serves as a marker
+    IMAX = 0xFFFF, ///< max index, also serves as a marker
   };
   /// Construct a pattern object given a regex string.
   explicit Pattern(
@@ -203,7 +203,7 @@ class Pattern {
     const throw (regex_error);
  private:
   typedef unsigned int         Char;
-#ifdef WITH_BITS
+#if defined(WITH_BITS)
   typedef Bits                 Chars; ///< represent 8-bit char (+ meta char) set as a bitvector
 #else
   typedef ORanges<Char>        Chars; ///< represent (wide) char set as a set of ranges
@@ -229,16 +229,16 @@ class Pattern {
     Position greedy(bool b)    const { return b ? Position(k | GREEDY) : Position(k & ~GREEDY); }
     Position anchor(bool b)    const { return b ? Position(k | ANCHOR) : Position(k & ~ANCHOR); }
     Position accept(bool b)    const { return b ? Position(k | ACCEPT) : Position(k & ~ACCEPT); }
-    Position lazy(Location l)  const { return Position((k & 0x0000ffffffffffffLL) | static_cast<value_type>(l) << 48); }
-    Position pos(void)         const { return Position(k & 0x00000000ffffffffLL); }
-    Location loc(void)         const { return static_cast<Location>(k & 0xffff); }
-    Index    accepts(void)     const { return static_cast<Index>(k & 0xffff); }
-    Index    iter(void)        const { return static_cast<Index>(k >> 16 & 0xffff); }
+    Position lazy(Location l)  const { return Position((k & 0x0000FFFFFFFFFFFFLL) | static_cast<value_type>(l) << 48); }
+    Position pos(void)         const { return Position(k & 0x00000000FFFFFFFFLL); }
+    Location loc(void)         const { return static_cast<Location>(k & 0xFFFF); }
+    Index    accepts(void)     const { return static_cast<Index>(k & 0xFFFF); }
+    Index    iter(void)        const { return static_cast<Index>(k >> 16 & 0xFFFF); }
     bool     ticked(void)      const { return (k & TICKED) != 0; }
     bool     greedy(void)      const { return (k & GREEDY) != 0; }
     bool     anchor(void)      const { return (k & ANCHOR) != 0; }
     bool     accept(void)      const { return (k & ACCEPT) != 0; }
-    Location lazy(void)        const { return static_cast<Location>(k >> 48 & 0xffff); }
+    Location lazy(void)        const { return static_cast<Location>(k >> 48 & 0xFFFF); }
     value_type k;
   };
   typedef std::set<Position>           Positions;
@@ -297,9 +297,9 @@ class Pattern {
     META_BOL = 0x107, ///< begin of line          `^`
     META_EOL = 0x108, ///< end of line            `$`
     META_BOB = 0x109, ///< begin of buffer        `\A`
-    META_EOB = 0x10a, ///< end of buffer          `\Z`
-    META_IND = 0x10b, ///< indent boundary        `\i`
-    META_DED = 0x10c, ///< dedent boundary        `\j` (must be the largest META code)
+    META_EOB = 0x10A, ///< end of buffer          `\Z`
+    META_IND = 0x10B, ///< indent boundary        `\i`
+    META_DED = 0x10C, ///< dedent boundary        `\j` (must be the largest META code)
     META_MAX          ///< max meta characters
   };
   /// Initialize the pattern at construction.
@@ -449,19 +449,19 @@ class Pattern {
   }
   static Opcode opcode_take(Index index)
   {
-    return 0xff000000 | index;
+    return 0xFF000000 | index;
   }
   static Opcode opcode_redo(void)
   {
-    return 0xff000000 | IMAX;
+    return 0xFF000000 | IMAX;
   }
   static Opcode opcode_tail(Index index)
   {
-    return 0xff7e0000 | index;
+    return 0xFF7E0000 | index;
   }
   static Opcode opcode_head(Index index)
   {
-    return 0xff7f0000 | index;
+    return 0xFF7F0000 | index;
   }
   static Opcode opcode_goto(
       Char  lo,
@@ -469,49 +469,49 @@ class Pattern {
       Index index)
   {
     if (!is_meta(lo)) return lo << 24 | hi << 16 | index;
-    return 0xff000000 | (lo - META_MIN) << 16 | index;
+    return 0xFF000000 | (lo - META_MIN) << 16 | index;
   }
   static Opcode opcode_halt(void)
   {
-    return 0x00ff0000 | IMAX;
+    return 0x00FF0000 | IMAX;
   }
   static bool is_opcode_redo(Opcode opcode)
   {
-    return opcode == (0xff000000 | IMAX);
+    return opcode == (0xFF000000 | IMAX);
   }
   static bool is_opcode_take(Opcode opcode)
   {
-    return (opcode & 0xffff0000) == 0xff000000;
+    return (opcode & 0xFFFF0000) == 0xFF000000;
   }
   static bool is_opcode_tail(Opcode opcode)
   {
-    return (opcode & 0xffff0000) == 0xff7e0000;
+    return (opcode & 0xFFFF0000) == 0xFF7E0000;
   }
   static bool is_opcode_head(Opcode opcode)
   {
-    return (opcode & 0xffff0000) == 0xff7f0000;
+    return (opcode & 0xFFFF0000) == 0xFF7F0000;
   }
   static bool is_opcode_halt(Opcode opcode)
   {
-    return opcode == (0x00ff0000 | IMAX);
+    return opcode == (0x00FF0000 | IMAX);
   }
   static bool is_opcode_meta(Opcode opcode)
   {
-    return (opcode & 0xff800000) == 0xff000000;
+    return (opcode & 0xFF800000) == 0xFF000000;
   }
   static bool is_opcode_meta(Opcode opcode, Char a)
   {
-    return (opcode & 0xffff0000) == (0xff000000 | (a - META_MIN) << 16);
+    return (opcode & 0xFFFF0000) == (0xFF000000 | (a - META_MIN) << 16);
   }
   static bool is_opcode_match(
       Opcode          opcode,
       unsigned char c)
   {
-    return c >= (opcode >> 24) && c <= (opcode >> 16 & 0xff);
+    return c >= (opcode >> 24) && c <= (opcode >> 16 & 0xFF);
   }
   static Char meta_of(Opcode opcode)
   {
-    return META_MIN + (opcode >> 16 & 0xff);
+    return META_MIN + (opcode >> 16 & 0xFF);
   }
   static Char lo_of(Opcode opcode)
   {
@@ -519,11 +519,11 @@ class Pattern {
   }
   static Char hi_of(Opcode opcode)
   {
-    return is_opcode_meta(opcode) ? meta_of(opcode) : opcode >> 16 & 0xff;
+    return is_opcode_meta(opcode) ? meta_of(opcode) : opcode >> 16 & 0xFF;
   }
   static Index index_of(Opcode opcode)
   {
-    return opcode & 0xffff;
+    return opcode & 0xFFFF;
   }
   Option                opt_; ///< pattern compiler options
   std::string           rex_; ///< regular expression string

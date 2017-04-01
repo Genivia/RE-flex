@@ -1,5 +1,5 @@
 
-RE/flex User Guide                                                  {#mainpage}
+RE/flex user guide                                                  {#mainpage}
 ==================
                                                                @tableofcontents
 
@@ -1511,13 +1511,15 @@ Unicode mode enables the following patterns:
   `.`                | matches any Unicode character (beware of \ref invalid-utf)
   `€` (UTF-8)        | matches wide character `€`, encoded in UTF-8
   `[€¥£]` (UTF-8)    | matches wide character `€`, `¥` or `£`, encoded in UTF-8
-  `\u{20AC}`         | matches Unicode character U+20AC
-  `\p{C}`            | matches a character in category C
-  `\p{^C}`,`\P{C}`   | matches any character except in category C
+  `\X`               | matches any ISO-8859-1 or Unicode character
+  `\R`               | matches a Unicode line break
   `\s`               | matches a white space character with Unicode sub-property Zs
   `\l`               | matches a lower case letter with Unicode sub-property Ll
   `\u`               | matches an upper case letter with Unicode sub-property Lu
   `\w`               | matches a Unicode word character with property L, Nd, or Pc
+  `\u{20AC}`         | matches Unicode character U+20AC
+  `\p{C}`            | matches a character in category C
+  `\p{^C}`,`\P{C}`   | matches any character except in category C
 
 The following patterns use Flex/Lex syntax that is specific to lexer
 specifications and should only be used as such:
@@ -1622,6 +1624,7 @@ The following Unicode character categories are enabled with the **reflex**
   -------------------------------------- | ------------------------------------
   `.`                                    | matches any Unicode character (beware of \ref invalid-utf)
   `\X`                                   | matches any ISO-8859-1 or Unicode character (with or without the `−−unicode` option)
+  `\R`                                   | matches a Unicode line break
   `\s`, `\p{Zs}`                         | matches a white space character with Unicode sub-propert Zs
   `\l`, `\p{Ll}`                         | matches a lower case letter with Unicode sub-property Ll
   `\u`, `\p{Lu}`                         | matches an upper case letter with Unicode sub-property Lu
@@ -3788,7 +3791,7 @@ catch (reflex::regex_error& e)
     case reflex::regex_error::invalid_anchor:       std::cerr << "invalid anchor"; break;
     case reflex::regex_error::invalid_repeat:       std::cerr << "invalid repeat range, e.g. {10,1}"; break;
     case reflex::regex_error::invalid_quantifier:   std::cerr << "invalid lazy/possessive quantifier"; break;
-    case reflex::regex_error::invalid_modifier:     std::cerr << "invalid (?ismx:) modifier"; break;
+    case reflex::regex_error::invalid_modifier:     std::cerr << "invalid (?ismux:) modifier"; break;
     case reflex::regex_error::invalid_syntax:       std::cerr << "invalid regex syntax"; break;
     case reflex::regex_error::exceeds_limits:       std::cerr << "exceeds complexity limits: {n,m} range too large"; break;
   }
@@ -3842,7 +3845,7 @@ For example:
 #include <reflex/matcher.h> // reflex::Matcher, reflex::Input, reflex::Pattern
 
 // use a Matcher to check if sentence is in Greek:
-static const reflex::Pattern pattern(reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+"));
+static const reflex::Pattern pattern(reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+", reflex::convert_flag::unicode));
 if (reflex::Matcher(pattern, sentence).matches())
   std::cout << "This is Greek" << std::endl;
 ```
@@ -3869,7 +3872,7 @@ example when the regex syntax is invalid:
 std::string regex;
 try
 {
-  regex = reflex::BoostMatcher::convert(argv[1]));
+  regex = reflex::BoostMatcher::convert(argv[1], reflex::convert_flag::unicode));
 }
 catch (reflex::regex_error& e)
 {
@@ -3888,7 +3891,7 @@ catch (reflex::regex_error& e)
     case reflex::regex_error::invalid_anchor:       std::cerr << "invalid anchor"; break;
     case reflex::regex_error::invalid_repeat:       std::cerr << "invalid repeat range, e.g. {10,1}"; break;
     case reflex::regex_error::invalid_quantifier:   std::cerr << "invalid lazy/possessive quantifier"; break;
-    case reflex::regex_error::invalid_modifier:     std::cerr << "invalid (?ismx:) modifier"; break;
+    case reflex::regex_error::invalid_modifier:     std::cerr << "invalid (?ismux:) modifier"; break;
     case reflex::regex_error::invalid_syntax:       std::cerr << "invalid regex syntax"; break;
   }
 }
@@ -4089,9 +4092,11 @@ The file encoding is obtained with the `file_encoding()` method of a
   `reflex::Input::file_encoding::utf32be` | UTF-32 big endian (BOM detected)
   `reflex::Input::file_encoding::utf32le` | UTF-32 little endian (BOM detected)
 
-To override the file encoding, use `reflex::Input::file_encoding(enc)`, for
-example to override the encoding as ISO-8859-1 for matching with Unicode
-patterns (i.e. internally normalizes ISO-8859-1 to UTF-8):
+To override the file encoding, use `reflex::Input::file_encoding(enc)`.
+
+For example, use `reflex::Input::file_encoding::latin` to override the encoding
+when the file contains ISO-8859-1.  This way you can match its content using
+Unicode patterns (matcher engines internally normalizes ISO-8859-1 to UTF-8):
 
 ```cpp
 if (matcher.in.file_encoding() == Input::file_encoding::plain)
@@ -4099,14 +4104,26 @@ if (matcher.in.file_encoding() == Input::file_encoding::plain)
 ```
 
 Wide strings are internally converted to UTF-8 for matching, which effectively
-normalizes the input for matching.  This conversion is illustrated below.  The
-copyright symbol `©` with Unicode U+00A9 is matched against its UTF-8 sequence
-`C2 A9`:
+normalizes the input for matching with Unicode patterns.  This conversion is
+illustrated below.  The copyright symbol `©` with Unicode U+00A9 is matched
+against its UTF-8 sequence `C2 A9` of `©`:
 
 ```cpp
-if (reflex::Matcher("\xc2\xa9", L"©").matches())
+if (reflex::Matcher("©", L"©").matches())
   std::cout << "copyright symbol matches\n";
 ```
+
+To ensure that Unicode patterns in UTF-8 strings are grouped properly, use \ref
+regex-convert, for example as follows:
+
+```cpp
+static reflex::Pattern CR(reflex::Matcher::convert("(?u:\u{00A9})"));
+if (reflex::Matcher(CR, L"©").matches())
+  std::cout << "copyright symbol matches\n";
+```
+
+Here we made the converted pattern static to avoid repeated conversion and
+construction overheads.
 
 ⇢ [Back to contents](#)
 
@@ -4445,7 +4462,7 @@ if (matcher.in.file() && matcher.in.good())
 ⇢ [Back to contents](#)
 
 
-Tips, Tricks and Gotchas                                              {#tricks}
+Tips, tricks and gotchas                                              {#tricks}
 ========================
 
 Invalid UTF encodings                                            {#invalid-utf}
@@ -4454,9 +4471,9 @@ Invalid UTF encodings                                            {#invalid-utf}
 It may be tempting to write a pattern with `.` (dot) as a wildcard in a lexer
 specification, but beware that in Unicode mode with option `−−unicode` (global
 `%%option unicode` or local `(?u:φ)`) the dot matches any code point, including
-code points outside of the valid Unicode character range.  The reason for this
-design decision is that a lexer should support a "catch all else" rule to
-report errors in the input:
+code points outside of the valid Unicode character range and invalid overlong
+UTF-8.  The reason for this design decision is that a lexer should support a
+"catch all else" rule to report errors in the input:
 
 <div class="alt">
 ```cpp
@@ -4464,18 +4481,22 @@ report errors in the input:
 ```
 </div>
 
-If dot is restrictive (which it is not), the action above will never be
-triggered when invalid input is encountered.  Because all non-dot regex
-patterns are valid Unicode in RE/flex, it would be impossible to write a "catch
-all else" rule!
+If dot in Unicode mode would be restrictive (which it is not), the action above
+will never be triggered when invalid input is encountered.  Because all non-dot
+regex patterns are valid Unicode in RE/flex, it would be impossible to write a
+"catch all else" rule that catches input format errors!
+
+The dot in Unicode mode is self-synchronizing and consumes text up to to the
+next ASCII or Unicode character.
 
 To reject invalid UTF-8 input in regex patterns, make sure to avoid `.` (dot)
-and use `\p{Unicode}` or `\X` instead.
+and use `\p{Unicode}` or `\X` instead, and reserve dot to catch anything,
+including invalid UTF-8 and UTF-16 encodings.
 
-Invalid UTF-16 is detected automatically and replaced with the `REFLEX_NONCHAR`
-code point U+200000 that lies outside the valid Unicode range.  This code point
-is never matched by non-dot regex patterns and is easy to detect by a regex
-pattern with a dot.
+Invalid UTF-16 is detected automatically by the `reflex::Input` class and
+replaced with the `REFLEX_NONCHAR` code point U+200000 that lies outside the
+valid Unicode range.  This code point is never matched by non-dot regex
+patterns and is easy to detect by a regex pattern with a dot.
 
 Note that character classes written as bracket lists may produce invalid
 Unicode ranges when not used properly.  This is not a problem for matching, but
@@ -4483,7 +4504,9 @@ for rejecting surrogate halves that are invalid Unicode.  For example,
 `[\u{00}-\u{10FFFF}]` obviously includes the invalid range of surrogate halves
 `[\u{D800}-\u{DFFF}]`.  You can always remove surrogate halves from any
 character class by intersecting the class with `[\p{Unicode}]`, that is
-`[...&&[\p{Unicode}]]`.
+`[...&&[\p{Unicode}]]`.  Furthermore, character class negation with `^` results
+in classes that are within range U+0000 to U+10FFFF and excludes surrogate
+halves.
 
 ⇢ [Back to contents](#)
 
@@ -4495,6 +4518,32 @@ Repetitions (`*`, `+`, and `{n,m}`) are greedy, unless marked with an extra `?`
 to make them lazy.  Lazy repetitions are useless when the regex pattern after
 the lazy repetitions permits empty input.  For example, `.*?a?` only
 matches one `a` or nothing at all, because `a?` permits an empty match.
+
+⇢ [Back to contents](#)
+
+
+Repeately switching to the same input                              {#switching}
+-------------------------------------
+
+The state of the input object `reflex::Input` changes as the scanner's matcher
+consumes more input.  If you switch to the same input again (e.g. with `in(i)`
+or `switch_stream(i)` for input source `i`), a portion of that input may end up
+being discarded as part of the matcher's internal buffer that is flushed when
+input is assigned.  Therefore, the following code will not work because stdin
+is flushed repeately:
+
+```cpp
+Lexer lexer(stdin);       // a lexer that reads stdin
+lexer.in(stdin);          // this is OK, nothing read yet
+while (lexer.lex(stdin))  // oops, assigning stdin again and again
+  std::cout << "we're not getting anywhere?" << std::endl;
+```
+
+If you need to read a file or stream again, you must rewind it to the location
+in the file to start reading.  Beware that `FILE*` input is checked against an
+UTF BOM at the start of a file, which means that you cannot reliably move to a
+location in the file to start reading when files are encoded in UTF-8 or
+UTF-16.
 
 ⇢ [Back to contents](#)
 

@@ -58,7 +58,7 @@
 # define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.18"
+#define REFLEX_VERSION "0.9.19"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -77,8 +77,8 @@ class Reflex
   struct Library {
     const char *name;      ///< the unique ID name of the regex library
     const char *file;      ///< the header file to include
-    const char *pattern;   ///< the pattern type used by the matcher class
-    const char *matcher;   ///< the matcher class
+    const char *pattern;   ///< the name of the pattern class or C++ type used by the matcher class
+    const char *matcher;   ///< the name of the matcher class
     const char *signature; ///< a regex library signature of the form "[decls:]escapes[?+]"
   };
 

@@ -593,24 +593,29 @@ void Reflex::set_library()
     options["matcher"].clear();
   else if (!options["matcher"].empty())
   {
-    LibraryMap::iterator i = libraries.find(options["matcher"]);
+    std::string& name = options["matcher"];
+    size_t pos;
+    while ((pos = name.find('-')) != std::string::npos)
+      name[pos] = '_';
+    LibraryMap::iterator i = libraries.find(name);
     if (i != libraries.end())
     {
       library = &i->second;
     }
     else
     {
-      library = &libraries[options["matcher"]];
-      library->name = options["matcher"].c_str();
+      library = &libraries[name];
+      library->name = name.c_str();
       if (options["include"].empty())
-        library->file = file_ext(options["matcher"], "h").c_str();
+        options["include"] = file_ext(name, "h");
       else
-        library->file = file_ext(options["include"], "h").c_str();
+        options["include"] = file_ext(options["include"], "h");
+      library->file = options["include"].c_str();
       if (options["pattern"].empty())
         library->pattern = "char *";
       else
         library->pattern = options["pattern"].c_str();
-      library->matcher = options["matcher"].c_str();
+      library->matcher = name.c_str();
       library->signature = "m:";
       warning("using custom matcher ", library->name);
     }
@@ -1680,7 +1685,7 @@ void Reflex::write_class()
     *out <<
       " public:\n"
       "  " << lexer << "(\n"
-      "      const reflex::Input& input = " << (options["nostdinit"].empty() ? "stdin" : "std::cin") << ",\n"
+      "      const reflex::Input& input = reflex::Input(),\n"
       "      std::ostream        *os    = NULL)\n"
       "    :\n"
       "      " << base << "(input, os)\n";
@@ -1736,7 +1741,7 @@ void Reflex::write_class()
       " public:\n"
       "  typedef " << base << " AbstractBaseLexer;\n"
       "  " << lexer << "(\n"
-      "      const reflex::Input& input = " << (options["nostdinit"].empty() ? "stdin" : "std::cin") << ",\n" <<
+      "      const reflex::Input& input = reflex::Input(),\n" <<
       "      std::ostream&        os    = std::cout)\n"
       "    :\n"
       "      AbstractBaseLexer(input, os)\n";
@@ -2125,10 +2130,10 @@ void Reflex::write_lexer()
     "  {\n";
   if (!options["tabs"].empty())
     *out <<
-      "    matcher(new Matcher(PATTERN_" << conditions[0] << ", in(), this, \"T=" << options["tabs"] << "\"));\n";
+      "    matcher(new Matcher(PATTERN_" << conditions[0] << ", " << (options["nostdinit"].empty() ? "stdinit()" : "nostdinit()") << ", this, \"T=" << options["tabs"] << "\"));\n";
   else
     *out <<
-      "    matcher(new Matcher(PATTERN_" << conditions[0] << ", in(), this));\n";
+      "    matcher(new Matcher(PATTERN_" << conditions[0] << ", " << (options["nostdinit"].empty() ? "stdinit()" : "nostdinit()") << ", this));\n";
 #ifdef WITH_BOOST_PARTIAL_MATCH_BUG
   if (options["matcher"] == "boost" || options["matcher"] == "boost-perl")
     *out <<
@@ -2142,8 +2147,6 @@ void Reflex::write_lexer()
   else if (!options["batch"].empty())
     *out <<
       "    matcher().buffer();\n";
-  *out <<
-    "    start(" << conditions[0] << ");\n";
   if (!options["flex"].empty())
     *out <<
       "    YY_USER_INIT\n";
@@ -2301,6 +2304,8 @@ void Reflex::write_lexer()
   }
   if (conditions.size() > 1)
     *out <<
+      "      default:\n"
+      "        return 0;\n"
       "    }\n";
   *out <<
     "  }\n"

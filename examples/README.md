@@ -20,7 +20,7 @@ Flex scanner examples
 - `wcpp.l` word count example with lexer class variables
 - `wcwc.l` word count example with custom lexer class
 - `echo.l` interactive scanner to echo input
-- `readline.l` interactive scanner to echo input using readline (required)
+- `readline.l` interactive scanner to echo input using readline (requires readline)
 - `json.l` JSON parser (verified with <http://seriot.ch/parsing_json.php>)
 
 RE/flex scanner examples
@@ -31,6 +31,7 @@ RE/flex scanner examples
 - `cow.l` scanner to convert cows
 - `cows.l` scanner to convert cows, uses word boundary anchors
 - `indent.l` indentation detection and reformatting example
+- `braille.l` a braille translator, inspired by the re2c example but expanded to be useful
 - `reflexexample3.l` example modified from the Flex documentation with bison
 - `reflexexample4.l` example modified from the Flex documentation with bison-bridge
 - `reflexexample5.l` example modified from the Flex documentation with bison-bridge

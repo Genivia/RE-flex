@@ -34,8 +34,8 @@
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
-#ifndef POSIX_H
-#define POSIX_H
+#ifndef REFLEX_POSIX_H
+#define REFLEX_POSIX_H
 
 #include <cstring>
 #include <map>

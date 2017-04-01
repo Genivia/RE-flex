@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Mar 26 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Fri Mar 31 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -53,7 +53,6 @@
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classreflex_1_1_abstract_lexer-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -110,11 +109,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aeca2e0dcb03e92d26478145004d077b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default wrap operation at EOF: do not wrap input.  <a href="#aeca2e0dcb03e92d26478145004d077b6">More...</a><br /></td></tr>
 <tr class="separator:aeca2e0dcb03e92d26478145004d077b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affea8a2b877c58c7c85f750b57f18df8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#affea8a2b877c58c7c85f750b57f18df8">in</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;input)</td></tr>
-<tr class="memdesc:affea8a2b877c58c7c85f750b57f18df8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start scanning from the given input character sequence.  <a href="#affea8a2b877c58c7c85f750b57f18df8">More...</a><br /></td></tr>
+<tr class="memdesc:affea8a2b877c58c7c85f750b57f18df8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the matcher and start scanning from the given input character sequence.  <a href="#affea8a2b877c58c7c85f750b57f18df8">More...</a><br /></td></tr>
 <tr class="separator:affea8a2b877c58c7c85f750b57f18df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90af4baa6d064decf87f54aeb95806d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_input.html">Input</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a90af4baa6d064decf87f54aeb95806d8">in</a> ()</td></tr>
 <tr class="memdesc:a90af4baa6d064decf87f54aeb95806d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current input character sequence that is being scanned.  <a href="#a90af4baa6d064decf87f54aeb95806d8">More...</a><br /></td></tr>
 <tr class="separator:a90af4baa6d064decf87f54aeb95806d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5b88719f4d035a4aefc2f67fd09f8d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_input.html">Input</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#aa5b88719f4d035a4aefc2f67fd09f8d2">stdinit</a> ()</td></tr>
+<tr class="memdesc:aa5b88719f4d035a4aefc2f67fd09f8d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current input character sequence that is being scanned, if none assign stdin.  <a href="#aa5b88719f4d035a4aefc2f67fd09f8d2">More...</a><br /></td></tr>
+<tr class="separator:aa5b88719f4d035a4aefc2f67fd09f8d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7da401412f85849c7b7e744ad4824731"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_input.html">Input</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a7da401412f85849c7b7e744ad4824731">nostdinit</a> ()</td></tr>
+<tr class="memdesc:a7da401412f85849c7b7e744ad4824731"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current input character sequence that is being scanned, if none assign std::cin.  <a href="#a7da401412f85849c7b7e744ad4824731">More...</a><br /></td></tr>
+<tr class="separator:a7da401412f85849c7b7e744ad4824731"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5611c94c961a216fc733244c9b688f8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a5611c94c961a216fc733244c9b688f8f">out</a> (std::ostream &amp;os)</td></tr>
 <tr class="memdesc:a5611c94c961a216fc733244c9b688f8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current output to the given output stream to echo text matches to.  <a href="#a5611c94c961a216fc733244c9b688f8f">More...</a><br /></td></tr>
 <tr class="separator:a5611c94c961a216fc733244c9b688f8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,9 +174,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7991f7785e86d29c9f64d9991ce47f9e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a7991f7785e86d29c9f64d9991ce47f9e">columno</a> () const </td></tr>
 <tr class="memdesc:a7991f7785e86d29c9f64d9991ce47f9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the column number of matched text, counting wide characters.  <a href="#a7991f7785e86d29c9f64d9991ce47f9e">More...</a><br /></td></tr>
 <tr class="separator:a7991f7785e86d29c9f64d9991ce47f9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
 <tr class="memitem:a905c83f6978b3599c43167ae3c7f5b30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a905c83f6978b3599c43167ae3c7f5b30">start</a> (int state)</td></tr>
 <tr class="memdesc:a905c83f6978b3599c43167ae3c7f5b30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transition to the given start condition state.  <a href="#a905c83f6978b3599c43167ae3c7f5b30">More...</a><br /></td></tr>
 <tr class="separator:a905c83f6978b3599c43167ae3c7f5b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -460,7 +462,7 @@ template&lt;typename M &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Start scanning from the given input character sequence. </p>
+<p>Reset the matcher and start scanning from the given input character sequence. </p>
 <dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -625,6 +627,34 @@ template&lt;typename M &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a7da401412f85849c7b7e744ad4824731"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_input.html">Input</a>&amp; <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt; M &gt;::nostdinit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current input character sequence that is being scanned, if none assign std::cin. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object with input assigned. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a5611c94c961a216fc733244c9b688f8f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -760,7 +790,7 @@ template&lt;typename M &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -850,7 +880,7 @@ template&lt;typename M &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -946,7 +976,7 @@ template&lt;typename M &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -980,13 +1010,41 @@ template&lt;typename M &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Returns the current start condition state. </p>
 <dl class="section return"><dt>Returns</dt><dd>start condition (integer). </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aa5b88719f4d035a4aefc2f67fd09f8d2"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_input.html">Input</a>&amp; <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt; M &gt;::stdinit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current input character sequence that is being scanned, if none assign stdin. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object with input assigned. </dd></dl>
 
 </div>
 </div>
@@ -1064,7 +1122,7 @@ template&lt;typename M &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1333,7 +1391,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Mar 26 2017 14:41:02 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Fri Mar 31 2017 21:20:28 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -40,6 +40,9 @@
 #include <cerrno>
 #include <cmath>
 
+/// DFA compaction: -1 == reverse order edge compression (best); 1 == edge compression; 0 == no edge compression.
+#define WITH_COMPACT_DFA -1
+
 #ifdef DEBUG
 # define DBGLOGPOS(p) \
   if ((p).accept()) \
@@ -1077,13 +1080,18 @@ void Pattern::compile(
         } while (target_state);
         if (!target_state)
           back_state = back_state->next = *branch_ptr = target_state = new State(pos);
-#ifdef WITH_BITS
-        size_t lo = i->first.find_first(), j = lo, k = lo;
+#if defined(WITH_BITS)
+        Char lo = i->first.find_first(), j = lo, k = lo;
         for (;;)
         {
           if (j != k)
           {
-            state->edges[lo] = std::pair<Char,State*>(k - 1, target_state);
+            Char hi = k - 1;
+#if WITH_COMPACT_DFA == -1
+            state->edges[lo] = std::pair<Char,State*>(hi, target_state);
+#else
+            state->edges[hi] = std::pair<Char,State*>(lo, target_state);
+#endif
             lo = k = j;
           }
           if (j == Bits::npos)
@@ -1095,8 +1103,14 @@ void Pattern::compile(
 #else
         for (Chars::const_iterator j = i->first.begin(); j != i->first.end(); ++j)
         {
-          state->edges[j->first] = std::pair<Char,State*>(j->second - 1, target_state); // -1 to adjust open ended [lo,hi)
-          eno_ += j->second - j->first;
+          Char lo = j->first;
+          Char hi = j->second - 1; // -1 to adjust open ended [lo,hi)
+#if WITH_COMPACT_DFA == -1
+          state->edges[lo] = std::pair<Char,State*>(hi, target_state);
+#else
+          state->edges[hi] = std::pair<Char,State*>(lo, target_state);
+#endif
+          eno_ += hi - lo + 1;
         }
 #endif
       }
@@ -1367,10 +1381,10 @@ void Pattern::compile_transition(
                     default:
                       c = compile_esc(loc + 1, chars);
                       if (std::isalpha(c) && (opt_.i || is_modified('i', modifiers, loc)))
-		      {
+                      {
                         chars.insert(upper(c));
                         chars.insert(lower(c));
-		      }
+                      }
                   }
                 }
             }
@@ -1656,7 +1670,7 @@ void Pattern::posix(size_t index, Chars& chars) const
 
 void Pattern::flip(Chars& chars) const
 {
-#ifdef WITH_BITS
+#if defined(WITH_BITS)
   chars.reserve(256).flip();
 #else
   Chars flip;
@@ -1690,6 +1704,8 @@ void Pattern::assemble(State& start) throw (regex_error)
 
 void Pattern::compact_dfa(State& start)
 {
+#if WITH_COMPACT_DFA == -1
+  // edge compaction in reverse order
   for (State *state = &start; state; state = state->next)
   {
     for (State::Edges::iterator i = state->edges.begin(); i != state->edges.end(); ++i)
@@ -1714,6 +1730,35 @@ void Pattern::compact_dfa(State& start)
       }
     }
   }
+#elif WITH_COMPACT_DFA == 1
+  // edge compaction
+  for (State *state = &start; state; state = state->next)
+  {
+    for (State::Edges::reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
+    {
+      Char lo = i->second.first;
+      if (lo <= 0x00)
+        break;
+      State::Edges::reverse_iterator j = i;
+      ++j;
+      while (j != state->edges.rend() && j->first >= lo - 1)
+      {
+        lo = j->second.first;
+        if (j->second.second == i->second.second)
+        {
+          i->second.first = lo;
+          state->edges.erase(--j.base());
+        }
+        else
+        {
+          ++j;
+        }
+      }
+    }
+  }
+#else
+  (void)start;
+#endif
 }
 
 void Pattern::encode_dfa(State& start) throw (regex_error)
@@ -1722,14 +1767,16 @@ void Pattern::encode_dfa(State& start) throw (regex_error)
   for (State *state = &start; state; state = state->next)
   {
     state->index = nop_;
-    Char hi = 0;
+#if WITH_COMPACT_DFA == -1
+    Char hi = 0x00;
     for (State::Edges::const_iterator i = state->edges.begin(); i != state->edges.end(); ++i)
     {
-      if (i->first == hi)
+      Char lo = i->first;
+      if (lo == hi)
         hi = i->second.first + 1;
       ++nop_;
-      if (is_meta(i->first))
-        nop_ += i->second.first - i->first;
+      if (is_meta(lo))
+        nop_ += i->second.first - lo;
     }
     // add dead state only when needed
     if (hi <= 0xFF)
@@ -1737,6 +1784,30 @@ void Pattern::encode_dfa(State& start) throw (regex_error)
       state->edges[hi] = std::pair<Char,State*>(0xFF, NULL);
       ++nop_;
     }
+#else
+    Char lo = 0xFF;
+    bool covered = false;
+    for (State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
+    {
+      Char hi = i->first;
+      if (lo == hi)
+      {
+        if (i->second.first == 0x00)
+          covered = true;
+        else
+          lo =  i->second.first - 1;
+      }
+      ++nop_;
+      if (is_meta(lo))
+        nop_ += hi - i->second.first;
+    }
+    // add dead state only when needed
+    if (!covered)
+    {
+      state->edges[lo] = std::pair<Char,State*>(0x00, NULL);
+      ++nop_;
+    }
+#endif
     nop_ += static_cast<Index>(state->heads.size() + state->tails.size() + (state->accept > 0 || state->redo));
     if (nop_ < state->index)
       throw regex_error(regex_error::exceeds_limits, rex_.c_str());
@@ -1754,6 +1825,7 @@ void Pattern::encode_dfa(State& start) throw (regex_error)
       opcode[pc++] = opcode_tail(static_cast<Index>(*i));
     for (Set::const_iterator i = state->heads.begin(); i != state->heads.end(); ++i)
       opcode[pc++] = opcode_head(static_cast<Index>(*i));
+#if WITH_COMPACT_DFA == -1
     for (State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
     {
       Char lo = i->first;
@@ -1772,8 +1844,36 @@ void Pattern::encode_dfa(State& start) throw (regex_error)
           opcode[pc++] = opcode_goto(lo, lo, target_index);
         } while (++lo <= hi);
       }
-      // CHECKED could handle wide character opcodes for future extensions
     }
+#else
+    for (State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
+    {
+      Char hi = i->first;
+      Char lo = i->second.first;
+      if (is_meta(lo))
+      {
+        Index target_index = IMAX;
+        if (i->second.second)
+          target_index = i->second.second->index;
+        do
+        {
+          opcode[pc++] = opcode_goto(lo, lo, target_index);
+        } while (++lo <= hi);
+      }
+    }
+    for (State::Edges::const_iterator i = state->edges.begin(); i != state->edges.end(); ++i)
+    {
+      Char lo = i->second.first;
+      if (!is_meta(lo))
+      {
+        Char hi = i->first;
+        Index target_index = IMAX;
+        if (i->second.second)
+          target_index = i->second.second->index;
+        opcode[pc++] = opcode_goto(lo, hi, target_index);
+      }
+    }
+#endif
   }
 }
 
@@ -1815,7 +1915,8 @@ void Pattern::gencode_dfa(const State& start) const
           if (state->edges.rbegin() != state->edges.rend() && state->edges.rbegin()->first == META_DED)
             ::fprintf(fd, "  if (m.FSM_DENT()) goto S%u;\n", state->edges.rbegin()->second.second->index);
           bool read = false;
-          bool elseif = false;
+          bool elif = false;
+#if WITH_COMPACT_DFA == -1
           for (State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
           {
             Char lo = i->first;
@@ -1875,36 +1976,137 @@ void Pattern::gencode_dfa(const State& start) const
                   case META_EOB:
                   case META_EOL:
                     ::fprintf(fd, "  ");
-                    if (elseif)
+                    if (elif)
                       ::fprintf(fd, "else ");
                     ::fprintf(fd, "if (m.FSM_META_%s(c1)) {\n", meta_label[lo - META_MIN]);
                     gencode_dfa_closure(fd, i->second.second, 2);
                     ::fprintf(fd, "  }\n");
-                    elseif = true;
+                    elif = true;
                     break;
                   case META_EWE:
                   case META_BWE:
                   case META_NWE:
                     ::fprintf(fd, "  ");
-                    if (elseif)
+                    if (elif)
                       ::fprintf(fd, "else ");
                     ::fprintf(fd, "if (m.FSM_META_%s(c0, c1)) {\n", meta_label[lo - META_MIN]);
                     gencode_dfa_closure(fd, i->second.second, 2);
                     ::fprintf(fd, "  }\n");
-                    elseif = true;
+                    elif = true;
                     break;
                   default:
                     ::fprintf(fd, "  ");
-                    if (elseif)
+                    if (elif)
                       ::fprintf(fd, "else ");
                     ::fprintf(fd, "if (m.FSM_META_%s()) {\n", meta_label[lo - META_MIN]);
                     gencode_dfa_closure(fd, i->second.second, 2);
                     ::fprintf(fd, "  }\n");
-                    elseif = true;
+                    elif = true;
                 }
               } while (++lo <= hi);
             }
           }
+#else
+          for (State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
+          {
+            Char hi = i->first;
+            Char lo = i->second.first;
+            if (is_meta(lo))
+            {
+              if (!read)
+              {
+                ::fprintf(fd, "  c0 = c1, c1 = m.FSM_CHAR();\n");
+                read = true;
+              }
+              do
+              {
+                switch (lo)
+                {
+                  case META_EOB:
+                  case META_EOL:
+                    ::fprintf(fd, "  ");
+                    if (elif)
+                      ::fprintf(fd, "else ");
+                    ::fprintf(fd, "if (m.FSM_META_%s(c1)) {\n", meta_label[lo - META_MIN]);
+                    gencode_dfa_closure(fd, i->second.second, 2);
+                    ::fprintf(fd, "  }\n");
+                    elif = true;
+                    break;
+                  case META_EWE:
+                  case META_BWE:
+                  case META_NWE:
+                    ::fprintf(fd, "  ");
+                    if (elif)
+                      ::fprintf(fd, "else ");
+                    ::fprintf(fd, "if (m.FSM_META_%s(c0, c1)) {\n", meta_label[lo - META_MIN]);
+                    gencode_dfa_closure(fd, i->second.second, 2);
+                    ::fprintf(fd, "  }\n");
+                    elif = true;
+                    break;
+                  default:
+                    ::fprintf(fd, "  ");
+                    if (elif)
+                      ::fprintf(fd, "else ");
+                    ::fprintf(fd, "if (m.FSM_META_%s()) {\n", meta_label[lo - META_MIN]);
+                    gencode_dfa_closure(fd, i->second.second, 2);
+                    ::fprintf(fd, "  }\n");
+                    elif = true;
+                }
+              } while (++lo <= hi);
+            }
+          }
+          for (State::Edges::const_iterator i = state->edges.begin(); i != state->edges.end(); ++i)
+          {
+            Char hi = i->first;
+            Char lo = i->second.first;
+            Index target_index = IMAX;
+            if (i->second.second)
+              target_index = i->second.second->index;
+            if (!read)
+            {
+              ::fprintf(fd, "  c0 = c1, c1 = m.FSM_CHAR();\n");
+              read = true;
+            }
+            if (!is_meta(lo))
+            {
+              State::Edges::const_iterator j = i;
+              if ((lo == 0x00 && hi == 0xFF) || ++j == state->edges.end() || is_meta(j->second.first))
+              {
+                ::fprintf(fd, " ");
+              }
+              else if (lo == hi)
+              {
+                ::fprintf(fd, "  if (c1 == ");
+                print_char(fd, lo);
+                ::fprintf(fd, ")");
+              }
+              else if (lo == 0x00)
+              {
+                ::fprintf(fd, "  if (c1 <= ");
+                print_char(fd, hi);
+                ::fprintf(fd, ")");
+              }
+              else if (hi == 0xFF)
+              {
+                ::fprintf(fd, "  if (");
+                print_char(fd, lo);
+                ::fprintf(fd, " <= c1)");
+              }
+              else
+              {
+                ::fprintf(fd, "  if (");
+                print_char(fd, lo);
+                ::fprintf(fd, " <= c1 && c1 <= ");
+                print_char(fd, hi);
+                ::fprintf(fd, ")");
+              }
+              if (target_index == IMAX)
+                ::fprintf(fd, " return m.FSM_HALT(c1);\n");
+              else
+                ::fprintf(fd, " goto S%u;\n", target_index);
+            }
+          }
+#endif
         }
         ::fprintf(fd, "}\n\n");
         if (fd != stdout)
@@ -1916,7 +2118,7 @@ void Pattern::gencode_dfa(const State& start) const
 
 void Pattern::gencode_dfa_closure(FILE *fd, const State *state, int nest) const
 {
-  bool elseif = false;
+  bool elif = false;
   if (state->redo)
     ::fprintf(fd, "%*sm.FSM_REDO(c1);\n", 2*nest, "");
   else if (state->accept > 0)
@@ -1925,8 +2127,13 @@ void Pattern::gencode_dfa_closure(FILE *fd, const State *state, int nest) const
     ::fprintf(fd, "%*sm.FSM_TAIL(%zu);\n", 2*nest, "", *i);
   for (State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
   {
+#if WITH_COMPACT_DFA == -1
     Char lo = i->first;
     Char hi = i->second.first;
+#else
+    Char hi = i->first;
+    Char lo = i->second.first;
+#endif
     if (is_meta(lo))
     {
       do
@@ -1936,32 +2143,32 @@ void Pattern::gencode_dfa_closure(FILE *fd, const State *state, int nest) const
           case META_EOB:
           case META_EOL:
             ::fprintf(fd, "%*s", 2*nest, "");
-            if (elseif)
+            if (elif)
               ::fprintf(fd, "else ");
             ::fprintf(fd, "if (m.FSM_META_%s(c1))\n {\n", meta_label[lo - META_MIN]);
             gencode_dfa_closure(fd, i->second.second, nest + 1);
             ::fprintf(fd, "%*s}\n", 2*nest, "");
-            elseif = true;
+            elif = true;
             break;
           case META_EWE:
           case META_BWE:
           case META_NWE:
             ::fprintf(fd, "%*s", 2*nest, "");
-            if (elseif)
+            if (elif)
               ::fprintf(fd, "else ");
             ::fprintf(fd, "if (m.FSM_META_%s(c0, c1)) {\n", meta_label[lo - META_MIN]);
             gencode_dfa_closure(fd, i->second.second, nest + 1);
             ::fprintf(fd, "%*s}\n", 2*nest, "");
-            elseif = true;
+            elif = true;
             break;
           default:
             ::fprintf(fd, "%*s", 2*nest, "");
-            if (elseif)
+            if (elif)
               ::fprintf(fd, "else ");
             ::fprintf(fd, "if (m.FSM_META_%s()) {\n", meta_label[lo - META_MIN]);
             gencode_dfa_closure(fd, i->second.second, nest + 1);
             ::fprintf(fd, "%*s}\n", 2*nest, "");
-            elseif = true;
+            elif = true;
         }
       } while (++lo <= hi);
     }
@@ -2063,8 +2270,13 @@ void Pattern::export_dfa(const State& start) const
             ::fprintf(fd, "\"];\n");
           for (State::Edges::const_iterator i = state->edges.begin(); i != state->edges.end(); ++i)
           {
+#if WITH_COMPACT_DFA == -1
             Char lo = i->first;
             Char hi = i->second.first;
+#else
+            Char hi = i->first;
+            Char lo = i->second.first;
+#endif
             if (!is_meta(lo))
             {
               ::fprintf(fd, "\t\tN%p -> N%p [label=\"", state, i->second.second);
