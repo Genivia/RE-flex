@@ -3,9 +3,12 @@
 Installation
 ------------
 
+A clean build:
+
+    $ ./clean.sh
     $ ./build.sh
 
-or use the 'make' command to do the same:
+or use the 'make' command:
 
     $ cd src; make
 
