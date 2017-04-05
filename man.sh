@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Generates man page doc/man/reflex.1 from reflex -h
+# Robert van Engelen, Genivia Inc. All rights reserved.
+
 if [ "$#" = 1 ]
 then
 

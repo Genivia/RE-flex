@@ -184,7 +184,7 @@ Test tests[] = {
   { "(ab)+?ac", "", "", "ababac", { 1 } },
   { "ABB*?|ab+?|A|a", "", "", "ABab", { 1, 2 } },
   { "(a|b)+?a|a", "", "", "bbaaa", { 1, 1 } },
-  { "^(a|b)+?a", "", "", "abba", { 1 } }, // FIXME starting anchors invalidate lazy quantifiers
+  { "^(a|b)+?a", "", "", "abba", { 1 } }, // TODO can starting anchors invalidate lazy quantifiers?
   { "(a|b)+?a$", "", "", "abba", { 1 } }, // OK ending anchors at & lazy quantifiers
   // Lazy iterations {n,m}
   { "(a|b){0,3}?aaa", "", "", "baaaaaa", { 1, 1 } },

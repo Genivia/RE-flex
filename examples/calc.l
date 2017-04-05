@@ -10,6 +10,10 @@
   #include <cstdlib>
   #include <string>
   #include <map>
+
+  // fix problem with newer bison 2.7 that needs the Lexer class type:
+  class REFLEX_OPTION_lexer;  // %option lexer ('Lexer' by default)
+
   #include "y.tab.h"
 %}
 

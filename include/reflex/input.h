@@ -225,13 +225,14 @@ class Input {
  public:
   /// Common constants.
   struct file_encoding {
-    static const unsigned short plain   = 0; ///< plain octets, ASCII, binary, or UTF-8 without BOM detected
+    static const unsigned short plain   = 0; ///< plain octets: 7-bit ASCII, 8-bit binary or UTF-8 without BOM detected
     static const unsigned short utf8    = 1; ///< UTF-8 with BOM detected
-    static const unsigned short latin   = 2; ///< Basic Latin ASCII with Latin-1 supplement, ISO-8859-1
-    static const unsigned short utf16be = 3; ///< UTF-16 big endian
-    static const unsigned short utf16le = 4; ///< UTF-16 little endian
-    static const unsigned short utf32be = 5; ///< UTF-32 big endian
-    static const unsigned short utf32le = 6; ///< UTF-32 little endian
+    static const unsigned short latin   = 2; ///< Basic Latin ASCII and Latin-1 supplement, ISO-8859-1
+    static const unsigned short ebcdic  = 3; ///< EBCDIC
+    static const unsigned short utf16be = 4; ///< UTF-16 big endian
+    static const unsigned short utf16le = 5; ///< UTF-16 little endian
+    static const unsigned short utf32be = 6; ///< UTF-32 big endian
+    static const unsigned short utf32le = 7; ///< UTF-32 little endian
   };
   /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
   Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects)
@@ -325,6 +326,20 @@ class Input {
       istream_(NULL)
   {
     init();
+  }
+  /// Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.
+  Input(
+      FILE          *file, ///< input file
+      unsigned short enc)  ///< file_encoding (when UTF BOM is not present)
+    :
+      cstring_(NULL),
+      wstring_(NULL),
+      file_(file),
+      istream_(NULL)
+  {
+    init();
+    if (file_encoding() == file_encoding::plain)
+      file_encoding(enc);
   }
   /// Construct input character sequence from a std::istream.
   Input(std::istream& istream) ///< input stream
@@ -533,7 +548,7 @@ class Input {
         }
         else
         {
-	  size_t l;
+          size_t l;
           if (c >= 0xD800 && c < 0xE000)
           {
             // UTF-16 surrogate pair
@@ -542,10 +557,10 @@ class Input {
             else
               l = utf8(REFLEX_NONCHAR, utf8_);
           }
-	  else
-	  {
-	    l = utf8(c, utf8_);
-	  }
+          else
+          {
+            l = utf8(c, utf8_);
+          }
           if (k < l)
           {
             utf8_[l] = '\0';
@@ -571,19 +586,12 @@ class Input {
       return static_cast<size_t>(n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, static_cast<std::streamsize>(n)).gcount());
     return 0;
   }
-  /// Set encoding for `FILE*` input to file_encoding::plain, file_encoding::utf8, file_encoding::latin, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le. File encodings are automatically detected by the presence of a UTF BOM in the file. This function may be used when a BOM is not present and file encoding is known or to override the BOM.
-  void file_encoding(short enc) ///< file_encoding::plain, file_encoding::utf8, file_encoding::latin, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le
-  {
-    if (file_ && utfx_ != enc)
-    {
-      size_ = 0;
-      uidx_ = 0;
-      utfx_ = enc;
-    }
-  }
-  /// Get encoding of the current `FILE*` input, file_encoding::plain, file_encoding::utf8, file_encoding::latin, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le.
-  short file_encoding() const
-    /// @returns file_encoding::plain, file_encoding::utf8, file_encoding::latin, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le.
+  /// Set encoding for `FILE*` input.
+  void file_encoding(unsigned short enc) ///< file_encoding::plain, file_encoding::utf8, file_encoding::latin, file_encoding::ebcdic, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le
+    ;
+  /// Get encoding of the current `FILE*` input.
+  unsigned short file_encoding() const
+    /// @returns file_encoding::plain, file_encoding::utf8, file_encoding::latin, file_encoding::ebcdic, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le.
   {
     return utfx_;
   }
@@ -622,7 +630,7 @@ class Input {
   size_t         size_;    ///< size of the input in bytes, when known
   char           utf8_[8]; ///< UTF-8 conversion buffer
   unsigned short uidx_;    ///< index in utf8_[] or >= 8 when unused
-  unsigned short utfx_;    ///< 0 = ASCII/UTF-8, 1 = UTF-16 BE, 2 = UTF-16 LE, 3 = UTF-32 BE, 4 = UTF-32 LE
+  unsigned short utfx_;    ///< file_encoding
 };
 
 } // namespace reflex

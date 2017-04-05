@@ -491,25 +491,27 @@ void Reflex::help(const char *message, const char *arg)
                 generate interactive scanner\n\
         -m, --matcher=NAME\n\
                 use matcher NAME library [";
-  for (LibraryMap::const_iterator i = libraries.cbegin(); i != libraries.cend(); ++i)
+  for (LibraryMap::const_iterator i = libraries.begin(); i != libraries.end(); ++i)
     std::cout << i->first << "|";
   std::cout << "...]\n\
         --pattern=NAME\n\
                 use custom pattern class NAME for custom matcher option -m\n\
         --include=FILE\n\
                 include header FILE.h for custom matcher option -m\n\
+        --tabs=N\n\
+                set tab size to N (1,2,4,8) for indent and dedent matching\n\
         -u, --unicode\n\
                 match Unicode . (dot), \\p, \\s, \\w, ..., and group UTF-8\n\
         -x, --freespace\n\
                 ignore space in patterns\n\
 \n\
-   Files:\n\
+   Generated files:\n\
         -o, --outfile=FILE\n\
                 specify output FILE instead of lex.yy.cpp\n\
         -t, --stdout\n\
                 write scanner on stdout instead of lex.yy.cpp\n\
         --graphs-file[=FILE]\n\
-                write the scanner's DFA to FILE.gv for the Graphviz dot tool\n\
+                write the scanner's DFA in Graphviz format to FILE.gv\n\
         --header-file[=FILE]\n\
                 write a C++ header FILE.h in addition to the scanner\n\
         --regexp-file[=FILE]\n\
@@ -838,6 +840,7 @@ std::string Reflex::get_string(size_t& pos)
 std::string Reflex::get_regex(size_t& pos)
 {
   std::string regex;
+  size_t at_lineno = lineno;
   (void)ws(pos); // skip indent, if any
   size_t loc = pos;
   bool fsp = !options["freespace"].empty();
@@ -893,9 +896,9 @@ std::string Reflex::get_regex(size_t& pos)
         // line ends in \ and continues on the next line
         regex.append(line.substr(loc, pos - loc));
         if (!get_line())
-          error("EOF encountered inside a pattern");
+          error("EOF encountered inside a pattern", NULL, at_lineno);
         if (line == "%%")
-          error("%% section ending encountered inside a pattern");
+          error("%% section ending encountered inside a pattern", NULL, at_lineno);
         pos = 0;
         (void)ws(pos); // skip indent, if any
         loc = pos;
@@ -931,7 +934,7 @@ std::string Reflex::get_regex(size_t& pos)
   }
   catch (reflex::regex_error& e)
   {
-    error("malformed regular expression or unsupported syntax\n", e.what());
+    error("malformed regular expression or unsupported syntax\n", e.what(), at_lineno);
   }
   return regex;
 }
@@ -975,6 +978,7 @@ Reflex::Starts Reflex::get_starts(size_t& pos)
 std::string Reflex::get_code(size_t& pos)
 {
   std::string code;
+  size_t at_lineno = lineno;
   size_t blk = 0, lev = 0;
   enum { CODE, STRING, CHAR, COMMENT } tok = CODE;
   if (pos == 0 && (line == "%{" || is_topcode() || is_classcode() || is_initcode()))
@@ -993,12 +997,12 @@ std::string Reflex::get_code(size_t& pos)
     while (pos >= linelen)
     {
       if (!get_line())
-        error("EOF encountered inside an action");
+        error("EOF encountered inside an action", NULL, at_lineno);
       pos = 0;
       if (tok == CODE)
       {
         if ((blk > 0 || lev > 0) && line == "%%")
-          error("%% section ending encountered inside an action");
+          error("%% section ending encountered inside an action", NULL, at_lineno);
         if (line == "%{")
         {
           code.append(newline);
@@ -1012,7 +1016,7 @@ std::string Reflex::get_code(size_t& pos)
           if (blk == 0 && lev == 0)
           {
             if (!get_line())
-              error("EOF encountered inside an action");
+              error("EOF encountered inside an action", NULL, at_lineno);
             return code;
           }
         }
@@ -1299,7 +1303,7 @@ void Reflex::parse_section_2()
         }
         else
         {
-          for (Starts::const_iterator i = scopes.top().cbegin(); i != scopes.top().cend(); ++i)
+          for (Starts::const_iterator i = scopes.top().begin(); i != scopes.top().end(); ++i)
             section_2[*i].push_back(Code(code, infile, lineno));
         }
       }
@@ -1336,12 +1340,12 @@ void Reflex::parse_section_2()
           }
           else if (no_starts && !scopes.empty())
           {
-            for (Starts::const_iterator start = scopes.top().cbegin(); start != scopes.top().cend(); ++start)
+            for (Starts::const_iterator start = scopes.top().begin(); start != scopes.top().end(); ++start)
               rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
           }
           else
           {
-            for (Starts::const_iterator start = starts.cbegin(); start != starts.cend(); ++start)
+            for (Starts::const_iterator start = starts.begin(); start != starts.end(); ++start)
               rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
           }
           init = false;
@@ -1351,7 +1355,7 @@ void Reflex::parse_section_2()
   }
   if (!scopes.empty())
   {
-    const char *name = conditions.at(*scopes.top().cbegin()).c_str();
+    const char *name = conditions.at(*scopes.top().begin()).c_str();
     if (in->eof())
       error("EOF encountered inside scope ", name);
     else
@@ -1379,7 +1383,7 @@ void Reflex::parse_section_2()
     }
     pattern.resize(pattern.size() - 1); // remove dummy % from (?m...)%
     const char *sep = "";
-    for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
+    for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
     {
       if (rule->regex != "<<EOF>>")
       {
@@ -1619,7 +1623,7 @@ void Reflex::write_prelude()
   if (!out->good())
     return;
   write_banner("OPTIONS USED");
-  for (StringMap::const_iterator option = options.cbegin(); option != options.cend(); ++option)
+  for (StringMap::const_iterator option = options.begin(); option != options.end(); ++option)
   {
     if (!option->second.empty())
     {
@@ -1824,7 +1828,7 @@ void Reflex::write_perf_report()
       *out <<
         "    std::cerr << \"  " << conditions[start] << " rules matched:\\n\"";
       size_t report = 0;
-      for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
+      for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
       {
         if (rule->regex != "<<EOF>>" && rule->code.line != "|")
         {
@@ -1849,7 +1853,7 @@ void Reflex::write_perf_report()
     for (Start start = 0; start < conditions.size(); ++start)
     {
       size_t report = 0;
-      for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
+      for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
       {
         if (rule->regex != "<<EOF>>" && rule->code.line != "|")
         {
@@ -1872,7 +1876,7 @@ void Reflex::write_perf_report()
     for (Start start = 0; start < conditions.size(); ++start)
     {
       size_t report = 0;
-      for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
+      for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
         if (rule->regex != "<<EOF>>" && rule->code.line != "|")
           ++report;
       *out <<
@@ -1915,7 +1919,7 @@ void Reflex::write_code(const Codes& codes)
   if (!out->good())
     return;
   size_t this_lineno = 0;
-  for (Codes::const_iterator code = codes.cbegin(); code != codes.cend(); ++code)
+  for (Codes::const_iterator code = codes.begin(); code != codes.end(); ++code)
   {
     if (code->lineno != this_lineno && options["noline"].empty())
     {
@@ -2159,7 +2163,7 @@ void Reflex::write_lexer()
   else if (!section_2.empty())
   {
     *out << "  switch (start())" << std::endl << "  {" << std::endl;
-    for (CodesMap::const_iterator i = section_2.cbegin(); i != section_2.cend(); ++i)
+    for (CodesMap::const_iterator i = section_2.begin(); i != section_2.end(); ++i)
     {
       *out << "    case " << conditions[i->first] << ":" << std::endl;
       write_code(i->second);
@@ -2191,7 +2195,7 @@ void Reflex::write_lexer()
       "            if (matcher().at_end())\n"
       "            {\n";
     bool has_eof = false;
-    for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
+    for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
     {
       if (rule->regex == "<<EOF>>")
       {
@@ -2261,7 +2265,7 @@ void Reflex::write_lexer()
         "            break;\n";
     size_t accept = 1;
     size_t report = 0;
-    for (Rules::const_iterator rule = rules[start].cbegin(); rule != rules[start].cend(); ++rule)
+    for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
     {
       if (rule->regex != "<<EOF>>")
       {
@@ -2345,7 +2349,7 @@ void Reflex::write_main()
 void Reflex::write_regex(const std::string& regex)
 {
   *out << "\"";
-  for (std::string::const_iterator i = regex.cbegin(); i != regex.cend(); ++i)
+  for (std::string::const_iterator i = regex.begin(); i != regex.end(); ++i)
   {
     if (*i == '\\')
       *out << "\\\\";
@@ -2363,7 +2367,7 @@ void Reflex::stats()
   if (!options["verbose"].empty())
   {
     std::cout << "reflex " REFLEX_VERSION " " << infile << " usage report:\n" << "  options used:\n";
-    for (StringMap::const_iterator option = options.cbegin(); option != options.cend(); ++option)
+    for (StringMap::const_iterator option = options.begin(); option != options.end(); ++option)
       if (!option->second.empty())
         std::cout << "    " << option->first << "=" << option->second << std::endl;
     if (!options["verbose"].empty())

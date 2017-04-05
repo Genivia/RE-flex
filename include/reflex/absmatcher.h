@@ -873,14 +873,13 @@ class AbstractMatcher {
     }
 #endif
   }
-  /// Reset the matched text, this operation is needed to search for a new match.
+  /// Reset the matched text by removing the terminating NUL, which is needed to search for a new match.
   void reset_text()
   {
     if (chr_ != '\0')
     {
       const_cast<char*>(txt_)[len_] = chr_;
       chr_ = '\0';
-      txt_ = NULL;
     }
   }
   /// Set the current position in the buffer for the next match.

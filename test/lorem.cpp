@@ -268,6 +268,38 @@ void test_lorem(const char *title, AbstractMatcher &tokenizer, AbstractMatcher &
   if (hits != 2682)
     printf("FAIL hits=%zu\n", hits);
 
+  file = fopen("latin1lorem.txt", "r");
+  tokenizer.input(Input(file, Input::file_encoding::latin));
+  timer();
+  for (size_t run = 0; run < RUNS; ++run)
+  {
+    rewind(file);
+    tokenizer.input(Input(file, Input::file_encoding::latin));
+    hits = 0;
+    while (tokenizer.scan())
+      ++hits;
+  }
+  timer("Scanning latin1lorem.txt took");
+  fclose(file);
+  if (hits != 6183)
+    printf("FAIL hits=%zu\n", hits);
+
+  file = fopen("ebcdiclorem.txt", "r");
+  tokenizer.input(Input(file, Input::file_encoding::ebcdic));
+  timer();
+  for (size_t run = 0; run < RUNS; ++run)
+  {
+    rewind(file);
+    tokenizer.input(Input(file, Input::file_encoding::ebcdic));
+    hits = 0;
+    while (tokenizer.scan())
+      ++hits;
+  }
+  timer("Scanning ebcdiclorem.txt took");
+  fclose(file);
+  if (hits != 2682)
+    printf("FAIL hits=%zu\n", hits);
+
   std::istringstream stream(lorem);
   timer();
   for (size_t run = 0; run < RUNS; ++run)

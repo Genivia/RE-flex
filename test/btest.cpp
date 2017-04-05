@@ -111,7 +111,7 @@ Test tests[] = {
   { "^a$|\\n", "m", "", "a\na", { 1, 2, 1 } },
   { "^a|a$|a|\\n", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
 #ifndef INTERACTIVE
-  { "\\Aa\\Z|\\Aa|a\\Z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },  // FIXME boost has a bug when interactive() blk=1
+  { "\\Aa\\Z|\\Aa|a\\Z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },  // boost has a bug when interactive() blk=1
 #endif
   // Optional X?
   { "a?z", "", "", "azz", { 1, 1 } },
@@ -186,14 +186,14 @@ Test tests[] = {
   { "[ --]", "", "", " +-", { 1, 1, 1 } },
   { "[^a-z]", "", "", "A", { 1 } },
   { "[[:alpha:]]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } },
-  // { "[\\p{Alpha}]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } }, // TODO no \p class support
+  // { "[\\p{Alpha}]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } }, // no \p class support
   { "[][]", "", "", "[]", { 1, 1 } },
   // Lookahead
   { "a(?=bc)|ab(?=d)|bc|d", "", "", "abcdabd", { 1, 3, 4, 2, 4 } },
   // { "[ab]+(?=ab)|-|ab", "", "", "aaab-bbab", { 1, 3, 2, 1, 3 } }, // has trailing context (undefined as per POSIX)
   { "a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
 #ifndef INTERACTIVE
-  { "a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } }, // FIXME boost has a bug when interactive() blk=1
+  { "a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } }, // boost has a bug when interactive() blk=1
 #endif
   { "^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
   { "a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
@@ -202,7 +202,7 @@ Test tests[] = {
   // Word boundaries \<, \>, \b, and \B
   { "\\<a\\>|\\<a|a\\>|a|-", "", "", "a-aaa", { 1, 5, 2, 4, 3 } },
 #ifndef INTERACTIVE
-  { "\\<.*\\>", "", "", "abc def", { 1 } }, // FIXME boost has a bug when interactive() blk=1
+  { "\\<.*\\>", "", "", "abc def", { 1 } }, // boost has a bug when interactive() blk=1
 #endif
   { "\\<.*\\>|-", "", "", "abc-", { 1, 2 } },
   { "\\b.*\\b|-", "", "", "abc-", { 1, 2 } },
@@ -214,20 +214,20 @@ Test tests[] = {
   { "\\<(-|a)(-|a)\\>| ", "", "", "aa aa", { 1, 2, 1 } },
   { "\\b(-|a)(-|a)\\b| ", "", "", "aa aa", { 1, 2, 1 } },
 #ifndef INTERACTIVE
-  { "\\B(-|a)(-|a)\\B|b|#", "", "", "baab#--#", { 2, 1, 2, 3, 1, 3 } }, // FIXME boost has a bug when interactive() blk=1
+  { "\\B(-|a)(-|a)\\B|b|#", "", "", "baab#--#", { 2, 1, 2, 3, 1, 3 } }, // boost has a bug when interactive() blk=1
 #endif
   { "-\\b(-|a)(-|a)\\b", "", "", "-aa", { 1 } },
   { "a\\b(-|a)(-|a)\\b", "", "", "a-a", { 1 } },
 #ifndef INTERACTIVE
-  { "a?\\>(-|a)(-|a)\\b| ", "", "", "a-a-a", { 1, 1 } }, // FIXME boost has a bug when interactive() blk=1 & does not check \> at start, so accepts more liberally
+  { "a?\\>(-|a)(-|a)\\b| ", "", "", "a-a-a", { 1, 1 } }, // boost has a bug when interactive() blk=1 & does not check \> at start, so accepts more liberally
 #endif
   { "\\b(-|a)(-|a)\\bz?| ", "", "", "aa a-z", { 1, 2, 1 } },
   { "(-|a)(-|a)\\bz?| ", "", "", "aa a-z", { 1, 2, 1 } },
   { "a?\\b(-|a)(-|a)\\b| ", "", "", "a-a", { 1 } },
 #ifndef INTERACTIVE
-  { "-(?=\\<a\\>)|-|a|b", "", "", "-a-ab", { 1, 3, 2, 3, 4 } }, // FIXME boost has a bug when interactive() blk=1
+  { "-(?=\\<a\\>)|-|a|b", "", "", "-a-ab", { 1, 3, 2, 3, 4 } }, // boost has a bug when interactive() blk=1
 #endif
-  // Unicode (TODO: requires a flag and changes to the parser so that UTF-8 multibyte chars are parsed as ONE char)
+  // Unicode
   { "(©)+", "", "", "©", { 1 } },
   { NULL, NULL, NULL, NULL, { } }
 };

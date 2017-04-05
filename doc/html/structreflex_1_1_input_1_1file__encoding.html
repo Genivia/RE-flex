@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input::file_encoding Struct Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Mar 31 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Apr 5 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -66,30 +66,55 @@
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a9f48fc525d274af1351fdde16b9e55e3"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a9f48fc525d274af1351fdde16b9e55e3">plain</a> = 0</td></tr>
-<tr class="memdesc:a9f48fc525d274af1351fdde16b9e55e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">plain octets, ASCII, binary, or UTF-8 without BOM detected  <a href="#a9f48fc525d274af1351fdde16b9e55e3">More...</a><br /></td></tr>
+<tr class="memdesc:a9f48fc525d274af1351fdde16b9e55e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">plain octets: 7-bit ASCII, 8-bit binary or UTF-8 without BOM detected  <a href="#a9f48fc525d274af1351fdde16b9e55e3">More...</a><br /></td></tr>
 <tr class="separator:a9f48fc525d274af1351fdde16b9e55e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fb02ae23658a5f18a9e1bd1edc7af61"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a3fb02ae23658a5f18a9e1bd1edc7af61">utf8</a> = 1</td></tr>
 <tr class="memdesc:a3fb02ae23658a5f18a9e1bd1edc7af61"><td class="mdescLeft">&#160;</td><td class="mdescRight">UTF-8 with BOM detected.  <a href="#a3fb02ae23658a5f18a9e1bd1edc7af61">More...</a><br /></td></tr>
 <tr class="separator:a3fb02ae23658a5f18a9e1bd1edc7af61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d77bb18dbc37d57df341f1878faa134"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a1d77bb18dbc37d57df341f1878faa134">latin</a> = 2</td></tr>
-<tr class="memdesc:a1d77bb18dbc37d57df341f1878faa134"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic Latin ASCII with Latin-1 supplement, ISO-8859-1.  <a href="#a1d77bb18dbc37d57df341f1878faa134">More...</a><br /></td></tr>
+<tr class="memdesc:a1d77bb18dbc37d57df341f1878faa134"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic Latin ASCII and Latin-1 supplement, ISO-8859-1.  <a href="#a1d77bb18dbc37d57df341f1878faa134">More...</a><br /></td></tr>
 <tr class="separator:a1d77bb18dbc37d57df341f1878faa134"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a384c11d51f3320424bf1d78b581d1e24"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a384c11d51f3320424bf1d78b581d1e24">utf16be</a> = 3</td></tr>
+<tr class="memitem:aa3d38a4be53b6d4401ddcd8734f93c64"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#aa3d38a4be53b6d4401ddcd8734f93c64">ebcdic</a> = 3</td></tr>
+<tr class="memdesc:aa3d38a4be53b6d4401ddcd8734f93c64"><td class="mdescLeft">&#160;</td><td class="mdescRight">EBCDIC.  <a href="#aa3d38a4be53b6d4401ddcd8734f93c64">More...</a><br /></td></tr>
+<tr class="separator:aa3d38a4be53b6d4401ddcd8734f93c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a384c11d51f3320424bf1d78b581d1e24"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a384c11d51f3320424bf1d78b581d1e24">utf16be</a> = 4</td></tr>
 <tr class="memdesc:a384c11d51f3320424bf1d78b581d1e24"><td class="mdescLeft">&#160;</td><td class="mdescRight">UTF-16 big endian.  <a href="#a384c11d51f3320424bf1d78b581d1e24">More...</a><br /></td></tr>
 <tr class="separator:a384c11d51f3320424bf1d78b581d1e24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa053fdac14b83ea2040ae500e06bbde5"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#aa053fdac14b83ea2040ae500e06bbde5">utf16le</a> = 4</td></tr>
+<tr class="memitem:aa053fdac14b83ea2040ae500e06bbde5"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#aa053fdac14b83ea2040ae500e06bbde5">utf16le</a> = 5</td></tr>
 <tr class="memdesc:aa053fdac14b83ea2040ae500e06bbde5"><td class="mdescLeft">&#160;</td><td class="mdescRight">UTF-16 little endian.  <a href="#aa053fdac14b83ea2040ae500e06bbde5">More...</a><br /></td></tr>
 <tr class="separator:aa053fdac14b83ea2040ae500e06bbde5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c9c0952f934dff7970320f054d87244"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a4c9c0952f934dff7970320f054d87244">utf32be</a> = 5</td></tr>
+<tr class="memitem:a4c9c0952f934dff7970320f054d87244"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a4c9c0952f934dff7970320f054d87244">utf32be</a> = 6</td></tr>
 <tr class="memdesc:a4c9c0952f934dff7970320f054d87244"><td class="mdescLeft">&#160;</td><td class="mdescRight">UTF-32 big endian.  <a href="#a4c9c0952f934dff7970320f054d87244">More...</a><br /></td></tr>
 <tr class="separator:a4c9c0952f934dff7970320f054d87244"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6dab80b13b986dd7d21dc59acf8a7325"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a6dab80b13b986dd7d21dc59acf8a7325">utf32le</a> = 6</td></tr>
+<tr class="memitem:a6dab80b13b986dd7d21dc59acf8a7325"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a6dab80b13b986dd7d21dc59acf8a7325">utf32le</a> = 7</td></tr>
 <tr class="memdesc:a6dab80b13b986dd7d21dc59acf8a7325"><td class="mdescLeft">&#160;</td><td class="mdescRight">UTF-32 little endian.  <a href="#a6dab80b13b986dd7d21dc59acf8a7325">More...</a><br /></td></tr>
 <tr class="separator:a6dab80b13b986dd7d21dc59acf8a7325"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Common constants. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="aa3d38a4be53b6d4401ddcd8734f93c64"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned short reflex::Input::file_encoding::ebcdic = 3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>EBCDIC. </p>
+
+</div>
+</div>
 <a class="anchor" id="a1d77bb18dbc37d57df341f1878faa134"></a>
 <div class="memitem">
 <div class="memproto">
@@ -108,7 +133,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Basic Latin ASCII with Latin-1 supplement, ISO-8859-1. </p>
+<p>Basic Latin ASCII and Latin-1 supplement, ISO-8859-1. </p>
 
 </div>
 </div>
@@ -130,7 +155,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>plain octets, ASCII, binary, or UTF-8 without BOM detected </p>
+<p>plain octets: 7-bit ASCII, 8-bit binary or UTF-8 without BOM detected </p>
 
 </div>
 </div>
@@ -142,7 +167,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const unsigned short reflex::Input::file_encoding::utf16be = 3</td>
+          <td class="memname">const unsigned short reflex::Input::file_encoding::utf16be = 4</td>
         </tr>
       </table>
   </td>
@@ -164,7 +189,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const unsigned short reflex::Input::file_encoding::utf16le = 4</td>
+          <td class="memname">const unsigned short reflex::Input::file_encoding::utf16le = 5</td>
         </tr>
       </table>
   </td>
@@ -186,7 +211,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const unsigned short reflex::Input::file_encoding::utf32be = 5</td>
+          <td class="memname">const unsigned short reflex::Input::file_encoding::utf32be = 6</td>
         </tr>
       </table>
   </td>
@@ -208,7 +233,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const unsigned short reflex::Input::file_encoding::utf32le = 6</td>
+          <td class="memname">const unsigned short reflex::Input::file_encoding::utf32le = 7</td>
         </tr>
       </table>
   </td>
@@ -250,7 +275,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Mar 31 2017 21:20:28 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Apr 5 2017 16:04:50 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

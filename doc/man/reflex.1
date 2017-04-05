@@ -1,4 +1,4 @@
-.TH REFLEX "1" "March 31, 2017" "reflex 0.9.19" "User Commands"
+.TH REFLEX "1" "April 05, 2017" "reflex 0.9.20" "User Commands"
 .SH NAME
 reflex \- the regex\-centric fast and flexible lexical analyzer generator
 .SH SYNOPSIS
@@ -41,12 +41,15 @@ use custom pattern class NAME for custom matcher option \fB\-m\fR
 \fB\-\-include\fR=\fIFILE\fR
 include header FILE.h for custom matcher option \fB\-m\fR
 .TP
+\fB\-\-tabs\fR=\fIN\fR
+set tab size to N (1,2,4,8) for indent and dedent matching
+.TP
 \fB\-u\fR, \fB\-\-unicode\fR
 match Unicode . (dot), \\p, \\s, \\w, ..., and group UTF\-8
 .TP
 \fB\-x\fR, \fB\-\-freespace\fR
 ignore space in patterns
-.SS "Files:"
+.SS "Generated files:"
 .TP
 \fB\-o\fR, \fB\-\-outfile\fR=\fIFILE\fR
 specify output FILE instead of lex.yy.cpp
@@ -55,7 +58,7 @@ specify output FILE instead of lex.yy.cpp
 write scanner on stdout instead of lex.yy.cpp
 .TP
 \fB\-\-graphs\-file\fR[=\fI\fR\fIFILE\fR]
-write the scanner's DFA to FILE.gv for the Graphviz dot tool
+write the scanner's DFA in Graphviz format to FILE.gv
 .TP
 \fB\-\-header\-file\fR[=\fI\fR\fIFILE\fR]
 write a C++ header FILE.h in addition to the scanner

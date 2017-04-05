@@ -48,6 +48,7 @@ Features
 - Generates clean source code that defines an MT-safe (reentrant) C++ Lexer
   class derived from an abstract lexer class template, parameterized by matcher
   class type.
+- Multiple lexer classes can be combined and used in one application.
 - Configurable Lexer class generation to customize the interface for various
   parsers, including Yacc and Bison.
 - Generates scanners for lexical analysis on files, C++ streams, and (wide)
@@ -317,6 +318,7 @@ Changelog
 - Mar 24, 2017: 0.9.17 improvements
 - Mar 26, 2017: 0.9.18 added reflex option `-p` (`--perf-report`) for performance debugging, added doc/man/reflex.1 man page, added interactive readline example
 - Mar 31, 2017: 0.9.19 fixed reflex option `-m`, `lexer.in(i)` now resets the lexer, fixed reassigning the same input to the lexer that caused UTF BOM to be read twice
+- Apr  5, 2017: 0.9.20 EBCDIC file translation, other improvements
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
