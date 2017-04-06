@@ -159,6 +159,7 @@ class Reflex
   bool        is_classcode();
   bool        is_initcode();
   std::string get_name(size_t& pos);
+  std::string get_option(size_t& pos);
   std::string get_start(size_t& pos);
   std::string get_string(size_t& pos);
   std::string get_regex(size_t& pos);

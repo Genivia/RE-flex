@@ -4708,6 +4708,24 @@ UTF-16.
 ⇢ [Back to contents](#)
 
 
+Where is FlexLexer.h?                                              {#flexlexer}
+---------------------
+
+RE/flex uses its own header file `reflex/flexlexer.h` for compatibility with
+Flex, instead of `FlexLexer.h`.  The latter is specific to Flex and cannot be
+used with RE/flex.  You should not have to include `FlexLexer.h` but if you do,
+use:
+
+```cpp
+#include <reflex/flexlexer.h>
+```
+
+The `FlexLexer` class defined in `reflex/flexlexer.h` is the base class of the
+generated `yyFlexLexer` class.
+
+⇢ [Back to contents](#)
+
+
 Interactive input with GNU readline                                 {#readline}
 -----------------------------------
 

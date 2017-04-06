@@ -804,6 +804,23 @@ std::string Reflex::get_name(size_t& pos)
   return line.substr(loc, pos - loc);
 }
 
+/// Advance pos over option name (letters, digits, +/hyphen/underscore), return name.
+std::string Reflex::get_option(size_t& pos)
+{
+  if (pos >= linelen || !std::isalnum(line.at(pos)))
+    return "";
+  size_t loc = pos++;
+  while (pos < linelen)
+  {
+    if (line.at(pos) == '-' || line.at(pos) == '+') // normalize - and + to _
+      line[pos] = '_';
+    else if (!std::isalnum(line.at(pos)) && line.at(pos) != '_')
+      break;
+    ++pos;
+  }
+  return line.substr(loc, pos - loc);
+}
+
 /// Advance pos over start condition name (an ASCII C++ identifier or C++11 Unicode identifier), return name.
 std::string Reflex::get_start(size_t& pos)
 {
@@ -829,11 +846,10 @@ std::string Reflex::get_string(size_t& pos)
   size_t loc = ++pos;
   while (pos < linelen)
   {
-    if (line.at(pos) == '"')
+    if (line.at(pos++) == '"')
       break;
-    ++pos;
   }
-  return line.substr(loc, pos - loc);
+  return line.substr(loc, pos - loc - 1);
 }
 
 /// Get regex string, converted to a format understood by the selected regex engine library.
@@ -1206,52 +1222,55 @@ void Reflex::parse_section_1()
                   pos = 1;
                 do
                 {
-                  std::string name = get_name(pos);
+                  std::string name = get_option(pos);
                   if (name.empty())
                     error("bad %option name");
-                  StringMap::iterator i = options.find(name);
-                  if (i == options.end())
-                    error("unrecognized %option: ", name.c_str());
-                  (void)ws(pos);
-                  if (eq(pos) && pos < linelen)
+                  if (name != "c__") // %option c++ has no effect
                   {
-                    std::string value;
-                    if (line.at(pos) == '"')
-                      value = get_string(pos); // %option OPTION = "NAME"
-                    else
-                      value = get_name(pos); // %option OPTION = NAME
+                    StringMap::iterator i = options.find(name);
+                    if (i == options.end())
+                      error("unrecognized %option: ", name.c_str());
                     (void)ws(pos);
-                    if (!i->second.empty() && i->second.compare(value) != 0)
-                      warning("redefining %option ", name.c_str());
-                    i->second = value;
-                  }
-                  else
-                  {
-                    i->second = "true";
-                    if (name.compare(0, 2, "no") == 0)
+                    if (eq(pos) && pos < linelen)
                     {
-                      StringMap::iterator j = options.find(name.substr(2));
-                      if (j != options.end() && j->second.compare("true") == 0)
-                      {
-                        warning("disabling an initially enabled %option ", name.c_str() + 2);
-                        j->second.clear();
-                      }
+                      std::string value;
+                      if (line.at(pos) == '"')
+                        value = get_string(pos); // %option OPTION = "NAME"
+                      else
+                        value = get_name(pos); // %option OPTION = NAME
+                      (void)ws(pos);
+                      if (!i->second.empty() && i->second.compare(value) != 0)
+                        warning("redefining %option ", name.c_str());
+                      i->second = value;
                     }
                     else
                     {
-                      std::string noname("no");
-                      StringMap::iterator j = options.find(noname.append(name));
-                      if (j != options.end() && j->second.compare("true") == 0)
+                      i->second = "true";
+                      if (name.compare(0, 2, "no") == 0)
                       {
-                        warning("enabling an initially disabled %option ", noname.c_str());
-                        j->second.clear();
+                        StringMap::iterator j = options.find(name.substr(2));
+                        if (j != options.end() && j->second.compare("true") == 0)
+                        {
+                          warning("disabling an initially enabled %option ", name.c_str() + 2);
+                          j->second.clear();
+                        }
+                      }
+                      else
+                      {
+                        std::string noname("no");
+                        StringMap::iterator j = options.find(noname.append(name));
+                        if (j != options.end() && j->second.compare("true") == 0)
+                        {
+                          warning("enabling an initially disabled %option ", noname.c_str());
+                          j->second.clear();
+                        }
                       }
                     }
+                    if (!option && !nl(pos))
+                      error("trailing text after %option: ", name.c_str());
+                    if (name.compare("matcher") == 0)
+                      set_library();
                   }
-                  if (!option && !nl(pos))
-                    error("trailing text after %option: ", name.c_str());
-                  if (name.compare("matcher") == 0)
-                    set_library();
                 } while (!nl(pos));
               }
             }

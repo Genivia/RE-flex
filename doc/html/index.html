@@ -96,6 +96,7 @@
 <li class="level1"><a href="#tricks">Tips, tricks and gotchas                                              </a><ul><li class="level2"><a href="#invalid-utf">Invalid UTF encodings                                            </a></li>
 <li class="level2"><a href="#lazy">Lazy repetitions                                                        </a></li>
 <li class="level2"><a href="#switching">Repeately switching to the same input                              </a></li>
+<li class="level2"><a href="#flexlexer">Where is FlexLexer.h?                                              </a></li>
 <li class="level2"><a href="#readline">Interactive input with GNU readline                                 </a></li>
 </ul>
 </li>
@@ -1819,6 +1820,11 @@ Repeately switching to the same input                              </h2>
 <p>The state of the input object <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> changes as the scanner's matcher consumes more input. If you switch to the same input again (e.g. with <code>in(i)</code> or <code>switch_stream(i)</code> for input source <code>i</code>), a portion of that input may end up being discarded as part of the matcher's internal buffer that is flushed when input is assigned. Therefore, the following code will not work because stdin is flushed repeately:</p>
 <div class="fragment"><div class="line">Lexer lexer(stdin);       <span class="comment">// a lexer that reads stdin</span></div><div class="line">lexer.in(stdin);          <span class="comment">// this is OK, nothing read yet</span></div><div class="line"><span class="keywordflow">while</span> (lexer.lex(stdin))  <span class="comment">// oops, assigning stdin again and again</span></div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;we&#39;re not getting anywhere?&quot;</span> &lt;&lt; std::endl;</div></div><!-- fragment --><p>If you need to read a file or stream again, you must rewind it to the location in the file to start reading. Beware that <code>FILE*</code> input is checked against an UTF BOM at the start of a file, which means that you cannot reliably move to a location in the file to start reading when files are encoded in UTF-8 or UTF-16.</p>
 <p>⇢ <a href="#">Back to contents</a></p>
+<h2><a class="anchor" id="flexlexer"></a>
+Where is FlexLexer.h?                                              </h2>
+<p>RE/flex uses its own header file <code><a class="el" href="flexlexer_8h.html" title="RE/flex Flex-compatible FlexLexer base class and Lex/Flex-compatible macros. ">reflex/flexlexer.h</a></code> for compatibility with Flex, instead of <code><a class="el" href="flexlexer_8h.html" title="RE/flex Flex-compatible FlexLexer base class and Lex/Flex-compatible macros. ">FlexLexer.h</a></code>. The latter is specific to Flex and cannot be used with RE/flex. You should not have to include <code><a class="el" href="flexlexer_8h.html" title="RE/flex Flex-compatible FlexLexer base class and Lex/Flex-compatible macros. ">FlexLexer.h</a></code> but if you do, use:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="flexlexer_8h.html">reflex/flexlexer.h</a>&gt;</span></div></div><!-- fragment --><p>The <code>FlexLexer</code> class defined in <code><a class="el" href="flexlexer_8h.html" title="RE/flex Flex-compatible FlexLexer base class and Lex/Flex-compatible macros. ">reflex/flexlexer.h</a></code> is the base class of the generated <code>yyFlexLexer</code> class.</p>
+<p>⇢ <a href="#">Back to contents</a></p>
 <h2><a class="anchor" id="readline"></a>
 Interactive input with GNU readline                                 </h2>
 <p>Option <code>-I</code> for interactive input generates a scanner that uses <code>fgetc()</code> to read input from a <code>FILE*</code> descriptor (stdin by default). Interactive input is made more user-friendly with the GNU readline library that provides basic line editing and a history mechanism.</p>
@@ -1838,7 +1844,7 @@ License and copyright                                                </h1>
 </div></div><div class="alt"><div class="alt">The Free Software Foundation maintains a <a href="http://directory.fsf.org/wiki/License:BSD_3Clause">BSD-3 License Wiki</a>.</div></div><div class="alt"><div class="alt">⇢ <a href="#">Back to contents</a></div></div><div class="alt"><div class="alt">Copyright (c) 2017, Robert van Engelen, Genivia Inc. All rights reserved. </div></div></div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Apr 5 2017 16:04:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Apr 5 2017 21:33:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
