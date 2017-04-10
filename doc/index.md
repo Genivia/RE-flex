@@ -400,7 +400,7 @@ The RE/flex regex engine uses a deterministic finite state machine (FSM) to get
 the best performance when matching.  However, constructing a FSM adds overhead.
 This matcher is better suitable for searching long texts.  The FSM construction 
 overhead can be eliminated by pre-converting the regex to C++ code tables ahead
-of time as we will see later.
+of time as we will see shortly.
 
 The Boost.Regex engines normally use Perl mode matching.  We added a POSIX mode
 Boost.Regex engine class for the RE/flex scanner generator.  Scanners typically

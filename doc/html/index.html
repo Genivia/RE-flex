@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Apr 9 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Apr 10 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -257,7 +257,7 @@ Found
 <tr>
 <td><code>StdPosixMatcher</code> </td><td>POSIX </td><td>std::regex </td><td>regex backtracking </td></tr>
 </table>
-<p>The RE/flex regex engine uses a deterministic finite state machine (FSM) to get the best performance when matching. However, constructing a FSM adds overhead. This matcher is better suitable for searching long texts. The FSM construction overhead can be eliminated by pre-converting the regex to C++ code tables ahead of time as we will see later.</p>
+<p>The RE/flex regex engine uses a deterministic finite state machine (FSM) to get the best performance when matching. However, constructing a FSM adds overhead. This matcher is better suitable for searching long texts. The FSM construction overhead can be eliminated by pre-converting the regex to C++ code tables ahead of time as we will see shortly.</p>
 <p>The Boost.Regex engines normally use Perl mode matching. We added a POSIX mode Boost.Regex engine class for the RE/flex scanner generator. Scanners typically use POSIX mode matching. See <a class="el" href="index.html#reflex-posix-perl">POSIX versus Perl matching </a> for more information.</p>
 <p>The Boost.Regex engines are all initialized with <code>match_not_dot_newline</code>, which disables dotall matching as the default setting. Dotall can be re-enabled with the <code>(?s)</code> regex mode modifier. This is done for compatibility with scanners.</p>
 <p>A matcher can be applied to strings and wide strings, such as <code>std::string</code> and <code>std::wstring</code>, <code>char*</code> and <code>wchar_t*</code>. Wide strings are converted to UTF-8 to enable matching with regular expressions that contain Unicode patterns.</p>
@@ -1985,7 +1985,7 @@ License and copyright                                                </h1>
 </div></div><div class="alt"><div class="alt">The Free Software Foundation maintains a <a href="http://directory.fsf.org/wiki/License:BSD_3Clause">BSD-3 License Wiki</a>.</div></div><div class="alt"><div class="alt">🔝 <a href="#">Back to table of contents</a></div></div><div class="alt"><div class="alt">Copyright (c) 2017, Robert van Engelen, Genivia Inc. All rights reserved. </div></div></div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Apr 9 2017 21:47:01 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Apr 10 2017 11:39:01 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

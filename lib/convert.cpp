@@ -54,11 +54,14 @@ namespace reflex {
 /// regex meta chars
 static const char regex_meta[] = "#$()*+.?[\\]^{|}";
 
-/// regex chars that can be escaped
-static const char regex_escapes[] = "!\"#%&-/:;@~";
+/// regex chars that when escaped should be un-escaped
+static const char regex_unescapes[] = "!\"#%&',-/:;@`";
+
+/// regex chars that when escaped should be converted to \xXX
+static const char regex_escapes[] = "~";
 
 /// regex anchors and boundaries
-static const char regex_anchors[] = "AZzBby`'<>";
+static const char regex_anchors[] = "AZzBby<>";
 
 /// \a (BEL), \b (BS), \t (TAB), \n (LF), \v (VT), \f (FF), \r (CR)
 static const char regex_abtnvfr[] = "abtnvfr";
@@ -203,7 +206,7 @@ static std::string unicode_class(const char *s, int esc, const char *par)
     else
     {
       regex.assign(utf8(wc[0], wc[1], esc, par));
-      wc += 2;
+     wc += 2;
       for (; wc[1] != 0; wc += 2)
         regex.append("|").append(utf8(wc[0], wc[1], esc, par));
     }
@@ -222,11 +225,18 @@ static std::string unicode_class(const char *s, int esc, const char *par)
 static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, const char *escapes, const std::map<int,size_t>& mod, const char *par, std::string& regex) throw (regex_error)
 {
   int c = pattern[pos];
-  if (std::strchr(regex_escapes, c) != NULL)
+  if (std::strchr(regex_unescapes, c) != NULL)
   {
     // translate \x to x
     regex.append(&pattern[loc], pos - loc - 1);
     loc = pos;
+  }
+  else if (std::strchr(regex_escapes, c) != NULL)
+  {
+    // translate \x to \xXX
+    int esc = hex_or_octal_escape(escapes);
+    regex.append(&pattern[loc], pos - loc - 1).append(latin1(c, c, esc));
+    loc = pos + 1;
   }
   else if (std::strchr(regex_meta, c) == NULL)
   {
@@ -251,22 +261,6 @@ static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, c
           throw regex_error(regex_error::invalid_anchor, pattern, pos);
         // translate \Z to (?=[\n\r]*\z)
         regex.append(&pattern[loc], pos - loc - 1).append("(?=(\\r?\\n)?\\z)");
-        loc = pos + 1;
-      }
-      else if (c == '`')
-      {
-        if (!supports_escape(escapes, 'A'))
-          throw regex_error(regex_error::invalid_anchor, pattern, pos);
-        // translate \` to \A
-        regex.append(&pattern[loc], pos - loc - 1).append("\\A");
-        loc = pos + 1;
-      }
-      else if (c == '\'')
-      {
-        if (!supports_escape(escapes, 'z'))
-          throw regex_error(regex_error::invalid_anchor, pattern, pos);
-        // translate \' to \z
-        regex.append(&pattern[loc], pos - loc - 1).append("\\z");
         loc = pos + 1;
       }
       else if (c == 'b')
