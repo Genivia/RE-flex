@@ -6,7 +6,11 @@
 if [ "$#" = 1 ]
 then
 
-./build.sh
+if [ -x bin/reflex ] 
+then
+
+echo
+echo "Creating reflex man page"
 mkdir -p doc/man
 echo '.TH REFLEX "1" "'`date '+%B %d, %Y'`'" "reflex '$1'" "User Commands"' > doc/man/reflex.1
 cat >> doc/man/reflex.1 << END
@@ -21,7 +25,7 @@ Generates C++ source code programs that perform pattern\-matching on text.
 Generates lex.yy.cpp unless option \fB-o\fR specifies otherwise.
 .SH OPTIONS
 END
-./bin/reflex -h \
+bin/reflex -h \
 | sed -e 's/\([^\\]\)\\/\1\\\\/g' \
 | sed \
   -e '/^$/ d' \
@@ -64,6 +68,13 @@ lex(1), flex(1), flex++(1).
 END
 
 echo "reflex $1 manual page created and saved in doc/man/reflex.1"
+
+else
+
+echo "bin/reflex is needed but was not found: build reflex first"
+exit 1
+
+fi
 
 else
 

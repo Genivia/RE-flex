@@ -1,6 +1,8 @@
 #!/bin/sh
-cd lib; make distclean; cd -
-cd src; make distclean; cd -
-cd unicode; make clean; cd -
-cd examples; make clean; cd -
-cd test; make clean; cd -
+echo
+echo "Cleaning reflex"
+cd lib;      make -f Make distclean; cd -
+cd src;      make -f Make distclean; cd -
+cd unicode;  make -f Make clean; cd -
+cd examples; make -f Make clean; cd -
+cd test;     make -f Make clean; cd -

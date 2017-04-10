@@ -44,7 +44,7 @@ Features
   regex engines, including the RE/flex regex engine and Boost.Regex.
 - Adds freespace mode option to improve readability of lexer specifications.
 - Adds `%class` and `%init` to customize the generated Lexer classes.
-- Adds `%include` to modularize lex specifications.
+- Adds `%include` to modularize lexer specifications.
 - Generates clean source code that defines an MT-safe (reentrant) C++ Lexer
   class derived from an abstract lexer class template, parameterized by matcher
   class type.
@@ -73,37 +73,60 @@ The RE/flex repo includes tokenizers for Java, Python, and C/C++.
 Installation
 ------------
 
-A clean build:
+You have two options: 1) quick install or 2) configure and make.
+
+Windows users: use `bin/reflex.exe`, use the C++ header files in
+`include/reflex` and the C++ source files in `lib` and `unicode`.
+
+### Quick install
+
+For a quick clean build assuming your environment is pretty much standard:
 
     $ ./clean.sh
     $ ./build.sh
 
-or use the 'make' command:
+Or use the `make -f Make` command to do the same:
 
-    $ cd src; make
+    $ cd src; make -f Make
 
-This compiles the **reflex** tool and installs it locally in reflex/bin.  You
-can add this location to your $PATH variable to enable the new reflex command:
+This compiles the **reflex** tool and installs it locally in `reflex/bin`.  You
+can add this location to your `$PATH` variable to enable the new `reflex`
+command:
 
     export PATH=$PATH:/reflex_install_path/bin
 
-The `libreflex.a` and `libreflex.so` libraries are saved in reflex/lib.  Link
-against one of these libraries when you use the RE/flex regex engine in your
-code.  The RE/flex header files are located in reflex/include/reflex.
+The `libreflex.a` and `libreflex.so` libraries are saved locally in
+`lib`.  Link against one of these libraries when you use the RE/flex regex
+engine in your code.  The RE/flex header files are locally located in
+`include/reflex`.
 
-To install the library and the 'reflex' command in /usr/local/lib and
-/usr/local/bin:
+To install the library and the `reflex` command in `/usr/local/lib` and
+`/usr/local/bin`:
 
-    $ sudo ./install.sh
+    $ sudo ./allinstall.sh
 
-or use the 'make' command to do the same:
+Or use the `make -f Make install` command to do the same:
 
-    $ cd lib; sudo make install
-    $ cd src; sudo make install
+    $ cd lib; sudo make -f Make install
+    $ cd src; sudo make -f Make install
 
-Windows users: use reflex/bin/reflex.exe.
+### Configure and make
 
-Optional libraries to install:
+The configure script accepts configuration and installation options.  To view
+these options, run:
+
+    $ ./configure --help
+
+Run configure and make:
+
+    $ ./configure && make
+
+After this successfully completes, you can optionally run `make install` to
+install the `reflex` command and `libreflex` library:
+
+    $ sudo make install
+
+### Optional libraries to install
 
 - To use Boost.Regex as a regex engine with the RE/flex library and scanner
   generator, install [Boost][boost-url] and link your code against
@@ -122,11 +145,11 @@ There are two ways you can use this project:
 2. as an extensible regex matching library for C++.
 
 For the first option, simply build the **reflex** tool and run it on the
-command line on a lex specification:
+command line on a lexer specification:
 
     $ reflex --flex --bison --graphs-file lexspec.l
 
-This generates a scanner for Bison from the Flex specification `lexspec.l` and
+This generates a scanner for Bison from the lexer specification `lexspec.l` and
 saves the finite state machine (FSM) as a Graphviz `.gv` file that can be
 visualized with the [Graphviz dot][dot-url] tool:
 
@@ -319,6 +342,7 @@ Changelog
 - Mar 26, 2017: 0.9.18 added reflex option `-p` (`--perf-report`) for performance debugging, added doc/man/reflex.1 man page, added interactive readline example
 - Mar 31, 2017: 0.9.19 fixed reflex option `-m`, `lexer.in(i)` now resets the lexer, fixed reassigning the same input to the lexer that caused UTF BOM to be read twice
 - Apr  5, 2017: 0.9.20 EBCDIC file translation, other improvements
+- Apr 10, 2017: 0.9.21 fixed option `-P` to support multiple lexer classes in one application, added `configure` installation script, optional quick install with `allinstall.sh` (renamed from `install.sh`)
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

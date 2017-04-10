@@ -199,7 +199,7 @@ class AbstractMatcher {
    public:
     /// AbstractMatcher::Operation() matches input to a pattern using method Const::SCAN, Const::FIND, or Const::SPLIT.
     size_t operator()() const
-      /// @returns value of accept() >= 1 for match or 0 for no end of matches.
+      /// @returns value of accept() >= 1 for match or 0 for end of matches.
     {
       return matcher_->match(method_);
     }

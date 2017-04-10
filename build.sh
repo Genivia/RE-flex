@@ -1,3 +1,5 @@
 #!/bin/sh
-cd lib; make; cd -
-cd src; make; cd -
+echo
+echo "Building reflex"
+cd lib; make -f Make; cd -
+cd src; make -f Make; cd -

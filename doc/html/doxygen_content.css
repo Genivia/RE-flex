@@ -20,6 +20,22 @@ div.textblock {
 	margin-right: 10%;
 }
 
+.textblock h1, .textblock h2 {
+	margin-right: 6px;
+	padding: 14px 25px 14px 25px;
+	color: #3D578C;
+	background: #fafafa;
+        border-radius: 7px 7px 7px 7px;
+}
+
+.textblock h3 {
+	margin-right: 6px;
+	padding: 7px 25px 7px 25px;
+	color: #3D578C;
+	background: #fafafa;
+        border-radius: 7px 7px 7px 7px;
+}
+
 a.el {
 	font-weight: normal;
 }
@@ -58,7 +74,7 @@ div.header {
 }
 
 div.toc {
-        padding: 14px 25px;
+        padding: 14px 25px 14px 25px;
         background: #fafafa;
         border: 1px solid rgba(38, 91, 142, 0.5);
         border-radius: 7px 7px 7px 7px;
@@ -81,7 +97,7 @@ div.alt div.fragment {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	margin-left: 0px;
-	font: 100 1em;
+	font-size: 1em;
         line-height: normal;
 	overflow: auto;
 }
@@ -95,7 +111,7 @@ div.fragment {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	margin-left: 0px;
-	font: 100 1em;
+	font-size: 1em;
         line-height: normal;
 	overflow: auto;
 }
@@ -110,7 +126,7 @@ pre.fragment {
 	color: hsl(0, 0%, 100%);
 	padding: 6px;
 	margin-left: 0px;
-	font: 100 1em;
+	font-size: 1em;
         line-height: normal;
 	overflow: auto;
 	white-space: pre;

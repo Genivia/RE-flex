@@ -7,7 +7,7 @@
 #
 ################################################################################
 
-make test
+make -f Make test
 
 history -r test_regex_history
 

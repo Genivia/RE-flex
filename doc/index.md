@@ -87,7 +87,7 @@ In summary, RE/flex is
   This framework is flexible and can be extended to include other regex pattern
   matchers that can operate seamlessly with the RE/flex scanner generator.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Yet another scanner generator                                         {#intro1}
@@ -286,7 +286,7 @@ API that can be used as a stand-alone library for matching, searching, scanning
 and splitting input from strings, files and streams in regular C++ applications
 (i.e. applications that are not necessarily tokenizers for compilers).
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 A flexible regex library                                              {#intro2}
@@ -569,16 +569,16 @@ You can use this method and other methods to obtain the details of a match:
   Method      | Result
   ----------- | ---------------------------------------------------------------
   `accept()`  | returns group capture index or zero if not captured/matched
-  `text()`    | returns `const char*` to `\0`-terminated match
+  `text()`    | returns `const char*` to NUL-terminated match (ends in `\0`)
   `str()`     | returns `std::string` copy of `text()` (but preserves `\0`s)
   `wstr()`    | returns `std::wstring` copy of `text()`, converted from UTF-8
   `pair()`    | returns `std::pair<size_t,std::string>(accept(),str())`
   `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
-  `begin()`   | returns `const char*` to non-`\0`-terminated match begin
-  `end()`     | returns `const char*` to non-`\0`-terminated match end
-  `rest()`    | returns `const char*` to `\0`-terminated rest of input
+  `begin()`   | returns `const char*` to non-NUL-terminated match begin
+  `end()`     | returns `const char*` to non-NUL-terminated match end
+  `rest()`    | returns `const char*` to NUL-terminated rest of input
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
   `lineno()`  | returns line number of the match, starting with line 1
@@ -594,7 +594,8 @@ You can use this method and other methods to obtain the details of a match:
 The `operator[n]` takes the group number `n` and returns the n'th group capture
 match as a pair with a `const char*` pointer to the group-matching text and the
 size of the matched text in bytes.  Because the pointer points to a string that
-is not `\0`-terminated, you should use the size to determine the matching part.
+is not NUL-terminated, you should use the size to determine the matching part.
+
 The pointer is NULL when the group capture has no match.
 
 For example:
@@ -623,7 +624,7 @@ after matching continues and when the matcher object is deallocated.  To retain
 the `text()` value use the `str()` method that returns a copy of `text()`.
 
 @warning The `operator[]` method returns a pair with the match info of the n'th
-group, which is a non-`\0`-terminated `const char*` pointer (or NULL) with size
+group, which is a non-NUL-terminated `const char*` pointer (or NULL), with size
 in bytes of the captured match.  The string *should not be used* after matching
 continues.
 
@@ -873,7 +874,7 @@ In summary:
 
 \ref regex section has more information about the RE/flex regex library.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 The RE/flex scanner generator                                         {#reflex}
@@ -889,7 +890,7 @@ stand-alone application or part of a larger program such as a compiler:
 digraph build {
   ranksep=.25;
   node     [ shape=box, fontname=Helvetica, fontsize=11 ];
-  spec     [ label="lexer specification\n(.l, .lex)", peripheries=0 ];
+  spec     [ label="lexer specification\n(.l)", peripheries=0 ];
   reflex   [ label="reflex scanner generator" ];
   lexyycpp [ label="lexer class\n(lex.yy.cpp)", peripheries=0 ];
   cpp      [ label="C++ compiler & linker" ];
@@ -936,7 +937,7 @@ digraph execute {
 The generated scanner executes actions (typically to produce tokens for a
 parser).  The actions are triggered by matching patterns to the input.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 The reflex command line tool                                  {#reflex-command}
@@ -960,7 +961,7 @@ compatibility with [Bison](dinosaur.compilertools.net/#bison) parsers.  See
 The source code output is intentionally structured in sections that are clean,
 readable, and reusable.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Command-line options                                          {#reflex-options}
@@ -1015,6 +1016,8 @@ the value that is assigned to the option.  This allows your program code to
 check and use RE/flex options.  For example, the lexer class name is
 `REFLEX_OPTION_lexer` when the lexer class name is redefined with option
 `−−lexer=NAME`.
+
+🔝 [Back to table of contents](#)
 
 ### Scanner options                                   {#reflex-options-scanner}
 
@@ -1119,15 +1122,17 @@ to match a space or a tab character.  Actions in free space mode MUST be placed
 in `{` and `}` blocks and all other code must be placed in `%{` and `%}`
 blocks.  Patterns ending in an escape `\` continue on the next line.
 
-### Generated files options                             {#reflex-options-files}
+🔝 [Back to table of contents](#)
+
+### Output files options                                {#reflex-options-files}
 
 #### `-o FILE`, `−−outfile=FILE`
 
-This saves the scanner to FILE instead of yy.lex.cpp.
+This saves the scanner to FILE instead of lex.yy.cpp.
 
 #### `-t`, `−−stdout`
 
-This writes the scanner to stdout instead of to the yy.lex.cpp file.
+This writes the scanner to stdout instead of to lex.yy.cpp.
 
 #### `−−graphs-file[=FILE]`
 
@@ -1206,7 +1211,9 @@ should compile the generated table file with the scanner.  Options `−−full` 
 `−−fast` eliminate the FSM construction overhead when the scanner is
 initialized.
 
-### Generated code options                               {#reflex-options-code}
+🔝 [Back to table of contents](#)
+
+### Output code options                                  {#reflex-options-code}
 
 #### `−−namespace=NAME`
 
@@ -1248,8 +1255,9 @@ This suppresses the `#line` directives in the generated scanner code.
 #### `-P NAME`, `−−prefix=NAME`
 
 This specifies NAME as a prefix for the generated `yyFlexLexer` class to
-replace the default `yy` prefix.  This option is only useful with the `−−flex`
-option and can be used in combination with `−−bison`.
+replace the default `yy` prefix.  Also renames the prefix of `yylex()`.
+Generates `lex.NAME.cpp` file instead of `lex.yy.cpp`, and generates
+`lex.NAME.h` with option `−−header-file`.
 
 #### `−−nostdinit`
 
@@ -1292,6 +1300,8 @@ compatibility and when `−−flex`  and `−−bison` are used together.  Use
 has no effect for C++ lexer classes, which have a virtual `int wrap()` (or
 `yywrap()` with option `−−flex`) method that can be overridden.
 
+🔝 [Back to table of contents](#)
+
 ### Debugging options                                   {#reflex-options-debug}
 
 #### `-d`, `−−debug`
@@ -1328,6 +1338,8 @@ This displays a summary of scanner statistics.
 
 This disables warnings.
 
+🔝 [Back to table of contents](#)
+
 ### Miscellaneous options                       {#reflex-options-miscellaneous}
 
 #### `-h`, `−−help`
@@ -1342,11 +1354,11 @@ This displays the current **reflex** release version.
 
 These options are enabled by default and have no effect.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
-RE/flex lexer specifications                                     {#reflex-spec}
-----------------------------
+Lexer specifications                                             {#reflex-spec}
+--------------------
 
 A lexer specification consists of three sections that are divided by `%%`
 delimiters:
@@ -1429,6 +1441,8 @@ int main() { return Lexer().lex(); }
 
 The main function instantiates the lexer class and invokes the scanner, which
 will not return until the entire input is processed.
+
+🔝 [Back to table of contents](#)
 
 ### The definitions section                                 {#reflex-spec-defs}
 
@@ -1616,6 +1630,8 @@ exclusive states:
 
 See \ref reflex-states for more information about states.
 
+🔝 [Back to table of contents](#)
+
 ### The rules section                                      {#reflex-spec-rules}
 
 Each rule in the rules section consists of a pattern-action pair.  For example,
@@ -1640,7 +1656,7 @@ the classic Flex actions shown in the second column of this table:
 
   RE/flex action        | Flex action          | Result
   --------------------- | -------------------- | ------------------------------
-  `text()`              | `YYText()`, `yytext` | `\0`-terminated text match
+  `text()`              | `YYText()`, `yytext` | NUL-terminated text match
   `str()`               | *n/a*                | `std::string` of `text()`
   `wstr()`              | *n/a*                | `std::wstring` of `text()`
   `size()`              | `YYLeng()`, `yyleng` | size of the match in bytes
@@ -1763,6 +1779,8 @@ file, or a stream.
 
 See \ref reflex-input for more details on managing the input to a scanner.
 
+🔝 [Back to table of contents](#)
+
 ### User code sections                                      {#reflex-spec-user}
 
 To inject code at the end of the generated scanner, such as a `main`
@@ -1824,11 +1842,19 @@ The above uses a `FILE` descriptor to read input from, which has the advantage
 of automatically decoding UTF-8/16/32 input.  Other permissible input sources
 are `std::istream`, `std::string`, `std::wstring`, `char*`, and `wchar_t*`.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Patterns                                                     {#reflex-patterns}
 --------
+
+Regex pattern syntax depends on the regex matcher library being used.  However,
+lexer specifications accept a broad pattern syntax that extends the Flex/Lex
+pattern syntax.  The **reflex** command internally converts patterns to regex
+forms that the underlying matcher engine library supports.  This ensures that
+the same pattern syntax can be used with any matcher engine library.
+
+🔝 [Back to table of contents](#)
 
 ### Pattern syntax                                     {#reflex-pattern-syntax}
 
@@ -1938,6 +1964,8 @@ mark, such as `?\?`, which the compiler will translate to `??`.  Otherwise,
 lazy optional pattern constructs will appear broken.  Fortunately, most C++
 compilers will warn about trigraph translation before causing trouble.
 
+🔝 [Back to table of contents](#)
+
 ### Character classes                                   {#reflex-pattern-class}
 
 Character classes in bracket lists are sets of characters.  Sets can be
@@ -1960,6 +1988,8 @@ The character class sets may be Unicode character sets.  In that case
 \ref reflex-pattern-unicode should be enabled.
 
 Shorthands for character classes are character categories, discussed next.
+
+🔝 [Back to table of contents](#)
 
 ### Character categories                                 {#reflex-patterns-cat}
 
@@ -2088,6 +2118,8 @@ In addition, the `−−unicode` option enables Unicode language scripts:
 You can also use the `\P{C}` form that is identical to `\p{^C}` that matches
 any character except characters in the class `C`.
 
+🔝 [Back to table of contents](#)
+
 ### Anchors and boundaries                             {#reflex-pattern-anchor}
 
 Anchors are used to demarcate the start and end of input or the start and end
@@ -2123,6 +2155,8 @@ the underscore.
 patterns at the start or end of the pattern.  Boundaries are not permitted in
 the middle of a pattern.
 
+🔝 [Back to table of contents](#)
+
 ### Indent/nodent/dedent                                {#reflex-pattern-dents}
 
 Automatic indent and dedent matching is a special feature of RE/flex and is
@@ -2130,7 +2164,7 @@ enabled when the RE/flex matcher engine is used (not the Boost.Regex matcher).
 
   Pattern | Matches
   ------- | -------------------------------------------------------------------
-  `\i`    | indent: matches the next indent position
+  `\i`    | indent: matches and defines the next indent position
   `\j`    | dedent: matches the previous indent position
 
 These patterns should be used in combination with the start of a line anchor
@@ -2197,7 +2231,9 @@ the content between `/*` and `*/`:
 
 See \ref reflex-states for more information about start condition states.
 
-### Lookahead and lookbehind                        {#reflex-pattern-lookahead}
+🔝 [Back to table of contents](#)
+
+### Lookahead/lookbehind                            {#reflex-pattern-lookahead}
 
 Boost matchers support lookahead `φ(?=ψ)` and lookbehind `φ(?<=ψ)` patterns
 that may appear anywhere in a regex.
@@ -2219,6 +2255,8 @@ a pattern.  There are some important \ref reflex-limitations to consider that
 are historical and related to the contruction of efficient FSMs for regular
 expressions.  The limitations apply to trailing context and lookaheads that the
 RE/flex matcher implements.
+
+🔝 [Back to table of contents](#)
 
 ### Unicode mode                                      {#reflex-pattern-unicode}
 
@@ -2246,6 +2284,8 @@ matcher converter flag `reflex::convert_flag::unicode` to convert Unicode
 patterns for use with the 8-bit based RE/flex, Boost.Regex, and std::regex
 regex libraries, see \ref regex-convert for more details.
 
+🔝 [Back to table of contents](#)
+
 ### Free space mode                                 {#reflex-pattern-freespace}
 
 Free space mode can be useful to improve readability of patterns.  Free space
@@ -2265,6 +2305,8 @@ matcher converter flag `reflex::convert_flag::freespace` to convert the regex
 or use `(?x:φ)` to locally enable free-space mode in a pattern `φ`.  See
 \ref regex-convert for more details.
 
+🔝 [Back to table of contents](#)
+
 ### Multi-line mode                                 {#reflex-pattern-multiline}
 
 Multi-line mode makes the anchors `^` and `$` match the start and end of a
@@ -2276,6 +2318,8 @@ matcher converter flag `reflex::convert_flag::multiline` to convert the regex
 or use `(?m:φ)` to locally enable multi-line mode in a pattern `φ`.  See
 \ref regex-convert for more details.
 
+🔝 [Back to table of contents](#)
+
 ### Dotall mode                                        {#reflex-pattern-dotall}
 
 To enable dotall mode in **reflex** use the `-a` or `−−dotall` option (or
@@ -2285,6 +2329,8 @@ When converting regex patterns for use with a C++ regex library, use regex
 matcher converter flag `reflex::convert_flag::dotall` to convert the regex
 or use `(?s:φ)` to locally enable dotall mode in a pattern `φ`.  See
 \ref regex-convert for more details.
+
+🔝 [Back to table of contents](#)
 
 ### Case-insensitive mode                             {#reflex-pattern-anycase}
 
@@ -2296,11 +2342,11 @@ matcher converter flag `reflex::convert_flag::anycase` to convert the regex
 or use `(?i:φ)` to locally enable case-insensitive mode in a pattern `φ`.  See
 \ref regex-convert for more details.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
-The Lexer class                                                 {#reflex-lexer}
----------------
+The Lexer/yyFlexLexer class                                     {#reflex-lexer}
+---------------------------
 
 By default, **reflex** produces a Lexer class with a virtual lex scanner
 function.  The name of this function as well as the Lexer class name and the
@@ -2464,117 +2510,92 @@ namespace NAMESPACE {
 }
 ```
 
-To use a new Lexer class that is derived from the generated base Lexer class,
-use option option `−−class=CLASS`.
+To use a custom lexer class that inherits the generated base Lexer class, use
+option `−−class=NAME` to declare the name of your custom lexer class (or option
+`−−yyclass=NAME` to also enable `−−flex` compatibility with the `yyFlexLexer`
+class).  For details, see \ref reflex-inherit.
 
-When using this option, you must also explicitly define a `CLASS` class that is
-derived from the base lexer class.  For example, the simplest derived Lexer
-class would be:
+🔝 [Back to table of contents](#)
+
+
+Inheriting Lexer/yyFlexLexer                                  {#reflex-inherit}
+----------------------------
+
+To define a custom lexer class that inherits the generated Lexer or the
+yyFlexLexer class, use option `−−class=NAME` or option `−−yyclass=NAME`,
+respectively.  Note that `−−yyclass=NAME` also enables option `−−flex` and
+therefore enables Flex specification syntax.
+
+When a `−−class=NAME` or `−−yyclass=NAME` option is specified with the name of
+your custom lexer class, **reflex** generates the `lex()` (or `yylex()`) method
+code for your custom lexer class.  The custom lexer class should declare a
+public `int lex()` method (or `int yylex()` method with option
+`−−yyclass=NAME`).  Otherwise, C++ compilation of your custom class will fail.
+
+For example, the following bare-bones custom Lexer class definition simply
+inherits Lexer and declares a public `int lex()` method:
   
 <div class="alt">
 ```cpp
-%option class=CLASS
-%option lexer=LEXER
-%option lex=LEX
-
+%option class=MyLexer
 %{
-  class CLASS : public LEXER {
+  class MyLexer : public Lexer {
    public:
-    int LEX();
+    int lex();
   };
 %}
 ```
 </div>
 
-The base Lexer class `LEXER` is the same class as was shown earlier, except
-that the `LEX()` function is now a pure virtual method and the Lexer class is
-abstract.  The `CLASS::LEX()` scanner function is generated by **reflex**.
+The `int MyLexer::lex()` method code is generated by **reflex** for this lexer
+specification.
 
-You can omit the `lexer` and `lex` options shown above, which means that the
-default Lexer class name and lex scanner function name are used.
+Options `−−lexer=NAME` and `--lex=NAME` can be combined with `−−class=NAME` to
+change the name of the inherited Lexer class and change the name of the `lex()`
+method, respectively.
 
-⇢ [Back to contents](#)
-
-
-POSIX versus Perl matching                                 {#reflex-posix-perl}
---------------------------
-
-The **reflex** scanner generator gives you a choice of matchers to use in the
-generated scanner, where the default is the POSIX RE/flex matcher engine.
-Other options are the Boost.Regex matcher in POSIX mode or in Perl mode.
-
-To use a matcher for the generated scanner, use one of these three choices:
-
-  Option          | Matcher class used  | Mode  | Engine      
-  --------------- | ------------------- | ----- | ----------------------------- 
-  `-m reflex`     | `Matcher`           | POSIX | RE/flex lib (default choice)
-  `-m boost`      | `BoostPosixMatcher` | POSIX | Boost.Regex 
-  `-m boost-perl` | `BoostPerlMatcher`  | Perl  | Boost.Regex 
-
-The POSIX matchers look for the *longest possible match* among the given set of
-alternative patterns.  Perl matchers look for the *first match* among the given
-set of alternative patterns.
-
-POSIX is generally preferred for scanners, since it is easier to arrange rules
-that may have partially overlapping patterns.  Since we are looking for the
-longest match anyway, it does not matter which rule comes first.  The order
-does not matter as long as the length of the matches differ.  When matches are
-of the same length because multiple patterns match, then the first rule is
-selected.
-
-Consider for example the following specification if a lexer with rules that are
-intended to match keywords and identifiers in some input text:
+When using option `−−yyclass=NAME` the inherited lexer is `yyFlexLexer`.  The
+custom lexer class should declare a public `yylex()` method similar to Flex.
+For example:
 
 <div class="alt">
 ```cpp
-%%
-
-int                     out() << "int keyword\n;
-interface               out() << "interface keyword\n;
-float                   out() << "float keyword\n;
-[A-Za-z][A-Za-z0-9]*    out() << "identifier\n";
-
-%%
+%option yyclass=MyLexer
+%{
+  class MyLexer : public yyFlexLexer {
+   public:
+    int yylex();
+  };
+%}
 ```
 </div>
 
-When the input to the scanner is the text `integer` then a POSIX matcher
-selects the last rule, which is what we want because it is an identifier.
+The `int MyLexer::yylex()` method code is generated by **reflex** for this
+lexer specification.
 
-By contrast, a Perl matcher selects the first rule because it matches the first
-part `int` of `integer`.  This is NOT what we want.  The same problem occurs
-when the text `interface` is encountered on the input, which we want to
-recognize as a separate keyword and not match against `int`.  Switching the
-rules for `int` and `interface` fixes that problem.  But note that we cannot do
-the same to fix matching `integer` as an identifier: when moving the last rule
-up to the top we cannot match `int` any longer!
+🔝 [Back to table of contents](#)
 
-@note To prevent a Perl matcher from matching a keyword when an identifier
-starts with the name of that keyword, we could use a lookahead pattern such as
-`int(?=[^A-Za-z0-9_])` which is written in a lexer specification as
-`int/[^A-Za-z0-9_]` with the `/` lookahead meta symbol.
 
-Basically, a Perl matcher works in an *operational* mode by working the regex
-pattern as a sequence of *operations* for matching, usually using backtracking
-to find a matching pattern.
+Combining multiple lexers                                    {#reflex-multiple}
+-------------------------
 
-A POSIX matcher on the other hand is *declarative* and have a deeper foundation
-in formal language theory.  An advantage of POSIX matchers is that regular
-expressions can be compiled to deterministic finite state machines for
-efficient matching.
+To combine multiple lexers in one application, use the `−−lexer=NAME` option.
+This option renames the generated lexer class to avoid lexer class name
+clashes.  Use this option in combination with option `−−header-file` to output
+a header file with the lexer class declaration to include in your application
+source code.
 
-@note POSIX matching still require moving the `int` matching rule before the
-identifier matching rule.  Otherwise an `int` on the input will be matched by
-the identifier rule.
+Use option `−−prefix=NAME` to output the generated code in file `lex.NAME.cpp`
+instead of the standard `lex.yy.cpp` to avoid file name clashes.  This option
+also affect the `−−flex` option by generating `xxFlexLexer` with a `xxlex()`
+method when option `−−prefix=xx` is used.  The generated `#define` names (some
+of which are added to support option `−−flex`) are prefixed to avoid macro name
+clashes.
 
-Perl matchers generally support lazy quantifiers and group captures, while most
-POSIX matchers do not (Boost.Regex in POSIX mode does not support lazy
-quantifiers).  The RE/flex POSIX matcher supports lazy quantifiers, but not
-group captures.  The added support for lazy quantifiers and word boundary
-anchors in RE/flex matching offers a reasonably new and useful feature for
-scanners that require POSIX mode matching.
+Alternatively to `−−lexer=NAME` you can use `−−namespace=NAME` to place the
+generated lexer class in a C++ namespace to avoid lexer class name clashes.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Switching input sources                                         {#reflex-input}
@@ -2867,7 +2888,7 @@ The `LexerInput` method may be invoked multiple times by the matcher engine
 and should eventually return zero to indicate the end of input is reached (e.g.
 when at EOF).
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Start condition states                                         {#reflex-states}
@@ -3052,11 +3073,11 @@ pattern    action
 
 Start condition scopes may be nested.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
-Interfacing with Bison and Yacc                                 {#reflex-bison}
--------------------------------
+Interfacing with Bison/Yacc                                     {#reflex-bison}
+---------------------------
 
 The [Bison](dinosaur.compilertools.net/#bison) tools generate parsers that
 invoke the global C function `yylex()` to get the next token.  Tokens are
@@ -3354,13 +3375,96 @@ can be used as such in the scanner's rules.
 ```
 </div>
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
+
+
+POSIX versus Perl matching                                 {#reflex-posix-perl}
+--------------------------
+
+The **reflex** scanner generator gives you a choice of matchers to use in the
+generated scanner, where the default is the POSIX RE/flex matcher engine.
+Other options are the Boost.Regex matcher in POSIX mode or in Perl mode.
+
+To use a matcher for the generated scanner, use one of these three choices:
+
+  Option          | Matcher class used  | Mode  | Engine      
+  --------------- | ------------------- | ----- | ----------------------------- 
+  `-m reflex`     | `Matcher`           | POSIX | RE/flex lib (default choice)
+  `-m boost`      | `BoostPosixMatcher` | POSIX | Boost.Regex 
+  `-m boost-perl` | `BoostPerlMatcher`  | Perl  | Boost.Regex 
+
+The POSIX matchers look for the *longest possible match* among the given set of
+alternative patterns.  Perl matchers look for the *first match* among the given
+set of alternative patterns.
+
+POSIX is generally preferred for scanners, since it is easier to arrange rules
+that may have partially overlapping patterns.  Since we are looking for the
+longest match anyway, it does not matter which rule comes first.  The order
+does not matter as long as the length of the matches differ.  When matches are
+of the same length because multiple patterns match, then the first rule is
+selected.
+
+Consider for example the following specification if a lexer with rules that are
+intended to match keywords and identifiers in some input text:
+
+<div class="alt">
+```cpp
+%%
+
+int                     out() << "int keyword\n;
+interface               out() << "interface keyword\n;
+float                   out() << "float keyword\n;
+[A-Za-z][A-Za-z0-9]*    out() << "identifier\n";
+
+%%
+```
+</div>
+
+When the input to the scanner is the text `integer` then a POSIX matcher
+selects the last rule, which is what we want because it is an identifier.
+
+By contrast, a Perl matcher selects the first rule because it matches the first
+part `int` of `integer`.  This is NOT what we want.  The same problem occurs
+when the text `interface` is encountered on the input, which we want to
+recognize as a separate keyword and not match against `int`.  Switching the
+rules for `int` and `interface` fixes that problem.  But note that we cannot do
+the same to fix matching `integer` as an identifier: when moving the last rule
+up to the top we cannot match `int` any longer!
+
+@note To prevent a Perl matcher from matching a keyword when an identifier
+starts with the name of that keyword, we could use a lookahead pattern such as
+`int(?=[^A-Za-z0-9_])` which is written in a lexer specification as
+`int/[^A-Za-z0-9_]` with the `/` lookahead meta symbol.
+
+Basically, a Perl matcher works in an *operational* mode by working the regex
+pattern as a sequence of *operations* for matching, usually using backtracking
+to find a matching pattern.
+
+A POSIX matcher on the other hand is *declarative* and have a deeper foundation
+in formal language theory.  An advantage of POSIX matchers is that regular
+expressions can be compiled to deterministic finite state machines for
+efficient matching.
+
+@note POSIX matching still require moving the `int` matching rule before the
+identifier matching rule.  Otherwise an `int` on the input will be matched by
+the identifier rule.
+
+Perl matchers generally support lazy quantifiers and group captures, while most
+POSIX matchers do not (Boost.Regex in POSIX mode does not support lazy
+quantifiers).  The RE/flex POSIX matcher supports lazy quantifiers, but not
+group captures.  The added support for lazy quantifiers and word boundary
+anchors in RE/flex matching offers a reasonably new and useful feature for
+scanners that require POSIX mode matching.
+
+🔝 [Back to table of contents](#)
 
 
 Examples                                                     {#reflex-examples}
 --------
 
 Some lexer specification examples to generate scanners with RE/flex.
+
+🔝 [Back to table of contents](#)
 
 ### Example 1
 
@@ -3402,6 +3506,8 @@ specification shown above.  This option when combined with `−−flex` produces
 global "yy" functions and variables.  This means that you can use RE/flex
 scanners with Bison (Yacc) and with any other C code, assuming everything is
 compiled together with a C++ compiler.
+
+🔝 [Back to table of contents](#)
 
 ### Example 2
 
@@ -3453,6 +3559,8 @@ This simple word count program differs slightly from the Unix wc utility,
 because the wc utility counts words delimited by wide character spaces
 (`iswspace`) whereas this program counts words made up from word characters
 combined with punctuation.
+
+🔝 [Back to table of contents](#)
 
 ### Example 3
 
@@ -3534,6 +3642,8 @@ We use `matcher().less(size() - 1)` to remove the ending `>` from the match in
 ignores it.  We could also have used a lookahead pattern `"</"{name}/">"` where
 `X/Y` means look ahead for `Y` after `X`.
 
+🔝 [Back to table of contents](#)
+
 ### Example 4
 
 This example Flex specification scans C/C++ source code.  It uses free space
@@ -3590,7 +3700,7 @@ Unicode identifier names.  Note that we can use `matcher().columno()` in the
 error message.  The `matcher()` object associated with the Lexer offers several
 other methods that Flex does not support.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Limitations                                               {#reflex-limitations}
@@ -3637,7 +3747,7 @@ Boost.Regex library limitations:
   possible given some partial text, Boost.Regex should flag the result as a
   partial match instead of a full match.*
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 The RE/flex regex library                                              {#regex}
@@ -3647,7 +3757,7 @@ The RE/flex regex library consists of a set of C++ templates and classes that
 encapsulate regex engines in a standard API for scanning, tokenizing,
 searching, and splitting of strings, wide strings, files, and streams.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Boost matcher classes                                            {#regex-boost}
@@ -3750,7 +3860,7 @@ See \ref regex-methods for more details on pattern matching methods.
 
 See \ref regex-convert for more details on regex converters.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 std::regex matcher classes                                         {#regex-std}
@@ -3823,7 +3933,7 @@ See \ref regex-methods for more details on pattern matching methods.
 
 See \ref regex-convert for more details on regex converters.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 The RE/flex matcher class                                      {#regex-matcher}
@@ -3880,7 +3990,7 @@ See \ref regex-methods for more details on pattern matching methods.
 
 See \ref regex-convert for more details on regex converters.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 The RE/flex pattern class                                      {#regex-pattern}
@@ -3953,7 +4063,7 @@ catch (reflex::regex_error& e)
 }
 ```
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Regex converters                                               {#regex-convert}
@@ -4059,14 +4169,14 @@ catch (reflex::regex_error& e)
 }
 ```
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Methods and iterators                                          {#regex-methods}
 ---------------------
 
-The RE/flex abstract matcher offers four operations for matching with the regex
-engines that are derived from this base abstract class:
+The RE/flex abstract matcher provides four operations for matching with an
+instance of a regex engine:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
@@ -4084,21 +4194,159 @@ that apply filtering tokenization, and splitting:
   `scan.begin()`...`scan.end()`   | tokenizer | continuous matches
   `split.begin()`...`split.end()` | splitter  | text between matches
 
-To obtain details of a match use the following methods:
+🔝 [Back to table of contents](#)
+
+### matches                                            {#regex-methods-matches}
+
+The `matches()` method returns true if the given input from begin to the end
+matches the specified pattern.  For example, to match a UUID string:
+
+```cpp
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
+
+std::string uuid = "123e4567-e89b-12d3-a456-426655440000";
+
+if (reflex::BoostMatcher("[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}", uuid).matches())
+  std::cout << uuid << " is a string in UUID format" << std::endl;
+```
+
+When executed this code prints:
+
+    123e4567-e89b-12d3-a456-426655440000 is a string in UUID format
+
+🔝 [Back to table of contents](#)
+
+### find                                                  {#regex-methods-find}
+
+The `find()` method and `find` iterator search for a match in the given input.
+The iterator iterates over matches found and serves as an input filter.
+
+For example, to find all words in a string:
+
+```cpp
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
+
+reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
+while (matcher.find() == true)
+  std::cout << matcher.text() << std::endl;
+```
+
+When executed this code prints:
+
+    How
+    now
+    brown
+    cow
+
+In C++11 we can use a range-based loop to loop over matches using the `find`
+iterator:
+
+```cpp
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
+
+for (auto& match : reflex::BoostMatcher("\\w+", "How now brown cow.").find)
+  std::cout << match.text() << std::endl;
+```
+
+Iterators can be used with STL algorithms and other iterator functions.  For
+example to count words in a string:
+
+```cpp
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
+
+reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
+std::cout << std::distance(matcher.find.begin(), boostmatcher.find.end()) << std::endl;
+```
+
+When executed this code prints:
+
+    4
+
+🔝 [Back to table of contents](#)
+
+### scan                                                  {#regex-methods-scan}
+
+The `scan()` method and `scan` iterator are similar to `find` but return
+continuous matches in the given input, meaning matches without gaps.  The
+iterator iterates over continuous matches and serves as an input tokenizer.
+
+For example, to scan for words, spacing, and punctuation in a sentence:
+
+```cpp
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
+
+const char *tokens[4] = { "n/a", "word", "space", "other" };
+reflex::BoostMatcher matcher("(\\w+)|(\\s+)|(.)", "How now brown cow.");
+while (matcher.scan() == true)
+  std::cout << tokens[matcher.accept()] << std::endl;
+```
+
+When executed this code prints:
+
+    word
+    space
+    word
+    space
+    word
+    space
+    word
+    other
+
+If the pattern does not match the input immediately succeeding a previous
+match, then the `scan()` method returns false and the iterator returns
+`scan.end()`.  To determine if all input was scanned and end of input was
+reached, use the `at_end()` method, see \ref regex-methods-props.
+
+🔝 [Back to table of contents](#)
+
+### split                                                {#regex-methods-split}
+
+The `split()` method and `split` iterator search for text between matches in
+the given input.  The iterator iterates over these splits and serves as an
+input splitter.
+
+The matches returns empty text between adjacent matches.  Also the start of
+input and end of input return text matches, which may be empty.  For example,
+to split text into words by matching non-words:
+
+```cpp
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
+
+reflex::BoostMatcher matcher("\\W+", "How now brown cow.");
+while (matcher.split() == true)
+  std::cout << "'" << matcher.text() << "'" << std::endl;
+```
+
+When executed this code prints:
+
+    'How'
+    'now'
+    'brown'
+    'cow'
+    ''
+
+This produces five text splits where the last text is empty because the period
+at the end of the sentence matches the pattern and empty input remains.
+
+🔝 [Back to table of contents](#)
+
+### Properties of a match                                {#regex-methods-props}
+
+To obtain properties of a match, use the following methods:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
   `accept()`  | returns group capture index or zero if not captured/matched
-  `text()`    | returns `const char*` to `\0`-terminated match
+  `text()`    | returns `const char*` to NUL-terminated match (ends in `\0`)
   `str()`     | returns `std::string` copy of `text()` (but preserves `\0`s)
   `wstr()`    | returns `std::wstring` copy of `text()`, converted from UTF-8
   `pair()`    | returns `std::pair<size_t,std::string>(accept(),str())`
   `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
-  `begin()`   | returns `const char*` to non-`\0`-terminated match begin
-  `end()`     | returns `const char*` to non-`\0`-terminated match end
-  `rest()`    | returns `const char*` to `\0`-terminated rest of input
+  `begin()`   | returns `const char*` to non-NUL-terminated match begin
+  `end()`     | returns `const char*` to non-NUL-terminated match end
+  `rest()`    | returns `const char*` to NUL-terminated rest of input
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
   `lineno()`  | returns line number of the match, starting with line 1
@@ -4111,11 +4359,17 @@ To obtain details of a match use the following methods:
   `[0]`       | operator returns `std::pair<const char*,size_t>(begin(),size())`
   `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
 
-Note: the `wstr()` and `wsize()` methods are more expensive to invoke and take
-more than constant time to compute, whereas `text()` and `size()` take constant
-time.
+Note that `begin()`, `operator[0]`, and `operator[n]` return non-NUL-terminated
+strings.  You must use `end()` with `begin()` to determine the span of the
+match.  Use the size of the capture to determine the end of the match or
+capture.
 
-In addition, type casts of matcher objects and iterators are available:
+All methods take constant time to execute except for `str()`, `wstr()`,
+`pair()`, `wpair()`, `wsize()`, `lineno()` and `columno()` that require a pass
+over the (matched) text.
+
+In addition, the following type casts of matcher objects and iterators can be
+used for convenience:
 
 - Casting to `size_t` gives the matcher's `accept()` index.
 - Casting to `std::string` is the same as invoking `str()`
@@ -4123,16 +4377,35 @@ In addition, type casts of matcher objects and iterators are available:
 - Casting to `std::pair<size_t,std::string>` is the same as `pair()`.
 - Casting to `std::pair<size_t,std::wstring>` is the same as `wpair()`.
 
-Four special methods can be used to manipulate the input stream directly:
+The following example prints some of the properties of each match:
 
-  Method     | Result
-  ---------- | ----------------------------------------------------------------
-  `input()`  | returns next char 0..255 from the input, matcher then skips it
-  `winput()` | returns the next wide character from the input, matcher skips it
-  `unput(c)` | put char `c` back unto the stream, matcher then takes it
-  `peek()`   | returns the next char 0..255 from the input without consuming it
+```cpp
+#include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 
-These methods operate on the `in` public instance variable of a matcher:
+reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
+while (matcher.find() == true)
+  std::cout <<
+    "accept: " << matcher.accept() <<
+    "text:   " << matcher.text() <<
+    "size:   " << matcher.size() <<
+    "line:   " << matcher.lineno() <<
+    "column: " << matcher.columno() <<
+    "first:  " << matcher.first() <<
+    "last:   " << matcher.last() << std::endl;
+```
+
+When executed this code prints:
+
+    accept: 1 text: How size: 3 line: 1 column: 0 first: 0 last: 3
+    accept: 1 text: now size: 3 line: 1 column: 4 first: 4 last: 7
+    accept: 1 text: brown size: 5 line: 1 column: 8 first: 8 last: 13
+    accept: 1 text: cow size: 3 line: 1 column: 14 first: 14 last: 17
+
+🔝 [Back to table of contents](#)
+
+### Public data members                                        {#regex-members}
+
+Four public data members of a matcher object are accesible:
 
   Variable | Usage
   -------- | ------------------------------------------------------------------
@@ -4141,16 +4414,40 @@ These methods operate on the `in` public instance variable of a matcher:
   `scan`   | the `reflex::AbstractMatcher::Operation` functor for scanning
   `split`  | the `reflex::AbstractMatcher::Operation` functor for splitting
 
-To initialize a matcher for interactive use, to assign a new input source or to
-change its pattern, you can use the following methods:
+Normally only the `in` variable should be used which holds the current input
+object of the matcher.  See \ref regex-input for details.
+
+The functors provide `begin()` and `end()` methods that return iterators and
+hold the necessary state information for the iterators.  A functor invocation
+essentially invokes the corresponding method listed in \ref regex-methods.
+
+🔝 [Back to table of contents](#)
+
+### Pattern methods                                    {#regex-methods-pattern}
+
+To change a matcher's pattern or check if a pattern was assigned, you can use
+the following methods:
 
   Method          | Result
   --------------- | -----------------------------------------------------------
-  `input(i)`      | set input to `reflex::Input i` (string, stream, or `FILE*`)
   `pattern(p)`    | set pattern to `p` (string regex or `reflex::Pattern`)
   `has_pattern()` | true if the matcher has a pattern assigned to it
   `own_pattern()` | true if the matcher has a pattern to manage and delete
   `pattern()`     | get the pattern object, `reflex::Pattern` or `boost::regex`
+
+The first method returns a reference to the matcher, so multiple method
+invocations can be chained together.
+
+🔝 [Back to table of contents](#)
+
+### Input methods                                        {#regex-methods-input}
+
+To assign a new input source to a matcher or set the input to buffered or
+interactive, you can use the following methods:
+
+  Method          | Result
+  --------------- | -----------------------------------------------------------
+  `input(i)`      | set input to `reflex::Input i` (string, stream, or `FILE*`)
   `buffer()`      | buffer all input at once, returns true if successful
   `buffer(n)`     | set the adaptive buffer size to `n` bytes to buffer input
   `interactive()` | sets buffer size to 1 for console-based (TTY) input
@@ -4158,12 +4455,24 @@ change its pattern, you can use the following methods:
   `reset()`       | resets the matcher, restarting it from the remaining input
   `reset(o)`      | resets the matcher with new options string `o` ("A?N?T?")
 
-The first two methods return a reference to the matcher, so multiple method
+The first method returns a reference to the matcher, so multiple method
 invocations can be chained together.
 
+Four special methods can be used to read the input stream provided to a matcher
+directly, even when you use the matcher's search and match methods:
+
+  Method     | Result
+  ---------- | ----------------------------------------------------------------
+  `input()`  | returns next char 0..255 from the input, matcher then skips it
+  `winput()` | returns the next wide character from the input, matcher skips it
+  `unput(c)` | put char `c` back unto the stream, matcher then takes it
+  `peek()`   | returns the next char 0..255 from the input without consuming it
+
 A matcher reads from the specified input source using its virtual method
-`size_t get(char *s, size_t n)` that simply returns `in.get(s, n)`.  This
-method can be overriden by a derived matcher class to customize reading.
+`size_t get(char *s, size_t n)` that simply returns `in.get(s, n)`, that is,
+the result of the `reflex::Input::get(s, n)` method of the `reflex::Input`
+object.  This method can be overriden by a derived matcher class to customize
+reading.
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
@@ -4201,12 +4510,14 @@ class WrappedInputMatcher : public reflex::Matcher {
 ```
 
 Note that the constructor in this example does not specify a pattern and input.
-We can set a pattern for the matcher after its instantiation, by using the
-`pattern(p)` method.  In this case the input does not need to be specified to
-immediately force reading the sources of input that we assigned in our
-`wrap()`.
+To set a pattern for the matcher after its instantiation use the `pattern(p)`
+method.  In this case the input does not need to be specified, which allows us
+to immediately force reading the sources of input that we assigned in our
+`wrap()` method.
 
-⇢ [Back to contents](#)
+For details of the `reflex::Input` class, see \ref regex-input.
+
+🔝 [Back to table of contents](#)
 
 
 The Input class                                                  {#regex-input}
@@ -4216,11 +4527,28 @@ A matcher may accept several types of input, but can only read from one input
 source at a time.  Input to a matcher is represented by a single
 `reflex::Input` class instance that the matcher uses internally.
 
-An input object can be instantiated and assigned `std::string` and `char*`
-strings, wide strings `std::wstring` and `wchar_t*`, a `FILE*`, or a
-`std::istream`.
+🔝 [Back to table of contents](#)
 
-To obtain the properties of an input object use the following methods:
+### Assigning input                                       {#regex-input-assign}
+
+An input object can be constructed by specifying a string, a file, or a stream
+to read from.  You can also reassign input to read from new input.
+
+More specifically, you can pass a `std::string`, `char*`, `std::wstring`,
+`wchar_t*`, `FILE*`, or a `std::istream` object to the constructor.
+
+A `FILE*` file descriptor is a special case.  The input object handles various
+file encodings.  If a UTF BOM is detected then the UTF input will be normalized
+to UTF-8.  When no UTF BOM is detected then the input is considered plain
+ASCII, binary, or UTF-8 and passed through unconverted.  To override the file
+encoding when no UTF BOM was present, and normalize Latin-1, ISO-8859-1,
+EBCDIC, and other encodings to UTF-8, see \ref regex-input-file.
+
+🔝 [Back to table of contents](#)
+
+### Input methods                                        {#regex-input-methods}
+
+To obtain the properties of an input source use the following methods:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
@@ -4232,10 +4560,13 @@ To obtain the properties of an input object use the following methods:
   `file()`    | the current `FILE*` file descriptor or NULL
   `istream()` | a `std::istream*` pointer to the current stream object or NULL
 
+🔝 [Back to table of contents](#)
+
+### FILE encodings                                          {#regex-input-file}
+
 File content specified with a `FILE*` file descriptor can be encoded in ASCII,
 binary, or UTF-8/16/32 formats.  UTF-16/32 file content is automatically
-decoded and converted to UTF-8 (i.e. streaming) to normalize the input for
-matching.
+decoded and translated to UTF-8 which normalizes the input for matching.
 
 A [UTF byte order mark (BOM)](www.unicode.org/faq/utf_bom.html) is detected in
 the content of a file by the matcher, which enables UTF-8 normalization of the
@@ -4293,13 +4624,15 @@ if (reflex::Matcher(CR, L"©").matches())
 Here we made the converted pattern static to avoid repeated conversion and
 construction overheads.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Examples                                                      {#regex-examples}
 --------
 
 Some examples to demonstrate the concepts discussed.
+
+🔝 [Back to table of contents](#)
 
 ### Example 1
 
@@ -4353,6 +4686,8 @@ When executed this code prints:
     Monty Python's Flying Circus
     Circus Flying Monty Python's
 
+
+🔝 [Back to table of contents](#)
 
 ### Example 2
 
@@ -4416,6 +4751,8 @@ else
 }
 ```
 
+🔝 [Back to table of contents](#)
+
 ### Example 3
 
 This example shows how input can be reassigned in each iteration of a loop that
@@ -4442,6 +4779,8 @@ When executed this code prints:
 
     Monty, Flying, Circus, 
 
+🔝 [Back to table of contents](#)
+
 ### Example 4
 
 This example counts the number of words, lines, and chars from the `std::cin`
@@ -4461,6 +4800,8 @@ size_t chars = word.last();
 
 std::cout << lines << " " << words << " " << chars << std::endl;
 ```
+
+🔝 [Back to table of contents](#)
 
 ### Example 5
 
@@ -4495,6 +4836,8 @@ When executed this code prints:
     Token = 4: matched ' ' with '(.)'
     Token = 2: matched 'hotdogs' with '(\\w*dog\\w*)'
     Token = 4: matched '!' with '(.)'
+
+🔝 [Back to table of contents](#)
 
 ### Example 6
 
@@ -4540,6 +4883,8 @@ When executed this code prints:
     3: 601112345678901234
     4: 38812345678901
 
+🔝 [Back to table of contents](#)
+
 ### Example 7
 
 The RE/flex matcher engine `reflex::matcher` only recognizes group captures at
@@ -4561,6 +4906,8 @@ while (matcher.find())
     << std::string(matcher[1].first, matcher[1].second)
     << std::endl;
 ```
+
+🔝 [Back to table of contents](#)
 
 ### Example 8
 
@@ -4619,7 +4966,7 @@ if (input.file() != NULL)
 This sets the file encoding to ISO-8859-1, but only if no UTF BOM was detected,
 because UTF encodings that start with a UTF BOM cannot be overruled.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Tips, tricks and gotchas                                              {#tricks}
@@ -4668,7 +5015,7 @@ character class by intersecting the class with `[\p{Unicode}]`, that is
 in classes that are within range U+0000 to U+10FFFF and excludes surrogate
 halves.
 
-⇢ [Back to contents](#)
+🔝 [Back to contents](#)
 
 
 Lazy repetitions                                                        {#lazy}
@@ -4679,7 +5026,7 @@ to make them lazy.  Lazy repetitions are useless when the regex pattern after
 the lazy repetitions permits empty input.  For example, `.*?a?` only
 matches one `a` or nothing at all, because `a?` permits an empty match.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Repeately switching to the same input                              {#switching}
@@ -4705,7 +5052,7 @@ UTF BOM at the start of a file, which means that you cannot reliably move to a
 location in the file to start reading when files are encoded in UTF-8 or
 UTF-16.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Where is FlexLexer.h?                                              {#flexlexer}
@@ -4723,7 +5070,7 @@ use:
 The `FlexLexer` class defined in `reflex/flexlexer.h` is the base class of the
 generated `yyFlexLexer` class.
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Interactive input with GNU readline                                 {#readline}
@@ -4799,7 +5146,7 @@ example:
 %%
 ```
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Getting RE/flex                                                     {#download}
@@ -4808,7 +5155,7 @@ Getting RE/flex                                                     {#download}
 Download RE/flex from [SourceForge](https://sourceforge.net/projects/re-flex)
 or visit the RE/flex [GitHub repository](https://github.com/Genivia/RE-flex).
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 License and copyright                                                {#license}
@@ -4847,6 +5194,6 @@ includes the ability to reuse all or parts of the RE/flex source tree.
 The Free Software Foundation maintains a
 [BSD-3 License Wiki](http://directory.fsf.org/wiki/License:BSD_3Clause).
 
-⇢ [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 Copyright (c) 2017, Robert van Engelen, Genivia Inc. All rights reserved.

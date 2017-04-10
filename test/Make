@@ -1,0 +1,64 @@
+# Makefile to quickly build the tests:
+# > make -f Make
+# Normally you should use configure and make to build and install:
+# > ./configure && make
+# > cd test
+# > make
+#
+# requires Boost.Regex and std::regex
+#
+
+CXX       = c++
+REFLEX    = ../bin/reflex
+REFLAGS   =
+LIBREFLEX =../lib/libreflex.a
+YACC      = bison -y
+INCBOOST  = /opt/local/include
+LIBBOOST  = /opt/local/lib/libboost_regex-mt.dylib
+CXXOFLAGS = -O2
+CXXWFLAGS = -Wall -Wunused -Wextra -Wno-unused-label
+CXXIFLAGS = -I. -I../include -I $(INCBOOST)
+CXXMFLAGS =
+CXXFLAGS  = $(CXXWFLAGS) $(CXXOFLAGS) $(CXXIFLAGS) $(CXXMFLAGS)
+
+all:		test_ranges lorem test rtest btest stest
+
+lorem:		lorem.cpp
+		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX) $(LIBBOOST)
+		./lorem
+
+test:		test.cpp
+		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX) $(LIBBOOST)
+		./test '(a|b)*abb' 'ababb'
+
+rtest:		rtest.cpp
+		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX)
+		./rtest
+
+btest:		btest.cpp
+		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX) $(LIBBOOST)
+		./btest
+
+stest:		stest.cpp
+		$(CXX) -std=c++11 $(CXXFLAGS) -o $@ $< $(LIBREFLEX)
+		./stest
+
+test_bits:	test_bits.cpp
+		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX)
+		./test_bits
+
+test_ranges:	test_ranges.cpp
+		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX)
+		./test_ranges
+
+.PHONY:		clean
+
+clean:
+		-rm -rf *.dSYM
+		-rm -f *.o *.gch *.log
+		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c
+		-rm -rf *.dSYM
+		-rm -f *.o *.gch *.log
+		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv reflex.*.txt
+		-rm -f a.out test_regex_history dump.gv dump.pdf dump.cpp
+		-rm -f lorem test rtest btest stest test_bits test_ranges

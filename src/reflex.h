@@ -53,12 +53,18 @@
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
 # define OS_WIN
-# define PLATFORM "WIN"
-#else
-# define PLATFORM "(unknown arch)"
 #endif
 
-#define REFLEX_VERSION "0.9.20"
+#if !defined(PLATFORM)
+# if defined(OS_WIN)
+#  define PLATFORM "WIN"
+# else
+#  define PLATFORM "(unknown OS)"
+# endif
+#endif
+
+// DO NOT ALTER THIS LINE: the makemake.sh script updates the version
+#define REFLEX_VERSION "0.9.21"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -135,6 +141,7 @@ class Reflex
   void        write();
   void        write_banner(const char *title);
   void        write_prelude();
+  void        write_defines();
   void        write_class();
   void        write_section_top();
   void        write_section_class();

@@ -3,37 +3,60 @@
 Installation
 ------------
 
-A clean build:
+You have two options: 1) quick install or 2) configure and make.
+
+Windows users: use `bin/reflex.exe`, use the C++ header files in
+`include/reflex` and the C++ source files in `lib` and `unicode`.
+
+### Quick install
+
+For a quick clean build assuming your environment is pretty much standard:
 
     $ ./clean.sh
     $ ./build.sh
 
-or use the 'make' command:
+Or use the `make -f Make` command to do the same:
 
-    $ cd src; make
+    $ cd src; make -f Make
 
-This compiles the **reflex** tool and installs it locally in reflex/bin.  You
-can add this location to your $PATH variable to enable the new reflex command:
+This compiles the **reflex** tool and installs it locally in `reflex/bin`.  You
+can add this location to your `$PATH` variable to enable the new `reflex`
+command:
 
     export PATH=$PATH:/reflex_install_path/bin
 
-The `libreflex.a` and `libreflex.so` libraries are saved in reflex/lib.  Link
-against one of these libraries when you use the RE/flex regex engine in your
-code.  The RE/flex header files are located in reflex/include/reflex.
+The `libreflex.a` and `libreflex.so` libraries are saved locally in
+`lib`.  Link against one of these libraries when you use the RE/flex regex
+engine in your code.  The RE/flex header files are locally located in
+`include/reflex`.
 
-To install the library and the 'reflex' command in /usr/local/lib and
-/usr/local/bin:
+To install the library and the `reflex` command in `/usr/local/lib` and
+`/usr/local/bin`:
 
-    $ sudo ./install.sh
+    $ sudo ./allinstall.sh
 
-or use the 'make' command to do the same:
+Or use the `make -f Make install` command to do the same:
 
-    $ cd lib; sudo make install
-    $ cd src; sudo make install
+    $ cd lib; sudo make -f Make install
+    $ cd src; sudo make -f Make install
 
-Windows users: use reflex/bin/reflex.exe.
+### Configure and make
 
-Optional:
+The configure script accepts configuration and installation options.  To view
+these options, run:
+
+    $ ./configure --help
+
+Run configure and make:
+
+    $ ./configure && make
+
+After this successfully completes, you can optionally run `make install` to
+install the `reflex` command and `libreflex` library:
+
+    $ sudo make install
+
+### Optional libraries to install
 
 - To use Boost.Regex as a regex engine with the RE/flex library and scanner
   generator, install [Boost][boost-url] and link your code against
