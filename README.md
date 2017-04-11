@@ -1,6 +1,8 @@
 
 [![logo][logo-url]][reflex-url]
 
+[![build status][travis-image]][travis-url]
+
 "The regex-centric fast and flexible lexical analyzer generator for C++"
 
 Flex reimagined.  Fast, flexible, adds Boost 💪
@@ -125,6 +127,13 @@ After this successfully completes, you can optionally run `make install` to
 install the `reflex` command and `libreflex` library:
 
     $ sudo make install
+
+Unfortunately, cloning from Git does not preserve timestamps which means that
+you may run into "WARNING: 'aclocal-1.15' is missing on your system."  To
+work around this problem, run:
+
+    $ autoreconf -fi
+    $ ./configure && make
 
 ### Optional libraries to install
 
@@ -353,3 +362,5 @@ Changelog
 [dot-url]: http://www.graphviz.org
 [FSM-url]: https://www.genivia.com/images/reflex-FSM.png
 [boost-url]: http://www.boost.org
+[travis-image]: https://travis-ci.org/Genivia/RE-flex.svg?branch=master
+[travis-url]: https://travis-ci.org/Genivia/RE-flex

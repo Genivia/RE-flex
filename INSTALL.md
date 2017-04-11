@@ -56,6 +56,13 @@ install the `reflex` command and `libreflex` library:
 
     $ sudo make install
 
+Unfortunately, cloning from Git does not preserve timestamps which means that
+you may run into "WARNING: 'aclocal-1.15' is missing on your system."  To
+work around this problem, run:
+
+    $ autoreconf -fi
+    $ ./configure && make
+
 ### Optional libraries to install
 
 - To use Boost.Regex as a regex engine with the RE/flex library and scanner
