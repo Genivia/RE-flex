@@ -1,4 +1,4 @@
-AC_INIT(reflex,0.9.21)
+AC_INIT(reflex,0.9.22)
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_CANONICAL_HOST
 AC_HEADER_TIME
@@ -11,7 +11,7 @@ AC_PROG_CXX
 AM_PROG_AR
 AC_PROG_RANLIB
 AC_PROG_YACC
-AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile examples/Makefile])
+AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile tests/Makefile examples/Makefile])
 PLATFORM=${host}
 AC_SUBST(PLATFORM)
 AC_OUTPUT

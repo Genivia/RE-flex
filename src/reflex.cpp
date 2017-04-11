@@ -892,7 +892,8 @@ std::string Reflex::get_regex(size_t& pos)
       // eat [...]
       if (pos < linelen && line.at(pos) == '^')
         ++pos;
-      ++pos;
+      if (line.at(pos) != '\\')
+	++pos;
       while (pos < linelen && line.at(pos) != ']')
         pos += 1 + (line.at(pos) == '\\');
       ++pos;
@@ -1870,7 +1871,7 @@ void Reflex::write_perf_report()
       }
       if (options["nodefault"].empty())
         *out <<
-          "\n      \"    default rule matched \" << perf_report_" << conditions[start] << "_default << \" time(s)\\n\"";
+          "\n      \"    default rule accepted \" << perf_report_" << conditions[start] << "_default << \" times\\n\"";
       *out <<
         ";\n";
     }
@@ -2316,7 +2317,7 @@ void Reflex::write_lexer()
             *out <<
               "            if (debug()) std::cerr << \"--" <<
               SGR("\\033[1;35m") << "accepting rule at line " << rule->code.lineno << SGR("\\033[0m") <<
-              " (\\\"\" << matcher().text() << \"\\\")\\n\";\n";
+              " (\\\"" << SGR("\\033[1m") << "\" << matcher().text() << \"" << SGR("\\033[0m") << "\\\")\\n\";\n";
           if (!options["flex"].empty())
             *out <<
               "            YY_USER_ACTION\n";

@@ -26,3 +26,8 @@ install-data-hook:
 		@echo "|             https://github.com/Genivia/RE-flex       |"; \
 		@echo "|             https://sourceforge.net/projects/re-flex |"; \
 		@echo "|______________________________________________________|";
+
+.PHONY:		test
+
+test:		$(abs_top_builddir)/src/reflex
+		-cd tests; $(MAKE) && ./rtest

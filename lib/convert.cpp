@@ -255,7 +255,23 @@ static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, c
     }
     else if (!supports_escape(escapes, c))
     {
-      if (c == 'Z')
+      if (c == 'A')
+      {
+        if (!supports_escape(escapes, '`'))
+          throw regex_error(regex_error::invalid_anchor, pattern, pos);
+        // translate \A to \`
+        regex.append(&pattern[loc], pos - loc - 1).append("\\`");
+        loc = pos + 1;
+      }
+      else if (c == 'z')
+      {
+        if (!supports_escape(escapes, '\''))
+          throw regex_error(regex_error::invalid_anchor, pattern, pos);
+        // translate \z to \'
+        regex.append(&pattern[loc], pos - loc - 1).append("\\'");
+        loc = pos + 1;
+      }
+      else if (c == 'Z')
       {
         if (!supports_escape(escapes, 'z') || !supports_modifier(mod, '='))
           throw regex_error(regex_error::invalid_anchor, pattern, pos);

@@ -1321,7 +1321,7 @@ scanner.  The scanner reports the performance statistics on `std::cerr` when
 EOF is reached.  If your scanner does not reach EOF, then invoke the lexer's
 `perf_report()` method explicitly in your code.  Invoking this method also
 resets the statistics and timers, meaning that this method will report the
-statistics collected since its last call.
+statistics collected since it was last called.
 
 #### `-s`, `−−nodefault`
 
@@ -1968,7 +1968,7 @@ compilers will warn about trigraph translation before causing trouble.
 
 ### Character classes                                   {#reflex-pattern-class}
 
-Character classes in bracket lists are sets of characters.  Sets can be
+Character classes in bracket lists represent sets of characters.  Sets can be
 inverted, subtracted, intersected, and merged:
 
   Pattern           | Matches
@@ -1984,10 +1984,10 @@ first character after the bracket is always part of the list.  So `[][]` is a
 list that matches a `]` and a `[`, `[^][]` is a list that matches anything but
 `]` and `[`, and `[-^]` is a list that matches a `-` and a `^`.
 
-The character class sets may be Unicode character sets.  In that case
-\ref reflex-pattern-unicode should be enabled.
+Bracket lists may contain ASCII and Unicode \ref reflex-patterns-cat.
 
-Shorthands for character classes are character categories, discussed next.
+To add Unicode character categories and UTF-8 characters to bracket lists
+\ref reflex-pattern-unicode should be enabled.
 
 🔝 [Back to table of contents](#)
 
@@ -1995,7 +1995,7 @@ Shorthands for character classes are character categories, discussed next.
 
 The 7-bit ASCII character categories are:
 
-  Category     | List form      | Matches
+  Category     | POSIX form     | Matches
   ------------ | -------------- | ---------------------------------------------
   `\p{Space}`  | `[[:space:]]`  | matches a white space character `[ \t\n\v\f\r]` same as `\s`
   `\p{Xdigit}` | `[[:xdigit:]]` | matches a hex digit `[0-9A-Fa-f]`

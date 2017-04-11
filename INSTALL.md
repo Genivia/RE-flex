@@ -109,7 +109,9 @@ following files:
     |       |__ reflex.1
     |
     |__ examples/
-    |   |__ Makefile
+    |   |__ Make
+    |   |__ Makefile.am
+    |   |__ Makefile.in
     |   |__ ...
     |
     |__ include/
@@ -135,7 +137,9 @@ following files:
     |       |__ utf8.h
     |
     |__ lib/
-    |   |__ Makefile
+    |   |__ Make
+    |   |__ Makefile.am
+    |   |__ Makefile.in
     |   |__ convert.cpp
     |   |__ debug.cpp
     |   |__ error.cpp
@@ -147,16 +151,21 @@ following files:
     |   |__ utf8.cpp
     |
     |__ src/
-    |   |__ Makefile
+    |   |__ Make
+    |   |__ Makefile.am
+    |   |__ Makefile.in
     |   |__ reflex.cpp
     |   |__ reflex.h
     |
-    |__ test/
-    |   |__ Makefile
+    |__ tests/
+    |   |__ Make
+    |   |__ Makefile.am
+    |   |__ Makefile.in
+    |   |__ rtest.cpp
     |   |__ ...
     |
     |__ unicode/
-        |__ Makefile
+        |__ Make
         |__ Scripts.txt
         |__ UnicodeData.txt
         |__ language_scripts.cpp
