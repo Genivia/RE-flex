@@ -102,26 +102,27 @@ following files:
     reflex/
     |
     |__ bin/
-    |   |__ reflex.exe
+    |   |__ reflex.exe				Windows executable reflex
     |
     |__ doc/
     |   |__ Doxyfile
-    |   |__ README.md
+    |   |__ README.md				URL to online documentation
     |   |__ footer.html
     |   |__ header.html
     |   |__ reflex-logo.png
     |   |__ html/
-    |   |   |__ index.html
+    |   |   |__ index.html			HTML documentation (also online)
     |   |__ man/
-    |       |__ reflex.1
+    |       |__ reflex.1			man page
     |
     |__ examples/
-    |   |__ Make
-    |   |__ Makefile.am
-    |   |__ Makefile.in
+    |   |__ Make				quick-build Make(file)
+    |   |__ Makefile.am				automake file
+    |   |__ Makefile.in				automake file
+    |   |__ build.sh				quick build examples
     |   |__ ...
     |
-    |__ include/
+    |__ include/				reflex header files to install
     |   |__ reflex/
     |       |__ abslexer.h
     |       |__ absmatcher.h
@@ -143,10 +144,10 @@ following files:
     |       |__ unicode.h
     |       |__ utf8.h
     |
-    |__ lib/
-    |   |__ Make
-    |   |__ Makefile.am
-    |   |__ Makefile.in
+    |__ lib/					reflex library files to install
+    |   |__ Make				quick-build Make(file)
+    |   |__ Makefile.am				automake file
+    |   |__ Makefile.in				automake file
     |   |__ convert.cpp
     |   |__ debug.cpp
     |   |__ error.cpp
@@ -157,29 +158,38 @@ following files:
     |   |__ unicode.cpp
     |   |__ utf8.cpp
     |
-    |__ src/
-    |   |__ Make
-    |   |__ Makefile.am
-    |   |__ Makefile.in
+    |__ src/					reflex command-line tool
+    |   |__ Make				quick-build Make(file)
+    |   |__ Makefile.am				automake file
+    |   |__ Makefile.in				automake file
     |   |__ reflex.cpp
     |   |__ reflex.h
     |
     |__ tests/
-    |   |__ Make
-    |   |__ Makefile.am
-    |   |__ Makefile.in
+    |   |__ Make				quick-build Make(file)
+    |   |__ Makefile.am				automake file
+    |   |__ Makefile.in				automake file
     |   |__ rtest.cpp
     |   |__ ...
     |
     |__ unicode/
-        |__ Make
-        |__ Scripts.txt
-        |__ UnicodeData.txt
-        |__ language_scripts.cpp
-        |__ language_scripts.l
-        |__ letter_scripts.cpp
-        |__ letter_scripts.l
-
+    |   |__ Make				quick-build Make(file)
+    |   |__ Scripts.txt
+    |   |__ UnicodeData.txt
+    |   |__ language_scripts.cpp
+    |   |__ language_scripts.l
+    |   |__ letter_scripts.cpp
+    |   |__ letter_scripts.l
+    |
+    |__ INSTALL.md				this file
+    |__ LICENSE.txt				BSD-3 license
+    |__ README.md				README to get started, changelog
+    |__ Makefile.am				automake file
+    |__ Makefile.in				automake file
+    |__ allinstall.sh				quick build and install
+    |__ build.sh				quick build (local build)
+    |__ clean.sh				quick cleanup
+    |__ configure				./configure && make
 
 License and copyright
 ---------------------

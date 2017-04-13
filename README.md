@@ -184,10 +184,10 @@ You can select matchers that are based on different regex engines:
 Each matcher may differ in regex syntax features (see the full documentation), 
 but they have the same methods and iterators:
 
-- `matches()` true if the input from begin to end matches the regex pattern;
-- `find()` search input and return true if a match was found;
-- `scan()` scan input and return true if input at current position matches;
-- `split()` split input at the next match;
+- `matches()` returns nonzero if the input from begin to end matches;
+- `find()` search input and return nonzero if a match was found;
+- `scan()` scan input and return nonzero if input at current position matches;
+- `split()` return nonzero for a split of the input at the next match;
 - `find.begin()`...`find.end()` filter iterator;
 - `scan.begin()`...`scan.end()` tokenizer iterator;
 - `split.begin()`...`split.end()` splitter iterator.
@@ -207,7 +207,7 @@ With a group capture to fetch the year:
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to check if the birthdate string is a valid date
 reflex::BoostMatcher matcher("(\\d{4})-\\d{2}-\\d{2}", birthdate);
-if (matcher.matches())
+if (matcher.matches() != 0)
   std::cout << std::string(matcher[1].first, matcher[1].second) << " was a good year!" << std::endl;
 ```
 
@@ -217,7 +217,7 @@ To search a string for words `\w+`:
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to search for words in a sentence
 reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
-while (matcher.find() == true)
+while (matcher.find() != 0)
   std::cout << "Found " << matcher.text() << std::endl;
 ```
 
@@ -228,7 +228,7 @@ located between matches.  For example using non-word matching `\W+`:
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to search for words in a sentence
 reflex::BoostMatcher matcher("\\W+", "How now brown cow.");
-while (matcher.split() == true)
+while (matcher.split())
   std::cout << "Found " << matcher.text() << std::endl;
 ```
 
@@ -242,7 +242,7 @@ FILE *fd = fopen("somefile.txt", "r");
 if (fd == NULL)
   exit(EXIT_FAILURE);
 reflex::BoostMatcher matcher("\\w+", fd);
-while (matcher.find() == true)
+while (matcher.find())
   std::cout << "Found " << matcher.text() << std::endl;
 fclose(fd);
 ```
@@ -254,7 +254,7 @@ Same again, but this time with a C++ input stream:
 // use a BoostMatcher to search and display words from a stream
 std::ifstream file("somefile.txt", std::ifstream::in);
 reflex::BoostMatcher matcher("\\w+", file);
-while (matcher.find() == true)
+while (matcher.find())
   std::cout << "Found " << matcher.text() << std::endl;
 file.close();
 ```
@@ -293,7 +293,7 @@ For example:
 #include <reflex/matcher.h> // reflex::Matcher, reflex::Input, reflex::Pattern
 // use a Matcher to check if sentence is in Greek:
 static const reflex::Pattern pattern(reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+"));
-if (reflex::Matcher(pattern, sentence).matches())
+if (reflex::Matcher(pattern, sentence).matches() != 0)
   std::cout << "This is Greek" << std::endl;
 ```
 
@@ -352,6 +352,7 @@ Changelog
 - Mar 31, 2017: 0.9.19 fixed reflex option `-m`, `lexer.in(i)` now resets the lexer, fixed reassigning the same input to the lexer that caused UTF BOM to be read twice
 - Apr  5, 2017: 0.9.20 EBCDIC file translation, other improvements
 - Apr 10, 2017: 0.9.21 fixed option `-P` to support multiple lexer classes in one application, added `configure` installation script, optional quick install with `allinstall.sh` (renamed from `install.sh`)
+- Apr 12, 2017: 0.9.22 improved explanations of `matches()`, `find()`, `scan()`, `split()` that return nonzero for a match, other minor improvements
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

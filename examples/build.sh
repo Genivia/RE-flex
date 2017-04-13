@@ -1,4 +1,4 @@
 #!/bin/sh
 echo
-echo "Building reflex examples"
+echo "Building the reflex examples"
 make -f Make
