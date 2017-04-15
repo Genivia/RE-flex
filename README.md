@@ -16,6 +16,7 @@ tokenizing a representative C source code file into 244 tokens takes:
 <tr><td><b>reflex --fast</b></td><td><b>RE/flex</b></td><td><b>13</b></td></tr>
 <tr><td>flex -+ --full</td><td>Flex</td><td>17</td></tr>
 <tr><td><b>reflex --full</b></td><td><b>RE/flex</b></td><td><b>29</b></td></tr>
+<tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex</td><td>40</td></tr>
 <tr><td>reflex -m=boost-perl</td><td>Boost.Regex (Perl mode)</td><td>230</td></tr>
 <tr><td>pcre2_match()</td><td>PCRE2 (pre-compiled)</td><td>318</td></tr>
 <tr><td>reflex -m=boost</td><td>Boost.Regex (POSIX mode)</td><td>450</td></tr>
@@ -197,7 +198,7 @@ For example:
 ```{.cpp}
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to check if the birthdate string is a valid date
-if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
+if (reflex::BoostMatcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches() != 0)
   std::cout << "Valid date!" << std::endl;
 ```
 
@@ -281,7 +282,7 @@ for (auto& match : reflex::StdMatcher("\\w+", "How now brown cow.").find)
 RE/flex also allows you to convert expressive regex syntax forms such as `\p`
 Unicode classes, character class set operations such as `[a-z--[aeiou]]`,
 escapes such as `\X`, and `(?x)` mode modifiers, to a regex string that the
-underlying regex library understands and can use:
+underlying regex library understands and will be able to use:
 
 - `std::string reflex::Matcher::convert(const std::string& regex)`
 - `std::string reflex::BoostMatcher::convert(const std::string& regex)`
