@@ -31,7 +31,8 @@ RE/flex scanner examples
 - `cow.l` scanner to convert cows
 - `cows.l` scanner to convert cows, uses word boundary anchors
 - `indent.l` indentation detection and reformatting example
-- `braille.l` a braille translator, inspired by the re2c example but expanded to be useful
+- `braille.l` a braille translator, inspired by the re2c example but expanded
+- `unicode.l` a very simple Unicode word matcher to demonstrate Unicode matching
 - `reflexexample3.l` example modified from the Flex documentation with bison
 - `reflexexample4.l` example modified from the Flex documentation with bison-bridge
 - `reflexexample5.l` example modified from the Flex documentation with bison-bridge

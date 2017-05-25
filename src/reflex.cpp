@@ -893,7 +893,7 @@ std::string Reflex::get_regex(size_t& pos)
       if (pos < linelen && line.at(pos) == '^')
         ++pos;
       if (line.at(pos) != '\\')
-	++pos;
+        ++pos;
       while (pos < linelen && line.at(pos) != ']')
         pos += 1 + (line.at(pos) == '\\');
       ++pos;
@@ -2377,18 +2377,17 @@ void Reflex::write_main()
   }
 }
 
-/// Write regex string to lex.yy.cpp.
+/// Write regex string to lex.yy.cpp by escaping \ and ", prevent trigraphs
 void Reflex::write_regex(const std::string& regex)
 {
   *out << "\"";
+  int c = '\0';
   for (std::string::const_iterator i = regex.begin(); i != regex.end(); ++i)
   {
-    if (*i == '\\')
-      *out << "\\\\";
-    else if (*i == '"')
-      *out << "\\\"";
-    else
-      *out << *i;
+    if (*i == '\\' || *i == '"' || (*i == '?' && c == '?'))
+      *out << "\\";
+    *out << *i;
+    c = *i;
   }
   *out << "\"";
 }

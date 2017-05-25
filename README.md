@@ -1,7 +1,7 @@
 
 [![logo][logo-url]][reflex-url]
 
-[![build status][travis-image]][travis-url]
+[![build status][travis-image]][travis-url][![license][bsd-3-image]][bsd-3-url]
 
 "The regex-centric fast and flexible lexical analyzer generator for C++"
 
@@ -9,13 +9,13 @@ Flex reimagined.  Fast, flexible, adds Boost 💪
 
 RE/flex is as fast as Flex (in some cases faster), and much faster than regex
 libraries such as Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example,
-tokenizing a representative C source code file into 244 tokens takes:
+tokenizing a representative C source code file into 244 tokens takes only 13 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
 <tr><td><b>reflex --fast</b></td><td><b>RE/flex</b></td><td><b>13</b></td></tr>
 <tr><td>flex -+ --full</td><td>Flex</td><td>17</td></tr>
-<tr><td><b>reflex --full</b></td><td><b>RE/flex</b></td><td><b>29</b></td></tr>
+<tr><td>reflex --full</td><td>RE/flex</td><td>29</td></tr>
 <tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex</td><td>40</td></tr>
 <tr><td>reflex -m=boost-perl</td><td>Boost.Regex (Perl mode)</td><td>230</td></tr>
 <tr><td>pcre2_match()</td><td>PCRE2 (pre-compiled)</td><td>318</td></tr>
@@ -25,7 +25,7 @@ tokenizing a representative C source code file into 244 tokens takes:
 <tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>14784</td></tr>
 </table>
 
-Note: *Best times of 10 tests with average time in micro seconds over 100 runs
+Note: *Best times of 10 tests with average time in microseconds over 100 runs
 (using clang 8.0.0 with -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz LPDDR3).*
 
 
@@ -354,6 +354,7 @@ Changelog
 - Apr  5, 2017: 0.9.20 EBCDIC file translation, other improvements
 - Apr 10, 2017: 0.9.21 fixed option `-P` to support multiple lexer classes in one application, added `configure` installation script, optional quick install with `allinstall.sh` (renamed from `install.sh`)
 - Apr 12, 2017: 0.9.22 improved explanations of `matches()`, `find()`, `scan()`, `split()` that return nonzero for a match, other minor improvements
+- May 24, 2017: 0.9.23 improved portability, added file encoding conversions for CP-1250 to CP-1258, CP 437, and CP 850/858
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
@@ -366,3 +367,5 @@ Changelog
 [boost-url]: http://www.boost.org
 [travis-image]: https://travis-ci.org/Genivia/RE-flex.svg?branch=master
 [travis-url]: https://travis-ci.org/Genivia/RE-flex
+[bsd-3-image]: https://img.shields.io/badge/License-BSD%203--Clause-blue.svg
+[bsd-3-url]: https://opensource.org/licenses/BSD-3-Clause

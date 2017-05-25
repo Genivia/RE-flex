@@ -79,7 +79,7 @@ std::string regex_error::regex_error_message(regex_error_type code, const char *
 
   std::string what("error in regex at position ");
   char buf[24];
-#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
+#if (defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__BORLANDC__)) && !defined(__CYGWIN__) && !defined(__MINGW32__) && !defined(__MINGW64__)
   sprintf_s(buf, sizeof(buf), "%zu\n", pos);
 #else
   std::sprintf(buf, "%zu\n", pos);

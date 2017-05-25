@@ -4,12 +4,12 @@
 WHITESPACE	[[:space:]]+
 ILCOMMENT	"//"([^\n]|\\\n)*\n
 MLCOMMENT	"/*"(.|\n)*?"*/"
-DIRECTIVE	^[[:blank:]]*#(.|\\\r?\n)+
+DIRECTIVE	^[[:blank:]]*#([^\n]|\\\r?\n)+
 NAME		[[:alpha:]_][[:alnum:]_]*
-UDEC		0|[1-9]\d*
-UHEX		0[Xx][[:xdigit:]]+
-UOCT		0[0-7]+
-UINT		({UDEC}|{UHEX})([Ll]{0,2}[Uu]?|[Uu][Ll]{0,2})
 UFLT		\d*(\d|\.\d|\d\.)\d*([Ee][-+]?\d+)?[FfLl]?
+UOCT		0[0-7]+
+UHEX		0[Xx][[:xdigit:]]+
+UDEC		0|[1-9]\d*
+UINT		({UOCT}|{UHEX}|{UDEC})([Ll]{0,2}[Uu]?|[Uu][Ll]{0,2})
 CHAR		L?'(\\.|[^\\\n'])*'
 STRING		L?\"(\\.|\\\r?\n|[^\\\n"])*\"

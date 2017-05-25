@@ -8,6 +8,7 @@ INSTALL_LIB=/usr/local/lib
 INSTALL_INC=/usr/local/include/reflex
 CPP=c++
 AR=ar
+RANLIB=ranlib
 COFLAGS=-O3
 CWFLAGS=-Wall -Wunused -Wextra
 CIFLAGS=-I. -I../include
@@ -23,7 +24,7 @@ release:		libreflex.a libreflex.so
 install:		release
 			@echo
 			@echo "Installing libreflex in $(INSTALL_LIB)"
-			-cp -f libreflex.a $(INSTALL_LIB)
+			-cp -f -p libreflex.a $(INSTALL_LIB)
 			-mkdir -p $(INSTALL_INC)
 			@echo
 			@echo "Installing reflex header files in $(INSTALL_INC)"
@@ -31,6 +32,7 @@ install:		release
 
 libreflex.a:		convert.o debug.o error.o input.o language_scripts.o letter_scripts.o matcher.o pattern.o posix.o unicode.o utf8.o
 			$(AR) -rsc $@ $^
+			$(RANLIB) $@
 
 libreflex.so:		convert.cpp debug.cpp error.cpp input.cpp ../unicode/language_scripts.cpp ../unicode/letter_scripts.cpp matcher.cpp pattern.cpp posix.cpp unicode.cpp utf8.cpp
 			$(CPP) $(CFLAGS) -shared -o $@ -fPIC $^

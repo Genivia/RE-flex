@@ -82,7 +82,7 @@ inline char upper(int c)
   return c & ~0x20;
 }
 
-#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
+#if (defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__BORLANDC__)) && !defined(__CYGWIN__) && !defined(__MINGW32__) && !defined(__MINGW64__)
 inline int fopen_s(FILE **fd, const char *name, const char *mode) { return ::fopen_s(fd, name, mode); }
 #else
 inline int fopen_s(FILE **fd, const char *name, const char *mode) { return (*fd = ::fopen(name, mode)) ? 0 : errno; }

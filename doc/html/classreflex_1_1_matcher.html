@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Apr 12 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed May 24 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -123,24 +123,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acf0031339b3f8426b730a6860e5feba2"><td class="memItemLeft" align="right" valign="top">virtual std::pair&lt; const char *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#acf0031339b3f8426b730a6860e5feba2">operator[]</a> (size_t n) const </td></tr>
 <tr class="memdesc:acf0031339b3f8426b730a6860e5feba2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns captured text as a std::pair&lt;const char*,size_t&gt; with string pointer (not NUL-terminated) and length.  <a href="#acf0031339b3f8426b730a6860e5feba2">More...</a><br /></td></tr>
 <tr class="separator:acf0031339b3f8426b730a6860e5feba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43734e349aec75a4afd05302f6c5fbb0"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; size_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a43734e349aec75a4afd05302f6c5fbb0">stops</a> (void) const </td></tr>
-<tr class="memdesc:a43734e349aec75a4afd05302f6c5fbb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns vector of tab stops.  <a href="#a43734e349aec75a4afd05302f6c5fbb0">More...</a><br /></td></tr>
-<tr class="separator:a43734e349aec75a4afd05302f6c5fbb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a980c06e7c868419074d7815de154ab3d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a980c06e7c868419074d7815de154ab3d">clear_stops</a> (void)</td></tr>
-<tr class="memdesc:a980c06e7c868419074d7815de154ab3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear tab stops.  <a href="#a980c06e7c868419074d7815de154ab3d">More...</a><br /></td></tr>
-<tr class="separator:a980c06e7c868419074d7815de154ab3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4591c398bd930fb5bb0cda5b56ef03c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a4591c398bd930fb5bb0cda5b56ef03c8">push_stops</a> (void)</td></tr>
-<tr class="memdesc:a4591c398bd930fb5bb0cda5b56ef03c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push stops and clear stops.  <a href="#a4591c398bd930fb5bb0cda5b56ef03c8">More...</a><br /></td></tr>
-<tr class="separator:a4591c398bd930fb5bb0cda5b56ef03c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7736ffcc340ede12da1f9bbe8854a5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ad7736ffcc340ede12da1f9bbe8854a5f">pop_stops</a> (void)</td></tr>
-<tr class="memdesc:ad7736ffcc340ede12da1f9bbe8854a5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop stops.  <a href="#ad7736ffcc340ede12da1f9bbe8854a5f">More...</a><br /></td></tr>
-<tr class="separator:ad7736ffcc340ede12da1f9bbe8854a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf84adb39572b43c63f56aecd1aaa35d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#adf84adb39572b43c63f56aecd1aaa35d">stops</a> ()</td></tr>
+<tr class="memdesc:adf84adb39572b43c63f56aecd1aaa35d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns reference to vector of current indent stop positions.  <a href="#adf84adb39572b43c63f56aecd1aaa35d">More...</a><br /></td></tr>
+<tr class="separator:adf84adb39572b43c63f56aecd1aaa35d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06cc1f381a99c834a0abf213b617b895"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a06cc1f381a99c834a0abf213b617b895">clear_stops</a> ()</td></tr>
+<tr class="memdesc:a06cc1f381a99c834a0abf213b617b895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear indent stop positions.  <a href="#a06cc1f381a99c834a0abf213b617b895">More...</a><br /></td></tr>
+<tr class="separator:a06cc1f381a99c834a0abf213b617b895"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addc00e8755eeb766a180943c66786a29"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#addc00e8755eeb766a180943c66786a29">push_stops</a> ()</td></tr>
+<tr class="memdesc:addc00e8755eeb766a180943c66786a29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push current indent stops and clear current indent stops.  <a href="#addc00e8755eeb766a180943c66786a29">More...</a><br /></td></tr>
+<tr class="separator:addc00e8755eeb766a180943c66786a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a363f0c0c37cbb496849034b1542e4344"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a363f0c0c37cbb496849034b1542e4344">pop_stops</a> ()</td></tr>
+<tr class="memdesc:a363f0c0c37cbb496849034b1542e4344"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop indent stops.  <a href="#a363f0c0c37cbb496849034b1542e4344">More...</a><br /></td></tr>
+<tr class="separator:a363f0c0c37cbb496849034b1542e4344"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81899695d5bb82e06e49608ed9ebd629"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a81899695d5bb82e06e49608ed9ebd629">FSM_INIT</a> (int &amp;c1)</td></tr>
 <tr class="memdesc:a81899695d5bb82e06e49608ed9ebd629"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code INIT,.  <a href="#a81899695d5bb82e06e49608ed9ebd629">More...</a><br /></td></tr>
 <tr class="separator:a81899695d5bb82e06e49608ed9ebd629"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c852851aeae6ed96e7adb0f6afe7932"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a1c852851aeae6ed96e7adb0f6afe7932">FSM_CHAR</a> (void)</td></tr>
-<tr class="memdesc:a1c852851aeae6ed96e7adb0f6afe7932"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code CHAR.  <a href="#a1c852851aeae6ed96e7adb0f6afe7932">More...</a><br /></td></tr>
-<tr class="separator:a1c852851aeae6ed96e7adb0f6afe7932"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2d2cbadbfa26b8b49509733971d1cc6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ae2d2cbadbfa26b8b49509733971d1cc6">FSM_CHAR</a> ()</td></tr>
+<tr class="memdesc:ae2d2cbadbfa26b8b49509733971d1cc6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code CHAR.  <a href="#ae2d2cbadbfa26b8b49509733971d1cc6">More...</a><br /></td></tr>
+<tr class="separator:ae2d2cbadbfa26b8b49509733971d1cc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16876012f70f8957f689b9bda076a730"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a16876012f70f8957f689b9bda076a730">FSM_HALT</a> (int c1)</td></tr>
 <tr class="memdesc:a16876012f70f8957f689b9bda076a730"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code HALT.  <a href="#a16876012f70f8957f689b9bda076a730">More...</a><br /></td></tr>
 <tr class="separator:a16876012f70f8957f689b9bda076a730"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,9 +150,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1a041cea3bd793a450445cc82b24fc90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a1a041cea3bd793a450445cc82b24fc90">FSM_TAKE</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Pattern::Index</a> cap, int c1)</td></tr>
 <tr class="memdesc:a1a041cea3bd793a450445cc82b24fc90"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code TAKE.  <a href="#a1a041cea3bd793a450445cc82b24fc90">More...</a><br /></td></tr>
 <tr class="separator:a1a041cea3bd793a450445cc82b24fc90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ba89f6e60b06a9e280ceb6159d78dd2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3ba89f6e60b06a9e280ceb6159d78dd2">FSM_REDO</a> (void)</td></tr>
-<tr class="memdesc:a3ba89f6e60b06a9e280ceb6159d78dd2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code REDO.  <a href="#a3ba89f6e60b06a9e280ceb6159d78dd2">More...</a><br /></td></tr>
-<tr class="separator:a3ba89f6e60b06a9e280ceb6159d78dd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a899420f3b5924b6c858a862d1c3b5b71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a899420f3b5924b6c858a862d1c3b5b71">FSM_REDO</a> ()</td></tr>
+<tr class="memdesc:a899420f3b5924b6c858a862d1c3b5b71"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code REDO.  <a href="#a899420f3b5924b6c858a862d1c3b5b71">More...</a><br /></td></tr>
+<tr class="separator:a899420f3b5924b6c858a862d1c3b5b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29425e4f07a84ed574e99e034891493d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a29425e4f07a84ed574e99e034891493d">FSM_REDO</a> (int c1)</td></tr>
 <tr class="memdesc:a29425e4f07a84ed574e99e034891493d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code REDO.  <a href="#a29425e4f07a84ed574e99e034891493d">More...</a><br /></td></tr>
 <tr class="separator:a29425e4f07a84ed574e99e034891493d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,45 +162,45 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a05bf4f34f39a43143b0942dc053c8718"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a05bf4f34f39a43143b0942dc053c8718">FSM_TAIL</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Pattern::Index</a> la)</td></tr>
 <tr class="memdesc:a05bf4f34f39a43143b0942dc053c8718"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code TAIL.  <a href="#a05bf4f34f39a43143b0942dc053c8718">More...</a><br /></td></tr>
 <tr class="separator:a05bf4f34f39a43143b0942dc053c8718"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fb6dab47fc270e53d4b8af86aaf744f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a5fb6dab47fc270e53d4b8af86aaf744f">FSM_DENT</a> (void)</td></tr>
-<tr class="memdesc:a5fb6dab47fc270e53d4b8af86aaf744f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code DENT.  <a href="#a5fb6dab47fc270e53d4b8af86aaf744f">More...</a><br /></td></tr>
-<tr class="separator:a5fb6dab47fc270e53d4b8af86aaf744f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f07084ad78c0f79ecf3e01b279f450a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a6f07084ad78c0f79ecf3e01b279f450a">FSM_META_DED</a> (void)</td></tr>
-<tr class="memdesc:a6f07084ad78c0f79ecf3e01b279f450a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META DED.  <a href="#a6f07084ad78c0f79ecf3e01b279f450a">More...</a><br /></td></tr>
-<tr class="separator:a6f07084ad78c0f79ecf3e01b279f450a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe1192161f249844190d6f3b76349c1b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#abe1192161f249844190d6f3b76349c1b">FSM_META_IND</a> (void)</td></tr>
-<tr class="memdesc:abe1192161f249844190d6f3b76349c1b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META IND.  <a href="#abe1192161f249844190d6f3b76349c1b">More...</a><br /></td></tr>
-<tr class="separator:abe1192161f249844190d6f3b76349c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6d846e6b7fe4a8257ead872cd89515a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ae6d846e6b7fe4a8257ead872cd89515a">FSM_DENT</a> ()</td></tr>
+<tr class="memdesc:ae6d846e6b7fe4a8257ead872cd89515a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code DENT.  <a href="#ae6d846e6b7fe4a8257ead872cd89515a">More...</a><br /></td></tr>
+<tr class="separator:ae6d846e6b7fe4a8257ead872cd89515a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a441387325bdc654d53e95dafd076331c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a441387325bdc654d53e95dafd076331c">FSM_META_DED</a> ()</td></tr>
+<tr class="memdesc:a441387325bdc654d53e95dafd076331c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META DED.  <a href="#a441387325bdc654d53e95dafd076331c">More...</a><br /></td></tr>
+<tr class="separator:a441387325bdc654d53e95dafd076331c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a920ae1d0113ba546efa140f445d18a1a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a920ae1d0113ba546efa140f445d18a1a">FSM_META_IND</a> ()</td></tr>
+<tr class="memdesc:a920ae1d0113ba546efa140f445d18a1a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META IND.  <a href="#a920ae1d0113ba546efa140f445d18a1a">More...</a><br /></td></tr>
+<tr class="separator:a920ae1d0113ba546efa140f445d18a1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7acbb9557977ccf9a85f6baedc63287f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a7acbb9557977ccf9a85f6baedc63287f">FSM_META_EOB</a> (int c1)</td></tr>
 <tr class="memdesc:a7acbb9557977ccf9a85f6baedc63287f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EOB.  <a href="#a7acbb9557977ccf9a85f6baedc63287f">More...</a><br /></td></tr>
 <tr class="separator:a7acbb9557977ccf9a85f6baedc63287f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3714503b8e60531d572db6838b0d7d98"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3714503b8e60531d572db6838b0d7d98">FSM_META_BOB</a> (void)</td></tr>
-<tr class="memdesc:a3714503b8e60531d572db6838b0d7d98"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BOB.  <a href="#a3714503b8e60531d572db6838b0d7d98">More...</a><br /></td></tr>
-<tr class="separator:a3714503b8e60531d572db6838b0d7d98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a852ba4d4ec243d088a1a052cab98d5b2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a852ba4d4ec243d088a1a052cab98d5b2">FSM_META_BOB</a> ()</td></tr>
+<tr class="memdesc:a852ba4d4ec243d088a1a052cab98d5b2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BOB.  <a href="#a852ba4d4ec243d088a1a052cab98d5b2">More...</a><br /></td></tr>
+<tr class="separator:a852ba4d4ec243d088a1a052cab98d5b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0222ac0b08f7dfe4232cc1ae38ec86b0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a0222ac0b08f7dfe4232cc1ae38ec86b0">FSM_META_EOL</a> (int c1)</td></tr>
 <tr class="memdesc:a0222ac0b08f7dfe4232cc1ae38ec86b0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EOL.  <a href="#a0222ac0b08f7dfe4232cc1ae38ec86b0">More...</a><br /></td></tr>
 <tr class="separator:a0222ac0b08f7dfe4232cc1ae38ec86b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a431d6fdd08b14eea0d758aa4d577f003"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a431d6fdd08b14eea0d758aa4d577f003">FSM_META_BOL</a> (void)</td></tr>
-<tr class="memdesc:a431d6fdd08b14eea0d758aa4d577f003"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BOL.  <a href="#a431d6fdd08b14eea0d758aa4d577f003">More...</a><br /></td></tr>
-<tr class="separator:a431d6fdd08b14eea0d758aa4d577f003"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d619b6c0e42eef76e82cddea2cc8a34"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a1d619b6c0e42eef76e82cddea2cc8a34">FSM_META_BOL</a> ()</td></tr>
+<tr class="memdesc:a1d619b6c0e42eef76e82cddea2cc8a34"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BOL.  <a href="#a1d619b6c0e42eef76e82cddea2cc8a34">More...</a><br /></td></tr>
+<tr class="separator:a1d619b6c0e42eef76e82cddea2cc8a34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a108d0fa7893bd165a1103aca4e8708ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a108d0fa7893bd165a1103aca4e8708ca">FSM_META_EWE</a> (int c0, int c1)</td></tr>
 <tr class="memdesc:a108d0fa7893bd165a1103aca4e8708ca"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EWE.  <a href="#a108d0fa7893bd165a1103aca4e8708ca">More...</a><br /></td></tr>
 <tr class="separator:a108d0fa7893bd165a1103aca4e8708ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade19817779426782ab997a7a5d8e2e3b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ade19817779426782ab997a7a5d8e2e3b">FSM_META_BWE</a> (int c0, int c1)</td></tr>
 <tr class="memdesc:ade19817779426782ab997a7a5d8e2e3b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BWE.  <a href="#ade19817779426782ab997a7a5d8e2e3b">More...</a><br /></td></tr>
 <tr class="separator:ade19817779426782ab997a7a5d8e2e3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53183f5dab031514f52bad12fb2dbca1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a53183f5dab031514f52bad12fb2dbca1">FSM_META_EWB</a> (void)</td></tr>
-<tr class="memdesc:a53183f5dab031514f52bad12fb2dbca1"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EWB.  <a href="#a53183f5dab031514f52bad12fb2dbca1">More...</a><br /></td></tr>
-<tr class="separator:a53183f5dab031514f52bad12fb2dbca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1290821154dd3abd8646117c18bb0d24"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a1290821154dd3abd8646117c18bb0d24">FSM_META_BWB</a> (void)</td></tr>
-<tr class="memdesc:a1290821154dd3abd8646117c18bb0d24"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BWB.  <a href="#a1290821154dd3abd8646117c18bb0d24">More...</a><br /></td></tr>
-<tr class="separator:a1290821154dd3abd8646117c18bb0d24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbe8cafe20bb1a1ee964b04ce7be08e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#acbe8cafe20bb1a1ee964b04ce7be08e6">FSM_META_EWB</a> ()</td></tr>
+<tr class="memdesc:acbe8cafe20bb1a1ee964b04ce7be08e6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META EWB.  <a href="#acbe8cafe20bb1a1ee964b04ce7be08e6">More...</a><br /></td></tr>
+<tr class="separator:acbe8cafe20bb1a1ee964b04ce7be08e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1df3cef14e6011ae629e7382a87b8e2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a1df3cef14e6011ae629e7382a87b8e2a">FSM_META_BWB</a> ()</td></tr>
+<tr class="memdesc:a1df3cef14e6011ae629e7382a87b8e2a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META BWB.  <a href="#a1df3cef14e6011ae629e7382a87b8e2a">More...</a><br /></td></tr>
+<tr class="separator:a1df3cef14e6011ae629e7382a87b8e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77fbd40b1c0fc532f3ec5dda683d5d86"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a77fbd40b1c0fc532f3ec5dda683d5d86">FSM_META_NWE</a> (int c0, int c1)</td></tr>
 <tr class="memdesc:a77fbd40b1c0fc532f3ec5dda683d5d86"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META NWE.  <a href="#a77fbd40b1c0fc532f3ec5dda683d5d86">More...</a><br /></td></tr>
 <tr class="separator:a77fbd40b1c0fc532f3ec5dda683d5d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a406ca28596bc6f75dcf975d3abb4c963"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a406ca28596bc6f75dcf975d3abb4c963">FSM_META_NWB</a> (void)</td></tr>
-<tr class="memdesc:a406ca28596bc6f75dcf975d3abb4c963"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META NWB.  <a href="#a406ca28596bc6f75dcf975d3abb4c963">More...</a><br /></td></tr>
-<tr class="separator:a406ca28596bc6f75dcf975d3abb4c963"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3da6f6a08905ca89a5920ccd16d098dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3da6f6a08905ca89a5920ccd16d098dd">FSM_META_NWB</a> ()</td></tr>
+<tr class="memdesc:a3da6f6a08905ca89a5920ccd16d098dd"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META NWB.  <a href="#a3da6f6a08905ca89a5920ccd16d098dd">More...</a><br /></td></tr>
+<tr class="separator:a3da6f6a08905ca89a5920ccd16d098dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreflex_1_1_pattern_matcher"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreflex_1_1_pattern_matcher')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreflex_1_1_pattern_matcher.html">reflex::PatternMatcher&lt; reflex::Pattern &gt;</a></td></tr>
 <tr class="memitem:a7b32893191d6bfb4af05e33b5643b2b2 inherit pub_methods_classreflex_1_1_pattern_matcher"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern_matcher.html#a7b32893191d6bfb4af05e33b5643b2b2">PatternMatcher</a> (const <a class="el" href="classreflex_1_1_pattern_matcher.html">PatternMatcher</a> &amp;matcher)</td></tr>
 <tr class="memdesc:a7b32893191d6bfb4af05e33b5643b2b2 inherit pub_methods_classreflex_1_1_pattern_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor, the underlying pattern object is shared (not deep copied).  <a href="#a7b32893191d6bfb4af05e33b5643b2b2">More...</a><br /></td></tr>
@@ -709,7 +709,7 @@ template&lt;typename P &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a980c06e7c868419074d7815de154ab3d"></a>
+<a class="anchor" id="a06cc1f381a99c834a0abf213b617b895"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -719,7 +719,6 @@ template&lt;typename P &gt; </div>
         <tr>
           <td class="memname">void reflex::Matcher::clear_stops </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -731,7 +730,7 @@ template&lt;typename P &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Clear tab stops. </p>
+<p>Clear indent stop positions. </p>
 
 </div>
 </div>
@@ -806,7 +805,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a1c852851aeae6ed96e7adb0f6afe7932"></a>
+<a class="anchor" id="ae2d2cbadbfa26b8b49509733971d1cc6"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -816,7 +815,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">int reflex::Matcher::FSM_CHAR </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -832,7 +830,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a5fb6dab47fc270e53d4b8af86aaf744f"></a>
+<a class="anchor" id="ae6d846e6b7fe4a8257ead872cd89515a"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -842,7 +840,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool reflex::Matcher::FSM_DENT </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -936,7 +933,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a3714503b8e60531d572db6838b0d7d98"></a>
+<a class="anchor" id="a852ba4d4ec243d088a1a052cab98d5b2"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -946,7 +943,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool reflex::Matcher::FSM_META_BOB </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -962,7 +958,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a431d6fdd08b14eea0d758aa4d577f003"></a>
+<a class="anchor" id="a1d619b6c0e42eef76e82cddea2cc8a34"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -972,7 +968,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool reflex::Matcher::FSM_META_BOL </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -988,7 +983,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a1290821154dd3abd8646117c18bb0d24"></a>
+<a class="anchor" id="a1df3cef14e6011ae629e7382a87b8e2a"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -998,7 +993,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool reflex::Matcher::FSM_META_BWB </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1050,7 +1044,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a6f07084ad78c0f79ecf3e01b279f450a"></a>
+<a class="anchor" id="a441387325bdc654d53e95dafd076331c"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1060,7 +1054,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool reflex::Matcher::FSM_META_DED </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1128,7 +1121,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a53183f5dab031514f52bad12fb2dbca1"></a>
+<a class="anchor" id="acbe8cafe20bb1a1ee964b04ce7be08e6"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1138,7 +1131,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool reflex::Matcher::FSM_META_EWB </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1190,7 +1182,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="abe1192161f249844190d6f3b76349c1b"></a>
+<a class="anchor" id="a920ae1d0113ba546efa140f445d18a1a"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1200,7 +1192,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool reflex::Matcher::FSM_META_IND </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1216,7 +1207,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a406ca28596bc6f75dcf975d3abb4c963"></a>
+<a class="anchor" id="a3da6f6a08905ca89a5920ccd16d098dd"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1226,7 +1217,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool reflex::Matcher::FSM_META_NWB </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1278,7 +1268,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a3ba89f6e60b06a9e280ceb6159d78dd2"></a>
+<a class="anchor" id="a899420f3b5924b6c858a862d1c3b5b71"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1288,7 +1278,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">void reflex::Matcher::FSM_REDO </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1547,7 +1536,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ad7736ffcc340ede12da1f9bbe8854a5f"></a>
+<a class="anchor" id="a363f0c0c37cbb496849034b1542e4344"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1557,7 +1546,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">void reflex::Matcher::pop_stops </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1569,11 +1557,11 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Pop stops. </p>
+<p>Pop indent stops. </p>
 
 </div>
 </div>
-<a class="anchor" id="a4591c398bd930fb5bb0cda5b56ef03c8"></a>
+<a class="anchor" id="addc00e8755eeb766a180943c66786a29"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1583,7 +1571,6 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">void reflex::Matcher::push_stops </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1595,7 +1582,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Push stops and clear stops. </p>
+<p>Push current indent stops and clear current indent stops. </p>
 
 </div>
 </div>
@@ -1627,7 +1614,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a43734e349aec75a4afd05302f6c5fbb0"></a>
+<a class="anchor" id="adf84adb39572b43c63f56aecd1aaa35d"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1635,11 +1622,10 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::vector&lt;size_t&gt;&amp; reflex::Matcher::stops </td>
+          <td class="memname">std::vector&lt;size_t&gt;&amp; reflex::Matcher::stops </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -1649,7 +1635,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns vector of tab stops. </p>
+<p>Returns reference to vector of current indent stop positions. </p>
 <dl class="section return"><dt>Returns</dt><dd>vector of size_t. </dd></dl>
 
 </div>
@@ -1771,7 +1757,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Apr 12 2017 21:54:29 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed May 24 2017 21:57:42 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

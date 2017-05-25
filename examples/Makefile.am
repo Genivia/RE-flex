@@ -38,6 +38,7 @@ examples:	flexexample1 \
 		indent \
 		json \
 		braille \
+		unicode \
 		cards
 
 flexexample1:	flexexample1.l
@@ -193,6 +194,10 @@ braille:	braille.l
 		$(REFLEX) $(REFLAGS) $<
 		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
+unicode:	unicode.l
+		$(REFLEX) $(REFLAGS) $<
+		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+
 cards:		cards.cpp
 		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ cards.cpp $(LIBREFLEX)
 
@@ -206,4 +211,4 @@ clean-local:
 		-rm -f *.o *.gch *.log
 		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample?
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json braille cards url
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json braille unicode cards url

@@ -382,32 +382,35 @@ class AbstractMatcher {
   {
     const char *t = txt_;
     std::wstring ws;
-#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
-    // store wide string in std::wstring encoded in UTF-16
-    while (t < txt_ + len_)
+    if (sizeof(wchar_t) < 32)
     {
-      int wc = utf8(t, &t);
-      if (wc > 0xFFFF)
+      // assuming sizeof(wchar_t) == 16: store wide string in std::wstring encoded in UTF-16
+      while (t < txt_ + len_)
       {
-        if (wc <= 0x10FFFF)
-        {
-          ws.push_back(0xD800 | (wc - 0x010000) >> 10); // first half of UTF-16 surrogate pair
-          ws.push_back(0xDC00 | (wc & 0x03FF)); // second half of UTF-16 surrogate pair
-        }
-        else
-        {
-          ws.push_back(0xFFFD);
-        }
-      }
-      else
-      {
-        ws.push_back(wc);
+	int wc = utf8(t, &t);
+	if (wc > 0xFFFF)
+	{
+	  if (wc <= 0x10FFFF)
+	  {
+	    ws.push_back(0xD800 | (wc - 0x010000) >> 10); // first half of UTF-16 surrogate pair
+	    ws.push_back(0xDC00 | (wc & 0x03FF));         // second half of UTF-16 surrogate pair
+	  }
+	  else
+	  {
+	    ws.push_back(0xFFFD);
+	  }
+	}
+	else
+	{
+	  ws.push_back(wc);
+	}
       }
     }
-#else
-    while (t < txt_ + len_)
-      ws.push_back(utf8(t, &t));
-#endif
+    else
+    {
+      while (t < txt_ + len_)
+	ws.push_back(utf8(t, &t));
+    }
     return ws;
   }
   /// Returns the length of the matched text in number of bytes, a constant-time operation.

@@ -94,25 +94,25 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
       return std::pair<const char*,size_t>(txt_, len_);
     return std::pair<const char*,size_t>(NULL, 0);
   }
-  /// Returns vector of tab stops.
-  const std::vector<size_t>& stops(void) const
+  /// Returns reference to vector of current indent stop positions.
+  std::vector<size_t>& stops()
     /// @returns vector of size_t.
   {
     return tab_;
   }
-  /// Clear tab stops.
-  void clear_stops(void)
+  /// Clear indent stop positions.
+  void clear_stops()
   {
     tab_.clear();
   }
-  /// Push stops and clear stops.
-  void push_stops(void)
+  /// Push current indent stops and clear current indent stops.
+  void push_stops()
   {
     stk_.push(std::vector<size_t>());
     stk_.top().swap(tab_);
   }
-  /// Pop stops.
-  void pop_stops(void)
+  /// Pop indent stops.
+  void pop_stops()
   {
     stk_.top().swap(tab_);
     stk_.pop();
@@ -123,7 +123,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     c1 = fsm_.c1;
   }
   /// FSM code CHAR.
-  inline int FSM_CHAR(void)
+  inline int FSM_CHAR()
   {
     return get();
   }
@@ -147,7 +147,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
       --cur_;
   }
   /// FSM code REDO.
-  inline void FSM_REDO(void)
+  inline void FSM_REDO()
   {
     cap_ = Const::EMPTY;
     cur_ = pos_;
@@ -174,7 +174,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
       cur_ = txt_ - buf_ + static_cast<size_t>(lap_[la]);
   }
   /// FSM code DENT.
-  inline bool FSM_DENT(void)
+  inline bool FSM_DENT()
   {
     if (ded_ > 0)
     {
@@ -184,12 +184,12 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     return false;
   }
   /// FSM code META DED.
-  inline bool FSM_META_DED(void)
+  inline bool FSM_META_DED()
   {
     return fsm_.bol && dedent(fsm_.col);
   }
   /// FSM code META IND.
-  inline bool FSM_META_IND(void)
+  inline bool FSM_META_IND()
   {
     return fsm_.bol && indent(fsm_.col);
   }
@@ -199,7 +199,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     return c1 == EOF;
   }
   /// FSM code META BOB.
-  inline bool FSM_META_BOB(void)
+  inline bool FSM_META_BOB()
   {
     return fsm_.bob;
   }
@@ -209,7 +209,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     return c1 == EOF || c1 == '\n';
   }
   /// FSM code META BOL.
-  inline bool FSM_META_BOL(void)
+  inline bool FSM_META_BOL()
   {
     return fsm_.bol;
   }
@@ -224,12 +224,12 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     return !isword(c0) && isword(c1);
   }
   /// FSM code META EWB.
-  inline bool FSM_META_EWB(void)
+  inline bool FSM_META_EWB()
   {
     return fsm_.eow;
   }
   /// FSM code META BWB.
-  inline bool FSM_META_BWB(void)
+  inline bool FSM_META_BWB()
   {
     return fsm_.bow;
   }
@@ -239,7 +239,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     return isword(c0) == isword(c1);
   }
   /// FSM code META NWB.
-  inline bool FSM_META_NWB(void)
+  inline bool FSM_META_NWB()
   {
     return !fsm_.bow && !fsm_.eow;
   }

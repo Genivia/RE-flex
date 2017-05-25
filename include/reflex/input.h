@@ -225,14 +225,25 @@ class Input {
  public:
   /// Common constants.
   struct file_encoding {
-    static const unsigned short plain   = 0; ///< plain octets: 7-bit ASCII, 8-bit binary or UTF-8 without BOM detected
-    static const unsigned short utf8    = 1; ///< UTF-8 with BOM detected
-    static const unsigned short latin   = 2; ///< Basic Latin ASCII and Latin-1 supplement, ISO-8859-1
-    static const unsigned short ebcdic  = 3; ///< EBCDIC
-    static const unsigned short utf16be = 4; ///< UTF-16 big endian
-    static const unsigned short utf16le = 5; ///< UTF-16 little endian
-    static const unsigned short utf32be = 6; ///< UTF-32 big endian
-    static const unsigned short utf32le = 7; ///< UTF-32 little endian
+    static const unsigned short plain   =  0; ///< plain octets: 7-bit ASCII, 8-bit binary or UTF-8 without BOM detected
+    static const unsigned short utf8    =  1; ///< UTF-8 with BOM detected
+    static const unsigned short utf16be =  2; ///< UTF-16 big endian
+    static const unsigned short utf16le =  3; ///< UTF-16 little endian
+    static const unsigned short utf32be =  4; ///< UTF-32 big endian
+    static const unsigned short utf32le =  5; ///< UTF-32 little endian
+    static const unsigned short latin   =  6; ///< Basic Latin ASCII and Latin-1 supplement, ISO-8859-1
+    static const unsigned short cp437   =  7; ///< CP 427
+    static const unsigned short cp850   =  8; ///< CP 850 (updated to CP 858)
+    static const unsigned short ebcdic  =  9; ///< EBCDIC
+    static const unsigned short cp1250  = 10; ///< CP-1250
+    static const unsigned short cp1251  = 11; ///< CP-1251
+    static const unsigned short cp1252  = 12; ///< CP-1252
+    static const unsigned short cp1253  = 13; ///< CP-1253
+    static const unsigned short cp1254  = 14; ///< CP-1254
+    static const unsigned short cp1255  = 15; ///< CP-1255
+    static const unsigned short cp1256  = 16; ///< CP-1256
+    static const unsigned short cp1257  = 17; ///< CP-1257
+    static const unsigned short cp1258  = 18; ///< CP-1258
   };
   /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
   Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects)

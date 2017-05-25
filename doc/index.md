@@ -604,16 +604,16 @@ You can use this method and other methods to obtain the details of a match:
   Method      | Result
   ----------- | ---------------------------------------------------------------
   `accept()`  | returns group capture index (or zero if not captured/matched)
-  `text()`    | returns `const char*` to NUL-terminated match (ends in `\0`)
+  `text()`    | returns `const char*` to 0-terminated match (ends in `\0`)
   `str()`     | returns `std::string` copy of `text()` (but preserves `\0`s)
   `wstr()`    | returns `std::wstring` copy of `text()`, converted from UTF-8
   `pair()`    | returns `std::pair<size_t,std::string>(accept(),str())`
   `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
-  `begin()`   | returns `const char*` to non-NUL-terminated match begin
-  `end()`     | returns `const char*` to non-NUL-terminated match end
-  `rest()`    | returns `const char*` to NUL-terminated rest of input
+  `begin()`   | returns `const char*` to non-0-terminated match begin
+  `end()`     | returns `const char*` to non-0-terminated match end
+  `rest()`    | returns `const char*` to 0-terminated rest of input
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
   `lineno()`  | returns line number of the match, starting with line 1
@@ -629,7 +629,7 @@ You can use this method and other methods to obtain the details of a match:
 The `operator[n]` takes the group number `n` and returns the n'th group capture
 match as a pair with a `const char*` pointer to the group-matching text and the
 size of the matched text in bytes.  Because the pointer points to a string that
-is not NUL-terminated, you should use the size to determine the matching part.
+is not 0-terminated, you should use the size to determine the matching part.
 
 The pointer is NULL when the group capture has no match.
 
@@ -659,7 +659,7 @@ after matching continues and when the matcher object is deallocated.  To retain
 the `text()` value use the `str()` method that returns a copy of `text()`.
 
 @warning The `operator[]` method returns a pair with the match info of the n'th
-group, which is a non-NUL-terminated `const char*` pointer (or NULL), with size
+group, which is a non-0-terminated `const char*` pointer (or NULL) and its size
 in bytes of the captured match.  The string *should not be used* after matching
 continues.
 
@@ -1703,7 +1703,7 @@ the classic Flex actions shown in the second column of this table:
 
   RE/flex action        | Flex action          | Result
   --------------------- | -------------------- | ------------------------------
-  `text()`              | `YYText()`, `yytext` | NUL-terminated text match
+  `text()`              | `YYText()`, `yytext` | 0-terminated text match
   `str()`               | *n/a*                | `std::string` of `text()`
   `wstr()`              | *n/a*                | `std::wstring` of `text()`
   `size()`              | `YYLeng()`, `yyleng` | size of the match in bytes
@@ -1728,12 +1728,12 @@ the classic Flex actions shown in the second column of this table:
   `matcher().wstr()`    | *n/a*                | same as `wstr()`
   `matcher().size()`    | `YYLeng()`, `yyleng` | same as `size()`
   `matcher().wsize()`   | *n/a*                | same as `wsize()`
-  `matcher().input()`   | `yyinput()`          | get next char from input
+  `matcher().input()`   | `yyinput()`          | get next 8-bit char from input
   `matcher().winput()`  | *n/a*                | get wide character from input
   `matcher().unput(c)`  | `unput(c)`           | put back 8-bit char `c`
   `matcher().peek()`    | *n/a*                | peek at next char on input
-  `matcher().more()`    | `yymore()`           | concat next match to the match
-  `matcher().less(n)`   | `yyless(n)`          | shrink match's length to `n`
+  `matcher().more()`    | `yymore()`           | append next match to this match
+  `matcher().less(n)`   | `yyless(n)`          | shrink match length to `n`
   `matcher().first()`   | *n/a*                | first pos of match in input
   `matcher().last()`    | *n/a*                | last pos+1 of match in input
   `matcher().rest()`    | *n/a*                | get rest of input until end
@@ -1918,7 +1918,7 @@ patterns `φ` and `ψ`:
   `\n`      | matches a newline, others are `\a` (BEL), `\b` (BS), `\t` (HT), `\v` (VT), `\f` (FF), and `\r` (CR)
   `\0`      | matches the NUL character
   `\cX`     | matches the control character `X` mod 32 (e.g. `\cA` is `\x01`)
-  `\0177`   | matches an 8-bit character with octal value `177` (see below)
+  `\0177`   | matches an 8-bit character with octal value `177` (use `\177` in lexer specifications instea, see below)
   `\x7f`    | matches an 8-bit character with hexadecimal value `7f`
   `\x{7f}`  | matches an 8-bit character with hexadecimal value `7f`
   `\p{C}`   | matches a character in category C of \ref reflex-pattern-cat
@@ -1939,7 +1939,7 @@ patterns `φ` and `ψ`:
   `φ{2,}?`  | matches `φ` at least two times or more as needed (lazy repetition)
   `φψ`      | matches `φ` then matches `ψ` (concatenation)
   `φ⎮ψ`     | matches `φ` or matches `ψ` (alternation)
-  `(φ)`     | matches `φ` as a group for capture (non-capturing in lexer specifications)
+  `(φ)`     | matches `φ` as a group to capture (this is non-capturing in lexer specifications)
   `(?:φ)`   | matches `φ` without group capture
   `(?=φ)`   | matches `φ` without consuming it (\ref reflex-pattern-lookahead)
   `(?<=φ)`  | matches `φ` to the left without consuming it (\ref reflex-pattern-lookbehind, not supported by the RE/flex matcher)
@@ -1952,10 +1952,10 @@ patterns `φ` and `ψ`:
   `φ\b`     | matches `φ` ending at a word boundary
   `\Bφ`     | matches `φ` starting at a non-word boundary
   `φ\B`     | matches `φ` ending at a non-word boundary
-  `\<φ`     | matches `φ` that starts as a word
-  `\>φ`     | matches `φ` that starts as a non-word
-  `φ\<`     | matches `φ` that ends as a non-word
-  `φ\>`     | matches `φ` that ends as a word
+  `\<φ`     | matches `φ` that starts a word
+  `\>φ`     | matches `φ` that starts a non-word
+  `φ\<`     | matches `φ` that ends a non-word
+  `φ\>`     | matches `φ` that ends a word
   `\i`      | matches an indent for \ref reflex-pattern-dents matching
   `\j`      | matches a dedent for \ref reflex-pattern-dents matching
   `(?i:φ)`  | \ref reflex-pattern-anycase matches `φ` ignoring case
@@ -2000,24 +2000,25 @@ match the space character use `" "` or `[ ]` and to match the tab character use
 The order of precedence for composing larger patterns from sub-patterns is as
 follows, from high to low precedence:
 
-1. Characters, character classes, bracket expressions, escapes, quotation
+1. Characters, character classes (bracket expressions), escapes, quotation
 2. Grouping `(φ)`, `(?:φ)`, `(?=φ)`, and inline modifiers `(?imsux:φ)`
 3. Quantifiers `?`, `*`, `+`, `{n,m}`
-4. Concatenation (including trailing context `φ/ψ`)
+4. Concatenation `φψ` (including trailing context `φ/ψ`)
 5. Anchoring `^`, `$`, `\<`, `\>`, `\b`, `\B`, `\A`, `\z` 
-6. Alternation `|`
+6. Alternation `φ|ψ`
 7. Global modifiers `(?imsux)φ`
 
 @note When using regex patterns in C++ literal strings, make sure that "regex
 escapes are escaped", meaning that an extra backslash is needed for every
 backslash in the regex string.
 
-@warning Trigraphs in C++ strings are special three character sequences,
-beginning with two question marks and followed by one other character.  Avoid
-`??` at all cost in C++ strings.  Instead, use at least one escaped question
-mark, such as `?\?`, which the compiler will translate to `??`.  Otherwise,
-lazy optional pattern constructs will appear broken.  Fortunately, most C++
-compilers will warn about trigraph translation before causing trouble.
+@note Trigraphs in C/C++ strings are special tripple-character sequences,
+beginning with two question marks and followed by a character that is
+translated.  Avoid `??` in regex strings.  Instead, use at least one escaped
+question mark, such as `?\?`, which the compiler will translate to `??`.  This
+problem does not apply to lexer specifications that the **reflex** command
+converts to regex strings.  Fortunately, most C++ compilers ignore trigraphs
+unless in standard-conforming modes, such as `-ansi` and `-std=c++98`.
 
 🔝 [Back to table of contents](#)
 
@@ -2218,31 +2219,32 @@ the underscore.
 
 @note The RE/flex regex library requires word boundaries to be specified in
 patterns at the start or end of the pattern.  Boundaries are not permitted in
-the middle of a pattern.
+the middle of a pattern, see \ref reflex-limitations.
 
 🔝 [Back to table of contents](#)
 
 ### Indent/nodent/dedent                                {#reflex-pattern-dents}
 
 Automatic indent and dedent matching is a special feature of RE/flex and is
-enabled when the RE/flex matcher engine is used (not the Boost.Regex matcher).
+only available when the RE/flex matcher engine is used (the default matcher).
+An indent and a dedent position is defined and matched with:
 
   Pattern | Matches
   ------- | -------------------------------------------------------------------
-  `\i`    | indent: matches and defines the next indent position
-  `\j`    | dedent: matches the previous indent position
+  `\i`    | indent: matches and adds a new indent stop position
+  `\j`    | dedent: matches a previous indent position, removes one indent stop
 
 These patterns should be used in combination with the start of a line anchor
-`^` followed by a pattern that represents the spacing for indentations.  The
-pattern may include any characters that are considered part of indentation
-margins, but should exclude `\n`.  For example:
+`^` followed by a pattern that represents left margin spacing for indentations.
+This spacing pattern may include any characters that are considered part of the
+left margin, but must exclude `\n`.  For example:
 
 <div class="alt">
 ```cpp
 %o tabs=8
 %%
-^\h+      out() << "| "; // nodent: text is aligned to current indent margin
-^\h*\i    out() << "> "; // indent: matched with \i
+^\h+      out() << "| "; // nodent: text is aligned to current indent
+^\h*\i    out() << "> "; // indent: matched and added with \i
 ^\h*\j    out() << "< "; // dedent: matched with \j
 \j        out() << "< "; // dedent: for each extra level dedented
 %%
@@ -2251,10 +2253,12 @@ margins, but should exclude `\n`.  For example:
 
 The `\h` pattern matches space and tabs, where tabs advance to the next column
 that is a multiple of 8.  The tab multiplier can be changed by setting the
-`−−tabs=N` option where `N` must be a positive integer that is a power of 2.
+`−−tabs=N` option where `N` must be a positive integer that is a power of 2
+and between 1 and 8 (1, 2, 4, 8).
 
 To add a pattern that consumes line continuations without affecting the
-indentation levels, use a negative match, which is a new RE/flex feature:
+indentation levels defined by `\i`, use a negative match, which is a new
+RE/flex feature:
 
 <div class="alt">
 ```cpp
@@ -2265,15 +2269,24 @@ indentation levels, use a negative match, which is a new RE/flex feature:
 The negative pattern `(?^\\\n\h+)` consumes input internally as if we are
 repeately calling `input()` (or `yyinput()` with `−−flex`).  We used it here to
 consume the line-ending `\` and the indent that followed it, as if this text
-was not part of the input, which ensures that the current indent positions are
-not affected.
+was not part of the input, which ensures that the current indent positions that
+are defined by `\i` are not affected.
 
 To scan input that continues on the next new line(s) while preserving the
-current indent positions, use the RE/flex matcher `matcher().push_stops()` and
-`matcher().pop_stops()`.  For example, to continue scanning after a `/*` for
-multiple lines without indentation matching and up to a `*/` you can save the
-current indent positions and transition to a new start condition state to scan
-the content between `/*` and `*/`:
+current indent stop positions, use the RE/flex matcher `matcher().push_stops()`
+and `matcher().pop_stops()`:
+
+  RE/flex action            | Result
+  ------------------------- | -------------------------------------------------
+  `matcher().push_stops()`  | push indent stops on the stack then clear stops
+  `matcher().pop_stops()`   | pop indent stops and make them current
+  `matcher().clear_stops()` | clear current indent stops
+  `matcher().stops()`       | reference to current `std::vector<size_t>` stops
+
+For example, to continue scanning after a `/*` for multiple lines without
+indentation matching and up to a `*/` you can save the current indent positions
+and transition to a new start condition state to scan the content between `/*`
+and `*/`:
 
 <div class="alt">
 ```cpp
@@ -2283,7 +2296,7 @@ the content between `/*` and `*/`:
 ^\h+          out() << "| "; // nodent, text is aligned to current margin
 ^\h*\i        out() << "> "; // indent
 ^\h*\j        out() << "< "; // dedent
-\j            out() << "< "; // dedent, triggered by each extra dedent
+\j            out() << "< "; // dedent, for each extra indent level on the same line
 "/*"          matcher().push_stops(); // save the indent margin/tab stops
               start(CONTINUE);        // continue w/o indent matching
 <CONTINUE>{
@@ -2293,6 +2306,10 @@ the content between `/*` and `*/`:
 }
 ```
 </div>
+
+The `matcher().stops()` method returns a reference to the current
+`std::vector<size_t>` of indent stop positions, which may be modified by adding
+and/or removing indent stop positions.  Make sure to keep the vector sorted.
 
 See \ref reflex-states for more information about start condition states.
 
@@ -4502,16 +4519,16 @@ To obtain properties of a match, use the following methods:
   Method      | Result
   ----------- | ---------------------------------------------------------------
   `accept()`  | returns group capture index (or zero if not captured/matched)
-  `text()`    | returns `const char*` to NUL-terminated match (ends in `\0`)
+  `text()`    | returns `const char*` to 0-terminated match (ends in `\0`)
   `str()`     | returns `std::string` copy of `text()` (but preserves `\0`s)
   `wstr()`    | returns `std::wstring` copy of `text()`, converted from UTF-8
   `pair()`    | returns `std::pair<size_t,std::string>(accept(),str())`
   `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
-  `begin()`   | returns `const char*` to non-NUL-terminated match begin
-  `end()`     | returns `const char*` to non-NUL-terminated match end
-  `rest()`    | returns `const char*` to NUL-terminated rest of input
+  `begin()`   | returns `const char*` to non-0-terminated match begin
+  `end()`     | returns `const char*` to non-0-terminated match end
+  `rest()`    | returns `const char*` to 0-terminated rest of input
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
   `lineno()`  | returns line number of the match, starting with line 1
@@ -4524,7 +4541,7 @@ To obtain properties of a match, use the following methods:
   `[0]`       | operator returns `std::pair<const char*,size_t>(begin(),size())`
   `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
 
-Note that `begin()`, `operator[0]`, and `operator[n]` return non-NUL-terminated
+Note that `begin()`, `operator[0]`, and `operator[n]` return non-0-terminated
 strings.  You must use `end()` with `begin()` to determine the span of the
 match.  Use the size of the capture to determine the end of the match or
 capture.
@@ -4707,7 +4724,8 @@ file encodings.  If a UTF BOM is detected then the UTF input will be normalized
 to UTF-8.  When no UTF BOM is detected then the input is considered plain
 ASCII, binary, or UTF-8 and passed through unconverted.  To override the file
 encoding when no UTF BOM was present, and normalize Latin-1, ISO-8859-1,
-EBCDIC, and other encodings to UTF-8, see \ref regex-input-file.
+CP-1252, CP 434, CP 850, EBCDIC, and other encodings to UTF-8, see
+\ref regex-input-file.
 
 🔝 [Back to table of contents](#)
 
@@ -4743,13 +4761,24 @@ The file encoding is obtained with the `file_encoding()` method of a
   Constant                                | File encoding
   --------------------------------------- | -----------------------------------
   `reflex::Input::file_encoding::plain`   | plain octets, ASCII/binary/UTF-8
-  `reflex::Input::file_encoding::latin`   | ASCII and Latin-1, ISO-8859-1
-  `reflex::Input::file_encoding::ebcdic`  | EBCDIC
   `reflex::Input::file_encoding::utf8`    | UTF-8 (BOM detected)
   `reflex::Input::file_encoding::utf16be` | UTF-16 big endian (BOM detected)
   `reflex::Input::file_encoding::utf16le` | UTF-16 little endian (BOM detected)
   `reflex::Input::file_encoding::utf32be` | UTF-32 big endian (BOM detected)
   `reflex::Input::file_encoding::utf32le` | UTF-32 little endian (BOM detected)
+  `reflex::Input::file_encoding::latin`   | ASCII and Latin-1, ISO-8859-1
+  `reflex::Input::file_encoding::cp437`   | CP 437
+  `reflex::Input::file_encoding::cp850`   | CP 850 (updated to CP 858)
+  `reflex::Input::file_encoding::ebcdic`  | EBCDIC
+  `reflex::Input::file_encoding::cp1250`  | CP-1250
+  `reflex::Input::file_encoding::cp1251`  | CP-1251
+  `reflex::Input::file_encoding::cp1252`  | CP-1252
+  `reflex::Input::file_encoding::cp1253`  | CP-1253
+  `reflex::Input::file_encoding::cp1254`  | CP-1254
+  `reflex::Input::file_encoding::cp1255`  | CP-1255
+  `reflex::Input::file_encoding::cp1256`  | CP-1256
+  `reflex::Input::file_encoding::cp1257`  | CP-1257
+  `reflex::Input::file_encoding::cp1258`  | CP-1258
 
 To set the file encoding when assigning a file to read, use
 `reflex::Input(file, enc)` to construct the input object.
@@ -5092,13 +5121,24 @@ if (matcher.in.file() != NULL && matcher.in.good())
   switch (matcher.in.file_encoding())
   {
     case Input::file_encoding::plain:   std::cout << "plain ASCII/binary/UTF-8"; break;
-    case Input::file_encoding::latin:   std::cout << "ASCII and Latin-1";        break;
-    case Input::file_encoding::ebcdic:  std::cout << "EBCDIC";                   break;
     case Input::file_encoding::utf8:    std::cout << "UTF-8 with BOM";           break;
     case Input::file_encoding::utf16be: std::cout << "UTF-16 big endian";        break;
     case Input::file_encoding::utf16le: std::cout << "UTF-16 little endian";     break;
     case Input::file_encoding::utf32be: std::cout << "UTF-32 big endian";        break;
     case Input::file_encoding::utf32le: std::cout << "UTF-32 little endian";     break;
+    case Input::file_encoding::latin:   std::cout << "ASCII+Latin-1/ISO-8859-1"; break;
+    case Input::file_encoding::cp437:   std::cout << "CP 437";                   break;
+    case Input::file_encoding::cp850:   std::cout << "CP 850";                   break;
+    case Input::file_encoding::ebcdic:  std::cout << "EBCDIC";                   break;
+    case Input::file_encoding::cp1250:  std::cout << "CP-1250";                  break;
+    case Input::file_encoding::cp1251:  std::cout << "CP-1251";                  break;
+    case Input::file_encoding::cp1252:  std::cout << "CP-1252";                  break;
+    case Input::file_encoding::cp1253:  std::cout << "CP-1253";                  break;
+    case Input::file_encoding::cp1254:  std::cout << "CP-1254";                  break;
+    case Input::file_encoding::cp1255:  std::cout << "CP-1255";                  break;
+    case Input::file_encoding::cp1256:  std::cout << "CP-1256";                  break;
+    case Input::file_encoding::cp1257:  std::cout << "CP-1257";                  break;
+    case Input::file_encoding::cp1258:  std::cout << "CP-1258";                  break;
   }
   std::cout << " of " << matcher.in.size() << " converted bytes to read\n";
   matcher.buffer(); // because Boost.Regex partial_match is broken!
@@ -5109,11 +5149,16 @@ if (matcher.in.file() != NULL && matcher.in.good())
 }
 ```
 
-The default encoding is `Input::file_encoding::plain` when no UTF BOM is
-detected at the start of the file, meaning that `Input::file_encoding::latin`
-and `Input::file_encoding::ebcdic` are never detected automatically as plain
-UTF-8 encoding is assumed.  If you expect the source file to contain ISO-8859-1
-then set the file encoding as follows:
+The default encoding is `reflex::Input::file_encoding::plain` when no UTF BOM
+is detected at the start of the input file.  The encodings
+`reflex::Input::file_encoding::latin`, `reflex::Input::file_encoding::cp1252`,
+`reflex::Input::file_encoding::cp437`, `reflex::Input::file_encoding::cp850`,
+`reflex::Input::file_encoding::ebcdic` are never detected automatically,
+because plain encoding is implicitly assumed to be the default encoding.  To
+convert these files, set the file encoding format explicitly in your code.  For
+example, if you expect the source file to contain ISO-8859-1 8-bit characters
+(ASCII and the latin-1 supplement) then set the default file encoding to
+`reflex::Input::file_encoding::latin` as follows:
 
 ```cpp
 reflex::Input input(fopen("filename", "r"), reflex::Input::file_encoding::latin);
@@ -5128,8 +5173,9 @@ if (input.file() != NULL)
 }
 ```
 
-This sets the file encoding to ISO-8859-1, but only if no UTF BOM was detected,
-because UTF encodings that start with a UTF BOM cannot be overruled.
+This sets the file encoding to ISO-8859-1, but only if no UTF BOM was detected
+in the file.  Files with a UTF BOM are always decoded as UTF, which cannot be
+overruled.
 
 🔝 [Back to table of contents](#)
 
@@ -5186,10 +5232,33 @@ halves.
 Lazy repetitions                                                        {#lazy}
 ----------------
 
-Repetitions (`*`, `+`, and `{n,m}`) are greedy, unless marked with an extra `?`
-to make them lazy.  Lazy repetitions are useless when the regex pattern after
-the lazy repetitions permits empty input.  For example, `.*?a?` only
-matches one `a` or nothing at all, because `a?` permits an empty match.
+Repetitions (`*`, `+`, and `{n,m}`) and the optional pattern (`?`) are greedy,
+unless marked with an extra `?` to make them lazy.  Lazy repetitions are
+useless when the regex pattern after the lazy repetitions permits empty input.
+For example, `.*?a?` only matches one `a` or nothing at all, because `a?`
+permits an empty match.
+
+🔝 [Back to table of contents](#)
+
+
+Lazy optional patterns and trigraphs                               {#trigraphs}
+------------------------------------
+
+This C/C++ trigraph problem work-around does not apply to lexer specifications
+that the **reflex** command converts while preventing trigraphs.
+
+Trigraphs in C/C++ strings are special tripple-character sequences, beginning
+with two question marks and followed by a character that is translated.  For
+example, `"x??(y|z)"` is translated to `"x[y|z)"`.
+
+Fortunately, most C++ compilers ignore trigraphs unless in standard-conforming
+modes, such as `-ansi` and `-std=c++98`.
+
+When using the lazy optional pattern `φ??` in a regex C/C++ string for pattern
+matching with one of the RE/flex matchers for example, use `φ?\?` instead,
+which the C/C++ compiler translates to `φ??`.
+
+Otherwise, lazy optional pattern constructs will appear broken.
 
 🔝 [Back to table of contents](#)
 
