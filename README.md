@@ -7,9 +7,10 @@
 
 Flex reimagined.  Fast, flexible, adds Boost 💪
 
-RE/flex is as fast as Flex (in some cases faster), and much faster than regex
-libraries such as Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example,
-tokenizing a representative C source code file into 244 tokens takes only 13 microseconds:
+[RE/flex][reflex-url] is as fast as Flex (in some cases faster), and much
+faster than regex libraries such as Boost.Regex, C++11 std::regex, PCRE2 and
+RE2.  For example, tokenizing a representative C source code file into 244
+tokens takes only 13 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
@@ -78,8 +79,19 @@ Installation
 
 You have two options: 1) quick install or 2) configure and make.
 
-Windows users: use `bin/reflex.exe`, use the C++ header files in
-`include/reflex` and the C++ source files in `lib` and `unicode`.
+Windows users: use `reflex/bin/reflex.exe` from the command line or add a
+**Custom Build Step** in MSVC++ as follows: 1) select the project name in
+**Solution Explorer** then **Property Pages** from the **View** menu (see also
+[custom-build steps in Visual Studio](http://msdn.microsoft.com/en-us/library/hefydhhy.aspx));
+2) enter `reflex.exe --header-file "C:\Users\YourUserName\Documents\mylexer.l"`
+in the **Command Line** property under **Custom Build Step** (this assumes
+lexer.l is in your **Documents** folder; 3) enter `lex.yy.h lex.yy.cpp` in
+the **Outputs** property.  Then, to compile your program with MSVC++, make sure
+to drag the C++ header files located in `reflex/include/reflex` to "Header
+Files" in the "Solution Explorer" panel, and drag the C++ source files located
+in `reflex/lib` and `reflex/unicode` to the "Source Files" in the "Solution
+Explorer" panel. After running `reflex.exe` put the generated `lex.yy.cpp` file
+there as well.
 
 ### Quick install
 
