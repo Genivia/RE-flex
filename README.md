@@ -77,21 +77,26 @@ The RE/flex repo includes tokenizers for Java, Python, and C/C++.
 Installation
 ------------
 
-You have two options: 1) quick install or 2) configure and make.
+### Windows users
 
-Windows users: use `reflex/bin/reflex.exe` from the command line or add a
-**Custom Build Step** in MSVC++ as follows: 1) select the project name in
-**Solution Explorer** then **Property Pages** from the **View** menu (see also
+use `reflex/bin/reflex.exe` from the command line or add a **Custom Build
+Step** in MSVC++ as follows: 1) select the project name in **Solution
+Explorer** then **Property Pages** from the **View** menu (see also
 [custom-build steps in Visual Studio](http://msdn.microsoft.com/en-us/library/hefydhhy.aspx));
 2) enter `reflex.exe --header-file "C:\Users\YourUserName\Documents\mylexer.l"`
 in the **Command Line** property under **Custom Build Step** (this assumes
 lexer.l is in your **Documents** folder; 3) enter `lex.yy.h lex.yy.cpp` in
-the **Outputs** property.  Then, to compile your program with MSVC++, make sure
-to drag the C++ header files located in `reflex/include/reflex` to "Header
-Files" in the "Solution Explorer" panel, and drag the C++ source files located
-in `reflex/lib` and `reflex/unicode` to the "Source Files" in the "Solution
-Explorer" panel. After running `reflex.exe` put the generated `lex.yy.cpp` file
-there as well.
+the **Outputs** property; 4) specify **Execute Before** as `PreBuildEvent`.
+
+Then, to compile your program with MSVC++, make sure to drag the C++ header
+files located in `reflex/include/reflex` to **Header Files** in the **Solution
+Explorer** panel, and drag the C++ source files located in `reflex/lib` and
+`reflex/unicode` to the **Source Files** in the **Solution Explorer** panel.
+After running `reflex.exe` drag the generated `lex.yy.cpp` file there as well.
+
+### Unix/Linux and Mac OS
+
+You have two options: 1) quick install or 2) configure and make.
 
 ### Quick install
 
