@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed May 24 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Jun 25 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -112,9 +112,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a13135ec6cf70ed5d16396ad2db5b0c7b">Input</a> (FILE *<a class="el" href="classreflex_1_1_input.html#a948d77cb9989bf0ca0ce99ac3afd8a33">file</a>)</td></tr>
 <tr class="memdesc:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.  <a href="#a13135ec6cf70ed5d16396ad2db5b0c7b">More...</a><br /></td></tr>
 <tr class="separator:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80b7f5fa0b4115b2cc73e2e7c15278fc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a80b7f5fa0b4115b2cc73e2e7c15278fc">Input</a> (FILE *<a class="el" href="classreflex_1_1_input.html#a948d77cb9989bf0ca0ce99ac3afd8a33">file</a>, unsigned short enc)</td></tr>
-<tr class="memdesc:a80b7f5fa0b4115b2cc73e2e7c15278fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.  <a href="#a80b7f5fa0b4115b2cc73e2e7c15278fc">More...</a><br /></td></tr>
-<tr class="separator:a80b7f5fa0b4115b2cc73e2e7c15278fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93c5c4f5dd43521923d12ddd6ff59b1d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a93c5c4f5dd43521923d12ddd6ff59b1d">Input</a> (FILE *<a class="el" href="classreflex_1_1_input.html#a948d77cb9989bf0ca0ce99ac3afd8a33">file</a>, unsigned short enc, const unsigned short *page=NULL)</td></tr>
+<tr class="memdesc:a93c5c4f5dd43521923d12ddd6ff59b1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.  <a href="#a93c5c4f5dd43521923d12ddd6ff59b1d">More...</a><br /></td></tr>
+<tr class="separator:a93c5c4f5dd43521923d12ddd6ff59b1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a25a1b7ebdda31f175e0139713212f1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a2a25a1b7ebdda31f175e0139713212f1">Input</a> (std::istream &amp;<a class="el" href="classreflex_1_1_input.html#a79e4205350b645d67747feeaba4ba190">istream</a>)</td></tr>
 <tr class="memdesc:a2a25a1b7ebdda31f175e0139713212f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a std::istream.  <a href="#a2a25a1b7ebdda31f175e0139713212f1">More...</a><br /></td></tr>
 <tr class="separator:a2a25a1b7ebdda31f175e0139713212f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,9 +165,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3a3830a022486d78670f01003b56d5e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get</a> (char *s, size_t n)</td></tr>
 <tr class="memdesc:a3a3830a022486d78670f01003b56d5e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy character sequence data into buffer.  <a href="#a3a3830a022486d78670f01003b56d5e5">More...</a><br /></td></tr>
 <tr class="separator:a3a3830a022486d78670f01003b56d5e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0293c898ccb82f568a58824ede15e020"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a0293c898ccb82f568a58824ede15e020">file_encoding</a> (unsigned short enc)</td></tr>
-<tr class="memdesc:a0293c898ccb82f568a58824ede15e020"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set encoding for <code>FILE*</code> input.  <a href="#a0293c898ccb82f568a58824ede15e020">More...</a><br /></td></tr>
-<tr class="separator:a0293c898ccb82f568a58824ede15e020"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a920aef092e068d7b0f6e828a5e302d3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a920aef092e068d7b0f6e828a5e302d3e">file_encoding</a> (unsigned short enc, const unsigned short *page=NULL)</td></tr>
+<tr class="memdesc:a920aef092e068d7b0f6e828a5e302d3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set encoding for <code>FILE*</code> input.  <a href="#a920aef092e068d7b0f6e828a5e302d3e">More...</a><br /></td></tr>
+<tr class="separator:a920aef092e068d7b0f6e828a5e302d3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6014fcca0d45cb8b7ab3382097e0c749"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a6014fcca0d45cb8b7ab3382097e0c749">file_encoding</a> () const </td></tr>
 <tr class="memdesc:a6014fcca0d45cb8b7ab3382097e0c749"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get encoding of the current <code>FILE*</code> input.  <a href="#a6014fcca0d45cb8b7ab3382097e0c749">More...</a><br /></td></tr>
 <tr class="separator:a6014fcca0d45cb8b7ab3382097e0c749"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,6 +219,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a2e560a30d77f8c4bf277e60998e3c7db"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a2e560a30d77f8c4bf277e60998e3c7db">utfx_</a></td></tr>
 <tr class="memdesc:a2e560a30d77f8c4bf277e60998e3c7db"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">file_encoding</a>  <a href="#a2e560a30d77f8c4bf277e60998e3c7db">More...</a><br /></td></tr>
 <tr class="separator:a2e560a30d77f8c4bf277e60998e3c7db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accc6c55cd219a6717e536bd6c9f0606d"><td class="memItemLeft" align="right" valign="top">const unsigned short *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#accc6c55cd219a6717e536bd6c9f0606d">page_</a></td></tr>
+<tr class="memdesc:accc6c55cd219a6717e536bd6c9f0606d"><td class="mdescLeft">&#160;</td><td class="mdescRight">custom code page  <a href="#accc6c55cd219a6717e536bd6c9f0606d">More...</a><br /></td></tr>
+<tr class="separator:accc6c55cd219a6717e536bd6c9f0606d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> character sequence class for unified access to sources of input text. </p>
@@ -533,7 +536,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a80b7f5fa0b4115b2cc73e2e7c15278fc"></a>
+<a class="anchor" id="a93c5c4f5dd43521923d12ddd6ff59b1d"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -550,7 +553,13 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">unsigned short&#160;</td>
-          <td class="paramname"><em>enc</em>&#160;</td>
+          <td class="paramname"><em>enc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned short *&#160;</td>
+          <td class="paramname"><em>page</em> = <code>NULL</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -570,6 +579,7 @@ Protected Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">file</td><td>input file </td></tr>
     <tr><td class="paramname">enc</td><td><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">file_encoding</a> (when UTF BOM is not present) </td></tr>
+    <tr><td class="paramname">page</td><td>code page for <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a3e61805f611257e324b7e7f4c73a5dd7" title="custom code page ">file_encoding::custom</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -770,7 +780,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a0293c898ccb82f568a58824ede15e020"></a>
+<a class="anchor" id="a920aef092e068d7b0f6e828a5e302d3e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -778,8 +788,18 @@ Protected Attributes</h2></td></tr>
           <td class="memname">void <a class="el" href="structreflex_1_1_input_1_1file__encoding.html">reflex::Input::file_encoding</a> </td>
           <td>(</td>
           <td class="paramtype">unsigned short&#160;</td>
-          <td class="paramname"><em>enc</em></td><td>)</td>
+          <td class="paramname"><em>enc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const unsigned short *&#160;</td>
+          <td class="paramname"><em>page</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -787,7 +807,8 @@ Protected Attributes</h2></td></tr>
 <p>Set encoding for <code>FILE*</code> input. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">enc</td><td><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a9f48fc525d274af1351fdde16b9e55e3" title="plain octets: 7-bit ASCII, 8-bit binary or UTF-8 without BOM detected ">file_encoding::plain</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a3fb02ae23658a5f18a9e1bd1edc7af61" title="UTF-8 with BOM detected. ">file_encoding::utf8</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a1d77bb18dbc37d57df341f1878faa134" title="Basic Latin ASCII and Latin-1 supplement, ISO-8859-1. ">file_encoding::latin</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#aa3d38a4be53b6d4401ddcd8734f93c64" title="EBCDIC. ">file_encoding::ebcdic</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a384c11d51f3320424bf1d78b581d1e24" title="UTF-16 big endian. ">file_encoding::utf16be</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#aa053fdac14b83ea2040ae500e06bbde5" title="UTF-16 little endian. ">file_encoding::utf16le</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a4c9c0952f934dff7970320f054d87244" title="UTF-32 big endian. ">file_encoding::utf32be</a>, or <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a6dab80b13b986dd7d21dc59acf8a7325" title="UTF-32 little endian. ">file_encoding::utf32le</a> </td></tr>
+    <tr><td class="paramname">enc</td><td><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">file_encoding</a> </td></tr>
+    <tr><td class="paramname">page</td><td>custom code page for <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a3e61805f611257e324b7e7f4c73a5dd7" title="custom code page ">file_encoding::custom</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -816,7 +837,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get encoding of the current <code>FILE*</code> input. </p>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a9f48fc525d274af1351fdde16b9e55e3" title="plain octets: 7-bit ASCII, 8-bit binary or UTF-8 without BOM detected ">file_encoding::plain</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a3fb02ae23658a5f18a9e1bd1edc7af61" title="UTF-8 with BOM detected. ">file_encoding::utf8</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a1d77bb18dbc37d57df341f1878faa134" title="Basic Latin ASCII and Latin-1 supplement, ISO-8859-1. ">file_encoding::latin</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#aa3d38a4be53b6d4401ddcd8734f93c64" title="EBCDIC. ">file_encoding::ebcdic</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a384c11d51f3320424bf1d78b581d1e24" title="UTF-16 big endian. ">file_encoding::utf16be</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#aa053fdac14b83ea2040ae500e06bbde5" title="UTF-16 little endian. ">file_encoding::utf16le</a>, <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a4c9c0952f934dff7970320f054d87244" title="UTF-32 big endian. ">file_encoding::utf32be</a>, or <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a6dab80b13b986dd7d21dc59acf8a7325" title="UTF-32 little endian. ">file_encoding::utf32le</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">file_encoding</a> </dd></dl>
 
 </div>
 </div>
@@ -1332,6 +1353,28 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="accc6c55cd219a6717e536bd6c9f0606d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned short* reflex::Input::page_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>custom code page </p>
+
+</div>
+</div>
 <a class="anchor" id="a4ca4ea90ef6f28c106a6811ff21bcc2b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1448,7 +1491,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed May 24 2017 21:57:42 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Jun 25 2017 09:36:40 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

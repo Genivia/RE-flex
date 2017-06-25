@@ -2362,7 +2362,7 @@ mode enables the following patterns to be used:
   `€` (UTF-8)        | matches wide character `€`, encoded in UTF-8
   `[€¥£]` (UTF-8)    | matches wide character `€`, `¥` or `£`, encoded in UTF-8
   `\X`               | matches any ISO-8859-1 or Unicode character
-  `\R`               | matches a Unicode line break `\r\n|[\u{000A}-\u{000D}u{U+0085}\u{2028}\u{2029}]`
+  `\R`               | matches a Unicode line break `\r\n` or `[\u{000A}-\u{000D}u{U+0085}\u{2028}\u{2029}]`
   `\s`               | matches a white space character with Unicode sub-property Zs
   `\l`               | matches a lower case letter with Unicode sub-property Ll
   `\u`               | matches an upper case letter with Unicode sub-property Lu
@@ -4717,7 +4717,7 @@ An input object can be constructed by specifying a string, a file, or a stream
 to read from.  You can also reassign input to read from new input.
 
 More specifically, you can pass a `std::string`, `char*`, `std::wstring`,
-`wchar_t*`, `FILE*`, or a `std::istream` object to the constructor.
+`wchar_t*`, `FILE*`, or a `std::istream` to the constructor.
 
 A `FILE*` file descriptor is a special case.  The input object handles various
 file encodings.  If a UTF BOM is detected then the UTF input will be normalized
@@ -4729,19 +4729,45 @@ CP-1252, CP 434, CP 850, EBCDIC, and other encodings to UTF-8, see
 
 🔝 [Back to table of contents](#)
 
-### Input methods                                        {#regex-input-methods}
+### Input strings                                        {#regex-input-strings}
 
-To obtain the properties of an input source use the following methods:
+An input object constructed from an 8-bit string `char*` or `std::string` just
+passes the string to the matcher engine.  The string should contain UTF-8 when
+Unicode patterns are used.
 
-  Method      | Result
-  ----------- | ---------------------------------------------------------------
-  `size()`    | size of the input in total bytes (encoded) or zero when unknown
-  `good()`    | input is available to read (no error and not EOF)
-  `eof()`     | end of input (but use only `at_end()` with matchers!)
-  `cstring()` | the current `const char*` (of a `std::string`) or NULL
-  `wstring()` | the current `const wchar_t*` (of a `std::wstring`) or NULL
-  `file()`    | the current `FILE*` file descriptor or NULL
-  `istream()` | a `std::istream*` pointer to the current stream object or NULL
+An input object constructed from a wide string `wchar_t*` or `std::wstring`
+translates the wide string to UTF-8 for matching, which effectively normalizes
+the input for matching with Unicode patterns.  This conversion is illustrated
+below.  The copyright symbol `©` with Unicode U+00A9 is matched against its
+UTF-8 sequence `C2 A9` of `©`:
+
+```cpp
+if (reflex::Matcher("©", L"©").matches())
+  std::cout << "copyright symbol matches\n";
+```
+
+To ensure that Unicode patterns in UTF-8 strings are grouped properly, use \ref
+regex-convert, for example as follows:
+
+```cpp
+static reflex::Pattern CR(reflex::Matcher::convert("(?u:\u{00A9})"));
+if (reflex::Matcher(CR, L"©").matches())
+  std::cout << "copyright symbol matches\n";
+```
+
+Here we made the converted pattern static to avoid repeated conversion and
+construction overheads.
+
+@note Strings cannot contain the terminating `\0` (NUL) character.  To match
+raw binary content that contains zeros, use a `std::istringstream`.
+
+🔝 [Back to table of contents](#)
+
+### Input streams                                        {#regex-input-streams}
+
+An input object constructed from a `std::istream` (or a derived class) just
+passes the text to the matcher engine.  The stream should contain UTF-8 when
+Unicode patterns are used.
 
 🔝 [Back to table of contents](#)
 
@@ -4755,8 +4781,8 @@ A [UTF byte order mark (BOM)](www.unicode.org/faq/utf_bom.html) is detected in
 the content of a file by the matcher, which enables UTF-8 normalization of the
 input automatically.
 
-The file encoding is obtained with the `file_encoding()` method of a
-`reflex::Input` object and returns an `reflex::Input::file_encoding` constant:
+The file encoding is obtained with the `reflex::Input::file_encoding()` method,
+which returns an `reflex::Input::file_encoding` constant:
 
   Constant                                | File encoding
   --------------------------------------- | -----------------------------------
@@ -4779,6 +4805,7 @@ The file encoding is obtained with the `file_encoding()` method of a
   `reflex::Input::file_encoding::cp1256`  | CP-1256
   `reflex::Input::file_encoding::cp1257`  | CP-1257
   `reflex::Input::file_encoding::cp1258`  | CP-1258
+  `reflex::Input::file_encoding::custom`  | User-defined custom code page
 
 To set the file encoding when assigning a file to read, use
 `reflex::Input(file, enc)` to construct the input object.
@@ -4796,27 +4823,52 @@ This sets the standard input encoding to ISO-8859-1, but only if no UTF BOM was
 detected on the standard input, because the UTF encoding of a `FILE*` that
 starts with a UTF BOM cannot be overruled.
 
-Wide strings are internally converted to UTF-8 for matching, which effectively
-normalizes the input for matching with Unicode patterns.  This conversion is
-illustrated below.  The copyright symbol `©` with Unicode U+00A9 is matched
-against its UTF-8 sequence `C2 A9` of `©`:
+To define a custom code page to translate files, define a code page table with
+256 entries that maps each 8-bit input character to a 16-bit Unicode character
+(UCS-2).  Then use `reflex::Input::file_encoding::custom` with a pointer to
+your code page to construct an input object.  For example:
 
 ```cpp
-if (reflex::Matcher("©", L"©").matches())
-  std::cout << "copyright symbol matches\n";
+const unsigned short CP[256] = {
+   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+   48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
+   64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
+   80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
+   96, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111,
+  112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,
+   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+};
+reflex::Input input(stdin, reflex::Input::file_encoding::custom, CP);
+reflex::Matcher matcher(pattern, input);
 ```
 
-To ensure that Unicode patterns in UTF-8 strings are grouped properly, use \ref
-regex-convert, for example as follows:
+This example translates all constrol characters and characters above 127 to
+spaces before matching.
 
-```cpp
-static reflex::Pattern CR(reflex::Matcher::convert("(?u:\u{00A9})"));
-if (reflex::Matcher(CR, L"©").matches())
-  std::cout << "copyright symbol matches\n";
-```
+🔝 [Back to table of contents](#)
 
-Here we made the converted pattern static to avoid repeated conversion and
-construction overheads.
+### Input properties                                  {#regex-input-properties}
+
+To obtain the properties of an input source use the following methods:
+
+  Method      | Result
+  ----------- | ---------------------------------------------------------------
+  `size()`    | size of the input in total bytes (encoded) or zero when unknown
+  `good()`    | input is available to read (no error and not EOF)
+  `eof()`     | end of input (but use only `at_end()` with matchers!)
+  `cstring()` | the current `const char*` (of a `std::string`) or NULL
+  `wstring()` | the current `const wchar_t*` (of a `std::wstring`) or NULL
+  `file()`    | the current `FILE*` file descriptor or NULL
+  `istream()` | a `std::istream*` pointer to the current stream object or NULL
 
 🔝 [Back to table of contents](#)
 
@@ -5195,14 +5247,14 @@ UTF-8.  The reason for this design decision is that a lexer should support a
 
 <div class="alt">
 ```cpp
-.    std::cerr << "lexical error, full stop." << std::endl;
+.    std::cerr << "lexical error, full stop!" << std::endl; exit(EXIT_FAILURE);
 ```
 </div>
 
-If dot in Unicode mode would be restrictive (which it is not), the action above
-will never be triggered when invalid input is encountered.  Because all non-dot
-regex patterns are valid Unicode in RE/flex, it would be impossible to write a
-"catch all else" rule that catches input format errors!
+If dot in Unicode mode would be restricted to match valid Unicode only, then
+the action above will never be triggered when invalid input is encountered.
+Because all non-dot regex patterns are valid Unicode in RE/flex, it would be
+impossible to write a "catch all else" rule that catches input format errors!
 
 The dot in Unicode mode is self-synchronizing and consumes text up to to the
 next ASCII or Unicode character.
@@ -5217,8 +5269,8 @@ valid Unicode range.  This code point is never matched by non-dot regex
 patterns and is easy to detect by a regex pattern with a dot.
 
 Note that character classes written as bracket lists may produce invalid
-Unicode ranges when not used properly.  This is not a problem for matching, but
-for rejecting surrogate halves that are invalid Unicode.  For example,
+Unicode ranges when used improperly.  This is not a problem for matching, but
+may prevent rejecting surrogate halves that are invalid Unicode.  For example,
 `[\u{00}-\u{10FFFF}]` obviously includes the invalid range of surrogate halves
 `[\u{D800}-\u{DFFF}]`.  You can always remove surrogate halves from any
 character class by intersecting the class with `[\p{Unicode}]`, that is
@@ -5269,9 +5321,9 @@ Repeately switching to the same input                              {#switching}
 The state of the input object `reflex::Input` changes as the scanner's matcher
 consumes more input.  If you switch to the same input again (e.g. with `in(i)`
 or `switch_stream(i)` for input source `i`), a portion of that input may end up
-being discarded as part of the matcher's internal buffer that is flushed when
-input is assigned.  Therefore, the following code will not work because stdin
-is flushed repeately:
+being discarded as part of the matcher's internal buffer is flushed when input
+is assigned.  Therefore, the following code will not work because stdin is
+flushed repeately:
 
 ```cpp
 Lexer lexer(stdin);       // a lexer that reads stdin

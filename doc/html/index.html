@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed May 24 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Jun 25 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -103,8 +103,10 @@
 </ul>
 </li>
 <li class="level2"><a href="#regex-input">The Input class                                                  </a><ul><li class="level3"><a href="#regex-input-assign">Assigning input</a></li>
-<li class="level3"><a href="#regex-input-methods">Input methods</a></li>
+<li class="level3"><a href="#regex-input-strings">Input strings</a></li>
+<li class="level3"><a href="#regex-input-streams">Input streams</a></li>
 <li class="level3"><a href="#regex-input-file">FILE encodings</a></li>
+<li class="level3"><a href="#regex-input-properties">Input properties</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#regex-examples">Examples                                                      </a></li>
@@ -1243,8 +1245,23 @@ Unicode mode</h3>
 <td><code>[€¥£]</code> (UTF-8) </td><td>matches wide character <code>€</code>, <code>¥</code> or <code>£</code>, encoded in UTF-8 </td></tr>
 <tr>
 <td><code>\X</code> </td><td>matches any ISO-8859-1 or Unicode character </td></tr>
+<tr>
+<td><code>\R</code> </td><td>matches a Unicode line break <code>\r\n</code> or <code>[\u{000A}-\u{000D}u{U+0085}\u{2028}\u{2029}]</code> </td></tr>
+<tr>
+<td><code>\s</code> </td><td>matches a white space character with Unicode sub-property Zs </td></tr>
+<tr>
+<td><code>\l</code> </td><td>matches a lower case letter with Unicode sub-property Ll </td></tr>
+<tr>
+<td><code>\u</code> </td><td>matches an upper case letter with Unicode sub-property Lu </td></tr>
+<tr>
+<td><code>\w</code> </td><td>matches a Unicode word character with property L, Nd, or Pc </td></tr>
+<tr>
+<td><code>\u{20AC}</code> </td><td>matches Unicode character U+20AC </td></tr>
+<tr>
+<td><code>\p{C}</code> </td><td>matches a character in category C </td></tr>
+<tr>
+<td><code>\p{^C}</code>,<code>\P{C}</code> </td><td>matches any character except in category C </td></tr>
 </table>
-<p><code>\R</code> | matches a Unicode line break <code>\r\n|[\u{000A}-\u{000D}u{U+0085}\u{2028}\u{2029}]</code> <code>\s</code> | matches a white space character with Unicode sub-property Zs <code>\l</code> | matches a lower case letter with Unicode sub-property Ll <code>\u</code> | matches an upper case letter with Unicode sub-property Lu <code>\w</code> | matches a Unicode word character with property L, Nd, or Pc <code>\u{20AC}</code> | matches Unicode character U+20AC <code>\p{C}</code> | matches a character in category C <code>\p{^C}</code>,<code>\P{C}</code> | matches any character except in category C</p>
 <p>When converting regex patterns for use with a C++ regex library, use regex matcher converter flag <code><a class="el" href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39" title="convert . (dot), \s, \w, \l, \u, \S, \W, \L, \U to Unicode ">reflex::convert_flag::unicode</a></code> to convert Unicode patterns for use with the 8-bit based RE/flex, Boost.Regex, and std::regex regex libraries, see <a class="el" href="index.html#regex-convert">Regex converters </a> for more details.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-pattern-freespace"></a>
@@ -1884,36 +1901,26 @@ The Input class                                                  </h2>
 <h3><a class="anchor" id="regex-input-assign"></a>
 Assigning input</h3>
 <p>An input object can be constructed by specifying a string, a file, or a stream to read from. You can also reassign input to read from new input.</p>
-<p>More specifically, you can pass a <code>std::string</code>, <code>char*</code>, <code>std::wstring</code>, <code>wchar_t*</code>, <code>FILE*</code>, or a <code>std::istream</code> object to the constructor.</p>
+<p>More specifically, you can pass a <code>std::string</code>, <code>char*</code>, <code>std::wstring</code>, <code>wchar_t*</code>, <code>FILE*</code>, or a <code>std::istream</code> to the constructor.</p>
 <p>A <code>FILE*</code> file descriptor is a special case. The input object handles various file encodings. If a UTF BOM is detected then the UTF input will be normalized to UTF-8. When no UTF BOM is detected then the input is considered plain ASCII, binary, or UTF-8 and passed through unconverted. To override the file encoding when no UTF BOM was present, and normalize Latin-1, ISO-8859-1, CP-1252, CP 434, CP 850, EBCDIC, and other encodings to UTF-8, see <a class="el" href="index.html#regex-input-file">FILE encodings</a>.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
-<h3><a class="anchor" id="regex-input-methods"></a>
-Input methods</h3>
-<p>To obtain the properties of an input source use the following methods:</p>
-<table class="doxtable">
-<tr>
-<th>Method </th><th>Result  </th></tr>
-<tr>
-<td><code>size()</code> </td><td>size of the input in total bytes (encoded) or zero when unknown </td></tr>
-<tr>
-<td><code>good()</code> </td><td>input is available to read (no error and not EOF) </td></tr>
-<tr>
-<td><code>eof()</code> </td><td>end of input (but use only <code>at_end()</code> with matchers!) </td></tr>
-<tr>
-<td><code>cstring()</code> </td><td>the current <code>const char*</code> (of a <code>std::string</code>) or NULL </td></tr>
-<tr>
-<td><code>wstring()</code> </td><td>the current <code>const wchar_t*</code> (of a <code>std::wstring</code>) or NULL </td></tr>
-<tr>
-<td><code>file()</code> </td><td>the current <code>FILE*</code> file descriptor or NULL </td></tr>
-<tr>
-<td><code>istream()</code> </td><td>a <code>std::istream*</code> pointer to the current stream object or NULL </td></tr>
-</table>
+<h3><a class="anchor" id="regex-input-strings"></a>
+Input strings</h3>
+<p>An input object constructed from an 8-bit string <code>char*</code> or <code>std::string</code> just passes the string to the matcher engine. The string should contain UTF-8 when Unicode patterns are used.</p>
+<p>An input object constructed from a wide string <code>wchar_t*</code> or <code>std::wstring</code> translates the wide string to UTF-8 for matching, which effectively normalizes the input for matching with Unicode patterns. This conversion is illustrated below. The copyright symbol <code>©</code> with Unicode U+00A9 is matched against its UTF-8 sequence <code>C2 A9</code> of <code>©</code>:</p>
+<div class="fragment"><div class="line"><span class="keywordflow">if</span> (<a class="code" href="classreflex_1_1_matcher.html">reflex::Matcher</a>(<span class="stringliteral">&quot;©&quot;</span>, L<span class="stringliteral">&quot;©&quot;</span>).matches())</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;copyright symbol matches\n&quot;</span>;</div></div><!-- fragment --><p>To ensure that Unicode patterns in UTF-8 strings are grouped properly, use <a class="el" href="index.html#regex-convert">Regex converters </a>, for example as follows:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> CR(<a class="code" href="classreflex_1_1_matcher.html#a8862686f6d5680d4d0e5af146c4aed69">reflex::Matcher::convert</a>(<span class="stringliteral">&quot;(?u:\u{00A9})&quot;</span>));</div><div class="line"><span class="keywordflow">if</span> (<a class="code" href="classreflex_1_1_matcher.html">reflex::Matcher</a>(CR, L<span class="stringliteral">&quot;©&quot;</span>).matches())</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;copyright symbol matches\n&quot;</span>;</div></div><!-- fragment --><p>Here we made the converted pattern static to avoid repeated conversion and construction overheads.</p>
+<dl class="section note"><dt>Note</dt><dd>Strings cannot contain the terminating <code>\0</code> (NUL) character. To match raw binary content that contains zeros, use a <code>std::istringstream</code>.</dd></dl>
+<p>🔝 <a href="#">Back to table of contents</a></p>
+<h3><a class="anchor" id="regex-input-streams"></a>
+Input streams</h3>
+<p>An input object constructed from a <code>std::istream</code> (or a derived class) just passes the text to the matcher engine. The stream should contain UTF-8 when Unicode patterns are used.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="regex-input-file"></a>
 FILE encodings</h3>
 <p>File content specified with a <code>FILE*</code> file descriptor can be encoded in ASCII, binary, or UTF-8/16/32 formats. UTF-16/32 file content is automatically decoded and translated to UTF-8 which normalizes the input for matching.</p>
 <p>A <a href="www.unicode.org/faq/utf_bom.html">UTF byte order mark (BOM)</a> is detected in the content of a file by the matcher, which enables UTF-8 normalization of the input automatically.</p>
-<p>The file encoding is obtained with the <code>file_encoding()</code> method of a <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> object and returns an <code><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">reflex::Input::file_encoding</a></code> constant:</p>
+<p>The file encoding is obtained with the <code><a class="el" href="classreflex_1_1_input.html#a920aef092e068d7b0f6e828a5e302d3e" title="Set encoding for FILE* input. ">reflex::Input::file_encoding()</a></code> method, which returns an <code><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">reflex::Input::file_encoding</a></code> constant:</p>
 <table class="doxtable">
 <tr>
 <th>Constant </th><th>File encoding  </th></tr>
@@ -1955,13 +1962,36 @@ FILE encodings</h3>
 <td><code><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a4dc2f06a3db08e74ddeeac35906df341" title="CP-1257. ">reflex::Input::file_encoding::cp1257</a></code> </td><td>CP-1257 </td></tr>
 <tr>
 <td><code><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a479d78caf4c9625c28077966dec76725" title="CP-1258. ">reflex::Input::file_encoding::cp1258</a></code> </td><td>CP-1258 </td></tr>
+<tr>
+<td><code><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a3e61805f611257e324b7e7f4c73a5dd7" title="custom code page ">reflex::Input::file_encoding::custom</a></code> </td><td>User-defined custom code page </td></tr>
 </table>
 <p>To set the file encoding when assigning a file to read, use <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input(file, enc)</a></code> to construct the input object.</p>
 <p>For example, use <code><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a1d77bb18dbc37d57df341f1878faa134" title="Basic Latin ASCII and Latin-1 supplement, ISO-8859-1. ">reflex::Input::file_encoding::latin</a></code> to override the encoding when the file contains ISO-8859-1. This way you can match its content using Unicode patterns (matcher engines internally normalizes ISO-8859-1 to UTF-8):</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(stdin, <a class="code" href="structreflex_1_1_input_1_1file__encoding.html#a1d77bb18dbc37d57df341f1878faa134">reflex::Input::file_encoding::latin</a>);</div><div class="line"><a class="code" href="classreflex_1_1_matcher.html">reflex::Matcher</a> matcher(pattern, input);</div></div><!-- fragment --><p>This sets the standard input encoding to ISO-8859-1, but only if no UTF BOM was detected on the standard input, because the UTF encoding of a <code>FILE*</code> that starts with a UTF BOM cannot be overruled.</p>
-<p>Wide strings are internally converted to UTF-8 for matching, which effectively normalizes the input for matching with Unicode patterns. This conversion is illustrated below. The copyright symbol <code>©</code> with Unicode U+00A9 is matched against its UTF-8 sequence <code>C2 A9</code> of <code>©</code>:</p>
-<div class="fragment"><div class="line"><span class="keywordflow">if</span> (<a class="code" href="classreflex_1_1_matcher.html">reflex::Matcher</a>(<span class="stringliteral">&quot;©&quot;</span>, L<span class="stringliteral">&quot;©&quot;</span>).matches())</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;copyright symbol matches\n&quot;</span>;</div></div><!-- fragment --><p>To ensure that Unicode patterns in UTF-8 strings are grouped properly, use <a class="el" href="index.html#regex-convert">Regex converters </a>, for example as follows:</p>
-<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> CR(<a class="code" href="classreflex_1_1_matcher.html#a8862686f6d5680d4d0e5af146c4aed69">reflex::Matcher::convert</a>(<span class="stringliteral">&quot;(?u:\u{00A9})&quot;</span>));</div><div class="line"><span class="keywordflow">if</span> (<a class="code" href="classreflex_1_1_matcher.html">reflex::Matcher</a>(CR, L<span class="stringliteral">&quot;©&quot;</span>).matches())</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;copyright symbol matches\n&quot;</span>;</div></div><!-- fragment --><p>Here we made the converted pattern static to avoid repeated conversion and construction overheads.</p>
+<p>To define a custom code page to translate files, define a code page table with 256 entries that maps each 8-bit input character to a 16-bit Unicode character (UCS-2). Then use <code><a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a3e61805f611257e324b7e7f4c73a5dd7" title="custom code page ">reflex::Input::file_encoding::custom</a></code> with a pointer to your code page to construct an input object. For example:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> CP[256] = {</div><div class="line">   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,</div><div class="line">   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,</div><div class="line">   32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,</div><div class="line">   48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,</div><div class="line">   64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,</div><div class="line">   80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,</div><div class="line">   96, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111,</div><div class="line">  112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,</div><div class="line">   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,</div><div class="line">   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,</div><div class="line">   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,</div><div class="line">   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,</div><div class="line">   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,</div><div class="line">   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,</div><div class="line">   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,</div><div class="line">   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,</div><div class="line">};</div><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(stdin, <a class="code" href="structreflex_1_1_input_1_1file__encoding.html#a3e61805f611257e324b7e7f4c73a5dd7">reflex::Input::file_encoding::custom</a>, CP);</div><div class="line"><a class="code" href="classreflex_1_1_matcher.html">reflex::Matcher</a> matcher(pattern, input);</div></div><!-- fragment --><p>This example translates all constrol characters and characters above 127 to spaces before matching.</p>
+<p>🔝 <a href="#">Back to table of contents</a></p>
+<h3><a class="anchor" id="regex-input-properties"></a>
+Input properties</h3>
+<p>To obtain the properties of an input source use the following methods:</p>
+<table class="doxtable">
+<tr>
+<th>Method </th><th>Result  </th></tr>
+<tr>
+<td><code>size()</code> </td><td>size of the input in total bytes (encoded) or zero when unknown </td></tr>
+<tr>
+<td><code>good()</code> </td><td>input is available to read (no error and not EOF) </td></tr>
+<tr>
+<td><code>eof()</code> </td><td>end of input (but use only <code>at_end()</code> with matchers!) </td></tr>
+<tr>
+<td><code>cstring()</code> </td><td>the current <code>const char*</code> (of a <code>std::string</code>) or NULL </td></tr>
+<tr>
+<td><code>wstring()</code> </td><td>the current <code>const wchar_t*</code> (of a <code>std::wstring</code>) or NULL </td></tr>
+<tr>
+<td><code>file()</code> </td><td>the current <code>FILE*</code> file descriptor or NULL </td></tr>
+<tr>
+<td><code>istream()</code> </td><td>a <code>std::istream*</code> pointer to the current stream object or NULL </td></tr>
+</table>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="regex-examples"></a>
 Examples                                                      </h2>
@@ -2017,11 +2047,11 @@ Tips, tricks and gotchas                                              </h1>
 <h2><a class="anchor" id="invalid-utf"></a>
 Invalid UTF encodings                                            </h2>
 <p>It may be tempting to write a pattern with <code>.</code> (dot) as a wildcard in a lexer specification, but beware that in Unicode mode with option <code>−−unicode</code> (global <code>%option unicode</code> or local <code>(?u:φ)</code>) the dot matches any code point, including code points outside of the valid Unicode character range and invalid overlong UTF-8. The reason for this design decision is that a lexer should support a "catch all else" rule to report errors in the input:</p>
-<div class="alt"> <div class="fragment"><div class="line">.    std::cerr &lt;&lt; <span class="stringliteral">&quot;lexical error, full stop.&quot;</span> &lt;&lt; std::endl;</div></div><!-- fragment --> </div><p>If dot in Unicode mode would be restrictive (which it is not), the action above will never be triggered when invalid input is encountered. Because all non-dot regex patterns are valid Unicode in RE/flex, it would be impossible to write a "catch all else" rule that catches input format errors!</p>
+<div class="alt"> <div class="fragment"><div class="line">.    std::cerr &lt;&lt; <span class="stringliteral">&quot;lexical error, full stop!&quot;</span> &lt;&lt; std::endl; exit(EXIT_FAILURE);</div></div><!-- fragment --> </div><p>If dot in Unicode mode would be restricted to match valid Unicode only, then the action above will never be triggered when invalid input is encountered. Because all non-dot regex patterns are valid Unicode in RE/flex, it would be impossible to write a "catch all else" rule that catches input format errors!</p>
 <p>The dot in Unicode mode is self-synchronizing and consumes text up to to the next ASCII or Unicode character.</p>
 <p>To reject invalid UTF-8 input in regex patterns, make sure to avoid <code>.</code> (dot) and use <code>\p{Unicode}</code> or <code>\X</code> instead, and reserve dot to catch anything, including invalid UTF-8 and UTF-16 encodings.</p>
 <p>Invalid UTF-16 is detected automatically by the <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> class and replaced with the <code>REFLEX_NONCHAR</code> code point U+200000 that lies outside the valid Unicode range. This code point is never matched by non-dot regex patterns and is easy to detect by a regex pattern with a dot.</p>
-<p>Note that character classes written as bracket lists may produce invalid Unicode ranges when not used properly. This is not a problem for matching, but for rejecting surrogate halves that are invalid Unicode. For example, <code>[\u{00}-\u{10FFFF}]</code> obviously includes the invalid range of surrogate halves <code>[\u{D800}-\u{DFFF}]</code>. You can always remove surrogate halves from any character class by intersecting the class with <code>[\p{Unicode}]</code>, that is <code>[...&amp;&amp;[\p{Unicode}]]</code>. Furthermore, character class negation with <code>^</code> results in classes that are within range U+0000 to U+10FFFF and excludes surrogate halves.</p>
+<p>Note that character classes written as bracket lists may produce invalid Unicode ranges when used improperly. This is not a problem for matching, but may prevent rejecting surrogate halves that are invalid Unicode. For example, <code>[\u{00}-\u{10FFFF}]</code> obviously includes the invalid range of surrogate halves <code>[\u{D800}-\u{DFFF}]</code>. You can always remove surrogate halves from any character class by intersecting the class with <code>[\p{Unicode}]</code>, that is <code>[...&amp;&amp;[\p{Unicode}]]</code>. Furthermore, character class negation with <code>^</code> results in classes that are within range U+0000 to U+10FFFF and excludes surrogate halves.</p>
 <p>🔝 <a href="#">Back to contents</a></p>
 <h2><a class="anchor" id="lazy"></a>
 Lazy repetitions                                                        </h2>
@@ -2037,7 +2067,7 @@ Lazy optional patterns and trigraphs                               </h2>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="switching"></a>
 Repeately switching to the same input                              </h2>
-<p>The state of the input object <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> changes as the scanner's matcher consumes more input. If you switch to the same input again (e.g. with <code>in(i)</code> or <code>switch_stream(i)</code> for input source <code>i</code>), a portion of that input may end up being discarded as part of the matcher's internal buffer that is flushed when input is assigned. Therefore, the following code will not work because stdin is flushed repeately:</p>
+<p>The state of the input object <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> changes as the scanner's matcher consumes more input. If you switch to the same input again (e.g. with <code>in(i)</code> or <code>switch_stream(i)</code> for input source <code>i</code>), a portion of that input may end up being discarded as part of the matcher's internal buffer is flushed when input is assigned. Therefore, the following code will not work because stdin is flushed repeately:</p>
 <div class="fragment"><div class="line">Lexer lexer(stdin);       <span class="comment">// a lexer that reads stdin</span></div><div class="line">lexer.in(stdin);          <span class="comment">// this is OK, nothing read yet</span></div><div class="line"><span class="keywordflow">while</span> (lexer.lex(stdin))  <span class="comment">// oops, assigning stdin again and again</span></div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;we&#39;re not getting anywhere?&quot;</span> &lt;&lt; std::endl;</div></div><!-- fragment --><p>If you need to read a file or stream again, you must rewind it to the location in the file to start reading. Beware that <code>FILE*</code> input is checked against an UTF BOM at the start of a file, which means that you cannot reliably move to a location in the file to start reading when files are encoded in UTF-8 or UTF-16.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="flexlexer"></a>
@@ -2073,7 +2103,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed May 24 2017 21:57:48 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Jun 25 2017 09:36:46 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

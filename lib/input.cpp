@@ -554,9 +554,10 @@ size_t Input::file_get(char *s, size_t n)
     case file_encoding::cp1256:
     case file_encoding::cp1257:
     case file_encoding::cp1258:
+    case file_encoding::custom:
       while (n > 0 && ::fread(t, 1, 1, file_) == 1)
       {
-        int c = codepages[utfx_ - file_encoding::latin - 1][static_cast<unsigned char>(*t)];
+        int c = page_[static_cast<unsigned char>(*t)];
         if (c < 0x80)
         {
           *t++ = static_cast<char>(c);
@@ -613,11 +614,12 @@ void Input::file_size(void)
         case file_encoding::cp1256:
         case file_encoding::cp1257:
         case file_encoding::cp1258:
+        case file_encoding::custom:
           while (::fread(buf, 1, 1, file_) == 1)
-	  {
-            int c = codepages[utfx_ - file_encoding::latin - 1][buf[0]];
+          {
+            int c = page_[buf[0]];
             size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
-	  }
+          }
           break;
         case file_encoding::utf16be:
           while (::fread(buf, 2, 1, file_) == 1)
@@ -696,7 +698,7 @@ void Input::file_size(void)
   }
 }
 
-void Input::file_encoding(unsigned short enc)
+void Input::file_encoding(unsigned short enc, const unsigned short *page)
 {
   if (file_ && utfx_ != enc)
   {
@@ -734,9 +736,10 @@ void Input::file_encoding(unsigned short enc)
         case file_encoding::cp1256:
         case file_encoding::cp1257:
         case file_encoding::cp1258:
+          page_ = codepages[enc - file_encoding::latin - 1];
           for (unsigned short i = 0; *b != '\0'; ++i)
           {
-            c1 = codepages[enc - file_encoding::latin - 1][*b++];
+            c1 = page_[*b++];
             if (c1 < 0x80)
               *t++ = static_cast<char>(c1);
             else
@@ -744,6 +747,26 @@ void Input::file_encoding(unsigned short enc)
           }
           *t = '\0';
           uidx_ = 0;
+          break;
+        case file_encoding::custom:
+          if (page)
+          {
+            page_ = page;
+            for (unsigned short i = 0; *b != '\0'; ++i)
+            {
+              c1 = page_[*b++];
+              if (c1 < 0x80)
+                *t++ = static_cast<char>(c1);
+              else
+                t += utf8(c1, t);
+            }
+            *t = '\0';
+            uidx_ = 0;
+          }
+          else
+          {
+            enc = file_encoding::plain;
+          }
           break;
         case file_encoding::utf16be:
           // enforcing non-BOM UTF-16: translate utf8_[] to UTF-16 then to UTF-8

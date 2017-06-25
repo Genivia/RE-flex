@@ -244,6 +244,7 @@ class Input {
     static const unsigned short cp1256  = 16; ///< CP-1256
     static const unsigned short cp1257  = 17; ///< CP-1257
     static const unsigned short cp1258  = 18; ///< CP-1258
+    static const unsigned short custom  = 19; ///< custom code page
   };
   /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
   Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects)
@@ -254,7 +255,8 @@ class Input {
       istream_(input.istream_),
       size_(input.size_),
       uidx_(input.uidx_),
-      utfx_(input.utfx_)
+      utfx_(input.utfx_),
+      page_(input.page_)
   {
     std::memcpy(utf8_, input.utf8_, sizeof(utf8_));
   }
@@ -340,8 +342,9 @@ class Input {
   }
   /// Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.
   Input(
-      FILE          *file, ///< input file
-      unsigned short enc)  ///< file_encoding (when UTF BOM is not present)
+      FILE          *file,               ///< input file
+      unsigned short enc,                ///< file_encoding (when UTF BOM is not present)
+      const unsigned short *page = NULL) ///< code page for file_encoding::custom
     :
       cstring_(NULL),
       wstring_(NULL),
@@ -350,7 +353,7 @@ class Input {
   {
     init();
     if (file_encoding() == file_encoding::plain)
-      file_encoding(enc);
+      file_encoding(enc, page);
   }
   /// Construct input character sequence from a std::istream.
   Input(std::istream& istream) ///< input stream
@@ -598,11 +601,13 @@ class Input {
     return 0;
   }
   /// Set encoding for `FILE*` input.
-  void file_encoding(unsigned short enc) ///< file_encoding::plain, file_encoding::utf8, file_encoding::latin, file_encoding::ebcdic, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le
+  void file_encoding(
+      unsigned short enc,                ///< file_encoding
+      const unsigned short *page = NULL) ///< custom code page for file_encoding::custom
     ;
   /// Get encoding of the current `FILE*` input.
   unsigned short file_encoding() const
-    /// @returns file_encoding::plain, file_encoding::utf8, file_encoding::latin, file_encoding::ebcdic, file_encoding::utf16be, file_encoding::utf16le, file_encoding::utf32be, or file_encoding::utf32le.
+    /// @returns file_encoding
   {
     return utfx_;
   }
@@ -634,14 +639,15 @@ class Input {
   {
     return ::feof(file_) != 0;
   }
-  const char    *cstring_; ///< NUL-terminated char string input (when non-null)
-  const wchar_t *wstring_; ///< NUL-terminated wide string input (when non-null)
-  FILE          *file_;    ///< FILE* input (when non-null)
-  std::istream  *istream_; ///< stream input (when non-null)
-  size_t         size_;    ///< size of the input in bytes, when known
-  char           utf8_[8]; ///< UTF-8 conversion buffer
-  unsigned short uidx_;    ///< index in utf8_[] or >= 8 when unused
-  unsigned short utfx_;    ///< file_encoding
+  const char           *cstring_; ///< NUL-terminated char string input (when non-null)
+  const wchar_t        *wstring_; ///< NUL-terminated wide string input (when non-null)
+  FILE                 *file_;    ///< FILE* input (when non-null)
+  std::istream         *istream_; ///< stream input (when non-null)
+  size_t                size_;    ///< size of the input in bytes, when known
+  char                  utf8_[8]; ///< UTF-8 conversion buffer
+  unsigned short        uidx_;    ///< index in utf8_[] or >= 8 when unused
+  unsigned short        utfx_;    ///< file_encoding
+  const unsigned short *page_;    ///< custom code page
 };
 
 } // namespace reflex

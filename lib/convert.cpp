@@ -1478,23 +1478,20 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
       case '}':
         throw regex_error(regex_error::mismatched_braces, pattern, pos);
       case '#':
-        if (is_modified(mod, 'x'))
+        if ((flags & convert_flag::lex) && (flags & convert_flag::freespace))
         {
-          if ((flags & convert_flag::lex))
-          {
-            // x modifier and lex: translate # to \#
-            regex.append(&pattern[loc], pos - loc).append("\\#");
-            loc = pos + 1;
-            beg = false;
-          }
-          else
-          {
-            // x modifier: remove #...\n
-            regex.append(&pattern[loc], pos - loc);
-            while (pos + 1 < len && pattern[++pos] != '\n')
-              continue;
-            loc = pos + 1;
-          }
+          // lex freespace: translate # to \#
+          regex.append(&pattern[loc], pos - loc).append("\\#");
+          loc = pos + 1;
+          beg = false;
+        }
+        else if (is_modified(mod, 'x'))
+        {
+          // x modifier: remove #...\n
+          regex.append(&pattern[loc], pos - loc);
+          while (pos + 1 < len && pattern[++pos] != '\n')
+            continue;
+          loc = pos + 1;
         }
         else
         {

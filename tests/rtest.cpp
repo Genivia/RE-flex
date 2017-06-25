@@ -208,7 +208,7 @@ Test tests[] = {
   { "a(?=bc)|ab(?=d)|bc|d", "", "", "abcdabd", { 1, 3, 4, 2, 4 } },
   { "a/bc|ab/d|bc|d", "l", "", "abcdabd", { 1, 3, 4, 2, 4 } },
   { "a(a|b)?/a|a", "l", "", "aba", { 1, 2 } }, // Ambiguous, undefined in POSIX
-  // FIXME { "(a|ab)/ba|ba", "l", "", "aba", { 1, 2 } }, // Ambiguous, undefined in POSIX
+  // { "(a|ab)/ba|ba", "l", "", "aba", { 1, 2 } }, // Ambiguous, undefined in POSIX
   { "zx*/xy*|x?y*", "l", "", "zxxy", { 1, 2 } }, // Ambiguous, undefined in POSIX
   // { "[ab]+(?=ab)|-|ab", "", "", "aaab-bbab", { 1, 3, 2, 1, 3 } }, // Ambiguous, undefined in POSIX
   { "a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
