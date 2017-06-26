@@ -79,20 +79,32 @@ Installation
 
 ### Windows users
 
-use `reflex/bin/reflex.exe` from the command line or add a **Custom Build
-Step** in MSVC++ as follows: 1) select the project name in **Solution
-Explorer** then **Property Pages** from the **View** menu (see also
-[custom-build steps in Visual Studio](http://msdn.microsoft.com/en-us/library/hefydhhy.aspx));
-2) enter `reflex.exe --header-file "C:\Users\YourUserName\Documents\mylexer.l"`
-in the **Command Line** property under **Custom Build Step** (this assumes
-lexer.l is in your **Documents** folder; 3) enter `lex.yy.h lex.yy.cpp` in
-the **Outputs** property; 4) specify **Execute Before** as `PreBuildEvent`.
+Use `reflex/bin/reflex.exe` from the command line or add a **Custom Build
+Step** in MSVC++ as follows:
 
-Then, to compile your program with MSVC++, make sure to drag the C++ header
-files located in `reflex/include/reflex` to **Header Files** in the **Solution
-Explorer** panel, and drag the C++ source files located in `reflex/lib` and
-`reflex/unicode` to the **Source Files** in the **Solution Explorer** panel.
-After running `reflex.exe` drag the generated `lex.yy.cpp` file there as well.
+1. select the project name in **Solution Explorer** then **Property Pages**
+   from the **View** menu (see also
+   [custom-build steps in Visual Studio](http://msdn.microsoft.com/en-us/library/hefydhhy.aspx));
+
+2. add an extra path to the `reflex/include` folder in the **Include
+   Directories** under **VC++ Directories**, which should look like
+   `$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\YourUserName\Documents\reflex\include`
+   (this assumes the `reflex` source package is in your **Documents** folder).
+
+3. enter `"C:\Users\YourUserName\Documents\reflex\bin\reflex.exe" −−header-file
+   "C:\Users\YourUserName\Documents\mylexer.l"` in the **Command Line** property
+   under **Custom Build Step** (this assumes `mylexer.l` is in your
+   **Documents** folder);
+
+4. enter `lex.yy.h lex.yy.cpp` in the **Outputs** property;
+
+5. specify **Execute Before** as `PreBuildEvent`.
+
+To compile your program with MSVC++, make sure to drag the folders `reflex/lib`
+and `reflex/unicode` to the **Source Files** in the **Solution Explorer** panel
+of your project.  After running `reflex.exe` drag the generated `lex.yy.h` and
+`lex.yy.cpp` files there as well.  If you are using specific reflex
+command-line options such as `−−flex`, add these in step 3.
 
 ### Unix/Linux and Mac OS
 
