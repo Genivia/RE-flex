@@ -52,11 +52,11 @@
 
 namespace reflex {
 
-/// Check ASCII word-like character `[A-Za-z0-9_]`.
+/// Check ASCII word-like character `[A-Za-z0-9_]`, permitting the character range 0..303 (0x12F) and EOF.
 inline int isword(int c) ///< Character to check
   /// @returns nonzero if argument c is in `[A-Za-z0-9_]`, zero otherwise.
 {
-  return std::isalnum(c) || c == '_';
+  return std::isalnum((unsigned char)c) || c == '_';
 }
 
 /// The abstract matcher base class template defines an interface for all pattern matcher engines.
