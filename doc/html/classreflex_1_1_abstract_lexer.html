@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jun 25 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jun 28 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -168,6 +168,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9cefad78219d2fe0b10e49a4f74204cc"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a9cefad78219d2fe0b10e49a4f74204cc">wstr</a> () const </td></tr>
 <tr class="memdesc:a9cefad78219d2fe0b10e49a4f74204cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns wide string with a copy of the text matched.  <a href="#a9cefad78219d2fe0b10e49a4f74204cc">More...</a><br /></td></tr>
 <tr class="separator:a9cefad78219d2fe0b10e49a4f74204cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa08720e165486e2db19cdcd99ee80fb1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#aa08720e165486e2db19cdcd99ee80fb1">chr</a> () const </td></tr>
+<tr class="memdesc:aa08720e165486e2db19cdcd99ee80fb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the first 8-bit character of the text matched.  <a href="#aa08720e165486e2db19cdcd99ee80fb1">More...</a><br /></td></tr>
+<tr class="separator:aa08720e165486e2db19cdcd99ee80fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a160da2c0f59e43836cacad171badd45f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a160da2c0f59e43836cacad171badd45f">wchr</a> () const </td></tr>
+<tr class="memdesc:a160da2c0f59e43836cacad171badd45f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the first wide character of the text matched.  <a href="#a160da2c0f59e43836cacad171badd45f">More...</a><br /></td></tr>
+<tr class="separator:a160da2c0f59e43836cacad171badd45f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4adf95aef287ae60d22c7bbdf513570f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a4adf95aef287ae60d22c7bbdf513570f">size</a> () const </td></tr>
 <tr class="memdesc:a4adf95aef287ae60d22c7bbdf513570f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the matched text size in number of bytes.  <a href="#a4adf95aef287ae60d22c7bbdf513570f">More...</a><br /></td></tr>
 <tr class="separator:a4adf95aef287ae60d22c7bbdf513570f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -305,6 +311,34 @@ template&lt;typename M &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="aa08720e165486e2db19cdcd99ee80fb1"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt; M &gt;::chr </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the first 8-bit character of the text matched. </p>
+<dl class="section return"><dt>Returns</dt><dd>8-bit char. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a7991f7785e86d29c9f64d9991ce47f9e"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1138,6 +1172,34 @@ template&lt;typename M &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a160da2c0f59e43836cacad171badd45f"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt; M &gt;::wchr </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the first wide character of the text matched. </p>
+<dl class="section return"><dt>Returns</dt><dd>wide char (UTF-8 converted to <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a>). </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="aeca2e0dcb03e92d26478145004d077b6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1397,7 +1459,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jun 25 2017 09:36:39 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jun 28 2017 20:35:10 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

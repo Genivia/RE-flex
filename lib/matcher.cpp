@@ -328,14 +328,14 @@ done:
       }
       cap_ = Const::EMPTY;
       set_current(pos_); // chr_ = static_cast<unsigned char>(buf_[pos_]);
-      DBGLOG("Split at eof: cap = %zu txt = '%s' len = %zu", cap_, txt_, len_);
+      DBGLOG("Split at eof: cap = %zu txt = '%s' len = %zu", cap_, std::string(txt_, len_).c_str(), len_);
       DBGLOG("END Matcher::match()");
       return cap_;
     }
     if (bob && cur_ == 0 && hit_end())
       cap_ = Const::EMPTY;
     set_current(cur_);
-    DBGLOG("Split: txt = '%s' len = %zu", txt_, len_);
+    DBGLOG("Split: txt = '%s' len = %zu", std::string(txt_, len_).c_str(), len_);
     DBGLOG("END Matcher::match()");
     return cap_;
   }
@@ -388,7 +388,7 @@ done:
       }
     }
   }
-  DBGLOG("Return: cap = %zu txt = '%s' len = %zu got = %d", cap_, txt_, len_, got_);
+  DBGLOG("Return: cap = %zu txt = '%s' len = %zu got = %d", cap_, std::string(txt_, len_).c_str(), len_, got_);
   DBGLOG("END match()");
   return cap_;
 }

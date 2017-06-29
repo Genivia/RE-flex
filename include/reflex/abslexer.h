@@ -244,6 +244,18 @@ class AbstractLexer {
   {
     return matcher().wstr();
   }
+  /// Returns the first 8-bit character of the text matched.
+  int chr() const
+    /// @returns 8-bit char.
+  {
+    return matcher().chr();
+  }
+  /// Returns the first wide character of the text matched.
+  int wchr() const
+    /// @returns wide char (UTF-8 converted to Unicode).
+  {
+    return matcher().wchr();
+  }
   /// Returns the matched text size in number of bytes.
   size_t size() const
     /// @returns size of the matched text.

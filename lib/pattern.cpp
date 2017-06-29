@@ -1932,20 +1932,12 @@ void Pattern::gencode_dfa(const State& start) const
             if (!is_meta(lo))
             {
               State::Edges::const_reverse_iterator j = i;
-              if ((lo == 0x00 && hi == 0xFF) || ++j == state->edges.rend())
-              {
-                ::fprintf(fd, " ");
-              }
-              else if (lo == hi)
+              if (target_index == IMAX && (++j == state->edges.rend() || is_meta(j->second.first)))
+                break;
+              if (lo == hi)
               {
                 ::fprintf(fd, "  if (c1 == ");
                 print_char(fd, lo);
-                ::fprintf(fd, ")");
-              }
-              else if (lo == 0x00)
-              {
-                ::fprintf(fd, "  if (c1 <= ");
-                print_char(fd, hi);
                 ::fprintf(fd, ")");
               }
               else if (hi == 0xFF)
@@ -2070,20 +2062,12 @@ void Pattern::gencode_dfa(const State& start) const
             if (!is_meta(lo))
             {
               State::Edges::const_iterator j = i;
-              if ((lo == 0x00 && hi == 0xFF) || ++j == state->edges.end() || is_meta(j->second.first))
-              {
-                ::fprintf(fd, " ");
-              }
-              else if (lo == hi)
+              if (target_index == IMAX && (++j == state->edges.end() || is_meta(j->second.first)))
+                break;
+              if (lo == hi)
               {
                 ::fprintf(fd, "  if (c1 == ");
                 print_char(fd, lo);
-                ::fprintf(fd, ")");
-              }
-              else if (lo == 0x00)
-              {
-                ::fprintf(fd, "  if (c1 <= ");
-                print_char(fd, hi);
                 ::fprintf(fd, ")");
               }
               else if (hi == 0xFF)
@@ -2107,6 +2091,7 @@ void Pattern::gencode_dfa(const State& start) const
             }
           }
 #endif
+          ::fprintf(fd, "  return m.FSM_HALT(c1);\n");
         }
         ::fprintf(fd, "}\n\n");
         if (fd != stdout)

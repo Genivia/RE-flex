@@ -56,13 +56,12 @@ namespace reflex {
 inline int isword(int c) ///< Character to check
   /// @returns nonzero if argument c is in `[A-Za-z0-9_]`, zero otherwise.
 {
-  return std::isalnum((unsigned char)c) || c == '_';
+  return std::isalnum(static_cast<unsigned char>(c)) | (c == '_');
 }
 
 /// The abstract matcher base class template defines an interface for all pattern matcher engines.
 /**
-The buffer expands when matches do not fit.  The buffer size is initially
-2*BLOCK size.
+The buffer expands when matches do not fit.  The buffer size is initially 2*BLOCK size.
 
 ```
       _________________
@@ -76,10 +75,10 @@ buf_ // points to buffered input, grows to fit long matches
 cur_ // current position in buf_ while matching text, cur_ = pos_ afterwards, can be changed by more()
 pos_ // position in buf_ to start the next match
 end_ // position in buf_ that is free to fill with more input
-max_ // allocated size of buf_
-txt_ // buf_ + cur_ points to the match, NUL-terminated
+max_ // allocated size of buf_, must ensure that max_ > end_ for text() to add a \0
+txt_ // buf_ + cur_ points to the match, 0-terminated
 len_ // length of the match
-chr_ // char located at txt_[len_] when txt_[len_] is set to NUL
+chr_ // char located at txt_[len_] when txt_[len_] is set to \0
 got_ // buf_[cur_-1] character before this match (assigned before each match)
 ```
  
@@ -300,7 +299,7 @@ class AbstractMatcher {
     size_t n = in.size(); // get the (rest of the) data size, which is 0 if unknown (e.g. TTY)
     if (n > 0)
     {
-      (void)grow(n); // now attempt to fetch all (remaining) data to store in the buffer
+      (void)grow(n + 1); // now attempt to fetch all (remaining) data to store in the buffer, +1 for a \0
       end_ = get(buf_, n);
     }
     while (in.good()) // there is more to get while good(), e.g. via wrap()
@@ -308,7 +307,8 @@ class AbstractMatcher {
       (void)grow();
       end_ += get(buf_ + end_, max_ - end_);
     }
-    (void)grow(1); // we need space for a final NUL
+    if (end_ == max_)
+      (void)grow(1); // room for a final \0
     return in.eof();
   }
   /// Set buffer to 1 for interactive input.
@@ -347,7 +347,7 @@ class AbstractMatcher {
   {
     return cap_;
   }
-  /// Returns pointer to the begin of the matched text (not NUL-terminated), a fast constant-time operation, use with end() or use size() for text end/length.
+  /// Returns pointer to the begin of the matched text (non-0-terminated), a fast constant-time operation, use with end() or use size() for text end/length.
   const char *begin() const
     /// @returns const char* pointer to the matched text in the buffer.
   {
@@ -359,9 +359,9 @@ class AbstractMatcher {
   {
     return txt_ + len_;
   }
-  /// Returns NUL-terminated string of the text matched, a constant-time operation.
+  /// Returns 0-terminated string of the text matched, a constant-time operation.
   const char *text()
-    /// @returns NUL-terminated const char* string with text matched.
+    /// @returns 0-terminated const char* string with text matched.
   {
     if (chr_ == '\0')
     {
@@ -387,29 +387,29 @@ class AbstractMatcher {
       // assuming sizeof(wchar_t) == 16: store wide string in std::wstring encoded in UTF-16
       while (t < txt_ + len_)
       {
-	int wc = utf8(t, &t);
-	if (wc > 0xFFFF)
-	{
-	  if (wc <= 0x10FFFF)
-	  {
-	    ws.push_back(0xD800 | (wc - 0x010000) >> 10); // first half of UTF-16 surrogate pair
-	    ws.push_back(0xDC00 | (wc & 0x03FF));         // second half of UTF-16 surrogate pair
-	  }
-	  else
-	  {
-	    ws.push_back(0xFFFD);
-	  }
-	}
-	else
-	{
-	  ws.push_back(wc);
-	}
+        int wc = utf8(t, &t);
+        if (wc > 0xFFFF)
+        {
+          if (wc <= 0x10FFFF)
+          {
+            ws.push_back(0xD800 | (wc - 0x010000) >> 10); // first half of UTF-16 surrogate pair
+            ws.push_back(0xDC00 | (wc & 0x03FF));         // second half of UTF-16 surrogate pair
+          }
+          else
+          {
+            ws.push_back(0xFFFD);
+          }
+        }
+        else
+        {
+          ws.push_back(wc);
+        }
       }
     }
     else
     {
       while (t < txt_ + len_)
-	ws.push_back(utf8(t, &t));
+        ws.push_back(utf8(t, &t));
     }
     return ws;
   }
@@ -421,12 +421,24 @@ class AbstractMatcher {
   }
   /// Returns the length of the matched text in number of wide characters.
   size_t wsize() const
-    /// @returns the length of the match in number of (wide, multibyte UTF-8) characters.
+    /// @returns the length of the match in number of wide (multibyte UTF-8) characters.
   {
     size_t n = 0;
     for (const char *t = txt_; t < txt_ + len_; ++t)
       n += (*t & 0xC0) != 0x80;
     return n;
+  }
+  /// Returns the first 8-bit character of the text matched.
+  int chr() const
+    /// @returns 8-bit char.
+  {
+    return *txt_;
+  }
+  /// Returns the first wide character of the text matched.
+  int wchr() const
+    /// @returns wide char (UTF-8 converted to Unicode).
+  {
+    return utf8(txt_);
   }
   /// Returns the line number of the match in the input character sequence.
   size_t lineno() const
@@ -518,7 +530,7 @@ class AbstractMatcher {
     else if (got_ == '\n')
       got_ = Const::UNK;
   }
-  /// Returns the next 8-bit character from the input character sequence, while preserving the current text match.
+  /// Returns the next 8-bit character from the input character sequence, while preserving the current text() match (but pointer returned by text() may change; warning: does not preserve the yytext string pointer when options --flex and --bison are used).
   int input()
     /// @returns the character read (unsigned char 0..255) read or EOF (-1).
   {
@@ -542,7 +554,7 @@ class AbstractMatcher {
     cur_ = pos_;
     return got_;
   }
-  /// Returns the next wide character from the input character sequence, while preserving the current text match.
+  /// Returns the next wide character from the input character sequence, while preserving the current text() match (but pointer returned by text() may change; warning: does not preserve the yytext string pointer when options --flex and --bison are used).
   int winput()
     /// @returns the wide character read or EOF (-1).
   {
@@ -572,7 +584,7 @@ class AbstractMatcher {
     {
       txt_ = buf_;
       len_ = 0;
-      if (end_ == max_)
+      if (end_ + blk_ >= max_)
         (void)grow();
       std::memmove(buf_ + 1, buf_, end_);
       ++end_;
@@ -605,6 +617,8 @@ class AbstractMatcher {
         DBGLOGN("rest(): EOF");
         if (!wrap())
         {
+          if (end_ == max_)
+            (void)grow(1); // room for a final \0
           eof_ = true;
           break;
         }
@@ -647,7 +661,7 @@ class AbstractMatcher {
   }
   /// Cast this matcher to a std::wstring of the text matched by this matcher.
   operator std::wstring() const
-    /// @returns std::wstring converted to UCS from the NUL-terminated matched UTF-8 text.
+    /// @returns std::wstring converted to UCS from the 0-terminated matched UTF-8 text.
   {
     return wstr();
   }
@@ -713,7 +727,7 @@ class AbstractMatcher {
   {
     return static_cast<int>(accept()) != rhs;
   }
-  /// Returns captured text as a std::pair<const char*,size_t> with string pointer (not NUL-terminated) and length.
+  /// Returns captured text as a std::pair<const char*,size_t> with string pointer (non-0-terminated) and length.
   virtual std::pair<const char*,size_t> operator[](size_t n)
     /// @returns std::pair of string pointer and length in the captured text, where [0] returns std::pair(begin(), size()).
     const = 0;
@@ -809,7 +823,9 @@ class AbstractMatcher {
         pos_ -= gap;
         end_ -= gap;
 #if defined(WITH_REALLOC)
-        txt_ = buf_ = static_cast<char*>(std::realloc(static_cast<void*>(buf_), max_));
+        char *newbuf = static_cast<char*>(std::realloc(static_cast<void*>(buf_), max_));
+        std::memmove(newbuf, txt_, end_);
+        txt_ = buf_ = newbuf;
 #else
         char *newbuf = new char[max_];
         std::memcpy(newbuf, txt_, end_);
@@ -842,6 +858,8 @@ class AbstractMatcher {
       DBGLOGN("get(): EOF");
       if (!wrap())
       {
+        if (end_ == max_)
+          (void)grow(1); // room for a final \0
         eof_ = true;
         return EOF;
       }
@@ -870,13 +888,15 @@ class AbstractMatcher {
       DBGLOGN("peek(): EOF");
       if (!wrap())
       {
+        if (end_ == max_)
+          (void)grow(1); // room for a final \0
         eof_ = true;
         return EOF;
       }
     }
 #endif
   }
-  /// Reset the matched text by removing the terminating NUL, which is needed to search for a new match.
+  /// Reset the matched text by removing the terminating \0, which is needed to search for a new match.
   void reset_text()
   {
     if (chr_ != '\0')
@@ -892,24 +912,24 @@ class AbstractMatcher {
     pos_ = cur_ = loc;
     got_ = loc > 0 ? static_cast<unsigned char>(buf_[loc - 1]) : Const::UNK;
   }
-  Option         opt_; ///< options for matcher engines
-  char          *buf_; ///< input character sequence buffer
-  const char    *txt_; ///< points to the matched text in buffer AbstractMatcher::buf_
-  size_t         len_; ///< size of the matched text
-  size_t         cap_; ///< nonzero capture index of an accepted match or zero
-  size_t         cur_; ///< next position in AbstractMatcher::buf_ to assign to AbstractMatcher::txt_
-  size_t         pos_; ///< position in AbstractMatcher::buf_ after AbstractMatcher::txt_
-  size_t         end_; ///< ending position of the input buffered in AbstractMatcher::buf_
-  size_t         max_; ///< total buffer size and max position + 1 to fill
-  size_t         ind_; ///< current indent position
-  size_t         blk_; ///< block size for block-based input reading, as set by AbstractMatcher::buffer
-  int            got_; ///< last unsigned character we looked at (to determine anchors and boundaries)
-  int            chr_; ///< the character located at AbstractMatcher::txt_[AbstractMatcher::len_]
-  size_t         lno_; ///< line number count (prior to this buffered input)
-  size_t         cno_; ///< column number count (prior to this buffered input)
-  size_t         num_; ///< character count (number of characters flushed prior to this buffered input)
-  bool           eof_; ///< input has reached EOF
-  bool           mat_; ///< true if AbstractMatcher::matches() was successful
+  Option      opt_; ///< options for matcher engines
+  char       *buf_; ///< input character sequence buffer
+  const char *txt_; ///< points to the matched text in buffer AbstractMatcher::buf_
+  size_t      len_; ///< size of the matched text
+  size_t      cap_; ///< nonzero capture index of an accepted match or zero
+  size_t      cur_; ///< next position in AbstractMatcher::buf_ to assign to AbstractMatcher::txt_
+  size_t      pos_; ///< position in AbstractMatcher::buf_ after AbstractMatcher::txt_
+  size_t      end_; ///< ending position of the input buffered in AbstractMatcher::buf_
+  size_t      max_; ///< total buffer size and max position + 1 to fill
+  size_t      ind_; ///< current indent position
+  size_t      blk_; ///< block size for block-based input reading, as set by AbstractMatcher::buffer
+  int         got_; ///< last unsigned character we looked at (to determine anchors and boundaries)
+  int         chr_; ///< the character located at AbstractMatcher::txt_[AbstractMatcher::len_]
+  size_t      lno_; ///< line number count (prior to this buffered input)
+  size_t      cno_; ///< column number count (prior to this buffered input)
+  size_t      num_; ///< character count (number of characters flushed prior to this buffered input)
+  bool        eof_; ///< input has reached EOF
+  bool        mat_; ///< true if AbstractMatcher::matches() was successful
  private:
 #if defined(WITH_FAST_GET)
   /// Get the next character if not currently buffered.
@@ -928,6 +948,8 @@ class AbstractMatcher {
       DBGLOGN("get_more(): EOF");
       if (!wrap())
       {
+        if (end_ == max_)
+          (void)grow(1); // room for a final \0
         eof_ = true;
         return EOF;
       }
@@ -949,6 +971,8 @@ class AbstractMatcher {
       DBGLOGN("peek_more(): EOF");
       if (!wrap())
       {
+        if (end_ == max_)
+          (void)grow(1); // room for a final \0
         eof_ = true;
         return EOF;
       }

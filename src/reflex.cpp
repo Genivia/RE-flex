@@ -1355,6 +1355,8 @@ void Reflex::parse_section_2()
           std::string code = get_code(pos);
           if (no_starts && scopes.empty() && regex == "<<EOF>>")
           {
+            if (code == "|")
+              error("bad <<EOF>> action | in section 2: ", line.c_str());
             for (Start start = 0; start < conditions.size(); ++start)
               rules[start].push_back(Rule(regex, Code(code, infile, rule_lineno))); // only the first <<EOF>> code will be used
           }
@@ -2297,21 +2299,28 @@ void Reflex::write_lexer()
         "            break;\n";
     size_t accept = 1;
     size_t report = 0;
+    bool has_code = true;
     for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
     {
-      if (rule->regex != "<<EOF>>")
+      bool eof_rule = rule->regex == "<<EOF>>";
+      if (!eof_rule || !has_code)
       {
-        *out <<
-          "          case " << accept << ": // rule at line " << rule->code.lineno << ": " << rule->regex << std::endl;
-        if (rule->code.line != "|")
+        if (!eof_rule)
+          *out <<
+            "          case " << accept << ": // rule at line " << rule->code.lineno << ": " << rule->regex << std::endl;
+        has_code = rule->code.line != "|";
+        if (has_code)
         {
-          if (!options["perf_report"].empty())
+          if (!eof_rule)
           {
-            *out <<
-              "            ++perf_report_" << conditions[start] << "_rule[" << report << "];\n"
-              "            perf_report_" << conditions[start] << "_size[" << report << "] += size();\n"
-              "            perf_report_time_pointer = &perf_report_" << conditions[start] << "_time[" << report << "];\n";
-            ++report;
+            if (!options["perf_report"].empty())
+            {
+              *out <<
+                "            ++perf_report_" << conditions[start] << "_rule[" << report << "];\n"
+                "            perf_report_" << conditions[start] << "_size[" << report << "] += size();\n"
+                "            perf_report_time_pointer = &perf_report_" << conditions[start] << "_time[" << report << "];\n";
+              ++report;
+            }
           }
           if (!options["debug"].empty())
             *out <<

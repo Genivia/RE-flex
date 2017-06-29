@@ -172,7 +172,7 @@ yield                   emit("KEYWORD    ", text());
 int main(int argc, char **argv)
 {
   // in this example we'll use the Input class for convenience
-  reflex::Input input(stdin);
+  reflex::Input input;
 
   if (argc > 1)
   {
@@ -182,6 +182,10 @@ int main(int argc, char **argv)
       perror("Cannot open file for reading");
       exit(EXIT_FAILURE);
     }
+  }
+  else
+  {
+    input = stdin;
   }
 
   Lexer(input).lex();

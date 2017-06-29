@@ -30,6 +30,7 @@ RE/flex scanner examples
 - `calc.l` and `calc.y` calculator, supports Unicode identifier variables
 - `cow.l` scanner to convert cows
 - `cows.l` scanner to convert cows, uses word boundary anchors
+- `csv.l` scanner to read cleaned-up CSV rows into a vector
 - `indent.l` indentation detection and reformatting example
 - `braille.l` a braille translator, inspired by the re2c example but expanded
 - `unicode.l` a very simple Unicode word matcher to demonstrate Unicode matching

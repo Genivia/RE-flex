@@ -605,21 +605,23 @@ You can use this method and other methods to obtain the details of a match:
   ----------- | ---------------------------------------------------------------
   `accept()`  | returns group capture index (or zero if not captured/matched)
   `text()`    | returns `const char*` to 0-terminated match (ends in `\0`)
-  `str()`     | returns `std::string` copy of `text()` (but preserves `\0`s)
-  `wstr()`    | returns `std::wstring` copy of `text()`, converted from UTF-8
+  `str()`     | returns `std::string` text match (preserves `\0`s)
+  `wstr()`    | returns `std::wstring` wide text match (converted from UTF-8)
+  `chr()`     | returns first 8-bit character of the text match (`str()[0]`)
+  `wchr()`    | returns first wide character of the text match (`wstr()[0]`)
   `pair()`    | returns `std::pair<size_t,std::string>(accept(),str())`
   `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
-  `begin()`   | returns `const char*` to non-0-terminated match begin
-  `end()`     | returns `const char*` to non-0-terminated match end
+  `begin()`   | returns `const char*` to non-0-terminated text match begin
+  `end()`     | returns `const char*` to non-0-terminated text match end
   `rest()`    | returns `const char*` to 0-terminated rest of input
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
   `lineno()`  | returns line number of the match, starting with line 1
   `columno()` | returns column number of the match, starting with 0
-  `first()`   | returns position of the first character of the match
-  `last()`    | returns position of the last + 1 character of the match
+  `first()`   | returns input position of the first character of the match
+  `last()`    | returns input position of the last + 1 character of the match
   `at_bol()`  | true if matcher reached the begin of a new line `\n`
   `at_bob()`  | true if matcher is at the start of input, no matches consumed
   `at_end()`  | true if matcher is at the end of input
@@ -1701,47 +1703,53 @@ Actions in \ref reflex-spec-rules can use predefined RE/flex variables and
 functions.  With **reflex** option `−−flex`, the variables and functions are
 the classic Flex actions shown in the second column of this table:
 
-  RE/flex action        | Flex action          | Result
-  --------------------- | -------------------- | ------------------------------
-  `text()`              | `YYText()`, `yytext` | 0-terminated text match
-  `str()`               | *n/a*                | `std::string` of `text()`
-  `wstr()`              | *n/a*                | `std::wstring` of `text()`
-  `size()`              | `YYLeng()`, `yyleng` | size of the match in bytes
-  `wsize()`             | *n/a*                | number of wide chars matched
-  `lineno()`            | `yylineno`           | line number of match (>=1)
-  `columno()`           | *n/a*                | column number of match (>=0)
-  `echo()`              | `ECHO`               | `out().write(text(), size())`
-  `in(i)`               | `yyrestart(i)`       | set input to `reflex::Input i`
-  `in()`, `in() = &i`   | `*yyin`, `yyin = &i` | get/set `reflex::Input` object
-  `out(s)`              | `yyout = &s`         | set output to `std::ostream s`
-  `out()`               | `*yyout`             | get `std::ostream` object
-  `out().write(s, n)`   | `LexerOutput(s, n)`  | output chars `s[0..n-1]`
-  `out().put(c)`        | `output(c)`          | output char `c`
-  `start(n)`            | `BEGIN n`            | set start condition to `n`
-  `start()`             | `YY_START`           | get current start condition
-  `push_state(n)`       | `yy_push_state(n)`   | push current state, start `n`
-  `pop_state()`         | `yy_pop_state()`     | pop state and make it current
-  `top_state()`         | `yy_top_state()`     | get top state start condition
-  `matcher().accept()`  | `yy_act`             | number of the matched rule
-  `matcher().text()`    | `YYText()`, `yytext` | same as `text()`
-  `matcher().str()`     | *n/a*                | same as `str()`
-  `matcher().wstr()`    | *n/a*                | same as `wstr()`
-  `matcher().size()`    | `YYLeng()`, `yyleng` | same as `size()`
-  `matcher().wsize()`   | *n/a*                | same as `wsize()`
-  `matcher().input()`   | `yyinput()`          | get next 8-bit char from input
-  `matcher().winput()`  | *n/a*                | get wide character from input
-  `matcher().unput(c)`  | `unput(c)`           | put back 8-bit char `c`
-  `matcher().peek()`    | *n/a*                | peek at next char on input
-  `matcher().more()`    | `yymore()`           | append next match to this match
-  `matcher().less(n)`   | `yyless(n)`          | shrink match length to `n`
-  `matcher().first()`   | *n/a*                | first pos of match in input
-  `matcher().last()`    | *n/a*                | last pos+1 of match in input
-  `matcher().rest()`    | *n/a*                | get rest of input until end
-  `matcher().at_bob()`  | *n/a*                | true if at the begin of input
-  `matcher().at_end()`  | *n/a*                | true if at the end of input
-  `matcher().at_bol()`  | `YY_AT_BOL()`        | true if at begin of a newline
-  `set_debug(n)`        | `set_debug(n)`       | reflex option `-d` sets `n=1`
-  `debug()`             | `debug()`            | nonzero when debugging
+  RE/flex action       | Flex action          | Result
+  -------------------- | -------------------- | -------------------------------
+  `text()`             | `YYText()`, `yytext` | 0-terminated text match
+  `str()`              | *n/a*                | `std::string` text match
+  `wstr()`             | *n/a*                | `std::wstring` wide text match
+  `chr()`              | `yytext[0]`          | first 8-bit char of text match
+  `wchr()`             | *n/a*                | first wide char of text match
+  `size()`             | `YYLeng()`, `yyleng` | size of the match in bytes
+  `wsize()`            | *n/a*                | number of wide chars matched
+  `lineno()`           | `yylineno`           | line number of match (>=1)
+  `columno()`          | *n/a*                | column number of match (>=0)
+  `echo()`             | `ECHO`               | `out().write(text(), size())`
+  `in(i)`              | `yyrestart(i)`       | set input to `reflex::Input i`
+  `in()`, `in() = &i`  | `*yyin`, `yyin = &i` | get/set `reflex::Input` object
+  `out(s)`             | `yyout = &s`         | set output to `std::ostream s`
+  `out()`              | `*yyout`             | get `std::ostream` object
+  `out().write(s, n)`  | `LexerOutput(s, n)`  | output chars `s[0..n-1]`
+  `out().put(c)`       | `output(c)`          | output char `c`
+  `start(n)`           | `BEGIN n`            | set start condition to `n`
+  `start()`            | `YY_START`           | get current start condition
+  `push_state(n)`      | `yy_push_state(n)`   | push current state, start `n`
+  `pop_state()`        | `yy_pop_state()`     | pop state and make it current
+  `top_state()`        | `yy_top_state()`     | get top state start condition
+  `matcher().accept()` | `yy_act`             | number of the matched rule
+  `matcher().text()`   | `YYText()`, `yytext` | same as `text()`
+  `matcher().str()`    | *n/a*                | same as `str()`
+  `matcher().wstr()`   | *n/a*                | same as `wstr()`
+  `matcher().chr()`    | `yytext[0]`          | same as `chr()`
+  `matcher().wchr()`   | *n/a*                | same as `wchr()`
+  `matcher().size()`   | `YYLeng()`, `yyleng` | same as `size()`
+  `matcher().wsize()`  | *n/a*                | same as `wsize()`
+  `matcher().begin()`  | *n/a*                | non-0-terminated text match
+  `matcher().end()`    | *n/a*                | non-0-terminated text match end
+  `matcher().input()`  | `yyinput()`          | get next 8-bit char from input
+  `matcher().winput()` | *n/a*                | get wide character from input
+  `matcher().unput(c)` | `unput(c)`           | put back 8-bit char `c`
+  `matcher().peek()`   | *n/a*                | peek at next char on input
+  `matcher().more()`   | `yymore()`           | append next match to this match
+  `matcher().less(n)`  | `yyless(n)`          | shrink match length to `n`
+  `matcher().first()`  | *n/a*                | first pos of match in input
+  `matcher().last()`   | *n/a*                | last pos+1 of match in input
+  `matcher().rest()`   | *n/a*                | get rest of input until end
+  `matcher().at_bob()` | *n/a*                | true if at the begin of input
+  `matcher().at_end()` | *n/a*                | true if at the end of input
+  `matcher().at_bol()` | `YY_AT_BOL()`        | true if at begin of a newline
+  `set_debug(n)`       | `set_debug(n)`       | reflex option `-d` sets `n=1`
+  `debug()`            | `debug()`            | nonzero when debugging
 
 Note that Flex `switch_streams(i, o)` is the same as invoking the `in(i)` and
 `out(o)` methods.  Flex `yyrestart(i)` is the same as invoking `in(i)` to set
@@ -1757,7 +1765,11 @@ input (EOF) was reached, you should clear the EOF state with
 `matcher().set_end(false)` or reset the matcher state with `matcher().reset()`.  
 
 The `matcher().input()`, `matcher().winput()`, and `matcher().peek()` methods
-return EOF (-1) when the end of input is reached.
+return EOF (-1) when the end of input is reached.  These methods preserve the
+current `text()` match (and `yytext` with option `−−flex`), but the pointer
+returned by `text()` (and `yytext`) may change after these methods are called.
+However, the `yytext` pointer is not preserved when using these methods with
+**reflex** options `−−flex` and `−−bison`.
 
 @warning The Flex-compatible `yyinput()` returns 0 when the end of input is
 reached, which makes it impossible to distinguish `\0` (NUL) from EOF.
@@ -2040,7 +2052,7 @@ first character after the bracket is always part of the list.  So `[][]` is a
 list that matches a `]` and a `[`, `[^][]` is a list that matches anything but
 `]` and `[`, and `[-^]` is a list that matches a `-` and a `^`.
 
-Bracket lists may contain ASCII and Unicode \ref reflex-patterns-cat.
+Bracket lists may contain ASCII and Unicode \ref reflex-pattern-cat.
 
 To add Unicode character categories and UTF-8 characters to bracket lists
 \ref reflex-pattern-unicode should be enabled.
@@ -2053,7 +2065,7 @@ intersection.
 
 🔝 [Back to table of contents](#)
 
-### Character categories                                 {#reflex-patterns-cat}
+### Character categories                                  {#reflex-pattern-cat}
 
 The 7-bit ASCII character categories are:
 
@@ -3740,8 +3752,8 @@ ignores it.  We could also have used a lookahead pattern `"</"{name}/">"` where
 
 ### Example 4
 
-This example Flex specification scans C/C++ source code.  It uses free space
-mode to enhance readability.
+This example Flex specification scans non-Unicode C/C++ source code.  It uses
+free space mode to enhance readability.
 
 <div class="alt">
 ```cpp
@@ -4327,11 +4339,11 @@ const char *food = "hotdog";
 switch (reflex::BoostMatcher("(.*cat.*)|(.*dog.*)", food).matches())
 {
   case 0: std::cout << food << " has not cat or dog" << std::endl;
-	  break;
+          break;
   case 1: std::cout << food << " has a cat" << std::endl;
-	  break;
+          break;
   case 2: std::cout << food << " has a dog" << std::endl;
-	  break;
+          break;
 }
 ```
 
@@ -4519,22 +4531,24 @@ To obtain properties of a match, use the following methods:
   Method      | Result
   ----------- | ---------------------------------------------------------------
   `accept()`  | returns group capture index (or zero if not captured/matched)
-  `text()`    | returns `const char*` to 0-terminated match (ends in `\0`)
-  `str()`     | returns `std::string` copy of `text()` (but preserves `\0`s)
-  `wstr()`    | returns `std::wstring` copy of `text()`, converted from UTF-8
+  `text()`    | returns `const char*` to 0-terminated text match (ends in `\0`)
+  `str()`     | returns `std::string` text match (preserves `\0`s)
+  `wstr()`    | returns `std::wstring` wide text match (converted from UTF-8)
+  `chr()`     | returns first 8-bit character of the text match (`str()[0]`)
+  `wchr()`    | returns first wide character of the text match (`wstr()[0]`)
   `pair()`    | returns `std::pair<size_t,std::string>(accept(),str())`
   `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
-  `begin()`   | returns `const char*` to non-0-terminated match begin
-  `end()`     | returns `const char*` to non-0-terminated match end
+  `begin()`   | returns `const char*` to non-0-terminated text match begin
+  `end()`     | returns `const char*` to non-0-terminated text match end
   `rest()`    | returns `const char*` to 0-terminated rest of input
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
   `lineno()`  | returns line number of the match, starting with line 1
   `columno()` | returns column number of the match, starting with 0
-  `first()`   | returns position of the first character of the match
-  `last()`    | returns position of the last + 1 character of the match
+  `first()`   | returns input position of the first character of the match
+  `last()`    | returns input position of the last + 1 character of the match
   `at_bol()`  | true if matcher reached the begin of a new line `\n`
   `at_bob()`  | true if matcher is at the start of input, no matches consumed
   `at_end()`  | true if matcher is at the end of input
@@ -4543,12 +4557,14 @@ To obtain properties of a match, use the following methods:
 
 Note that `begin()`, `operator[0]`, and `operator[n]` return non-0-terminated
 strings.  You must use `end()` with `begin()` to determine the span of the
-match.  Use the size of the capture to determine the end of the match or
-capture.
+match.  Use the size of the capture to determine the end of the captured match.
 
 All methods take constant time to execute except for `str()`, `wstr()`,
 `pair()`, `wpair()`, `wsize()`, `lineno()` and `columno()` that require a pass
 over the (matched) text.
+
+The `chr()` and `wchr()` methods are much more efficient than `str()[0]` (or
+`text()[0]`) and `wstr()[0]`, respectively.
 
 In addition, the following type casts of matcher objects and iterators can be
 used for convenience:
@@ -4720,11 +4736,11 @@ More specifically, you can pass a `std::string`, `char*`, `std::wstring`,
 `wchar_t*`, `FILE*`, or a `std::istream` to the constructor.
 
 A `FILE*` file descriptor is a special case.  The input object handles various
-file encodings.  If a UTF BOM is detected then the UTF input will be normalized
-to UTF-8.  When no UTF BOM is detected then the input is considered plain
-ASCII, binary, or UTF-8 and passed through unconverted.  To override the file
-encoding when no UTF BOM was present, and normalize Latin-1, ISO-8859-1,
-CP-1252, CP 434, CP 850, EBCDIC, and other encodings to UTF-8, see
+file encodings.  If a UTF Byte Order Mark (BOM) is detected then the UTF input
+will be normalized to UTF-8.  When no UTF BOM is detected then the input is
+considered plain ASCII, binary, or UTF-8 and passed through unconverted.  To
+override the file encoding when no UTF BOM was present, and normalize Latin-1,
+ISO-8859-1, CP-1252, CP 434, CP 850, EBCDIC, and other encodings to UTF-8, see
 \ref regex-input-file.
 
 🔝 [Back to table of contents](#)
@@ -4774,15 +4790,19 @@ Unicode patterns are used.
 ### FILE encodings                                          {#regex-input-file}
 
 File content specified with a `FILE*` file descriptor can be encoded in ASCII,
-binary, or UTF-8/16/32 formats.  UTF-16/32 file content is automatically
-decoded and translated to UTF-8 which normalizes the input for matching.
+binary, UTF-8/16/32, ISO-8859-1, CP-1250 to CP-1258, CP 434, CP 850, or EBCDIC.
 
-A [UTF byte order mark (BOM)](www.unicode.org/faq/utf_bom.html) is detected in
-the content of a file by the matcher, which enables UTF-8 normalization of the
-input automatically.
+A [UTF Byte Order Mark (BOM)](www.unicode.org/faq/utf_bom.html) is detected in
+the content of a file scanned by the matcher, which enables UTF-8 normalization
+of the input automatically.
 
-The file encoding is obtained with the `reflex::Input::file_encoding()` method,
-which returns an `reflex::Input::file_encoding` constant:
+Otherwise, if no file encoding is explicitly specified, the matcher expects
+UTF-8, ASCII, or plain binary.  However, other file formats can be
+automatically decoded and translated to UTF-8 on the fly for matching.
+
+The current file encoding used by a matcher is obtained with the
+`reflex::Input::file_encoding()` method, which returns an
+`reflex::Input::file_encoding` constant:
 
   Constant                                | File encoding
   --------------------------------------- | -----------------------------------
@@ -4808,7 +4828,8 @@ which returns an `reflex::Input::file_encoding` constant:
   `reflex::Input::file_encoding::custom`  | User-defined custom code page
 
 To set the file encoding when assigning a file to read, use
-`reflex::Input(file, enc)` to construct the input object.
+`reflex::Input(file, enc)` with one of the encoding constants shown in the
+table to construct the input object.
 
 For example, use `reflex::Input::file_encoding::latin` to override the encoding
 when the file contains ISO-8859-1.  This way you can match its content using
@@ -5133,7 +5154,7 @@ When executed this code prints:
 
 ### Example 7
 
-The RE/flex matcher engine `reflex::matcher` only recognizes group captures at
+The RE/flex matcher engine `reflex::Matcher` only recognizes group captures at
 the top level of the regex (i.e. among the top-level alternations), because it
 uses an efficient FSM for matching.
 
@@ -5156,6 +5177,105 @@ while (matcher.find())
 🔝 [Back to table of contents](#)
 
 ### Example 8
+
+This is a more advanced example, in which we will use the
+`reflex::BoostMatcher` class to decompose URLs into parts: the host, port,
+path, optional ?-query string key=value pairs, and an optional #-anchor.
+
+To do so, we change the pattern of the matcher to partially match each of the
+URL's parts and also use `input()` to check the input character:
+
+```cpp
+#include <reflex/boostmatcher.h>
+#include <iostream>
+
+using namespace reflex;
+
+int main(int argc, char **argv)
+{
+  if (argc < 2)
+  {
+    std::cerr << "Usage: url 'URL'" << std::endl;
+    exit(EXIT_SUCCESS);
+  }
+
+  BoostMatcher re("https?://([^:/]*):?(\\d*)/?([^?#]*)", argv[1]);
+
+  if (re.scan())
+  {
+    // found a partial match at start, now check if we have a host
+    if (re[1].first != NULL)
+    {
+      std::string host(re[1].first, re[1].second);
+      std::cout << "host: " << host << std::endl;
+
+      // check of we have a port
+      if (re[2].first != NULL && re[2].second != 0)
+      {
+        std::string port(re[2].first, re[2].second);
+        std::cout << "port: " << port << std::endl;
+      }
+
+      // check of we have a path
+      if (re[3].first != NULL && re[3].second != 0)
+      {
+        std::string path(re[3].first, re[3].second);
+        std::cout << "path: " << path << std::endl;
+      }
+    }
+
+    // check if we have a query string
+    if (re.input() == '?')
+    {
+      // now switch patterns to match the rest of the input
+      // i.e. a query string or an anchor
+#if 0
+      // 1st method: a pattern to split query strings at '&'
+      re.pattern("&");
+      while (re.split())
+        std::cout << "query: " << re << std::endl;
+#else
+      // 2nd method: a pattern to capture key-value pairs between the '&'
+      re.pattern("([^=&]*)=?([^&]*)&?");
+      while (re.scan())
+        std::cout <<
+          "query key: " << std::string(re[1].first, re[1].second) <<
+          ", value: " << std::string(re[2].first, re[2].second) << std::endl;
+#endif
+    }
+    else if (!re.at_end())
+    {
+      // not a query string and not the end, we expect an # anchor
+      std::cout << "anchor: " << re.rest() << std::endl;
+    }
+  }
+  else
+  {
+    std::cout << "Error, not a http/s URL: " << re.rest() << std::endl;
+  }
+
+  return EXIT_SUCCESS;
+}
+```
+
+Note that there are two ways to splite the query string into key-value pairs
+and each method is shown in the two `#if` branches.
+
+When executing
+
+    ./url 'https://localhost:8080/test/me?name=reflex&license=BSD-3'
+
+this code prints:
+
+    host: localhost
+    port: 8080
+    path: test/me
+    query key: name, value: reflex
+    query key: license, value: BSD-3
+
+🔝 [Back to table of contents](#)
+
+### Example 9
 
 This example shows how a `FILE*` file descriptor is used as input.  The file
 encoding is obtained from the UTF BOM, when present in the file.  Note that the
@@ -5277,6 +5397,32 @@ character class by intersecting the class with `[\p{Unicode}]`, that is
 `[...&&[\p{Unicode}]]`.  Furthermore, character class negation with `^` results
 in classes that are within range U+0000 to U+10FFFF and excludes surrogate
 halves.
+
+🔝 [Back to contents](#)
+
+
+Scanning ISO-8859-1 (latin-1) files with a Unicode scanner        {#iso-8859-1}
+----------------------------------------------------------
+
+Scanning files encoded in ISO-8859-1 by a Unicode scanner that expects UTF-8
+will cause the scanner to misbehave or throw errors.
+
+Many text files are still encoded in ISO-8859-1 (also called latin-1).  To set
+up your scanner to safely scan ISO-8859-1 content when your scanner rules use
+Unicode (with the `−−unicode` option and your patterns that use UTF-8
+encodings), set the default file encoding to `latin`:
+
+```cpp
+reflex::Input input(stdin, reflex::Input::file_encoding::latin);
+Lexer lexer(input);
+lexer.lex();
+```
+
+This scans files from standard input that are encoded in ISO-8859-1, unless the
+file has a [UTF Byte Order Mark (BOM)](www.unicode.org/faq/utf_bom.html).  When
+a BOM is detected the scanner switches to UTF scanning.
+
+See \ref regex-input-file to set file encodings.
 
 🔝 [Back to contents](#)
 
