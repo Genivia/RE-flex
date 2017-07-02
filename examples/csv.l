@@ -41,7 +41,8 @@ field   ( [^\t\n\r ",;|] | \\\p{ASCII} )*
 \"{chars}\"     |
 {field}         { append(text()); }
 
-(\r?\n)+        |
+(\r?\n|\r)+     { next_row(); }
+
 <<EOF>>         { next_row(); return 0; }
 
 .               // ignore invalid character
@@ -78,8 +79,8 @@ void CSV::process_field()
   pos = 0;
   while ((pos = field.find_first_of(control, pos)) != std::string::npos)
     field.erase(pos, 1);
-  // 5. trim field by remove leading and trailing space
-  const char *whitespace = "\t\n ";
+  // 5. trim field by removing leading and trailing space
+  const char *whitespace = "\t\n\r ";
   pos = field.find_first_not_of(whitespace);
   if (pos != std::string::npos)
   {
@@ -89,6 +90,13 @@ void CSV::process_field()
   else
   {
     field.clear();
+  }
+  // 6. replace \t, \r and \n by space
+  pos = 0;
+  while ((pos = field.find_first_of("\t\n\r", pos)) != std::string::npos)
+  {
+    field.replace(pos, 2, " ");
+    ++pos;
   }
   // add the normalized field to the row
   row.push_back(field);
