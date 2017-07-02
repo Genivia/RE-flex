@@ -95,7 +95,7 @@ void CSV::process_field()
   pos = 0;
   while ((pos = field.find_first_of("\t\n\r", pos)) != std::string::npos)
   {
-    field.replace(pos, 2, " ");
+    field.replace(pos, 1, " ");
     ++pos;
   }
   // add the normalized field to the row
