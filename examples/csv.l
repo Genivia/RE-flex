@@ -16,7 +16,7 @@
   void append(int c)            { field.push_back(c); }
   void append(const char *text) { field.append(text); }
   void next_column()            { process_field(); field.clear(); }
-  void next_row()               { next_column(); process_row(); }
+  void next_row()               { next_column(); process_row(); row.clear(); }
   void process_field();
   void process_row();
 %}
@@ -41,7 +41,7 @@ field   ( [^\t\n\r ",;|] | \\\p{ASCII} )*
 \"{chars}\"     |
 {field}         { append(text()); }
 
-(\r?\n|\r)+     { next_row(); }
+[\r\n]+         { next_row(); }
 
 <<EOF>>         { next_row(); return 0; }
 
