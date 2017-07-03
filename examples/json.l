@@ -12,13 +12,13 @@
 // 7.  JSON values are indicated with tokens '0', 't', 'f', '#', '$'
 // 8.  C++ yyFlexLexer class members to store lexer values (MT-safe)
 // 9.  JSONParser is a recursive descent parser for JSON
-// 10. JSONParser inherits yyFlexLexer, to integrate yyFlexLexer::yylex()
+// 10. JSONParser inherits yyFlexLexer, for yyFlexLexer::yylex() and lexer state
 // 11. JSONParser recurses 100 levels deep max (MAXLEVEL)
 // 12. JSONParser accepts 1000 items per array/object max (MAXSIZE)
-// 13. The main() program reads a FILE* for automatic UTF-16/32 conversion
+// 13. main() reads a FILE* for automatic UTF-16/32 conversion
 // 14. JSON class stores parsed JSON data
 // 15. JSON class instances are printable on std::ostream
-// 16. Use wstr() to obtain wide string matched
+// 16. wstr() to get the wide string matched
 
 %top{
   #include <stdlib.h> // strtoul(), strtod()
@@ -73,16 +73,53 @@ false           { return 'f'; }
 
 %%
 
-// JSON value is one of: undefined, null, boolean, number, string, array, object, or error
+// JSON value
 class JSON {
  public:
   JSON() : tag(UND) { }
+  // one of: undefined, null, boolean, number, string, array, object, or error
   enum Tag { UND, NUL, BOO, NUM, STR, ARR, OBJ, ERR } tag;
   bool                        boolean;
   double                      number;
   std::wstring                string;
   std::vector<JSON>           array;
   std::map<std::wstring,JSON> object;
+  // convert to bool, double, or std::wstring
+  operator bool()         const { return this->boolean; }
+  operator double()       const { return this->number; }
+  operator std::wstring() const { return this->string; }
+  // assign bool, double, std::wstring
+  JSON& operator=(bool b) {
+    this->tag = BOO;
+    this->boolean = b;
+    return *this;
+  }
+  JSON& operator=(double n) {
+    this->tag = NUM;
+    this->number = n;
+    return *this;
+  }
+  JSON& operator=(const std::wstring& s) {
+    this->tag = STR;
+    this->string = s;
+    return *this;
+  }
+  // array accessor
+  JSON& operator[](size_t i) {
+    this->tag = ARR;
+    if (i >= array.size())
+      this->array.resize(i + 1);
+    return this->array[i];
+  }
+  // object accessor
+  JSON& operator[](const wchar_t *p) {
+    this->tag = OBJ;
+    return this->object[p];
+  }
+  JSON& operator[](const std::wstring& p) {
+    this->tag = OBJ;
+    return this->object[p];
+  }
 };
 
 // JSON parser inherits yyFlexLexer scanner to invoke yylex()
@@ -189,6 +226,12 @@ void print_string(std::ostream& os, const std::wstring& s) {
                    os << static_cast<char>(*i);
                  } else if (*i < 0x20) { // emit \u00xx for control codes
                    os << "\\u" << std::internal << std::setw(4) << std::setfill('0') << std::hex << *i << std::dec;
+                 } else if (*i >= 0xD800 && *i < 0xE000) { // UTF-16 surrogates
+                   char buf[8];
+                   int c = 0x010000 + ((*i - 0xD800) << 10);
+                   c += *++i - 0xDC00;
+                   buf[reflex::utf8(c, buf)] = '\0'; // convert to UTF-8 and make \0-terminated
+                   os << buf;
                  } else { // else emit UTF-8
                    char buf[8];
                    buf[reflex::utf8(*i, buf)] = '\0'; // convert to UTF-8 and make \0-terminated
@@ -246,6 +289,6 @@ int main(int argc, char **argv) {
   if (fd != stdin)
     fclose(fd);
   // print JSON value
-  std::cout << data;
+  std::cout << data << std::endl;
   return 0;
 }
