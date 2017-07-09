@@ -71,20 +71,25 @@
 #define YY_SCANNER             (*this)
 #endif
 
-/// Flex-compatible global yywrap() is enabled with `%%option yywrap` or `%%option bison`
 #if (defined(REFLEX_OPTION_yywrap) || defined(REFLEX_OPTION_bison)) && !defined(REFLEX_OPTION_noyywrap)
 #if defined(REFLEX_OPTION_reentrant)
+
+/// Flex-compatible global yywrap() is enabled with `%%option yywrap` or `%%option bison`
 #if defined(YY_EXTERN_C)
 YY_EXTERN_C int yywrap(yyscan_t);
 #else
 int yywrap(yyscan_t);
 #endif
+
 #else
+
+/// Flex-compatible global yywrap() is enabled with `%%option yywrap` or `%%option bison`
 #if defined(YY_EXTERN_C)
 YY_EXTERN_C int yywrap(void);
 #else
 int yywrap(void);
 #endif
+
 #endif
 #endif
 

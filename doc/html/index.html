@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Jun 28 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Jul 1 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -376,14 +376,15 @@ The <code>operator[]</code> method returns a pair with the match info of the n't
 <tr>
 <th>Method </th><th>Result  </th></tr>
 <tr>
-<td><code>input()</code> </td><td>returns next char 0..255 from the input, matcher then skips it </td></tr>
+<td><code>input()</code> </td><td>returns next 8-bit char from the input, matcher then skips it </td></tr>
 <tr>
-<td><code>winput()</code> </td><td>returns the next wide character from the input, matcher skips it </td></tr>
+<td><code>winput()</code> </td><td>returns next wide character from the input, matcher skips it </td></tr>
 <tr>
 <td><code>unput(c)</code> </td><td>put char <code>c</code> back unto the stream, matcher then takes it </td></tr>
 <tr>
-<td><code>peek()</code> </td><td>returns the next char 0..255 from the input without consuming it </td></tr>
+<td><code>peek()</code> </td><td>returns next 8-bit char from the input without consuming it </td></tr>
 </table>
+<p>The <code>input()</code>, <code>winput()</code>, and <code>peek()</code> methods return a non-negative character code and EOF (-1) when the end of input is reached.</p>
 <p>To initialize a matcher for interactive use, to assign a new input source or to change its pattern, you can use the following methods:</p>
 <table class="doxtable">
 <tr>
@@ -723,7 +724,7 @@ The rules section</h3>
 <tr>
 <td><code>matcher().unput(c)</code> </td><td><code>unput(c)</code> </td><td>put back 8-bit char <code>c</code> </td></tr>
 <tr>
-<td><code>matcher().peek()</code> </td><td><em>n/a</em> </td><td>peek at next char on input </td></tr>
+<td><code>matcher().peek()</code> </td><td><em>n/a</em> </td><td>peek at next 8-bit char on input </td></tr>
 <tr>
 <td><code>matcher().more()</code> </td><td><code><a class="el" href="flexlexer_8h.html#a5de61440b4ccefd409a06728ec4734a6" title="Flex-compatible macro: append the next matched text to the currently matched text (use only when scan...">yymore()</a></code> </td><td>append next match to this match </td></tr>
 <tr>
@@ -747,7 +748,7 @@ The rules section</h3>
 </table>
 <p>Note that Flex <code>switch_streams(i, o)</code> is the same as invoking the <code>in(i)</code> and <code>out(o)</code> methods. Flex <code><a class="el" href="flexlexer_8h.html#a4ecb7d50aa442ca3a95ef3cc806a911a" title="Flex-compatible macro: restart from the given input source. ">yyrestart(i)</a></code> is the same as invoking <code>in(i)</code> to set input to a file, stream, or string. Invoking <code>switch_streams(i, o)</code> and <code>in(i)</code> also resets the lexer's matcher (internally with <code>matcher.reset()</code>). This clears the line and column counters, resets the internal anchor and boundary flags for anchor and word boundary matching, and resets the matcher to consume buffered input.</p>
 <p>You can also set the input with <code>in() = &amp;i</code> (or <code>yyin = &amp;i)</code> with option <code>−−flex</code>). This does not reset the matcher. This means that when an end of input (EOF) was reached, you should clear the EOF state with <code>matcher().set_end(false)</code> or reset the matcher state with <code>matcher().reset()</code>.</p>
-<p>The <code>matcher().input()</code>, <code>matcher().winput()</code>, and <code>matcher().peek()</code> methods return EOF (-1) when the end of input is reached. These methods preserve the current <code>text()</code> match (and <code>yytext</code> with option <code>−−flex</code>), but the pointer returned by <code>text()</code> (and <code>yytext</code>) may change after these methods are called. However, the <code>yytext</code> pointer is not preserved when using these methods with <b>reflex</b> options <code>−−flex</code> and <code>−−bison</code>.</p>
+<p>The <code>matcher().input()</code>, <code>matcher().winput()</code>, and <code>matcher().peek()</code> methods return a non-negative character code and EOF (-1) when the end of input is reached. These methods preserve the current <code>text()</code> match (and <code>yytext</code> with option <code>−−flex</code>), but the pointer returned by <code>text()</code> (and <code>yytext</code>) may change after these methods are called. However, the <code>yytext</code> pointer is not preserved when using these methods with <b>reflex</b> options <code>−−flex</code> and <code>−−bison</code>.</p>
 <dl class="section warning"><dt>Warning</dt><dd>The Flex-compatible <code><a class="el" href="flexlexer_8h.html#a411db26910a55c4e92a226dee582564b" title="Flex-compatible macro: read one character, returns zero when EOF. ">yyinput()</a></code> returns 0 when the end of input is reached, which makes it impossible to distinguish <code>\0</code> (NUL) from EOF.</dd>
 <dd>
 Do not invoke <code>matcher()</code> before <code><a class="el" href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805" title="convert Lex/Flex regular expression syntax ">lex()</a></code> (or <code>yylex()</code> with option <code>−−flex</code>) is invoked! A matcher is not initially assigned to the lexer when it is constructed.</dd></dl>
@@ -1895,20 +1896,21 @@ Input methods</h3>
 <tr>
 <th>Method </th><th>Result  </th></tr>
 <tr>
-<td><code>input()</code> </td><td>returns next char 0..255 from the input, matcher then skips it </td></tr>
+<td><code>input()</code> </td><td>returns next 8-bit char from the input, matcher then skips it </td></tr>
 <tr>
-<td><code>winput()</code> </td><td>returns the next wide character from the input, matcher skips it </td></tr>
+<td><code>winput()</code> </td><td>returns next wide character from the input, matcher skips it </td></tr>
 <tr>
 <td><code>unput(c)</code> </td><td>put char <code>c</code> back unto the stream, matcher then takes it </td></tr>
 <tr>
-<td><code>peek()</code> </td><td>returns the next char 0..255 from the input without consuming it </td></tr>
+<td><code>peek()</code> </td><td>returns next 8-bit char from the input without consuming it </td></tr>
 </table>
+<p>The <code>input()</code>, <code>winput()</code>, and <code>peek()</code> methods return a non-negative character code and EOF (-1) when the end of input is reached.</p>
 <p>A matcher reads from the specified input source using its virtual method <code>size_t get(char *s, size_t n)</code> that simply returns <code>in.get(s, n)</code>, that is, the result of the <code>reflex::Input::get(s, n)</code> method of the <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> object. This method can be overriden by a derived matcher class to customize reading.</p>
 <table class="doxtable">
 <tr>
 <th>Method </th><th>Result  </th></tr>
 <tr>
-<td><code>get(s, n)</code> </td><td>fill <code>s[0..n-1]</code> with next input, returns number of bytes added </td></tr>
+<td><code>get(s, n)</code> </td><td>fill <code>s[0..n-1]</code> with next input, returns number of bytes read </td></tr>
 <tr>
 <td><code>wrap()</code> </td><td>returns false (can be overriden to wrap input after EOF) </td></tr>
 </table>
@@ -2144,7 +2146,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Jun 28 2017 20:35:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Jul 1 2017 22:58:29 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

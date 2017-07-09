@@ -1,7 +1,7 @@
 
 [![logo][logo-url]][reflex-url]
 
-[![build status][travis-image]][travis-url][![license][bsd-3-image]][bsd-3-url]
+[![build status][travis-image]][travis-url] [![license][bsd-3-image]][bsd-3-url]
 
 "The regex-centric fast and flexible lexical analyzer generator for C++"
 
@@ -91,7 +91,7 @@ Step** in MSVC++ as follows:
    `$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\YourUserName\Documents\reflex\include`
    (this assumes the `reflex` source package is in your **Documents** folder).
 
-3. enter `"C:\Users\YourUserName\Documents\reflex\bin\reflex.exe" −−header-file
+3. enter `"C:\Users\YourUserName\Documents\reflex\bin\reflex.exe" --header-file
    "C:\Users\YourUserName\Documents\mylexer.l"` in the **Command Line** property
    under **Custom Build Step** (this assumes `mylexer.l` is in your
    **Documents** folder);
@@ -104,7 +104,7 @@ To compile your program with MSVC++, make sure to drag the folders `reflex/lib`
 and `reflex/unicode` to the **Source Files** in the **Solution Explorer** panel
 of your project.  After running `reflex.exe` drag the generated `lex.yy.h` and
 `lex.yy.cpp` files there as well.  If you are using specific reflex
-command-line options such as `−−flex`, add these in step 3.
+command-line options such as `--flex`, add these in step 3.
 
 ### Unix/Linux and Mac OS
 
@@ -335,16 +335,16 @@ You can use `convert` with option `reflex::convert_flag::unicode` to make `.`
 (dot), `\w`, `\s` and so on match Unicode.
 
 
+How to contribute?
+------------------
+
+Please see [CONTRIBUTING](CONTRIBUTING.md).
+
+
 Where do I find the documentation?
 ----------------------------------
 
 Read more about RE/flex in the [manual][manual-url].
-
-
-TODO / Work in progress / Nice to have
---------------------------------------
-
-- Option to support Unicode without UTF-8 (RE/flex matcher/FSM is prepared)
 
 
 License and copyright
@@ -386,6 +386,7 @@ Changelog
 - May 24, 2017: 0.9.23 improved portability, added file encoding conversions for CP-1250 to CP-1258, CP 437, and CP 850/858
 - Jun 24, 2017: 0.9.24 added an option for users to define their own custom code pages to translate input, fixed `#` in free space mode
 - Jun 28, 2017: 0.9.25 fixed `--fast` FSM not always halting on EOF after a mismatch; fixed buffer realloc, added new examples/csv.l.
+- Jul  5, 2017: 0.9.26 fixed `wstr()` always returning UTF-16 strings (should be UTF-16 only when `std::wstring` requires it).
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
@@ -398,5 +399,5 @@ Changelog
 [boost-url]: http://www.boost.org
 [travis-image]: https://travis-ci.org/Genivia/RE-flex.svg?branch=master
 [travis-url]: https://travis-ci.org/Genivia/RE-flex
-[bsd-3-image]: https://img.shields.io/badge/License-BSD%203--Clause-blue.svg
+[bsd-3-image]: https://img.shields.io/badge/license-BSD%203--Clause-blue.svg
 [bsd-3-url]: https://opensource.org/licenses/BSD-3-Clause

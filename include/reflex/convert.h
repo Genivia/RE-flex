@@ -57,7 +57,7 @@ namespace reflex {
 typedef int convert_flag_type;
 
 namespace convert_flag {
-  const convert_flag_type none      = 0x00; ///< no extra conversion (default)
+  const convert_flag_type none      = 0x00; ///< no conversion (default)
   const convert_flag_type unicode   = 0x01; ///< convert . (dot), `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` to Unicode
   const convert_flag_type recap     = 0x02; ///< remove capturing groups, add capturing groups to the top level
   const convert_flag_type lex       = 0x04; ///< convert Lex/Flex regular expression syntax

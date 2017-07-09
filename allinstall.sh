@@ -7,3 +7,5 @@ echo
 echo "Installing reflex man page"
 mkdir -p /usr/local/share/man/man1
 cp -f doc/man/reflex.1 /usr/local/share/man/man1
+echo
+echo "OK"

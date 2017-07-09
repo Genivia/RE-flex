@@ -676,10 +676,13 @@ Three special methods can be used to manipulate the input stream directly:
 
   Method     | Result
   ---------- | ----------------------------------------------------------------
-  `input()`  | returns next char 0..255 from the input, matcher then skips it
-  `winput()` | returns the next wide character from the input, matcher skips it
+  `input()`  | returns next 8-bit char from the input, matcher then skips it
+  `winput()` | returns next wide character from the input, matcher skips it
   `unput(c)` | put char `c` back unto the stream, matcher then takes it
-  `peek()`   | returns the next char 0..255 from the input without consuming it
+  `peek()`   | returns next 8-bit char from the input without consuming it
+
+The `input()`, `winput()`, and `peek()` methods return a non-negative character
+code and EOF (-1) when the end of input is reached.
 
 To initialize a matcher for interactive use, to assign a new input source or to
 change its pattern, you can use the following methods:
@@ -1739,7 +1742,7 @@ the classic Flex actions shown in the second column of this table:
   `matcher().input()`  | `yyinput()`          | get next 8-bit char from input
   `matcher().winput()` | *n/a*                | get wide character from input
   `matcher().unput(c)` | `unput(c)`           | put back 8-bit char `c`
-  `matcher().peek()`   | *n/a*                | peek at next char on input
+  `matcher().peek()`   | *n/a*                | peek at next 8-bit char on input
   `matcher().more()`   | `yymore()`           | append next match to this match
   `matcher().less(n)`  | `yyless(n)`          | shrink match length to `n`
   `matcher().first()`  | *n/a*                | first pos of match in input
@@ -1765,11 +1768,12 @@ input (EOF) was reached, you should clear the EOF state with
 `matcher().set_end(false)` or reset the matcher state with `matcher().reset()`.  
 
 The `matcher().input()`, `matcher().winput()`, and `matcher().peek()` methods
-return EOF (-1) when the end of input is reached.  These methods preserve the
-current `text()` match (and `yytext` with option `−−flex`), but the pointer
-returned by `text()` (and `yytext`) may change after these methods are called.
-However, the `yytext` pointer is not preserved when using these methods with
-**reflex** options `−−flex` and `−−bison`.
+return a non-negative character code and EOF (-1) when the end of input is
+reached.  These methods preserve the current `text()` match (and `yytext` with
+option `−−flex`), but the pointer returned by `text()` (and `yytext`) may
+change after these methods are called.  However, the `yytext` pointer is not
+preserved when using these methods with **reflex** options `−−flex` and
+`−−bison`.
 
 @warning The Flex-compatible `yyinput()` returns 0 when the end of input is
 reached, which makes it impossible to distinguish `\0` (NUL) from EOF.
@@ -4661,10 +4665,13 @@ directly, even when you use the matcher's search and match methods:
 
   Method     | Result
   ---------- | ----------------------------------------------------------------
-  `input()`  | returns next char 0..255 from the input, matcher then skips it
-  `winput()` | returns the next wide character from the input, matcher skips it
+  `input()`  | returns next 8-bit char from the input, matcher then skips it
+  `winput()` | returns next wide character from the input, matcher skips it
   `unput(c)` | put char `c` back unto the stream, matcher then takes it
-  `peek()`   | returns the next char 0..255 from the input without consuming it
+  `peek()`   | returns next 8-bit char from the input without consuming it
+
+The `input()`, `winput()`, and `peek()` methods return a non-negative character
+code and EOF (-1) when the end of input is reached.
 
 A matcher reads from the specified input source using its virtual method
 `size_t get(char *s, size_t n)` that simply returns `in.get(s, n)`, that is,
@@ -4674,7 +4681,7 @@ reading.
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
-  `get(s, n)` | fill `s[0..n-1]` with next input, returns number of bytes added
+  `get(s, n)` | fill `s[0..n-1]` with next input, returns number of bytes read
   `wrap()`    | returns false (can be overriden to wrap input after EOF)
 
 When a matcher reaches the end of input, it invokes the virtual method `wrap()`

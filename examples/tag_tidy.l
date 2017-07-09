@@ -1,5 +1,5 @@
 // A lexer to normalize HTML by adding closing tags and quoting non-quoted attribute values.
-// Limitations: does no match HTML mixed case tags.
+// Limitations: does no match HTML mixed case tags, cannot handle DTDs.
 
   #include <stdio.h>
   #include <deque>
@@ -15,7 +15,7 @@
 %o dotall main unicode class=Tidy
 
 dot                     \p{Unicode}
-pi                      <!|<\?
+pi                      <\?
 comment                 <!--{dot}*?-->
 open                    <[^!/>\s]+
 close                   <\/{dot}+?>
@@ -60,6 +60,7 @@ value                   =\s*[^/>\s'"]+
                         tags.pop_back();
                         start(INITIAL);
 
+<ATTRIBUTES>"?>"        |
 <ATTRIBUTES>">"         echo();
                         start(INITIAL);
 

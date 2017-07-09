@@ -1,6 +1,6 @@
 // A lexer to print out all XML tags in a file.
 // Uses lazy quantifiers for compact expressions.
-// Does not check UTF-8 encoding validity.
+// Limitations: does not check UTF-8 encoding validity, cannot handle DTDs.
 
   #include <stdio.h>
   int level = 0;
@@ -22,8 +22,7 @@ string                  \".*?\"|'.*?'
 {comment}               |
 {cdata}                 /* skip comments and CDATA sections */
 
-{pi}                    level++;
-                        start(ATTRIBUTES);
+{pi}                    start(ATTRIBUTES);
 
 {open}                  printf("%*s%s\n", level++, "", text() + 1);
                         start(ATTRIBUTES);
@@ -37,6 +36,7 @@ string                  \".*?\"|'.*?'
 <ATTRIBUTES>"/>"        --level;
                         start(INITIAL);
 
+<ATTRIBUTES>"?>"        |
 <ATTRIBUTES>">"         start(INITIAL);
 
 <ATTRIBUTES>{name}      |

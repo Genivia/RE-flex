@@ -10,5 +10,5 @@ cd ..
 ./build.sh || exit 1
 rm -f unicode/language_scripts.cpp.bak
 rm -f unicode/letter_scripts.cpp.bak
-
-
+echo
+echo "OK"
