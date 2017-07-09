@@ -30,9 +30,9 @@ Did you have a patch that fixes a bug?
 - Write a clear log message for your commits.  One-line messages are fine for
   small changes, but bigger changes should look like this:
 
-    $ git commit -m "A brief summary of the commit
-    > 
-    > A paragraph describing what changed and its impact."
+      $ git commit -m "A brief summary of the commit
+      > 
+      > A paragraph describing what changed and its impact."
 
 Do you intend to add a new feature or change an existing one?
 -------------------------------------------------------------
