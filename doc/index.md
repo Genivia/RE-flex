@@ -77,9 +77,9 @@ In summary, RE/flex is
   of data sources, such as strings, files, and streams of unlimited length.
 
 - a stand-alone *regex library* is included with RE/flex for fast matching with
-  efficient deterministic finite state machines (FSMs) that are contructed from
-  regex patterns with POSIX mode matching extended to support lazy quantifiers,
-  word boundary anchors, Unicode UTF-8, and much more;
+  efficient deterministic finite state machines (FSMs) contructed from patterns
+  of POSIX-mode regular expressions that are extended with lazy quantifiers for
+  lazy repeats, word boundary anchors, Unicode UTF-8, and much more;
 
 - a *flexible regex framework* that combines the above with a collection of C++
   class templates that are easy to use and that offer a rich API for searching,
@@ -1832,9 +1832,13 @@ the underlying matcher used by the scanner.  Therefore, `new_matcher(i)`
 instantiates a `reflex::Matcher` or `reflex::BoostPosixMatcher` depending on
 the `−−matcher` option.
 
-The Flex `yy_scan_string(string)` and `yy_scan_bytes(bytes, len)` functions are
-also supported with **reflex** option `−−flex` and are simply creating setting
-the matcher's `in(i)` input to a string.
+The Flex `yy_scan_string(string)`, `yy_scan_bytes(bytes, len)`, and
+`yy_scan_buffer(bytes, len)` functions are also supported with **reflex**
+option `−−flex` to scan the specified string that is 0-terminated or scan `len`
+`bytes`.  These functions create a new buffer (i.e. a new matcher in RE/flex).
+A pointer to the new buffer is returned, which becomes the `YY_CURRENT_BUFFER`.
+You should delete this new buffer with `yy_delete_buffer(YY_CURRENT_BUFFER)`
+when you are done with it.
 
 The generated scanner reads from the standard input by default or from an input
 source specified as a `reflex::Input` object, such as a string, wide string,
@@ -3408,10 +3412,13 @@ text for error reporting.  For example:
 }
 
 %{
-  /* add this only to patch old bison versions */
+  /* reflex option --bison-locations makes yylex() take yylval and yylloc */
   extern int yylex(YYSTYPE*, YYLTYPE*);
   #define YYLEX_PARAM &yylval, &yylloc
 %}
+
+/* add &yylval and &yyloc parameters to yylex() with a trick: use YYLEX_PARAM */
+%lex-param { void *YYLEX_PARAM }
 
 %token <num> CONST_NUMBER
 %token <str> CONST_STRING
@@ -3445,12 +3452,15 @@ And a final example that combines options `−−bison-locations` and
 
 %{
   #include "lex.yy.h"
+  void yyerror(YYLTYPE*, yyscan_t, const char*);
   #define YYPARSE_PARAM scanner
   #define YYLEX_PARAM   scanner
 %}
 
-%pure-parser
 %locations
+%pure-parser
+%lex-param { void *scanner }
+%parse-param { void *scanner }
 
 %union {         // YYSTYPE yylval is a union:
   int num;       // yylval.num
@@ -3463,12 +3473,22 @@ And a final example that combines options `−−bison-locations` and
 %%
 ...  // grammar rules
 %%
+
+void yyerror(YYLTYPE *yylloc, yyscan_t scanner, const char *msg)
+{
+  fprintf(stderr, "%s at %d,%d to line %d,%d\n",
+    msg,
+    yylloc.first_line,
+    yylloc.first_column,
+    yylloc.last_line,
+    yylloc.last_column);
+}
 ```
 </div>
 
-When Bison `%locations` with `%define api.pure full` is used, `yyerror` has the
-signature `void yyerror(YYLTYPE *locp, char const *msg)`.  This function
-signature is required to obtain the location information with Bison
+@note when Bison `%locations` with `%define api.pure full` is used, `yyerror`
+has the signature `void yyerror(YYLTYPE *locp, char const *msg)`.  This
+function signature is required to obtain the location information with Bison
 pure-parsers.
 
 @note `yylval` is not a pointer argument but is always passed by reference and

@@ -1,4 +1,5 @@
 /* Parser to convert "C" assignments to lisp. */
+/* Demonstrates bison locations with yylex() taking yylval and yylloc (reflex option bison-locations) */
 /* Compile: bison -d -y flexexample7.y */
 
 %{
@@ -14,10 +15,13 @@ void yyerror(const char*);
 }
 
 %{
-/* patches old bison versions that don't produce correct YYLEX */
+/* Patches old bison versions that don't produce correct YYLEX */
 extern int yylex(YYSTYPE*, YYLTYPE*);
 #define YYLEX_PARAM &yylval, &yylloc
 %}
+
+/* Add &yylval and &yyloc parameters to yylex() with a trick: use YYLEX_PARAM */
+%lex-param { void *YYLEX_PARAM }
 
 %token <str> STRING
 %token <num> NUMBER

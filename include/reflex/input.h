@@ -442,7 +442,7 @@ class Input {
     }
     else if (wstring_)
     {
-      wchar_t c;
+      unsigned int c;
       for (const wchar_t *s = wstring_; (c = *s) != L'\0'; ++s)
       {
         if (c >= 0xD800 && c < 0xE000)

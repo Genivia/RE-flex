@@ -171,6 +171,13 @@ int yywrap(void);
 #define yy_create_buffer(i,_)  YY_SCANNER.new_matcher(i)
 #endif
 
+/// Flex-compatible macro: create and return a new buffer.
+#if defined(REFLEX_OPTION_reentrant)
+#define yy_new_buffer(i,_,s) static_cast<FlexLexer*>(s)->new_matcher(i)
+#else
+#define yy_new_buffer(i,_)  YY_SCANNER.new_matcher(i)
+#endif
+
 /// Flex-compatible macro: delete a buffer.
 #if defined(REFLEX_OPTION_reentrant)
 #define yy_delete_buffer(b,s)  static_cast<FlexLexer*>(s)->del_matcher(b)
@@ -213,20 +220,15 @@ int yywrap(void);
 #define yyrestart(i)           YY_SCANNER.in(i)
 #endif
 
-/// Flex-compatible macro: scan a string, returns NULL buffer because we don't allocate anything.
+/// Flex-compatible macro: scan a string
 #if defined(REFLEX_OPTION_reentrant)
-#define yy_scan_string(i,s)    (static_cast<FlexLexer*>(s)->in(i),static_cast<YY_BUFFER_STATE>(NULL))
-#define yy_scan_buffer(i,s)    (static_cast<FlexLexer*>(s)->in(i),static_cast<YY_BUFFER_STATE>(NULL))
+#define yy_scan_string(i,s)    (static_cast<FlexLexer*>(s)->matcher(static_cast<FlexLexer*>(s)->new_matcher(i)),YY_CURRENT_BUFFER)
+#define yy_scan_bytes(b,n,s)   (static_cast<FlexLexer*>(s)->matcher(static_cast<FlexLexer*>(s)->new_matcher(std::string(b, n))),YY_CURRENT_BUFFER)
+#define yy_scan_buffer(b,n,s)  yy_scan_bytes(b, n, s)
 #else
-#define yy_scan_string(i)      (YY_SCANNER.in(i),static_cast<YY_BUFFER_STATE>(NULL))
-#define yy_scan_buffer(i)      (YY_SCANNER.in(i),static_cast<YY_BUFFER_STATE>(NULL))
-#endif
-
-/// Flex-compatible macro: scan raw bytes, returns NULL buffer because we don't allocate anything.
-#if defined(REFLEX_OPTION_reentrant)
-#define yy_scan_bytes(b,n,s)   (static_cast<FlexLexer*>(s)->in(std::string(b, n)),static_cast<YY_BUFFER_STATE>(NULL))
-#else
-#define yy_scan_bytes(b,n)     (YY_SCANNER.in(std::string(b, n)),static_cast<YY_BUFFER_STATE>(NULL))
+#define yy_scan_string(i)      (YY_SCANNER.matcher(YY_SCANNER.new_matcher(i)),YY_CURRENT_BUFFER)
+#define yy_scan_bytes(b,n)     (YY_SCANNER.matcher(YY_SCANNER.new_matcher(std::string(b, n))),YY_CURRENT_BUFFER)
+#define yy_scan_buffer(b,n)    yy_scan_bytes(b, n)
 #endif
 
 /// Flex-compatible macro: the terminating action.

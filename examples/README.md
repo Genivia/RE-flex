@@ -21,7 +21,7 @@ Flex scanner examples
 - `wcwc.l` word count example with custom lexer class
 - `echo.l` interactive scanner to echo input
 - `readline.l` interactive scanner to echo input using readline (requires readline)
-- `json.l` JSON parser (verified with <http://seriot.ch/parsing_json.php>)
+- `json.l` JSON parser (validated against <http://seriot.ch/parsing_json.php>)
 
 RE/flex scanner examples
 ------------------------
@@ -34,10 +34,10 @@ RE/flex scanner examples
 - `indent.l` indentation detection and reformatting example
 - `braille.l` a braille translator, inspired by the re2c example but expanded
 - `unicode.l` a very simple Unicode word matcher to demonstrate Unicode matching
-- `reflexexample3.l` example modified from the Flex documentation with bison
-- `reflexexample4.l` example modified from the Flex documentation with bison-bridge
-- `reflexexample5.l` example modified from the Flex documentation with bison-bridge
-- `reflexexample6.l` example reentrant scanner with state stacks
+- `reflexexample3.l` example RE/flex scanner adapted from the Flex documentation with bison
+- `reflexexample4.l` example RE/flex scanner adapted from the Flex documentation with bison-bridge
+- `reflexexample5.l` example RE/flex scanner adapted from the Flex documentation with bison-bridge
+- `reflexexample6.l` example RE/flex reentrant scanner with state stacks
 - `tag.l` simple lexer to print out all XML/HTML tags
 - `tag_lazy.l` simple lexer to print XML/HTML tags, uses lazy quants
 - `tag_lazystates.l` lexer to print XML tags, uses lazy quants and states

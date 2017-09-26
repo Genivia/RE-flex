@@ -1,5 +1,5 @@
 /* Parser to convert "C" assignments to lisp. */
-/* Demonstrates parameters passed to yyparse and to yylex */
+/* Demonstrates bison pure parser with parameters passed to yyparse and to yylex */
 /* Compile: bison -d -y flexexample5.y */
 
 %{
@@ -16,7 +16,9 @@ void yyerror(struct pass_through *param, const char *msg); /* yyerror accepts `p
 
 /* pure-parser adds yylval parameter to yylex() */
 %pure-parser
-/* parse-param adds extra parameter to yylex() */
+/* Add params->scanner parameter to yylex() with a trick: use YYLEX_PARAM */
+%lex-param { void *YYLEX_PARAM }
+/* Add pass-through parameter to yyparse() */
 %parse-param { struct pass_through *params }
 
 %union {

@@ -39,7 +39,7 @@
 
 #include <cstring>
 
-#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__BORLANDC__) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__)
+#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__BORLANDC__)
 namespace reflex {
 typedef unsigned __int16 uint16_t;
 typedef unsigned __int32 uint32_t;

@@ -13,6 +13,7 @@
 %}
 
 %pure-parser
+%lex-param { Lexer *lexer }
 %parse-param { Lexer *lexer }
 
 %union {
