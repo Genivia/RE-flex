@@ -57,8 +57,8 @@ std::string regex_error::regex_error_message(regex_error_type code, const char *
     "invalid quantifier", 
     "invalid modifier", 
     "invalid syntax", 
-    "undefined name", 
     "exceeds complexity limits", 
+    "undefined name", 
   };
 
   const char *s = messages[code];

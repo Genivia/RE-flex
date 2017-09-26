@@ -1775,8 +1775,10 @@ change after these methods are called.  However, the `yytext` pointer is not
 preserved when using these methods with **reflex** options `−−flex` and
 `−−bison`.
 
-@warning The Flex-compatible `yyinput()` returns 0 when the end of input is
-reached, which makes it impossible to distinguish `\0` (NUL) from EOF.
+@warning The Flex-compatible `yyinput()` function returns 0 when the end of
+input is reached, which makes it impossible to distinguish `\0` (NUL) from EOF.
+By contrast, `matcher().input()` returns EOF (-1) when the end of the input is
+reached.
 
 @warning Do not invoke `matcher()` before `lex()` (or `yylex()` with option
 `−−flex`) is invoked!  A matcher is not initially assigned to the lexer when it
@@ -1784,15 +1786,16 @@ is constructed.
 
 Use **reflex** options `−−flex` and `−−bison` to enable global Flex actions and
 variables.  This makes Flex actions and variables globally accessible outside
-of \ref reflex-spec-rules, with the exception of `yy_push_state`, `yy_pop_state`,
-`yy_top_state`.  Outside \ref reflex-spec-rules you must use the global action
-`yyinput` instead of `input`, global action `yyunput` instead of `unput`, and
-global action `yyoutput` instead of `output`.  Because `yyin` and `yyout` are
-macros they cannot be (re)declared or accessed as global variables, but they
-can be used as if these were variables.  To avoid compilation errors, use
-**reflex** option `−−header-file` to generate a header file `lex.yy.h` to
-include in your code to use the global use Flex actions and variables.
-See \ref reflex-bison for more details on the `−−bison` options to use.
+of \ref reflex-spec-rules, with the exception of `yy_push_state()`,
+`yy_pop_state()`, `yy_top_state()`.  Outside \ref reflex-spec-rules you must
+use the global action `yyinput()` instead of `input()`, global action
+`yyunput()` instead of `unput()`, and global action `yyoutput()` instead of
+`output()`.  Because `yyin` and `yyout` are macros they cannot be (re)declared
+or accessed as global variables, but they can be used as if these were
+variables.  To avoid compilation errors, use **reflex** option `−−header-file`
+to generate a header file `lex.yy.h` to include in your code to use the global
+use Flex actions and variables.  See \ref reflex-bison for more details on the
+`−−bison` options to use.
 
 From the first couple of entries in the table shown above you may have guessed
 correctly that `text()` is just a shorthand for `matcher().text()`, since
@@ -2360,7 +2363,7 @@ not look too far behind, see \ref reflex-limitations.
 
 Flex "trailing context" `φ/ψ` matches a pattern `φ` only when followed by the
 lookahead pattern `φ`.  A trailing context `φ/ψ` has the same meaning as the
-lookahead `φ(?=ψ)`.
+lookahead `φ(?=ψ)`, see \ref reflex-pattern-lookahead.
 
 A trailing context can only be used in lexer specifications and should only
 occur at the end of a pattern, not in the middle of a pattern.  There are some
@@ -3263,9 +3266,9 @@ variables, but these can be used as if they are variables to assign a new input
 source and to set the output stream.  To avoid compilation errors when using
 globals such as `yyin`, use **reflex** option `−−header-file` to generate a
 header file `lex.yy.h` to include in your code.  Finally, in code outside of
-\ref reflex-spec-rules you must use `yyinput` instead of `input`, use the global
-action `yyunput` instead of `unput`, and use the global action `yyoutput`
-instead of `output`.
+\ref reflex-spec-rules you must use `yyinput()` instead of `input()`, use the
+global action `yyunput()` instead of `unput()`, and use the global action
+`yyoutput()` instead of `output()`.
 
 See the generated `lex.yy.cpp` BISON section, which contains declarations
 specific to Bison when the `−−bison` option is used.
@@ -3296,7 +3299,7 @@ or a better approach is to generate a `lex.yy.h` header file with option
 
 <div class="alt">
 ```cpp
-/* yacc grammar (.y file) assuming C++ */
+/* yacc grammar (.y file) for C++ */
 
 %{
   #include "lex.yy.h"
@@ -3351,7 +3354,7 @@ The **reflex** option `−−bison-bridge` expects a Bison "pure parser":
 
 <div class="alt">
 ```cpp
-/* yacc grammar (.y file) assuming C++ */
+/* yacc grammar (.y file) for C++ */
 
 %{
   #include "lex.yy.h"
@@ -3397,7 +3400,7 @@ text for error reporting.  For example:
 
 <div class="alt">
 ```cpp
-/* yacc grammar (.y file) assuming C++ */
+/* yacc grammar (.y file) for C++ */
 
 %{
   #include "lex.yy.h"

@@ -22,17 +22,19 @@ div.textblock {
 
 .textblock h1, .textblock h2 {
 	margin-right: 6px;
-	padding: 14px 25px 14px 25px;
+	margin-left: -8%;
+	padding: 14px 0px 14px 8%;
 	color: #3D578C;
-	background: #fafafa;
+	background: #ccc;
         border-radius: 7px 7px 7px 7px;
 }
 
 .textblock h3 {
 	margin-right: 6px;
-	padding: 7px 25px 7px 25px;
+	margin-left: -8%;
+	padding: 4px 0px 4px 8%;
 	color: #3D578C;
-	background: #fafafa;
+	background: #ccc;
         border-radius: 7px 7px 7px 7px;
 }
 

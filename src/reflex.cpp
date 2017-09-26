@@ -2454,7 +2454,7 @@ void Reflex::stats()
         for (size_t rule = 0; rule < rules[start].size(); ++rule)
           if (rules[start][rule].regex != "<<EOF>>")
             if (!pattern.reachable(accept++))
-              warning("rule cannot be matched because a previous rule subsumes it, perhaps move this rule up?", "", rules[start][rule].code.lineno);
+              warning("rule cannot be matched because a previous rule subsumes it, perhaps try to move this rule up?", "", rules[start][rule].code.lineno);
         reflex::Pattern::Index n = 0;
         if (!patterns[start].empty())
           n = pattern.size();
