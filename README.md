@@ -7,10 +7,10 @@
 
 Flex reimagined.  Fast, flexible, adds Boost 💪
 
-[RE/flex][reflex-url] is as fast as Flex (in some cases faster), and much
-faster than regex libraries such as Boost.Regex, C++11 std::regex, PCRE2 and
-RE2.  For example, tokenizing a representative C source code file into 244
-tokens takes only 13 microseconds:
+[RE/flex][reflex-url] is as fast or faster than Flex, and much faster than
+regex libraries such as Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For
+example, tokenizing a representative C source code file into 244 tokens takes
+only 13 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
@@ -390,7 +390,6 @@ Changelog
 - Jul  5, 2017: 0.9.26 fixed `wstr()` always returning UTF-16 strings (should be UTF-16 only when `std::wstring` requires it).
 - Sep 26, 2017: 0.9.27 the Flex-compatible `yy_scan_string()`, `yy_scan_bytes()` and `yy_scan_buffer()` functions now create a new buffer as in Flex, delete this buffer with `yy_delete_buffer()`; fixed examples to work with newer Bison versions (Bison 3.0.4).
 - Dec 12, 2017: 0.9.28 added `yy_scan_wstring` and `yy_scan_wbuffer` for wide string scanning with Flex-like functions
-
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
