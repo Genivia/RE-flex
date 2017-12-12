@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">flexlexer.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Sep 26 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Dec 12 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -52,7 +52,8 @@
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">flexlexer.h File Reference</div>  </div>
 </div><!--header-->
@@ -187,13 +188,17 @@ Macros</h2></td></tr>
 <tr class="memitem:a4ecb7d50aa442ca3a95ef3cc806a911a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a4ecb7d50aa442ca3a95ef3cc806a911a">yyrestart</a>(i)                  &#160;&#160;&#160;YY_SCANNER.in(i)</td></tr>
 <tr class="memdesc:a4ecb7d50aa442ca3a95ef3cc806a911a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: restart from the given input source.  <a href="#a4ecb7d50aa442ca3a95ef3cc806a911a">More...</a><br /></td></tr>
 <tr class="separator:a4ecb7d50aa442ca3a95ef3cc806a911a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd47859dde5a17ec41867674dc65d03a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#afd47859dde5a17ec41867674dc65d03a">yy_scan_string</a>(i)        &#160;&#160;&#160;(YY_SCANNER.matcher(YY_SCANNER.new_matcher(i)),<a class="el" href="flexlexer_8h.html#aa093d500a6330d06d8e4760c494fac33">YY_CURRENT_BUFFER</a>)</td></tr>
+<tr class="memitem:afd47859dde5a17ec41867674dc65d03a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#afd47859dde5a17ec41867674dc65d03a">yy_scan_string</a>(i)        &#160;&#160;&#160;(YY_SCANNER.has_matcher() ? (YY_SCANNER.matcher(YY_SCANNER.new_matcher(i)), <a class="el" href="flexlexer_8h.html#aa093d500a6330d06d8e4760c494fac33">YY_CURRENT_BUFFER</a>) : (YY_SCANNER.in(i), static_cast&lt;<a class="el" href="flexlexer_8h.html#af8ef002da9f9ba35951176ec0be7ab23">YY_BUFFER_STATE</a>&gt;(NULL)))</td></tr>
 <tr class="memdesc:afd47859dde5a17ec41867674dc65d03a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: scan a string.  <a href="#afd47859dde5a17ec41867674dc65d03a">More...</a><br /></td></tr>
 <tr class="separator:afd47859dde5a17ec41867674dc65d03a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65add7262b009a8828e8582986473f9c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a65add7262b009a8828e8582986473f9c">yy_scan_bytes</a>(b,  n)      &#160;&#160;&#160;(YY_SCANNER.matcher(YY_SCANNER.new_matcher(std::string(b, n))),<a class="el" href="flexlexer_8h.html#aa093d500a6330d06d8e4760c494fac33">YY_CURRENT_BUFFER</a>)</td></tr>
-<tr class="separator:a65add7262b009a8828e8582986473f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee421e70a9938a95ab50156f34d835f8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aee421e70a9938a95ab50156f34d835f8">yy_scan_buffer</a>(b,  n)    &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a65add7262b009a8828e8582986473f9c">yy_scan_bytes</a>(b, n)</td></tr>
+<tr class="memitem:a7aca2f6da44872331cefc5f96674ea6d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a7aca2f6da44872331cefc5f96674ea6d">yy_scan_wstring</a>(i)      &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#afd47859dde5a17ec41867674dc65d03a">yy_scan_string</a>(i)</td></tr>
+<tr class="separator:a7aca2f6da44872331cefc5f96674ea6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee421e70a9938a95ab50156f34d835f8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aee421e70a9938a95ab50156f34d835f8">yy_scan_buffer</a>(b,  n)    &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#afd47859dde5a17ec41867674dc65d03a">yy_scan_string</a>(std::string(b, n))</td></tr>
 <tr class="separator:aee421e70a9938a95ab50156f34d835f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45332c3425a192d0e7823e4ca5545975"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a45332c3425a192d0e7823e4ca5545975">yy_scan_wbuffer</a>(b,  n)  &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#afd47859dde5a17ec41867674dc65d03a">yy_scan_string</a>(std::wstring(b, n))</td></tr>
+<tr class="separator:a45332c3425a192d0e7823e4ca5545975"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65add7262b009a8828e8582986473f9c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a65add7262b009a8828e8582986473f9c">yy_scan_bytes</a>(b,  n)      &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#afd47859dde5a17ec41867674dc65d03a">yy_scan_string</a>(std::string(b, n))</td></tr>
+<tr class="separator:a65add7262b009a8828e8582986473f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14a01126580f1d5ad5d4fc521bc715d2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a14a01126580f1d5ad5d4fc521bc715d2">yyterminate</a>()                &#160;&#160;&#160;return 0</td></tr>
 <tr class="memdesc:a14a01126580f1d5ad5d4fc521bc715d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the terminating action.  <a href="#a14a01126580f1d5ad5d4fc521bc715d2">More...</a><br /></td></tr>
 <tr class="separator:a14a01126580f1d5ad5d4fc521bc715d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,6 +220,13 @@ Macros</h2></td></tr>
 <tr class="memitem:a301f4439c9b191c80db45f5b1a8c7269"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a301f4439c9b191c80db45f5b1a8c7269">yy_flex_debug</a>&#160;&#160;&#160;YY_SCANNER.debug_;</td></tr>
 <tr class="memdesc:a301f4439c9b191c80db45f5b1a8c7269"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the debug flag.  <a href="#a301f4439c9b191c80db45f5b1a8c7269">More...</a><br /></td></tr>
 <tr class="separator:a301f4439c9b191c80db45f5b1a8c7269"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab10cd6c1fbe434c7ee678c145b8891cd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#ab10cd6c1fbe434c7ee678c145b8891cd">yy_scan_buffer_string</a> (const std::string &amp;b, size_t n)</td></tr>
+<tr class="separator:ab10cd6c1fbe434c7ee678c145b8891cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a805cbfe264ce7b559411a3fd12791719"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a805cbfe264ce7b559411a3fd12791719">yy_scan_buffer_string</a> (const std::wstring &amp;b, size_t n)</td></tr>
+<tr class="separator:a805cbfe264ce7b559411a3fd12791719"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex Flex-compatible FlexLexer base class and Lex/Flex-compatible macros. </p>
@@ -505,7 +517,7 @@ Macros</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a65add7262b009a8828e8582986473f9c">yy_scan_bytes</a>(b, n)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#afd47859dde5a17ec41867674dc65d03a">yy_scan_string</a>(std::string(b, n))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -531,7 +543,7 @@ Macros</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;(YY_SCANNER.matcher(YY_SCANNER.new_matcher(std::string(b, n))),<a class="el" href="flexlexer_8h.html#aa093d500a6330d06d8e4760c494fac33">YY_CURRENT_BUFFER</a>)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#afd47859dde5a17ec41867674dc65d03a">yy_scan_string</a>(std::string(b, n))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -547,12 +559,54 @@ Macros</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">i</td><td>)</td>
-          <td>&#160;&#160;&#160;(YY_SCANNER.matcher(YY_SCANNER.new_matcher(i)),<a class="el" href="flexlexer_8h.html#aa093d500a6330d06d8e4760c494fac33">YY_CURRENT_BUFFER</a>)</td>
+          <td>&#160;&#160;&#160;(YY_SCANNER.has_matcher() ? (YY_SCANNER.matcher(YY_SCANNER.new_matcher(i)), <a class="el" href="flexlexer_8h.html#aa093d500a6330d06d8e4760c494fac33">YY_CURRENT_BUFFER</a>) : (YY_SCANNER.in(i), static_cast&lt;<a class="el" href="flexlexer_8h.html#af8ef002da9f9ba35951176ec0be7ab23">YY_BUFFER_STATE</a>&gt;(NULL)))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Flex-compatible macro: scan a string. </p>
+
+</div>
+</div>
+<a class="anchor" id="a45332c3425a192d0e7823e4ca5545975"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yy_scan_wbuffer</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">b, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">n&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#afd47859dde5a17ec41867674dc65d03a">yy_scan_string</a>(std::wstring(b, n))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7aca2f6da44872331cefc5f96674ea6d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yy_scan_wstring</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">i</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#afd47859dde5a17ec41867674dc65d03a">yy_scan_string</a>(i)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -936,10 +990,79 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="ab10cd6c1fbe434c7ee678c145b8891cd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string yy_scan_buffer_string </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a805cbfe264ce7b559411a3fd12791719"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::wstring yy_scan_buffer_string </td>
+          <td>(</td>
+          <td class="paramtype">const std::wstring &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Sep 26 2017 15:12:49 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Dec 12 2017 16:16:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

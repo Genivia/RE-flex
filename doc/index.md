@@ -1337,7 +1337,9 @@ This generates additional Flex-compatible `yylex()` reentrant scanner
 functions.  RE/flex scanners are always reentrant, assuming that `%%class`
 variables are used instead of the user declaring global variables.  This is a
 Flex-compatibility option and should only be used with options `−−flex` and
-`−−bison`.  See \ref reflex-bison.
+`−−bison`.  With this option enabled, most Flex functions take a `yyscan_t`
+scanner as an extra last argument.  See \ref reflex-reentrant and also
+\ref reflex-bison.
 
 #### `−−yywrap` and `−−noyywrap`
 
@@ -1720,7 +1722,7 @@ the classic Flex actions shown in the second column of this table:
   `echo()`             | `ECHO`               | `out().write(text(), size())`
   `in(i)`              | `yyrestart(i)`       | set input to `reflex::Input i`
   `in()`, `in() = &i`  | `*yyin`, `yyin = &i` | get/set `reflex::Input` object
-  `out(s)`             | `yyout = &s`         | set output to `std::ostream s`
+  `out(o)`             | `yyout = &o`         | set output to `std::ostream o`
   `out()`              | `*yyout`             | get `std::ostream` object
   `out().write(s, n)`  | `LexerOutput(s, n)`  | output chars `s[0..n-1]`
   `out().put(c)`       | `output(c)`          | output char `c`
@@ -1797,6 +1799,10 @@ to generate a header file `lex.yy.h` to include in your code to use the global
 use Flex actions and variables.  See \ref reflex-bison for more details on the
 `−−bison` options to use.
 
+When using **reflex** options `−−flex`, `−−bison` and `−−reentrant`, most Flex
+functions take a `yyscan_t` scanner as an extra last argument.  See
+\ref reflex-reentrant for details.
+
 From the first couple of entries in the table shown above you may have guessed
 correctly that `text()` is just a shorthand for `matcher().text()`, since
 `matcher()` is the matcher object associated with the generated Lexer class.
@@ -1835,13 +1841,30 @@ the underlying matcher used by the scanner.  Therefore, `new_matcher(i)`
 instantiates a `reflex::Matcher` or `reflex::BoostPosixMatcher` depending on
 the `−−matcher` option.
 
-The Flex `yy_scan_string(string)`, `yy_scan_bytes(bytes, len)`, and
-`yy_scan_buffer(bytes, len)` functions are also supported with **reflex**
-option `−−flex` to scan the specified string that is 0-terminated or scan `len`
-`bytes`.  These functions create a new buffer (i.e. a new matcher in RE/flex).
-A pointer to the new buffer is returned, which becomes the `YY_CURRENT_BUFFER`.
-You should delete this new buffer with `yy_delete_buffer(YY_CURRENT_BUFFER)`
-when you are done with it.
+The following Flex functions are also supported with **reflex** option
+`−−flex` and take `std::string` and `char*` arguments:
+
+  Flex action                   | Result
+  ----------------------------- | ---------------------------------------------
+  `yy_scan_string(string)`      | scan `string`
+  `yy_scan_buffer(string, len)` | scan `string` upto length `len`
+  `yy_scan_bytes(bytes, len)`   | scan `bytes` upto length `len`
+
+In addition, the following wide string versions take `std::wstring` and
+`wchar_t*` arguments:
+  
+  RE/flex action                 | Result
+  ------------------------------ | --------------------------------------------
+  `yy_scan_wstring(string)`      | scan wide `string`
+  `yy_scan_wbuffer(string, len)` | scan wide `string` upto length `len`
+
+These functions create a new buffer (i.e. a new matcher in RE/flex).  A pointer
+to the new buffer is returned, which becomes the `YY_CURRENT_BUFFER`.  You
+should delete this new buffer with `yy_delete_buffer(YY_CURRENT_BUFFER)` when
+you are done with it.
+
+These functions take an extra last `yyscan_t` argument for reentrant Flex
+scanners generated with option `−−reentrant`.
 
 The generated scanner reads from the standard input by default or from an input
 source specified as a `reflex::Input` object, such as a string, wide string,
@@ -3314,26 +3337,33 @@ or a better approach is to generate a `lex.yy.h` header file with option
 The second option requires the generated parser to be compiled in C++, because
 `lex.yy.h` contains C++ declarations.
 
-The ugly Flex macro `YY_DECL` is not supported by RE/flex.  This macro is
+@note The ugly Flex macro `YY_DECL` is not supported by RE/flex.  This macro is
 needed with Flex to redeclare the `yylex()` function signature, for example to
 take an additional `yylval` parameter that must be passed through from
 `yyparse()` to `yylex()`.  Because the generated scanner uses a Lexer class for
 scanning, the class can be extended with `%%class{` and `%}` to hold state
 information and additional token-related values.  These values can then be
 exchanged with the parser using getters and setters, which is preferred over
-changing the `yylex()` function signature.
+changing the `yylex()` function signature with `YY_DECL`.
 
-Yacc and Bison use the global variable `yylval` to exchange token values.
-Reentrant Bison parsers pass the `yylval` to the `yylex()` function as a
-parameter.  RE/flex supports all of these Bison-specific features with
-command-line options.
+🔝 [Back to table of contents](#)
 
-To change the generated code for use with Bison, use the following options:
+
+### Bison and thread-safety                             {#reflex-bison-mt-safe}
+
+Bison and Yacc are not thread-safe because the generated code uses and updates
+global variables.  Yacc and Bison use the global variable `yylval` to exchange
+token values.  By contrast, thread-safe reentrant Bison parsers pass the
+`yylval` to the `yylex()` function as a parameter.  RE/flex supports all of
+these Bison-specific features.
+
+The following combinations of options are available to generate scanners for
+Bison:
 
   Options                                       | Method                                    | Global functions and variables
   --------------------------------------------- | ----------------------------------------- | ------------------------------
-  &nbsp;                                        | `int Lexer::lex()`                        | &nbsp;                          
-  `−−flex`                                      | `int yyFlexLexer::yylex()`                | &nbsp;                          
+  &nbsp;                                        | `int Lexer::lex()`                        | no global variables, but doesn't work with Bison
+  `−−flex`                                      | `int yyFlexLexer::yylex()`                | no global variables, but doesn't work with Bison
   `−−bison`                                     | `int Lexer::lex()`                        | `Lexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`
   `−−flex` `−−bison`                            | `int yyFlexLexer::yylex()`                | `yyFlexLexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`, `char *yytext`, `yy_size_t yyleng`, `int yylineno`
   `−−bison` `−−reentrant`                       | `int Lexer::lex()`                        | `int yylex(yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
@@ -3350,7 +3380,16 @@ generated `yyFlexLexer` and `yylex`.  This option can be combined with option
 `−−bison` to also change the prefix of the generated `yytext`, `yyleng`, and
 `yylineno`.
 
-The **reflex** option `−−bison-bridge` expects a Bison "pure parser":
+The following sections explain the `−−bison` with `−−reentrant`,
+`−−bison-bridge` and `−−bison-locations` options for **reflex**.
+
+🔝 [Back to table of contents](#)
+
+
+### Bison-bridge                                         {#reflex-bison-bridge}
+
+The **reflex** option `−−bison-bridge` expects a Bison "pure parser" that is
+declared as follows in a Yacc specification:
 
 <div class="alt">
 ```cpp
@@ -3370,29 +3409,31 @@ The **reflex** option `−−bison-bridge` expects a Bison "pure parser":
 ```
 </div>
 
-For the `−−bison-bridge` option, the `yyscan_t` argument type of
+With the `−−bison-bridge` option of **reflex**, the `yyscan_t` argument type of
 `yylex()` is a `void*` type that passes the scanner object to this global
 function (as defined by `YYPARSE_PARAM` and `YYLEX_PARAM`).  The function then
 invokes this scanner's lex function.  This option also passes the `yylval`
 value to the lex function, which is a reference to an `YYSTYPE` value.
 
-For the `−−reentrant` and `−−bison-bridge` options two additional functions are
-generated that can be used to create a new scanner and delete the scanner:
+Wtih the `−−bison-bridge` option two additional functions are generated that
+should be used to create a new scanner and delete the scanner in your program:
 
 <div class="alt">
 ```cpp
 yyscan_t scanner = nullptr;
-yylex_init(&scanner);      // create a new scanner
+yylex_init(&scanner);                // create a new scanner
 ...
-// three possibilities, depending on options:
-int token = yylex(scanner);                   // reentrant scan
-int token = yylex(&yylval, scanner);          // reentrant scan with bison-bridge
-int token = yylex(&yylval, &yylloc, scanner); // reentrant scan with bison-bridge and bison-locations
+int token = yylex(&yylval, scanner); // scan with bison-bridge
 ...
-yylex_destroy(scanner);    // delete a scanner
+yylex_destroy(scanner);              // delete a scanner
 scanner = nullptr;
 ```
 </div>
+
+🔝 [Back to table of contents](#)
+
+
+### Bison-locations                                   {#reflex-bison-locations}
 
 The option `−−bison-locations` expects a Bison parser with the locations
 feature enabled.  This feature provides line and column numbers of the matched
@@ -3446,8 +3487,17 @@ The `yylval` value is passed to the lex function.  The `yylloc` structure is
 automatically set by the RE/flex scanner, so you do not need to define a
 `YY_USER_ACTION` macro as you have to with Flex.
 
-And a final example that combines options `−−bison-locations` and
-`−−bison-bridge`, which expects a Bison pure-parser with locations enabled:
+Note that with the `−−bison-location` option, `yylex()` takes an additional
+`YYLTYPE` argument that a Bison parser provides.
+
+🔝 [Back to table of contents](#)
+
+
+### Bison-bridge & locations                   {#reflex-bison-bridge-locations}
+
+Here is a final example that combines options `−−bison-locations` and
+`−−bison-bridge`,  The Bison parser should be a Bison pure-parser with
+locations enabled:
 
 <div class="alt">
 ```cpp
@@ -3507,6 +3557,99 @@ can be used as such in the scanner's rules.
 %}
 ```
 </div>
+
+With the `−−bison-bridge` and `−−bison-location` options two additional
+functions are generated that should be used to create a new scanner and delete
+the scanner in your program:
+
+<div class="alt">
+```cpp
+yyscan_t scanner = nullptr;
+yylex_init(&scanner);      // create a new scanner
+...
+int token = yylex(&yylval, &yylloc, scanner); // scan with bison-bridge and bison-locations
+...
+yylex_destroy(scanner);    // delete a scanner
+scanner = nullptr;
+```
+</div>
+
+🔝 [Back to table of contents](#)
+
+
+### Reentrant Bison                                         {#reflex-reentrant}
+
+When **reflex** is used as a Flex replacement with option `−−flex` and
+`−−bison`, option `-R` or `−−reentrant` can be used to generate a reentrant
+scanner.  This is only useful if you use both options `−−flex` and `−−bison`,
+for example when migrating an existing project from Flex to **reflex**, because
+**reflex** by defaul generates is MT-safe scanners.  See also \ref
+reflex-bison.
+
+When using reentrant scanners, your code should create a `yyscan_t` scanner
+object with `yylex_init(&scanner)` and destroy it with
+`yylex_destroy(scanner)`.  Reentrant Flex functions take the scanner object as
+an extra last argument.
+
+With the `−−reentrant` option two additional functions are generated that should
+be used to create a new scanner and delete the scanner in your program:
+
+<div class="alt">
+```cpp
+yyscan_t scanner = nullptr;
+yylex_init(&scanner);       // create a new scanner
+...
+int token = yylex(scanner); // reentrant scan
+...
+yylex_destroy(scanner);     // delete a scanner
+scanner = nullptr;
+```
+</div>
+
+Within a rules section you should refer to the scanner with `yyscanner`.
+
+The following additional functions are available in a reentrant Flex scanner,
+which are useful outside of the rules section (you can still use the usual
+Flex functions in the rules section):
+
+  Reentrant Flex action       | Result
+  --------------------------- | -----------------------------------------------
+  `yyget_text(s)`             | 0-terminated text match
+  `yyget_leng(s)`             | size of the match in bytes
+  `yyget_lineno(s)`           | line number of match (>=1)
+  `yyget_in(s)`               | get `reflex::Input` object
+  `yyset_in(i, s)`            | set `reflex::Input` object
+  `yyget_out(s)`              | get `std::ostream` object
+  `yyset_out(o, s)`           | set output to `std::ostream o`
+  `yyget_debug(s)`            | reflex option `-d` sets `n=1`
+  `yyset_debug(n, s)`         | reflex option `-d` sets `n=1`
+  `yyrestart(i, s)`           | set input to `reflex::Input i`
+  `yyinput(s)`                | get next 8-bit char from input
+  `yyunput(c, s)`             | put back 8-bit char `c`
+  `yyoutput(c, s)`            | output char `c`
+  `yy_create_buffer(i, n, s)` | new matcher `reflex::Input i`
+  `yy_delete_buffer(m, s)`    | delete matcher `m`
+  `yypush_buffer_state(m, s)` | push current matcher, use `m`
+  `yypop_buffer_state(s)`     | pop matcher and delete current
+  `yy_switch_to_buffer(m, s)` | use matcher `m`
+  `yyget_extra(s)`            | get user-defined extra parameter
+  `yyset_extra(x, s)`         | set user-defined extra parameter
+
+With respect to the last two functions, a scanner object has a `YY_EXTRA_TYPE
+yyextra` value that is user-definable.  You can define the type in a lexer
+specification with the `extra-type` option:
+
+<div class="alt">
+```cpp
+%option flex bison reentrant
+%option extra-type struct extra
+struct extra { ... }; // type of the data to include in a FlexLexer
+```
+</div>
+
+This is a crude mechanism originating in Flex' C legacy to add extra
+user-defined values to a scanner class.  Because **reflex** is C++, you should
+instead define a derived class that extends the `Lexer` or `FlexLexer` class.
 
 🔝 [Back to table of contents](#)
 

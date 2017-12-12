@@ -183,6 +183,16 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     }
     return false;
   }
+  /// FSM extra code POSN returns current position.
+  inline size_t FSM_POSN()
+  {
+    return pos_ - (txt_ - buf_);
+  }
+  /// FSM extra code BACK position to a previous position returned by FSM_POSN().
+  inline void FSM_BACK(size_t pos)
+  {
+    cur_ = txt_ - buf_ + pos;
+  }
   /// FSM code META DED.
   inline bool FSM_META_DED()
   {

@@ -18,11 +18,12 @@ tokens takes only 13 microseconds:
 <tr><td>flex -+ --full</td><td>Flex</td><td>17</td></tr>
 <tr><td>reflex --full</td><td>RE/flex</td><td>29</td></tr>
 <tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex</td><td>40</td></tr>
-<tr><td>reflex -m=boost-perl</td><td>Boost.Regex (Perl mode)</td><td>230</td></tr>
+<tr><td>reflex -m=boost-perl</td><td>Boost.Regex</td><td>230</td></tr>
 <tr><td>pcre2_match()</td><td>PCRE2 (pre-compiled)</td><td>318</td></tr>
-<tr><td>reflex -m=boost</td><td>Boost.Regex (POSIX mode)</td><td>450</td></tr>
+<tr><td>reflex -m=boost</td><td>Boost.Regex POSIX mode</td><td>450</td></tr>
 <tr><td>flex -+</td><td>Flex</td><td>3968</td></tr>
 <tr><td>RE2::Consume()</td><td>RE2 (pre-compiled)</td><td>5088</td></tr>
+<tr><td>RE2::Consume()</td><td>RE2 POSIX mode (pre-compiled)</td><td>5420</td></tr>
 <tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>14784</td></tr>
 </table>
 
@@ -388,6 +389,7 @@ Changelog
 - Jun 28, 2017: 0.9.25 fixed `--fast` FSM not always halting on EOF after a mismatch; fixed buffer realloc, added new examples/csv.l.
 - Jul  5, 2017: 0.9.26 fixed `wstr()` always returning UTF-16 strings (should be UTF-16 only when `std::wstring` requires it).
 - Sep 26, 2017: 0.9.27 the Flex-compatible `yy_scan_string()`, `yy_scan_bytes()` and `yy_scan_buffer()` functions now create a new buffer as in Flex, delete this buffer with `yy_delete_buffer()`; fixed examples to work with newer Bison versions (Bison 3.0.4).
+- Dec 12, 2017: 0.9.28 added `yy_scan_wstring` and `yy_scan_wbuffer` for wide string scanning with Flex-like functions
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

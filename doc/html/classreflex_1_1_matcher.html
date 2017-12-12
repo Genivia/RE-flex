@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Sep 26 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Dec 12 2017 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -165,6 +165,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae6d846e6b7fe4a8257ead872cd89515a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ae6d846e6b7fe4a8257ead872cd89515a">FSM_DENT</a> ()</td></tr>
 <tr class="memdesc:ae6d846e6b7fe4a8257ead872cd89515a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code DENT.  <a href="#ae6d846e6b7fe4a8257ead872cd89515a">More...</a><br /></td></tr>
 <tr class="separator:ae6d846e6b7fe4a8257ead872cd89515a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a996f60e73e31c802fac029eadac0d149"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a996f60e73e31c802fac029eadac0d149">FSM_POSN</a> ()</td></tr>
+<tr class="memdesc:a996f60e73e31c802fac029eadac0d149"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> extra code POSN returns current position.  <a href="#a996f60e73e31c802fac029eadac0d149">More...</a><br /></td></tr>
+<tr class="separator:a996f60e73e31c802fac029eadac0d149"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e077964c3a6847b1087bed1eb77bc26"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a2e077964c3a6847b1087bed1eb77bc26">FSM_BACK</a> (size_t pos)</td></tr>
+<tr class="memdesc:a2e077964c3a6847b1087bed1eb77bc26"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> extra code BACK position to a previous position returned by <a class="el" href="classreflex_1_1_matcher.html#a996f60e73e31c802fac029eadac0d149" title="FSM extra code POSN returns current position. ">FSM_POSN()</a>.  <a href="#a2e077964c3a6847b1087bed1eb77bc26">More...</a><br /></td></tr>
+<tr class="separator:a2e077964c3a6847b1087bed1eb77bc26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a441387325bdc654d53e95dafd076331c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a441387325bdc654d53e95dafd076331c">FSM_META_DED</a> ()</td></tr>
 <tr class="memdesc:a441387325bdc654d53e95dafd076331c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META DED.  <a href="#a441387325bdc654d53e95dafd076331c">More...</a><br /></td></tr>
 <tr class="separator:a441387325bdc654d53e95dafd076331c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -811,6 +817,32 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a2e077964c3a6847b1087bed1eb77bc26"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::FSM_BACK </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> extra code BACK position to a previous position returned by <a class="el" href="classreflex_1_1_matcher.html#a996f60e73e31c802fac029eadac0d149" title="FSM extra code POSN returns current position. ">FSM_POSN()</a>. </p>
+
+</div>
+</div>
 <a class="anchor" id="ae2d2cbadbfa26b8b49509733971d1cc6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1271,6 +1303,31 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code META NWE. </p>
+
+</div>
+</div>
+<a class="anchor" id="a996f60e73e31c802fac029eadac0d149"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::Matcher::FSM_POSN </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> extra code POSN returns current position. </p>
 
 </div>
 </div>
@@ -1763,7 +1820,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Sep 26 2017 15:12:50 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Dec 12 2017 16:16:17 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

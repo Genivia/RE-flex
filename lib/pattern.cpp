@@ -480,13 +480,15 @@ void Pattern::parse2(
     if (nullable1)
     {
       set_insert(lastpos, lastpos1);
+      set_insert(lazypos, lazypos1); // FIXME 10/21
     }
     else
     {
       lastpos.swap(lastpos1);
+      lazypos.swap(lazypos1); // FIXME 10/21
       nullable = false;
     }
-    set_insert(lazypos, lazypos1);
+    // FIXME 10/21 set_insert(lazypos, lazypos1);
     if (iter1 > iter)
       iter = iter1;
   }
@@ -1150,13 +1152,19 @@ void Pattern::greedy(Positions& pos) const
 {
   Positions pos1;
   for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
-    // pos1.insert(p->lazy() ? *p : p->greedy(true)); // CHECKED algorithmic options: 7/29 guard added: p->lazy() ? *p : p->greedy(true)
-    pos1.insert(p->lazy(0).greedy(true));
+    pos1.insert(p->lazy() ? *p : p->greedy(true)); // CHECKED algorithmic options: 7/29 guard added: p->lazy() ? *p : p->greedy(true)
+    // FIXME 10/21 pos1.insert(p->lazy(0).greedy(true));
   pos.swap(pos1);
 }
 
 void Pattern::trim_lazy(Positions& pos) const
 {
+#ifdef DEBUG
+  DBGLOG("BEGIN trim_lazy({");
+  for (Positions::const_iterator q = pos.begin(); q != pos.end(); ++q)
+    DBGLOGPOS(*q);
+  DBGLOGA(" })");
+#endif
   Positions::reverse_iterator p = pos.rbegin();
   while (p != pos.rend() && p->lazy())
   {
@@ -1188,7 +1196,7 @@ void Pattern::trim_lazy(Positions& pos) const
       if (!p->greedy()) // stop here, greedy bit is 0 from here on
         break;
       pos.insert(p->lazy(0));
-      ++p;
+      pos.erase(--p.base()); // FIXME 10/21 ++p;
 #endif
     }
   }
@@ -1198,6 +1206,12 @@ void Pattern::trim_lazy(Positions& pos) const
     pos.insert(p->greedy(false));
     pos.erase(--p.base());
   }
+#endif
+#ifdef DEBUG
+  DBGLOG("END trim_lazy({");
+  for (Positions::const_iterator q = pos.begin(); q != pos.end(); ++q)
+    DBGLOGPOS(*q);
+  DBGLOGA(" })");
 #endif
 }
 
