@@ -212,7 +212,7 @@ You can select matchers that are based on different regex engines:
 - C++11 std::regex: `#include <reflex/stdmatcher.h>` and use
   `reflex::StdMatcher` or `reflex::StdPosixMatcher`.
 
-Each matcher may differ in regex syntax features (see the full documentation), 
+Each matcher may differ in regex syntax features (see the full documentation),
 but they have the same methods and iterators:
 
 - `matches()` returns nonzero if the input from begin to end matches;
@@ -352,7 +352,7 @@ License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2015-2017, All rights reserved.   
+Copyright (c) 2015-2017, All rights reserved.
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.
