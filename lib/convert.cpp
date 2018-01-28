@@ -72,7 +72,7 @@ static const char regex_abtnvfr[] = "abtnvfr";
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-inline bool enable_modifier(int c, const char *pattern, size_t pos, std::map<int,size_t>& mod, size_t lev) throw (regex_error)
+inline bool enable_modifier(int c, const char *pattern, size_t pos, std::map<int,size_t>& mod, size_t lev)
 {
   std::map<int,size_t>::iterator i = mod.find(c);
   if (i == mod.end())
@@ -222,7 +222,7 @@ static std::string unicode_class(const char *s, int esc, const char *par)
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, const char *escapes, const std::map<int,size_t>& mod, const char *par, std::string& regex) throw (regex_error)
+static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, const char *escapes, const std::map<int,size_t>& mod, const char *par, std::string& regex)
 {
   int c = pattern[pos];
   if (std::strchr(regex_unescapes, c) != NULL)
@@ -377,7 +377,7 @@ static int convert_hex(const char *pattern, size_t len, size_t& pos, convert_fla
   return -1;
 }
 
-static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t& pos, convert_flag_type flags, const char *escapes, const std::map<int,size_t>& mod, const char *par, std::string& regex) throw (regex_error)
+static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t& pos, convert_flag_type flags, const char *escapes, const std::map<int,size_t>& mod, const char *par, std::string& regex)
 {
   int c = pattern[pos];
   if (c == '\n' || c == '\r')
@@ -563,7 +563,7 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-static void insert_escape_class(const char *pattern, size_t& pos, const std::map<int,size_t>& mod, ORanges<int>& ranges) throw (regex_error)
+static void insert_escape_class(const char *pattern, size_t& pos, const std::map<int,size_t>& mod, ORanges<int>& ranges)
 {
   int c = pattern[pos];
   char name[2] = { lower(c), '\0' };
@@ -619,7 +619,7 @@ static void insert_escape_class(const char *pattern, size_t& pos, const std::map
   }
 }
 
-static int insert_escape(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges) throw (regex_error)
+static int insert_escape(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges)
 {
   int c = pattern[pos];
   if (c == 'c')
@@ -752,7 +752,7 @@ static int insert_escape(const char *pattern, size_t len, size_t& pos, convert_f
   return c;
 }
 
-static void insert_posix_class(const char *pattern, size_t len, size_t& pos, ORanges<int>& ranges) throw (regex_error)
+static void insert_posix_class(const char *pattern, size_t len, size_t& pos, ORanges<int>& ranges)
 {
   pos += 2;
   char buf[8];
@@ -792,9 +792,9 @@ static void insert_posix_class(const char *pattern, size_t len, size_t& pos, ORa
   ++pos;
 }
 
-static void insert_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges) throw (regex_error);
+static void insert_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges);
 
-static void merge_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges) throw (regex_error)
+static void merge_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges)
 {
   if (pattern[pos] == '^')
   {
@@ -821,7 +821,7 @@ static void merge_list(const char *pattern, size_t len, size_t& pos, convert_fla
   }
 }
 
-static void intersect_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges) throw (regex_error)
+static void intersect_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges)
 {
   ORanges<int> intersect;
   if (pattern[pos] == '^')
@@ -849,7 +849,7 @@ static void intersect_list(const char *pattern, size_t len, size_t& pos, convert
   }
 }
 
-static void subtract_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges) throw (regex_error)
+static void subtract_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges)
 {
   ORanges<int> subtract;
   if (pattern[pos] == '^')
@@ -877,7 +877,7 @@ static void subtract_list(const char *pattern, size_t len, size_t& pos, convert_
   }
 }
 
-static void insert_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges) throw (regex_error)
+static void insert_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<int,size_t>& mod, ORanges<int>& ranges)
 {
   size_t loc = pos;
   bool range = false;
@@ -1028,7 +1028,7 @@ static void convert_anycase_ranges(ORanges<int>& ranges)
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-std::string convert(const char *pattern, const char *signature, convert_flag_type flags, const std::map<std::string,std::string> *macros) throw (regex_error)
+std::string convert(const char *pattern, const char *signature, convert_flag_type flags, const std::map<std::string,std::string> *macros)
 {
   std::string regex;
   bool anc = false;

@@ -154,7 +154,7 @@ const std::string Pattern::operator[](Index choice) const
   return "";
 }
 
-void Pattern::error(regex_error_type code, size_t pos) const throw (regex_error)
+void Pattern::error(regex_error_type code, size_t pos) const
 {
   regex_error err(code, rex_.c_str(), pos);
   if (opt_.w)
@@ -163,7 +163,7 @@ void Pattern::error(regex_error_type code, size_t pos) const throw (regex_error)
     throw err;
 }
 
-void Pattern::init(const char *opt) throw (regex_error)
+void Pattern::init(const char *opt)
 {
   if (opc_)
   {
@@ -263,7 +263,7 @@ void Pattern::parse(
     Positions& startpos,
     Follow&    followpos,
     Map&       modifiers,
-    Map&       lookahead) throw (regex_error)
+    Map&       lookahead)
 {
   DBGLOG("BEGIN parse()");
   Location   loc = 0;
@@ -345,7 +345,7 @@ void Pattern::parse1(
     Positions& lazypos,
     Map&       modifiers,
     Ranges&    lookahead,
-    Index&     iter) throw (regex_error)
+    Index&     iter)
 {
   DBGLOG("BEGIN parse1(%zu)", loc);
   parse2(
@@ -399,7 +399,7 @@ void Pattern::parse2(
     Positions& lazypos,
     Map&       modifiers,
     Ranges&    lookahead,
-    Index&     iter) throw (regex_error)
+    Index&     iter)
 {
   DBGLOG("BEGIN parse2(%zu)", loc);
   Positions a_pos;
@@ -480,15 +480,15 @@ void Pattern::parse2(
     if (nullable1)
     {
       set_insert(lastpos, lastpos1);
-      set_insert(lazypos, lazypos1); // FIXME 10/21
+      set_insert(lazypos, lazypos1); // CHECKED 10/21
     }
     else
     {
       lastpos.swap(lastpos1);
-      lazypos.swap(lazypos1); // FIXME 10/21
+      lazypos.swap(lazypos1); // CHECKED 10/21
       nullable = false;
     }
-    // FIXME 10/21 set_insert(lazypos, lazypos1);
+    // CHECKED 10/21 set_insert(lazypos, lazypos1);
     if (iter1 > iter)
       iter = iter1;
   }
@@ -527,7 +527,7 @@ void Pattern::parse3(
     Positions& lazypos,
     Map&       modifiers,
     Ranges&    lookahead,
-    Index&     iter) throw (regex_error)
+    Index&     iter)
 {
   DBGLOG("BEGIN parse3(%zu)", loc);
   Position b_pos(loc);
@@ -709,7 +709,7 @@ void Pattern::parse4(
     Positions& lazypos,
     Map&       modifiers,
     Ranges&    lookahead,
-    Index&     iter) throw (regex_error)
+    Index&     iter)
 {
   DBGLOG("BEGIN parse4(%zu)", loc);
   firstpos.clear();
@@ -977,7 +977,7 @@ void Pattern::parse4(
   DBGLOG("END parse4()");
 }
 
-void Pattern::parse_esc(Location& loc) const throw (regex_error)
+void Pattern::parse_esc(Location& loc) const
 {
   Char c;
   if (at(loc++) == opt_.e && opt_.e != '\0' && (c = at(loc)) != '\0')
@@ -1040,7 +1040,7 @@ void Pattern::compile(
     State&     start,
     Follow&    followpos,
     const Map& modifiers,
-    const Map& lookahead) throw (regex_error)
+    const Map& lookahead)
 {
   DBGLOG("BEGIN compile()");
   State *back_state = &start;
@@ -1153,7 +1153,7 @@ void Pattern::greedy(Positions& pos) const
   Positions pos1;
   for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
     pos1.insert(p->lazy() ? *p : p->greedy(true)); // CHECKED algorithmic options: 7/29 guard added: p->lazy() ? *p : p->greedy(true)
-    // FIXME 10/21 pos1.insert(p->lazy(0).greedy(true));
+    // CHECKED 10/21 pos1.insert(p->lazy(0).greedy(true));
   pos.swap(pos1);
 }
 
@@ -1196,7 +1196,7 @@ void Pattern::trim_lazy(Positions& pos) const
       if (!p->greedy()) // stop here, greedy bit is 0 from here on
         break;
       pos.insert(p->lazy(0));
-      pos.erase(--p.base()); // FIXME 10/21 ++p;
+      pos.erase(--p.base()); // CHECKED 10/21 ++p;
 #endif
     }
   }
@@ -1220,7 +1220,7 @@ void Pattern::compile_transition(
     Follow&    followpos,
     const Map& modifiers,
     const Map& lookahead,
-    Moves&     moves) const throw (regex_error)
+    Moves&     moves) const
 {
   DBGLOG("BEGIN compile_transition()");
   Positions::const_iterator end = state->end();
@@ -1467,7 +1467,7 @@ void Pattern::transition(
     moves.push_back(Move(rest, follow)); // faster: C++11 move.emplace_back(rest, follow)
 }
 
-Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (regex_error)
+Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const
 {
   Char c = at(loc);
   if (c == '0')
@@ -1535,7 +1535,7 @@ Pattern::Char Pattern::compile_esc(Location loc, Chars& chars) const throw (rege
   return c;
 }
 
-void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) const throw (regex_error)
+void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) const
 {
   bool complement = (at(loc) == '^');
   if (complement)
@@ -1701,7 +1701,7 @@ void Pattern::flip(Chars& chars) const
 #endif
 }
 
-void Pattern::assemble(State& start) throw (regex_error)
+void Pattern::assemble(State& start)
 {
   DBGLOG("BEGIN assemble()");
   timer_type t;
@@ -1775,7 +1775,7 @@ void Pattern::compact_dfa(State& start)
 #endif
 }
 
-void Pattern::encode_dfa(State& start) throw (regex_error)
+void Pattern::encode_dfa(State& start)
 {
   nop_ = 0;
   for (State *state = &start; state; state = state->next)

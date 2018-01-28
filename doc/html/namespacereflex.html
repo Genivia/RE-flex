@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Dec 12 2017 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Jan 28 2018 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -149,10 +149,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">isword</a> (int c)</td></tr>
 <tr class="memdesc:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check ASCII word-like character <code>[A-Za-z0-9_]</code>, permitting the character range 0..303 (0x12F) and EOF.  <a href="#a10f9faa3bb7ef4d3cee8339b8e647875">More...</a><br /></td></tr>
 <tr class="separator:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f388dfde137fe178705346b44c56223"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a4f388dfde137fe178705346b44c56223">convert</a> (const char *pattern, const char *signature=NULL, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, const std::map&lt; std::string, std::string &gt; *macros=NULL)  throw (regex_error)</td></tr>
+<tr class="memitem:a4f388dfde137fe178705346b44c56223"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a4f388dfde137fe178705346b44c56223">convert</a> (const char *pattern, const char *signature=NULL, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
 <tr class="memdesc:a4f388dfde137fe178705346b44c56223"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the converted regex string given a regex library signature and conversion flags, throws <a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">regex_error</a>.  <a href="#a4f388dfde137fe178705346b44c56223">More...</a><br /></td></tr>
 <tr class="separator:a4f388dfde137fe178705346b44c56223"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae7cb74d72d8413de9743b1a6e057539"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#aae7cb74d72d8413de9743b1a6e057539">convert</a> (const std::string &amp;pattern, const char *signature=NULL, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, const std::map&lt; std::string, std::string &gt; *macros=NULL)  throw (regex_error)</td></tr>
+<tr class="memitem:aae7cb74d72d8413de9743b1a6e057539"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#aae7cb74d72d8413de9743b1a6e057539">convert</a> (const std::string &amp;pattern, const char *signature=NULL, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
 <tr class="separator:aae7cb74d72d8413de9743b1a6e057539"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3deed9d6b147d91074913f47c330d232"><td class="memTemplParams" colspan="2">template&lt;typename S1 , typename S2 &gt; </td></tr>
 <tr class="memitem:a3deed9d6b147d91074913f47c330d232"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a3deed9d6b147d91074913f47c330d232">is_disjoint</a> (const S1 &amp;s1, const S2 &amp;s2)</td></tr>
@@ -268,12 +268,6 @@ Functions</h2></td></tr>
           <td>)</td>
           <td></td><td></td>
         </tr>
-        <tr>
-          <td align="right">throw </td><td>(</td><td colspan="2">regex_error</td>
-        </tr>
-        <tr>
-          <td align="right"></td><td>)</td><td></td><td></td>
-        </tr>
       </table>
 </div><div class="memdoc">
 
@@ -311,7 +305,7 @@ Functions</h2></td></tr>
 <li><code>y</code> for <code>\y</code> word boundary</li>
 <li><code>z</code> for <code>\z</code> end of input anchor</li>
 <li><code>0</code> for <code>\0nnn</code> 8-bit character encoding in octal requires a leading <code>0</code></li>
-<li>`<code>for `\</code> begin of input anchor</li>
+<li><code>&lt;tt&gt;for</code>\ begin of input anchor</li>
 <li><code>'</code> for <code>\'</code> end of input anchor</li>
 <li><code>&lt;</code> for <code>\&lt;</code> left word boundary</li>
 <li><code>&gt;</code> for <code>\&gt;</code> right word boundary</li>
@@ -331,13 +325,12 @@ Functions</h2></td></tr>
 <li><code>?</code> lazy quantifiers for repeats are supported</li>
 <li><code>+</code> possessive quantifiers for repeats are supported</li>
 </ul>
-<p>The optional <code>"."</code> (dot) specifies that dot matches any character except newline. </p>
+<p>The optional <code>"."</code> (dot) specifies that dot matches any character except newline. {name} macros to expand </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pattern</td><td>regex string pattern to convert </td></tr>
     <tr><td class="paramname">signature</td><td>regex library signature </td></tr>
     <tr><td class="paramname">flags</td><td>conversion flags </td></tr>
-    <tr><td class="paramname">macros</td><td>{name} macros to expand </td></tr>
   </table>
   </dd>
 </dl>
@@ -379,12 +372,6 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
-        </tr>
-        <tr>
-          <td align="right">throw </td><td>(</td><td colspan="2">regex_error</td>
-        </tr>
-        <tr>
-          <td align="right"></td><td>)</td><td></td><td></td>
         </tr>
       </table>
   </td>
@@ -860,7 +847,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Dec 12 2017 16:16:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Jan 28 2018 15:23:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

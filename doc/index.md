@@ -2986,7 +2986,7 @@ before using the matcher again.
 To read a number of bytes `n` into a string buffer `s[0..n-1]`, use
 `matcher().in.get(s, n)`, which is the same as invoking the virtual method
 `matcher().get(s, n)`.  This matcher method can be overriden by a derived
-matcher class (to customize reading.
+matcher class (to customize reading).
 
 The Flex `YY_INPUT` macro is not supported by RE/flex.  It is recommended to
 use `YY_BUFFER_STATE` (Flex), which is a `reflex::FlexLexer::Matcher` class in
@@ -3649,7 +3649,8 @@ struct extra { ... }; // type of the data to include in a FlexLexer
 
 This is a crude mechanism originating in Flex' C legacy to add extra
 user-defined values to a scanner class.  Because **reflex** is C++, you should
-instead define a derived class that extends the `Lexer` or `FlexLexer` class.
+instead define a derived class that extends the `Lexer` or `FlexLexer` class,
+see \ref #reflex-inherit.
 
 🔝 [Back to table of contents](#)
 
