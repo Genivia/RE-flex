@@ -7,8 +7,8 @@
 
 Flex reimagined.  Fast, flexible, adds Boost 💪
 
-[RE/flex][reflex-url] is as fast or faster than Flex while providing a wealth
-of new features.  RE/flex is also much faster than regex libraries such as
+[RE/flex][reflex-url] is faster than Flex while providing a wealth of new
+features.  RE/flex is also much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a
 representative C source code file into 244 tokens takes only 13 microseconds:
 
