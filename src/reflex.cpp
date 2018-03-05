@@ -852,6 +852,25 @@ std::string Reflex::get_string(size_t& pos)
   return line.substr(loc, pos - loc - 1);
 }
 
+std::string Reflex::get_namespace(size_t& pos)
+{
+    if (pos >= linelen || (!std::isalnum(line.at(pos)) && (line.at(pos) & 0x80) != 0x80))
+        return "";
+    size_t loc = pos++;
+    while (pos < linelen)
+    {
+        if (line.at(pos) == '-') // normalize - to _
+            line[pos] = '_';
+        else if (line.at(pos) == '.') {
+            // dot is a valid character in namespace name (part1.part2.part3)
+        }
+        else if (!std::isalnum(line.at(pos)) && line.at(pos) != '_' && (line.at(pos) & 0x80) != 0x80)
+            break;
+        ++pos;
+    }
+    return line.substr(loc, pos - loc);
+}
+
 /// Get regex string, converted to a format understood by the selected regex engine library.
 std::string Reflex::get_regex(size_t& pos)
 {
@@ -1238,11 +1257,25 @@ void Reflex::parse_section_1()
                       if (line.at(pos) == '"')
                         value = get_string(pos); // %option OPTION = "NAME"
                       else
-                        value = get_name(pos); // %option OPTION = NAME
+                      {
+                          value = (name == "namespace")
+                              ? get_namespace(pos) // %option namespace = part1.part2.part3
+                              : get_name(pos);     // %option OPTION = NAME
+                      }
                       (void)ws(pos);
                       if (!i->second.empty() && i->second.compare(value) != 0)
                         warning("redefining %option ", name.c_str());
                       i->second = value;
+
+                      if (name == "namespace")
+                      {
+                          std::istringstream ns(value);
+                          std::string nsname;
+
+                          while (std::getline(ns, nsname, '.')) {
+                              namespaces.push_back(nsname);
+                          }
+                      }
                     }
                     else
                     {
@@ -1539,7 +1572,7 @@ void Reflex::write()
         write_banner("REENTRANT");
       *out << "typedef ";
       if (!options["namespace"].empty())
-        *out << options["namespace"] << "::";
+          write_namespace_def();
       if (!options["yyclass"].empty())
         *out << options["yyclass"];
       else if (!options["class"].empty())
@@ -1569,7 +1602,7 @@ void Reflex::write()
       *out <<
         "extern ";
       if (!options["namespace"].empty())
-        *out << options["namespace"] << "::";
+          write_namespace_def();
       if (!options["yyclass"].empty())
         *out << options["yyclass"];
       else if (!options["class"].empty())
@@ -1594,7 +1627,7 @@ void Reflex::write()
       *out <<
         "extern ";
       if (!options["namespace"].empty())
-        *out << options["namespace"] << "::";
+          write_namespace_def();
       if (!options["yyclass"].empty())
         *out << options["yyclass"];
       else if (!options["class"].empty())
@@ -1699,10 +1732,17 @@ void Reflex::write_class()
         "#undef yyleng\n"
         "#undef yylineno\n";
     if (!options["namespace"].empty())
-      *out << std::endl << "namespace " << options["namespace"] << " {" << std::endl;
+    {
+        *out << std::endl;
+        write_namespace_start();
+        *out << std::endl;
+    }
     *out << "typedef reflex::FlexLexer" << "<" << matcher << "> FlexLexer;" << std::endl;
     if (!options["namespace"].empty())
-      *out << "}" << std::endl;
+    {
+        write_namespace_end();
+        *out << std::endl;
+    }
     base = "FlexLexer";
   }
   else
@@ -1714,7 +1754,10 @@ void Reflex::write_class()
   write_banner("LEXER CLASS");
   std::string lexer = options["lexer"];
   if (!options["namespace"].empty())
-    *out << "namespace " << options["namespace"] << " {" << std::endl << std::endl;
+  {
+      write_namespace_start();
+      *out << std::endl << std::endl;
+  }
   *out <<
     "class " << lexer << " : public " << base << " {\n";
   write_section_class();
@@ -1813,7 +1856,11 @@ void Reflex::write_class()
   *out <<
     "};" << std::endl;
   if (!options["namespace"].empty())
-    *out << std::endl << "}" << std::endl;
+  {
+      *out << std::endl;
+      write_namespace_end();
+      *out << std::endl;
+  }
 }
 
 /// Write %%top{ %} code to lex.yy.cpp.
@@ -1996,7 +2043,7 @@ void Reflex::write_lexer()
       write_banner("REENTRANT");
     *out << "typedef ";
     if (!options["namespace"].empty())
-      *out << options["namespace"] << "::";
+        write_namespace_def();
     if (!options["yyclass"].empty())
       *out << options["yyclass"];
     else if (!options["class"].empty())
@@ -2054,7 +2101,7 @@ void Reflex::write_lexer()
   {
     write_banner("BISON LOCATIONS");
     if (!options["namespace"].empty())
-      *out << options["namespace"] << "::";
+        write_namespace_def();
     if (!options["yyclass"].empty())
       *out << options["yyclass"];
     else if (!options["class"].empty())
@@ -2080,7 +2127,7 @@ void Reflex::write_lexer()
   {
     write_banner("BISON");
     if (!options["namespace"].empty())
-      *out << options["namespace"] << "::";
+        write_namespace_def();
     if (!options["yyclass"].empty())
       *out << options["yyclass"];
     else if (!options["class"].empty())
@@ -2130,7 +2177,7 @@ void Reflex::write_lexer()
   }
   *out << "int ";
   if (!options["namespace"].empty())
-    *out << options["namespace"] << "::";
+      write_namespace_def();
   if (!options["yyclass"].empty())
     *out << options["yyclass"];
   else if (!options["class"].empty())
@@ -2368,8 +2415,8 @@ void Reflex::write_main()
     *out << "int main()\n{\n  return ";
     if (options["bison"].empty())
     {
-      if (!options["namespace"].empty())
-        *out << options["namespace"] << "::";
+        if (!options["namespace"].empty())
+            write_namespace_def();
       if (!options["yyclass"].empty())
         *out << options["yyclass"];
       else if (!options["class"].empty())
@@ -2399,6 +2446,24 @@ void Reflex::write_regex(const std::string& regex)
     c = *i;
   }
   *out << "\"";
+}
+
+void Reflex::write_namespace_start()
+{
+    for (auto& name : namespaces)
+        *out << "namespace " << name << " { ";
+}
+
+void Reflex::write_namespace_end()
+{
+    for (auto& name : namespaces)
+        *out << "} ";
+}
+
+void Reflex::write_namespace_def()
+{
+    for (auto& name : namespaces)
+        *out << name << "::";
 }
 
 /// Display usage report.

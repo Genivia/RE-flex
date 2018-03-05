@@ -46,10 +46,12 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <sstream>
 #include <map>
 #include <set>
 #include <stack>
 #include <vector>
+#include <list>
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
 # define OS_WIN
@@ -127,6 +129,7 @@ class Reflex
   typedef std::set<Start>                   Starts;     ///< Set of start conditions
   typedef std::map<Start,Codes>             CodesMap;   ///< Map of start conditions to lines of code
   typedef std::map<Start,Rules>             RulesMap;   ///< Map of start conditions to rules
+  typedef std::list<std::string>            StringList; ///< List (std::string)
 
  private:
   void        init(int argc, char **argv);
@@ -153,7 +156,11 @@ class Reflex
   void        write_code(const Code& code);
   void        write_lexer();
   void        write_main();
-  void        write_regex(const std::string& regex);
+  void        write_regex(const std::string& regex);    
+  void        write_namespace_start();
+  void        write_namespace_end();
+  void        write_namespace_def();
+
   void        stats();
   bool        get_line();
   bool        skip_comment(size_t& pos);
@@ -170,6 +177,7 @@ class Reflex
   std::string get_start(size_t& pos);
   std::string get_string(size_t& pos);
   std::string get_regex(size_t& pos);
+  std::string get_namespace(size_t& pos);
   Starts      get_starts(size_t& pos);
   std::string get_code(size_t& pos);
   void        abort(const char *message, const char *arg = NULL);
@@ -179,6 +187,7 @@ class Reflex
 
  protected:
   StringMap     options;       ///< maps option name (from the options_table) to its option value
+  StringList    namespaces;    ///< list of namespace names
   LibraryMap    libraries;     ///< maps regex library name ("reflex", "boost", etc) to library info
   Library      *library;       ///< the regex library selected
   Strings       conditions;    ///< "INITIAL" start condition etc. defined with %x name
@@ -198,7 +207,7 @@ class Reflex
   std::string   line;          ///< current line read from input
   size_t        lineno;        ///< current line number at input
   size_t        linelen;       ///< current line length
-  bool          color_term;    ///< terminal supports colors
+  bool          color_term;    ///< terminal supports colors   
 };
 
 #endif
