@@ -3,7 +3,7 @@
 
 [![build status][travis-image]][travis-url] [![license][bsd-3-image]][bsd-3-url]
 
-"The regex-centric fast and flexible lexical analyzer generator for C++"
+"The regex-centric, fast and flexible lexical analyzer generator for C++"
 
 Flex reimagined.  Fast, flexible, adds Boost 💪
 
@@ -352,7 +352,7 @@ License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2015-2017, All rights reserved.
+Copyright (c) 2015-2018, All rights reserved.
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.
@@ -386,11 +386,13 @@ Changelog
 - Apr 12, 2017: 0.9.22 improved explanations of `matches()`, `find()`, `scan()`, `split()` that return nonzero for a match, other minor improvements
 - May 24, 2017: 0.9.23 improved portability, added file encoding conversions for CP-1250 to CP-1258, CP 437, and CP 850/858
 - Jun 24, 2017: 0.9.24 added an option for users to define their own custom code pages to translate input, fixed `#` in free space mode
-- Jun 28, 2017: 0.9.25 fixed `--fast` FSM not always halting on EOF after a mismatch; fixed buffer realloc, added new examples/csv.l.
-- Jul  5, 2017: 0.9.26 fixed `wstr()` always returning UTF-16 strings (should be UTF-16 only when `std::wstring` requires it).
-- Sep 26, 2017: 0.9.27 the Flex-compatible `yy_scan_string()`, `yy_scan_bytes()` and `yy_scan_buffer()` functions now create a new buffer as in Flex, delete this buffer with `yy_delete_buffer()`; fixed examples to work with newer Bison versions (Bison 3.0.4).
+- Jun 28, 2017: 0.9.25 fixed `--fast` FSM not always halting on EOF after a mismatch; fixed buffer realloc, added new examples/csv.l
+- Jul  5, 2017: 0.9.26 fixed `wstr()` always returning UTF-16 strings (should be UTF-16 only when `std::wstring` requires it)
+- Sep 26, 2017: 0.9.27 the Flex-compatible `yy_scan_string()`, `yy_scan_bytes()` and `yy_scan_buffer()` functions now create a new buffer as in Flex, delete this buffer with `yy_delete_buffer()`; fixed examples to work with newer Bison versions (Bison 3.0.4)
 - Dec 12, 2017: 0.9.28 added `yy_scan_wstring` and `yy_scan_wbuffer` for wide string scanning with Flex-like functions
 - Jan 28, 2018: 1.0.0 removed dynamic exception specifications to comply with C++17, upgraded to stable release 1.0
+- Feb 24, 2018: 1.0.1 added Unicode IsBlockName categories
+- mar  6, 2018: 1.0.2 added namespace nesting with `%option namespace=NAME1.NAME2.NAME3 ...`
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

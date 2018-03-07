@@ -1263,10 +1263,11 @@ initialized.
 
 ### Output code options                                  {#reflex-options-code}
 
-#### `−−namespace=NAME`
+#### `−−namespace=NAME` and `--namespace=NAME1.NAME2.NAME3 ...`
 
 This places the generated scanner class in the C++ namespace NAME scope.  Which
 means `NAME::Lexer` (and `NAME::yyFlexLexer` when option `−−flex` is used).
+To use multiple nested namespaces, separate them with a dot.
 
 #### `−−lexer=NAME`
 
@@ -2195,7 +2196,109 @@ library:
   `\p{PythonIdentifierStart}`            | matches a character in the Python IdentifierStart class
   `\p{PythonIdentifierPart}`             | matches a character in the Python IdentifierPart class
 
-In addition, the `−−unicode` option enables Unicode language scripts:
+To specify a Unicode block as a category, use `\p{IsBlockName}`:
+
+  IsBlockName                                  | Unicode character range
+  -------------------------------------------- | -----------------------
+  `\p{IsBasicLatin}`                           | U+0000 to U+007F
+  `\p{IsLatin-1Supplement}`                    | U+0080 to U+00FF
+  `\p{IsLatinExtended-A}`                      | U+0100 to U+017F
+  `\p{IsLatinExtended-B}`                      | U+0180 to U+024F
+  `\p{IsIPAExtensions}`                        | U+0250 to U+02AF
+  `\p{IsSpacingModifierLetters}`               | U+02B0 to U+02FF
+  `\p{IsCombiningDiacriticalMarks}`            | U+0300 to U+036F
+  `\p{IsGreek}`                                | U+0370 to U+03FF
+  `\p{IsCyrillic}`                             | U+0400 to U+04FF
+  `\p{IsArmenian}`                             | U+0530 to U+058F
+  `\p{IsHebrew}`                               | U+0590 to U+05FF
+  `\p{IsArabic}`                               | U+0600 to U+06FF
+  `\p{IsSyriac}`                               | U+0700 to U+074F
+  `\p{IsThaana}`                               | U+0780 to U+07BF
+  `\p{IsDevanagari}`                           | U+0900 to U+097F
+  `\p{IsBengali}`                              | U+0980 to U+09FF
+  `\p{IsGurmukhi}`                             | U+0A00 to U+0A7F
+  `\p{IsGujarati}`                             | U+0A80 to U+0AFF
+  `\p{IsOriya}`                                | U+0B00 to U+0B7F
+  `\p{IsTamil}`                                | U+0B80 to U+0BFF
+  `\p{IsTelugu}`                               | U+0C00 to U+0C7F
+  `\p{IsKannada}`                              | U+0C80 to U+0CFF
+  `\p{IsMalayalam}`                            | U+0D00 to U+0D7F
+  `\p{IsSinhala}`                              | U+0D80 to U+0DFF
+  `\p{IsThai}`                                 | U+0E00 to U+0E7F
+  `\p{IsLao}`                                  | U+0E80 to U+0EFF
+  `\p{IsTibetan}`                              | U+0F00 to U+0FFF
+  `\p{IsMyanmar}`                              | U+1000 to U+109F
+  `\p{IsGeorgian}`                             | U+10A0 to U+10FF
+  `\p{IsHangulJamo}`                           | U+1100 to U+11FF
+  `\p{IsEthiopic}`                             | U+1200 to U+137F
+  `\p{IsCherokee}`                             | U+13A0 to U+13FF
+  `\p{IsUnifiedCanadianAboriginalSyllabics}`   | U+1400 to U+167F
+  `\p{IsOgham}`                                | U+1680 to U+169F
+  `\p{IsRunic}`                                | U+16A0 to U+16FF
+  `\p{IsKhmer}`                                | U+1780 to U+17FF
+  `\p{IsMongolian}`                            | U+1800 to U+18AF
+  `\p{IsLatinExtendedAdditional}`              | U+1E00 to U+1EFF
+  `\p{IsGreekExtended}`                        | U+1F00 to U+1FFF
+  `\p{IsGeneralPunctuation}`                   | U+2000 to U+206F
+  `\p{IsSuperscriptsandSubscripts}`            | U+2070 to U+209F
+  `\p{IsCurrencySymbols}`                      | U+20A0 to U+20CF
+  `\p{IsCombiningMarksforSymbols}`             | U+20D0 to U+20FF
+  `\p{IsLetterlikeSymbols}`                    | U+2100 to U+214F
+  `\p{IsNumberForms}`                          | U+2150 to U+218F
+  `\p{IsArrows}`                               | U+2190 to U+21FF
+  `\p{IsMathematicalOperators}`                | U+2200 to U+22FF
+  `\p{IsMiscellaneousTechnical}`               | U+2300 to U+23FF
+  `\p{IsControlPictures}`                      | U+2400 to U+243F
+  `\p{IsOpticalCharacterRecognition}`          | U+2440 to U+245F
+  `\p{IsEnclosedAlphanumerics}`                | U+2460 to U+24FF
+  `\p{IsBoxDrawing}`                           | U+2500 to U+257F
+  `\p{IsBlockElements}`                        | U+2580 to U+259F
+  `\p{IsGeometricShapes}`                      | U+25A0 to U+25FF
+  `\p{IsMiscellaneousSymbols}`                 | U+2600 to U+26FF
+  `\p{IsDingbats}`                             | U+2700 to U+27BF
+  `\p{IsBraillePatterns}`                      | U+2800 to U+28FF
+  `\p{IsCJKRadicalsSupplement}`                | U+2E80 to U+2EFF
+  `\p{IsKangxiRadicals}`                       | U+2F00 to U+2FDF
+  `\p{IsIdeographicDescriptionCharacters}`     | U+2FF0 to U+2FFF
+  `\p{IsCJKSymbolsandPunctuation}`             | U+3000 to U+303F
+  `\p{IsHiragana}`                             | U+3040 to U+309F
+  `\p{IsKatakana}`                             | U+30A0 to U+30FF
+  `\p{IsBopomofo}`                             | U+3100 to U+312F
+  `\p{IsHangulCompatibilityJamo}`              | U+3130 to U+318F
+  `\p{IsKanbun}`                               | U+3190 to U+319F
+  `\p{IsBopomofoExtended}`                     | U+31A0 to U+31BF
+  `\p{IsEnclosedCJKLettersandMonths}`          | U+3200 to U+32FF
+  `\p{IsCJKCompatibility}`                     | U+3300 to U+33FF
+  `\p{IsCJKUnifiedIdeographsExtensionA}`       | U+3400 to U+4DB5
+  `\p{IsCJKUnifiedIdeographs}`                 | U+4E00 to U+9FFF
+  `\p{IsYiSyllables}`                          | U+A000 to U+A48F
+  `\p{IsYiRadicals}`                           | U+A490 to U+A4CF
+  `\p{IsHangulSyllables}`                      | U+AC00 to U+D7A3
+  `\p{IsHighSurrogates}`                       | U+D800 to U+DB7F
+  `\p{IsHighPrivateUseSurrogates}`             | U+DB80 to U+DBFF
+  `\p{IsLowSurrogates}`                        | U+DC00 to U+DFFF
+  `\p{IsPrivateUse}`                           | U+E000 to U+F8FF
+  `\p{IsCJKCompatibilityIdeographs}`           | U+F900 to U+FAFF
+  `\p{IsAlphabeticPresentationForms}`          | U+FB00 to U+FB4F
+  `\p{IsArabicPresentationForms-A}`            | U+FB50 to U+FDFF
+  `\p{IsCombiningHalfMarks}`                   | U+FE20 to U+FE2F
+  `\p{IsCJKCompatibilityForms}`                | U+FE30 to U+FE4F
+  `\p{IsSmallFormVariants}`                    | U+FE50 to U+FE6F
+  `\p{IsArabicPresentationForms-B}`            | U+FE70 to U+FEFE
+  `\p{IsHalfwidthandFullwidthForms}`           | U+FF00 to U+FFEF
+  `\p{IsSpecials}`                             | U+FFF0 to U+FFFD
+  `\p{IsOldItalic}`                            | U+10300 to U+1032F
+  `\p{IsGothic}`                               | U+10330 to U+1034F
+  `\p{IsDeseret}`                              | U+10400 to U+1044F
+  `\p{IsByzantineMusicalSymbols}`              | U+1D000 to U+1D0FF
+  `\p{IsMusicalSymbols}`                       | U+1D100 to U+1D1FF
+  `\p{IsMathematicalAlphanumericSymbols}`      | U+1D400 to U+1D7FF
+  `\p{IsCJKUnifiedIdeographsExtensionB}`       | U+20000 to U+2A6D6
+  `\p{IsCJKCompatibilityIdeographsSupplement}` | U+2F800 to U+2FA1F
+  `\p{IsTags}`                                 | U+E0000 to U+E007F
+  `\p{IsPrivateUse}`                           | U+F0000 to U+10FFFD
+
+In addition, the `−−unicode` option enables standard Unicode language scripts:
 
   `\p{Arabic}`, `\p{Armenian}`, `\p{Avestan}`, `\p{Balinese}`, `\p{Bamum}`,
   `\p{Bassa_Vah}`, `\p{Batak}`, `\p{Bengali}`, `\p{Bopomofo}`, `\p{Brahmi}`,
@@ -2497,6 +2600,10 @@ namespace can be set with options:
   `lex`       | `lex()` function     | `yylex()` function
 
 To customize the Lexer class use these options and code injection.
+
+You can declare multiple nested namespace names by separating the names with a
+dot, as for example in `namespace=NAME1.NAME2.NAME3` to declare the lexer in
+`NAME1::NAME2::NAME3`.
 
 To understand the impact of these options, consider the following lex
 specification template:

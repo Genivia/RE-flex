@@ -515,8 +515,6 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
       size_t j = pos + 1;
       if (c == 'P')
         name.push_back('^');
-      if (j + 2 < len && pattern[j] == 'I' && (pattern[j + 1] == 'n' || pattern[j + 1] == 's'))
-        j += 2;
       k = j;
       while (k < len && pattern[k] != '}')
         ++k;
@@ -668,8 +666,6 @@ static int insert_escape(const char *pattern, size_t len, size_t& pos, convert_f
     if (pattern[k] == '{')
     {
       size_t j = k + 1;
-      if (j + 2 < len && pattern[j] == 'I' && (pattern[j + 1] == 'n' || pattern[j + 1] == 's'))
-        j += 2;
       k = j;
       while (k < len && pattern[k] != '}')
         ++k;

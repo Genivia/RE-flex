@@ -43,8 +43,9 @@ namespace Unicode {
 
 Tables::Tables()
 {
-  letter_scripts();
+  block_scripts();
   language_scripts();
+  letter_scripts();
 
   range["Other"]                  = range["C"];
   range["Letter"]                 = range["L"];

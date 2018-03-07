@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 28 2018 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Mar 6 2018 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -72,20 +72,21 @@
 <code>#include &lt;set&gt;</code><br />
 <code>#include &lt;stack&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;list&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for reflex.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="reflex_8h__incl.png" border="0" usemap="#reflex_8h" alt=""/></div>
 <map name="reflex_8h" id="reflex_8h">
-<area shape="rect" id="node2" href="convert_8h.html" title="RE/flex regex converter. " alt="" coords="46,80,159,107"/>
-<area shape="rect" id="node3" href="error_8h.html" title="RE/flex regex errors. " alt="" coords="40,155,138,181"/>
-<area shape="rect" id="node7" href="pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="726,80,836,107"/>
-<area shape="rect" id="node14" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="339,229,431,256"/>
-<area shape="rect" id="node8" href="bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="674,155,765,181"/>
-<area shape="rect" id="node11" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="789,155,896,181"/>
-<area shape="rect" id="node13" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="437,155,536,181"/>
-<area shape="rect" id="node17" href="ranges_8h.html" title="RE/flex range set container. " alt="" coords="920,155,1031,181"/>
-<area shape="rect" id="node20" href="setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="1055,155,1158,181"/>
+<area shape="rect" id="node2" href="convert_8h.html" title="RE/flex regex converter. " alt="" coords="138,80,229,107"/>
+<area shape="rect" id="node3" href="error_8h.html" title="RE/flex regex errors. " alt="" coords="43,155,121,181"/>
+<area shape="rect" id="node7" href="pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="777,80,867,107"/>
+<area shape="rect" id="node14" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="407,229,482,256"/>
+<area shape="rect" id="node8" href="bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="837,155,911,181"/>
+<area shape="rect" id="node11" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="570,155,655,181"/>
+<area shape="rect" id="node13" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="467,155,545,181"/>
+<area shape="rect" id="node17" href="ranges_8h.html" title="RE/flex range set container. " alt="" coords="935,155,1023,181"/>
+<area shape="rect" id="node20" href="setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="730,155,813,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -116,7 +117,7 @@ Classes</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a1fa4f1561216be34f745f32aaa38d943"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8h.html#a1fa4f1561216be34f745f32aaa38d943">PLATFORM</a>&#160;&#160;&#160;&quot;(unknown OS)&quot;</td></tr>
 <tr class="separator:a1fa4f1561216be34f745f32aaa38d943"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4126f60eecffe17e1a0385c6cfc41d8c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8h.html#a4126f60eecffe17e1a0385c6cfc41d8c">REFLEX_VERSION</a>&#160;&#160;&#160;&quot;1.0.0&quot;</td></tr>
+<tr class="memitem:a4126f60eecffe17e1a0385c6cfc41d8c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8h.html#a4126f60eecffe17e1a0385c6cfc41d8c">REFLEX_VERSION</a>&#160;&#160;&#160;&quot;1.0.2&quot;</td></tr>
 <tr class="separator:a4126f60eecffe17e1a0385c6cfc41d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -143,7 +144,7 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define REFLEX_VERSION&#160;&#160;&#160;&quot;1.0.0&quot;</td>
+          <td class="memname">#define REFLEX_VERSION&#160;&#160;&#160;&quot;1.0.2&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -153,7 +154,7 @@ Macros</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 28 2018 15:23:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Mar 6 2018 15:20:34 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

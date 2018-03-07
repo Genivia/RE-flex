@@ -47,8 +47,9 @@ class Tables : public Posix::Tables {
  public:
   Tables();
  private:
-  void letter_scripts(void);
+  void block_scripts(void);
   void language_scripts(void);
+  void letter_scripts(void);
 };
 
 const int * range(const char *);

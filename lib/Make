@@ -30,12 +30,15 @@ install:		release
 			@echo "Installing reflex header files in $(INSTALL_INC)"
 			-cp -f ../include/reflex/*.h $(INSTALL_INC)
 
-libreflex.a:		convert.o debug.o error.o input.o language_scripts.o letter_scripts.o matcher.o pattern.o posix.o unicode.o utf8.o
+libreflex.a:		convert.o debug.o error.o input.o block_scripts.o language_scripts.o letter_scripts.o matcher.o pattern.o posix.o unicode.o utf8.o
 			$(AR) -rsc $@ $^
 			$(RANLIB) $@
 
-libreflex.so:		convert.cpp debug.cpp error.cpp input.cpp ../unicode/language_scripts.cpp ../unicode/letter_scripts.cpp matcher.cpp pattern.cpp posix.cpp unicode.cpp utf8.cpp
+libreflex.so:		convert.cpp debug.cpp error.cpp input.cpp ../unicode/block_scripts.cpp ../unicode/language_scripts.cpp ../unicode/letter_scripts.cpp matcher.cpp pattern.cpp posix.cpp unicode.cpp utf8.cpp
 			$(CPP) $(CFLAGS) -shared -o $@ -fPIC $^
+
+block_scripts.o:	../unicode/block_scripts.cpp
+			$(CPP) $(CFLAGS) -c $^
 
 language_scripts.o:	../unicode/language_scripts.cpp
 			$(CPP) $(CFLAGS) -c $^
