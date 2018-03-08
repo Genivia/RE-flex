@@ -770,83 +770,91 @@ void Input::file_encoding(unsigned short enc, const unsigned short *page)
           break;
         case file_encoding::utf16be:
           // enforcing non-BOM UTF-16: translate utf8_[] to UTF-16 then to UTF-8
-          if (b[1] == '\0')
-            (void)::fread(b + 1, 1, 1, file_);
-          if (b[2] == '\0')
-            (void)::fread(b + 2, 1, 2, file_);
-          else if (b[3] == '\0')
-            (void)::fread(b + 3, 1, 1, file_);
-          c1 = b[0] << 8 | b[1];
-          c2 = b[2] << 8 | b[3];
-          if (c1 >= 0xD800 && c1 < 0xE000)
+          if (b[1] == '\0' && ::fread(b + 1, 1, 1, file_) == 1)
           {
-            // UTF-16 surrogate pair
-            if (c1 < 0xDC00 && (c2 & 0xFC00) == 0xDC00)
-              c1 = 0x010000 - 0xDC00 + ((c1 - 0xD800) << 10) + c2;
-            else
-              c1 = REFLEX_NONCHAR;
-            t += utf8(c1, t);
+            if (b[2] == '\0' ? ::fread(b + 2, 1, 2, file_) == 1 :
+                b[3] == '\0' ? ::fread(b + 3, 1, 1, file_) == 1 :
+                false
+               )
+            {
+              c1 = b[0] << 8 | b[1];
+              c2 = b[2] << 8 | b[3];
+              if (c1 >= 0xD800 && c1 < 0xE000)
+              {
+                // UTF-16 surrogate pair
+                if (c1 < 0xDC00 && (c2 & 0xFC00) == 0xDC00)
+                  c1 = 0x010000 - 0xDC00 + ((c1 - 0xD800) << 10) + c2;
+                else
+                  c1 = REFLEX_NONCHAR;
+                t += utf8(c1, t);
+              }
+              else
+              {
+                t += utf8(c1, t);
+                t += utf8(c2, t);
+              }
+              *t = '\0';
+              uidx_ = 0;
+            }
           }
-          else
-          {
-            t += utf8(c1, t);
-            t += utf8(c2, t);
-          }
-          *t = '\0';
-          uidx_ = 0;
           break;
         case file_encoding::utf16le:
           // enforcing non-BOM UTF-16: translate utf8_[] to UTF-16 then to UTF-8
-          if (b[1] == '\0')
-            (void)::fread(b + 1, 1, 1, file_);
-          if (b[2] == '\0')
-            (void)::fread(b + 2, 1, 2, file_);
-          else if (b[3] == '\0')
-            (void)::fread(b + 3, 1, 1, file_);
-          c1 = b[0] | b[1] << 8;
-          c2 = b[2] | b[3] << 8;
-          if (c1 >= 0xD800 && c1 < 0xE000)
+          if (b[1] == '\0' && ::fread(b + 1, 1, 1, file_) == 1)
           {
-            // UTF-16 surrogate pair
-            if (c1 < 0xDC00 && (c2 & 0xFC00) == 0xDC00)
-              c1 = 0x010000 - 0xDC00 + ((c1 - 0xD800) << 10) + c2;
-            else
-              c1 = REFLEX_NONCHAR;
-            t += utf8(c1, t);
+            if (b[2] == '\0' ? ::fread(b + 2, 1, 2, file_) == 1 :
+                b[3] == '\0' ? ::fread(b + 3, 1, 1, file_) == 1 :
+                false
+               )
+            {
+              c1 = b[0] | b[1] << 8;
+              c2 = b[2] | b[3] << 8;
+              if (c1 >= 0xD800 && c1 < 0xE000)
+              {
+                // UTF-16 surrogate pair
+                if (c1 < 0xDC00 && (c2 & 0xFC00) == 0xDC00)
+                  c1 = 0x010000 - 0xDC00 + ((c1 - 0xD800) << 10) + c2;
+                else
+                  c1 = REFLEX_NONCHAR;
+                t += utf8(c1, t);
+              }
+              else
+              {
+                t += utf8(c1, t);
+                t += utf8(c2, t);
+              }
+              *t = '\0';
+              uidx_ = 0;
+            }
           }
-          else
-          {
-            t += utf8(c1, t);
-            t += utf8(c2, t);
-          }
-          *t = '\0';
-          uidx_ = 0;
           break;
         case file_encoding::utf32be:
           // enforcing non-BOM UTF-32: translate utf8_[] to UTF-32 then to UTF-8
-          if (b[1] == '\0')
-            (void)::fread(b + 1, 1, 3, file_);
-          else if (b[2] == '\0')
-            (void)::fread(b + 2, 1, 2, file_);
-          else if (b[3] == '\0')
-            (void)::fread(b + 3, 1, 1, file_);
-          c1 = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3];
-          t += utf8(c1, t);
-          *t = '\0';
-          uidx_ = 0;
+          if (b[1] == '\0' ? ::fread(b + 1, 1, 3, file_) == 1 :
+              b[2] == '\0' ? ::fread(b + 2, 1, 2, file_) == 1 :
+              b[3] == '\0' ? ::fread(b + 3, 1, 1, file_) == 1 :
+              false
+             )
+          {
+            c1 = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3];
+            t += utf8(c1, t);
+            *t = '\0';
+            uidx_ = 0;
+          }
           break;
         case file_encoding::utf32le:
           // enforcing non-BOM UTF-32: translate utf8_[] to UTF-32 then to UTF-8
-          if (b[1] == '\0')
-            (void)::fread(b + 1, 1, 3, file_);
-          else if (b[2] == '\0')
-            (void)::fread(b + 2, 1, 2, file_);
-          else if (b[3] == '\0')
-            (void)::fread(b + 3, 1, 1, file_);
-          c1 = buf[0] | buf[1] << 8 | buf[2] << 16 | buf[3] << 24;
-          t += utf8(c1, t);
-          *t = '\0';
-          uidx_ = 0;
+          if (b[1] == '\0' ? ::fread(b + 1, 1, 3, file_) == 1 :
+              b[2] == '\0' ? ::fread(b + 2, 1, 2, file_) == 1 :
+              b[3] == '\0' ? ::fread(b + 3, 1, 1, file_) == 1 :
+              false
+             )
+          {
+            c1 = buf[0] | buf[1] << 8 | buf[2] << 16 | buf[3] << 24;
+            t += utf8(c1, t);
+            *t = '\0';
+            uidx_ = 0;
+          }
           break;
         default:
           break;

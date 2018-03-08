@@ -65,7 +65,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "1.0.2"
+#define REFLEX_VERSION "1.0.3"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -155,9 +155,9 @@ class Reflex
   void        write_lexer();
   void        write_main();
   void        write_regex(const std::string& regex);    
-  void        write_namespace_start();
-  void        write_namespace_end();
-  void        write_namespace_def();
+  void        write_namespace_open();
+  void        write_namespace_close();
+  void        write_namespace_scope();
 
   void        stats();
   bool        get_line();
@@ -186,7 +186,6 @@ class Reflex
 
  protected:
   StringMap     options;       ///< maps option name (from the options_table) to its option value
-  Strings       namespaces;    ///< namespace names
   LibraryMap    libraries;     ///< maps regex library name ("reflex", "boost", etc) to library info
   Library      *library;       ///< the regex library selected
   Strings       conditions;    ///< "INITIAL" start condition etc. defined with %x name

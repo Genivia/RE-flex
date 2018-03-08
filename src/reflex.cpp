@@ -752,15 +752,6 @@ bool Reflex::eq(size_t& pos)
   return true;
 }
 
-/// Advance pos over '.', return true if OK.
-bool Reflex::dt(size_t& pos)
-{
-  if (pos + 1 >= linelen || line.at(pos) != '.')
-    return false;
-  ++pos;
-  return true;
-}
-
 /// Advance pos to end of line while skipping whitespace, return true if end of line.
 bool Reflex::nl(size_t& pos)
 {
@@ -813,6 +804,23 @@ std::string Reflex::get_name(size_t& pos)
   return line.substr(loc, pos - loc);
 }
 
+/// Advance pos over namespaces (letters, digits, ., -, _ , or any non-ASCII character), return name.
+std::string Reflex::get_namespace(size_t& pos)
+{
+  if (pos >= linelen || (!std::isalnum(line.at(pos)) && (line.at(pos) & 0x80) != 0x80))
+    return "";
+  size_t loc = pos++;
+  while (pos < linelen)
+  {
+    if (line.at(pos) == '-') // normalize - to _
+      line[pos] = '_';
+    else if (!std::isalnum(line.at(pos)) && line.at(pos) != '_' && line.at(pos) != '.' && (line.at(pos) & 0x80) != 0x80)
+      break;
+    ++pos;
+  }
+  return line.substr(loc, pos - loc);
+}
+
 /// Advance pos over option name (letters, digits, +/hyphen/underscore), return name.
 std::string Reflex::get_option(size_t& pos)
 {
@@ -859,22 +867,6 @@ std::string Reflex::get_string(size_t& pos)
       break;
   }
   return line.substr(loc, pos - loc - 1);
-}
-
-std::string Reflex::get_namespace(size_t& pos)
-{
-  if (pos >= linelen || (!std::isalnum(line.at(pos)) && (line.at(pos) & 0x80) != 0x80))
-    return "";
-  size_t loc = pos++;
-  while (pos < linelen)
-  {
-    if (line.at(pos) == '-') // normalize - to _
-      line[pos] = '_';
-    else if (!std::isalnum(line.at(pos)) && line.at(pos) != '_' && line.at(pos) != '.' && (line.at(pos) & 0x80) != 0x80)
-      break;
-    ++pos;
-  }
-  return line.substr(loc, pos - loc);
 }
 
 /// Get regex string, converted to a format understood by the selected regex engine library.
@@ -1267,20 +1259,9 @@ void Reflex::parse_section_1()
                       else
                       {
                         if (name == "namespace")
-                        {
-                          value = get_name(pos);
-                          namespaces.push_back(value);
-                          while (dt(pos))
-                          {
-                            std::string nsname = get_name(pos);
-                            value.append("::").append(nsname);
-                            namespaces.push_back(nsname);
-                          }
-                        }
+                          value = get_namespace(pos); // %option namespace = NAME1.NAME2.NAME3
                         else
-                        {
                           value = get_name(pos); // %option OPTION = NAME
-                        }
                       }
                       (void)ws(pos);
                       if (!i->second.empty() && i->second.compare(value) != 0)
@@ -1582,7 +1563,7 @@ void Reflex::write()
         write_banner("REENTRANT");
       *out << "typedef ";
       if (!options["namespace"].empty())
-        write_namespace_def();
+        write_namespace_scope();
       if (!options["yyclass"].empty())
         *out << options["yyclass"];
       else if (!options["class"].empty())
@@ -1612,7 +1593,7 @@ void Reflex::write()
       *out <<
         "extern ";
       if (!options["namespace"].empty())
-        write_namespace_def();
+        write_namespace_scope();
       if (!options["yyclass"].empty())
         *out << options["yyclass"];
       else if (!options["class"].empty())
@@ -1637,7 +1618,7 @@ void Reflex::write()
       *out <<
         "extern ";
       if (!options["namespace"].empty())
-        write_namespace_def();
+        write_namespace_scope();
       if (!options["yyclass"].empty())
         *out << options["yyclass"];
       else if (!options["class"].empty())
@@ -1744,14 +1725,14 @@ void Reflex::write_class()
     if (!options["namespace"].empty())
     {
       *out << std::endl;
-      write_namespace_start();
+      write_namespace_open();
       *out << std::endl;
     }
     *out << "typedef reflex::FlexLexer" << "<" << matcher << "> FlexLexer;" << std::endl;
     if (!options["namespace"].empty())
     {
       *out << std::endl;
-      write_namespace_end();
+      write_namespace_close();
     }
     base = "FlexLexer";
   }
@@ -1765,7 +1746,7 @@ void Reflex::write_class()
   std::string lexer = options["lexer"];
   if (!options["namespace"].empty())
   {
-    write_namespace_start();
+    write_namespace_open();
     *out << std::endl;
   }
   *out <<
@@ -1868,7 +1849,7 @@ void Reflex::write_class()
   if (!options["namespace"].empty())
   {
     *out << std::endl;
-    write_namespace_end();
+    write_namespace_close();
   }
 }
 
@@ -2052,7 +2033,7 @@ void Reflex::write_lexer()
       write_banner("REENTRANT");
     *out << "typedef ";
     if (!options["namespace"].empty())
-      write_namespace_def();
+      write_namespace_scope();
     if (!options["yyclass"].empty())
       *out << options["yyclass"];
     else if (!options["class"].empty())
@@ -2110,7 +2091,7 @@ void Reflex::write_lexer()
   {
     write_banner("BISON LOCATIONS");
     if (!options["namespace"].empty())
-      write_namespace_def();
+      write_namespace_scope();
     if (!options["yyclass"].empty())
       *out << options["yyclass"];
     else if (!options["class"].empty())
@@ -2136,7 +2117,7 @@ void Reflex::write_lexer()
   {
     write_banner("BISON");
     if (!options["namespace"].empty())
-      write_namespace_def();
+      write_namespace_scope();
     if (!options["yyclass"].empty())
       *out << options["yyclass"];
     else if (!options["class"].empty())
@@ -2186,7 +2167,7 @@ void Reflex::write_lexer()
   }
   *out << "int ";
   if (!options["namespace"].empty())
-    write_namespace_def();
+    write_namespace_scope();
   if (!options["yyclass"].empty())
     *out << options["yyclass"];
   else if (!options["class"].empty())
@@ -2425,7 +2406,7 @@ void Reflex::write_main()
     if (options["bison"].empty())
     {
       if (!options["namespace"].empty())
-        write_namespace_def();
+        write_namespace_scope();
       if (!options["yyclass"].empty())
         *out << options["yyclass"];
       else if (!options["class"].empty())
@@ -2457,22 +2438,43 @@ void Reflex::write_regex(const std::string& regex)
   *out << "\"";
 }
 
-void Reflex::write_namespace_start()
+/// Write namespace openings NAME {
+void Reflex::write_namespace_open()
 {
-  for (Strings::const_iterator i = namespaces.begin(); i != namespaces.end(); ++i)
-    *out << "namespace " << *i << " {" << std::endl;
+  const std::string& s = options["namespace"];
+  size_t i = 0, j;
+  while ((j = s.find('.', i)) != std::string::npos)
+  {
+    *out << "namespace " << s.substr(i, j-i) << " {" << std::endl;
+    i = j + 1;
+  }
+  *out << "namespace " << s.substr(i) << " {" << std::endl;
 }
 
-void Reflex::write_namespace_end()
+/// Write namespace closing scope } // NAME
+void Reflex::write_namespace_close()
 {
-  for (Strings::const_iterator i = namespaces.begin(); i != namespaces.end(); ++i)
-    *out << "} // namespace " << *i << std::endl;
+  const std::string& s = options["namespace"];
+  size_t i = 0, j;
+  while ((j = s.find('.', i)) != std::string::npos)
+  {
+    *out << "} // namespace " << s.substr(i, j-i) << std::endl;
+    i = j + 1;
+  }
+  *out << "} // namespace " << s.substr(i) << std::endl;
 }
 
-void Reflex::write_namespace_def()
+/// Write namespace scope
+void Reflex::write_namespace_scope()
 {
-  for (Strings::const_iterator i = namespaces.begin(); i != namespaces.end(); ++i)
-    *out << *i << "::";
+  const std::string& s = options["namespace"];
+  size_t i = 0, j;
+  while ((j = s.find('.', i)) != std::string::npos)
+  {
+    *out << s.substr(i, j-i) << "::";
+    i = j + 1;
+  }
+  *out << s.substr(i) << "::";
 }
 
 /// Display usage report.
