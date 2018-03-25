@@ -179,7 +179,7 @@ class Bits {
   ~Bits()
   {
     if (vec_)
-      delete vec_;
+      delete[] vec_;
   }
   /// Assign bits.
   Bits& operator=(const Bits& bits) ///< bits to copy

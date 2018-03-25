@@ -37,7 +37,7 @@
 #ifndef REFLEX_UNICODE_H
 #define REFLEX_UNICODE_H
 
-#include "posix.h"
+#include <reflex/posix.h>
 
 namespace reflex {
 

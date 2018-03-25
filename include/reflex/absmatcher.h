@@ -824,8 +824,8 @@ class AbstractMatcher {
         end_ -= gap;
 #if defined(WITH_REALLOC)
         char *newbuf = static_cast<char*>(std::realloc(static_cast<void*>(buf_), max_));
-        std::memmove(newbuf, txt_, end_);
-        txt_ = buf_ = newbuf;
+        if (newbuf != NULL)
+          txt_ = buf_ = newbuf;
 #else
         char *newbuf = new char[max_];
         std::memcpy(newbuf, txt_, end_);
