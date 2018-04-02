@@ -1,5 +1,5 @@
 AC_INIT(reflex,0.9)
-AM_INIT_AUTOMAKE([-Wall foreign])
+AM_INIT_AUTOMAKE([-Wall foreign subdir-objects])
 AC_CANONICAL_HOST
 AC_HEADER_TIME
 AC_TYPE_SIZE_T
