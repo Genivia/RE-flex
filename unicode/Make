@@ -15,7 +15,13 @@ CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
 
 .PHONY:			all clean
 
-all:			language_scripts.cpp letter_scripts.cpp
+all:			block_scripts.cpp language_scripts.cpp letter_scripts.cpp
+
+block_scripts.cpp:	block_scripts.l
+			$(REFLEX) block_scripts.l
+			$(CPP) $(CFLAGS) -o gen_block_scripts_cpp lex.yy.cpp $(LIBS)
+			./gen_block_scripts_cpp < Blocks.txt > block_scripts.cpp
+			-rm -f lex.yy.cpp gen_block_scripts_cpp
 
 language_scripts.cpp:	language_scripts.l
 			$(REFLEX) language_scripts.l

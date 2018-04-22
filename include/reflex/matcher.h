@@ -56,7 +56,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// Default constructor.
   Matcher() : PatternMatcher<reflex::Pattern>()
   {
-    reset();
+    Matcher::reset();
   }
   /// Construct matcher engine from a pattern or a string regex, and an input character sequence.
   template<typename P> /// @tparam <P> a reflex::Pattern or a string regex 
