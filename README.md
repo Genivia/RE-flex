@@ -101,19 +101,22 @@ Step** in MSVC++ as follows:
 
 5. specify **Execute Before** as `PreBuildEvent`.
 
-To compile your program with MSVC++, make sure to drag the folders `reflex/lib`
-and `reflex/unicode` to the **Source Files** in the **Solution Explorer** panel
-of your project.  After running `reflex.exe` drag the generated `lex.yy.h` and
-`lex.yy.cpp` files there as well.  If you are using specific reflex
-command-line options such as `--flex`, add these in step 3.
+If you are using specific reflex options such as `--flex` then add these in step 3.
 
-### Unix/Linux and Mac OS
+Before compiling your program with MSVC++, drag the folders `reflex/lib` and
+`reflex/unicode` to the **Source Files** in the **Solution Explorer** panel of
+your project.  Next, run `reflex.exe` simply by compiling your project (which
+may fail, but that is OK for now as long as we executed the custom build step
+to run `reflex.exe`).  Drag the generated `lex.yy.h` and `lex.yy.cpp` files to
+the **Source Files**.  Now you are all set!
+
+### Unix/Linux and Mac OS X
 
 You have two options: 1) quick install or 2) configure and make.
 
 ### Quick install
 
-For a quick clean build assuming your environment is pretty much standard:
+A quick clean build, assuming your environment is pretty much standard:
 
     $ ./clean.sh
     $ ./build.sh
@@ -122,18 +125,26 @@ Or use the `make -f Make` command to do the same:
 
     $ cd src; make -f Make
 
-This compiles the **reflex** tool and installs it locally in `reflex/bin`.  You
-can add this location to your `$PATH` variable to enable the new `reflex`
-command:
+This compiles the **reflex** tool and installs it locally in `reflex/bin`.  For
+local use of RE/flex in your project, you can add this location to your `$PATH`
+variable to enable the new `reflex` command:
 
-    export PATH=$PATH:/reflex_install_path/bin
+    export PATH=$PATH:/your_path_to_reflex/reflex/bin
 
-The `libreflex.a` and `libreflex.so` libraries are saved locally in
-`lib`.  Link against one of these libraries when you use the RE/flex regex
-engine in your code.  The RE/flex header files are locally located in
-`include/reflex`.
+Note that the `libreflex.a` and `libreflex.so` libraries are saved locally in
+`reflex/lib`.  Link against the library when you use the RE/flex regex engine
+in your code, such as:
 
-To install the library and the `reflex` command in `/usr/local/lib` and
+    $ c++ <options and .o/.cpp files> -L/your_path_to_reflex/reflex/lib -lreflex
+
+or you could statically link libreflex.a with:
+
+    $ c++ <options and .o/.cpp files> /your_path_to_reflex/reflex/lib/libreflex.a
+
+Also note that the RE/flex header files that you will need to include in your
+project are locally located in `include/reflex`.
+
+To fully install the library and the `reflex` command in `/usr/local/lib` and
 `/usr/local/bin`:
 
     $ sudo ./allinstall.sh
@@ -215,7 +226,7 @@ You can select matchers that are based on different regex engines:
 Each matcher may differ in regex syntax features (see the full documentation),
 but they have the same methods and iterators:
 
-- `matches()` returns nonzero if the input from begin to end matches;
+- `matches()` returns nonzero if the input matches the specified pattern;
 - `find()` search input and return nonzero if a match was found;
 - `scan()` scan input and return nonzero if input at current position matches;
 - `split()` return nonzero for a split of the input at the next match;
@@ -314,26 +325,27 @@ Unicode classes, character class set operations such as `[a-z--[aeiou]]`,
 escapes such as `\X`, and `(?x)` mode modifiers, to a regex string that the
 underlying regex library understands and will be able to use:
 
-- `std::string reflex::Matcher::convert(const std::string& regex)`
-- `std::string reflex::BoostMatcher::convert(const std::string& regex)`
-- `std::string reflex::StdMatcher::convert(const std::string& regex)`
+- `std::string reflex::Matcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+- `std::string reflex::BoostMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+- `std::string reflex::StdMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
 
 For example:
 
 ```{.cpp}
 #include <reflex/matcher.h> // reflex::Matcher, reflex::Input, reflex::Pattern
 // use a Matcher to check if sentence is in Greek:
-static const reflex::Pattern pattern(reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+"));
+static const reflex::Pattern pattern(reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+", reflex::convert_flag::unicode));
 if (reflex::Matcher(pattern, sentence).matches() != 0)
   std::cout << "This is Greek" << std::endl;
 ```
 
+We use `convert` with optional flag `reflex::convert_flag::unicode` to make `.`
+(dot), `\w`, `\s` and so on match Unicode and to convert `\p` Unicode character
+classes.
+
 Conversion is fast (it runs in linear time in the size of the regex), but it is
 not without some overhead.  Making converted regex patterns `static` as shown
 above saves the cost of conversion to just once to support many matchings.
-
-You can use `convert` with option `reflex::convert_flag::unicode` to make `.`
-(dot), `\w`, `\s` and so on match Unicode.
 
 
 How to contribute?
@@ -394,6 +406,7 @@ Changelog
 - Feb 24, 2018: 1.0.1 added Unicode IsBlockName categories
 - Mar  6, 2018: 1.0.2 added namespace nesting with `%option namespace=NAME1.NAME2.NAME3 ...`
 - Mar  7, 2018: 1.0.3 fixed `--namespace` and `%option namespace`
+- Apr 22, 2018: 1.0.4 updated to Unicode 10, cleaned up code to remove tool warnings
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

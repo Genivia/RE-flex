@@ -27,35 +27,69 @@
 \******************************************************************************/
 
 /**
-@file      unicode.h
-@brief     Get Unicode character class ranges and UTF-8 regex translations
+@file      block_scripts.l
+@brief     RE/Flex specification to convert Unicode Blocks.txt to a C++ map
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
-#ifndef REFLEX_UNICODE_H
-#define REFLEX_UNICODE_H
+%{
 
-#include <reflex/posix.h>
+#include <reflex/ranges.h>
+#include <iostream>
+#include <map>
 
-namespace reflex {
+typedef reflex::ORanges<int>        Chars;   // open-ended ranges of characters
+typedef std::map<std::string,Chars> Scripts; // maps Unicode category/script to open-ended ranges
 
-namespace Unicode {
+int lo, hi;
+Scripts p;
+std::string key;
 
-class Tables : public Posix::Tables {
- public:
-  Tables();
- private:
-  void block_scripts(void);
-  void language_scripts(void);
-  void letter_scripts(void);
-};
+%}
 
-const int * range(const char *);
+%o matcher=reflex
+%o nodefault
+%x SCRIPT
 
-} // namespace Unicode
+hex			[[:xdigit:]]+
 
-} // namespace reflex;
+%%
 
-#endif
+^#.*\n			// skip comments
+^\h*\n			// skip empty lines
+^{hex}".."{hex}		sscanf(text(), "%x..%x", &lo, &hi); start(SCRIPT);
+
+<SCRIPT>[; ]+		// skip ;, <space>
+<SCRIPT>[\w\-]+		key += text();
+<SCRIPT>\n		p[key].insert(lo, hi); key.clear(); start(INITIAL);
+
+%%
+
+int main()
+{
+  Lexer().lex();
+
+  std::cout <<
+    "// Converted from http://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt by block_scripts.l\n"
+    "#include <reflex/unicode.h>\n"
+    "void reflex::Unicode::Tables::block_scripts(void)\n{\n";
+
+  // Write range[] code
+  for (Scripts::const_iterator i = p.begin(); i != p.end(); ++i)
+  {
+    const std::string name = "Is" + i->first;
+    std::string c_name = name;
+    size_t pos;
+    while ((pos = c_name.find('-')) != std::string::npos)
+      c_name[pos] = '_';
+    std::cout << "  static const int " << c_name << "[] = { ";
+    for (Chars::const_iterator j = i->second.begin(); j != i->second.end(); ++j)
+      std::cout << j->first << ", " << j->second-1 << ", ";
+    std::cout << "0, 0 };" << std::endl;
+    std::cout << "  range[\"" << name << "\"] = " << c_name << ";\n";
+  }
+
+  std::cout << "}" << std::endl;
+}

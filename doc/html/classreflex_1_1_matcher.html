@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Mar 7 2018 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Apr 22 2018 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -123,6 +123,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acf0031339b3f8426b730a6860e5feba2"><td class="memItemLeft" align="right" valign="top">virtual std::pair&lt; const char *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#acf0031339b3f8426b730a6860e5feba2">operator[]</a> (size_t n) const </td></tr>
 <tr class="memdesc:acf0031339b3f8426b730a6860e5feba2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns captured text as a std::pair&lt;const char*,size_t&gt; with string pointer (non-0-terminated) and length.  <a href="#acf0031339b3f8426b730a6860e5feba2">More...</a><br /></td></tr>
 <tr class="separator:acf0031339b3f8426b730a6860e5feba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a835fa7ced2659ece33c458f21b1762"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a9a835fa7ced2659ece33c458f21b1762">last_stop</a> ()</td></tr>
+<tr class="memdesc:a9a835fa7ced2659ece33c458f21b1762"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the position of the last indent stop.  <a href="#a9a835fa7ced2659ece33c458f21b1762">More...</a><br /></td></tr>
+<tr class="separator:a9a835fa7ced2659ece33c458f21b1762"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06e6875f27734e64531a0e03b0521186"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a06e6875f27734e64531a0e03b0521186">insert_stop</a> (size_t n)</td></tr>
+<tr class="memdesc:a06e6875f27734e64531a0e03b0521186"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts or appends an indent stop position, keeping indent stops sorted.  <a href="#a06e6875f27734e64531a0e03b0521186">More...</a><br /></td></tr>
+<tr class="separator:a06e6875f27734e64531a0e03b0521186"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25e197a62083648d93f813a00131f5b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a25e197a62083648d93f813a00131f5b9">delete_stop</a> (size_t n)</td></tr>
+<tr class="memdesc:a25e197a62083648d93f813a00131f5b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove all stop positions from position n and up until the last.  <a href="#a25e197a62083648d93f813a00131f5b9">More...</a><br /></td></tr>
+<tr class="separator:a25e197a62083648d93f813a00131f5b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf84adb39572b43c63f56aecd1aaa35d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#adf84adb39572b43c63f56aecd1aaa35d">stops</a> ()</td></tr>
 <tr class="memdesc:adf84adb39572b43c63f56aecd1aaa35d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns reference to vector of current indent stop positions.  <a href="#adf84adb39572b43c63f56aecd1aaa35d">More...</a><br /></td></tr>
 <tr class="separator:adf84adb39572b43c63f56aecd1aaa35d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -817,6 +826,32 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a25e197a62083648d93f813a00131f5b9"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::delete_stop </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Remove all stop positions from position n and up until the last. </p>
+
+</div>
+</div>
 <a class="anchor" id="a2e077964c3a6847b1087bed1eb77bc26"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1503,6 +1538,57 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a06e6875f27734e64531a0e03b0521186"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::insert_stop </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Inserts or appends an indent stop position, keeping indent stops sorted. </p>
+
+</div>
+</div>
+<a class="anchor" id="a9a835fa7ced2659ece33c458f21b1762"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::Matcher::last_stop </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the position of the last indent stop. </p>
+
+</div>
+</div>
 <a class="anchor" id="ab8a1264b3ede06dbba853b1ca0baead5"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1820,7 +1906,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Mar 7 2018 22:52:37 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Apr 22 2018 15:30:04 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

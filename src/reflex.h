@@ -50,7 +50,6 @@
 #include <set>
 #include <stack>
 #include <vector>
-#include <list>
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
 # define OS_WIN
@@ -65,7 +64,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "1.0.3"
+#define REFLEX_VERSION "1.0.4"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**

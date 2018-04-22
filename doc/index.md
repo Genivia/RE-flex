@@ -457,7 +457,7 @@ use it with a regex matcher engine as follows:
 #include <reflex/matcher.h> // reflex::Matcher, reflex::Input, reflex::Pattern
 
 // convert a regex with Unicode character classes to create a pattern FSM:
-static const std::string regex = reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+");
+static const std::string regex = reflex::Matcher::convert("[\\p{Greek}\\p{Zs}\\pP]+", reflex::convert_flag::unicode);
 static const reflex::Pattern pattern(regex);
 
 // use a Matcher to check if sentence is in Greek:
@@ -1263,11 +1263,11 @@ initialized.
 
 ### Output code options                                  {#reflex-options-code}
 
-#### `−−namespace=NAME` and `--namespace=NAME1.NAME2.NAME3 ...`
+#### `−−namespace=NAME`
 
-This places the generated scanner class in the C++ namespace NAME scope.  Which
-means `NAME::Lexer` (and `NAME::yyFlexLexer` when option `−−flex` is used).
-To use multiple nested namespaces, separate them with a dot.
+This places the generated scanner class in the C++ namespace NAME scope, that
+is `NAME::Lexer` (and `NAME::yyFlexLexer` when option `−−flex` is used).
+`NAME` can be a list of nested namespaces of the form `NAME1.NAME2.NAME3` ...
 
 #### `−−lexer=NAME`
 
@@ -2196,142 +2196,218 @@ library:
   `\p{PythonIdentifierStart}`            | matches a character in the Python IdentifierStart class
   `\p{PythonIdentifierPart}`             | matches a character in the Python IdentifierPart class
 
-To specify a Unicode block as a category, use `\p{IsBlockName}`:
+To specify a Unicode block as a category when using the `−−unicode` option, use
+`\p{IsBlockName}`.  The table below lists the block categories up to U+FFFF,
+but you can use any of the Unicode blocks up to U+10FFFF not listed below:
 
-  IsBlockName                                  | Unicode character range
-  -------------------------------------------- | -----------------------
-  `\p{IsBasicLatin}`                           | U+0000 to U+007F
-  `\p{IsLatin-1Supplement}`                    | U+0080 to U+00FF
-  `\p{IsLatinExtended-A}`                      | U+0100 to U+017F
-  `\p{IsLatinExtended-B}`                      | U+0180 to U+024F
-  `\p{IsIPAExtensions}`                        | U+0250 to U+02AF
-  `\p{IsSpacingModifierLetters}`               | U+02B0 to U+02FF
-  `\p{IsCombiningDiacriticalMarks}`            | U+0300 to U+036F
-  `\p{IsGreek}`                                | U+0370 to U+03FF
-  `\p{IsCyrillic}`                             | U+0400 to U+04FF
-  `\p{IsArmenian}`                             | U+0530 to U+058F
-  `\p{IsHebrew}`                               | U+0590 to U+05FF
-  `\p{IsArabic}`                               | U+0600 to U+06FF
-  `\p{IsSyriac}`                               | U+0700 to U+074F
-  `\p{IsThaana}`                               | U+0780 to U+07BF
-  `\p{IsDevanagari}`                           | U+0900 to U+097F
-  `\p{IsBengali}`                              | U+0980 to U+09FF
-  `\p{IsGurmukhi}`                             | U+0A00 to U+0A7F
-  `\p{IsGujarati}`                             | U+0A80 to U+0AFF
-  `\p{IsOriya}`                                | U+0B00 to U+0B7F
-  `\p{IsTamil}`                                | U+0B80 to U+0BFF
-  `\p{IsTelugu}`                               | U+0C00 to U+0C7F
-  `\p{IsKannada}`                              | U+0C80 to U+0CFF
-  `\p{IsMalayalam}`                            | U+0D00 to U+0D7F
-  `\p{IsSinhala}`                              | U+0D80 to U+0DFF
-  `\p{IsThai}`                                 | U+0E00 to U+0E7F
-  `\p{IsLao}`                                  | U+0E80 to U+0EFF
-  `\p{IsTibetan}`                              | U+0F00 to U+0FFF
-  `\p{IsMyanmar}`                              | U+1000 to U+109F
-  `\p{IsGeorgian}`                             | U+10A0 to U+10FF
-  `\p{IsHangulJamo}`                           | U+1100 to U+11FF
-  `\p{IsEthiopic}`                             | U+1200 to U+137F
-  `\p{IsCherokee}`                             | U+13A0 to U+13FF
-  `\p{IsUnifiedCanadianAboriginalSyllabics}`   | U+1400 to U+167F
-  `\p{IsOgham}`                                | U+1680 to U+169F
-  `\p{IsRunic}`                                | U+16A0 to U+16FF
-  `\p{IsKhmer}`                                | U+1780 to U+17FF
-  `\p{IsMongolian}`                            | U+1800 to U+18AF
-  `\p{IsLatinExtendedAdditional}`              | U+1E00 to U+1EFF
-  `\p{IsGreekExtended}`                        | U+1F00 to U+1FFF
-  `\p{IsGeneralPunctuation}`                   | U+2000 to U+206F
-  `\p{IsSuperscriptsandSubscripts}`            | U+2070 to U+209F
-  `\p{IsCurrencySymbols}`                      | U+20A0 to U+20CF
-  `\p{IsCombiningMarksforSymbols}`             | U+20D0 to U+20FF
-  `\p{IsLetterlikeSymbols}`                    | U+2100 to U+214F
-  `\p{IsNumberForms}`                          | U+2150 to U+218F
-  `\p{IsArrows}`                               | U+2190 to U+21FF
-  `\p{IsMathematicalOperators}`                | U+2200 to U+22FF
-  `\p{IsMiscellaneousTechnical}`               | U+2300 to U+23FF
-  `\p{IsControlPictures}`                      | U+2400 to U+243F
-  `\p{IsOpticalCharacterRecognition}`          | U+2440 to U+245F
-  `\p{IsEnclosedAlphanumerics}`                | U+2460 to U+24FF
-  `\p{IsBoxDrawing}`                           | U+2500 to U+257F
-  `\p{IsBlockElements}`                        | U+2580 to U+259F
-  `\p{IsGeometricShapes}`                      | U+25A0 to U+25FF
-  `\p{IsMiscellaneousSymbols}`                 | U+2600 to U+26FF
-  `\p{IsDingbats}`                             | U+2700 to U+27BF
-  `\p{IsBraillePatterns}`                      | U+2800 to U+28FF
-  `\p{IsCJKRadicalsSupplement}`                | U+2E80 to U+2EFF
-  `\p{IsKangxiRadicals}`                       | U+2F00 to U+2FDF
-  `\p{IsIdeographicDescriptionCharacters}`     | U+2FF0 to U+2FFF
-  `\p{IsCJKSymbolsandPunctuation}`             | U+3000 to U+303F
-  `\p{IsHiragana}`                             | U+3040 to U+309F
-  `\p{IsKatakana}`                             | U+30A0 to U+30FF
-  `\p{IsBopomofo}`                             | U+3100 to U+312F
-  `\p{IsHangulCompatibilityJamo}`              | U+3130 to U+318F
-  `\p{IsKanbun}`                               | U+3190 to U+319F
-  `\p{IsBopomofoExtended}`                     | U+31A0 to U+31BF
-  `\p{IsEnclosedCJKLettersandMonths}`          | U+3200 to U+32FF
-  `\p{IsCJKCompatibility}`                     | U+3300 to U+33FF
-  `\p{IsCJKUnifiedIdeographsExtensionA}`       | U+3400 to U+4DB5
-  `\p{IsCJKUnifiedIdeographs}`                 | U+4E00 to U+9FFF
-  `\p{IsYiSyllables}`                          | U+A000 to U+A48F
-  `\p{IsYiRadicals}`                           | U+A490 to U+A4CF
-  `\p{IsHangulSyllables}`                      | U+AC00 to U+D7A3
-  `\p{IsHighSurrogates}`                       | U+D800 to U+DB7F
-  `\p{IsHighPrivateUseSurrogates}`             | U+DB80 to U+DBFF
-  `\p{IsLowSurrogates}`                        | U+DC00 to U+DFFF
-  `\p{IsPrivateUse}`                           | U+E000 to U+F8FF
-  `\p{IsCJKCompatibilityIdeographs}`           | U+F900 to U+FAFF
-  `\p{IsAlphabeticPresentationForms}`          | U+FB00 to U+FB4F
-  `\p{IsArabicPresentationForms-A}`            | U+FB50 to U+FDFF
-  `\p{IsCombiningHalfMarks}`                   | U+FE20 to U+FE2F
-  `\p{IsCJKCompatibilityForms}`                | U+FE30 to U+FE4F
-  `\p{IsSmallFormVariants}`                    | U+FE50 to U+FE6F
-  `\p{IsArabicPresentationForms-B}`            | U+FE70 to U+FEFE
-  `\p{IsHalfwidthandFullwidthForms}`           | U+FF00 to U+FFEF
-  `\p{IsSpecials}`                             | U+FFF0 to U+FFFD
-  `\p{IsOldItalic}`                            | U+10300 to U+1032F
-  `\p{IsGothic}`                               | U+10330 to U+1034F
-  `\p{IsDeseret}`                              | U+10400 to U+1044F
-  `\p{IsByzantineMusicalSymbols}`              | U+1D000 to U+1D0FF
-  `\p{IsMusicalSymbols}`                       | U+1D100 to U+1D1FF
-  `\p{IsMathematicalAlphanumericSymbols}`      | U+1D400 to U+1D7FF
-  `\p{IsCJKUnifiedIdeographsExtensionB}`       | U+20000 to U+2A6D6
-  `\p{IsCJKCompatibilityIdeographsSupplement}` | U+2F800 to U+2FA1F
-  `\p{IsTags}`                                 | U+E0000 to U+E007F
-  `\p{IsPrivateUse}`                           | U+F0000 to U+10FFFD
+  IsBlockName                                        | Unicode character range
+  -------------------------------------------------- | -----------------------
+  `\p{IsBasicLatin}`                                 | U+0000 to U+007F 
+  `\p{IsLatin-1Supplement}`                          | U+0080 to U+00FF 
+  `\p{IsLatinExtended-A}`                            | U+0100 to U+017F 
+  `\p{IsLatinExtended-B}`                            | U+0180 to U+024F 
+  `\p{IsIPAExtensions}`                              | U+0250 to U+02AF 
+  `\p{IsSpacingModifierLetters}`                     | U+02B0 to U+02FF 
+  `\p{IsCombiningDiacriticalMarks}`                  | U+0300 to U+036F 
+  `\p{IsGreekandCoptic}`                             | U+0370 to U+03FF 
+  `\p{IsCyrillic}`                                   | U+0400 to U+04FF 
+  `\p{IsCyrillicSupplement}`                         | U+0500 to U+052F 
+  `\p{IsArmenian}`                                   | U+0530 to U+058F 
+  `\p{IsHebrew}`                                     | U+0590 to U+05FF 
+  `\p{IsArabic}`                                     | U+0600 to U+06FF 
+  `\p{IsSyriac}`                                     | U+0700 to U+074F 
+  `\p{IsArabicSupplement}`                           | U+0750 to U+077F 
+  `\p{IsThaana}`                                     | U+0780 to U+07BF 
+  `\p{IsNKo}`                                        | U+07C0 to U+07FF 
+  `\p{IsSamaritan}`                                  | U+0800 to U+083F 
+  `\p{IsMandaic}`                                    | U+0840 to U+085F 
+  `\p{IsSyriacSupplement}`                           | U+0860 to U+086F 
+  `\p{IsArabicExtended-A}`                           | U+08A0 to U+08FF 
+  `\p{IsDevanagari}`                                 | U+0900 to U+097F 
+  `\p{IsBengali}`                                    | U+0980 to U+09FF 
+  `\p{IsGurmukhi}`                                   | U+0A00 to U+0A7F 
+  `\p{IsGujarati}`                                   | U+0A80 to U+0AFF 
+  `\p{IsOriya}`                                      | U+0B00 to U+0B7F 
+  `\p{IsTamil}`                                      | U+0B80 to U+0BFF 
+  `\p{IsTelugu}`                                     | U+0C00 to U+0C7F 
+  `\p{IsKannada}`                                    | U+0C80 to U+0CFF 
+  `\p{IsMalayalam}`                                  | U+0D00 to U+0D7F 
+  `\p{IsSinhala}`                                    | U+0D80 to U+0DFF 
+  `\p{IsThai}`                                       | U+0E00 to U+0E7F 
+  `\p{IsLao}`                                        | U+0E80 to U+0EFF 
+  `\p{IsTibetan}`                                    | U+0F00 to U+0FFF 
+  `\p{IsMyanmar}`                                    | U+1000 to U+109F 
+  `\p{IsGeorgian}`                                   | U+10A0 to U+10FF 
+  `\p{IsHangulJamo}`                                 | U+1100 to U+11FF 
+  `\p{IsEthiopic}`                                   | U+1200 to U+137F 
+  `\p{IsEthiopicSupplement}`                         | U+1380 to U+139F 
+  `\p{IsCherokee}`                                   | U+13A0 to U+13FF 
+  `\p{IsUnifiedCanadianAboriginalSyllabics}`         | U+1400 to U+167F 
+  `\p{IsOgham}`                                      | U+1680 to U+169F 
+  `\p{IsRunic}`                                      | U+16A0 to U+16FF 
+  `\p{IsTagalog}`                                    | U+1700 to U+171F 
+  `\p{IsHanunoo}`                                    | U+1720 to U+173F 
+  `\p{IsBuhid}`                                      | U+1740 to U+175F 
+  `\p{IsTagbanwa}`                                   | U+1760 to U+177F 
+  `\p{IsKhmer}`                                      | U+1780 to U+17FF 
+  `\p{IsMongolian}`                                  | U+1800 to U+18AF 
+  `\p{IsUnifiedCanadianAboriginalSyllabicsExtended}` | U+18B0 to U+18FF 
+  `\p{IsLimbu}`                                      | U+1900 to U+194F 
+  `\p{IsTaiLe}`                                      | U+1950 to U+197F 
+  `\p{IsNewTaiLue}`                                  | U+1980 to U+19DF 
+  `\p{IsKhmerSymbols}`                               | U+19E0 to U+19FF 
+  `\p{IsBuginese}`                                   | U+1A00 to U+1A1F 
+  `\p{IsTaiTham}`                                    | U+1A20 to U+1AAF 
+  `\p{IsCombiningDiacriticalMarksExtended}`          | U+1AB0 to U+1AFF 
+  `\p{IsBalinese}`                                   | U+1B00 to U+1B7F 
+  `\p{IsSundanese}`                                  | U+1B80 to U+1BBF 
+  `\p{IsBatak}`                                      | U+1BC0 to U+1BFF 
+  `\p{IsLepcha}`                                     | U+1C00 to U+1C4F 
+  `\p{IsOlChiki}`                                    | U+1C50 to U+1C7F 
+  `\p{IsCyrillicExtended-C}`                         | U+1C80 to U+1C8F 
+  `\p{IsSundaneseSupplement}`                        | U+1CC0 to U+1CCF 
+  `\p{IsVedicExtensions}`                            | U+1CD0 to U+1CFF 
+  `\p{IsPhoneticExtensions}`                         | U+1D00 to U+1D7F 
+  `\p{IsPhoneticExtensionsSupplement}`               | U+1D80 to U+1DBF 
+  `\p{IsCombiningDiacriticalMarksSupplement}`        | U+1DC0 to U+1DFF 
+  `\p{IsLatinExtendedAdditional}`                    | U+1E00 to U+1EFF 
+  `\p{IsGreekExtended}`                              | U+1F00 to U+1FFF 
+  `\p{IsGeneralPunctuation}`                         | U+2000 to U+206F 
+  `\p{IsSuperscriptsandSubscripts}`                  | U+2070 to U+209F 
+  `\p{IsCurrencySymbols}`                            | U+20A0 to U+20CF 
+  `\p{IsCombiningDiacriticalMarksforSymbols}`        | U+20D0 to U+20FF 
+  `\p{IsLetterlikeSymbols}`                          | U+2100 to U+214F 
+  `\p{IsNumberForms}`                                | U+2150 to U+218F 
+  `\p{IsArrows}`                                     | U+2190 to U+21FF 
+  `\p{IsMathematicalOperators}`                      | U+2200 to U+22FF 
+  `\p{IsMiscellaneousTechnical}`                     | U+2300 to U+23FF 
+  `\p{IsControlPictures}`                            | U+2400 to U+243F 
+  `\p{IsOpticalCharacterRecognition}`                | U+2440 to U+245F 
+  `\p{IsEnclosedAlphanumerics}`                      | U+2460 to U+24FF 
+  `\p{IsBoxDrawing}`                                 | U+2500 to U+257F 
+  `\p{IsBlockElements}`                              | U+2580 to U+259F 
+  `\p{IsGeometricShapes}`                            | U+25A0 to U+25FF 
+  `\p{IsMiscellaneousSymbols}`                       | U+2600 to U+26FF 
+  `\p{IsDingbats}`                                   | U+2700 to U+27BF 
+  `\p{IsMiscellaneousMathematicalSymbols-A}`         | U+27C0 to U+27EF 
+  `\p{IsSupplementalArrows-A}`                       | U+27F0 to U+27FF 
+  `\p{IsBraillePatterns}`                            | U+2800 to U+28FF 
+  `\p{IsSupplementalArrows-B}`                       | U+2900 to U+297F 
+  `\p{IsMiscellaneousMathematicalSymbols-B}`         | U+2980 to U+29FF 
+  `\p{IsSupplementalMathematicalOperators}`          | U+2A00 to U+2AFF 
+  `\p{IsMiscellaneousSymbolsandArrows}`              | U+2B00 to U+2BFF 
+  `\p{IsGlagolitic}`                                 | U+2C00 to U+2C5F 
+  `\p{IsLatinExtended-C}`                            | U+2C60 to U+2C7F 
+  `\p{IsCoptic}`                                     | U+2C80 to U+2CFF 
+  `\p{IsGeorgianSupplement}`                         | U+2D00 to U+2D2F 
+  `\p{IsTifinagh}`                                   | U+2D30 to U+2D7F 
+  `\p{IsEthiopicExtended}`                           | U+2D80 to U+2DDF 
+  `\p{IsCyrillicExtended-A}`                         | U+2DE0 to U+2DFF 
+  `\p{IsSupplementalPunctuation}`                    | U+2E00 to U+2E7F 
+  `\p{IsCJKRadicalsSupplement}`                      | U+2E80 to U+2EFF 
+  `\p{IsKangxiRadicals}`                             | U+2F00 to U+2FDF 
+  `\p{IsIdeographicDescriptionCharacters}`           | U+2FF0 to U+2FFF 
+  `\p{IsCJKSymbolsandPunctuation}`                   | U+3000 to U+303F 
+  `\p{IsHiragana}`                                   | U+3040 to U+309F 
+  `\p{IsKatakana}`                                   | U+30A0 to U+30FF 
+  `\p{IsBopomofo}`                                   | U+3100 to U+312F 
+  `\p{IsHangulCompatibilityJamo}`                    | U+3130 to U+318F 
+  `\p{IsKanbun}`                                     | U+3190 to U+319F 
+  `\p{IsBopomofoExtended}`                           | U+31A0 to U+31BF 
+  `\p{IsCJKStrokes}`                                 | U+31C0 to U+31EF 
+  `\p{IsKatakanaPhoneticExtensions}`                 | U+31F0 to U+31FF 
+  `\p{IsEnclosedCJKLettersandMonths}`                | U+3200 to U+32FF 
+  `\p{IsCJKCompatibility}`                           | U+3300 to U+33FF 
+  `\p{IsCJKUnifiedIdeographsExtensionA}`             | U+3400 to U+4DBF 
+  `\p{IsYijingHexagramSymbols}`                      | U+4DC0 to U+4DFF 
+  `\p{IsCJKUnifiedIdeographs}`                       | U+4E00 to U+9FFF 
+  `\p{IsYiSyllables}`                                | U+A000 to U+A48F 
+  `\p{IsYiRadicals}`                                 | U+A490 to U+A4CF 
+  `\p{IsLisu}`                                       | U+A4D0 to U+A4FF 
+  `\p{IsVai}`                                        | U+A500 to U+A63F 
+  `\p{IsCyrillicExtended-B}`                         | U+A640 to U+A69F 
+  `\p{IsBamum}`                                      | U+A6A0 to U+A6FF 
+  `\p{IsModifierToneLetters}`                        | U+A700 to U+A71F 
+  `\p{IsLatinExtended-D}`                            | U+A720 to U+A7FF 
+  `\p{IsSylotiNagri}`                                | U+A800 to U+A82F 
+  `\p{IsCommonIndicNumberForms}`                     | U+A830 to U+A83F 
+  `\p{IsPhags-pa}`                                   | U+A840 to U+A87F 
+  `\p{IsSaurashtra}`                                 | U+A880 to U+A8DF 
+  `\p{IsDevanagariExtended}`                         | U+A8E0 to U+A8FF 
+  `\p{IsKayahLi}`                                    | U+A900 to U+A92F 
+  `\p{IsRejang}`                                     | U+A930 to U+A95F 
+  `\p{IsHangulJamoExtended-A}`                       | U+A960 to U+A97F 
+  `\p{IsJavanese}`                                   | U+A980 to U+A9DF 
+  `\p{IsMyanmarExtended-B}`                          | U+A9E0 to U+A9FF 
+  `\p{IsCham}`                                       | U+AA00 to U+AA5F 
+  `\p{IsMyanmarExtended-A}`                          | U+AA60 to U+AA7F 
+  `\p{IsTaiViet}`                                    | U+AA80 to U+AADF 
+  `\p{IsMeeteiMayekExtensions}`                      | U+AAE0 to U+AAFF 
+  `\p{IsEthiopicExtended-A}`                         | U+AB00 to U+AB2F 
+  `\p{IsLatinExtended-E}`                            | U+AB30 to U+AB6F 
+  `\p{IsCherokeeSupplement}`                         | U+AB70 to U+ABBF 
+  `\p{IsMeeteiMayek}`                                | U+ABC0 to U+ABFF 
+  `\p{IsHangulSyllables}`                            | U+AC00 to U+D7AF 
+  `\p{IsHangulJamoExtended-B}`                       | U+D7B0 to U+D7FF 
+  `\p{IsHighSurrogates}`                             | U+D800 to U+DB7F 
+  `\p{IsHighPrivateUseSurrogates}`                   | U+DB80 to U+DBFF 
+  `\p{IsLowSurrogates}`                              | U+DC00 to U+DFFF 
+  `\p{IsPrivateUseArea}`                             | U+E000 to U+F8FF 
+  `\p{IsCJKCompatibilityIdeographs}`                 | U+F900 to U+FAFF 
+  `\p{IsAlphabeticPresentationForms}`                | U+FB00 to U+FB4F 
+  `\p{IsArabicPresentationForms-A}`                  | U+FB50 to U+FDFF 
+  `\p{IsVariationSelectors}`                         | U+FE00 to U+FE0F 
+  `\p{IsVerticalForms}`                              | U+FE10 to U+FE1F 
+  `\p{IsCombiningHalfMarks}`                         | U+FE20 to U+FE2F 
+  `\p{IsCJKCompatibilityForms}`                      | U+FE30 to U+FE4F 
+  `\p{IsSmallFormVariants}`                          | U+FE50 to U+FE6F 
+  `\p{IsArabicPresentationForms-B}`                  | U+FE70 to U+FEFF 
+  `\p{IsHalfwidthandFullwidthForms}`                 | U+FF00 to U+FFEF 
+  `\p{IsSpecials}`                                   | U+FFF0 to U+FFFF 
 
 In addition, the `−−unicode` option enables standard Unicode language scripts:
 
-  `\p{Arabic}`, `\p{Armenian}`, `\p{Avestan}`, `\p{Balinese}`, `\p{Bamum}`,
-  `\p{Bassa_Vah}`, `\p{Batak}`, `\p{Bengali}`, `\p{Bopomofo}`, `\p{Brahmi}`,
+  `\p{Adlam}`, `\p{Ahom}`, `\p{Anatolian_Hieroglyphs}`, `\p{Arabic}`,
+  `\p{Armenian}`, `\p{Avestan}`, `\p{Balinese}`, `\p{Bamum}`, `\p{Bassa_Vah}`,
+  `\p{Batak}`, `\p{Bengali}`, `\p{Bhaiksuki}`, `\p{Bopomofo}`, `\p{Brahmi}`,
   `\p{Braille}`, `\p{Buginese}`, `\p{Buhid}`, `\p{Canadian_Aboriginal}`,
   `\p{Carian}`, `\p{Caucasian_Albanian}`, `\p{Chakma}`, `\p{Cham}`,
-  `\p{Cherokee}`, `\p{Common}`, `\p{Coptic}`, `\p{Cuneiform}`, `\p{Cypriot}`,
-  `\p{Cyrillic}`, `\p{Deseret}`, `\p{Devanagari}`, `\p{Duployan}`,
-  `\p{Egyptian_Hieroglyphs}`, `\p{Elbasan}`, `\p{Ethiopic}`, `\p{Georgian}`,
-  `\p{Glagolitic}`, `\p{Gothic}`, `\p{Grantha}`, `\p{Greek}`, `\p{Gujarati}`,
-  `\p{Gurmukhi}`, `\p{Han}`, `\p{Hangul}`, `\p{Hanunoo}`, `\p{Hebrew}`,
-  `\p{Hiragana}`, `\p{Imperial_Aramaic}`, `\p{Inherited}`,
-  `\p{Inscriptional_Pahlavi}`, `\p{Inscriptional_Parthian}`, `\p{Javanese}`,
-  `\p{Kaithi}`, `\p{Kannada}`, `\p{Katakana}`, `\p{Kayah_Li}`,
-  `\p{Kharoshthi}`, `\p{Khmer}`, `\p{Khojki}`, `\p{Khudawadi}`, `\p{Lao}`,
-  `\p{Latin}`, `\p{Lepcha}`, `\p{Limbu}`, `\p{Linear_A}`, `\p{Linear_B}`,
-  `\p{Lisu}`, `\p{Lycian}`, `\p{Lydian}`, `\p{Mahajani}`, `\p{Malayalam}`,
-  `\p{Mandaic}`, `\p{Manichaean}`, `\p{Meetei_Mayek}`, `\p{Mende_Kikakui}`,
+  `\p{Cherokee}`, `\p{Coptic}`, `\p{Cuneiform}`, `\p{Cypriot}`, `\p{Cyrillic}`,
+  `\p{Deseret}`, `\p{Devanagari}`, `\p{Duployan}`, `\p{Egyptian_Hieroglyphs}`,
+  `\p{Elbasan}`, `\p{Ethiopic}`, `\p{Georgian}`, `\p{Glagolitic}`,
+  `\p{Gothic}`, `\p{Grantha}`, `\p{Greek}`, `\p{Gujarati}`, `\p{Gurmukhi}`,
+  `\p{Han}`, `\p{Hangul}`, `\p{Hanunoo}`, `\p{Hatran}`, `\p{Hebrew}`,
+  `\p{Hiragana}`, `\p{Imperial_Aramaic}`, `\p{Inscriptional_Pahlavi}`,
+  `\p{Inscriptional_Parthian}`, `\p{Javanese}`, `\p{Kaithi}`, `\p{Kannada}`,
+  `\p{Katakana}`, `\p{Kayah_Li}`, `\p{Kharoshthi}`, `\p{Khmer}`, `\p{Khojki}`,
+  `\p{Khudawadi}`, `\p{Lao}`, `\p{Latin}`, `\p{Lepcha}`, `\p{Limbu}`,
+  `\p{Linear_A}`, `\p{Linear_B}`, `\p{Lisu}`, `\p{Lycian}`, `\p{Lydian}`,
+  `\p{Mahajani}`, `\p{Malayalam}`, `\p{Mandaic}`, `\p{Manichaean}`,
+  `\p{Marchen}`, `\p{Masaram_Gondi}`, `\p{Meetei_Mayek}`, `\p{Mende_Kikakui}`,
   `\p{Meroitic_Cursive}`, `\p{Meroitic_Hieroglyphs}`, `\p{Miao}`, `\p{Modi}`,
-  `\p{Mongolian}`, `\p{Mro}`, `\p{Myanmar}`, `\p{Nabataean}`,
-  `\p{New_Tai_Lue}`, `\p{Nko}`, `\p{Ogham}`, `\p{Ol_Chiki}`, `\p{Old_Italic}`,
+  `\p{Mongolian}`, `\p{Mro}`, `\p{Multani}`, `\p{Myanmar}`, `\p{Nabataean}`,
+  `\p{New_Tai_Lue}`, `\p{Newa}`, `\p{Nko}`, `\p{Nushu}`, `\p{Ogham}`,
+  `\p{Ol_Chiki}`, `\p{Old_Hungarian}`, `\p{Old_Italic}`,
   `\p{Old_North_Arabian}`, `\p{Old_Permic}`, `\p{Old_Persian}`,
-  `\p{Old_South_Arabian}`, `\p{Old_Turkic}`, `\p{Oriya}`, `\p{Osmanya}`,
-  `\p{Pahawh_Hmong}`, `\p{Palmyrene}`, `\p{Pau_Cin_Hau}`, `\p{Phags_Pa}`,
-  `\p{Phoenician}`, `\p{Psalter_Pahlavi}`, `\p{Rejang}`, `\p{Runic}`,
-  `\p{Samaritan}`, `\p{Saurashtra}`, `\p{Sharada}`, `\p{Shavian}`,
-  `\p{Siddham}`, `\p{Sinhala}`, `\p{Sora_Sompeng}`, `\p{Sundanese}`,
-  `\p{Syloti_Nagri}`, `\p{Syriac}`, `\p{Tagalog}`, `\p{Tagbanwa}`,
-  `\p{Tai_Le}`, `\p{Tai_Tham}`, `\p{Tai_Viet}`, `\p{Takri}`, `\p{Tamil}`,
-  `\p{Telugu}`, `\p{Thaana}`, `\p{Thai}`, `\p{Tibetan}`, `\p{Tifinagh}`,
-  `\p{Tirhuta}`, `\p{Ugaritic}`, `\p{Vai}`, `\p{Warang_Citi}`, `\p{Yi}`.
+  `\p{Old_South_Arabian}`, `\p{Old_Turkic}`, `\p{Oriya}`, `\p{Osage}`,
+  `\p{Osmanya}`, `\p{Pahawh_Hmong}`, `\p{Palmyrene}`, `\p{Pau_Cin_Hau}`,
+  `\p{Phags_Pa}`, `\p{Phoenician}`, `\p{Psalter_Pahlavi}`, `\p{Rejang}`,
+  `\p{Runic}`, `\p{Samaritan}`, `\p{Saurashtra}`, `\p{Sharada}`, `\p{Shavian}`,
+  `\p{Siddham}`, `\p{SignWriting}`, `\p{Sinhala}`, `\p{Sora_Sompeng}`,
+  `\p{Soyombo}`, `\p{Sundanese}`, `\p{Syloti_Nagri}`, `\p{Syriac}`,
+  `\p{Tagalog}`, `\p{Tagbanwa}`, `\p{Tai_Le}`, `\p{Tai_Tham}`, `\p{Tai_Viet}`,
+  `\p{Takri}`, `\p{Tamil}`, `\p{Tangut}`, `\p{Telugu}`, `\p{Thaana}`,
+  `\p{Thai}`, `\p{Tibetan}`, `\p{Tifinagh}`, `\p{Tirhuta}`, `\p{Ugaritic}`,
+  `\p{Vai}`, `\p{Warang_Citi}`, `\p{Yi}`, `\p{Zanabazar_Square}`.
 
 You can also use the capitalized `\P{C}` form that has the same meaning as
 `\p{^C}`, which matches any character except characters in the class `C`.
+
+@note Unicode language script character classes differ from the Unicode blocks
+that have a similar name.  For example, the `\p{Greek}` class represents Greek
+and Coptic letters and differs from the Unicode block `\p{IsGreek}` that spans
+a specific Unicode block of Greek and Coptic characters only, which also
+includes unassigned characters.
 
 🔝 [Back to table of contents](#)
 
@@ -2421,16 +2497,19 @@ consume the line-ending `\` and the indent that followed it, as if this text
 was not part of the input, which ensures that the current indent positions that
 are defined by `\i` are not affected.
 
-To scan input that continues on the next new line(s) while preserving the
-current indent stop positions, use the RE/flex matcher `matcher().push_stops()`
-and `matcher().pop_stops()`:
+To scan input that continues on the next new line(s) (which may affect indent
+stops) while preserving the current indent stop positions, use the RE/flex
+matcher `matcher().push_stops()` and `matcher().pop_stops()`:
 
-  RE/flex action            | Result
-  ------------------------- | -------------------------------------------------
-  `matcher().push_stops()`  | push indent stops on the stack then clear stops
-  `matcher().pop_stops()`   | pop indent stops and make them current
-  `matcher().clear_stops()` | clear current indent stops
-  `matcher().stops()`       | reference to current `std::vector<size_t>` stops
+  RE/flex action             | Result
+  -------------------------- | ------------------------------------------------
+  `matcher().push_stops()`   | push indent stops on the stack then clear stops
+  `matcher().pop_stops()`    | pop indent stops and make them current
+  `matcher().clear_stops()`  | clear current indent stops
+  `matcher().stops()`        | reference to current `std::vector<size_t>` stops
+  `matcher().last_stop()`    | returns the last indent stop position or 0
+  `matcher().insert_stop(n)` | inserts/appends an indent stop at position `n`
+  `matcher().delete_stop(n)` | remove stop positions from position `n` and up
 
 For example, to continue scanning after a `/*` for multiple lines without
 indentation matching and up to a `*/` you can save the current indent positions
@@ -4426,7 +4505,7 @@ try
 catch (reflex::regex_error& e)
 {
   std::cerr << e.what();
-  switch (e)
+  switch (e.code())
   {
     case reflex::regex_error::mismatched_parens:    std::cerr << "mismatched ( )"; break;
     case reflex::regex_error::mismatched_braces:    std::cerr << "mismatched { }"; break;
@@ -4533,7 +4612,7 @@ try
 catch (reflex::regex_error& e)
 {
   std::cerr << e.what();
-  switch (e)
+  switch (e.code())
   {
     case reflex::regex_error::mismatched_parens:    std::cerr << "mismatched ( )"; break;
     case reflex::regex_error::mismatched_braces:    std::cerr << "mismatched { }"; break;

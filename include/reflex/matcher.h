@@ -56,7 +56,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// Default constructor.
   Matcher() : PatternMatcher<reflex::Pattern>()
   {
-    reset();
+    Matcher::reset();
   }
   /// Construct matcher engine from a pattern or a string regex, and an input character sequence.
   template<typename P> /// @tparam <P> a reflex::Pattern or a string regex 
@@ -93,6 +93,54 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     if (n == 0)
       return std::pair<const char*,size_t>(txt_, len_);
     return std::pair<const char*,size_t>(NULL, 0);
+  }
+  /// Returns the position of the last indent stop.
+  size_t last_stop()
+  {
+    if (tab_.empty())
+      return 0;
+    return tab_.back();
+  }
+  /// Inserts or appends an indent stop position, keeping indent stops sorted.
+  void insert_stop(size_t n)
+  {
+    if (n > 0)
+    {
+      if (tab_.empty() || tab_.back() < n)
+      {
+        tab_.push_back(n);
+      }
+      else
+      {
+        for (std::vector<size_t>::reverse_iterator i = tab_.rbegin(); i != tab_.rend(); ++i)
+        {
+          if (*i == n)
+            return;
+          if (*i < n)
+          {
+            tab_.insert(i.base(), n);
+            return;
+          }
+        }
+        tab_.insert(tab_.begin(), n);
+      }
+    }
+  }
+  /// Remove all stop positions from position n and up until the last.
+  void delete_stop(size_t n)
+  {
+    if (!tab_.empty())
+    {
+      for (std::vector<size_t>::reverse_iterator i = tab_.rbegin(); i != tab_.rend(); ++i)
+      {
+        if (*i < n)
+        {
+          tab_.erase(i.base(), tab_.end());
+          return;
+        }
+      }
+      tab_.clear();
+    }
   }
   /// Returns reference to vector of current indent stop positions.
   std::vector<size_t>& stops()

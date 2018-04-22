@@ -521,7 +521,8 @@ void Reflex::help(const char *message, const char *arg)
 \n\
    Generated code:\n\
         --namespace=NAME\n\
-                use C++ namespace NAME for the generated scanner class\n\
+                use C++ namespace NAME for the generated scanner class, where\n\
+                multiple namespaces can be specified as NAME1.NAME2.NAME3 ...\n\
         --lexer=NAME\n\
                 use lexer class NAME instead of Lexer or yyFlexLexer\n\
         --lex=NAME\n\
