@@ -1,13 +1,13 @@
 <map id="Reflex" name="Reflex">
-<area shape="rect" id="node2" title="STL class. " alt="" coords="1124,41,1215,67"/>
-<area shape="rect" id="node3" title="STL class. " alt="" coords="738,5,867,47"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="384,46,539,73"/>
-<area shape="rect" id="node19" title="STL class. " alt="" coords="736,71,869,112"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="181,46,281,73"/>
-<area shape="rect" id="node6" href="$struct_reflex_1_1_library.html" title="A library entry to describe regex library properties. " alt="" coords="749,198,857,225"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="745,627,860,654"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="191,409,271,435"/>
-<area shape="rect" id="node14" href="$struct_reflex_1_1_code.html" title="Line of code fragment in lex specifications. " alt="" coords="412,409,511,435"/>
-<area shape="rect" id="node11" title="STL class. " alt="" coords="5,401,132,443"/>
-<area shape="rect" id="node18" title="STL class. " alt="" coords="1121,91,1217,118"/>
+<area shape="rect" id="node2" title="STL class. " alt="" coords="926,33,999,59"/>
+<area shape="rect" id="node3" title="STL class. " alt="" coords="613,5,715,47"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="325,54,447,81"/>
+<area shape="rect" id="node19" title="STL class. " alt="" coords="611,71,717,112"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="155,54,236,81"/>
+<area shape="rect" id="node6" href="$struct_reflex_1_1_library.html" title="A library entry to describe regex library properties. " alt="" coords="621,198,707,225"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="618,627,710,654"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="163,409,228,435"/>
+<area shape="rect" id="node14" href="$struct_reflex_1_1_code.html" title="Line of code fragment in lex specifications. " alt="" coords="346,409,426,435"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="5,401,105,443"/>
+<area shape="rect" id="node18" title="STL class. " alt="" coords="924,90,1001,117"/>
 </map>

@@ -46,12 +46,10 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <sstream>
 #include <map>
 #include <set>
 #include <stack>
 #include <vector>
-#include <list>
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
 # define OS_WIN
@@ -66,7 +64,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "1.0.0"
+#define REFLEX_VERSION "1.0.4"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -129,7 +127,6 @@ class Reflex
   typedef std::set<Start>                   Starts;     ///< Set of start conditions
   typedef std::map<Start,Codes>             CodesMap;   ///< Map of start conditions to lines of code
   typedef std::map<Start,Rules>             RulesMap;   ///< Map of start conditions to rules
-  typedef std::list<std::string>            StringList; ///< List (std::string)
 
  private:
   void        init(int argc, char **argv);
@@ -157,9 +154,9 @@ class Reflex
   void        write_lexer();
   void        write_main();
   void        write_regex(const std::string& regex);    
-  void        write_namespace_start();
-  void        write_namespace_end();
-  void        write_namespace_def();
+  void        write_namespace_open();
+  void        write_namespace_close();
+  void        write_namespace_scope();
 
   void        stats();
   bool        get_line();
@@ -167,6 +164,7 @@ class Reflex
   bool        as(size_t& pos, const char *s);
   bool        ws(size_t& pos);
   bool        eq(size_t& pos);
+  bool        dt(size_t& pos);
   bool        nl(size_t& pos);
   bool        is_code();
   bool        is_topcode();
@@ -187,7 +185,6 @@ class Reflex
 
  protected:
   StringMap     options;       ///< maps option name (from the options_table) to its option value
-  StringList    namespaces;    ///< list of namespace names
   LibraryMap    libraries;     ///< maps regex library name ("reflex", "boost", etc) to library info
   Library      *library;       ///< the regex library selected
   Strings       conditions;    ///< "INITIAL" start condition etc. defined with %x name
@@ -207,7 +204,7 @@ class Reflex
   std::string   line;          ///< current line read from input
   size_t        lineno;        ///< current line number at input
   size_t        linelen;       ///< current line length
-  bool          color_term;    ///< terminal supports colors   
+  bool          color_term;    ///< terminal supports colors
 };
 
 #endif

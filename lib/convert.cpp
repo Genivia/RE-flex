@@ -515,8 +515,6 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
       size_t j = pos + 1;
       if (c == 'P')
         name.push_back('^');
-      if (j + 2 < len && pattern[j] == 'I' && (pattern[j + 1] == 'n' || pattern[j + 1] == 's'))
-        j += 2;
       k = j;
       while (k < len && pattern[k] != '}')
         ++k;
@@ -668,8 +666,6 @@ static int insert_escape(const char *pattern, size_t len, size_t& pos, convert_f
     if (pattern[k] == '{')
     {
       size_t j = k + 1;
-      if (j + 2 < len && pattern[j] == 'I' && (pattern[j + 1] == 'n' || pattern[j + 1] == 's'))
-        j += 2;
       k = j;
       while (k < len && pattern[k] != '}')
         ++k;
@@ -755,7 +751,7 @@ static int insert_escape(const char *pattern, size_t len, size_t& pos, convert_f
 static void insert_posix_class(const char *pattern, size_t len, size_t& pos, ORanges<int>& ranges)
 {
   pos += 2;
-  char buf[8];
+  char buf[8] = "";
   char *name = buf;
   while (pos + 1 < len && name < buf + sizeof(buf) - 1 && (pattern[pos] != ':' || pattern[pos + 1] != ']'))
     *name++ = pattern[pos++];
@@ -1425,7 +1421,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
         {
           // if macros are provided: lookup {name} and expand without converting
           regex.append(&pattern[loc], pos - loc);
-          loc = pos++;
+          ++pos;
           size_t k = pos++;
           while (pos < len && (std::isalnum(pattern[pos]) || pattern[pos] == '_' || (pattern[pos] & 0x80) == 0x80))
             ++pos;

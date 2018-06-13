@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 28 2018 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Apr 22 2018 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -284,7 +284,7 @@ other
 <p>The Boost.Regex engines are all initialized with <code>match_not_dot_newline</code>, which disables dotall matching as the default setting. Dotall can be re-enabled with the <code>(?s)</code> regex mode modifier. This is done for compatibility with scanners.</p>
 <p>A matcher can be applied to strings and wide strings, such as <code>std::string</code> and <code>std::wstring</code>, <code>char*</code> and <code>wchar_t*</code>. Wide strings are converted to UTF-8 to enable matching with regular expressions that contain Unicode patterns.</p>
 <p>To match Unicode patterns with regex library engines that are 8-bit based or do not support Unicode, you may want to convert your regex string first before you use it with a regex matcher engine as follows:</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="matcher_8h.html">reflex/matcher.h</a>&gt;</span> <span class="comment">// reflex::Matcher, reflex::Input, reflex::Pattern</span></div><div class="line"></div><div class="line"><span class="comment">// convert a regex with Unicode character classes to create a pattern FSM:</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> std::string regex = <a class="code" href="classreflex_1_1_matcher.html#a8862686f6d5680d4d0e5af146c4aed69">reflex::Matcher::convert</a>(<span class="stringliteral">&quot;[\\p{Greek}\\p{Zs}\\pP]+&quot;</span>);</div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> pattern(regex);</div><div class="line"></div><div class="line"><span class="comment">// use a Matcher to check if sentence is in Greek:</span></div><div class="line"><span class="keywordflow">if</span> (<a class="code" href="classreflex_1_1_matcher.html">reflex::Matcher</a>(pattern, sentence).matches())</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;This is Greek&quot;</span> &lt;&lt; std::endl;</div></div><!-- fragment --><p>This converts the Unicode character classes to UTF-8 for matching with an 8-bit regex engine. The <code>convert</code> static method differs per matcher class. An error <code><a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">reflex::regex_error</a></code> is thrown as an exception if conversion was not possible, which is unlikely, or if the regex is syntactically incorrect.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="matcher_8h.html">reflex/matcher.h</a>&gt;</span> <span class="comment">// reflex::Matcher, reflex::Input, reflex::Pattern</span></div><div class="line"></div><div class="line"><span class="comment">// convert a regex with Unicode character classes to create a pattern FSM:</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> std::string regex = <a class="code" href="classreflex_1_1_matcher.html#a8862686f6d5680d4d0e5af146c4aed69">reflex::Matcher::convert</a>(<span class="stringliteral">&quot;[\\p{Greek}\\p{Zs}\\pP]+&quot;</span>, <a class="code" href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39">reflex::convert_flag::unicode</a>);</div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> pattern(regex);</div><div class="line"></div><div class="line"><span class="comment">// use a Matcher to check if sentence is in Greek:</span></div><div class="line"><span class="keywordflow">if</span> (<a class="code" href="classreflex_1_1_matcher.html">reflex::Matcher</a>(pattern, sentence).matches())</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;This is Greek&quot;</span> &lt;&lt; std::endl;</div></div><!-- fragment --><p>This converts the Unicode character classes to UTF-8 for matching with an 8-bit regex engine. The <code>convert</code> static method differs per matcher class. An error <code><a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">reflex::regex_error</a></code> is thrown as an exception if conversion was not possible, which is unlikely, or if the regex is syntactically incorrect.</p>
 <p>Conversion is fast (it runs in linear time in the size of the regex), but it is not without some overhead. You can make the converted regex patterns <code>static</code>, as shown above, to eliminate the cost of repeated conversions.</p>
 <p>A <code><a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a></code> object is immutable (it stores a constant table) and can be shared among threads.</p>
 <p>Use <code>convert</code> with option <code><a class="el" href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39" title="convert . (dot), \s, \w, \l, \u, \S, \W, \L, \U to Unicode ">reflex::convert_flag::unicode</a></code> to change the meaning of <code>.</code> (dot), <code>\w</code>, <code>\s</code>, <code>\l</code>, <code>\u</code>, <code>\W</code>, <code>\S</code>, <code>\L</code>, <code>\U</code> character classes.</p>
@@ -563,7 +563,7 @@ Output files options</h3>
 <h3><a class="anchor" id="reflex-options-code"></a>
 Output code options</h3>
 <h4><code>−−namespace=NAME</code></h4>
-<p>This places the generated scanner class in the C++ namespace NAME scope. Which means <code>NAME::Lexer</code> (and <code>NAME::yyFlexLexer</code> when option <code>−−flex</code> is used).</p>
+<p>This places the generated scanner class in the C++ namespace NAME scope, that is <code>NAME::Lexer</code> (and <code>NAME::yyFlexLexer</code> when option <code>−−flex</code> is used). <code>NAME</code> can be a list of nested namespaces of the form <code>NAME1.NAME2.NAME3</code> ...</p>
 <h4><code>−−lexer=NAME</code></h4>
 <p>This defines the NAME of the generated scanner class and replaces the default name <code>Lexer</code> (and replaces <code>yyFlexLexer</code> when option <code>−−flex</code> is used).</p>
 <h4><code>−−lex=NAME</code></h4>
@@ -1187,9 +1187,339 @@ Character categories</h3>
 <tr>
 <td><code>\p{PythonIdentifierPart}</code> </td><td>matches a character in the Python IdentifierPart class </td></tr>
 </table>
-<p>In addition, the <code>−−unicode</code> option enables Unicode language scripts:</p>
-<p><code>\p{Arabic}</code>, <code>\p{Armenian}</code>, <code>\p{Avestan}</code>, <code>\p{Balinese}</code>, <code>\p{Bamum}</code>, <code>\p{Bassa_Vah}</code>, <code>\p{Batak}</code>, <code>\p{Bengali}</code>, <code>\p{Bopomofo}</code>, <code>\p{Brahmi}</code>, <code>\p{Braille}</code>, <code>\p{Buginese}</code>, <code>\p{Buhid}</code>, <code>\p{Canadian_Aboriginal}</code>, <code>\p{Carian}</code>, <code>\p{Caucasian_Albanian}</code>, <code>\p{Chakma}</code>, <code>\p{Cham}</code>, <code>\p{Cherokee}</code>, <code>\p{Common}</code>, <code>\p{Coptic}</code>, <code>\p{Cuneiform}</code>, <code>\p{Cypriot}</code>, <code>\p{Cyrillic}</code>, <code>\p{Deseret}</code>, <code>\p{Devanagari}</code>, <code>\p{Duployan}</code>, <code>\p{Egyptian_Hieroglyphs}</code>, <code>\p{Elbasan}</code>, <code>\p{Ethiopic}</code>, <code>\p{Georgian}</code>, <code>\p{Glagolitic}</code>, <code>\p{Gothic}</code>, <code>\p{Grantha}</code>, <code>\p{Greek}</code>, <code>\p{Gujarati}</code>, <code>\p{Gurmukhi}</code>, <code>\p{Han}</code>, <code>\p{Hangul}</code>, <code>\p{Hanunoo}</code>, <code>\p{Hebrew}</code>, <code>\p{Hiragana}</code>, <code>\p{Imperial_Aramaic}</code>, <code>\p{Inherited}</code>, <code>\p{Inscriptional_Pahlavi}</code>, <code>\p{Inscriptional_Parthian}</code>, <code>\p{Javanese}</code>, <code>\p{Kaithi}</code>, <code>\p{Kannada}</code>, <code>\p{Katakana}</code>, <code>\p{Kayah_Li}</code>, <code>\p{Kharoshthi}</code>, <code>\p{Khmer}</code>, <code>\p{Khojki}</code>, <code>\p{Khudawadi}</code>, <code>\p{Lao}</code>, <code>\p{Latin}</code>, <code>\p{Lepcha}</code>, <code>\p{Limbu}</code>, <code>\p{Linear_A}</code>, <code>\p{Linear_B}</code>, <code>\p{Lisu}</code>, <code>\p{Lycian}</code>, <code>\p{Lydian}</code>, <code>\p{Mahajani}</code>, <code>\p{Malayalam}</code>, <code>\p{Mandaic}</code>, <code>\p{Manichaean}</code>, <code>\p{Meetei_Mayek}</code>, <code>\p{Mende_Kikakui}</code>, <code>\p{Meroitic_Cursive}</code>, <code>\p{Meroitic_Hieroglyphs}</code>, <code>\p{Miao}</code>, <code>\p{Modi}</code>, <code>\p{Mongolian}</code>, <code>\p{Mro}</code>, <code>\p{Myanmar}</code>, <code>\p{Nabataean}</code>, <code>\p{New_Tai_Lue}</code>, <code>\p{Nko}</code>, <code>\p{Ogham}</code>, <code>\p{Ol_Chiki}</code>, <code>\p{Old_Italic}</code>, <code>\p{Old_North_Arabian}</code>, <code>\p{Old_Permic}</code>, <code>\p{Old_Persian}</code>, <code>\p{Old_South_Arabian}</code>, <code>\p{Old_Turkic}</code>, <code>\p{Oriya}</code>, <code>\p{Osmanya}</code>, <code>\p{Pahawh_Hmong}</code>, <code>\p{Palmyrene}</code>, <code>\p{Pau_Cin_Hau}</code>, <code>\p{Phags_Pa}</code>, <code>\p{Phoenician}</code>, <code>\p{Psalter_Pahlavi}</code>, <code>\p{Rejang}</code>, <code>\p{Runic}</code>, <code>\p{Samaritan}</code>, <code>\p{Saurashtra}</code>, <code>\p{Sharada}</code>, <code>\p{Shavian}</code>, <code>\p{Siddham}</code>, <code>\p{Sinhala}</code>, <code>\p{Sora_Sompeng}</code>, <code>\p{Sundanese}</code>, <code>\p{Syloti_Nagri}</code>, <code>\p{Syriac}</code>, <code>\p{Tagalog}</code>, <code>\p{Tagbanwa}</code>, <code>\p{Tai_Le}</code>, <code>\p{Tai_Tham}</code>, <code>\p{Tai_Viet}</code>, <code>\p{Takri}</code>, <code>\p{Tamil}</code>, <code>\p{Telugu}</code>, <code>\p{Thaana}</code>, <code>\p{Thai}</code>, <code>\p{Tibetan}</code>, <code>\p{Tifinagh}</code>, <code>\p{Tirhuta}</code>, <code>\p{Ugaritic}</code>, <code>\p{Vai}</code>, <code>\p{Warang_Citi}</code>, <code>\p{Yi}</code>.</p>
+<p>To specify a Unicode block as a category when using the <code>−−unicode</code> option, use <code>\p{IsBlockName}</code>. The table below lists the block categories up to U+FFFF, but you can use any of the Unicode blocks up to U+10FFFF not listed below:</p>
+<table class="doxtable">
+<tr>
+<th>IsBlockName </th><th>Unicode character range  </th></tr>
+<tr>
+<td><code>\p{IsBasicLatin}</code> </td><td>U+0000 to U+007F </td></tr>
+<tr>
+<td><code>\p{IsLatin-1Supplement}</code> </td><td>U+0080 to U+00FF </td></tr>
+<tr>
+<td><code>\p{IsLatinExtended-A}</code> </td><td>U+0100 to U+017F </td></tr>
+<tr>
+<td><code>\p{IsLatinExtended-B}</code> </td><td>U+0180 to U+024F </td></tr>
+<tr>
+<td><code>\p{IsIPAExtensions}</code> </td><td>U+0250 to U+02AF </td></tr>
+<tr>
+<td><code>\p{IsSpacingModifierLetters}</code> </td><td>U+02B0 to U+02FF </td></tr>
+<tr>
+<td><code>\p{IsCombiningDiacriticalMarks}</code> </td><td>U+0300 to U+036F </td></tr>
+<tr>
+<td><code>\p{IsGreekandCoptic}</code> </td><td>U+0370 to U+03FF </td></tr>
+<tr>
+<td><code>\p{IsCyrillic}</code> </td><td>U+0400 to U+04FF </td></tr>
+<tr>
+<td><code>\p{IsCyrillicSupplement}</code> </td><td>U+0500 to U+052F </td></tr>
+<tr>
+<td><code>\p{IsArmenian}</code> </td><td>U+0530 to U+058F </td></tr>
+<tr>
+<td><code>\p{IsHebrew}</code> </td><td>U+0590 to U+05FF </td></tr>
+<tr>
+<td><code>\p{IsArabic}</code> </td><td>U+0600 to U+06FF </td></tr>
+<tr>
+<td><code>\p{IsSyriac}</code> </td><td>U+0700 to U+074F </td></tr>
+<tr>
+<td><code>\p{IsArabicSupplement}</code> </td><td>U+0750 to U+077F </td></tr>
+<tr>
+<td><code>\p{IsThaana}</code> </td><td>U+0780 to U+07BF </td></tr>
+<tr>
+<td><code>\p{IsNKo}</code> </td><td>U+07C0 to U+07FF </td></tr>
+<tr>
+<td><code>\p{IsSamaritan}</code> </td><td>U+0800 to U+083F </td></tr>
+<tr>
+<td><code>\p{IsMandaic}</code> </td><td>U+0840 to U+085F </td></tr>
+<tr>
+<td><code>\p{IsSyriacSupplement}</code> </td><td>U+0860 to U+086F </td></tr>
+<tr>
+<td><code>\p{IsArabicExtended-A}</code> </td><td>U+08A0 to U+08FF </td></tr>
+<tr>
+<td><code>\p{IsDevanagari}</code> </td><td>U+0900 to U+097F </td></tr>
+<tr>
+<td><code>\p{IsBengali}</code> </td><td>U+0980 to U+09FF </td></tr>
+<tr>
+<td><code>\p{IsGurmukhi}</code> </td><td>U+0A00 to U+0A7F </td></tr>
+<tr>
+<td><code>\p{IsGujarati}</code> </td><td>U+0A80 to U+0AFF </td></tr>
+<tr>
+<td><code>\p{IsOriya}</code> </td><td>U+0B00 to U+0B7F </td></tr>
+<tr>
+<td><code>\p{IsTamil}</code> </td><td>U+0B80 to U+0BFF </td></tr>
+<tr>
+<td><code>\p{IsTelugu}</code> </td><td>U+0C00 to U+0C7F </td></tr>
+<tr>
+<td><code>\p{IsKannada}</code> </td><td>U+0C80 to U+0CFF </td></tr>
+<tr>
+<td><code>\p{IsMalayalam}</code> </td><td>U+0D00 to U+0D7F </td></tr>
+<tr>
+<td><code>\p{IsSinhala}</code> </td><td>U+0D80 to U+0DFF </td></tr>
+<tr>
+<td><code>\p{IsThai}</code> </td><td>U+0E00 to U+0E7F </td></tr>
+<tr>
+<td><code>\p{IsLao}</code> </td><td>U+0E80 to U+0EFF </td></tr>
+<tr>
+<td><code>\p{IsTibetan}</code> </td><td>U+0F00 to U+0FFF </td></tr>
+<tr>
+<td><code>\p{IsMyanmar}</code> </td><td>U+1000 to U+109F </td></tr>
+<tr>
+<td><code>\p{IsGeorgian}</code> </td><td>U+10A0 to U+10FF </td></tr>
+<tr>
+<td><code>\p{IsHangulJamo}</code> </td><td>U+1100 to U+11FF </td></tr>
+<tr>
+<td><code>\p{IsEthiopic}</code> </td><td>U+1200 to U+137F </td></tr>
+<tr>
+<td><code>\p{IsEthiopicSupplement}</code> </td><td>U+1380 to U+139F </td></tr>
+<tr>
+<td><code>\p{IsCherokee}</code> </td><td>U+13A0 to U+13FF </td></tr>
+<tr>
+<td><code>\p{IsUnifiedCanadianAboriginalSyllabics}</code> </td><td>U+1400 to U+167F </td></tr>
+<tr>
+<td><code>\p{IsOgham}</code> </td><td>U+1680 to U+169F </td></tr>
+<tr>
+<td><code>\p{IsRunic}</code> </td><td>U+16A0 to U+16FF </td></tr>
+<tr>
+<td><code>\p{IsTagalog}</code> </td><td>U+1700 to U+171F </td></tr>
+<tr>
+<td><code>\p{IsHanunoo}</code> </td><td>U+1720 to U+173F </td></tr>
+<tr>
+<td><code>\p{IsBuhid}</code> </td><td>U+1740 to U+175F </td></tr>
+<tr>
+<td><code>\p{IsTagbanwa}</code> </td><td>U+1760 to U+177F </td></tr>
+<tr>
+<td><code>\p{IsKhmer}</code> </td><td>U+1780 to U+17FF </td></tr>
+<tr>
+<td><code>\p{IsMongolian}</code> </td><td>U+1800 to U+18AF </td></tr>
+<tr>
+<td><code>\p{IsUnifiedCanadianAboriginalSyllabicsExtended}</code> </td><td>U+18B0 to U+18FF </td></tr>
+<tr>
+<td><code>\p{IsLimbu}</code> </td><td>U+1900 to U+194F </td></tr>
+<tr>
+<td><code>\p{IsTaiLe}</code> </td><td>U+1950 to U+197F </td></tr>
+<tr>
+<td><code>\p{IsNewTaiLue}</code> </td><td>U+1980 to U+19DF </td></tr>
+<tr>
+<td><code>\p{IsKhmerSymbols}</code> </td><td>U+19E0 to U+19FF </td></tr>
+<tr>
+<td><code>\p{IsBuginese}</code> </td><td>U+1A00 to U+1A1F </td></tr>
+<tr>
+<td><code>\p{IsTaiTham}</code> </td><td>U+1A20 to U+1AAF </td></tr>
+<tr>
+<td><code>\p{IsCombiningDiacriticalMarksExtended}</code> </td><td>U+1AB0 to U+1AFF </td></tr>
+<tr>
+<td><code>\p{IsBalinese}</code> </td><td>U+1B00 to U+1B7F </td></tr>
+<tr>
+<td><code>\p{IsSundanese}</code> </td><td>U+1B80 to U+1BBF </td></tr>
+<tr>
+<td><code>\p{IsBatak}</code> </td><td>U+1BC0 to U+1BFF </td></tr>
+<tr>
+<td><code>\p{IsLepcha}</code> </td><td>U+1C00 to U+1C4F </td></tr>
+<tr>
+<td><code>\p{IsOlChiki}</code> </td><td>U+1C50 to U+1C7F </td></tr>
+<tr>
+<td><code>\p{IsCyrillicExtended-C}</code> </td><td>U+1C80 to U+1C8F </td></tr>
+<tr>
+<td><code>\p{IsSundaneseSupplement}</code> </td><td>U+1CC0 to U+1CCF </td></tr>
+<tr>
+<td><code>\p{IsVedicExtensions}</code> </td><td>U+1CD0 to U+1CFF </td></tr>
+<tr>
+<td><code>\p{IsPhoneticExtensions}</code> </td><td>U+1D00 to U+1D7F </td></tr>
+<tr>
+<td><code>\p{IsPhoneticExtensionsSupplement}</code> </td><td>U+1D80 to U+1DBF </td></tr>
+<tr>
+<td><code>\p{IsCombiningDiacriticalMarksSupplement}</code> </td><td>U+1DC0 to U+1DFF </td></tr>
+<tr>
+<td><code>\p{IsLatinExtendedAdditional}</code> </td><td>U+1E00 to U+1EFF </td></tr>
+<tr>
+<td><code>\p{IsGreekExtended}</code> </td><td>U+1F00 to U+1FFF </td></tr>
+<tr>
+<td><code>\p{IsGeneralPunctuation}</code> </td><td>U+2000 to U+206F </td></tr>
+<tr>
+<td><code>\p{IsSuperscriptsandSubscripts}</code> </td><td>U+2070 to U+209F </td></tr>
+<tr>
+<td><code>\p{IsCurrencySymbols}</code> </td><td>U+20A0 to U+20CF </td></tr>
+<tr>
+<td><code>\p{IsCombiningDiacriticalMarksforSymbols}</code> </td><td>U+20D0 to U+20FF </td></tr>
+<tr>
+<td><code>\p{IsLetterlikeSymbols}</code> </td><td>U+2100 to U+214F </td></tr>
+<tr>
+<td><code>\p{IsNumberForms}</code> </td><td>U+2150 to U+218F </td></tr>
+<tr>
+<td><code>\p{IsArrows}</code> </td><td>U+2190 to U+21FF </td></tr>
+<tr>
+<td><code>\p{IsMathematicalOperators}</code> </td><td>U+2200 to U+22FF </td></tr>
+<tr>
+<td><code>\p{IsMiscellaneousTechnical}</code> </td><td>U+2300 to U+23FF </td></tr>
+<tr>
+<td><code>\p{IsControlPictures}</code> </td><td>U+2400 to U+243F </td></tr>
+<tr>
+<td><code>\p{IsOpticalCharacterRecognition}</code> </td><td>U+2440 to U+245F </td></tr>
+<tr>
+<td><code>\p{IsEnclosedAlphanumerics}</code> </td><td>U+2460 to U+24FF </td></tr>
+<tr>
+<td><code>\p{IsBoxDrawing}</code> </td><td>U+2500 to U+257F </td></tr>
+<tr>
+<td><code>\p{IsBlockElements}</code> </td><td>U+2580 to U+259F </td></tr>
+<tr>
+<td><code>\p{IsGeometricShapes}</code> </td><td>U+25A0 to U+25FF </td></tr>
+<tr>
+<td><code>\p{IsMiscellaneousSymbols}</code> </td><td>U+2600 to U+26FF </td></tr>
+<tr>
+<td><code>\p{IsDingbats}</code> </td><td>U+2700 to U+27BF </td></tr>
+<tr>
+<td><code>\p{IsMiscellaneousMathematicalSymbols-A}</code> </td><td>U+27C0 to U+27EF </td></tr>
+<tr>
+<td><code>\p{IsSupplementalArrows-A}</code> </td><td>U+27F0 to U+27FF </td></tr>
+<tr>
+<td><code>\p{IsBraillePatterns}</code> </td><td>U+2800 to U+28FF </td></tr>
+<tr>
+<td><code>\p{IsSupplementalArrows-B}</code> </td><td>U+2900 to U+297F </td></tr>
+<tr>
+<td><code>\p{IsMiscellaneousMathematicalSymbols-B}</code> </td><td>U+2980 to U+29FF </td></tr>
+<tr>
+<td><code>\p{IsSupplementalMathematicalOperators}</code> </td><td>U+2A00 to U+2AFF </td></tr>
+<tr>
+<td><code>\p{IsMiscellaneousSymbolsandArrows}</code> </td><td>U+2B00 to U+2BFF </td></tr>
+<tr>
+<td><code>\p{IsGlagolitic}</code> </td><td>U+2C00 to U+2C5F </td></tr>
+<tr>
+<td><code>\p{IsLatinExtended-C}</code> </td><td>U+2C60 to U+2C7F </td></tr>
+<tr>
+<td><code>\p{IsCoptic}</code> </td><td>U+2C80 to U+2CFF </td></tr>
+<tr>
+<td><code>\p{IsGeorgianSupplement}</code> </td><td>U+2D00 to U+2D2F </td></tr>
+<tr>
+<td><code>\p{IsTifinagh}</code> </td><td>U+2D30 to U+2D7F </td></tr>
+<tr>
+<td><code>\p{IsEthiopicExtended}</code> </td><td>U+2D80 to U+2DDF </td></tr>
+<tr>
+<td><code>\p{IsCyrillicExtended-A}</code> </td><td>U+2DE0 to U+2DFF </td></tr>
+<tr>
+<td><code>\p{IsSupplementalPunctuation}</code> </td><td>U+2E00 to U+2E7F </td></tr>
+<tr>
+<td><code>\p{IsCJKRadicalsSupplement}</code> </td><td>U+2E80 to U+2EFF </td></tr>
+<tr>
+<td><code>\p{IsKangxiRadicals}</code> </td><td>U+2F00 to U+2FDF </td></tr>
+<tr>
+<td><code>\p{IsIdeographicDescriptionCharacters}</code> </td><td>U+2FF0 to U+2FFF </td></tr>
+<tr>
+<td><code>\p{IsCJKSymbolsandPunctuation}</code> </td><td>U+3000 to U+303F </td></tr>
+<tr>
+<td><code>\p{IsHiragana}</code> </td><td>U+3040 to U+309F </td></tr>
+<tr>
+<td><code>\p{IsKatakana}</code> </td><td>U+30A0 to U+30FF </td></tr>
+<tr>
+<td><code>\p{IsBopomofo}</code> </td><td>U+3100 to U+312F </td></tr>
+<tr>
+<td><code>\p{IsHangulCompatibilityJamo}</code> </td><td>U+3130 to U+318F </td></tr>
+<tr>
+<td><code>\p{IsKanbun}</code> </td><td>U+3190 to U+319F </td></tr>
+<tr>
+<td><code>\p{IsBopomofoExtended}</code> </td><td>U+31A0 to U+31BF </td></tr>
+<tr>
+<td><code>\p{IsCJKStrokes}</code> </td><td>U+31C0 to U+31EF </td></tr>
+<tr>
+<td><code>\p{IsKatakanaPhoneticExtensions}</code> </td><td>U+31F0 to U+31FF </td></tr>
+<tr>
+<td><code>\p{IsEnclosedCJKLettersandMonths}</code> </td><td>U+3200 to U+32FF </td></tr>
+<tr>
+<td><code>\p{IsCJKCompatibility}</code> </td><td>U+3300 to U+33FF </td></tr>
+<tr>
+<td><code>\p{IsCJKUnifiedIdeographsExtensionA}</code> </td><td>U+3400 to U+4DBF </td></tr>
+<tr>
+<td><code>\p{IsYijingHexagramSymbols}</code> </td><td>U+4DC0 to U+4DFF </td></tr>
+<tr>
+<td><code>\p{IsCJKUnifiedIdeographs}</code> </td><td>U+4E00 to U+9FFF </td></tr>
+<tr>
+<td><code>\p{IsYiSyllables}</code> </td><td>U+A000 to U+A48F </td></tr>
+<tr>
+<td><code>\p{IsYiRadicals}</code> </td><td>U+A490 to U+A4CF </td></tr>
+<tr>
+<td><code>\p{IsLisu}</code> </td><td>U+A4D0 to U+A4FF </td></tr>
+<tr>
+<td><code>\p{IsVai}</code> </td><td>U+A500 to U+A63F </td></tr>
+<tr>
+<td><code>\p{IsCyrillicExtended-B}</code> </td><td>U+A640 to U+A69F </td></tr>
+<tr>
+<td><code>\p{IsBamum}</code> </td><td>U+A6A0 to U+A6FF </td></tr>
+<tr>
+<td><code>\p{IsModifierToneLetters}</code> </td><td>U+A700 to U+A71F </td></tr>
+<tr>
+<td><code>\p{IsLatinExtended-D}</code> </td><td>U+A720 to U+A7FF </td></tr>
+<tr>
+<td><code>\p{IsSylotiNagri}</code> </td><td>U+A800 to U+A82F </td></tr>
+<tr>
+<td><code>\p{IsCommonIndicNumberForms}</code> </td><td>U+A830 to U+A83F </td></tr>
+<tr>
+<td><code>\p{IsPhags-pa}</code> </td><td>U+A840 to U+A87F </td></tr>
+<tr>
+<td><code>\p{IsSaurashtra}</code> </td><td>U+A880 to U+A8DF </td></tr>
+<tr>
+<td><code>\p{IsDevanagariExtended}</code> </td><td>U+A8E0 to U+A8FF </td></tr>
+<tr>
+<td><code>\p{IsKayahLi}</code> </td><td>U+A900 to U+A92F </td></tr>
+<tr>
+<td><code>\p{IsRejang}</code> </td><td>U+A930 to U+A95F </td></tr>
+<tr>
+<td><code>\p{IsHangulJamoExtended-A}</code> </td><td>U+A960 to U+A97F </td></tr>
+<tr>
+<td><code>\p{IsJavanese}</code> </td><td>U+A980 to U+A9DF </td></tr>
+<tr>
+<td><code>\p{IsMyanmarExtended-B}</code> </td><td>U+A9E0 to U+A9FF </td></tr>
+<tr>
+<td><code>\p{IsCham}</code> </td><td>U+AA00 to U+AA5F </td></tr>
+<tr>
+<td><code>\p{IsMyanmarExtended-A}</code> </td><td>U+AA60 to U+AA7F </td></tr>
+<tr>
+<td><code>\p{IsTaiViet}</code> </td><td>U+AA80 to U+AADF </td></tr>
+<tr>
+<td><code>\p{IsMeeteiMayekExtensions}</code> </td><td>U+AAE0 to U+AAFF </td></tr>
+<tr>
+<td><code>\p{IsEthiopicExtended-A}</code> </td><td>U+AB00 to U+AB2F </td></tr>
+<tr>
+<td><code>\p{IsLatinExtended-E}</code> </td><td>U+AB30 to U+AB6F </td></tr>
+<tr>
+<td><code>\p{IsCherokeeSupplement}</code> </td><td>U+AB70 to U+ABBF </td></tr>
+<tr>
+<td><code>\p{IsMeeteiMayek}</code> </td><td>U+ABC0 to U+ABFF </td></tr>
+<tr>
+<td><code>\p{IsHangulSyllables}</code> </td><td>U+AC00 to U+D7AF </td></tr>
+<tr>
+<td><code>\p{IsHangulJamoExtended-B}</code> </td><td>U+D7B0 to U+D7FF </td></tr>
+<tr>
+<td><code>\p{IsHighSurrogates}</code> </td><td>U+D800 to U+DB7F </td></tr>
+<tr>
+<td><code>\p{IsHighPrivateUseSurrogates}</code> </td><td>U+DB80 to U+DBFF </td></tr>
+<tr>
+<td><code>\p{IsLowSurrogates}</code> </td><td>U+DC00 to U+DFFF </td></tr>
+<tr>
+<td><code>\p{IsPrivateUseArea}</code> </td><td>U+E000 to U+F8FF </td></tr>
+<tr>
+<td><code>\p{IsCJKCompatibilityIdeographs}</code> </td><td>U+F900 to U+FAFF </td></tr>
+<tr>
+<td><code>\p{IsAlphabeticPresentationForms}</code> </td><td>U+FB00 to U+FB4F </td></tr>
+<tr>
+<td><code>\p{IsArabicPresentationForms-A}</code> </td><td>U+FB50 to U+FDFF </td></tr>
+<tr>
+<td><code>\p{IsVariationSelectors}</code> </td><td>U+FE00 to U+FE0F </td></tr>
+<tr>
+<td><code>\p{IsVerticalForms}</code> </td><td>U+FE10 to U+FE1F </td></tr>
+<tr>
+<td><code>\p{IsCombiningHalfMarks}</code> </td><td>U+FE20 to U+FE2F </td></tr>
+<tr>
+<td><code>\p{IsCJKCompatibilityForms}</code> </td><td>U+FE30 to U+FE4F </td></tr>
+<tr>
+<td><code>\p{IsSmallFormVariants}</code> </td><td>U+FE50 to U+FE6F </td></tr>
+<tr>
+<td><code>\p{IsArabicPresentationForms-B}</code> </td><td>U+FE70 to U+FEFF </td></tr>
+<tr>
+<td><code>\p{IsHalfwidthandFullwidthForms}</code> </td><td>U+FF00 to U+FFEF </td></tr>
+<tr>
+<td><code>\p{IsSpecials}</code> </td><td>U+FFF0 to U+FFFF </td></tr>
+</table>
+<p>In addition, the <code>−−unicode</code> option enables standard Unicode language scripts:</p>
+<p><code>\p{Adlam}</code>, <code>\p{Ahom}</code>, <code>\p{Anatolian_Hieroglyphs}</code>, <code>\p{Arabic}</code>, <code>\p{Armenian}</code>, <code>\p{Avestan}</code>, <code>\p{Balinese}</code>, <code>\p{Bamum}</code>, <code>\p{Bassa_Vah}</code>, <code>\p{Batak}</code>, <code>\p{Bengali}</code>, <code>\p{Bhaiksuki}</code>, <code>\p{Bopomofo}</code>, <code>\p{Brahmi}</code>, <code>\p{Braille}</code>, <code>\p{Buginese}</code>, <code>\p{Buhid}</code>, <code>\p{Canadian_Aboriginal}</code>, <code>\p{Carian}</code>, <code>\p{Caucasian_Albanian}</code>, <code>\p{Chakma}</code>, <code>\p{Cham}</code>, <code>\p{Cherokee}</code>, <code>\p{Coptic}</code>, <code>\p{Cuneiform}</code>, <code>\p{Cypriot}</code>, <code>\p{Cyrillic}</code>, <code>\p{Deseret}</code>, <code>\p{Devanagari}</code>, <code>\p{Duployan}</code>, <code>\p{Egyptian_Hieroglyphs}</code>, <code>\p{Elbasan}</code>, <code>\p{Ethiopic}</code>, <code>\p{Georgian}</code>, <code>\p{Glagolitic}</code>, <code>\p{Gothic}</code>, <code>\p{Grantha}</code>, <code>\p{Greek}</code>, <code>\p{Gujarati}</code>, <code>\p{Gurmukhi}</code>, <code>\p{Han}</code>, <code>\p{Hangul}</code>, <code>\p{Hanunoo}</code>, <code>\p{Hatran}</code>, <code>\p{Hebrew}</code>, <code>\p{Hiragana}</code>, <code>\p{Imperial_Aramaic}</code>, <code>\p{Inscriptional_Pahlavi}</code>, <code>\p{Inscriptional_Parthian}</code>, <code>\p{Javanese}</code>, <code>\p{Kaithi}</code>, <code>\p{Kannada}</code>, <code>\p{Katakana}</code>, <code>\p{Kayah_Li}</code>, <code>\p{Kharoshthi}</code>, <code>\p{Khmer}</code>, <code>\p{Khojki}</code>, <code>\p{Khudawadi}</code>, <code>\p{Lao}</code>, <code>\p{Latin}</code>, <code>\p{Lepcha}</code>, <code>\p{Limbu}</code>, <code>\p{Linear_A}</code>, <code>\p{Linear_B}</code>, <code>\p{Lisu}</code>, <code>\p{Lycian}</code>, <code>\p{Lydian}</code>, <code>\p{Mahajani}</code>, <code>\p{Malayalam}</code>, <code>\p{Mandaic}</code>, <code>\p{Manichaean}</code>, <code>\p{Marchen}</code>, <code>\p{Masaram_Gondi}</code>, <code>\p{Meetei_Mayek}</code>, <code>\p{Mende_Kikakui}</code>, <code>\p{Meroitic_Cursive}</code>, <code>\p{Meroitic_Hieroglyphs}</code>, <code>\p{Miao}</code>, <code>\p{Modi}</code>, <code>\p{Mongolian}</code>, <code>\p{Mro}</code>, <code>\p{Multani}</code>, <code>\p{Myanmar}</code>, <code>\p{Nabataean}</code>, <code>\p{New_Tai_Lue}</code>, <code>\p{Newa}</code>, <code>\p{Nko}</code>, <code>\p{Nushu}</code>, <code>\p{Ogham}</code>, <code>\p{Ol_Chiki}</code>, <code>\p{Old_Hungarian}</code>, <code>\p{Old_Italic}</code>, <code>\p{Old_North_Arabian}</code>, <code>\p{Old_Permic}</code>, <code>\p{Old_Persian}</code>, <code>\p{Old_South_Arabian}</code>, <code>\p{Old_Turkic}</code>, <code>\p{Oriya}</code>, <code>\p{Osage}</code>, <code>\p{Osmanya}</code>, <code>\p{Pahawh_Hmong}</code>, <code>\p{Palmyrene}</code>, <code>\p{Pau_Cin_Hau}</code>, <code>\p{Phags_Pa}</code>, <code>\p{Phoenician}</code>, <code>\p{Psalter_Pahlavi}</code>, <code>\p{Rejang}</code>, <code>\p{Runic}</code>, <code>\p{Samaritan}</code>, <code>\p{Saurashtra}</code>, <code>\p{Sharada}</code>, <code>\p{Shavian}</code>, <code>\p{Siddham}</code>, <code>\p{SignWriting}</code>, <code>\p{Sinhala}</code>, <code>\p{Sora_Sompeng}</code>, <code>\p{Soyombo}</code>, <code>\p{Sundanese}</code>, <code>\p{Syloti_Nagri}</code>, <code>\p{Syriac}</code>, <code>\p{Tagalog}</code>, <code>\p{Tagbanwa}</code>, <code>\p{Tai_Le}</code>, <code>\p{Tai_Tham}</code>, <code>\p{Tai_Viet}</code>, <code>\p{Takri}</code>, <code>\p{Tamil}</code>, <code>\p{Tangut}</code>, <code>\p{Telugu}</code>, <code>\p{Thaana}</code>, <code>\p{Thai}</code>, <code>\p{Tibetan}</code>, <code>\p{Tifinagh}</code>, <code>\p{Tirhuta}</code>, <code>\p{Ugaritic}</code>, <code>\p{Vai}</code>, <code>\p{Warang_Citi}</code>, <code>\p{Yi}</code>, <code>\p{Zanabazar_Square}</code>.</p>
 <p>You can also use the capitalized <code>\P{C}</code> form that has the same meaning as <code>\p{^C}</code>, which matches any character except characters in the class <code>C</code>.</p>
+<dl class="section note"><dt>Note</dt><dd>Unicode language script character classes differ from the Unicode blocks that have a similar name. For example, the <code>\p{Greek}</code> class represents Greek and Coptic letters and differs from the Unicode block <code>\p{IsGreek}</code> that spans a specific Unicode block of Greek and Coptic characters only, which also includes unassigned characters.</dd></dl>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-pattern-anchor"></a>
 Anchors and boundaries</h3>
@@ -1245,7 +1575,7 @@ Indent/nodent/dedent</h3>
 <div class="alt"> <div class="fragment"><div class="line">%o tabs=8</div><div class="line">%%</div><div class="line">^\h+      out() &lt;&lt; <span class="stringliteral">&quot;| &quot;</span>; <span class="comment">// nodent: text is aligned to current indent</span></div><div class="line">^\h*\i    out() &lt;&lt; <span class="stringliteral">&quot;&gt; &quot;</span>; <span class="comment">// indent: matched and added with \i</span></div><div class="line">^\h*\j    out() &lt;&lt; <span class="stringliteral">&quot;&lt; &quot;</span>; <span class="comment">// dedent: matched with \j</span></div><div class="line">\j        out() &lt;&lt; <span class="stringliteral">&quot;&lt; &quot;</span>; <span class="comment">// dedent: for each extra level dedented</span></div><div class="line">%%</div></div><!-- fragment --> </div><p>The <code>\h</code> pattern matches space and tabs, where tabs advance to the next column that is a multiple of 8. The tab multiplier can be changed by setting the <code>−−tabs=N</code> option where <code>N</code> must be a positive integer that is a power of 2 and between 1 and 8 (1, 2, 4, 8).</p>
 <p>To add a pattern that consumes line continuations without affecting the indentation levels defined by <code>\i</code>, use a negative match, which is a new RE/flex feature:</p>
 <div class="alt"> <div class="fragment"><div class="line">(?^\\\n\h*)  <span class="comment">// lines ending in \ will continue on the next line</span></div></div><!-- fragment --> </div><p>The negative pattern <code>(?^\\\n\h+)</code> consumes input internally as if we are repeately calling <code>input()</code> (or <code><a class="el" href="flexlexer_8h.html#a411db26910a55c4e92a226dee582564b" title="Flex-compatible macro: read one character, returns zero when EOF. ">yyinput()</a></code> with <code>−−flex</code>). We used it here to consume the line-ending <code>\</code> and the indent that followed it, as if this text was not part of the input, which ensures that the current indent positions that are defined by <code>\i</code> are not affected.</p>
-<p>To scan input that continues on the next new line(s) while preserving the current indent stop positions, use the RE/flex matcher <code>matcher().push_stops()</code> and <code>matcher().pop_stops()</code>:</p>
+<p>To scan input that continues on the next new line(s) (which may affect indent stops) while preserving the current indent stop positions, use the RE/flex matcher <code>matcher().push_stops()</code> and <code>matcher().pop_stops()</code>:</p>
 <table class="doxtable">
 <tr>
 <th>RE/flex action </th><th>Result  </th></tr>
@@ -1257,6 +1587,12 @@ Indent/nodent/dedent</h3>
 <td><code>matcher().clear_stops()</code> </td><td>clear current indent stops </td></tr>
 <tr>
 <td><code>matcher().stops()</code> </td><td>reference to current <code>std::vector&lt;size_t&gt;</code> stops </td></tr>
+<tr>
+<td><code>matcher().last_stop()</code> </td><td>returns the last indent stop position or 0 </td></tr>
+<tr>
+<td><code>matcher().insert_stop(n)</code> </td><td>inserts/appends an indent stop at position <code>n</code> </td></tr>
+<tr>
+<td><code>matcher().delete_stop(n)</code> </td><td>remove stop positions from position <code>n</code> and up </td></tr>
 </table>
 <p>For example, to continue scanning after a <code>/*</code> for multiple lines without indentation matching and up to a <code>*/</code> you can save the current indent positions and transition to a new start condition state to scan the content between <code>/*</code> and <code>*/</code>:</p>
 <div class="alt"> <div class="fragment"><div class="line">%o tabs=8</div><div class="line">%x CONTINUE</div><div class="line">%%</div><div class="line">^\h+          out() &lt;&lt; <span class="stringliteral">&quot;| &quot;</span>; <span class="comment">// nodent, text is aligned to current margin</span></div><div class="line">^\h*\i        out() &lt;&lt; <span class="stringliteral">&quot;&gt; &quot;</span>; <span class="comment">// indent</span></div><div class="line">^\h*\j        out() &lt;&lt; <span class="stringliteral">&quot;&lt; &quot;</span>; <span class="comment">// dedent</span></div><div class="line">\j            out() &lt;&lt; <span class="stringliteral">&quot;&lt; &quot;</span>; <span class="comment">// dedent, for each extra indent level on the same line</span></div><div class="line"><span class="stringliteral">&quot;/*&quot;</span>          matcher().push_stops(); <span class="comment">// save the indent margin/tab stops</span></div><div class="line">              start(CONTINUE);        <span class="comment">// continue w/o indent matching</span></div><div class="line">&lt;CONTINUE&gt;{</div><div class="line"><span class="stringliteral">&quot;*/&quot;</span>          matcher().pop_stops();  <span class="comment">// restore the indent margin/tab stops</span></div><div class="line">              start(INITIAL);         <span class="comment">// go back to the initial scanning state</span></div><div class="line">.|\n          <span class="comment">/* ignore */</span></div><div class="line">}</div></div><!-- fragment --> </div><p>The <code>matcher().stops()</code> method returns a reference to the current <code>std::vector&lt;size_t&gt;</code> of indent stop positions, which may be modified by adding and/or removing indent stop positions. Make sure to keep the vector sorted.</p>
@@ -1346,6 +1682,7 @@ The Lexer/yyFlexLexer class                                     </h2>
 <td><code>lex</code> </td><td><code><a class="el" href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805" title="convert Lex/Flex regular expression syntax ">lex()</a></code> function </td><td><code>yylex()</code> function </td></tr>
 </table>
 <p>To customize the Lexer class use these options and code injection.</p>
+<p>You can declare multiple nested namespace names by separating the names with a dot, as for example in <code>namespace=NAME1.NAME2.NAME3</code> to declare the lexer in <code>NAME1::NAME2::NAME3</code>.</p>
 <p>To understand the impact of these options, consider the following lex specification template:</p>
 <div class="alt"> <div class="fragment"><div class="line">%option <span class="keyword">namespace</span>=NAMESPACE</div><div class="line">%option lexer=LEXER</div><div class="line">%option <a class="code" href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805">lex</a>=LEX</div><div class="line"></div><div class="line">%<span class="keyword">class</span>{</div><div class="line">  MEMBERS</div><div class="line">%}</div><div class="line"></div><div class="line">%init{</div><div class="line">  INIT</div><div class="line">%}</div><div class="line"></div><div class="line">%%</div><div class="line"></div><div class="line">%{</div><div class="line">  CODE</div><div class="line">%}</div><div class="line"></div><div class="line">REGEX ACTION</div><div class="line"></div><div class="line">%%</div></div><!-- fragment --> </div><p>This produces the following Lexer class with the template parts filled in:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="abslexer_8h.html">reflex/abslexer.h</a>&gt;</span></div><div class="line"><span class="keyword">namespace </span>NAMESPACE {</div><div class="line">  <span class="keyword">class </span>LEXER : <span class="keyword">public</span> <a class="code" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt;reflex::Matcher&gt; {</div><div class="line">    MEMBERS</div><div class="line">   <span class="keyword">public</span>:</div><div class="line">    LEXER(</div><div class="line">        <span class="keyword">const</span> <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>&amp; input = <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>(),</div><div class="line">        std::ostream&amp;        os    = std::cout)</div><div class="line">      :</div><div class="line">        AbstractLexer(input, os)</div><div class="line">    {</div><div class="line">      INIT</div><div class="line">    }</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> INITIAL = 0;</div><div class="line">    <span class="keyword">virtual</span> <span class="keywordtype">int</span> LEX(<span class="keywordtype">void</span>);</div><div class="line">    <span class="keywordtype">int</span> LEX(</div><div class="line">        <span class="keyword">const</span> <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>&amp; input,</div><div class="line">        std::ostream        *os = NULL)</div><div class="line">    {</div><div class="line">      in(input);</div><div class="line">      <span class="keywordflow">if</span> (os)</div><div class="line">        out(*os);</div><div class="line">      <span class="keywordflow">return</span> LEX();</div><div class="line">    }</div><div class="line">  };</div><div class="line">  <span class="keywordtype">int</span> NAMESPACE::LEXER::LEX()</div><div class="line">  {</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> PATTERN_INITIAL(<span class="stringliteral">&quot;(?m)(REGEX)&quot;</span>);</div><div class="line">    <span class="keywordflow">if</span> (!has_matcher())</div><div class="line">    {</div><div class="line">      matcher(<span class="keyword">new</span> Matcher(PATTERN_INITIAL, stdinit(), <span class="keyword">this</span>));</div><div class="line">    }</div><div class="line">    CODE</div><div class="line">    <span class="keywordflow">while</span> (<span class="keyword">true</span>)</div><div class="line">    {</div><div class="line">      <span class="keywordflow">switch</span> (matcher().scan())</div><div class="line">      {</div><div class="line">        <span class="keywordflow">case</span> 0:</div><div class="line">          <span class="keywordflow">if</span> (matcher().at_end())</div><div class="line">          {</div><div class="line">            <span class="keywordflow">return</span> 0;</div><div class="line">          }</div><div class="line">          <span class="keywordflow">else</span></div><div class="line">          {</div><div class="line">            out().put(matcher().input());</div><div class="line">          }</div><div class="line">          <span class="keywordflow">break</span>;</div><div class="line">        <span class="keywordflow">case</span> 1:</div><div class="line">          ACTION</div><div class="line">          <span class="keywordflow">break</span>;</div><div class="line">      }</div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><p>The Lexer class produced with option <code>−−flex</code> is compatible with Flex (assuming Flex with option <code>-+</code> for C++):</p>
@@ -1731,7 +2068,7 @@ The RE/flex pattern class                                      </h2>
 <td><code>w</code> </td><td>display regex syntax errors before raising them as exceptions </td></tr>
 </table>
 <p>The compilation of a <code><a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a></code> object into a FSM may throw an exception when the regex string has problems:</p>
-<div class="fragment"><div class="line"><span class="keywordflow">try</span></div><div class="line">{</div><div class="line">  <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> pattern(argv[1]);</div><div class="line">  ...</div><div class="line">  <span class="comment">// code that uses the pattern object</span></div><div class="line">  ...</div><div class="line">}</div><div class="line"><span class="keywordflow">catch</span> (<a class="code" href="classreflex_1_1regex__error.html">reflex::regex_error</a>&amp; e)</div><div class="line">{</div><div class="line">  std::cerr &lt;&lt; e.what();</div><div class="line">  <span class="keywordflow">switch</span> (e)</div><div class="line">  {</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a293014262113a8affe812cdc1a155199">reflex::regex_error::mismatched_parens</a>:    std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched ( )&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#aa103b656bc8c84276caa3a3e479d5aed">reflex::regex_error::mismatched_braces</a>:    std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched { }&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a388b62b0f150f2c4e673a7326df98bf0">reflex::regex_error::mismatched_brackets</a>:  std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched [ ]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a4da14a39e65667e922d4ac9251d3acf2">reflex::regex_error::mismatched_quotation</a>: std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched \Q...\E quotation&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#aba10b497ace31b4e829961820f59ac1f">reflex::regex_error::empty_expression</a>:     std::cerr &lt;&lt; <span class="stringliteral">&quot;regex (sub)expression should not be empty&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ab8d5ad921586a5821a5a6ea57f3ef7f3">reflex::regex_error::empty_class</a>:          std::cerr &lt;&lt; <span class="stringliteral">&quot;class [...] is empty, e.g. [a&amp;&amp;[b]]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ac7c47c5a86f7f50f4128e4b31f3b8cd8">reflex::regex_error::invalid_class</a>:        std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid character class name&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a0a3dbc259753fe9c56bcb86ab22933f6">reflex::regex_error::invalid_class_range</a>:  std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid class range, e.g. [Z-A]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a3f67bcffa141ac3fd804dfe28a009165">reflex::regex_error::invalid_escape</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid escape character&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#abe00de8d9374f3b3528c181c3bbcee7c">reflex::regex_error::invalid_anchor</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid anchor&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a72584e74ccf493595d88f0ccc4b61f55">reflex::regex_error::invalid_repeat</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid repeat range, e.g. {10,1}&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a1c01a511c833d13708a5607c7a6d810a">reflex::regex_error::invalid_quantifier</a>:   std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid lazy/possessive quantifier&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#af9454b097595a8c39fe0118cdbae60d0">reflex::regex_error::invalid_modifier</a>:     std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid (?ismux:) modifier&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ac3e3283b3859fae05b21655d8ee096a6">reflex::regex_error::invalid_syntax</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid regex syntax&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a0c63bf6cff5be3ddb509de3ea84d6e41">reflex::regex_error::exceeds_limits</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;exceeds complexity limits: {n,m} range too large&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><p>🔝 <a href="#">Back to table of contents</a></p>
+<div class="fragment"><div class="line"><span class="keywordflow">try</span></div><div class="line">{</div><div class="line">  <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> pattern(argv[1]);</div><div class="line">  ...</div><div class="line">  <span class="comment">// code that uses the pattern object</span></div><div class="line">  ...</div><div class="line">}</div><div class="line"><span class="keywordflow">catch</span> (<a class="code" href="classreflex_1_1regex__error.html">reflex::regex_error</a>&amp; e)</div><div class="line">{</div><div class="line">  std::cerr &lt;&lt; e.what();</div><div class="line">  <span class="keywordflow">switch</span> (e.<a class="code" href="classreflex_1_1regex__error.html#a9db1cdde85bfe6f8f7807357addca122">code</a>())</div><div class="line">  {</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a293014262113a8affe812cdc1a155199">reflex::regex_error::mismatched_parens</a>:    std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched ( )&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#aa103b656bc8c84276caa3a3e479d5aed">reflex::regex_error::mismatched_braces</a>:    std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched { }&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a388b62b0f150f2c4e673a7326df98bf0">reflex::regex_error::mismatched_brackets</a>:  std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched [ ]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a4da14a39e65667e922d4ac9251d3acf2">reflex::regex_error::mismatched_quotation</a>: std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched \Q...\E quotation&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#aba10b497ace31b4e829961820f59ac1f">reflex::regex_error::empty_expression</a>:     std::cerr &lt;&lt; <span class="stringliteral">&quot;regex (sub)expression should not be empty&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ab8d5ad921586a5821a5a6ea57f3ef7f3">reflex::regex_error::empty_class</a>:          std::cerr &lt;&lt; <span class="stringliteral">&quot;class [...] is empty, e.g. [a&amp;&amp;[b]]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ac7c47c5a86f7f50f4128e4b31f3b8cd8">reflex::regex_error::invalid_class</a>:        std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid character class name&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a0a3dbc259753fe9c56bcb86ab22933f6">reflex::regex_error::invalid_class_range</a>:  std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid class range, e.g. [Z-A]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a3f67bcffa141ac3fd804dfe28a009165">reflex::regex_error::invalid_escape</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid escape character&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#abe00de8d9374f3b3528c181c3bbcee7c">reflex::regex_error::invalid_anchor</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid anchor&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a72584e74ccf493595d88f0ccc4b61f55">reflex::regex_error::invalid_repeat</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid repeat range, e.g. {10,1}&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a1c01a511c833d13708a5607c7a6d810a">reflex::regex_error::invalid_quantifier</a>:   std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid lazy/possessive quantifier&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#af9454b097595a8c39fe0118cdbae60d0">reflex::regex_error::invalid_modifier</a>:     std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid (?ismux:) modifier&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ac3e3283b3859fae05b21655d8ee096a6">reflex::regex_error::invalid_syntax</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid regex syntax&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a0c63bf6cff5be3ddb509de3ea84d6e41">reflex::regex_error::exceeds_limits</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;exceeds complexity limits: {n,m} range too large&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="regex-convert"></a>
 Regex converters                                               </h2>
 <p>To work around limitations of regex libraries and to support Unicode matching, RE/flex offers converters to translate expressive regex syntax forms (with Unicode patterns defined in section <a class="el" href="index.html#reflex-patterns">Patterns </a>) to regex strings that the selected regex engines can handle.</p>
@@ -1771,7 +2108,7 @@ Regex converters                                               </h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="matcher_8h.html">reflex/matcher.h</a>&gt;</span> <span class="comment">// reflex::Matcher, reflex::Input, reflex::Pattern</span></div><div class="line"></div><div class="line"><span class="comment">// use a Matcher to check if sentence is in Greek:</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> pattern(<a class="code" href="classreflex_1_1_matcher.html#a8862686f6d5680d4d0e5af146c4aed69">reflex::Matcher::convert</a>(<span class="stringliteral">&quot;[\\p{Greek}\\p{Zs}\\pP]+&quot;</span>, <a class="code" href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39">reflex::convert_flag::unicode</a>));</div><div class="line"><span class="keywordflow">if</span> (<a class="code" href="classreflex_1_1_matcher.html">reflex::Matcher</a>(pattern, sentence).matches())</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;This is Greek&quot;</span> &lt;&lt; std::endl;</div></div><!-- fragment --><p>For example, the <code>unicode</code> flag and <code>dotall</code> flag can be used with a <code>.</code> regex pattern to count wide characters in some <code>example</code> input:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="boostmatcher_8h.html">reflex/boostmatcher.h</a>&gt;</span> <span class="comment">// reflex::BoostMatcher, reflex::Input, boost::regex</span></div><div class="line"></div><div class="line"><span class="comment">// construct a Boost.Regex matcher to count wide characters:</span></div><div class="line">std::string regex = <a class="code" href="classreflex_1_1_boost_matcher.html#ad1827615da2d51f4896e9c802b6463fc">reflex::BoostMatcher::convert</a>(<span class="stringliteral">&quot;.&quot;</span>, <a class="code" href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39">reflex::convert_flag::unicode</a> | <a class="code" href="namespacereflex_1_1convert__flag.html#ab6a63c3a106c2dbcbad7b86797453f58">reflex::convert_flag::dotall</a>);</div><div class="line"><a class="code" href="classreflex_1_1_boost_matcher.html">reflex::BoostMatcher</a> boostmatcher(regex, example);</div><div class="line"><span class="keywordtype">size_t</span> n = std::distance(boostmatcher.scan.begin(), boostmatcher.scan.end());</div></div><!-- fragment --><p>You can also use the regex <code>"\\X"</code> to match any wide character without using these flags.</p>
 <p>A converter throws a <code><a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">reflex::regex_error</a></code> exception if conversion fails, for example when the regex syntax is invalid:</p>
-<div class="fragment"><div class="line">std::string regex;</div><div class="line"><span class="keywordflow">try</span></div><div class="line">{</div><div class="line">  regex = <a class="code" href="classreflex_1_1_boost_matcher.html#ad1827615da2d51f4896e9c802b6463fc">reflex::BoostMatcher::convert</a>(argv[1], <a class="code" href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39">reflex::convert_flag::unicode</a>));</div><div class="line">}</div><div class="line"><span class="keywordflow">catch</span> (<a class="code" href="classreflex_1_1regex__error.html">reflex::regex_error</a>&amp; e)</div><div class="line">{</div><div class="line">  std::cerr &lt;&lt; e.what();</div><div class="line">  <span class="keywordflow">switch</span> (e)</div><div class="line">  {</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a293014262113a8affe812cdc1a155199">reflex::regex_error::mismatched_parens</a>:    std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched ( )&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#aa103b656bc8c84276caa3a3e479d5aed">reflex::regex_error::mismatched_braces</a>:    std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched { }&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a388b62b0f150f2c4e673a7326df98bf0">reflex::regex_error::mismatched_brackets</a>:  std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched [ ]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a4da14a39e65667e922d4ac9251d3acf2">reflex::regex_error::mismatched_quotation</a>: std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched \Q...\E quotation&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#aba10b497ace31b4e829961820f59ac1f">reflex::regex_error::empty_expression</a>:     std::cerr &lt;&lt; <span class="stringliteral">&quot;regex (sub)expression should not be empty&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ab8d5ad921586a5821a5a6ea57f3ef7f3">reflex::regex_error::empty_class</a>:          std::cerr &lt;&lt; <span class="stringliteral">&quot;class [...] is empty, e.g. [a&amp;&amp;[b]]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ac7c47c5a86f7f50f4128e4b31f3b8cd8">reflex::regex_error::invalid_class</a>:        std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid character class name&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a0a3dbc259753fe9c56bcb86ab22933f6">reflex::regex_error::invalid_class_range</a>:  std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid class range, e.g. [Z-A]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a3f67bcffa141ac3fd804dfe28a009165">reflex::regex_error::invalid_escape</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid escape character&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#abe00de8d9374f3b3528c181c3bbcee7c">reflex::regex_error::invalid_anchor</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid anchor&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a72584e74ccf493595d88f0ccc4b61f55">reflex::regex_error::invalid_repeat</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid repeat range, e.g. {10,1}&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a1c01a511c833d13708a5607c7a6d810a">reflex::regex_error::invalid_quantifier</a>:   std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid lazy/possessive quantifier&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#af9454b097595a8c39fe0118cdbae60d0">reflex::regex_error::invalid_modifier</a>:     std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid (?ismux:) modifier&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ac3e3283b3859fae05b21655d8ee096a6">reflex::regex_error::invalid_syntax</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid regex syntax&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><p>🔝 <a href="#">Back to table of contents</a></p>
+<div class="fragment"><div class="line">std::string regex;</div><div class="line"><span class="keywordflow">try</span></div><div class="line">{</div><div class="line">  regex = <a class="code" href="classreflex_1_1_boost_matcher.html#ad1827615da2d51f4896e9c802b6463fc">reflex::BoostMatcher::convert</a>(argv[1], <a class="code" href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39">reflex::convert_flag::unicode</a>));</div><div class="line">}</div><div class="line"><span class="keywordflow">catch</span> (<a class="code" href="classreflex_1_1regex__error.html">reflex::regex_error</a>&amp; e)</div><div class="line">{</div><div class="line">  std::cerr &lt;&lt; e.what();</div><div class="line">  <span class="keywordflow">switch</span> (e.<a class="code" href="classreflex_1_1regex__error.html#a9db1cdde85bfe6f8f7807357addca122">code</a>())</div><div class="line">  {</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a293014262113a8affe812cdc1a155199">reflex::regex_error::mismatched_parens</a>:    std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched ( )&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#aa103b656bc8c84276caa3a3e479d5aed">reflex::regex_error::mismatched_braces</a>:    std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched { }&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a388b62b0f150f2c4e673a7326df98bf0">reflex::regex_error::mismatched_brackets</a>:  std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched [ ]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a4da14a39e65667e922d4ac9251d3acf2">reflex::regex_error::mismatched_quotation</a>: std::cerr &lt;&lt; <span class="stringliteral">&quot;mismatched \Q...\E quotation&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#aba10b497ace31b4e829961820f59ac1f">reflex::regex_error::empty_expression</a>:     std::cerr &lt;&lt; <span class="stringliteral">&quot;regex (sub)expression should not be empty&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ab8d5ad921586a5821a5a6ea57f3ef7f3">reflex::regex_error::empty_class</a>:          std::cerr &lt;&lt; <span class="stringliteral">&quot;class [...] is empty, e.g. [a&amp;&amp;[b]]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ac7c47c5a86f7f50f4128e4b31f3b8cd8">reflex::regex_error::invalid_class</a>:        std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid character class name&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a0a3dbc259753fe9c56bcb86ab22933f6">reflex::regex_error::invalid_class_range</a>:  std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid class range, e.g. [Z-A]&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a3f67bcffa141ac3fd804dfe28a009165">reflex::regex_error::invalid_escape</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid escape character&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#abe00de8d9374f3b3528c181c3bbcee7c">reflex::regex_error::invalid_anchor</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid anchor&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a72584e74ccf493595d88f0ccc4b61f55">reflex::regex_error::invalid_repeat</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid repeat range, e.g. {10,1}&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#a1c01a511c833d13708a5607c7a6d810a">reflex::regex_error::invalid_quantifier</a>:   std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid lazy/possessive quantifier&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#af9454b097595a8c39fe0118cdbae60d0">reflex::regex_error::invalid_modifier</a>:     std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid (?ismux:) modifier&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">    <span class="keywordflow">case</span> <a class="code" href="classreflex_1_1regex__error.html#ac3e3283b3859fae05b21655d8ee096a6">reflex::regex_error::invalid_syntax</a>:       std::cerr &lt;&lt; <span class="stringliteral">&quot;invalid regex syntax&quot;</span>; <span class="keywordflow">break</span>;</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="regex-methods"></a>
 Methods and iterators                                          </h2>
 <p>The RE/flex abstract matcher provides four operations for matching with an instance of a regex engine:</p>
@@ -2244,7 +2581,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 28 2018 15:23:20 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Apr 22 2018 15:30:09 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

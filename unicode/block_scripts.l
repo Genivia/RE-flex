@@ -27,77 +27,69 @@
 \******************************************************************************/
 
 /**
-@file      unicode.cpp
-@brief     Get Unicode character class ranges and UTF-8 regex translations
+@file      block_scripts.l
+@brief     RE/Flex specification to convert Unicode Blocks.txt to a C++ map
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
-#include <reflex/unicode.h>
-#include <reflex/utf8.h>
+%{
 
-namespace reflex {
+#include <reflex/ranges.h>
+#include <iostream>
+#include <map>
 
-namespace Unicode {
+typedef reflex::ORanges<int>        Chars;   // open-ended ranges of characters
+typedef std::map<std::string,Chars> Scripts; // maps Unicode category/script to open-ended ranges
 
-Tables::Tables()
+int lo, hi;
+Scripts p;
+std::string key;
+
+%}
+
+%o matcher=reflex
+%o nodefault
+%x SCRIPT
+
+hex			[[:xdigit:]]+
+
+%%
+
+^#.*\n			// skip comments
+^\h*\n			// skip empty lines
+^{hex}".."{hex}		sscanf(text(), "%x..%x", &lo, &hi); start(SCRIPT);
+
+<SCRIPT>[; ]+		// skip ;, <space>
+<SCRIPT>[\w\-]+		key += text();
+<SCRIPT>\n		p[key].insert(lo, hi); key.clear(); start(INITIAL);
+
+%%
+
+int main()
 {
-  block_scripts();
-  language_scripts();
-  letter_scripts();
+  Lexer().lex();
 
-  range["Other"]                  = range["C"];
-  range["Letter"]                 = range["L"];
-  range["Mark"]                   = range["M"];
-  range["Number"]                 = range["N"];
-  range["Punctuation"]            = range["P"];
-  range["Symbol"]                 = range["S"];
-  range["Separator"]              = range["Z"];
-  range["Lowercase_Letter"]       = range["Ll"];
-  range["Uppercase_Letter"]       = range["Lu"];
-  range["Titlecase_Letter"]       = range["Lt"];
-  range["Modifier_Letter"]        = range["Lm"];
-  range["Other_Letter"]           = range["Lo"];
-  range["Non_Spacing_Mark"]       = range["Mn"];
-  range["Spacing_Combining_Mark"] = range["Mc"];
-  range["Enclosing_Mark"]         = range["Me"];
-  range["Space_Separator"]        = range["Zs"];
-  range["Line_Separator"]         = range["Zl"];
-  range["Paragraph_Separator"]    = range["Zp"];
-  range["Math_Symbol"]            = range["Sm"];
-  range["Currency_Symbol"]        = range["Sc"];
-  range["Modifier_Symbol"]        = range["Sk"];
-  range["Other_Symbol"]           = range["So"];
-  range["Decimal_Digit_Number"]   = range["Nd"];
-  range["Letter_Number"]          = range["Nl"];
-  range["Other_Number"]           = range["No"];
-  range["Dash_Punctuation"]       = range["Pd"];
-  range["Open_Punctuation"]       = range["Ps"];
-  range["Close_Punctuation"]      = range["Pe"];
-  range["Initial_Punctuation"]    = range["Pi"];
-  range["Final_Punctuation"]      = range["Pf"];
-  range["Connector_Punctuation"]  = range["Pc"];
-  range["Other_Punctuation"]      = range["Po"];
-  range["Control"]                = range["Cc"];
-  range["Format"]                 = range["Cf"];
+  std::cout <<
+    "// Converted from http://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt by block_scripts.l\n"
+    "#include <reflex/unicode.h>\n"
+    "void reflex::Unicode::Tables::block_scripts(void)\n{\n";
 
-  range["l"] = range["Lowercase_Letter"];
-  range["u"] = range["Uppercase_Letter"];
-  range["s"] = range["Space"];
-  range["w"] = range["Word"];
-}
+  // Write range[] code
+  for (Scripts::const_iterator i = p.begin(); i != p.end(); ++i)
+  {
+    const std::string name = "Is" + i->first;
+    std::string c_name = name;
+    size_t pos;
+    while ((pos = c_name.find('-')) != std::string::npos)
+      c_name[pos] = '_';
+    std::cout << "  static const int " << c_name << "[] = { ";
+    for (Chars::const_iterator j = i->second.begin(); j != i->second.end(); ++j)
+      std::cout << j->first << ", " << j->second-1 << ", ";
+    std::cout << "0, 0 };" << std::endl;
+    std::cout << "  range[\"" << name << "\"] = " << c_name << ";\n";
+  }
 
-static const Tables tables;
-
-const int * range(const char *s)
-{
-  Tables::Range::const_iterator i = tables.range.find(s);
-  if (i != tables.range.end())
-    return i->second;
-  return NULL;
-}
-
-}
-
+  std::cout << "}" << std::endl;
 }

@@ -1048,13 +1048,13 @@ void Pattern::compile(
   eno_ = 0;
   ems_ = 0.0;
   timer_type vt, et;
-  timer_elapsed(vt);
+  timer_start(vt);
   acc_.resize(end_.size(), false);
   trim_lazy(start);
   for (State *state = &start; state; state = state->next)
   {
     Moves moves;
-    timer_elapsed(et);
+    timer_start(et);
     compile_transition(
         state,
         followpos,
@@ -2214,9 +2214,9 @@ void Pattern::export_dfa(const State& start) const
           else if (state->accept)
             ::fprintf(fd, "\n/*ACCEPT %hu*/\t", state->accept);
           for (Set::const_iterator i = state->heads.begin(); i != state->heads.end(); ++i)
-            ::fprintf(fd, "\n/*HEAD %lu*/\t", *i);
+            ::fprintf(fd, "\n/*HEAD %zu*/\t", *i);
           for (Set::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
-            ::fprintf(fd, "\n/*TAIL %lu*/\t", *i);
+            ::fprintf(fd, "\n/*TAIL %zu*/\t", *i);
           if (state != &start && !state->accept && state->heads.empty() && state->tails.empty())
             ::fprintf(fd, "\n/*STATE*/\t");
           ::fprintf(fd, "N%p [label=\"", state);
@@ -2256,9 +2256,9 @@ void Pattern::export_dfa(const State& start) const
           if (state->accept && !state->redo) // state->accept != IMAX)
             ::fprintf(fd, "[%hu]", state->accept);
           for (Set::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
-            ::fprintf(fd, "%lu>", *i);
+            ::fprintf(fd, "%zu>", *i);
           for (Set::const_iterator i = state->heads.begin(); i != state->heads.end(); ++i)
-            ::fprintf(fd, "<%lu", *i);
+            ::fprintf(fd, "<%zu", *i);
           if (state->redo) // state->accept != IMAX)
             ::fprintf(fd, "\",style=dashed,peripheries=1];\n");
           else if (state->accept) // state->accept != IMAX)
