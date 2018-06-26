@@ -2157,13 +2157,29 @@ void Reflex::write_lexer()
   if (options["matcher"].empty() && !options["fast"].empty())
   {
     for (Start start = 0; start < conditions.size(); ++start)
+    {
+      if (!options["namespace"].empty())
+        write_namespace_open();
+
       *out << "extern void reflex_code_" << conditions[start] << "(reflex::Matcher&);\n";
+      
+      if (!options["namespace"].empty())
+        write_namespace_close();
+    }
     *out << std::endl;
   }
   else if (options["matcher"].empty() && !options["full"].empty())
   {
     for (Start start = 0; start < conditions.size(); ++start)
+    {
+      if (!options["namespace"].empty())
+        write_namespace_open();
+
       *out << "extern const reflex::Pattern::Opcode reflex_code_" << conditions[start] << "[];\n";
+
+      if (!options["namespace"].empty())
+        write_namespace_close();
+    }
     *out << std::endl;
   }
   *out << "int ";
@@ -2512,6 +2528,8 @@ void Reflex::stats()
     {
       std::string option = "r";
       option.append(";n=").append(conditions[start]);
+      if (!options["namespace"].empty())
+          option.append(";z=").append(options["namespace"]);
       if (options["graphs_file"] == "true")
         option.append(";f=reflex.").append(conditions[start]).append(".gv");
       else if (!options["graphs_file"].empty())
@@ -2523,7 +2541,7 @@ void Reflex::stats()
       else if (!options["tables_file"].empty())
         option.append(";f=").append(start > 0 ? "+" : "").append(file_ext(options["tables_file"], "cpp"));
       if ((!options["full"].empty() || !options["fast"].empty()) && options["tables_file"].empty() && options["stdout"].empty())
-        option.append(";f=+").append(options["outfile"]);
+        option.append(";f=+").append(options["outfile"]);      
       try
       {
         reflex::Pattern pattern(patterns[start], option);

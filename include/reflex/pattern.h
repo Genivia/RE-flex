@@ -283,6 +283,7 @@ class Pattern {
     bool                     s; ///< single-line mode (dotall mode), also `(?s:X)`
     bool                     w; ///< write error message to stderr
     bool                     x; ///< free-spacing mode, also `(?x:X)`
+    std::string              z; ///< namespace (NAME1.NAME2.NAME3)
   };
   /// Meta characters.
   enum Meta {
@@ -400,6 +401,11 @@ class Pattern {
   void delete_dfa(State& start);
   void export_dfa(const State& start) const;
   void export_code(void) const;
+
+  void write_namespace_open(FILE* fd) const;
+  void write_namespace_close(FILE* fd) const;
+
+
   Location find_at(
       Location loc,
       char     c) const
