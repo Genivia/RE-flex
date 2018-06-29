@@ -235,6 +235,18 @@ void Pattern::init_options(const char *opt)
         case 'x':
           opt_.x = true;
           break;
+        case 'z':
+            for (const char *t = s += (s[1] == '='); *s != ';' && *s != '\0'; ++t)
+            {
+              if (std::isspace(*t) || *t == ';' || *t == '\0')
+              {
+                if (t > s + 1)
+                  opt_.z = std::string(s + 1, t - s - 1);
+                s = t;
+              }
+            }
+            --s;
+            break;
         case 'f':
         case 'n':
           for (const char *t = s += (s[1] == '='); *s != ';' && *s != '\0'; ++t)
@@ -1914,7 +1926,10 @@ void Pattern::gencode_dfa(const State& start) const
         err = reflex::fopen_s(&fd, filename.c_str(), "w");
       if (!err && fd)
       {
-        ::fprintf(fd, "#include <reflex/matcher.h>\n\nvoid reflex_code_%s(reflex::Matcher& m)\n{\n  int c0 = 0, c1 = c0;\n  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
+        ::fprintf(fd, "#include <reflex/matcher.h>\n\n");
+        write_namespace_open(fd);
+        ::fprintf(fd, "void reflex_code_%s(reflex::Matcher& m)\n{\n  int c0 = 0, c1 = c0;\n  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
+
         for (const State *state = &start; state; state = state->next)
         {
           ::fprintf(fd, "\nS%u:\n", state->index);
@@ -2107,7 +2122,10 @@ void Pattern::gencode_dfa(const State& start) const
 #endif
           ::fprintf(fd, "  return m.FSM_HALT(c1);\n");
         }
+        
         ::fprintf(fd, "}\n\n");
+        write_namespace_close(fd);
+        
         if (fd != stdout)
           ::fclose(fd);
       }
@@ -2410,5 +2428,36 @@ void Pattern::export_code() const
     }
   }
 }
+
+void Pattern::write_namespace_open(FILE* fd) const
+{
+    if (opt_.z.empty())
+        return;
+
+    const std::string& s = opt_.z;
+    size_t i = 0, j;
+    while ((j = s.find('.', i)) != std::string::npos)
+    {
+        ::fprintf(fd, "namespace %s {\n", s.substr(i, j - i).c_str());
+        i = j + 1;
+    }
+    ::fprintf(fd, "namespace %s {\n\n", s.substr(i).c_str());
+}
+
+void Pattern::write_namespace_close(FILE* fd) const
+{
+    if (opt_.z.empty())
+        return;
+
+    const std::string& s = opt_.z;
+    size_t i = 0, j;
+    while ((j = s.find('.', i)) != std::string::npos)
+    {
+        ::fprintf(fd, "} // namespace %s\n", s.substr(i, j - i).c_str());
+        i = j + 1;
+    }
+    ::fprintf(fd, "} // namespace %s\n", s.substr(i).c_str());
+}
+
 
 } // namespace reflex
