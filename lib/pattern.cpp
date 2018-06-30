@@ -1929,7 +1929,6 @@ void Pattern::gencode_dfa(const State& start) const
         ::fprintf(fd, "#include <reflex/matcher.h>\n\n");
         write_namespace_open(fd);
         ::fprintf(fd, "void reflex_code_%s(reflex::Matcher& m)\n{\n  int c0 = 0, c1 = c0;\n  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
-
         for (const State *state = &start; state; state = state->next)
         {
           ::fprintf(fd, "\nS%u:\n", state->index);
@@ -2122,10 +2121,8 @@ void Pattern::gencode_dfa(const State& start) const
 #endif
           ::fprintf(fd, "  return m.FSM_HALT(c1);\n");
         }
-        
         ::fprintf(fd, "}\n\n");
         write_namespace_close(fd);
-        
         if (fd != stdout)
           ::fclose(fd);
       }

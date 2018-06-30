@@ -401,10 +401,8 @@ class Pattern {
   void delete_dfa(State& start);
   void export_dfa(const State& start) const;
   void export_code(void) const;
-
   void write_namespace_open(FILE* fd) const;
   void write_namespace_close(FILE* fd) const;
-
 
   Location find_at(
       Location loc,

@@ -2160,9 +2160,7 @@ void Reflex::write_lexer()
     {
       if (!options["namespace"].empty())
         write_namespace_open();
-
       *out << "extern void reflex_code_" << conditions[start] << "(reflex::Matcher&);\n";
-      
       if (!options["namespace"].empty())
         write_namespace_close();
     }
@@ -2174,9 +2172,7 @@ void Reflex::write_lexer()
     {
       if (!options["namespace"].empty())
         write_namespace_open();
-
       *out << "extern const reflex::Pattern::Opcode reflex_code_" << conditions[start] << "[];\n";
-
       if (!options["namespace"].empty())
         write_namespace_close();
     }
