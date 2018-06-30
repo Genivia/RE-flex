@@ -5142,8 +5142,8 @@ raw binary content that contains zeros, use a `std::istringstream`.
 ### Input streams                                        {#regex-input-streams}
 
 An input object constructed from a `std::istream` (or a derived class) just
-passes the text to the matcher engine.  The stream should contain UTF-8 when
-Unicode patterns are used.
+passes the input text to the matcher engine.  The stream should contain ASCII,
+or may contain UTF-8 when Unicode patterns are used.
 
 🔝 [Back to table of contents](#)
 
@@ -5157,8 +5157,8 @@ the content of a file scanned by the matcher, which enables UTF-8 normalization
 of the input automatically.
 
 Otherwise, if no file encoding is explicitly specified, the matcher expects
-UTF-8, ASCII, or plain binary.  However, other file formats can be
-automatically decoded and translated to UTF-8 on the fly for matching.
+raw UTF-8, ASCII, or plain binary by default.  File formats can be decoded and
+translated to UTF-8 on the fly for matching by means of specifying encodings.
 
 The current file encoding used by a matcher is obtained with the
 `reflex::Input::file_encoding()` method, which returns an
@@ -5187,9 +5187,9 @@ The current file encoding used by a matcher is obtained with the
   `reflex::Input::file_encoding::cp1258`  | CP-1258
   `reflex::Input::file_encoding::custom`  | User-defined custom code page
 
-To set the file encoding when assigning a file to read, use
-`reflex::Input(file, enc)` with one of the encoding constants shown in the
-table to construct the input object.
+To set the file encoding when assigning a file to read with `reflex::Input`,
+use `reflex::Input(file, enc)` with one of the encoding constants shown in
+the table.
 
 For example, use `reflex::Input::file_encoding::latin` to override the encoding
 when the file contains ISO-8859-1.  This way you can match its content using
@@ -5232,7 +5232,7 @@ reflex::Input input(stdin, reflex::Input::file_encoding::custom, CP);
 reflex::Matcher matcher(pattern, input);
 ```
 
-This example translates all constrol characters and characters above 127 to
+This example translates all control characters and characters above 127 to
 spaces before matching.
 
 🔝 [Back to table of contents](#)
@@ -5257,7 +5257,7 @@ To obtain the properties of an input source use the following methods:
 Examples                                                      {#regex-examples}
 --------
 
-Some examples to demonstrate the concepts discussed.
+This section includes several examples to demonstrate the concepts discussed.
 
 🔝 [Back to table of contents](#)
 
@@ -5377,6 +5377,8 @@ else
   std::cout << "Error, not a http/s URL: " << re.rest() << std::endl;
 }
 ```
+
+See also Example 8 below for a more powerful URL pattern matcher.
 
 🔝 [Back to table of contents](#)
 
@@ -5618,8 +5620,9 @@ int main(int argc, char **argv)
 }
 ```
 
-Note that there are two ways to splite the query string into key-value pairs
-and each method is shown in the two `#if` branches.
+Note that there are two ways to split the query string into key-value pairs.
+Both methods are shown in the two `#if` branches in the code above, with the
+first branch disabled with `#if 0`.
 
 When executing
 

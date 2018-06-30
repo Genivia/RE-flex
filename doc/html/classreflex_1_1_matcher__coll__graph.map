@@ -1,16 +1,16 @@
 <map id="reflex::Matcher" name="reflex::Matcher">
-<area shape="rect" id="node11" href="$classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher..." alt="" coords="1143,225,1248,251"/>
-<area shape="rect" id="node2" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="1385,217,1539,259"/>
-<area shape="rect" id="node3" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="1116,71,1275,98"/>
-<area shape="rect" id="node5" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1383,101,1541,143"/>
-<area shape="rect" id="node4" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="875,5,1033,47"/>
-<area shape="rect" id="node6" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="908,71,1000,98"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="643,71,734,98"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="365,64,494,105"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="155,71,309,98"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="5,71,105,98"/>
-<area shape="rect" id="node12" href="$structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="878,174,1030,201"/>
-<area shape="rect" id="node13" title="STL class. " alt="" coords="389,174,469,201"/>
-<area shape="rect" id="node14" title="STL class. " alt="" coords="169,167,295,208"/>
-<area shape="rect" id="node21" href="$structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="616,455,761,482"/>
+<area shape="rect" id="node11" href="$classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher..." alt="" coords="949,238,1033,265"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="1149,231,1269,272"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="928,71,1053,98"/>
+<area shape="rect" id="node5" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1147,49,1272,91"/>
+<area shape="rect" id="node4" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="729,5,855,47"/>
+<area shape="rect" id="node6" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="755,71,829,98"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="539,71,612,98"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="311,64,414,105"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="136,71,257,98"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="5,71,87,98"/>
+<area shape="rect" id="node12" href="$structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="733,187,851,214"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="330,189,395,215"/>
+<area shape="rect" id="node14" title="STL class. " alt="" coords="147,181,247,223"/>
+<area shape="rect" id="node21" href="$structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="518,470,633,497"/>
 </map>

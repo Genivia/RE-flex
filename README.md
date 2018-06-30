@@ -407,6 +407,7 @@ Changelog
 - Mar  6, 2018: 1.0.2 added namespace nesting with `%option namespace=NAME1.NAME2.NAME3 ...`
 - Mar  7, 2018: 1.0.3 fixed `--namespace` and `%option namespace`
 - Apr 22, 2018: 1.0.4 updated to Unicode 10, cleaned up code to remove tool warnings
+- Jun 29, 2018: 1.0.5 updated `--namespace` for options `--fast` and `--full` to support the generation of multiple optimized lexers placed in namespaces.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
