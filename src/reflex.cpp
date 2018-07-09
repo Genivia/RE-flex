@@ -54,6 +54,7 @@ static const char *options_table[] = {
   "batch",
   "bison",
   "bison_bridge",
+  "bison_cc",
   "bison_locations",
   "case_insensitive",
   "class",
@@ -541,6 +542,8 @@ void Reflex::help(const char *message, const char *arg)
                 initialize input to std::cin instead of stdin\n\
         --bison\n\
                 generate global yylex() scanner for bison\n\
+        --bison-cc\n\
+                generate bison C++ interface code for bison lalr1.cc skeleton\n\
         --bison-bridge\n\
                 generate reentrant yylex() scanner for bison pure parser\n\
         --bison-locations\n\
@@ -1469,6 +1472,8 @@ void Reflex::write()
       options["header_file"] = std::string("lex.").append(options["prefix"]).append(".h");
   }
   std::ofstream ofs;
+  std::string yystype = options["bison_cc"].empty() ? "YYSTYPE" : "yy::parser::semantic_type";
+  std::string yyltype = options["bison_cc"].empty() ? "YYLTYPE" : "yy::location";
   if (options["stdout"].empty())
   {
     if (options["outfile"].empty())
@@ -1554,7 +1559,11 @@ void Reflex::write()
     write_prelude();
     write_section_top();
     write_class();
-    if (!options["reentrant"].empty() || !options["bison_bridge"].empty())
+    if (!options["bison_cc"].empty())
+    {
+      write_banner("BISON C++");
+    }
+    else if (!options["reentrant"].empty() || !options["bison_bridge"].empty())
     {
       if (!options["bison_locations"].empty())
         write_banner("BISON BRIDGE LOCATIONS");
@@ -1578,9 +1587,9 @@ void Reflex::write()
         "#define YY_EXTERN_C\n"
         "#endif\n\n";
       if (!options["bison_locations"].empty())
-        *out << "YY_EXTERN_C int yylex(YYSTYPE*, YYLTYPE*, yyscan_t);\n";
+        *out << "YY_EXTERN_C int yylex(" << yystype << "*, " << yyltype << "*, yyscan_t);\n";
       else if (!options["bison_bridge"].empty())
-        *out << "YY_EXTERN_C int yylex(YYSTYPE*, yyscan_t);\n";
+        *out << "YY_EXTERN_C int yylex(" << yystype << "*, yyscan_t);\n";
       else
         *out << "YY_EXTERN_C int yylex(yyscan_t);\n";
       *out << "YY_EXTERN_C void yylex_init(yyscan_t*);\n";
@@ -1606,7 +1615,7 @@ void Reflex::write()
         "#ifndef YY_EXTERN_C\n"
         "#define YY_EXTERN_C\n"
         "#endif\n\n"
-        "YY_EXTERN_C int yylex(YYSTYPE*, YYLTYPE*);\n";
+        "YY_EXTERN_C int yylex(" << yystype << "*, " << yyltype << "*);\n";
     }
     else if (!options["bison"].empty())
     {
@@ -1713,6 +1722,8 @@ void Reflex::write_class()
   *out << "#include <" << library->file << ">" << std::endl;
   const char *matcher = library->matcher;
   std::string lex = options["lex"];
+  std::string yystype = options["bison_cc"].empty() ? "YYSTYPE" : "yy::parser::semantic_type";
+  std::string yyltype = options["bison_cc"].empty() ? "YYLTYPE" : "yy::location";
   std::string base;
   if (!options["flex"].empty())
   {
@@ -1763,23 +1774,49 @@ void Reflex::write_class()
       "    :\n"
       "      " << base << "(input, os)\n";
     write_section_init();
-    if (!options["bison_bridge"].empty() || !options["bison_locations"].empty())
+    if (!options["bison_cc"].empty())
+    {
+      if (!options["bison_locations"].empty())
+        *out <<
+          "  virtual int " << lex << "(" << yystype << " *yylval, " << yyltype << " *yylloc)\n"
+          "  {\n"
+          "    yylloc->step();\n"
+          "    int ret = " << lex << "(*yylval);\n"
+          "    yylloc->end.line = matcher().lineno();\n"
+          "    yylloc->end.column = matcher().columno();\n"
+          "    return ret;\n"
+          "  }\n";
+      else
+        *out <<
+          "  virtual int " << lex << "(" << yystype << " *yylval)\n"
+          "  {\n"
+          "    return yylex(*yylval);\n"
+          "  }\n";
+      *out <<
+        "  virtual int yylex(void)\n"
+        "  {\n"
+        "    LexerError(\"" << lexer << "::yylex invoked but %option bison-cc is used\");\n"
+        "    return 0;\n"
+        "  }\n"
+        "  virtual int " << lex << "(" << yystype << "& yylval)";
+    }
+    else if (!options["bison_bridge"].empty() || !options["bison_locations"].empty())
     {
       *out <<
         "  virtual int yylex(void)\n"
         "  {\n"
-        "    LexerError(\"" << lexer << "::yylex invoked but %option bison-bridge or bison-location used\");\n"
+        "    LexerError(\"" << lexer << "::yylex invoked but %option bison-bridge and/or bison-locations is used\");\n"
         "    return 0;\n"
         "  }\n"
-        "  virtual int " << lex << "(YYSTYPE& yylval)";
+        "  virtual int " << lex << "(" << yystype << "& yylval)";
     }
     else
     {
-      if (options["lex"] != "yylex")
+      if (lex != "yylex")
         *out <<
           "  virtual int yylex(void)\n"
           "  {\n"
-          "    LexerError(\"" << lexer << "::yylex invoked but %option lex=" << lex << " used\");\n"
+          "    LexerError(\"" << lexer << "::yylex invoked but %option lex=" << lex << " is used\");\n"
           "    return 0;\n"
           "  }\n";
       *out <<
@@ -1791,20 +1828,8 @@ void Reflex::write_class()
       *out <<
         "\n"
         "  {\n"
-        "    LexerError(\"" << lexer << "::" << lex << " invoked but %option yyclass=" << options["yyclass"] << " used\");\n"
+        "    LexerError(\"" << lexer << "::" << lex << " invoked but %option yyclass=" << options["yyclass"] << " is used\");\n"
         "    return 0;\n"
-        "  }"
-        << std::endl;
-    if (options["bison_bridge"].empty())
-      *out <<
-        "  int " << lex << "(\n"
-        "      const reflex::Input& input,\n"
-        "      std::ostream        *os = NULL)\n"
-        "  {\n"
-        "    in(input);\n"
-        "    if (os)\n"
-        "      out(*os);\n"
-        "    return " << lex << "();\n"
         "  }"
         << std::endl;
   }
@@ -1822,9 +1847,30 @@ void Reflex::write_class()
     for (Start start = 0; start < conditions.size(); ++start)
       *out <<
         "  static const int " << conditions[start] << " = " << start << ";\n";
-    if (!options["bison_bridge"].empty() || !options["bison_locations"].empty())
+    if (!options["bison_cc"].empty())
+    {
+      if (!options["bison_locations"].empty())
+        *out <<
+          "  virtual int " << lex << "(" << yystype << " *yylval, " << yyltype << " *yylloc)\n"
+          "  {\n"
+          "    yylloc->step();\n"
+          "    int ret = " << lex << "(*yylval);\n"
+          "    yylloc->end.line = matcher().lineno();\n"
+          "    yylloc->end.column = matcher().columno();\n"
+          "    return ret;\n"
+          "  }\n";
+      else
+        *out <<
+          "  virtual int " << lex << "(" << yystype << " *yylval)\n"
+          "  {\n"
+          "    return yylex(*yylval);\n"
+          "  }\n";
       *out <<
-        "  virtual int " << lex << "(YYSTYPE& yylval)";
+        "  virtual int " << lex << "(" << yystype << "& yylval)";
+    }
+    else if (!options["bison_bridge"].empty() || !options["bison_locations"].empty())
+      *out <<
+        "  virtual int " << lex << "(" << yystype << "& yylval)";
     else
       *out <<
         "  virtual int " << lex << "()";
@@ -1832,18 +1878,18 @@ void Reflex::write_class()
       *out << ";\n";
     else
       *out << " = 0;\n";
-    if (options["bison_bridge"].empty())
-      *out <<
-        "  int " << lex << "(\n"
-        "      const reflex::Input& input,\n"
-        "      std::ostream        *os = NULL)\n"
-        "  {\n"
-        "    in(input);\n"
-        "    if (os)\n"
-        "      out(*os);\n"
-        "    return " << lex << "();\n"
-        "  }\n";
   }
+  if (options["bison_cc"].empty() && options["bison_bridge"].empty() && options["bison_locations"].empty())
+    *out <<
+      "  int " << lex << "(\n"
+      "      const reflex::Input& input,\n"
+      "      std::ostream        *os = NULL)\n"
+      "  {\n"
+      "    in(input);\n"
+      "    if (os)\n"
+      "      out(*os);\n"
+      "    return " << lex << "();\n"
+      "  }\n";
   write_perf_report();
   *out <<
     "};" << std::endl;
@@ -2024,7 +2070,14 @@ void Reflex::write_lexer()
 {
   if (!out->good())
     return;
-  if (!options["reentrant"].empty() || !options["bison_bridge"].empty())
+  std::string lex = options["lex"];
+  std::string yystype = options["bison_cc"].empty() ? "YYSTYPE" : "yy::parser::semantic_type";
+  std::string yyltype = options["bison_cc"].empty() ? "YYLTYPE" : "yy::location";
+  if (!options["bison_cc"].empty())
+  {
+    write_banner("BISON C++");
+  }
+  else if (!options["reentrant"].empty() || !options["bison_bridge"].empty())
   {
     if (!options["bison_locations"].empty())
       write_banner("BISON BRIDGE LOCATIONS");
@@ -2049,26 +2102,26 @@ void Reflex::write_lexer()
       "#endif\n\n";
     if (!options["bison_locations"].empty())
       *out <<
-        "YY_EXTERN_C int yylex(YYSTYPE *lvalp, YYLTYPE *llocp, yyscan_t scanner)\n"
+        "YY_EXTERN_C int yylex(" << yystype << " *lvalp, " << yyltype << " *llocp, yyscan_t scanner)\n"
         "{\n"
         "  llocp->first_line = llocp->last_line;\n"
         "  llocp->first_column = llocp->last_column;\n"
-        "  int res = static_cast<yyscanner_t*>(scanner)->" << options["lex"] << "(*lvalp);\n"
+        "  int res = static_cast<yyscanner_t*>(scanner)->" << lex << "(*lvalp);\n"
         "  llocp->last_line = static_cast<yyscanner_t*>(scanner)->matcher().lineno();\n"
         "  llocp->last_column = static_cast<yyscanner_t*>(scanner)->matcher().columno();\n"
         "  return res;\n"
         "}\n\n";
     else if (!options["bison_bridge"].empty())
       *out <<
-        "YY_EXTERN_C int yylex(YYSTYPE *lvalp, yyscan_t scanner)\n"
+        "YY_EXTERN_C int yylex(" << yystype << " *lvalp, yyscan_t scanner)\n"
         "{\n"
-        "  return static_cast<yyscanner_t*>(scanner)->" << options["lex"] << "(*lvalp);\n"
+        "  return static_cast<yyscanner_t*>(scanner)->" << lex << "(*lvalp);\n"
         "}\n\n";
     else
       *out <<
         "YY_EXTERN_C int yylex(yyscan_t scanner)\n"
         "{\n"
-        "  return static_cast<yyscanner_t*>(scanner)->" << options["lex"] << "();\n"
+        "  return static_cast<yyscanner_t*>(scanner)->" << lex << "();\n"
         "}\n\n";
     *out <<
       "YY_EXTERN_C void yylex_init(yyscan_t *scanner)\n"
@@ -2104,11 +2157,11 @@ void Reflex::write_lexer()
       "#ifndef YY_EXTERN_C\n"
       "#define YY_EXTERN_C\n"
       "#endif\n\n"
-      "YY_EXTERN_C int yylex(YYSTYPE *lvalp, YYLTYPE *llocp)\n"
+      "YY_EXTERN_C int yylex(" << yystype << " *lvalp, " << yyltype << " *llocp)\n"
       "{\n"
       "  llocp->first_line = llocp->last_line;\n"
       "  llocp->first_column = llocp->last_column;\n"
-      "  int res = YY_SCANNER." << options["lex"] << "(*lvalp);\n"
+      "  int res = YY_SCANNER." << lex << "(*lvalp);\n"
       "  llocp->last_line = YY_SCANNER.matcher().lineno();\n"
       "  llocp->last_column = YY_SCANNER.matcher().columno();\n"
       "  return res;\n"
@@ -2137,7 +2190,7 @@ void Reflex::write_lexer()
         "int " << options["prefix"] << "lineno;\n"
         "YY_EXTERN_C int " << options["prefix"] << "lex(void)\n"
         "{\n"
-        "  int res = YY_SCANNER." << options["lex"] << "();\n"
+        "  int res = YY_SCANNER." << lex << "();\n"
         "  " << options["prefix"] << "text = const_cast<char*>(YY_SCANNER.YYText());\n"
         "  " << options["prefix"] << "leng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
         "  " << options["prefix"] << "lineno = static_cast<int>(YY_SCANNER.lineno());\n"
@@ -2150,7 +2203,7 @@ void Reflex::write_lexer()
       *out <<
         "YY_EXTERN_C int yylex(void)\n"
         "{\n"
-        "  return YY_SCANNER." << options["lex"] << "();\n"
+        "  return YY_SCANNER." << lex << "();\n"
         "}\n";
   }
   write_banner("SECTION 2: rules");
@@ -2187,10 +2240,10 @@ void Reflex::write_lexer()
     *out << options["class"];
   else
     *out << options["lexer"];
-  if (!options["bison_bridge"].empty() || !options["bison_locations"].empty())
-    *out << "::" << options["lex"] << "(YYSTYPE& yylval)\n{\n";
+  if (!options["bison_cc"].empty() || !options["bison_bridge"].empty() || !options["bison_locations"].empty())
+    *out << "::" << lex << "(" << yystype << "& yylval)\n{\n";
   else
-    *out << "::" << options["lex"] << "()\n{\n";
+    *out << "::" << lex << "()\n{\n";
   for (Start start = 0; start < conditions.size(); ++start)
   {
     if (options["matcher"].empty())

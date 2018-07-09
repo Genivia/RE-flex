@@ -1,6 +1,6 @@
 #!/bin/sh
 echo
-echo "Building the reflex examples"
+echo "Building the examples"
 make -f Make
 echo
 echo "OK"

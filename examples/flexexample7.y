@@ -1,4 +1,4 @@
-/* Parser to convert "C" assignments to lisp. */
+/* Parser to convert "C" assignments to lisp using Bison in C. */
 /* Demonstrates bison locations with yylex() taking yylval and yylloc (reflex option bison-locations) */
 /* Compile: bison -d -y flexexample7.y */
 
@@ -10,8 +10,8 @@ void yyerror(const char*);
 %locations
 
 %union {
-    int num;
-    char* str;
+    int   num;
+    char *str;
 }
 
 %{

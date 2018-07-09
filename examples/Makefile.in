@@ -13,6 +13,19 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
+
+# These examples require Bison or Yacc
+#
+# To quickly build the examples:
+# > make -f Make
+#
+# Or use configure and make to build:
+# > ./configure && make
+# > cd examples
+# > make
+#
+# To build examples3.0 requires Bison 3.0 or greater:
+# > make -f Make examples3.0
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -431,6 +444,8 @@ examples:	flexexample1 \
 		reflexexample4 \
 		reflexexample5 \
 		reflexexample6 \
+		reflexexample7 \
+		reflexexample8 \
 		ctokens \
 		jtokens \
 		ptokens \
@@ -523,6 +538,19 @@ reflexexample6:	reflexexample6.l
 		$(REFLEX) $(REFLAGS) $<
 		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 		./reflexexample6 < reflexexample6.l
+
+reflexexample7:	reflexexample7.l flexexample7.y
+		$(YACC) -d flexexample7.y
+		$(REFLEX) $(REFLAGS) --bison-locations $<
+		$(CC) $(CPPFLAGS) $(CXXFLAGS) -c y.tab.c
+		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
+		./reflexexample7 < flexexample7.test
+
+reflexexample8:	reflexexample8.l flexexample8.y
+		$(YACC) -d flexexample8.y
+		$(REFLEX) $(REFLAGS) --bison-locations --bison-bridge --header-file $<
+		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+		./reflexexample8 < flexexample8.test
 
 ctokens:	ctokens.l
 		$(REFLEX) $(REFLAGS) $<
@@ -626,7 +654,7 @@ url:		url.cpp
 clean-local:
 		-rm -rf *.dSYM
 		-rm -f *.o *.gch *.log
-		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv reflex.*.txt
+		-rm -f lex.yy.h lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample?
 		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json csv braille unicode cards url
 

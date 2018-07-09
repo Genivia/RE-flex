@@ -1,4 +1,4 @@
-/* Parser to convert "C" assignments to lisp. */
+/* Parser to convert "C" assignments to lisp using Bison in C. */
 /* Compile: bison -d -y flexexample8.y */
 
 %{
@@ -16,8 +16,8 @@ void yyerror(YYLTYPE*, yyscan_t, const char*);
 %parse-param { void *scanner }
 
 %union {
-    int num;
-    char* str;
+    int   num;
+    char *str;
 }
 
 %token <str> STRING

@@ -1,0 +1,40 @@
+/* Parser to convert "C" assignments to lisp using Bison in C++. */
+/* Compile: bison -d -y flexexample3.y */
+
+%{
+#include <iostream>
+extern int yylex(void);
+extern char *yytext;
+extern int yyleng;
+extern int yylineno;
+void yyerror(const char*);
+%}
+
+%union {
+    int   num;
+    char *str;
+}
+
+%token <str> STRING
+%token <num> NUMBER
+
+%%
+
+assignments : assignment
+            | assignment assignments
+            ;
+assignment  : STRING '=' NUMBER ';' { std::cout << "(setf " << $1 << " " << $3 << ")\n"; }
+            ;
+
+%%
+
+int main()
+{
+  yyparse();
+  return 0;
+}
+
+void yyerror(const char *msg)
+{
+  std::cerr << msg << " at line " << yylineno << std::endl;
+}

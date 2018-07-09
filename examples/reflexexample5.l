@@ -1,6 +1,6 @@
 /* Scanner for "C" assignment statements... sort of. */
 /* Compile: reflex --bison-bridge --header-file reflexexample5.l */
-/*          bison -d -y flexexample5.y */
+/* Compile: bison -d -y flexexample5.y */
 /* Example taken from Flex documentation A.2 */
 /* Bison bridge passes yylval to yylex (which limits yylval's scope to the rule actions) */
 /* Note: yylval is a reference, no longer a pointer with reflex */

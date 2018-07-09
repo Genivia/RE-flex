@@ -67,7 +67,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 /// Flex and Bison-compatible `%%option bison` generates a global `YY_SCANNER` scanner object, otherwise we use *this.
-#if defined(REFLEX_OPTION_reentrant) || defined(REFLEX_OPTION_bison_bridge) || (!defined(REFLEX_OPTION_bison) && !defined(REFLEX_OPTION_bison_locations) && !defined(YY_SCANNER))
+#if defined(REFLEX_OPTION_reentrant) || defined(REFLEX_OPTION_bison_cc) || defined(REFLEX_OPTION_bison_bridge) || (!defined(REFLEX_OPTION_bison) && !defined(REFLEX_OPTION_bison_locations) && !defined(YY_SCANNER))
 #define YY_SCANNER             (*this)
 #endif
 

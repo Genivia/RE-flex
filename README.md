@@ -36,7 +36,8 @@ Features
 
 - Compatible with Flex to eliminate a learning curve, making a transition to
   RE/flex frustration-free.
-- Works with Bison and supports reentrant, bison-bridge and bison-locations.
+- Works with Bison and supports reentrant, bison-bridge, bison-locations and
+  Bison 3.0 C++ interface `%skeleton "lalr1.cc"`.
 - Extensive documentation in the online [User Guide][manual-url].
 - Adds Unicode support with Unicode property matching `\p{C}` and C++11, Java,
   C#, and Python Unicode properties for identifier name matching.
@@ -408,6 +409,7 @@ Changelog
 - Mar  7, 2018: 1.0.3 fixed `--namespace` and `%option namespace`
 - Apr 22, 2018: 1.0.4 updated to Unicode 10, cleaned up code to remove tool warnings
 - Jun 29, 2018: 1.0.5 updated `--namespace` for options `--fast` and `--full` to support the generation of multiple optimized lexers placed in namespaces.
+- Jul  9, 2018: 1.0.6 added `--bison-cc` option to generate scanners for Bison 3.0 `%skeleton "lalr1.cc"` C++ parsers, included two examples `flexexample9` and `reflexexample9` to demo this feature.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

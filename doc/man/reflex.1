@@ -1,4 +1,4 @@
-.TH REFLEX "1" "June 29, 2018" "reflex 1.0.5" "User Commands"
+.TH REFLEX "1" "July 09, 2018" "reflex 1.0.6" "User Commands"
 .SH NAME
 reflex \- the regex\-centric fast and flexible lexical analyzer generator
 .SH SYNOPSIS
@@ -100,6 +100,9 @@ initialize input to std::cin instead of stdin
 .TP
 \fB\-\-bison\fR
 generate global yylex() scanner for bison
+.TP
+\fB\-\-bison\-cc\fR
+generate bison C++ interface code for bison lalr1.cc skeleton
 .TP
 \fB\-\-bison\-bridge\fR
 generate reentrant yylex() scanner for bison pure parser
