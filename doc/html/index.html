@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Jul 9 2018 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Jul 12 2018 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -91,6 +91,7 @@
 </ul>
 </li>
 <li class="level2"><a href="#reflex-posix-perl">POSIX versus Perl matching                                 </a></li>
+<li class="level2"><a href="#reflex-debug">Debugging and profiling                                         </a></li>
 <li class="level2"><a href="#reflex-examples">Examples                                                     </a></li>
 <li class="level2"><a href="#reflex-limitations">Limitations                                               </a></li>
 </ul>
@@ -588,6 +589,10 @@ Output code options</h3>
 <p>This generates a scanner that works with Bison pure (MT-safe and reentrant) parsers using a Bison bridge for one ore more scanner objects. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison/Yacc </a> for more details.</p>
 <h4><code>−−bison-cc</code></h4>
 <p>This generates a scanner that works with Bison 3.0 <code>%skeleton "lalr1.cc"</code> C++ parsers that are MT-safe. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison/Yacc </a> for more details.</p>
+<h4><code>−−bison-cc-namespace=NAME</code></h4>
+<p>This specifies the namespace(s) for the Bison 3.0 <code>%skeleton "lalr1.cc"</code> C++ parser, which is <code>yy</code> by default.</p>
+<h4><code>−−bison-cc-parser=NAME</code></h4>
+<p>This specifies the class name of the Bison 3.0 <code>%skeleton "lalr1.cc"</code> C++ parser, which is <code>parser</code> by default.</p>
 <h4><code>−−bison-locations</code></h4>
 <p>This generates a scanner that works with Bison with locations enabled. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison/Yacc </a> for more details.</p>
 <h4><code>-R</code>, <code>−−reentrant</code></h4>
@@ -598,9 +603,9 @@ Output code options</h3>
 <h3><a class="anchor" id="reflex-options-debug"></a>
 Debugging options</h3>
 <h4><code>-d</code>, <code>−−debug</code></h4>
-<p>This enables debug mode in the generated scanner. Running the scanner produces debug messages on <code>std::cerr</code> standard error and the <code>debug()</code> function returns nonzero. To temporarily turn off debug messages, use <code>set_debug(0)</code> in your action code. To turn debug messages back on, use <code>set_debug(1)</code>. The <code>set_debug()</code> and <code>debug()</code> methods are virtual methods of the lexer class, so you can override their behavior in a derived lexer class. This option also enables assertions that check for internal errors.</p>
+<p>This enables debug mode in the generated scanner. Running the scanner produces debug messages on <code>std::cerr</code> standard error and the <code>debug()</code> function returns nonzero. To temporarily turn off debug messages, use <code>set_debug(0)</code> in your action code. To turn debug messages back on, use <code>set_debug(1)</code>. The <code>set_debug()</code> and <code>debug()</code> methods are virtual methods of the lexer class, so you can override their behavior in a derived lexer class. This option also enables assertions that check for internal errors. See <a class="el" href="index.html#reflex-debug">Debugging and profiling </a> for details.</p>
 <h4><code>-p</code>, <code>−−perf-report</code></h4>
-<p>This enables the collection and reporting of statistics by the generated scanner. The scanner reports the performance statistics on <code>std::cerr</code> when EOF is reached. If your scanner does not reach EOF, then invoke the lexer's <code>perf_report()</code> method explicitly in your code. Invoking this method also resets the statistics and timers, meaning that this method will report the statistics collected since it was last called.</p>
+<p>This enables the collection and reporting of statistics by the generated scanner. The scanner reports the performance statistics on <code>std::cerr</code> when EOF is reached. If your scanner does not reach EOF, then invoke the lexer's <code>perf_report()</code> method explicitly in your code. Invoking this method also resets the statistics and timers, meaning that this method will report the statistics collected since it was last called. See <a class="el" href="index.html#reflex-debug">Debugging and profiling </a> for details.</p>
 <h4><code>-s</code>, <code>−−nodefault</code></h4>
 <p>This suppresses the default rule that ECHOs all unmatched text when no rule matches. With the <code>−−flex</code> option, the scanner reports "scanner jammed" when no rule matches. Without the <code>−−flex</code> option, unmatched input is silently ignored.</p>
 <h4><code>-v</code>, <code>−−verbose</code></h4>
@@ -1820,7 +1825,7 @@ Bison and thread-safety</h3>
 <td><code>−−flex</code> <code>−−bison-bridge</code> <code>−−bison-locations</code> </td><td><code>int yyFlexLexer::yylex(YYSTYPE&amp; yylval)</code> </td><td><code>int yylex(YYSTYPE *yylval, YYLTYPE *yylloc, yyscan_t)</code>, <code>void yylex_init(yyscan_t*)</code>, <code>void yylex_destroy(yyscan_t)</code> </td></tr>
 </table>
 <p>Option <code>−−prefix</code> may be used with option <code>−−flex</code> to change the prefix of the generated <code>yyFlexLexer</code> and <code>yylex</code>. This option can be combined with option <code>−−bison</code> to also change the prefix of the generated <code>yytext</code>, <code>yyleng</code>, and <code>yylineno</code>.</p>
-<p>Furthermore, <b>reflex</b> options <code>−−namespace=NAMESPACE</code>, <code>−−lexer=LEXER</code> and <code>−−lex=LEX</code> can be used to add a C++ namespace, to rename the lexer class (<code>Lexer</code> or <code>yyFlexLexer</code> by default) and to rename the lexer function (<code>lex</code> or <code>yylex</code> by default), respectively.</p>
+<p>Furthermore, <b>reflex</b> options <code>−−namespace=NAME</code>, <code>−−lexer=LEXER</code> and <code>−−lex=LEX</code> can be used to add a C++ namespace, to rename the lexer class (<code>Lexer</code> or <code>yyFlexLexer</code> by default) and to rename the lexer function (<code>lex</code> or <code>yylex</code> by default), respectively.</p>
 <p>The following sections explain the <code>−−bison-cc</code>, <code>−−bison-bridge</code>, <code>−−bison-locations</code> and <code>−−reentrant</code> options for <b>reflex</b>.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-bison-cc"></a>
@@ -1829,7 +1834,8 @@ Bison-cc</h3>
 <div class="alt"> <div class="fragment"><div class="line"><span class="comment">/* yacc grammar (.yxx file) for C++ */</span></div><div class="line"></div><div class="line">%skeleton <span class="stringliteral">&quot;lalr1.cc&quot;</span></div><div class="line">%require  <span class="stringliteral">&quot;3.0&quot;</span></div><div class="line"></div><div class="line">%code requires{</div><div class="line">  <span class="keyword">namespace </span>yy {</div><div class="line">    <span class="keyword">class </span>Lexer;  <span class="comment">// Generated by reflex with namespace=yy lexer=Lexer lex=yylex</span></div><div class="line">  }</div><div class="line">}</div><div class="line"></div><div class="line">%parse-param { yy::Lexer&amp; lexer }  <span class="comment">// Construct parser object with lexer</span></div><div class="line"></div><div class="line">%code{</div><div class="line"><span class="preprocessor">  #include &quot;lex.yy.h&quot;</span></div><div class="line"><span class="preprocessor">  #undef yylex</span></div><div class="line"><span class="preprocessor">  #define yylex lexer.yylex  // Within bison&#39;s parse() we should invoke lexer.yylex(), not the global yylex()</span></div><div class="line">}</div><div class="line"></div><div class="line">%<span class="keyword">union </span>{         <span class="comment">// yy::parser::semantic_type yylval is a union:</span></div><div class="line">  <span class="keywordtype">int</span> num;       <span class="comment">// type of yylval.num is int</span></div><div class="line">  <span class="keywordtype">char</span>* str;     <span class="comment">// type of yylval.str is char*</span></div><div class="line">}</div><div class="line"></div><div class="line">%token &lt;num&gt; CONST_NUMBER       <span class="comment">// This defines yy::parser::token::CONST_NUMBER</span></div><div class="line">%token &lt;str&gt; CONST_STRING       <span class="comment">// This defines yy::parser::token::CONST_STRING</span></div><div class="line"></div><div class="line">%%</div><div class="line">...  <span class="comment">// grammar rules</span></div><div class="line">%%</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> yy::parser::error(<span class="keyword">const</span> std::string&amp; msg)</div><div class="line">{</div><div class="line">  std::cerr &lt;&lt; msg &lt;&lt; std::endl;</div><div class="line">}</div></div><!-- fragment --> </div><p>With the <code>−−bison-cc</code> option of <b>reflex</b>, the <code>yylex()</code> function takes a <code>yy::parser::semantic_type yylval</code> argument that makes the <code>yylval</code> visible in the lexer rules to assign semantic values to.</p>
 <p>The scanner is generated with <b>reflex</b> options <code>−−bison-cc</code>, <code>−−namespace=yy</code>, <code>−−lexer=Lexer</code> and <code>−−lex=yylex</code>. The lexer specification should <code>#include</code> the Bison-generated header file to ensure that the <code>yy::parser::token</code> enums <code>CONST_NUMBER</code> and <code>CONST_STRING</code> are defined.</p>
 <p>Using the code above, we can now initialize a Bison parser. We first should create a scanner and pass it to the <code>parser</code> constructor as follows:</p>
-<div class="alt"> <div class="fragment"><div class="line">yy::Lexer lexer(std::cin);  <span class="comment">// read from stdin (or a stream, string or FILE)</span></div><div class="line">yy::parser parser(lexer);</div><div class="line"><span class="keywordflow">if</span> (parser.parse() != 0)</div><div class="line">   ... <span class="comment">// error</span></div></div><!-- fragment --> </div><p>🔝 <a href="#">Back to table of contents</a></p>
+<div class="alt"> <div class="fragment"><div class="line">yy::Lexer lexer(std::cin);  <span class="comment">// read from stdin (or a stream, string or FILE)</span></div><div class="line">yy::parser parser(lexer);</div><div class="line"><span class="keywordflow">if</span> (parser.parse() != 0)</div><div class="line">   ... <span class="comment">// error</span></div></div><!-- fragment --> </div><p>Use options <code>−−bison-cc-namespace=NAME</code> and <code>−−bison-cc-parser=NAME</code> to specify the namespace and parser class name of the Bison 3.0 <code>%skeleton "lalr1.cc"</code> C++ parser you are generating with Bison. These are <code>yy</code> and <code>parser</code> by default, respectively. For option <code>−−bison-cc-namespace=NAME</code> the <code>NAME</code> can be a list of nested namespaces of the form <code>NAME1.NAME2.NAME3</code> ...</p>
+<p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-bison-cc-locations"></a>
 Bison-cc &amp; locations</h3>
 <p>The <b>reflex</b> option <code>−−bison-cc</code> with <code>−−bison-locations</code> expects a Bison 3.0 <code>%skeleton "lalr1.cc"</code> C++ parser that is declared as follows in a Yacc specification:</p>
@@ -1937,6 +1943,56 @@ POSIX versus Perl matching                                 </h2>
 <p>A POSIX matcher on the other hand is <em>declarative</em> and have a deeper foundation in formal language theory. An advantage of POSIX matchers is that regular expressions can be compiled to deterministic finite state machines for efficient matching.</p>
 <dl class="section note"><dt>Note</dt><dd>POSIX matching still require moving the <code>int</code> matching rule before the identifier matching rule. Otherwise an <code>int</code> on the input will be matched by the identifier rule.</dd></dl>
 <p>Perl matchers generally support lazy quantifiers and group captures, while most POSIX matchers do not (Boost.Regex in POSIX mode does not support lazy quantifiers). The RE/flex POSIX matcher supports lazy quantifiers, but not group captures. The added support for lazy quantifiers and word boundary anchors in RE/flex matching offers a reasonably new and useful feature for scanners that require POSIX mode matching.</p>
+<p>🔝 <a href="#">Back to table of contents</a></p>
+<h2><a class="anchor" id="reflex-debug"></a>
+Debugging and profiling                                         </h2>
+<p>There are several <b>reflex</b> options to debug a lexer and analyze its performance given some input text to scan:</p>
+<ul>
+<li>Option <code>-d</code> (or <code>−−debug</code>) generates a scanner that prints the matched text, which allows you to debug your patterns.</li>
+<li>Option <code>-p</code> (or <code>−−perf-report</code>) generates a scanner that profiles the performance of your lexer and the lexer rules executed, which allows you to find hotspots and performance bottlenecks in your rules.</li>
+<li>Option <code>-s</code> (or <code>−−nodefault</code>) suppresses the default rule that ECHOs all unmatched text when no rule matches. With the <code>−−flex</code> option, the scanner reports "scanner jammed" when no rule matches. Without the <code>−−flex</code> option, unmatched input is silently ignored.</li>
+<li>Option <code>-v</code> (or <code>−−verbose</code>) displays a summary of scanner statistics.</li>
+</ul>
+<p>🔝 <a href="#">Back to table of contents</a></p>
+<h3>Debugging</h3>
+<p>Option <code>-d</code> generates a scnner that prints the matched text while scanning input. The output displayed is of the form: </p><pre class="fragment">−−accepting rule at line NNN ("TEXT")
+</pre><p>where NNN is the line number of the pattern in the lexer specification and TEXT is the matched text.</p>
+<p>🔝 <a href="#">Back to table of contents</a></p>
+<h3>Profiling</h3>
+<p>Option <code>-p</code> generates a scanner that profiles the performance of your lexer. The performance report shows the performance statistics obtained for each pattern defined in the lexer specification, i.e. the number of matches per pattern, the total text length of the matches per pattern, and the total time spent matching and executing the rule corresponding to the pattern. The performance profile statistics are collected when the scanner runs on some given input. Profiling allows you to effectively fine-tune the performance of your lexer by focussing on patterns and rules that are frequently matched that turn out to be computationally expensive.</p>
+<p>This is perhaps best illustrated with an example. The JSON parser json.l located in the examples directory of the RE/flex download package was built with reflex option <code>-p</code> and then run on some given JSON input to analyze its performance: </p><pre class="fragment">reflex 0.9.22 json.l performance report:
+  INITIAL rules matched:
+    rule at line 51 accepted 58 times matching 255 bytes total in 0.009 ms
+    rule at line 52 accepted 58 times matching 58 bytes total in 0.824 ms
+    rule at line 53 accepted 0 times matching 0 bytes total in 0 ms
+    rule at line 54 accepted 0 times matching 0 bytes total in 0 ms
+    rule at line 55 accepted 0 times matching 0 bytes total in 0 ms
+    rule at line 56 accepted 5 times matching 23 bytes total in 0.007 ms
+    rule at line 57 accepted 38 times matching 38 bytes total in 0.006 ms
+    rule at line 72 accepted 0 times matching 0 bytes total in 0 ms
+    default rule accepted 0 times
+  STRING rules matched:
+    rule at line 60 accepted 38 times matching 38 bytes total in 0.021 ms
+    rule at line 61 accepted 0 times matching 0 bytes total in 0 ms
+    rule at line 62 accepted 0 times matching 0 bytes total in 0 ms
+    rule at line 63 accepted 0 times matching 0 bytes total in 0 ms
+    rule at line 64 accepted 0 times matching 0 bytes total in 0 ms
+    rule at line 65 accepted 0 times matching 0 bytes total in 0 ms
+    rule at line 66 accepted 0 times matching 0 bytes total in 0 ms
+    rule at line 67 accepted 0 times matching 0 bytes total in 0 ms
+    rule at line 68 accepted 314 times matching 314 bytes total in 0.04 ms
+    rule at line 69 accepted 8 times matching 25 bytes total in 0.006 ms
+    rule at line 72 accepted 0 times matching 0 bytes total in 0 ms
+    default rule accepted 0 times
+  WARNING: execution times are relative:
+    1) includes caller's execution time between matches when yylex() returns
+    2) perf-report instrumentation adds overhead and increases execution times
+</pre><p>The timings shown include the time of the pattern match and the time of the code executed by the rule. If the rule returns to the caller than the time spent by the caller is also included in this timing. For this example, we have two start condition states namely INITIAL and STRING. The rule at line 52 is:</p>
+<div class="alt"> <div class="fragment"><div class="line">[][}{,:]        { <span class="keywordflow">return</span> <a class="code" href="flexlexer_8h.html#a0d71f919dbec1ffd74b2460fa7e5ac28">yytext</a>[0]; }</div></div><!-- fragment --> </div><p>This returns a [ or ] bracket, a { or } brace, a comma, or a colon to the parser. Since the pattern and rule are very simple, we do not expect these to contribute much to the 0.824 ms time spent on this rule. The parser code executed when the scanner returns could be expensive. Depending on the character returned, the parser constructs a JSON array (bracket) or a JSON object (brace), and populates arrays and objects with an item each time a comma is matched. But which is most expensive? To obtain timings of these events separately, we can split the rule up into three similar rules:</p>
+<div class="alt"> <div class="fragment"><div class="line">[][]        { <span class="keywordflow">return</span> <a class="code" href="flexlexer_8h.html#a0d71f919dbec1ffd74b2460fa7e5ac28">yytext</a>[0]; }</div><div class="line">[}{]        { <span class="keywordflow">return</span> <a class="code" href="flexlexer_8h.html#a0d71f919dbec1ffd74b2460fa7e5ac28">yytext</a>[0]; }</div><div class="line">[,:]        { <span class="keywordflow">return</span> <a class="code" href="flexlexer_8h.html#a0d71f919dbec1ffd74b2460fa7e5ac28">yytext</a>[0]; }</div></div><!-- fragment --> </div><p>Then we use reflex option <code>-p</code>, recompile the generated scanner lex.yy.cpp and rerun our experiment to see these changes: </p><pre class="fragment">    rule at line 52 accepted 2 times matching 2 bytes total in 0.001 ms
+    rule at line 53 accepted 14 times matching 14 bytes total in 0.798 ms
+    rule at line 54 accepted 42 times matching 42 bytes total in 0.011 ms
+</pre><p>So it turns out that the construction of a JSON object by the parser is relatively speaking the most expensive part of our application, when { and } are encountered on the input. We should focus our optimization effort there if we want to improve the overall speed of our JSON parser.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="reflex-examples"></a>
 Examples                                                     </h2>
@@ -2613,7 +2669,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Jul 9 2018 15:13:47 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Jul 12 2018 15:45:07 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

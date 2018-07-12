@@ -55,6 +55,8 @@ static const char *options_table[] = {
   "bison",
   "bison_bridge",
   "bison_cc",
+  "bison_cc_namespace",
+  "bison_cc_parser",
   "bison_locations",
   "case_insensitive",
   "class",
@@ -118,6 +120,8 @@ static const char *options_table[] = {
   "yylineno",
   "yymore",
   "yywrap",
+  "YYLTYPE",
+  "YYSTYPE",
   "7bit",
   "8bit",
   NULL // end of table
@@ -544,6 +548,10 @@ void Reflex::help(const char *message, const char *arg)
                 generate global yylex() scanner for bison\n\
         --bison-cc\n\
                 generate bison C++ interface code for bison lalr1.cc skeleton\n\
+        --bison-cc-namespace=NAME\n\
+                use namespace NAME with bison lalr1.cc skeleton\n\
+        --bison-cc-parser=NAME\n\
+                use parser class NAME with bison lalr1.cc skeleton\n\
         --bison-bridge\n\
                 generate reentrant yylex() scanner for bison pure parser\n\
         --bison-locations\n\
@@ -808,7 +816,7 @@ std::string Reflex::get_name(size_t& pos)
   return line.substr(loc, pos - loc);
 }
 
-/// Advance pos over namespaces (letters, digits, ., -, _ , or any non-ASCII character), return name.
+/// Advance pos over namespaces (letters, digits, ::, ., -, _ , or any non-ASCII character), return name.
 std::string Reflex::get_namespace(size_t& pos)
 {
   if (pos >= linelen || (!std::isalnum(line.at(pos)) && (line.at(pos) & 0x80) != 0x80))
@@ -818,6 +826,8 @@ std::string Reflex::get_namespace(size_t& pos)
   {
     if (line.at(pos) == '-') // normalize - to _
       line[pos] = '_';
+    else if (line.at(pos) == ':' && pos + 1 < linelen && line.at(pos + 1) == ':')
+      ++pos;
     else if (!std::isalnum(line.at(pos)) && line.at(pos) != '_' && line.at(pos) != '.' && (line.at(pos) & 0x80) != 0x80)
       break;
     ++pos;
@@ -1262,7 +1272,7 @@ void Reflex::parse_section_1()
                       }
                       else
                       {
-                        if (name == "namespace")
+                        if (name == "namespace" || name == "bison_cc_namespace")
                           value = get_namespace(pos); // %option namespace = NAME1.NAME2.NAME3
                         else
                           value = get_name(pos); // %option OPTION = NAME
@@ -1471,9 +1481,21 @@ void Reflex::write()
     else
       options["header_file"] = std::string("lex.").append(options["prefix"]).append(".h");
   }
+  if (!options["namespace"].empty())
+    undot_namespace(options["namespace"]);
+  if (!options["bison_cc_namespace"].empty())
+    undot_namespace(options["bison_cc_namespace"]);
+  else if (!options["bison_cc"].empty())
+    options["bison_cc_namespace"] = "yy";
+  if (!options["bison_cc"].empty() && options["bison_cc_parser"].empty())
+    options["bison_cc_parser"] = "parser";
+  if (!options["bison_cc"].empty() && options["YYLTYPE"].empty())
+    options["YYLTYPE"] = options["bison_cc_namespace"] + "::location";
+  if (!options["bison_cc"].empty() && options["YYSTYPE"].empty())
+    options["YYSTYPE"] = options["bison_cc_namespace"] + "::" + options["bison_cc_parser"] + "::semantic_type";
+  std::string yyltype = options["YYLTYPE"].empty() ? "YYLTYPE" : options["YYLTYPE"];
+  std::string yystype = options["YYSTYPE"].empty() ? "YYSTYPE" : options["YYSTYPE"];
   std::ofstream ofs;
-  std::string yystype = options["bison_cc"].empty() ? "YYSTYPE" : "yy::parser::semantic_type";
-  std::string yyltype = options["bison_cc"].empty() ? "YYLTYPE" : "yy::location";
   if (options["stdout"].empty())
   {
     if (options["outfile"].empty())
@@ -1722,8 +1744,8 @@ void Reflex::write_class()
   *out << "#include <" << library->file << ">" << std::endl;
   const char *matcher = library->matcher;
   std::string lex = options["lex"];
-  std::string yystype = options["bison_cc"].empty() ? "YYSTYPE" : "yy::parser::semantic_type";
-  std::string yyltype = options["bison_cc"].empty() ? "YYLTYPE" : "yy::location";
+  std::string yyltype = options["YYLTYPE"].empty() ? "YYLTYPE" : options["YYLTYPE"];
+  std::string yystype = options["YYSTYPE"].empty() ? "YYSTYPE" : options["YYSTYPE"];
   std::string base;
   if (!options["flex"].empty())
   {
@@ -2071,8 +2093,8 @@ void Reflex::write_lexer()
   if (!out->good())
     return;
   std::string lex = options["lex"];
-  std::string yystype = options["bison_cc"].empty() ? "YYSTYPE" : "yy::parser::semantic_type";
-  std::string yyltype = options["bison_cc"].empty() ? "YYLTYPE" : "yy::location";
+  std::string yyltype = options["YYLTYPE"].empty() ? "YYLTYPE" : options["YYLTYPE"];
+  std::string yystype = options["YYSTYPE"].empty() ? "YYSTYPE" : options["YYSTYPE"];
   if (!options["bison_cc"].empty())
   {
     write_banner("BISON C++");
@@ -2507,40 +2529,30 @@ void Reflex::write_regex(const std::string& regex)
 /// Write namespace openings NAME {
 void Reflex::write_namespace_open()
 {
-  const std::string& s = options["namespace"];
-  size_t i = 0, j;
-  while ((j = s.find('.', i)) != std::string::npos)
-  {
-    *out << "namespace " << s.substr(i, j-i) << " {" << std::endl;
-    i = j + 1;
-  }
-  *out << "namespace " << s.substr(i) << " {" << std::endl;
+  *out << "namespace " << options["namespace"] << " {" << std::endl;
 }
 
 /// Write namespace closing scope } // NAME
 void Reflex::write_namespace_close()
 {
-  const std::string& s = options["namespace"];
-  size_t i = 0, j;
-  while ((j = s.find('.', i)) != std::string::npos)
-  {
-    *out << "} // namespace " << s.substr(i, j-i) << std::endl;
-    i = j + 1;
-  }
-  *out << "} // namespace " << s.substr(i) << std::endl;
+  *out << "} // namespace " << options["namespace"] << std::endl;
 }
 
-/// Write namespace scope
+/// Write namespace scope NAME ::
 void Reflex::write_namespace_scope()
 {
-  const std::string& s = options["namespace"];
-  size_t i = 0, j;
-  while ((j = s.find('.', i)) != std::string::npos)
+  *out << options["namespace"] << "::";
+}
+
+/// Replace all . by :: in namespace name
+void Reflex::undot_namespace(std::string& s)
+{
+  size_t i = 0;
+  while ((i = s.find('.', i)) != std::string::npos)
   {
-    *out << s.substr(i, j-i) << "::";
-    i = j + 1;
+    s.replace(i, 1, "::");
+    i += 2;
   }
-  *out << s.substr(i) << "::";
 }
 
 /// Display usage report.

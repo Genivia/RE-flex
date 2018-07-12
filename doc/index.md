@@ -1333,6 +1333,16 @@ parsers using a Bison bridge for one ore more scanner objects.  See
 This generates a scanner that works with Bison 3.0 `%%skeleton "lalr1.cc"` C++
 parsers that are MT-safe.  See \ref reflex-bison for more details.
 
+#### `−−bison-cc-namespace=NAME`
+
+This specifies the namespace(s) for the Bison 3.0 `%%skeleton "lalr1.cc"` C++
+parser, which is `yy` by default.
+
+#### `−−bison-cc-parser=NAME`
+
+This specifies the class name of the Bison 3.0 `%%skeleton "lalr1.cc"` C++
+parser, which is `parser` by default.
+
 #### `−−bison-locations`
 
 This generates a scanner that works with Bison with locations enabled.  See
@@ -1369,7 +1379,8 @@ nonzero.  To temporarily turn off debug messages, use `set_debug(0)` in your
 action code.  To turn debug messages back on, use `set_debug(1)`.  The
 `set_debug()` and `debug()` methods are virtual methods of the lexer class, so
 you can override their behavior in a derived lexer class.  This option also
-enables assertions that check for internal errors.
+enables assertions that check for internal errors.  See \ref reflex-debug for
+details.
 
 #### `-p`, `−−perf-report`
 
@@ -1378,7 +1389,8 @@ scanner.  The scanner reports the performance statistics on `std::cerr` when
 EOF is reached.  If your scanner does not reach EOF, then invoke the lexer's
 `perf_report()` method explicitly in your code.  Invoking this method also
 resets the statistics and timers, meaning that this method will report the
-statistics collected since it was last called.
+statistics collected since it was last called.  See \ref reflex-debug for
+details.
 
 #### `-s`, `−−nodefault`
 
@@ -3578,7 +3590,7 @@ generated `yyFlexLexer` and `yylex`.  This option can be combined with option
 `−−bison` to also change the prefix of the generated `yytext`, `yyleng`, and
 `yylineno`.
 
-Furthermore, **reflex** options `−−namespace=NAMESPACE`, `−−lexer=LEXER` and
+Furthermore, **reflex** options `−−namespace=NAME`, `−−lexer=LEXER` and
 `−−lex=LEX` can be used to add a C++ namespace, to rename the lexer class
 (`Lexer` or `yyFlexLexer` by default) and to rename the lexer function (`lex`
 or `yylex` by default), respectively.
@@ -3654,6 +3666,12 @@ if (parser.parse() != 0)
    ... // error
 ```
 </div>
+
+Use options `−−bison-cc-namespace=NAME` and `−−bison-cc-parser=NAME` to specify
+the namespace and parser class name of the Bison 3.0 `%%skeleton "lalr1.cc"`
+C++ parser you are generating with Bison.  These are `yy` and `parser` by
+default, respectively. For option `−−bison-cc-namespace=NAME` the `NAME` can be
+a list of nested namespaces of the form `NAME1.NAME2.NAME3` ...
 
 🔝 [Back to table of contents](#)
 
@@ -4080,6 +4098,128 @@ quantifiers).  The RE/flex POSIX matcher supports lazy quantifiers, but not
 group captures.  The added support for lazy quantifiers and word boundary
 anchors in RE/flex matching offers a reasonably new and useful feature for
 scanners that require POSIX mode matching.
+
+🔝 [Back to table of contents](#)
+
+
+Debugging and profiling                                         {#reflex-debug}
+-----------------------
+
+There are several **reflex** options to debug a lexer and analyze its
+performance given some input text to scan:
+
+- Option `-d` (or `−−debug`) generates a scanner that prints the matched text,
+  which allows you to debug your patterns.
+
+- Option `-p` (or `−−perf-report`) generates a scanner that profiles the
+  performance of your lexer and the lexer rules executed, which allows you to
+  find hotspots and performance bottlenecks in your rules.
+
+- Option `-s` (or `−−nodefault`) suppresses the default rule that ECHOs all
+  unmatched text when no rule matches.  With the `−−flex` option, the scanner
+  reports "scanner jammed" when no rule matches.  Without the `−−flex` option,
+  unmatched input is silently ignored.
+
+- Option `-v` (or `−−verbose`) displays a summary of scanner statistics.
+
+🔝 [Back to table of contents](#)
+
+### Debugging
+
+Option `-d` generates a scnner that prints the matched text while scanning
+input.  The output displayed is of the form:
+
+    −−accepting rule at line NNN ("TEXT")
+
+where NNN is the line number of the pattern in the lexer specification and TEXT
+is the matched text.
+
+🔝 [Back to table of contents](#)
+
+### Profiling
+
+Option `-p` generates a scanner that profiles the performance of your lexer.
+The performance report shows the performance statistics obtained for each
+pattern defined in the lexer specification, i.e. the number of matches per
+pattern, the total text length of the matches per pattern, and the total time
+spent matching and executing the rule corresponding to the pattern.  The
+performance profile statistics are collected when the scanner runs on some
+given input.  Profiling allows you to effectively fine-tune the performance of
+your lexer by focussing on patterns and rules that are frequently matched that
+turn out to be computationally expensive.
+
+This is perhaps best illustrated with an example.  The JSON parser json.l
+located in the examples directory of the RE/flex download package was built
+with reflex option `-p` and then run on some given JSON input to analyze its
+performance:
+
+    reflex 0.9.22 json.l performance report:
+      INITIAL rules matched:
+        rule at line 51 accepted 58 times matching 255 bytes total in 0.009 ms
+        rule at line 52 accepted 58 times matching 58 bytes total in 0.824 ms
+        rule at line 53 accepted 0 times matching 0 bytes total in 0 ms
+        rule at line 54 accepted 0 times matching 0 bytes total in 0 ms
+        rule at line 55 accepted 0 times matching 0 bytes total in 0 ms
+        rule at line 56 accepted 5 times matching 23 bytes total in 0.007 ms
+        rule at line 57 accepted 38 times matching 38 bytes total in 0.006 ms
+        rule at line 72 accepted 0 times matching 0 bytes total in 0 ms
+        default rule accepted 0 times
+      STRING rules matched:
+        rule at line 60 accepted 38 times matching 38 bytes total in 0.021 ms
+        rule at line 61 accepted 0 times matching 0 bytes total in 0 ms
+        rule at line 62 accepted 0 times matching 0 bytes total in 0 ms
+        rule at line 63 accepted 0 times matching 0 bytes total in 0 ms
+        rule at line 64 accepted 0 times matching 0 bytes total in 0 ms
+        rule at line 65 accepted 0 times matching 0 bytes total in 0 ms
+        rule at line 66 accepted 0 times matching 0 bytes total in 0 ms
+        rule at line 67 accepted 0 times matching 0 bytes total in 0 ms
+        rule at line 68 accepted 314 times matching 314 bytes total in 0.04 ms
+        rule at line 69 accepted 8 times matching 25 bytes total in 0.006 ms
+        rule at line 72 accepted 0 times matching 0 bytes total in 0 ms
+        default rule accepted 0 times
+      WARNING: execution times are relative:
+        1) includes caller's execution time between matches when yylex() returns
+        2) perf-report instrumentation adds overhead and increases execution times
+
+The timings shown include the time of the pattern match and the time of the
+code executed by the rule.  If the rule returns to the caller than the time
+spent by the caller is also included in this timing.  For this example, we have
+two start condition states namely INITIAL and STRING. The rule at line 52 is:
+
+<div class="alt">
+```cpp
+[][}{,:]        { return yytext[0]; }
+```
+</div>
+
+This returns a [ or ] bracket, a { or } brace, a comma, or a colon to the
+parser.  Since the pattern and rule are very simple, we do not expect these to
+contribute much to the 0.824 ms time spent on this rule.  The parser code
+executed when the scanner returns could be expensive.  Depending on the
+character returned, the parser constructs a JSON array (bracket) or a JSON
+object (brace), and populates arrays and objects with an item each time a comma
+is matched.  But which is most expensive? To obtain timings of these events
+separately, we can split the rule up into three similar rules:
+
+<div class="alt">
+```cpp
+[][]        { return yytext[0]; }
+[}{]        { return yytext[0]; }
+[,:]        { return yytext[0]; }
+```
+</div>
+
+Then we use reflex option `-p`, recompile the generated scanner lex.yy.cpp and
+rerun our experiment to see these changes:
+
+        rule at line 52 accepted 2 times matching 2 bytes total in 0.001 ms
+        rule at line 53 accepted 14 times matching 14 bytes total in 0.798 ms
+        rule at line 54 accepted 42 times matching 42 bytes total in 0.011 ms
+
+So it turns out that the construction of a JSON object by the parser is
+relatively speaking the most expensive part of our application, when { and }
+are encountered on the input. We should focus our optimization effort there if
+we want to improve the overall speed of our JSON parser.
 
 🔝 [Back to table of contents](#)
 

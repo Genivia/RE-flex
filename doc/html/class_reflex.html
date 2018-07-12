@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Reflex Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Jul 9 2018 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Jul 12 2018 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -282,8 +282,11 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a9cc88f0e37d66d3a2ccb864e46258447"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write namespace closing scope } // NAME.  <a href="#a9cc88f0e37d66d3a2ccb864e46258447">More...</a><br /></td></tr>
 <tr class="separator:a9cc88f0e37d66d3a2ccb864e46258447"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d1048f53a1c497e65e7682baa356ad8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a2d1048f53a1c497e65e7682baa356ad8">write_namespace_scope</a> ()</td></tr>
-<tr class="memdesc:a2d1048f53a1c497e65e7682baa356ad8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write namespace scope.  <a href="#a2d1048f53a1c497e65e7682baa356ad8">More...</a><br /></td></tr>
+<tr class="memdesc:a2d1048f53a1c497e65e7682baa356ad8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write namespace scope NAME ::  <a href="#a2d1048f53a1c497e65e7682baa356ad8">More...</a><br /></td></tr>
 <tr class="separator:a2d1048f53a1c497e65e7682baa356ad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a892519f5f07c5198606b0647bd6ce927"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a892519f5f07c5198606b0647bd6ce927">undot_namespace</a> (std::string &amp;s)</td></tr>
+<tr class="memdesc:a892519f5f07c5198606b0647bd6ce927"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace all . by :: in namespace name.  <a href="#a892519f5f07c5198606b0647bd6ce927">More...</a><br /></td></tr>
+<tr class="separator:a892519f5f07c5198606b0647bd6ce927"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18e27c7ca29d118601cb6a7a066f1300"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a18e27c7ca29d118601cb6a7a066f1300">stats</a> ()</td></tr>
 <tr class="memdesc:a18e27c7ca29d118601cb6a7a066f1300"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display usage report.  <a href="#a18e27c7ca29d118601cb6a7a066f1300">More...</a><br /></td></tr>
 <tr class="separator:a18e27c7ca29d118601cb6a7a066f1300"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -335,7 +338,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:ae7e968de28376a4a4084bae5aea663ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get regex string, converted to a format understood by the selected regex engine library.  <a href="#ae7e968de28376a4a4084bae5aea663ff">More...</a><br /></td></tr>
 <tr class="separator:ae7e968de28376a4a4084bae5aea663ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a4f4833e68b7bf0ba0309d3179a5d2fce">get_namespace</a> (size_t &amp;pos)</td></tr>
-<tr class="memdesc:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over namespaces (letters, digits, ., -, _ , or any non-ASCII character), return name.  <a href="#a4f4833e68b7bf0ba0309d3179a5d2fce">More...</a><br /></td></tr>
+<tr class="memdesc:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over namespaces (letters, digits, ::, ., -, _ , or any non-ASCII character), return name.  <a href="#a4f4833e68b7bf0ba0309d3179a5d2fce">More...</a><br /></td></tr>
 <tr class="separator:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9853a89f918acd624f9a59553e93d54f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Starts</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9853a89f918acd624f9a59553e93d54f">get_starts</a> (size_t &amp;pos)</td></tr>
 <tr class="memdesc:a9853a89f918acd624f9a59553e93d54f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get start conditions &lt;start1,start2,...&gt; of a rule.  <a href="#a9853a89f918acd624f9a59553e93d54f">More...</a><br /></td></tr>
@@ -764,7 +767,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Advance pos over namespaces (letters, digits, ., -, _ , or any non-ASCII character), return name. </p>
+<p>Advance pos over namespaces (letters, digits, ::, ., -, _ , or any non-ASCII character), return name. </p>
 
 </div>
 </div>
@@ -1350,6 +1353,32 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a892519f5f07c5198606b0647bd6ce927"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Reflex::undot_namespace </td>
+          <td>(</td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Replace all . by :: in namespace name. </p>
+
+</div>
+</div>
 <a class="anchor" id="a30485ab1c619a08756855152ec198508"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1691,7 +1720,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Write namespace scope. </p>
+<p>Write namespace scope NAME :: </p>
 
 </div>
 </div>
@@ -2392,7 +2421,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Jul 9 2018 15:13:41 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Jul 12 2018 15:45:00 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
