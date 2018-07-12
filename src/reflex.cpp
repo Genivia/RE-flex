@@ -2529,13 +2529,27 @@ void Reflex::write_regex(const std::string& regex)
 /// Write namespace openings NAME {
 void Reflex::write_namespace_open()
 {
-  *out << "namespace " << options["namespace"] << " {" << std::endl;
+  const std::string& s = options["namespace"];
+  size_t i = 0, j;
+  while ((j = s.find("::", i)) != std::string::npos)
+  {
+    *out << "namespace " << s.substr(i, j-i) << " {" << std::endl;
+    i = j + 2;
+  }
+  *out << "namespace " << s.substr(i) << " {" << std::endl;
 }
 
 /// Write namespace closing scope } // NAME
 void Reflex::write_namespace_close()
 {
-  *out << "} // namespace " << options["namespace"] << std::endl;
+  const std::string& s = options["namespace"];
+  size_t i = 0, j;
+  while ((j = s.find("::", i)) != std::string::npos)
+  {
+    *out << "} // namespace " << s.substr(i, j-i) << std::endl;
+    i = j + 2;
+  }
+  *out << "} // namespace " << s.substr(i) << std::endl;
 }
 
 /// Write namespace scope NAME ::
