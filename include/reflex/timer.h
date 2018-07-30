@@ -59,7 +59,7 @@ inline float timer_elapsed(timer_type& t) ///< timer to be updated
   float sec = now.wMilliseconds;
   sec -= t.wMilliseconds;
   t.wMilliseconds = now.wMilliseconds;
-  sec += 1000.0 * (now.wSecond - t.wSecond);
+  sec += 1000.0f * (now.wSecond - t.wSecond);
   t.wSecond = now.wSecond;
   if (sec < 0.0)
     sec += 60000.0;

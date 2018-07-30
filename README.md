@@ -36,6 +36,8 @@ Features
 
 - Compatible with Flex to eliminate a learning curve, making a transition to
   RE/flex frustration-free.
+- Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for
+  Python code, a tokenizer for Java code, and more.
 - Works with Bison and supports reentrant, bison-bridge, bison-locations and
   Bison 3.0 C++ interface `%skeleton "lalr1.cc"`.
 - Extensive documentation in the online [User Guide][manual-url].
@@ -63,8 +65,6 @@ Features
 - Generates lex.yy.cpp files while Flex generates lex.yy.cc files (in C++ mode
   with flex option -+), to distinguish the generated files.
 - Generates Graphviz files to visualize FSMs with the Graphviz dot tool.
-- Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for
-  Python code, a tokenizer for Java code, and more.
 - Conversion of regex expressions, for regex engines that lack regex features.
 - The RE/flex regex library makes C++11 std::regex and Boost.Regex much easier
   to use in plain C++ code for pattern matching on (wide) strings, files, and
@@ -316,7 +316,7 @@ Use C++11 range-based loops with RE/flex iterators:
 
 ```{.cpp}
 #include <reflex/stdmatcher.h> // reflex::StdMatcher, reflex::Input, std::regex
-// use a StdMatcher to to search for words in a sentence
+// use a StdMatcher with std::regex to to search for words in a sentence
 for (auto& match : reflex::StdMatcher("\\w+", "How now brown cow.").find)
   std::cout << "Found " << match.text() << std::endl;
 ```
@@ -411,6 +411,7 @@ Changelog
 - Jun 29, 2018: 1.0.5 updated `--namespace` for options `--fast` and `--full` to support the generation of multiple optimized lexers placed in namespaces.
 - Jul  9, 2018: 1.0.6 added `--bison-cc` option to generate scanners for Bison 3.0 `%skeleton "lalr1.cc"` C++ parsers, included two examples `flexexample9xx` and `reflexexample9xx` to demo this feature.
 - Jul 12, 2018: 1.0.7 added `--bison-cc-namespace` and `--bison-cc-parser` options to customize Bison 3.0 `%skeleton "lalr1.cc"` C++ parsers.
+- Jul 30, 2018: 1.0.8 updated to Unicode 11.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
