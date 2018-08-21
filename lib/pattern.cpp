@@ -661,17 +661,51 @@ void Pattern::parse3(
         // update followpos by virtually repeating sub-regex m-1 times
         Follow followpos1;
         for (Follow::const_iterator fp = followpos.begin(); fp != followpos.end(); ++fp)
-          if (fp->first >= b_pos)
+          if (fp->first.loc() >= b_pos)
             for (Index i = 1; i < m; ++i)
               for (Positions::const_iterator p = fp->second.begin(); p != fp->second.end(); ++p)
                 followpos1[fp->first.iter(iter * i)].insert(p->iter(iter * i));
+#ifdef DEBUG
+  DBGLOGN("iter = %hu", iter);
+  for (Follow::const_iterator fp = followpos1.begin(); fp != followpos1.end(); ++fp)
+  {
+    DBGLOGN("followpos1(");
+    DBGLOGPOS(fp->first);
+    DBGLOGA(" ) = {");
+    for (Positions::const_iterator p = fp->second.begin(); p != fp->second.end(); ++p)
+      DBGLOGPOS(*p);
+    DBGLOGA(" }");
+  }
+#endif
         for (Follow::const_iterator fp = followpos1.begin(); fp != followpos1.end(); ++fp)
           set_insert(followpos[fp->first], fp->second);
+#ifdef DEBUG
+  for (Follow::const_iterator fp = followpos.begin(); fp != followpos.end(); ++fp)
+  {
+    DBGLOGN("followpos(");
+    DBGLOGPOS(fp->first);
+    DBGLOGA(" ) = {");
+    for (Positions::const_iterator p = fp->second.begin(); p != fp->second.end(); ++p)
+      DBGLOGPOS(*p);
+    DBGLOGA(" }");
+  }
+#endif
         // add m-1 times virtual concatenation (by indexed positions k.i)
         for (Index i = 0; i < m - 1; ++i)
           for (Positions::const_iterator k = lastpos.begin(); k != lastpos.end(); ++k)
             for (Positions::const_iterator j = pfirstpos->begin(); j != pfirstpos->end(); ++j)
               followpos[k->pos().iter(iter * i)].insert(j->iter(iter * i + iter));
+#ifdef DEBUG
+  for (Follow::const_iterator fp = followpos.begin(); fp != followpos.end(); ++fp)
+  {
+    DBGLOGN("followpos(");
+    DBGLOGPOS(fp->first);
+    DBGLOGA(" ) = {");
+    for (Positions::const_iterator p = fp->second.begin(); p != fp->second.end(); ++p)
+      DBGLOGPOS(*p);
+    DBGLOGA(" }");
+  }
+#endif
         if (unlimited)
           for (Positions::const_iterator k = lastpos.begin(); k != lastpos.end(); ++k)
             for (Positions::const_iterator j = pfirstpos->begin(); j != pfirstpos->end(); ++j)

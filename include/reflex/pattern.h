@@ -223,7 +223,7 @@ class Pattern {
     Position(value_type k)     : k(k) { }
     Position(const Position& p): k(p.k) { }
     operator value_type()      const { return k; }
-    Position iter(Index i)     const { return Position(k | static_cast<value_type>(i) << 16); }
+    Position iter(Index i)     const { return Position(k + (static_cast<value_type>(i) << 16)); }
     Position ticked(bool b)    const { return b ? Position(k | TICKED) : Position(k & ~TICKED); }
     Position greedy(bool b)    const { return b ? Position(k | GREEDY) : Position(k & ~GREEDY); }
     Position anchor(bool b)    const { return b ? Position(k | ANCHOR) : Position(k & ~ANCHOR); }
