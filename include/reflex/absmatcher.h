@@ -449,21 +449,35 @@ class AbstractMatcher {
       n += (*s == '\n');
     return n;
   }
-  /// Returns the column number of matched text, counting wide characters (unless compiled with WITH_BYTE_COLUMNO).
+  /// Returns the column number of matched text, taking tab spacing into account and counting wide characters (unless compiled with WITH_BYTE_COLUMNO).
   size_t columno() const
     /// @returns column number.
   {
-    for (const char *s = txt_ - 1; s >= buf_; --s)
-      if (*s == '\n')
-        return txt_ - s - 1;
 #if defined(WITH_BYTE_COLUMNO)
     // count column offset in bytes
+    for (const char *s = txt_ - 1; s >= buf_; --s)
+      if (*s == '\n' || *s == '\r')
+        return txt_ - s - 1;
     return cno_ + txt_ - buf_;
 #else
     // count column offset in UTF-8 chars
     size_t n = cno_;
-    for (const char *t = buf_; t < txt_; ++t)
-      n += (*t & 0xC0) != 0x80;
+    const char *s;
+    for (s = txt_ - 1; s >= buf_; --s)
+    {
+      if (*s == '\n' || *s == '\r')
+      {
+        n = 0;
+        break;
+      }
+    }
+    for (++s; s < txt_; ++s)
+    {
+      if (*s == '\t')
+        n += 1 + ((-1 - n) & (opt_.T - 1));
+      else
+        n += (*s & 0xC0) != 0x80;
+    }
     return n;
 #endif
   }
@@ -986,7 +1000,7 @@ class AbstractMatcher {
     const char *t = buf_;
     for (const char *s = buf_; s < txt_; ++s)
     {
-      if (*s == '\n')
+      if (*s == '\n' || *s == '\r')
       {
         ++lno_;
         t = s;
@@ -999,10 +1013,15 @@ class AbstractMatcher {
 #else
     for (const char *s = buf_; s < txt_; ++s)
     {
-      if (*s == '\n')
+      if (*s == '\n' || *s == '\r')
       {
         ++lno_;
         cno_ = 0;
+      }
+      else if (*s == '\t')
+      {
+        // count tab spacing
+        cno_ += 1 + ((-1 - cno_) & (opt_.T - 1));
       }
       else
       {

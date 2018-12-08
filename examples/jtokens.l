@@ -166,7 +166,7 @@ int main(int argc, char **argv)
 {
   if (argc < 2)
   {
-    printf("Usage: jtokens FILE\n");
+    fprintf(stderr, "Usage: jtokens FILE\n");
     exit(EXIT_FAILURE);
   }
   // open en read the Java source code file

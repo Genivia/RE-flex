@@ -9,10 +9,15 @@
 %option lexer=CSV
 
 %class{
+ public:
+  void set_delim(int c) { delim = c; } // tab, space, comma, semicolon, or pipe
+
+ private:
   int                      delim; // delimiter character (tab, space, comma, semicolon, or pipe)
   std::string              field; // each field has ASCII/UTF-8 text
   std::vector<std::string> row;   // row of fields
 
+ private:
   void append(int c)            { field.push_back(c); }
   void append(const char *text) { field.append(text); }
   void next_column()            { process_field(); field.clear(); }
@@ -110,9 +115,66 @@ void CSV::process_row()
   std::cout << "--------------------------------------------------------------------------------" << std::endl;
 }
 
-int main()
+int main(int argc, char **argv)
 {
+  FILE *fd = stdin;
+  int delim = ',';
+  // handle arguments
+  for (int i = 1; i < argc; ++i)
+  {
+    if (argv[i][0] == '-')
+    {
+      if (argv[i][1] == 'd')
+      {
+        if (argv[i][2] == '\0')
+        {
+          if (++i < argc)
+            delim = argv[i][0];
+        }
+        else if (argv[i][2] == 't')
+        {
+          delim = '\t';
+        }
+        else if (argv[i][2] == 's')
+        {
+          delim = ' ';
+        }
+        else
+        {
+          delim = argv[i][2];
+        }
+        if (strchr("\t ,;|", delim) == NULL)
+        {
+          std::cerr << "Invalid delimiter" << std::endl;
+          exit(EXIT_FAILURE);
+        }
+      }
+      else
+      {
+          std::cerr << "Usage: csv [-dt|-ds|-d,|-d;|-d|] [FILE]" << std::endl;
+          exit(EXIT_FAILURE);
+      }
+    }
+    else if (fd != stdin)
+    {
+      std::cerr << "Invalid argument " << argv[i] << std::endl;
+      exit(EXIT_FAILURE);
+    }
+    else if ((fd = fopen(argv[i], "r")) == NULL)
+    {
+      std::cerr << "Cannot open " << argv[i] << " for reading" << std::endl;
+      exit(EXIT_FAILURE);
+    }
+  }
   // create a CSV lexer, assume that CVSs are encoded in ASCII/ISO-8859-1 unless a UTF BOM is present
-  CSV csv(reflex::Input(stdin, reflex::Input::file_encoding::latin));
-  return csv.lex();
+  CSV csv(reflex::Input(fd, reflex::Input::file_encoding::latin));
+  csv.set_delim(delim);
+  if (csv.lex() != 0)
+  {
+    std::cerr << "Error in CSV file at line " << csv.lineno() << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  if (fd != stdin)
+    fclose(fd);
+  return 0;
 }

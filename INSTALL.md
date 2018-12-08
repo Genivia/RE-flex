@@ -3,8 +3,6 @@
 Installation
 ------------
 
-You have two options: 1) quick install or 2) configure and make.
-
 ### Windows users
 
 Use `reflex/bin/reflex.exe` from the command line or add a **Custom Build

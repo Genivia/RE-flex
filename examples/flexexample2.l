@@ -38,7 +38,7 @@ unsigned int comm = 0 ; /* Bytes of comments. */
 
 %%
 
-int main(int argc, char* argv[]) {
+int main() {
 
   yyFlexLexer().yylex() ; /* modified for C++ */
 

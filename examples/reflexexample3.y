@@ -33,5 +33,5 @@ int main()
 
 void yyerror(const char *msg)
 {
-  fprintf(stderr, "%s at line %lu\n", msg, YY_SCANNER.matcher().lineno()); /* reflex-generated global `YY_SCANNER` */
+  fprintf(stderr, "%s at line %zu\n", msg, YY_SCANNER.matcher().lineno()); /* reflex-generated global `YY_SCANNER` */
 }

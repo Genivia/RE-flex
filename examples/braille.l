@@ -313,7 +313,10 @@ la [\u{2800} \t\n\r⠖⠦⠶⠴⠄⠤]
 int main(int argc, char **argv) {
   FILE *fd = stdin;
   if (argc > 1 && (fd = fopen(argv[1], "r")) == NULL)
+  {
+    std::cerr << "Cannot open " << argv[1] << " for reading" << std::endl;
     exit(EXIT_FAILURE);
+  }
   Braille translator;
   // assign input to read and output to write to, then translate
   translator.translate(fd, &std::cout);

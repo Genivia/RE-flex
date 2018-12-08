@@ -117,14 +117,14 @@ You have two options: 1) quick install or 2) configure and make.
 
 ### Quick install
 
-A quick clean build, assuming your environment is pretty much standard:
+First clone the code:
+
+    $ git clone https://github.com/Genivia/RE-flex
+
+Then, simply do a quick clean build, assuming your environment is pretty much standard:
 
     $ ./clean.sh
     $ ./build.sh
-
-Or use the `make -f Make` command to do the same:
-
-    $ cd src; make -f Make
 
 This compiles the **reflex** tool and installs it locally in `reflex/bin`.  For
 local use of RE/flex in your project, you can add this location to your `$PATH`
@@ -413,6 +413,7 @@ Changelog
 - Jul 12, 2018: 1.0.7 added `--bison-cc-namespace` and `--bison-cc-parser` options to customize Bison 3.0 `%skeleton "lalr1.cc"` C++ parsers.
 - Jul 30, 2018: 1.0.8 updated to Unicode 11.
 - Aug 21, 2018: 1.0.9 fixed reflex regex library matching with range quantifiers by correcting coding typo.
+- Dec  8, 2018: 1.0.10 fixed `columno()` to take tab spacing into account.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

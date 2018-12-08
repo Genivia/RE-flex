@@ -18,7 +18,7 @@
 
 %%
 
-int main ( int argc, char * argv[] )
+int main()
 {
   yyscan_t scanner;
 

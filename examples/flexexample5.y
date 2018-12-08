@@ -52,5 +52,5 @@ int main()
 
 void yyerror(struct pass_through *params, const char*)
 {
-  fprintf(stderr, "syntax error at %lu\n", params->scanner->matcher().lineno());
+  fprintf(stderr, "syntax error at %zu\n", params->scanner->matcher().lineno());
 }
