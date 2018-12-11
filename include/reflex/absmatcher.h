@@ -382,9 +382,9 @@ class AbstractMatcher {
   {
     const char *t = txt_;
     std::wstring ws;
-    if (sizeof(wchar_t) == 16)
+    if (sizeof(wchar_t) == 2)
     {
-      // sizeof(wchar_t) == 16: store wide string in std::wstring encoded in UTF-16
+      // sizeof(wchar_t) == 2: store wide string in std::wstring encoded in UTF-16
       while (t < txt_ + len_)
       {
         int wc = utf8(t, &t);
