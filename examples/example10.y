@@ -2,23 +2,21 @@
 /* 
     This example show include multiple buffer files
     and custom error message with info about location
-    from lexer and parser. 
+    from lexer and parser, handle file in parser . 
 */
 
 /* Compile:
  
-    Linux   :   bison -d -y flexexample10.parser 
-                reflex --flex --bison-locations --bison-bridge --header-file=lexer.hpp example10.lexer -o lexer.cpp
-                g++ ...
-                
-    Windows :   win_bison -d -y example10.parser -o parser.cpp
-                reflex --flex --bison-locations --bison-bridge --header-file=lexer.hpp example10.lexer -o lexer.cpp
-                cl /EHsc  /Feexample10.exe *.cpp   /I ..\include\ /link reflex.lib                
+    Linux   :   bison -d -y example10.y -o parser.cpp
+                reflex --flex --bison-locations --bison-bridge --header-file=lexer.hpp example10.l -o lexer.cpp
+                g++ lexer.cpp parser.cpp -o example10 -I ../include/ ../lib/libreflex.a
+   
+    Windows :   win_bison -d -y example10.y -o parser.cpp
+                ..\vs\reflex --flex --bison-locations --bison-bridge --header-file=lexer.hpp example10.l -o lexer.cpp
+                cl  /Feexample10.exe parser.cpp lexer.cpp  /I ..\include\ /link ..\vs\reflex.lib
+    
 */
 
-/* Example http://dinosaur.compilertools.net/flex/flex_12.html */
-/* this example can not be compiled */
-/* this is a work aorund workaround */
 
 %{
 #include <string>
@@ -74,10 +72,7 @@ assignment
 |
     INCLUDE    
     {
-        printf  ("#include#\n");
-        
         buffer.push ( static_cast<yyscanner_t*>(scanner) ) ;
-        
         static_cast<yyscanner_t*>(scanner)->matcher().flush();
         
         yyscanner_t scannerInclude;
@@ -88,21 +83,8 @@ assignment
         scannerInclude.in(fi);
 
         buffer.push ( &scannerInclude ) ; 
-        
         yyparse ( &scannerInclude ) ;
         
-    }
-|
-    FINE 
-    { 
-        printf  ("#eof#\n");
-
-        static_cast<yyscanner_t*>(buffer.top())->matcher().flush();
-                
-        buffer.pop() ;
-        bufferFileName.pop() ;
-        
-        yyparse ( buffer.top() ) ;
     }
 |
     ERROR
@@ -123,8 +105,14 @@ int main(void)
     bufferFileName.push ("example10a.test")  ;
     scanner.in(fi)  ;
 
+    // push
+    buffer.push ( &scanner ) ;
+    bufferFileName.push ("example10a.test")  ;
+
     // scanner is passed on to yylex()
     yyparse(&scanner);	
+
+    printf ( "\n" );
   
   return 0;
 }

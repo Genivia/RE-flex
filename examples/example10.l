@@ -2,23 +2,21 @@
 /* 
     This example show include multiple buffer files
     and custom error message with info about location
-    from lexer and parser.   
+    from lexer and parser, handle file in parser . 
 */
 
 /* Compile:
  
-    Linux   :   bison -d -y flexexample10.parser 
-                reflex --flex --bison-locations --bison-bridge --header-file=lexer.hpp example10.lexer -o lexer.cpp
-                g++ ...
-                
-    Windows :   win_bison -d -y example10.parser -o parser.cpp
-                reflex --flex --bison-locations --bison-bridge --header-file=lexer.hpp example10.lexer -o lexer.cpp
-                cl /EHsc  /Feexample10.exe *.cpp   /I ..\include\ /link reflex.lib               
+    Linux   :   bison -d -y example10.y -o parser.cpp
+                reflex --flex --bison-locations --bison-bridge --header-file=lexer.hpp example10.l -o lexer.cpp
+                g++ lexer.cpp parser.cpp -o example10 -I ../include/ ../lib/libreflex.a
+   
+    Windows :   win_bison -d -y example10.y -o parser.cpp
+                ..\vs\reflex --flex --bison-locations --bison-bridge --header-file=lexer.hpp example10.l -o lexer.cpp
+                cl  /Feexample10.exe parser.cpp lexer.cpp  /I ..\include\ /link ..\vs\reflex.lib
+    
 */
 
-/* Example http://dinosaur.compilertools.net/flex/flex_12.html */
-/* this example can not be compiled */
-/* this is a work aorund workaround */
 
 %top{
 
@@ -28,22 +26,23 @@
 
 void yyerror ( const char * msg,int col,int row ) ;
 
+#undef yywrap
+
 %}
-
-
 
 %option flex bison-locations bison-bridge noyywrap
 %option unicode
 
+
 %%
 
-<<EOF>>         { return FINE; }
 "include"       { return INCLUDE; }
 "error"         { return ERROR; }
 [[:digit:]]+    { yylval.num = atoi(yytext);   return NUMBER; }
 [[:alnum:]]+    { yylval.str = strdup(yytext); return STRING; }
 "="|";"         { return yytext[0]; }
 .|\n            { yyerror ( "lexer",lineno(),columno() ); }
+
 
 %%
 
