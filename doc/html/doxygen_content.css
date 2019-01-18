@@ -66,6 +66,13 @@ em code {
         font-style: normal;
 }
 
+b code {
+        color: hsl(0, 0%, 100%);
+        background-color: hsl(0, 0%, 25%);                                
+        font-style: normal;
+        font-weight: normal;
+}
+
 td code {
 	border: none;
 	padding: 0px;

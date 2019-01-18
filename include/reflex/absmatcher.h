@@ -950,6 +950,7 @@ class AbstractMatcher {
   int get_more()
     /// @returns the character read (unsigned char 0..255) or EOF (-1).
   {
+    DBGLOG("AbstractMatcher::get_more()");
     if (eof_)
       return EOF;
     if (end_ + blk_ >= max_)
@@ -973,6 +974,7 @@ class AbstractMatcher {
   int peek_more()
     /// @returns the character (unsigned char 0..255) or EOF (-1).
   {
+    DBGLOG("AbstractMatcher::peek_more()");
     if (eof_)
       return EOF;
     if (end_ + blk_ >= max_)

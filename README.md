@@ -111,6 +111,9 @@ may fail, but that is OK for now as long as we executed the custom build step
 to run `reflex.exe`).  Drag the generated `lex.yy.h` and `lex.yy.cpp` files to
 the **Source Files**.  Now you are all set!
 
+In addition, the `reflex/vs` directory contains batch scripts to build projects
+with MS Visual Studio C++.
+
 ### Unix/Linux and Mac OS X
 
 You have two options: 1) quick install or 2) configure and make.
@@ -414,6 +417,7 @@ Changelog
 - Jul 30, 2018: 1.0.8 updated to Unicode 11.
 - Aug 21, 2018: 1.0.9 fixed reflex regex library matching with range quantifiers by correcting coding typo.
 - Dec  8, 2018: 1.0.10 fixed `columno()` to take tab spacing into account.
+- Jan 18, 2019: 1.0.11 fixed GCC 8.2 warnings, additional enhancements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

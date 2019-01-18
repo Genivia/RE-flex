@@ -1045,7 +1045,7 @@ std::string Reflex::get_code(size_t& pos)
     while (pos >= linelen)
     {
       if (!get_line())
-        error("EOF encountered inside an action", NULL, at_lineno);
+        error("EOF encountered inside an action, %} or %% expected", NULL, at_lineno);
       pos = 0;
       if (tok == CODE)
       {
@@ -1064,7 +1064,7 @@ std::string Reflex::get_code(size_t& pos)
           if (blk == 0 && lev == 0)
           {
             if (!get_line())
-              error("EOF encountered inside an action", NULL, at_lineno);
+              error("EOF encountered inside an action, %} or %% expected", NULL, at_lineno);
             return code;
           }
         }
@@ -1380,7 +1380,7 @@ void Reflex::parse_section_2()
         {
           scopes.push(starts);
           if (!get_line())
-            error("EOF encountered inside an action");
+            error("EOF encountered inside an action, %} or %% expected");
           init = true;
         }
         else
@@ -1604,10 +1604,12 @@ void Reflex::write()
         *out << options["lexer"];
       *out <<
         " yyscanner_t;\n"
-        "typedef void *yyscan_t;\n\n"
+        "typedef void *yyscan_t;\n"
+        "\n"
         "#ifndef YY_EXTERN_C\n"
         "#define YY_EXTERN_C\n"
-        "#endif\n\n";
+        "#endif\n"
+        "\n";
       if (!options["bison_locations"].empty())
         *out << "YY_EXTERN_C int yylex(" << yystype << "*, " << yyltype << "*, yyscan_t);\n";
       else if (!options["bison_bridge"].empty())
@@ -1633,10 +1635,12 @@ void Reflex::write()
       else
         *out << options["lexer"];
       *out <<
-        " YY_SCANNER;\n\n"
+        " YY_SCANNER;\n"
+        "\n"
         "#ifndef YY_EXTERN_C\n"
         "#define YY_EXTERN_C\n"
-        "#endif\n\n"
+        "#endif\n"
+        "\n"
         "YY_EXTERN_C int yylex(" << yystype << "*, " << yyltype << "*);\n";
     }
     else if (!options["bison"].empty())
@@ -1658,10 +1662,12 @@ void Reflex::write()
       else
         *out << options["lexer"];
       *out <<
-        " YY_SCANNER;\n\n"
+        " YY_SCANNER;\n"
+        "\n"
         "#ifndef YY_EXTERN_C\n"
         "#define YY_EXTERN_C\n"
-        "#endif\n\n";
+        "#endif\n"
+        "\n";
       if (!options["flex"].empty())
         *out << "YY_EXTERN_C int " << options["prefix"] << "lex(void);\n";
       else
@@ -1818,7 +1824,7 @@ void Reflex::write_class()
         "  virtual int yylex(void)\n"
         "  {\n"
         "    LexerError(\"" << lexer << "::yylex invoked but %option bison-cc is used\");\n"
-        "    return 0;\n"
+        "    yyterminate();\n"
         "  }\n"
         "  virtual int " << lex << "(" << yystype << "& yylval)";
     }
@@ -1828,7 +1834,7 @@ void Reflex::write_class()
         "  virtual int yylex(void)\n"
         "  {\n"
         "    LexerError(\"" << lexer << "::yylex invoked but %option bison-bridge and/or bison-locations is used\");\n"
-        "    return 0;\n"
+        "    yyterminate();\n"
         "  }\n"
         "  virtual int " << lex << "(" << yystype << "& yylval)";
     }
@@ -1839,7 +1845,7 @@ void Reflex::write_class()
           "  virtual int yylex(void)\n"
           "  {\n"
           "    LexerError(\"" << lexer << "::yylex invoked but %option lex=" << lex << " is used\");\n"
-          "    return 0;\n"
+          "    yyterminate();\n"
           "  }\n";
       *out <<
         "  virtual int " << lex << "()";
@@ -1851,7 +1857,7 @@ void Reflex::write_class()
         "\n"
         "  {\n"
         "    LexerError(\"" << lexer << "::" << lex << " invoked but %option yyclass=" << options["yyclass"] << " is used\");\n"
-        "    return 0;\n"
+        "    yyterminate();\n"
         "  }"
         << std::endl;
   }
@@ -2117,11 +2123,14 @@ void Reflex::write_lexer()
     else
       *out << options["lexer"];
     *out <<
-      " yyscanner_t;\n\n"
-      "typedef void *yyscan_t;\n\n"
+      " yyscanner_t;\n"
+      "\n"
+      "typedef void *yyscan_t;\n"
+      "\n"
       "#ifndef YY_EXTERN_C\n"
       "#define YY_EXTERN_C\n"
-      "#endif\n\n";
+      "#endif\n"
+      "\n";
     if (!options["bison_locations"].empty())
       *out <<
         "YY_EXTERN_C int yylex(" << yystype << " *lvalp, " << yyltype << " *llocp, yyscan_t scanner)\n"
@@ -2132,31 +2141,36 @@ void Reflex::write_lexer()
         "  llocp->last_line = static_cast<yyscanner_t*>(scanner)->matcher().lineno();\n"
         "  llocp->last_column = static_cast<yyscanner_t*>(scanner)->matcher().columno();\n"
         "  return res;\n"
-        "}\n\n";
+        "}\n"
+        "\n";
     else if (!options["bison_bridge"].empty())
       *out <<
         "YY_EXTERN_C int yylex(" << yystype << " *lvalp, yyscan_t scanner)\n"
         "{\n"
         "  return static_cast<yyscanner_t*>(scanner)->" << lex << "(*lvalp);\n"
-        "}\n\n";
+        "}\n"
+        "\n";
     else
       *out <<
         "YY_EXTERN_C int yylex(yyscan_t scanner)\n"
         "{\n"
         "  return static_cast<yyscanner_t*>(scanner)->" << lex << "();\n"
-        "}\n\n";
+        "}\n"
+        "\n";
     *out <<
       "YY_EXTERN_C void yylex_init(yyscan_t *scanner)\n"
       "{\n"
       "  *scanner = static_cast<yyscan_t>(new yyscanner_t);\n"
-      "}\n\n";
+      "}\n"
+      "\n";
     if (!options["flex"].empty())
       *out <<
         "YY_EXTERN_C void yylex_init_extra(" << (options["extra_type"].empty() ? "YY_EXTRA_TYPE" : options["extra_type"].c_str()) << " extra, yyscan_t *scanner)\n"
         "{\n"
         "  *scanner = static_cast<yyscan_t>(new yyscanner_t);\n"
         "  yyset_extra(extra, *scanner);\n"
-        "}\n\n";
+        "}\n"
+        "\n";
     *out <<
       "YY_EXTERN_C void yylex_destroy(yyscan_t scanner)\n"
       "{\n"
@@ -2175,10 +2189,12 @@ void Reflex::write_lexer()
     else
       *out << options["lexer"];
     *out <<
-      " YY_SCANNER;\n\n"
+      " YY_SCANNER;\n"
+      "\n"
       "#ifndef YY_EXTERN_C\n"
       "#define YY_EXTERN_C\n"
-      "#endif\n\n"
+      "#endif\n"
+      "\n"
       "YY_EXTERN_C int yylex(" << yystype << " *lvalp, " << yyltype << " *llocp)\n"
       "{\n"
       "  llocp->first_line = llocp->last_line;\n"
@@ -2187,7 +2203,8 @@ void Reflex::write_lexer()
       "  llocp->last_line = YY_SCANNER.matcher().lineno();\n"
       "  llocp->last_column = YY_SCANNER.matcher().columno();\n"
       "  return res;\n"
-      "}\n\n";
+      "}\n"
+      "\n";
   }
   else if (!options["bison"].empty())
   {
@@ -2201,15 +2218,18 @@ void Reflex::write_lexer()
     else
       *out << options["lexer"];
     *out <<
-      " YY_SCANNER;\n\n"
+      " YY_SCANNER;\n"
+      "\n"
       "#ifndef YY_EXTERN_C\n"
       "#define YY_EXTERN_C\n"
-      "#endif\n\n";
+      "#endif\n"
+      "\n";
     if (!options["flex"].empty())
       *out <<
         "char *" << options["prefix"] << "text;\n"
         "yy_size_t " << options["prefix"] << "leng;\n"
         "int " << options["prefix"] << "lineno;\n"
+        "\n"
         "YY_EXTERN_C int " << options["prefix"] << "lex(void)\n"
         "{\n"
         "  int res = YY_SCANNER." << lex << "();\n"
@@ -2217,7 +2237,8 @@ void Reflex::write_lexer()
         "  " << options["prefix"] << "leng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
         "  " << options["prefix"] << "lineno = static_cast<int>(YY_SCANNER.lineno());\n"
         "  return res;\n"
-        "}\n\n"
+        "}\n"
+        "\n"
         "#define " << options["prefix"] << "text const_cast<char*>(YY_SCANNER.YYText())\n"
         "#define " << options["prefix"] << "leng static_cast<yy_size_t>(YY_SCANNER.YYLeng())\n"
         "#define " << options["prefix"] << "lineno static_cast<int>(YY_SCANNER.lineno())\n";
@@ -2376,8 +2397,14 @@ void Reflex::write_lexer()
     if (!options["perf_report"].empty())
       *out << "              perf_report();\n";
     if (!has_eof)
-      *out <<
-        "              return 0;\n";
+    {
+      if (!options["flex"].empty())
+        *out <<
+          "              yyterminate();\n";
+      else
+        *out <<
+          "              return 0;\n";
+    }
     *out <<
       "            }\n"
       "            else\n"
@@ -2392,7 +2419,7 @@ void Reflex::write_lexer()
       if (!options["flex"].empty())
         *out <<
           "              LexerError(\"scanner jammed\");\n"
-          "              return 0;\n";
+          "              yyterminate();\n";
       else if (!options["debug"].empty())
         *out <<
           "              if (debug()) std::cerr << \"--" <<
@@ -2473,10 +2500,18 @@ void Reflex::write_lexer()
         "        break;\n";
   }
   if (conditions.size() > 1)
-    *out <<
-      "      default:\n"
-      "        return 0;\n"
-      "    }\n";
+  {
+    if (!options["flex"].empty())
+      *out <<
+        "      default:\n"
+        "        yyterminate();\n"
+        "    }\n";
+    else
+      *out <<
+        "      default:\n"
+        "        return 0;\n"
+        "    }\n";
+  }
   *out <<
     "  }\n"
     "}" << std::endl;

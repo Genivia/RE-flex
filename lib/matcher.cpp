@@ -241,7 +241,7 @@ redo:
               opcode = *++pc;
               continue;
             case 0xff00 | Pattern::META_NWB:
-              DBGLOG("NWE? %d %d", bow, eow);
+              DBGLOG("NWB? %d %d", bow, eow);
               if (index == Pattern::IMAX && !bow && !eow)
                 index = Pattern::index_of(opcode);
               opcode = *++pc;
@@ -388,7 +388,7 @@ done:
       }
     }
   }
-  DBGLOG("Return: cap = %zu txt = '%s' len = %zu got = %d", cap_, std::string(txt_, len_).c_str(), len_, got_);
+  DBGLOG("Return: cap = %zu txt = '%s' len = %zu pos = %zu got = %d", cap_, std::string(txt_, len_).c_str(), len_, pos_, got_);
   DBGLOG("END match()");
   return cap_;
 }

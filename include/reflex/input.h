@@ -616,7 +616,10 @@ class Input {
   void init()
   {
     size_ = 0;
+    std::memset(utf8_, 0, sizeof(utf8_));
     uidx_ = sizeof(utf8_);
+    utfx_ = 0;
+    page_ = NULL;
     if (file_)
       file_init();
   }

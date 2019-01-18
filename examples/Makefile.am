@@ -1,4 +1,4 @@
-# These examples require Bison or Yacc
+# Some of these examples require Bison or Yacc
 #
 # To quickly build the examples:
 # > make -f Make
@@ -7,6 +7,9 @@
 # > ./configure && make
 # > cd examples
 # > make
+#
+# Bison C++ examples are build with:
+# > make -f Make examplesxx
 #
 # To build examples3.0 requires Bison 3.0 or greater:
 # > make -f Make examples3.0
@@ -28,12 +31,14 @@ examples:	flexexample1 \
 		flexexample6 \
 		flexexample7 \
 		flexexample8 \
+		flexexample10 \
 		reflexexample3 \
 		reflexexample4 \
 		reflexexample5 \
 		reflexexample6 \
 		reflexexample7 \
 		reflexexample8 \
+		reflexexample10 \
 		ctokens \
 		jtokens \
 		ptokens \
@@ -140,6 +145,11 @@ reflexexample8:	reflexexample8.l flexexample8.y
 		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
 		./reflexexample8 < flexexample8.test
 
+reflexexample10:reflexexample10.l
+		$(REFLEX) $(REFLAGS) $<
+		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		./reflexexample10 < flexexample10.test
+
 ctokens:	ctokens.l
 		$(REFLEX) $(REFLAGS) $<
 		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
@@ -243,5 +253,6 @@ clean-local:
 		-rm -rf *.dSYM
 		-rm -f *.o *.gch *.log
 		-rm -f lex.yy.h lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx reflex.*.cpp reflex.*.gv reflex.*.txt
-		-rm -f flexexample? reflexexample?
+		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
+		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
 		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json csv braille unicode cards url

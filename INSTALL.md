@@ -26,11 +26,18 @@ Step** in MSVC++ as follows:
 
 5. specify **Execute Before** as `PreBuildEvent`.
 
-To compile your program with MSVC++, make sure to drag the folders `reflex/lib`
-and `reflex/unicode` to the **Source Files** in the **Solution Explorer** panel
-of your project.  After running `reflex.exe` drag the generated `lex.yy.h` and
-`lex.yy.cpp` files there as well.  If you are using specific reflex
-command-line options such as `−−flex`, add these in step 3.
+If you are using specific reflex options such as `--flex` then add these in
+step 3.
+
+Before compiling your program with MSVC++, drag the folders `reflex/lib` and
+`reflex/unicode` to the **Source Files** in the **Solution Explorer** panel of
+your project.  Next, run `reflex.exe` simply by compiling your project (which
+may fail, but that is OK for now as long as we executed the custom build step
+to run `reflex.exe`).  Drag the generated `lex.yy.h` and `lex.yy.cpp` files to
+the **Source Files**.  Now you are all set!
+
+In addition, the `reflex/vs` directory contains batch scripts to build projects
+with MS Visual Studio C++.
 
 ### Unix/Linux and Mac OS
 
@@ -209,6 +216,9 @@ following files:
     |   |__ letter_scripts.cpp
     |   |__ letter_scripts.l
     |
+    |__ vs/                                     Visual Studio batch scripts
+    |   |__ ...
+    |
     |__ INSTALL.md				this file
     |__ LICENSE.txt				BSD-3 license
     |__ README.md				README to get started, changelog
@@ -223,7 +233,7 @@ License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2015-2017, All rights reserved.   
+Copyright (c) 2015-2018, All rights reserved.   
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.

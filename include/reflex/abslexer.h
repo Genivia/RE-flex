@@ -213,13 +213,18 @@ class AbstractLexer {
     matcher_ = matcher;
   }
   /// Pop matcher from the stack and continue scanning where it left off, delete the current matcher.
-  void pop_matcher()
+  bool pop_matcher()
   {
-    ASSERT(!stack_.empty());
     if (matcher_)
       delete matcher_;
-    matcher_ = stack_.top();
-    stack_.pop();
+    if (!stack_.empty())
+    {
+      matcher_ = stack_.top();
+      stack_.pop();
+      return true;
+    }
+    matcher_ = NULL;
+    return false;
   }
   /// Echo the matched text to the current output.
   void echo() const

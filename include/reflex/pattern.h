@@ -288,18 +288,18 @@ class Pattern {
   /// Meta characters.
   enum Meta {
     META_MIN = 0x100,
-    META_NWB = 0x101, ///< non-word at begin      `\Bx`
-    META_NWE = 0x102, ///< non-word at end        `x\B`
-    META_BWB = 0x103, ///< begin of word at begin `\<x`
-    META_EWB = 0x104, ///< end of word at begin   `\>x`
-    META_BWE = 0x105, ///< begin of word at end   `x\<`
-    META_EWE = 0x106, ///< end of word at end     `x\>`
-    META_BOL = 0x107, ///< begin of line          `^`
-    META_EOL = 0x108, ///< end of line            `$`
-    META_BOB = 0x109, ///< begin of buffer        `\A`
-    META_EOB = 0x10A, ///< end of buffer          `\Z`
-    META_IND = 0x10B, ///< indent boundary        `\i`
-    META_DED = 0x10C, ///< dedent boundary        `\j` (must be the largest META code)
+    META_NWB = 0x101, ///< non-word boundary at begin `\Bx`
+    META_NWE = 0x102, ///< non-word boundary at end   `x\B`
+    META_BWB = 0x103, ///< begin of word at begin     `\<x` where \bx=(\<|\>)x
+    META_EWB = 0x104, ///< end of word at begin       `\>x`
+    META_BWE = 0x105, ///< begin of word at end       `x\<` where x\b=x(\<|\>)
+    META_EWE = 0x106, ///< end of word at end         `x\>`
+    META_BOL = 0x107, ///< begin of line              `^`
+    META_EOL = 0x108, ///< end of line                `$`
+    META_BOB = 0x109, ///< begin of buffer            `\A`
+    META_EOB = 0x10A, ///< end of buffer              `\Z`
+    META_IND = 0x10B, ///< indent boundary            `\i`
+    META_DED = 0x10C, ///< dedent boundary            `\j` (must be the largest META code)
     META_MAX          ///< max meta characters
   };
   /// Initialize the pattern at construction.
