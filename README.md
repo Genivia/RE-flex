@@ -418,6 +418,7 @@ Changelog
 - Aug 21, 2018: 1.0.9 fixed reflex regex library matching with range quantifiers by correcting coding typo.
 - Dec  8, 2018: 1.0.10 fixed `columno()` to take tab spacing into account.
 - Jan 18, 2019: 1.0.11 fixed GCC 8.2 warnings, additional enhancements.
+- Jan 21, 2019: 1.0.12 the reflex tool now reads files using `reflex::Input`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

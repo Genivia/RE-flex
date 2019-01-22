@@ -645,7 +645,7 @@ void Reflex::parse()
     ifs.open(infile.c_str(), std::ifstream::in);
     if (!ifs.is_open())
       abort("cannot open file ", infile.c_str());
-    in = &ifs;
+    in = ifs;
   }
   parse_section_1();
   parse_section_2();
@@ -663,8 +663,8 @@ void Reflex::include(const std::string& filename)
     abort("cannot open file ", infile.c_str());
   std::string save_infile = infile;
   infile = filename;
-  std::istream *save_in = in;
-  in = &ifs;
+  reflex::Input save_in = in;
+  in = ifs;
   size_t save_lineno = lineno;
   lineno = 0;
   parse_section_1();
@@ -678,17 +678,23 @@ void Reflex::include(const std::string& filename)
 /// Fetch next line from the input, return true if ok.
 bool Reflex::get_line()
 {
-  if (in->eof())
+  if (in.eof())
     return false;
-  if (!in->good())
+  if (!in.good())
     abort("error in reading");
   ++lineno;
-  std::getline(*in, line);
+  line.clear();
+  int c;
+  while ((c = in.get()) != EOF && c != '\n')
+  {
+    if (c != '\r')
+      line.push_back(c);
+  }
   linelen = line.length();
   while (linelen > 0 && std::isspace(line.at(linelen - 1)))
     --linelen;
   line.resize(linelen);
-  if (in->eof() && line.empty())
+  if (in.eof() && line.empty())
     return false;
   return true;
 }
@@ -1336,7 +1342,7 @@ void Reflex::parse_section_1()
 /// Parse section 2 of a lex specification.
 void Reflex::parse_section_2()
 {
-  if (in->eof())
+  if (in.eof())
     error("missing %% section 2");
   bool init = true;
   std::stack<Starts> scopes;
@@ -1416,7 +1422,7 @@ void Reflex::parse_section_2()
   if (!scopes.empty())
   {
     const char *name = conditions.at(*scopes.top().begin()).c_str();
-    if (in->eof())
+    if (in.eof())
       error("EOF encountered inside scope ", name);
     else
       error("%% section ending encountered inside scope ", name);
@@ -1457,7 +1463,7 @@ void Reflex::parse_section_2()
 /// Parse section 3 of a lex specification.
 void Reflex::parse_section_3()
 {
-  if (in->eof())
+  if (in.eof())
     error("missing %% section 3");
   while (get_line())
     section_3.push_back(Code(line, infile, lineno));

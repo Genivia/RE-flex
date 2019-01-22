@@ -39,6 +39,7 @@
 
 #include <reflex/convert.h>
 #include <reflex/error.h>
+#include <reflex/input.h>
 #include <reflex/pattern.h>
 #include <reflex/utf8.h>
 #include <cctype>
@@ -64,7 +65,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "1.0.11"
+#define REFLEX_VERSION "1.0.12"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -199,7 +200,7 @@ class Reflex
   CodesMap      section_2;     ///< lexer user code in section 2 container
   Codes         section_3;     ///< main user code in section 3 container
   std::string   infile;        ///< input file name
-  std::istream *in;            ///< input stream with lex spec
+  reflex::Input in;            ///< input lex spec
   std::ostream *out;           ///< output stream
   std::string   line;          ///< current line read from input
   size_t        lineno;        ///< current line number at input

@@ -174,6 +174,15 @@ by one from stdin, e.g. reading input from a tty:
       fputc(c, stdout);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Or if you prefer to use an int character and check for EOF explicitly:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
+    reflex::Input input(stdin);
+    int c;
+    while ((c = input.get()) != EOF)
+      fputc(c, stdout);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Example
 -------
 
@@ -520,6 +529,14 @@ class Input {
     if (istream_)
       return istream_->eof();
     return true;
+  }
+  /// Get a single character or EOF when end-of-input is reached.
+  int get()
+  {
+    char c;
+    if (get(&c, 1))
+      return c;
+    return EOF;
   }
   /// Copy character sequence data into buffer.
   size_t get(

@@ -1,13 +1,14 @@
 <map id="Reflex" name="Reflex">
-<area shape="rect" id="node2" title="STL class. " alt="" coords="926,33,999,59"/>
-<area shape="rect" id="node3" title="STL class. " alt="" coords="613,5,715,47"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="325,54,447,81"/>
-<area shape="rect" id="node19" title="STL class. " alt="" coords="611,71,717,112"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="155,54,236,81"/>
-<area shape="rect" id="node6" href="$struct_reflex_1_1_library.html" title="A library entry to describe regex library properties. " alt="" coords="621,198,707,225"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="618,627,710,654"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="163,409,228,435"/>
-<area shape="rect" id="node14" href="$struct_reflex_1_1_code.html" title="Line of code fragment in lex specifications. " alt="" coords="346,409,426,435"/>
-<area shape="rect" id="node11" title="STL class. " alt="" coords="5,401,105,443"/>
-<area shape="rect" id="node18" title="STL class. " alt="" coords="924,90,1001,117"/>
+<area shape="rect" id="node2" href="$struct_reflex_1_1_library.html" title="A library entry to describe regex library properties. " alt="" coords="782,52,890,79"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="779,515,893,541"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="219,241,299,268"/>
+<area shape="rect" id="node10" href="$struct_reflex_1_1_code.html" title="Line of code fragment in lex specifications. " alt="" coords="456,295,555,321"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="5,234,132,275"/>
+<area shape="rect" id="node12" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="1157,628,1249,655"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="791,629,881,656"/>
+<area shape="rect" id="node14" title="STL class. " alt="" coords="441,625,570,666"/>
+<area shape="rect" id="node15" title="STL class. " alt="" coords="181,603,336,629"/>
+<area shape="rect" id="node20" title="STL class. " alt="" coords="439,559,572,601"/>
+<area shape="rect" id="node16" title="STL class. " alt="" coords="19,603,119,629"/>
+<area shape="rect" id="node19" title="STL class. " alt="" coords="963,567,1059,593"/>
 </map>

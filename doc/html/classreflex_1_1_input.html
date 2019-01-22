@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Jan 18 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Jan 21 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -162,6 +162,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac2e32c2296b088477df764d2cc743931"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931">eof</a> ()</td></tr>
 <tr class="memdesc:ac2e32c2296b088477df764d2cc743931"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if input reached EOF.  <a href="#ac2e32c2296b088477df764d2cc743931">More...</a><br /></td></tr>
 <tr class="separator:ac2e32c2296b088477df764d2cc743931"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48e95f4f8c324d1249ee45b41648f114"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a> ()</td></tr>
+<tr class="memdesc:a48e95f4f8c324d1249ee45b41648f114"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single character or EOF when end-of-input is reached.  <a href="#a48e95f4f8c324d1249ee45b41648f114">More...</a><br /></td></tr>
+<tr class="separator:a48e95f4f8c324d1249ee45b41648f114"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a3830a022486d78670f01003b56d5e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get</a> (char *s, size_t n)</td></tr>
 <tr class="memdesc:a3a3830a022486d78670f01003b56d5e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy character sequence data into buffer.  <a href="#a3a3830a022486d78670f01003b56d5e5">More...</a><br /></td></tr>
 <tr class="separator:a3a3830a022486d78670f01003b56d5e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,7 +184,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a2504b809d5be558d426618737c3e168d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a3b77d701d8ad80bd4e235e397c180bd5" title="Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the f...">init()</a> on a FILE*.  <a href="#a2504b809d5be558d426618737c3e168d">More...</a><br /></td></tr>
 <tr class="separator:a2504b809d5be558d426618737c3e168d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37dd7c46da3413a52866bee4bb060cc5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a37dd7c46da3413a52866bee4bb060cc5">file_get</a> (char *s, size_t n)</td></tr>
-<tr class="memdesc:a37dd7c46da3413a52866bee4bb060cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a> on a FILE*.  <a href="#a37dd7c46da3413a52866bee4bb060cc5">More...</a><br /></td></tr>
+<tr class="memdesc:a37dd7c46da3413a52866bee4bb060cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character or EOF when end-of-input is reached. ">get()</a> on a FILE*.  <a href="#a37dd7c46da3413a52866bee4bb060cc5">More...</a><br /></td></tr>
 <tr class="separator:a37dd7c46da3413a52866bee4bb060cc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d09f141e2ced0bc27129809cdbfc4f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a7d09f141e2ced0bc27129809cdbfc4f1">file_size</a> ()</td></tr>
 <tr class="memdesc:a7d09f141e2ced0bc27129809cdbfc4f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> on a FILE*.  <a href="#a7d09f141e2ced0bc27129809cdbfc4f1">More...</a><br /></td></tr>
@@ -229,12 +232,12 @@ Protected Attributes</h2></td></tr>
 <p>The <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class unifies access to a source of input text that constitutes a sequence of characters:</p>
 <ul>
 <li>An <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object is instantiated and (re)assigned a (new) source input: either a <code>char*</code> string, a <code>wchar_t*</code> wide string, a <code>std::string</code>, a <code>std::wstring</code>, a <code>FILE*</code> descriptor, or a <code>std::istream</code> object.</li>
-<li>When assigned a wide string source as input, the wide character content is automatically converted to an UTF-8 character sequence when reading with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a>. Wide strings are UCS-2/UCS-4 and may contain UTF-16 surrogate pairs.</li>
-<li>When assigned a <code>FILE*</code> source as input, the file is checked for the presence of a UTF-8 or a UTF-16 BOM (Byte Order Mark). A UTF-8 BOM is ignored and will not appear on the input character stream (and size is adjusted by 3 bytes). A UTF-16 BOM is intepreted, resulting in the conversion of the file content automatically to an UTF-8 character sequence when reading the file with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a>. Also, <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> gives the content size in the number of UTF-8 bytes.</li>
+<li>When assigned a wide string source as input, the wide character content is automatically converted to an UTF-8 character sequence when reading with <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character or EOF when end-of-input is reached. ">get()</a>. Wide strings are UCS-2/UCS-4 and may contain UTF-16 surrogate pairs.</li>
+<li>When assigned a <code>FILE*</code> source as input, the file is checked for the presence of a UTF-8 or a UTF-16 BOM (Byte Order Mark). A UTF-8 BOM is ignored and will not appear on the input character stream (and size is adjusted by 3 bytes). A UTF-16 BOM is intepreted, resulting in the conversion of the file content automatically to an UTF-8 character sequence when reading the file with <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character or EOF when end-of-input is reached. ">get()</a>. Also, <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> gives the content size in the number of UTF-8 bytes.</li>
 <li>An input object can be reassigned a new source of input for reading at any time.</li>
 <li>An input object obeys move semantics. That is, after assigning an input object to another, the former can no longer be used to read input. This prevents adding the overhead and complexity of file and stream duplication.</li>
 <li><code>size_t <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">Input::get(char *buf, size_t len)</a>;</code> reads source input and fills <code>buf</code> with up to <code>len</code> bytes, returning the number of bytes read or zero when a stream or file is bad or when EOF is reached.</li>
-<li><code>size_t <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">Input::size()</a>;</code> returns the number of ASCII/UTF-8 bytes available to read from the source input or zero (zero is also returned when the size is not determinable). Use this function only before reading input with <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a>. Wide character strings and UTF-16 <code>FILE*</code> content is counted as the total number of UTF-8 bytes that will be produced by <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a>. The size of a <code>std::istream</code> cannot be determined.</li>
+<li><code>size_t <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">Input::size()</a>;</code> returns the number of ASCII/UTF-8 bytes available to read from the source input or zero (zero is also returned when the size is not determinable). Use this function only before reading input with <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character or EOF when end-of-input is reached. ">get()</a>. Wide character strings and UTF-16 <code>FILE*</code> content is counted as the total number of UTF-8 bytes that will be produced by <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character or EOF when end-of-input is reached. ">get()</a>. The size of a <code>std::istream</code> cannot be determined.</li>
 <li><code>bool <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">Input::good()</a>;</code> returns true if the input is readable and has no EOF or error state. Returns false on EOF or if an error condition is present.</li>
 <li><code>bool <a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931" title="Check if input reached EOF. ">Input::eof()</a>;</code> returns true if the input reached EOF. Note that <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">good()</a> == ! <a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931" title="Check if input reached EOF. ">eof()</a> for string source input only, since files and streams may have error conditions that prevent reading. That is, for files and streams <a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931" title="Check if input reached EOF. ">eof()</a> implies <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">good()</a> == false, but not vice versa. Thus, an error is diagnosed when the condition <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">good()</a> == false &amp;&amp; <a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931" title="Check if input reached EOF. ">eof()</a> == false holds. Note that get(buf, len) == 0 &amp;&amp; len &gt; 0 implies <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">good()</a> == false.</li>
 <li>Compile with <code>WITH_UTF8_UNRESTRICTED</code> to enable unrestricted UTF-8 beyond U+10FFFF, permitting lossless UTF-8 encoding of 32 bit words without limits.</li>
@@ -248,13 +251,14 @@ Protected Attributes</h2></td></tr>
 <p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to read a character sequence in blocks from a file:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(fopen(<span class="stringliteral">&quot;input.h&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>));</div><div class="line"><span class="keywordtype">char</span> buf[1024];</div><div class="line"><span class="keywordtype">size_t</span> len;</div><div class="line"><span class="keywordflow">while</span> ((len = input.get(buf, <span class="keyword">sizeof</span>(buf))) &gt; 0)</div><div class="line">  fwrite(buf, 1, len, stdout);</div><div class="line">fclose(input);</div></div><!-- fragment --><h2>Example </h2>
 <p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to echo characters one by one from stdin, e.g. reading input from a tty:</p>
-<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(stdin);</div><div class="line"><span class="keywordtype">char</span> c;</div><div class="line"><span class="keywordflow">while</span> (input.get(&amp;c, 1))</div><div class="line">  fputc(c, stdout);</div></div><!-- fragment --><h2>Example </h2>
+<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(stdin);</div><div class="line"><span class="keywordtype">char</span> c;</div><div class="line"><span class="keywordflow">while</span> (input.get(&amp;c, 1))</div><div class="line">  fputc(c, stdout);</div></div><!-- fragment --><p>Or if you prefer to use an int character and check for EOF explicitly:</p>
+<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(stdin);</div><div class="line"><span class="keywordtype">int</span> c;</div><div class="line"><span class="keywordflow">while</span> ((c = input.get()) != EOF)</div><div class="line">  fputc(c, stdout);</div></div><!-- fragment --><h2>Example </h2>
 <p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to read a character sequence in blocks from a wide character string, converting it to UTF-8 to copy to stdout:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(L<span class="stringliteral">&quot;Copyright ©&quot;</span>); <span class="comment">// © is unicode U+00A9 and UTF-8 C2 A9</span></div><div class="line"><span class="keywordtype">char</span> buf[8];</div><div class="line"><span class="keywordtype">size_t</span> len;</div><div class="line"><span class="keywordflow">while</span> ((len = input.get(buf, <span class="keyword">sizeof</span>(buf))) &gt; 0)</div><div class="line">  fwrite(buf, 1, len, stdout);</div></div><!-- fragment --><h2>Example </h2>
 <p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to convert a wide character string to UTF-8:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(L<span class="stringliteral">&quot;Copyright ©&quot;</span>); <span class="comment">// © is unicode U+00A9 and UTF-8 C2 A9</span></div><div class="line"><span class="keywordtype">size_t</span> len = input.size(); <span class="comment">// size of UTF-8 string</span></div><div class="line"><span class="keywordtype">char</span> *buf = <span class="keyword">new</span> <span class="keywordtype">char</span>[len + 1];</div><div class="line">input.get(buf, len);</div><div class="line">buf[len] = <span class="charliteral">&#39;\0&#39;</span>; <span class="comment">// make \0-terminated</span></div></div><!-- fragment --><h2>Example </h2>
 <p>The following example shows how to switch source inputs while reading input byte by byte (use a buffer as shown in other examples to improve efficiency):</p>
-<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input = <span class="stringliteral">&quot;Hello&quot;</span>;</div><div class="line">std::string message;</div><div class="line"><span class="keywordtype">char</span> c;</div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div><div class="line">input = L<span class="stringliteral">&quot; world! To ∞ and beyond.&quot;</span>; <span class="comment">// switch input to a wide string</span></div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div></div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input = <span class="stringliteral">&quot;Hello&quot;</span>;</div><div class="line">std::string message;</div><div class="line"><span class="keywordtype">char</span> c;</div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div><div class="line">input = L<span class="stringliteral">&quot; world! To ∞ and beyond.&quot;</span>; <span class="comment">// switch input to a wide string</span></div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div></div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a7c6455e576c90b478789928db6066267"></a>
 <div class="memitem">
 <div class="memproto">
@@ -898,7 +902,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a> on a FILE*. </p>
+<p>Implements <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character or EOF when end-of-input is reached. ">get()</a> on a FILE*. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">s</td><td>points to the string buffer to fill with input </td></tr>
@@ -981,6 +985,31 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> on a FILE*. </p>
+
+</div>
+</div>
+<a class="anchor" id="a48e95f4f8c324d1249ee45b41648f114"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int reflex::Input::get </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a single character or EOF when end-of-input is reached. </p>
 
 </div>
 </div>
@@ -1256,7 +1285,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a <code>FILE*</code> or <code>std::istream</code> source). </p>
 <dl class="section return"><dt>Returns</dt><dd>the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable. </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>This function SHOULD NOT be used after <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">get()</a> as the "cursor" has moved it changes the result. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function SHOULD NOT be used after <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character or EOF when end-of-input is reached. ">get()</a> as the "cursor" has moved it changes the result. </dd></dl>
 
 </div>
 </div>
@@ -1491,7 +1520,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Jan 18 2019 10:10:33 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Jan 21 2019 21:57:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
