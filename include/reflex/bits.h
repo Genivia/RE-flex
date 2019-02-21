@@ -108,7 +108,7 @@ class Bits {
       return (*p & m) != 0;
     }
     /// Assign bit value.
-    bool operator=(bool b) ///< bit to assign
+    const Bitref& operator=(bool b) ///< bit to assign
       /// @returns result value true or false.
       const
     {
@@ -116,7 +116,7 @@ class Bits {
         *p |= m;
       else
         *p &= ~m;
-      return b;
+      return *this;
     }
     /// Bit-or bit value.
     bool operator|=(bool b) ///< bit-or with this bit

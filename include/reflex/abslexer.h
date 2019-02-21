@@ -96,6 +96,7 @@ class AbstractLexer {
   /// Delete lexer and its current matcher with its associated input.
   virtual ~AbstractLexer()
   {
+    DBGLOG("AbstractLexer::~AbstractLexer()");
     if (matcher_)
       delete matcher_;
   }

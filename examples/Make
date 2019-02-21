@@ -1,4 +1,6 @@
-# Some of these examples require Bison or Yacc
+# Some of these examples require Bison
+#
+# Change INCBOOST and LIBBOOST below to point to your Boost install paths
 #
 # To quickly build the examples:
 # > make -f Make
@@ -17,7 +19,7 @@
 CXX       = c++
 REFLEX    = ../bin/reflex
 REFLAGS   =
-LIBREFLEX =../lib/libreflex.a
+LIBREFLEX = ../lib/libreflex.a
 YACC      = bison -y
 BISON     = bison
 INCBOOST  = /opt/local/include
@@ -26,6 +28,7 @@ CXXOFLAGS = -O2
 CXXWFLAGS = -Wall -Wunused -Wextra -Wno-unused-label
 CXXIFLAGS = -I. -I../include -I $(INCBOOST)
 CXXMFLAGS =
+# CXXMFLAGS =-DDEBUG
 CXXFLAGS  = $(CXXWFLAGS) $(CXXOFLAGS) $(CXXIFLAGS) $(CXXMFLAGS)
 
 all:		examples examplesxx

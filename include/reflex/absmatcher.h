@@ -449,7 +449,7 @@ class AbstractMatcher {
       n += (*s == '\n');
     return n;
   }
-  /// Returns the column number of matched text, taking tab spacing into account and counting wide characters (unless compiled with WITH_BYTE_COLUMNO).
+  /// Returns the column number of matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).
   size_t columno() const
     /// @returns column number.
   {
@@ -775,8 +775,20 @@ class AbstractMatcher {
     init();
     opt_ = opt;
   }
+  /// Destruct base abstract matcher
+  // TODO
+  /// Delete abstract matcher, deletes this matcher's internal buffer.
+  virtual ~AbstractMatcher()
+  {
+    DBGLOG("AbstractMatcher::~AbstractMatcher()");
+#if defined(WITH_REALLOC)
+    std::free(static_cast<void*>(buf_));
+#else
+    delete[] buf_;
+#endif
+  }
   /// Initialize the base abstract matcher at construction.
-  void init(const char *opt = NULL) ///< options
+  virtual void init(const char *opt = NULL) ///< options
   {
     DBGLOG("AbstractMatcher::init(%s)", opt ? opt : "");
 #if defined(WITH_REALLOC)
@@ -1049,17 +1061,12 @@ class PatternMatcher : public AbstractMatcher {
       own_(false),
       pat_(matcher.pat_)
   { }
-  /// Delete matcher, deletes pattern when owned, deletes this matcher's internal buffer.
+  /// Delete matcher, deletes pattern when owned
   virtual ~PatternMatcher()
   {
     DBGLOG("PatternMatcher::~PatternMatcher()");
     if (own_ && pat_ != NULL)
       delete pat_;
-#if defined(WITH_REALLOC)
-    std::free(static_cast<void*>(buf_));
-#else
-    delete[] buf_;
-#endif
   }
   /// Set the pattern to use with this matcher as a shared pointer to another matcher pattern.
   virtual PatternMatcher& pattern(const PatternMatcher& matcher) ///< the other matcher

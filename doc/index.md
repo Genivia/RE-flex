@@ -1865,7 +1865,11 @@ The `lineno()` method returns the line number of the match, starting at line 1.
 The `columno()` method returns the column offset of a match, starting at
 column 0.  This method takes tab spacing and wide characters into account,
 unless all of the RE/flex source code is compiled with `WITH_BYTE_COLUMNO` to
-count bytes instead of wide characters and tabs.
+count bytes instead of wide characters and tabs.  A wide character is counted
+as one, thus not taking into account the character width of full-width and
+combining Unicode characters.  It is recommended to use the `wcwidth` function
+or [wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to determine
+Unicode character widths.
 
 Because `matcher()` returns the current matcher object, the following Flex-like
 actions are also supported:

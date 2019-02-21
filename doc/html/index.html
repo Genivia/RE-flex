@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Jan 21 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Feb 20 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -784,7 +784,7 @@ Do not invoke <code>matcher()</code> before <code><a class="el" href="namespacer
 <p>Use <b><code>reflex</code></b> options <code>−−flex</code> and <code>−−bison</code> to enable global Flex actions and variables. This makes Flex actions and variables globally accessible outside of <a class="el" href="index.html#reflex-spec-rules">The rules section</a>, with the exception of <code>yy_push_state()</code>, <code>yy_pop_state()</code>, <code>yy_top_state()</code>. Outside <a class="el" href="index.html#reflex-spec-rules">The rules section</a> you must use the global action <code><a class="el" href="flexlexer_8h.html#a89cb0e26f2aed856887fdbbc8d10c73a" title="Flex-compatible macro: read one character, returns zero when EOF. ">yyinput()</a></code> instead of <code>input()</code>, global action <code><a class="el" href="flexlexer_8h.html#a978e5155bc5a5e66b2cadcb7b2124c72" title="Flex-compatible macro: put one character back onto the input stream to be read again. ">yyunput()</a></code> instead of <code>unput()</code>, and global action <code><a class="el" href="flexlexer_8h.html#a01e073defdea723b59e8e4415648ac47" title="Flex-compatible macro: output one character. ">yyoutput()</a></code> instead of <code>output()</code>. Because <code>yyin</code> and <code>yyout</code> are macros they cannot be (re)declared or accessed as global variables, but they can be used as if these were variables. To avoid compilation errors, use <b><code>reflex</code></b> option <code>−−header-file</code> to generate a header file <em><code>lex.yy.h</code></em> to include in your code to use the global use Flex actions and variables. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison/Yacc </a> for more details on the <code>−−bison</code> options to use.</p>
 <p>When using <b><code>reflex</code></b> options <code>−−flex</code>, <code>−−bison</code> and <code>−−reentrant</code>, most Flex functions take a <code>yyscan_t</code> scanner as an extra last argument. See <a class="el" href="index.html#reflex-reentrant">Reentrant Bison</a> for details.</p>
 <p>From the first couple of entries in the table shown above you may have guessed correctly that <code>text()</code> is just a shorthand for <code>matcher().text()</code>, since <code>matcher()</code> is the matcher object associated with the generated Lexer class. The same shorthands apply to <code>str()</code>, <code>wstr()</code>, <code>size()</code>, <code>wsize()</code>, <code>lineno()</code> and <code>columno()</code>. Use <code>text()</code> for fast access to the matched text. The <code>str()</code> method returns a string copy of the match and is less efficient. Likewise, <code>wstr()</code> returns a wide string copy of the match, converted from UTF-8.</p>
-<p>The <code>lineno()</code> method returns the line number of the match, starting at line 1. The <code>columno()</code> method returns the column offset of a match, starting at column 0. This method takes tab spacing and wide characters into account, unless all of the RE/flex source code is compiled with <code>WITH_BYTE_COLUMNO</code> to count bytes instead of wide characters and tabs.</p>
+<p>The <code>lineno()</code> method returns the line number of the match, starting at line 1. The <code>columno()</code> method returns the column offset of a match, starting at column 0. This method takes tab spacing and wide characters into account, unless all of the RE/flex source code is compiled with <code>WITH_BYTE_COLUMNO</code> to count bytes instead of wide characters and tabs. A wide character is counted as one, thus not taking into account the character width of full-width and combining Unicode characters. It is recommended to use the <code>wcwidth</code> function or <a href="https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c">wcwidth.c</a> to determine Unicode character widths.</p>
 <p>Because <code>matcher()</code> returns the current matcher object, the following Flex-like actions are also supported:</p>
 <table class="doxtable">
 <tr>
@@ -2696,7 +2696,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Jan 21 2019 21:57:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Feb 20 2019 21:51:03 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

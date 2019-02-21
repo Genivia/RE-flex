@@ -89,7 +89,7 @@ static const unsigned short codepages[][256] =
   0x00D3,0x00DF,0x00D4,0x00D2,0x00F5,0x00D5,0x00B5,0x00FE,0x00DE,0x00DA,0x00DB,0x00D9,0x00FD,0x00DD,0x00AF,0x00B4,
   0x00AD,0x00B1,0x2017,0x00BE,0x00B6,0x00A7,0x00F7,0x00B8,0x00B0,0x00A8,0x00B7,0x00B9,0x00B3,0x00B2,0x25A0,0x00A0
   },
-  // EBCDIC 0037 to ISO-8859-1
+  // EBCDIC 0037 to Unicode
   {
        0,     1,     2,     3,   156,     9,   134,   127,   151,   141,   142,    11,    12,    13,    14,    15,
       16,    17,    18,    19,   157,   133,     8,   135,    24,    25,   146,   143,    28,    29,    30,    31,
@@ -618,7 +618,7 @@ void Input::file_size(void)
           while (::fread(buf, 1, 1, file_) == 1)
           {
             int c = page_[buf[0]];
-            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
+            size_ += 1 + (c >= 0x80) + (c >= 0x0800); // + (c >= 0x010000); NOTE: page_[] value range < Unicode range
           }
           break;
         case file_encoding::utf16be:
@@ -639,7 +639,7 @@ void Input::file_size(void)
               c = REFLEX_NONCHAR;
             }
 #endif
-            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
+            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
           }
           break;
         case file_encoding::utf16le:
@@ -660,7 +660,7 @@ void Input::file_size(void)
               c = REFLEX_NONCHAR;
             }
 #endif
-            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
+            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
           }
           break;
         case file_encoding::utf32be:
@@ -671,7 +671,7 @@ void Input::file_size(void)
             if (c > 0x10FFFF)
               c = REFLEX_NONCHAR;
 #endif
-            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
+            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
           }
           break;
         case file_encoding::utf32le:
@@ -682,7 +682,7 @@ void Input::file_size(void)
             if (c > 0x10FFFF)
               c = REFLEX_NONCHAR;
 #endif
-            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
+            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
           }
           break;
         default:

@@ -1,4 +1,4 @@
-AC_INIT(reflex,0.9)
+AC_INIT(reflex,1.0)
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_CANONICAL_HOST
 AC_HEADER_TIME

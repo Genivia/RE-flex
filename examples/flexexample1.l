@@ -55,5 +55,6 @@ int main ( int /* argc */, char** /* argv */ )
   FlexLexer* lexer = new yyFlexLexer;
   while (lexer->yylex() != 0)
     ;
+  delete lexer;
   return 0;
 }

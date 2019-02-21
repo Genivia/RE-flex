@@ -213,31 +213,32 @@ class Pattern {
   typedef std::map<int,Ranges> Map;
   /// Finite state machine construction position information.
   struct Position {
-    typedef uint64_t           value_type;
-    static const value_type    NPOS = static_cast<value_type>(-1LL);
-    static const value_type    TICKED = 1LL << 44;
-    static const value_type    GREEDY = 1LL << 45;
-    static const value_type    ANCHOR = 1LL << 46;
-    static const value_type    ACCEPT = 1LL << 47;
-    Position()                 : k(NPOS) { }
-    Position(value_type k)     : k(k) { }
-    Position(const Position& p): k(p.k) { }
-    operator value_type()      const { return k; }
-    Position iter(Index i)     const { return Position(k + (static_cast<value_type>(i) << 16)); }
-    Position ticked(bool b)    const { return b ? Position(k | TICKED) : Position(k & ~TICKED); }
-    Position greedy(bool b)    const { return b ? Position(k | GREEDY) : Position(k & ~GREEDY); }
-    Position anchor(bool b)    const { return b ? Position(k | ANCHOR) : Position(k & ~ANCHOR); }
-    Position accept(bool b)    const { return b ? Position(k | ACCEPT) : Position(k & ~ACCEPT); }
-    Position lazy(Location l)  const { return Position((k & 0x0000FFFFFFFFFFFFLL) | static_cast<value_type>(l) << 48); }
-    Position pos(void)         const { return Position(k & 0x00000000FFFFFFFFLL); }
-    Location loc(void)         const { return static_cast<Location>(k & 0xFFFF); }
-    Index    accepts(void)     const { return static_cast<Index>(k & 0xFFFF); }
-    Index    iter(void)        const { return static_cast<Index>(k >> 16 & 0xFFFF); }
-    bool     ticked(void)      const { return (k & TICKED) != 0; }
-    bool     greedy(void)      const { return (k & GREEDY) != 0; }
-    bool     anchor(void)      const { return (k & ANCHOR) != 0; }
-    bool     accept(void)      const { return (k & ACCEPT) != 0; }
-    Location lazy(void)        const { return static_cast<Location>(k >> 48 & 0xFFFF); }
+    typedef uint64_t        value_type;
+    static const value_type NPOS = static_cast<value_type>(-1LL);
+    static const value_type TICKED = 1LL << 44;
+    static const value_type GREEDY = 1LL << 45;
+    static const value_type ANCHOR = 1LL << 46;
+    static const value_type ACCEPT = 1LL << 47;
+    Position()                   : k(NPOS) { }
+    Position(value_type k)       : k(k)    { }
+    Position(const Position& p)  : k(p.k)  { }
+    Position& operator=(const Position& p) { k = p.k; return *this; }
+    operator value_type()            const { return k; }
+    Position iter(Index i)           const { return Position(k + (static_cast<value_type>(i) << 16)); }
+    Position ticked(bool b)          const { return b ? Position(k | TICKED) : Position(k & ~TICKED); }
+    Position greedy(bool b)          const { return b ? Position(k | GREEDY) : Position(k & ~GREEDY); }
+    Position anchor(bool b)          const { return b ? Position(k | ANCHOR) : Position(k & ~ANCHOR); }
+    Position accept(bool b)          const { return b ? Position(k | ACCEPT) : Position(k & ~ACCEPT); }
+    Position lazy(Location l)        const { return Position((k & 0x0000FFFFFFFFFFFFLL) | static_cast<value_type>(l) << 48); }
+    Position pos(void)               const { return Position(k & 0x00000000FFFFFFFFLL); }
+    Location loc(void)               const { return static_cast<Location>(k & 0xFFFF); }
+    Index    accepts(void)           const { return static_cast<Index>(k & 0xFFFF); }
+    Index    iter(void)              const { return static_cast<Index>(k >> 16 & 0xFFFF); }
+    bool     ticked(void)            const { return (k & TICKED) != 0; }
+    bool     greedy(void)            const { return (k & GREEDY) != 0; }
+    bool     anchor(void)            const { return (k & ANCHOR) != 0; }
+    bool     accept(void)            const { return (k & ACCEPT) != 0; }
+    Location lazy(void)              const { return static_cast<Location>(k >> 48 & 0xFFFF); }
     value_type k;
   };
   typedef std::set<Position>           Positions;

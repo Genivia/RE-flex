@@ -384,6 +384,20 @@ class Input {
   {
     init();
   }
+  /// Copy assignment operator
+  Input& operator=(const Input& input)
+  {
+    cstring_ = input.cstring_;
+    wstring_ = input.wstring_;
+    file_ = input.file_;
+    istream_ = input.istream_;
+    size_ = input.size_;
+    uidx_ = input.uidx_;
+    utfx_ = input.utfx_;
+    page_ = input.page_;
+    std::memcpy(utf8_, input.utf8_, sizeof(utf8_));
+    return *this;
+  }
   /// Cast this Input object to a string, returns NULL when this Input is not a string.
   operator const char *()
     /// @returns remaining unbuffered part of the NUL-terminated string or NULL.

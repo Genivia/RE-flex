@@ -41,6 +41,9 @@ with MS Visual Studio C++.
 
 ### Unix/Linux and Mac OS
 
+On Mac OS X you can use [homebrew](https://brew.sh) to install RE/flex with
+`brew install re-flex`.  Otherwise:
+
 You have two options: 1) quick install or 2) configure and make.
 
 ### Quick install

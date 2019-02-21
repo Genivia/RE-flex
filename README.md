@@ -1,7 +1,7 @@
 
 [![logo][logo-url]][reflex-url]
 
-[![build status][travis-image]][travis-url] [![license][bsd-3-image]][bsd-3-url]
+[![build status][travis-image]][travis-url] [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url]
 
 "The regex-centric, fast and flexible lexical analyzer generator for C++"
 
@@ -116,6 +116,9 @@ with MS Visual Studio C++.
 
 ### Unix/Linux and Mac OS X
 
+On Mac OS X you can use [homebrew](https://brew.sh) to install RE/flex with
+`brew install re-flex`.  Otherwise:
+
 You have two options: 1) quick install or 2) configure and make.
 
 ### Quick install
@@ -124,7 +127,8 @@ First clone the code:
 
     $ git clone https://github.com/Genivia/RE-flex
 
-Then, simply do a quick clean build, assuming your environment is pretty much standard:
+Then simply do a quick clean build, assuming your environment is pretty much
+standard:
 
     $ ./clean.sh
     $ ./build.sh
@@ -133,7 +137,7 @@ This compiles the **reflex** tool and installs it locally in `reflex/bin`.  For
 local use of RE/flex in your project, you can add this location to your `$PATH`
 variable to enable the new `reflex` command:
 
-    export PATH=$PATH:/your_path_to_reflex/reflex/bin
+    $ export PATH=$PATH:/your_path_to_reflex/reflex/bin
 
 Note that the `libreflex.a` and `libreflex.so` libraries are saved locally in
 `reflex/lib`.  Link against the library when you use the RE/flex regex engine
@@ -231,9 +235,9 @@ Each matcher may differ in regex syntax features (see the full documentation),
 but they have the same methods and iterators:
 
 - `matches()` returns nonzero if the input matches the specified pattern;
-- `find()` search input and return nonzero if a match was found;
-- `scan()` scan input and return nonzero if input at current position matches;
-- `split()` return nonzero for a split of the input at the next match;
+- `find()` search input and returns nonzero if a match was found;
+- `scan()` scan input and returns nonzero if input at current position matches;
+- `split()` returns nonzero for a split of the input at the next match;
 - `find.begin()`...`find.end()` filter iterator;
 - `scan.begin()`...`scan.end()` tokenizer iterator;
 - `split.begin()`...`split.end()` splitter iterator.
@@ -419,6 +423,7 @@ Changelog
 - Dec  8, 2018: 1.0.10 fixed `columno()` to take tab spacing into account.
 - Jan 18, 2019: 1.0.11 fixed GCC 8.2 warnings, additional enhancements.
 - Jan 21, 2019: 1.0.12 the reflex tool now reads files using `reflex::Input`.
+- Feb 20, 2019: 1.1.0 code quality updates.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
@@ -431,5 +436,7 @@ Changelog
 [boost-url]: http://www.boost.org
 [travis-image]: https://travis-ci.org/Genivia/RE-flex.svg?branch=master
 [travis-url]: https://travis-ci.org/Genivia/RE-flex
+[lgtm-image]: https://img.shields.io/lgtm/grade/cpp/g/Genivia/RE-flex.svg?logo=lgtm&logoWidth=18
+[lgtm-url]: https://lgtm.com/projects/g/Genivia/RE-flex/context:cpp
 [bsd-3-image]: https://img.shields.io/badge/license-BSD%203--Clause-blue.svg
 [bsd-3-url]: https://opensource.org/licenses/BSD-3-Clause
