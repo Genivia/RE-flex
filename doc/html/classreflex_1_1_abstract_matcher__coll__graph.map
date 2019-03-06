@@ -1,9 +1,0 @@
-<map id="reflex::AbstractMatcher" name="reflex::AbstractMatcher">
-<area shape="rect" id="node3" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="57,560,216,601"/>
-<area shape="rect" id="node2" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="5,337,164,379"/>
-<area shape="rect" id="node4" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="188,345,280,371"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="189,248,279,275"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="169,157,299,199"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="157,81,311,108"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="184,5,284,32"/>
-</map>

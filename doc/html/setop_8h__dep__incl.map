@@ -1,6 +1,0 @@
-<map id="setop.h" name="setop.h">
-<area shape="rect" id="node2" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="57,80,131,107"/>
-<area shape="rect" id="node3" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="5,155,87,181"/>
-<area shape="rect" id="node4" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="111,155,176,181"/>
-<area shape="rect" id="node5" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="103,229,183,256"/>
-</map>

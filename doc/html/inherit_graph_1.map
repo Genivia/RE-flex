@@ -1,4 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classreflex_1_1_abstract_lexer.html" title="The abstract lexer class template that is the abstract root class of all reflex&#45;generated scanners..." alt="" coords="5,5,184,32"/>
-<area shape="rect" id="node2" href="$classreflex_1_1_flex_lexer.html" title="Flex&#45;compatible FlexLexer abstract base class template derived from reflex::AbstractMatcher for the r..." alt="" coords="232,5,387,32"/>
-</map>

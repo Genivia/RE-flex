@@ -1,6 +1,4 @@
 #  Copyright (c) 2018, Michael B Tegtmeyer
-#  Copyright (c) 2016, Robert van Engelen, Genivia Inc.
-#
 #  All rights reserved.
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions are met:
@@ -25,46 +23,35 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-ACLOCAL_AMFLAGS = --install -I m4
+AUTOMAKE_OPTIONS = subdir-objects
 
-if EXAMPLES
-  MAYBE_EXAMPLES=examples
-endif
+noinst_LTLIBRARIES = libbootstrap.la
 
-SUBDIRS = bootstrap unicode lib src include $(MAYBE_EXAMPLES)
+libbootstrap_la_SOURCES= \
+  ../lib/convert.cpp \
+  ../lib/debug.cpp \
+  ../lib/error.cpp \
+  ../lib/input.cpp \
+  ../lib/matcher.cpp \
+  ../lib/pattern.cpp \
+  ../lib/posix.cpp \
+  ../lib/unicode.cpp \
+  ../lib/utf8.cpp
 
-dist_man1_MANS= doc/reflex.l
+libbootstrap_la_CPPFLAGS= \
+  -Wall -Wextra \
+  -I$(top_srcdir)/include
 
-# not clear why help2man isn't used here unless it is a WIN or licensing issue
-doc/reflex.l: $(top_srcdir)/doc/man.sh $(top_builddir)/src/reflex $(top_srcdir)/configure.ac
-	$(top_srcdir)/doc/man.sh $(top_builddir)/src/reflex doc/reflex.l ${PACKAGE_VERSION}
 
-@DX_RULES@
+noinst_PROGRAMS= \
+  bootstrap_reflex
 
-clean-local:
-	rm -rf $(top_srcdir)/doc/reflex-doc
+bootstrap_reflex_SOURCES= \
+  ../src/reflex.cpp \
+  ../src/reflex.h \
+  bootstrap_unicode.cc
 
-EXTRA_DIST= \
-  doc/man.sh \
-  CODE_OF_CONDUCT.md \
-  CONTRIBUTING.md \
-  INSTALL.md \
-  LICENSE.txt \
-  README.md
+bootstrap_reflex_CPPFLAGS= \
+  -Wall -Wextra
 
-CLEANFILES= \
-  doc/reflex.l
-
-install-data-hook:
-		@echo " ______________________________________________________ "; \
-		 echo "|                                                      |"; \
-		 echo "| You have successfully built and installed reflex.    |"; \
-		 echo "|                                                      |"; \
-		 echo "| You can use the reflex command to generate scanners. |"; \
-		 echo "| Link your generated scanner with -lreflex.           |"; \
-		 echo "|                                                      |"; \
-		 echo "| Thanks for using reflex.                             |"; \
-		 echo "|                                                      |"; \
-		 echo "|             https://github.com/Genivia/RE-flex       |"; \
-		 echo "|             https://sourceforge.net/projects/re-flex |"; \
-		 echo "|______________________________________________________|";
+bootstrap_reflex_LDADD=libbootstrap.la

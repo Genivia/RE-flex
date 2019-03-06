@@ -1,6 +1,4 @@
 #  Copyright (c) 2018, Michael B Tegtmeyer
-#  Copyright (c) 2016, Robert van Engelen, Genivia Inc.
-#
 #  All rights reserved.
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions are met:
@@ -25,46 +23,62 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-ACLOCAL_AMFLAGS = --install -I m4
+LEX=$(top_builddir)/bootstrap/bootstrap_reflex
+LEX_OUTPUT_ROOT=lex.yy
 
-if EXAMPLES
-  MAYBE_EXAMPLES=examples
-endif
+AM_LFLAGS= --outfile=lex.yy.c
 
-SUBDIRS = bootstrap unicode lib src include $(MAYBE_EXAMPLES)
+noinst_PROGRAMS= \
+  gen_block_scripts \
+  gen_language_scripts \
+  gen_letter_scripts
 
-dist_man1_MANS= doc/reflex.l
+gen_block_scripts_SOURCES=gen_block_scripts.ll
+gen_block_scripts_LDADD=\
+  $(top_builddir)/bootstrap/libbootstrap.la
 
-# not clear why help2man isn't used here unless it is a WIN or licensing issue
-doc/reflex.l: $(top_srcdir)/doc/man.sh $(top_builddir)/src/reflex $(top_srcdir)/configure.ac
-	$(top_srcdir)/doc/man.sh $(top_builddir)/src/reflex doc/reflex.l ${PACKAGE_VERSION}
+gen_language_scripts_SOURCES=gen_language_scripts.ll
+gen_language_scripts_LDADD=\
+  $(top_builddir)/bootstrap/libbootstrap.la
 
-@DX_RULES@
+gen_letter_scripts_SOURCES=gen_letter_scripts.ll
+gen_letter_scripts_LDADD=\
+  $(top_builddir)/bootstrap/libbootstrap.la
 
-clean-local:
-	rm -rf $(top_srcdir)/doc/reflex-doc
+
+
+noinst_LTLIBRARIES = libunicode.la
+
+libunicode_la_SOURCES = \
+  block_scripts.cc \
+  language_scripts.cc \
+  letter_scripts.cc
+
+libunicode_la_CPPFLAGS= \
+  -Wall -Wextra -pedantic \
+  -I$(top_srcdir)/include
+
+block_scripts.cc: Blocks.txt gen_block_scripts
+	./gen_block_scripts < $(top_srcdir)/unicode/Blocks.txt > block_scripts.cc
+
+language_scripts.cc:	Scripts.txt gen_language_scripts
+	./gen_language_scripts < $(top_srcdir)/unicode/Scripts.txt > language_scripts.cc
+
+letter_scripts.cc:	UnicodeData.txt gen_letter_scripts
+	./gen_letter_scripts < $(top_srcdir)/unicode/UnicodeData.txt > letter_scripts.cc
 
 EXTRA_DIST= \
-  doc/man.sh \
-  CODE_OF_CONDUCT.md \
-  CONTRIBUTING.md \
-  INSTALL.md \
-  LICENSE.txt \
-  README.md
+  Blocks.txt \
+  Scripts.txt \
+  UnicodeData.txt
 
 CLEANFILES= \
-  doc/reflex.l
-
-install-data-hook:
-		@echo " ______________________________________________________ "; \
-		 echo "|                                                      |"; \
-		 echo "| You have successfully built and installed reflex.    |"; \
-		 echo "|                                                      |"; \
-		 echo "| You can use the reflex command to generate scanners. |"; \
-		 echo "| Link your generated scanner with -lreflex.           |"; \
-		 echo "|                                                      |"; \
-		 echo "| Thanks for using reflex.                             |"; \
-		 echo "|                                                      |"; \
-		 echo "|             https://github.com/Genivia/RE-flex       |"; \
-		 echo "|             https://sourceforge.net/projects/re-flex |"; \
-		 echo "|______________________________________________________|";
+  block_scripts.cc \
+  language_scripts.cc \
+  letter_scripts.cc \
+  gen_block_scripts.cc \
+  gen_language_scripts.cc \
+  gen_letter_scripts.cc \
+  gen_block_scripts \
+  gen_language_scripts \
+  gen_letter_scripts

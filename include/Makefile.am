@@ -1,6 +1,4 @@
 #  Copyright (c) 2018, Michael B Tegtmeyer
-#  Copyright (c) 2016, Robert van Engelen, Genivia Inc.
-#
 #  All rights reserved.
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions are met:
@@ -25,46 +23,23 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-ACLOCAL_AMFLAGS = --install -I m4
-
-if EXAMPLES
-  MAYBE_EXAMPLES=examples
-endif
-
-SUBDIRS = bootstrap unicode lib src include $(MAYBE_EXAMPLES)
-
-dist_man1_MANS= doc/reflex.l
-
-# not clear why help2man isn't used here unless it is a WIN or licensing issue
-doc/reflex.l: $(top_srcdir)/doc/man.sh $(top_builddir)/src/reflex $(top_srcdir)/configure.ac
-	$(top_srcdir)/doc/man.sh $(top_builddir)/src/reflex doc/reflex.l ${PACKAGE_VERSION}
-
-@DX_RULES@
-
-clean-local:
-	rm -rf $(top_srcdir)/doc/reflex-doc
-
-EXTRA_DIST= \
-  doc/man.sh \
-  CODE_OF_CONDUCT.md \
-  CONTRIBUTING.md \
-  INSTALL.md \
-  LICENSE.txt \
-  README.md
-
-CLEANFILES= \
-  doc/reflex.l
-
-install-data-hook:
-		@echo " ______________________________________________________ "; \
-		 echo "|                                                      |"; \
-		 echo "| You have successfully built and installed reflex.    |"; \
-		 echo "|                                                      |"; \
-		 echo "| You can use the reflex command to generate scanners. |"; \
-		 echo "| Link your generated scanner with -lreflex.           |"; \
-		 echo "|                                                      |"; \
-		 echo "| Thanks for using reflex.                             |"; \
-		 echo "|                                                      |"; \
-		 echo "|             https://github.com/Genivia/RE-flex       |"; \
-		 echo "|             https://sourceforge.net/projects/re-flex |"; \
-		 echo "|______________________________________________________|";
+nobase_include_HEADERS= \
+  reflex/abslexer.h \
+  reflex/convert.h \
+  reflex/input.h \
+  reflex/ranges.h \
+  reflex/traits.h \
+  reflex/absmatcher.h \
+  reflex/debug.h \
+  reflex/matcher.h \
+  reflex/setop.h \
+  reflex/unicode.h \
+  reflex/bits.h \
+  reflex/error.h \
+  reflex/pattern.h \
+  reflex/stdmatcher.h \
+  reflex/utf8.h \
+  reflex/boostmatcher.h \
+  reflex/flexlexer.h \
+  reflex/posix.h \
+  reflex/timer.h
