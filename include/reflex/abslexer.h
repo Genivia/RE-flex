@@ -280,11 +280,23 @@ class AbstractLexer {
   {
     return matcher().lineno();
   }
-  /// Returns the column number of matched text, counting wide characters.
+  /// Returns the number of lines that the match spans.
+  size_t lines() const
+    /// @returns number of lines.
+  {
+    return matcher().lines();
+  }
+  /// Returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).
   size_t columno() const
     /// @returns column number.
   {
     return matcher().columno();
+  }
+  /// Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).
+  size_t columns() const
+    /// @returns number of columns.
+  {
+    return matcher().columns();
   }
   /// Transition to the given start condition state.
   AbstractLexer& start(int state) ///< start condition state to transition to

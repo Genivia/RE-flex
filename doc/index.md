@@ -623,6 +623,8 @@ You can use this method and other methods to obtain the details of a match:
   `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
+  `lines()`   | returns the number of lines in the text match
+  `columns()` | returns the number of columns of the text match
   `begin()`   | returns `const char*` to non-0-terminated text match begin
   `end()`     | returns `const char*` to non-0-terminated text match end
   `rest()`    | returns `const char*` to 0-terminated rest of input
@@ -637,6 +639,8 @@ You can use this method and other methods to obtain the details of a match:
   `at_end()`  | true if matcher is at the end of input
   `[0]`       | operator returns `std::pair<const char*,size_t>(begin(),size())`
   `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
+
+For a detailed explanation of these methods, see \ref regex-methods-props.
 
 The `operator[n]` takes the group number `n` and returns the n'th group capture
 match as a pair with a `const char*` pointer to the group-matching text and the
@@ -1167,7 +1171,8 @@ specified with option `-m`.
 This sets the tab size to `N`, where `N` > 0 must be a power of 2.  The tab
 size is used internally to determine the column position for
 \ref reflex-pattern-dents matching and to determine the column position
-returned by `columno()`.  It has no effect otherwise.
+returned by `columno()` and the number of columns returned by `columns()`.  It
+has no effect otherwise.
 
 #### `-u`, `−−unicode`
 
@@ -1756,6 +1761,8 @@ are the classic Flex actions shown in the second column of this table:
   `wchr()`             | *n/a*                | first wide char of text match
   `size()`             | `YYLeng()`, `yyleng` | size of the match in bytes
   `wsize()`            | *n/a*                | number of wide chars matched
+  `lines()`            | *n/a*                | number of lines matched
+  `columns()`          | *n/a*                | number of columns matched
   `lineno()`           | `yylineno`           | line number of match (>=1)
   `columno()`          | *n/a*                | column number of match (>=0)
   `echo()`             | `ECHO`               | `out().write(text(), size())`
@@ -1778,6 +1785,8 @@ are the classic Flex actions shown in the second column of this table:
   `matcher().wchr()`   | *n/a*                | same as `wchr()`
   `matcher().size()`   | `YYLeng()`, `yyleng` | same as `size()`
   `matcher().wsize()`  | *n/a*                | same as `wsize()`
+  `matcher().lines()`  | *n/a*                | same as `lines()`
+  `matcher().columns()`| *n/a*                | same as `columns()`
   `matcher().lineno()` | `yylineno`           | same as `lineno()`
   `matcher().columno()`| *n/a*                | same as `columno()`
   `matcher().begin()`  | *n/a*                | non-0-terminated text match
@@ -3555,7 +3564,7 @@ function that is not defined.
 This example sets the global `yylval.num` to the integer scanned or
 `yylval.str` to the string scanned.  It assumes that the yacc grammar
 specification defines the tokens `CONST_NUMBER` and `CONST_STRING` and the type
-`YYSTYPE` of `yylval`, which is a union.  For example:
+`YYSTYPE` of `yylval`.  For example:
 
 <div class="alt">
 ~~~{.cpp}
@@ -3578,6 +3587,9 @@ specification defines the tokens `CONST_NUMBER` and `CONST_STRING` and the type
     %%
 ~~~
 </div>
+
+`YYSTYPE` is a union defined by Bison or you can set it as an option
+<i>`%%option YYSTYPE=type`</i> in a lexer specification.  
 
 When option `−−flex` is used with `−−bison`, the `yytext`, `yyleng`,
 and `yylineno` globals are accessible to the Bison/Yacc parser.  In fact, all
@@ -3950,7 +3962,8 @@ automatically set by the RE/flex scanner, so you do not need to define a
 `YY_USER_ACTION` macro as you have to with Flex.
 
 Note that with the `−−bison-location` option, `yylex()` takes an additional
-`YYLTYPE` argument that a Bison parser provides.
+`YYLTYPE` argument that a Bison parser provides.  You can set `YYLTYPE` as
+an option <i>`%%option YYLTYPE=type`</i> in a lexer specification.
 
 🔝 [Back to table of contents](#)
 
@@ -5298,6 +5311,8 @@ To obtain properties of a match, use the following methods:
   `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
+  `lines()`   | returns the number of lines in the text match
+  `columns()` | returns the number of columns of the text match
   `begin()`   | returns `const char*` to non-0-terminated text match begin
   `end()`     | returns `const char*` to non-0-terminated text match end
   `rest()`    | returns `const char*` to 0-terminated rest of input
@@ -5313,22 +5328,58 @@ To obtain properties of a match, use the following methods:
   `[0]`       | operator returns `std::pair<const char*,size_t>(begin(),size())`
   `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
 
-Note that `begin()`, `operator[0]`, and `operator[n]` return non-0-terminated
-strings.  You must use `end()` with `begin()` to determine the span of the
-match.  Use the size of the capture to determine the end of the captured match.
+The `accept()` method returns nonzero for a succesful match, returning the
+group capture index.  The RE/flex matcher engine `reflex::Matcher` only
+recognizes group captures at the top level of the regex (i.e. among the
+top-level alternations), because it uses an efficient FSM for matching.
 
-All methods take constant time to execute except for `str()`, `wstr()`,
-`pair()`, `wpair()`, `wsize()`, `lineno()` and `columno()` that require a pass
-over the matched text.
+The `text()`, `str()`, and `wstr()` methods return the matched text.  To get
+the first character of a match, use `chr()` or `wchr()`.  The `chr()` and
+`wchr()` methods are much more efficient than `str()[0]` (or `text()[0]`) and
+`wstr()[0]`, respectively.  Normally, a match cannot be empty unless
+option `"N"` is used to explicitly initialize a matcher, see \ref regex-boost
+and \ref regex-matcher.
+
+The `begin()`, `operator[0]`, and `operator[n]` return non-0-terminated
+strings.  You must use `end()` with `begin()` to determine the span of the
+match.  Basically, `text()` is the 0-terminated version of the string spanned
+by `begin()` to `end()`, where `end()` points the next character after the
+match, which means that `end()` = `begin()` + `size()`.  Use the size of the
+capture returned by `operator[n]` to determine the end of the captured match.
 
 The `lineno()` method returns the line number of the match, starting at line 1.
 The `columno()` method returns the column offset of a match, starting at
-column 0.  This method takes tab spacing and wide characters into account,
-unless all of the RE/flex source code is compiled with `WITH_BYTE_COLUMNO` to
-count bytes.
+column 0.  The `columno()` method takes tab spacing and wide characters into
+account, unless all of the RE/flex source code is compiled with
+`WITH_BYTE_COLUMNO` to count bytes.
 
-The `chr()` and `wchr()` methods are much more efficient than `str()[0]` (or
-`text()[0]`) and `wstr()[0]`, respectively.
+The `lines()` and `columns()` methods return the number of lines and columns
+matched, where `columns()` takes tab spacing and wide characters into account.
+That is, the starting line of a match is `lineno()` and the ending line number
+is given by `lineno() + lines()`.  Likewise, the starting column of a match
+is `columno()` and the ending line number is given by `columno() + columns()`.
+
+The `rest()` method terminates the matcher and returns the rest of the input
+character sequence as a string.
+
+The `more()` method is used to create longer matches from individual matches.
+When this method is invoked, the next match has the current matched text
+prepended to it.  The `more()` operation is often used in lexers and was
+introduced in Lex.
+
+The `less(n)` method reduces the size of the matched text to `n` bytes.
+This method has no effect if `n` is larger than `size()`.  The value of `n`
+should not be `0`.  The `less(n)` operation is often used in lexers and was
+introduced in Lex.
+
+The `first()` and `last()` methods return the position in the input stream
+of the match, counting in bytes from the start of the input at byte 0.
+If the input stream is a wide character sequence, the UTF-8 positions are
+returned of the UTF-8-converted wide character input.
+
+All methods take constant time to execute except for `str()`, `wstr()`,
+`pair()`, `wpair()`, `wsize()`, `lines()`, `columns()`, `lineno()`, and
+`columno()` that require an extra pass over the matched text.
 
 In addition, the following type casts of matcher objects and iterators can be
 used for convenience:

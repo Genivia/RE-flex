@@ -440,7 +440,7 @@ class AbstractMatcher {
   {
     return utf8(txt_);
   }
-  /// Returns the line number of the match in the input character sequence.
+  /// Returns the starting line number of the match in the input character sequence.
   size_t lineno() const
     /// @returns line number.
   {
@@ -449,7 +449,16 @@ class AbstractMatcher {
       n += (*s == '\n');
     return n;
   }
-  /// Returns the column number of matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).
+  /// Returns the number of lines that the match spans.
+  size_t lines() const
+    /// @returns number of lines.
+  {
+    size_t n = 0;
+    for (const char *s = txt_; s < txt_ + len_; ++s)
+      n += (*s == '\n');
+    return n;
+  }
+  /// Returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).
   size_t columno() const
     /// @returns column number.
   {
@@ -460,7 +469,7 @@ class AbstractMatcher {
         return txt_ - s - 1;
     return cno_ + txt_ - buf_;
 #else
-    // count column offset in UTF-8 chars
+    // count column offset in tabs and UTF-8 chars
     size_t n = cno_;
     const char *s;
     for (s = txt_ - 1; s >= buf_; --s)
@@ -479,6 +488,41 @@ class AbstractMatcher {
         n += (*s & 0xC0) != 0x80;
     }
     return n;
+#endif
+  }
+  /// Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).
+  size_t columns() const
+    /// @returns number of columns.
+  {
+#if defined(WITH_BYTE_COLUMNO)
+    // count columns in bytes
+    for (const char *s = txt_ + len_ - 1; s >= txt_; --s)
+      if (*s == '\n' || *s == '\r')
+        return txt_ + len_ - s - 1;
+    return len_;
+#else
+    // count columns in tabs and UTF-8 chars
+    size_t n = cno_;
+    size_t m = 0;
+    const char *s;
+    for (s = txt_ + len_ - 1; s >= buf_; --s)
+    {
+      if (*s == '\n' || *s == '\r')
+      {
+        n = 0;
+        break;
+      }
+    }
+    for (++s; s < txt_ + len_; ++s)
+    {
+      if (s == txt_)
+        m = n;
+      if (*s == '\t')
+        n += 1 + ((-1 - n) & (opt_.T - 1));
+      else
+        n += (*s & 0xC0) != 0x80;
+    }
+    return n - m;
 #endif
   }
   /// Returns std::pair<size_t,std::string>(accept(), str()), useful for tokenizing input into containers of pairs.

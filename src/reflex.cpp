@@ -604,10 +604,13 @@ void Reflex::set_library()
   if (!definitions.empty())
     warning("%option matcher should be specified before the start of regular definitions");
   if (options["matcher"] == "reflex")
+  {
     options["matcher"].clear();
+  }
   else if (!options["matcher"].empty())
   {
     std::string& name = options["matcher"];
+    std::string name_ext = name;
     size_t pos;
     while ((pos = name.find('-')) != std::string::npos)
       name[pos] = '_';
@@ -621,9 +624,8 @@ void Reflex::set_library()
       library = &libraries[name];
       library->name = name.c_str();
       if (options["include"].empty())
-        options["include"] = file_ext(name, "h");
-      else
-        options["include"] = file_ext(options["include"], "h");
+        options["include"] = name_ext;
+      file_ext(options["include"], "h");
       library->file = options["include"].c_str();
       if (options["pattern"].empty())
         library->pattern = "char *";
@@ -1812,29 +1814,54 @@ void Reflex::write_class()
     {
       if (!options["bison_locations"].empty())
         *out <<
-          "  virtual int " << lex << "(" << yystype << " *yylval, " << yyltype << " *yylloc)\n"
+          "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
           "  {\n"
-          "    yylloc->step();\n"
-          "    int ret = " << lex << "(*yylval);\n"
-          "    yylloc->end.line = matcher().lineno();\n"
-          "    yylloc->end.column = matcher().columno();\n"
-          "    return ret;\n"
-          "  }\n";
+          "    yylloc.begin.line = matcher().lineno();\n"
+          "    yylloc.begin.column = matcher().columno();\n"
+          "    yylloc.end.line = yylloc.begin.line + matcher().lines();\n"
+          "    yylloc.end.column = yylloc.begin.column + matcher().columns();\n"
+          "  }\n"
+          "  virtual int yylex(void)\n"
+          "  {\n"
+          "    LexerError(\"" << lexer << "::yylex invoked but %option bison-cc is used\");\n"
+          "    yyterminate();\n"
+          "  }\n"
+          "  virtual int " << lex << "(" << yystype << " *lvalp, " << yyltype << " *llocp)\n"
+          "  {\n"
+          "    return " << lex  << "(*lvalp, *llocp);\n"
+          "  }\n"
+          "  virtual int " << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc)";
       else
         *out <<
           "  virtual int " << lex << "(" << yystype << " *yylval)\n"
           "  {\n"
           "    return yylex(*yylval);\n"
-          "  }\n";
+          "  }\n"
+          "  virtual int yylex(void)\n"
+          "  {\n"
+          "    LexerError(\"" << lexer << "::yylex invoked but %option bison-cc is used\");\n"
+          "    yyterminate();\n"
+          "  }\n"
+          "  virtual int " << lex << "(" << yystype << "& yylval)";
+    }
+    else if (!options["bison_locations"].empty())
+    {
       *out <<
+        "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
+        "  {\n"
+        "    yylloc.first_line = matcher().lineno();\n"
+        "    yylloc.first_column = matcher().columno();\n"
+        "    yylloc.last_line = yylloc.first_line + matcher().lines();\n"
+        "    yylloc.last_column = yylloc.first_column + matcher().columns();\n"
+        "  }\n"
         "  virtual int yylex(void)\n"
         "  {\n"
-        "    LexerError(\"" << lexer << "::yylex invoked but %option bison-cc is used\");\n"
+        "    LexerError(\"" << lexer << "::yylex invoked but %option bison-bridge and/or bison-locations is used\");\n"
         "    yyterminate();\n"
         "  }\n"
-        "  virtual int " << lex << "(" << yystype << "& yylval)";
+        "  virtual int " << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc)";
     }
-    else if (!options["bison_bridge"].empty() || !options["bison_locations"].empty())
+    else if (!options["bison_bridge"].empty())
     {
       *out <<
         "  virtual int yylex(void)\n"
@@ -1885,29 +1912,48 @@ void Reflex::write_class()
     {
       if (!options["bison_locations"].empty())
         *out <<
-          "  virtual int " << lex << "(" << yystype << " *yylval, " << yyltype << " *yylloc)\n"
+          "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
           "  {\n"
-          "    yylloc->step();\n"
-          "    int ret = " << lex << "(*yylval);\n"
-          "    yylloc->end.line = matcher().lineno();\n"
-          "    yylloc->end.column = matcher().columno();\n"
-          "    return ret;\n"
-          "  }\n";
+          "    yylloc.begin.line = matcher().lineno();\n"
+          "    yylloc.begin.column = matcher().columno();\n"
+          "    yylloc.end.line = yylloc.begin.line + matcher().lines();\n"
+          "    yylloc.end.column = yylloc.begin.column + matcher().columns();\n"
+          "  }\n"
+          "  virtual int " << lex << "(" << yystype << " *lvalp, " << yyltype << " *llocp)\n"
+          "  {\n"
+          "    return " << lex << "(*lvalp, *llocp);\n"
+          "  }\n"
+          "  virtual int " << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc)";
       else
         *out <<
           "  virtual int " << lex << "(" << yystype << " *yylval)\n"
           "  {\n"
           "    return yylex(*yylval);\n"
-          "  }\n";
+          "  }\n"
+          "  virtual int " << lex << "(" << yystype << "& yylval)";
+    }
+    else if (!options["bison_locations"].empty())
+    {
+      *out <<
+        "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
+        "  {\n"
+        "    yylloc.first_line = matcher().lineno();\n"
+        "    yylloc.first_column = matcher().columno();\n"
+        "    yylloc.last_line = yylloc.first_line + matcher().lines();\n"
+        "    yylloc.last_column = yylloc.first_column + matcher().columns();\n"
+        "  }\n"
+        "  virtual int " << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc)";
+    }
+    else if (!options["bison_bridge"].empty())
+    {
       *out <<
         "  virtual int " << lex << "(" << yystype << "& yylval)";
     }
-    else if (!options["bison_bridge"].empty() || !options["bison_locations"].empty())
-      *out <<
-        "  virtual int " << lex << "(" << yystype << "& yylval)";
     else
+    {
       *out <<
         "  virtual int " << lex << "()";
+    }
     if (options["class"].empty())
       *out << ";\n";
     else
@@ -2141,12 +2187,7 @@ void Reflex::write_lexer()
       *out <<
         "YY_EXTERN_C int yylex(" << yystype << " *lvalp, " << yyltype << " *llocp, yyscan_t scanner)\n"
         "{\n"
-        "  llocp->first_line = llocp->last_line;\n"
-        "  llocp->first_column = llocp->last_column;\n"
-        "  int res = static_cast<yyscanner_t*>(scanner)->" << lex << "(*lvalp);\n"
-        "  llocp->last_line = static_cast<yyscanner_t*>(scanner)->matcher().lineno();\n"
-        "  llocp->last_column = static_cast<yyscanner_t*>(scanner)->matcher().columno();\n"
-        "  return res;\n"
+        "  return static_cast<yyscanner_t*>(scanner)->" << lex << "(*lvalp, *llocp);\n"
         "}\n"
         "\n";
     else if (!options["bison_bridge"].empty())
@@ -2203,12 +2244,7 @@ void Reflex::write_lexer()
       "\n"
       "YY_EXTERN_C int yylex(" << yystype << " *lvalp, " << yyltype << " *llocp)\n"
       "{\n"
-      "  llocp->first_line = llocp->last_line;\n"
-      "  llocp->first_column = llocp->last_column;\n"
-      "  int res = YY_SCANNER." << lex << "(*lvalp);\n"
-      "  llocp->last_line = YY_SCANNER.matcher().lineno();\n"
-      "  llocp->last_column = YY_SCANNER.matcher().columno();\n"
-      "  return res;\n"
+      "  return YY_SCANNER." << lex << "(*lvalp, *llocp);\n"
       "}\n"
       "\n";
   }
@@ -2238,11 +2274,11 @@ void Reflex::write_lexer()
         "\n"
         "YY_EXTERN_C int " << options["prefix"] << "lex(void)\n"
         "{\n"
-        "  int res = YY_SCANNER." << lex << "();\n"
+        "  int ret = YY_SCANNER." << lex << "();\n"
         "  " << options["prefix"] << "text = const_cast<char*>(YY_SCANNER.YYText());\n"
         "  " << options["prefix"] << "leng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
         "  " << options["prefix"] << "lineno = static_cast<int>(YY_SCANNER.lineno());\n"
-        "  return res;\n"
+        "  return ret;\n"
         "}\n"
         "\n"
         "#define " << options["prefix"] << "text const_cast<char*>(YY_SCANNER.YYText())\n"
@@ -2289,7 +2325,9 @@ void Reflex::write_lexer()
     *out << options["class"];
   else
     *out << options["lexer"];
-  if (!options["bison_cc"].empty() || !options["bison_bridge"].empty() || !options["bison_locations"].empty())
+  if (!options["bison_locations"].empty())
+    *out << "::" << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc)\n{\n";
+  else if (!options["bison_cc"].empty() || !options["bison_bridge"].empty())
     *out << "::" << lex << "(" << yystype << "& yylval)\n{\n";
   else
     *out << "::" << lex << "()\n{\n";
@@ -2374,12 +2412,22 @@ void Reflex::write_lexer()
       *out <<
         "      case " << conditions[start] << ":\n"
         "        matcher().pattern(PATTERN_" << conditions[start] << ");\n";
-    *out <<
-      "        switch (matcher().scan())\n"
-      "        {\n"
-      "          case 0:\n"
-      "            if (matcher().at_end())\n"
-      "            {\n";
+    if (!options["bison_locations"].empty())
+      *out <<
+        "        matcher().scan();\n"
+        "        yylloc_update(yylloc);\n"
+        "        switch (matcher().accept())\n"
+        "        {\n"
+        "          case 0:\n"
+        "            if (matcher().at_end())\n"
+        "            {\n";
+    else
+      *out <<
+        "        switch (matcher().scan())\n"
+        "        {\n"
+        "          case 0:\n"
+        "            if (matcher().at_end())\n"
+        "            {\n";
     bool has_eof = false;
     for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
     {

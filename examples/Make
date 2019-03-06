@@ -10,11 +10,14 @@
 # > cd examples
 # > make
 #
-# Bison C++ examples are build with:
+# Bison C++ examples are built with:
 # > make -f Make examplesxx
 #
-# examples3.0 requires Bison 3.0 or greater:
+# flexexample9xx and reflexexample9xx require Bison 3.0 or greater:
 # > make -f Make examples3.0
+#
+# url and wc_boost require Boost:
+# > make -f Make boostexamples
 
 CXX       = c++
 REFLEX    = ../bin/reflex
@@ -38,6 +41,8 @@ examples:	flexexample1 flexexample2 flexexample3 flexexample4 flexexample5 flexe
 examplesxx:	flexexample3xx flexexample4xx flexexample5xx flexexample7xx flexexample8xx reflexexample3xx reflexexample4xx reflexexample5xx reflexexample7xx reflexexample8xx
 
 examples3.0:	flexexample9xx reflexexample9xx
+
+boostexamples:  url wc_boost
 
 flexexample1:	flexexample1.l
 		$(REFLEX) $(REFLAGS) --flex flexexample1.l
@@ -301,6 +306,10 @@ cards:		cards.cpp
 url:		url.cpp
 		$(CXX) $(CXXFLAGS) -I $(INCBOOST) -o $@ url.cpp $(LIBREFLEX) $(LIBBOOST)
 
+wc_boost:	wc.l
+		$(REFLEX) $(REFLAGS) --matcher=boost --flex wc.l
+		$(CXX) $(CXXFLAGS) -I $(INCBOOST) -o $@ lex.yy.cpp $(LIBREFLEX) $(LIBBOOST)
+
 .PHONY:		clean
 
 clean:
@@ -309,4 +318,4 @@ clean:
 		-rm -f lex.yy.h lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx location.hh position.hh stack.hh reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
 		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json braille unicode csv cards url
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json braille unicode csv cards url wc_boost
