@@ -168,10 +168,14 @@ void reflex::Unicode::Tables::block_scripts(void)
   range["IsDuployan"] = IsDuployan;
   static const int IsEarlyDynasticCuneiform[] = { 74880, 75087, 0, 0 };
   range["IsEarlyDynasticCuneiform"] = IsEarlyDynasticCuneiform;
+  static const int IsEgyptianHieroglyphFormatControls[] = { 78896, 78911, 0, 0 };
+  range["IsEgyptianHieroglyphFormatControls"] = IsEgyptianHieroglyphFormatControls;
   static const int IsEgyptianHieroglyphs[] = { 77824, 78895, 0, 0 };
   range["IsEgyptianHieroglyphs"] = IsEgyptianHieroglyphs;
   static const int IsElbasan[] = { 66816, 66863, 0, 0 };
   range["IsElbasan"] = IsElbasan;
+  static const int IsElymaic[] = { 69600, 69631, 0, 0 };
+  range["IsElymaic"] = IsElymaic;
   static const int IsEmoticons[] = { 128512, 128591, 0, 0 };
   range["IsEmoticons"] = IsEmoticons;
   static const int IsEnclosedAlphanumericSupplement[] = { 127232, 127487, 0, 0 };
@@ -398,6 +402,8 @@ void reflex::Unicode::Tables::block_scripts(void)
   range["IsNKo"] = IsNKo;
   static const int IsNabataean[] = { 67712, 67759, 0, 0 };
   range["IsNabataean"] = IsNabataean;
+  static const int IsNandinagari[] = { 72096, 72191, 0, 0 };
+  range["IsNandinagari"] = IsNandinagari;
   static const int IsNewTaiLue[] = { 6528, 6623, 0, 0 };
   range["IsNewTaiLue"] = IsNewTaiLue;
   static const int IsNewa[] = { 70656, 70783, 0, 0 };
@@ -406,6 +412,8 @@ void reflex::Unicode::Tables::block_scripts(void)
   range["IsNumberForms"] = IsNumberForms;
   static const int IsNushu[] = { 110960, 111359, 0, 0 };
   range["IsNushu"] = IsNushu;
+  static const int IsNyiakengPuachueHmong[] = { 123136, 123215, 0, 0 };
+  range["IsNyiakengPuachueHmong"] = IsNyiakengPuachueHmong;
   static const int IsOgham[] = { 5760, 5791, 0, 0 };
   range["IsOgham"] = IsOgham;
   static const int IsOlChiki[] = { 7248, 7295, 0, 0 };
@@ -436,6 +444,8 @@ void reflex::Unicode::Tables::block_scripts(void)
   range["IsOsage"] = IsOsage;
   static const int IsOsmanya[] = { 66688, 66735, 0, 0 };
   range["IsOsmanya"] = IsOsmanya;
+  static const int IsOttomanSiyaqNumbers[] = { 126208, 126287, 0, 0 };
+  range["IsOttomanSiyaqNumbers"] = IsOttomanSiyaqNumbers;
   static const int IsPahawhHmong[] = { 92928, 93071, 0, 0 };
   range["IsPahawhHmong"] = IsPahawhHmong;
   static const int IsPalmyrene[] = { 67680, 67711, 0, 0 };
@@ -482,6 +492,8 @@ void reflex::Unicode::Tables::block_scripts(void)
   range["IsSinhalaArchaicNumbers"] = IsSinhalaArchaicNumbers;
   static const int IsSmallFormVariants[] = { 65104, 65135, 0, 0 };
   range["IsSmallFormVariants"] = IsSmallFormVariants;
+  static const int IsSmallKanaExtension[] = { 110896, 110959, 0, 0 };
+  range["IsSmallKanaExtension"] = IsSmallKanaExtension;
   static const int IsSogdian[] = { 69424, 69487, 0, 0 };
   range["IsSogdian"] = IsSogdian;
   static const int IsSoraSompeng[] = { 69840, 69887, 0, 0 };
@@ -518,6 +530,8 @@ void reflex::Unicode::Tables::block_scripts(void)
   range["IsSuttonSignWriting"] = IsSuttonSignWriting;
   static const int IsSylotiNagri[] = { 43008, 43055, 0, 0 };
   range["IsSylotiNagri"] = IsSylotiNagri;
+  static const int IsSymbolsandPictographsExtended_A[] = { 129648, 129791, 0, 0 };
+  range["IsSymbolsandPictographsExtended-A"] = IsSymbolsandPictographsExtended_A;
   static const int IsSyriac[] = { 1792, 1871, 0, 0 };
   range["IsSyriac"] = IsSyriac;
   static const int IsSyriacSupplement[] = { 2144, 2159, 0, 0 };
@@ -540,6 +554,8 @@ void reflex::Unicode::Tables::block_scripts(void)
   range["IsTakri"] = IsTakri;
   static const int IsTamil[] = { 2944, 3071, 0, 0 };
   range["IsTamil"] = IsTamil;
+  static const int IsTamilSupplement[] = { 73664, 73727, 0, 0 };
+  range["IsTamilSupplement"] = IsTamilSupplement;
   static const int IsTangut[] = { 94208, 100351, 0, 0 };
   range["IsTangut"] = IsTangut;
   static const int IsTangutComponents[] = { 100352, 101119, 0, 0 };
@@ -574,6 +590,8 @@ void reflex::Unicode::Tables::block_scripts(void)
   range["IsVedicExtensions"] = IsVedicExtensions;
   static const int IsVerticalForms[] = { 65040, 65055, 0, 0 };
   range["IsVerticalForms"] = IsVerticalForms;
+  static const int IsWancho[] = { 123584, 123647, 0, 0 };
+  range["IsWancho"] = IsWancho;
   static const int IsWarangCiti[] = { 71840, 71935, 0, 0 };
   range["IsWarangCiti"] = IsWarangCiti;
   static const int IsYiRadicals[] = { 42128, 42191, 0, 0 };
