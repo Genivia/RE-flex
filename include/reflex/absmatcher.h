@@ -453,7 +453,7 @@ class AbstractMatcher {
   size_t lines() const
     /// @returns number of lines.
   {
-    size_t n = 0;
+    size_t n = 1;
     for (const char *s = txt_; s < txt_ + len_; ++s)
       n += (*s == '\n');
     return n;

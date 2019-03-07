@@ -65,7 +65,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "1.1.1"
+#define REFLEX_VERSION "1.1.2"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -179,6 +179,7 @@ class Reflex
   std::string get_namespace(size_t& pos);
   Starts      get_starts(size_t& pos);
   std::string get_code(size_t& pos);
+  std::string escape_bs(const std::string& s);
   void        abort(const char *message, const char *arg = NULL);
   void        error(const char *message, const char *arg = NULL, size_t at_lineno = 0);
   void        warning(const char *message, const char *arg = NULL, size_t at_lineno = 0);

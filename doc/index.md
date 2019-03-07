@@ -623,8 +623,8 @@ You can use this method and other methods to obtain the details of a match:
   `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
-  `lines()`   | returns the number of lines in the text match
-  `columns()` | returns the number of columns of the text match
+  `lines()`   | returns the number of lines in the text match (>=1)
+  `columns()` | returns the number of columns of the text match (>=1)
   `begin()`   | returns `const char*` to non-0-terminated text match begin
   `end()`     | returns `const char*` to non-0-terminated text match end
   `rest()`    | returns `const char*` to 0-terminated rest of input
@@ -1732,12 +1732,13 @@ See \ref reflex-states for more information about states.
 
 ### The rules section                                      {#reflex-spec-rules}
 
-Each rule in the rules section consists of a pattern-action pair.  For example,
-the following defines an action for a pattern:
+Each rule in the rules section consists of a pattern-action pair separated by
+spacing after the pattern (unless free space mode is used).  For example, the
+following defines an action for a pattern:
 
 <div class="alt">
 ~~~{.cpp}
-    {number}    out() << "number " << text() << std::endl;
+    [0-9]+      out() << "number " << text() << std::endl;
 ~~~
 </div>
 
@@ -1746,9 +1747,10 @@ within a <i>`{`</i> and </i>`}`</i> code block.  When local variables are
 declared in an action then the code should always be placed in a code block.
 
 In free space mode you MUST place actions in <i>`{`</i> and <i>`}`</i> blocks
-and other code in <i>`%{`</i> and <i>`%}`</i> instead of indented.
+and other code in <i>`%{`</i> and <i>`%}`</i> instead of indented, see \ref
+reflex-pattern-freespace.
 
-Actions in \ref reflex-spec-rules can use predefined RE/flex variables and
+Actions in the rules section can use predefined RE/flex variables and
 functions.  With <b>`reflex`</b> option `−−flex`, the variables and functions
 are the classic Flex actions shown in the second column of this table:
 
@@ -1761,8 +1763,8 @@ are the classic Flex actions shown in the second column of this table:
   `wchr()`             | *n/a*                | first wide char of text match
   `size()`             | `YYLeng()`, `yyleng` | size of the match in bytes
   `wsize()`            | *n/a*                | number of wide chars matched
-  `lines()`            | *n/a*                | number of lines matched
-  `columns()`          | *n/a*                | number of columns matched
+  `lines()`            | *n/a*                | number of lines matched (>=1)
+  `columns()`          | *n/a*                | number of columns matched (>=1)
   `lineno()`           | `yylineno`           | line number of match (>=1)
   `columno()`          | *n/a*                | column number of match (>=0)
   `echo()`             | `ECHO`               | `out().write(text(), size())`
@@ -1879,6 +1881,32 @@ as one, thus not taking into account the character width of full-width and
 combining Unicode characters.  It is recommended to use the `wcwidth` function
 or [wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to determine
 Unicode character widths.
+
+The `lines()` and `columns()` methods return the number of lines and columns
+matched, where `lines()` and `columns()` return nonzero and `columns()` takes
+tab spacing and wide characters into account.  That is, the starting line of a
+match is `lineno()` and the ending line number is given by
+`lineno() + lines() - 1`.  The starting column of a match is `columno()` and
+the ending column number is given by `columno() + columns() - 1`.
+
+The `matcher().more()` method is used to create longer matches from individual
+matches.  When this method is invoked, the next match has the current matched
+text prepended to it.  The `matcher().more()` operation is often used in lexers
+and was introduced in Lex.
+
+The `matcher().less(n)` method reduces the size of the matched text to `n`
+bytes.  This method has no effect if `n` is larger than `size()`.  The value of
+`n` should not be `0`.  The `matcher().less(n)` operation is often used in
+lexers and was introduced in Lex.
+
+The `matcher().first()` and `matcher().last()` methods return the position in
+the input stream of the match, counting in bytes from the start of the input at
+position 0.  If the input stream is a wide character sequence, the UTF-8
+positions are returned as a result of the internally-converted UTF-8 wide
+character input.
+
+The `matcher().rest()` method terminates the matcher and returns the rest of
+the input character sequence as a string.
 
 Because `matcher()` returns the current matcher object, the following Flex-like
 actions are also supported:
@@ -3835,9 +3863,11 @@ in a Yacc specification:
 With the `−−bison-cc` and `−−bison-locations` options of <b>`reflex`</b>, the
 `yylex()` function takes `yy::parser::semantic_type yylval` as the first
 argument that makes the `yylval` visible in the lexer rules to assign semantic
-values to, and takes a second argument `yy::location yylloc` that is set
-automatically by the <b>`reflex`</b> scanner to the line and column if the
-token matched.
+values to.   The second argument `yy::location yylloc` is set automatically by
+by invoking the lexer's `yylloc_update()` in `yylex()` to update the line and
+column of the match.  The virtual `yylloc_update()` method can be overriden by
+a user-defined lexer class that extends `Lexer` (or extends `yyFlexLexer` when
+option `−−flex` is used).
 
 The scanner is generated with <b>`reflex`</b> options `−−bison-cc`,
 `−−bison-locations`, `−−namespace=yy`, `−−lexer=Lexer` and `−−lex=yylex`.  The
@@ -3958,8 +3988,12 @@ text for error reporting.  For example:
 </div>
 
 The `yylval` value is passed to the lex function.  The `yylloc` structure is
-automatically set by the RE/flex scanner, so you do not need to define a
-`YY_USER_ACTION` macro as you have to with Flex.
+automatically updated by the RE/flex scanner, so you do not need to define a
+`YY_USER_ACTION` macro as you have to with Flex.  Instead, this is done
+automatically in `yylex()` by invoking the lexer's `yylloc_update()` to update
+the line and column of the match.  The virtual `yylloc_update()` method can be
+overriden by a user-defined lexer class that extends `Lexer` (or extends
+`yyFlexLexer` when option `−−flex` is used).
 
 Note that with the `−−bison-location` option, `yylex()` takes an additional
 `YYLTYPE` argument that a Bison parser provides.  You can set `YYLTYPE` as
@@ -4006,10 +4040,10 @@ locations enabled:
     {
       fprintf(stderr, "%s at %d,%d to line %d,%d\n",
         msg,
-        yylloc.first_line,
-        yylloc.first_column,
-        yylloc.last_line,
-        yylloc.last_column);
+        yylloc->first_line,
+        yylloc->first_column,
+        yylloc->last_line,
+        yylloc->last_column);
     }
 ~~~
 </div>
@@ -5311,8 +5345,8 @@ To obtain properties of a match, use the following methods:
   `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`    | returns the length of the text match in bytes
   `wsize()`   | returns the length of the match in number of wide characters
-  `lines()`   | returns the number of lines in the text match
-  `columns()` | returns the number of columns of the text match
+  `lines()`   | returns the number of lines in the text match (>=1)
+  `columns()` | returns the number of columns of the text match (>=1)
   `begin()`   | returns `const char*` to non-0-terminated text match begin
   `end()`     | returns `const char*` to non-0-terminated text match end
   `rest()`    | returns `const char*` to 0-terminated rest of input
@@ -5354,10 +5388,11 @@ account, unless all of the RE/flex source code is compiled with
 `WITH_BYTE_COLUMNO` to count bytes.
 
 The `lines()` and `columns()` methods return the number of lines and columns
-matched, where `columns()` takes tab spacing and wide characters into account.
-That is, the starting line of a match is `lineno()` and the ending line number
-is given by `lineno() + lines()`.  Likewise, the starting column of a match
-is `columno()` and the ending line number is given by `columno() + columns()`.
+matched, where `lines()` and `columns()` return nonzero and `columns()` takes
+tab spacing and wide characters into account.  That is, the starting line of a
+match is `lineno()` and the ending line number is given by
+`lineno() + lines() - 1`.  The starting column of a match is `columno()` and
+the ending column number is given by `columno() + columns() - 1`.
 
 The `rest()` method terminates the matcher and returns the rest of the input
 character sequence as a string.
@@ -5373,9 +5408,9 @@ should not be `0`.  The `less(n)` operation is often used in lexers and was
 introduced in Lex.
 
 The `first()` and `last()` methods return the position in the input stream
-of the match, counting in bytes from the start of the input at byte 0.
+of the match, counting in bytes from the start of the input at position 0.
 If the input stream is a wide character sequence, the UTF-8 positions are
-returned of the UTF-8-converted wide character input.
+returned as a result of the internally-converted UTF-8 wide character input.
 
 All methods take constant time to execute except for `str()`, `wstr()`,
 `pair()`, `wpair()`, `wsize()`, `lines()`, `columns()`, `lineno()`, and

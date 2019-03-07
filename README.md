@@ -425,6 +425,7 @@ Changelog
 - Jan 21, 2019: 1.0.12 the reflex tool now reads files using `reflex::Input`.
 - Feb 20, 2019: 1.1.0 code quality updates.
 - Mar  6, 2019: 1.1.1 fixed `configure` and `make install` header files, updated `--bison-locations` option.
+- Mar  7, 2019: 1.1.2 fixed reflex tool handling of backslashes in file paths.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
