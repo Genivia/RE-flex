@@ -187,7 +187,7 @@ dist_man1_MANS= reflex.l
 # not clear why help2man isn't used here unless it is a WIN or licensing issue
 reflex.l: $(top_srcdir)/doc/man.sh $(top_srcdir)/configure.ac
 	$(MAKE) $(AM_MAKEFLAGS) $(top_builddir)/src/reflex$(EXEEXT)
-	$(top_srcdir)/doc/man.sh reflex reflex.l ${PACKAGE_VERSION}
+	$(top_srcdir)/doc/man.sh $(builddir)/reflex reflex.l ${PACKAGE_VERSION}
 
 
 # Ensure the unicode scripts are distributed with the source
