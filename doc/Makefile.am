@@ -25,40 +25,44 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-ACLOCAL_AMFLAGS = --install -I m4
-
-if EXAMPLES
-  MAYBE_EXAMPLES=examples
-endif
-
-if HAVE_DOXYGEN
-  MAYBE_DOCS=doc
-endif
-
-SUBDIRS = src include $(MAYBE_DOCS) $(MAYBE_EXAMPLES)
-DIST_SUBDIRS = src include doc examples
 
 
-# Make sure the top level files and the files necessary to build the
-# documentation are included in the distribution. Generated man files are
-# included in the documentation but the Doxygen content is not.
+docpkg = $(PACKAGE_TARNAME)-doxy-$(PACKAGE_VERSION).tar.gz
+
+doc_DATA = $(docpkg)
+
+$(docpkg): doxygen.stamp
+	tar chof - html | gzip -9 -c >$@
+
+
+doxygen.stamp: Doxyfile
+	$(DOXYGEN) $(DOXYFLAGS) $<
+	echo Timestamp > $@
+
+uninstall-hook:
+	cd $(DESTDIR)$(docdir) && rm -rf html
+
+clean-local:
+	rm -rf html
+
+
 EXTRA_DIST= \
-  CODE_OF_CONDUCT.md \
-  CONTRIBUTING.md \
-  INSTALL.md \
-  LICENSE.txt \
-  README.md
+  man.sh \
+  Doxyfile.in \
+  README.md \
+  doxygen_content.css \
+  doxygen_tabs.css \
+  header.html \
+  footer.html \
+  index.md \
+  reflex-logo.pdf \
+  reflex-logo.png
+
+CLEANFILES= \
+  reflex.l \
+  doxywarn.txt \
+  doxygen.stamp \
+  $(docpkg)
 
 install-data-hook:
-		@echo " ______________________________________________________ "; \
-		 echo "|                                                      |"; \
-		 echo "| You have successfully built and installed reflex.    |"; \
-		 echo "|                                                      |"; \
-		 echo "| You can use the reflex command to generate scanners. |"; \
-		 echo "| Link your generated scanner with -lreflex.           |"; \
-		 echo "|                                                      |"; \
-		 echo "| Thanks for using reflex.                             |"; \
-		 echo "|                                                      |"; \
-		 echo "|             https://github.com/Genivia/RE-flex       |"; \
-		 echo "|             https://sourceforge.net/projects/re-flex |"; \
-		 echo "|______________________________________________________|";
+	cd $(DESTDIR)$(docdir) && tar xf $(docpkg)

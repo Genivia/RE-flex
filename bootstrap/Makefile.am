@@ -23,8 +23,6 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-AUTOMAKE_OPTIONS = subdir-objects
-
 noinst_LTLIBRARIES = libbootstrap.la
 
 libbootstrap_la_SOURCES= \
@@ -52,6 +50,7 @@ bootstrap_reflex_SOURCES= \
   bootstrap_unicode.cc
 
 bootstrap_reflex_CPPFLAGS= \
-  -Wall -Wextra
+  -Wall -Wextra -pedantic \
+  -I$(top_srcdir)/include
 
 bootstrap_reflex_LDADD=libbootstrap.la

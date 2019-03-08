@@ -938,7 +938,7 @@ std::string Reflex::get_regex(size_t& pos)
     else if (c == '(' && pos + 2 < linelen && line.at(pos + 1) == '?' && line.at(pos + 2) == '#')
     {
       // eat (?#...)
-      pos += 2; 
+      pos += 2;
       while (pos < linelen && line.at(pos) != ')')
         pos += 1 + (line.at(pos) == '\\');
       ++pos;
@@ -984,7 +984,7 @@ std::string Reflex::get_regex(size_t& pos)
     flags |= reflex::convert_flag::unicode;
   try
   {
-    regex = reflex::convert(regex, library->signature, flags, &definitions); 
+    regex = reflex::convert(regex, library->signature, flags, &definitions);
   }
   catch (reflex::regex_error& e)
   {
@@ -2657,7 +2657,7 @@ void Reflex::stats()
       else if (!options["tables_file"].empty())
         option.append(";f=").append(start > 0 ? "+" : "").append(file_ext(options["tables_file"], "cpp"));
       if ((!options["full"].empty() || !options["fast"].empty()) && options["tables_file"].empty() && options["stdout"].empty())
-        option.append(";f=+").append(options["outfile"]);      
+        option.append(";f=+").append(options["outfile"]);
       try
       {
         reflex::Pattern pattern(patterns[start], option);

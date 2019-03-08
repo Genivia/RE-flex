@@ -57,13 +57,13 @@ static const char regex_meta[] = "#$()*+.?[\\]^{|}";
 /// regex chars that when escaped should be un-escaped
 static const char regex_unescapes[] = "!\"#%&',-/:;@`";
 
-/// regex chars that when escaped should be converted to \xXX
+/// regex chars that when escaped should be converted to `\xXX`
 static const char regex_escapes[] = "~";
 
 /// regex anchors and boundaries
 static const char regex_anchors[] = "AZzBby<>";
 
-/// \a (BEL), \b (BS), \t (TAB), \n (LF), \v (VT), \f (FF), \r (CR)
+/// `\a` (BEL), `\b` (BS), `\t` (TAB), `\n` (LF), `\v` (VT), `\f` (FF), `\r` (CR)
 static const char regex_abtnvfr[] = "abtnvfr";
 
 ////////////////////////////////////////////////////////////////////////////////

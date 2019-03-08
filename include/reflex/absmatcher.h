@@ -81,7 +81,7 @@ len_ // length of the match
 chr_ // char located at txt_[len_] when txt_[len_] is set to \0
 got_ // buf_[cur_-1] character before this match (assigned before each match)
 ```
- 
+
 More info TODO
 */
 class AbstractMatcher {
@@ -110,7 +110,7 @@ class AbstractMatcher {
     { }
     bool A; ///< accept any/all (?^X) negative patterns
     bool N; ///< nullable, find may return empty match (N/A to scan, split, matches)
-    char T; ///< tab size, must be a power of 2, default is 8, for indent \i and \j
+    char T; ///< tab size, must be a power of 2, default is 8, for indent `\i` and `\j`
   };
   /// AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences.
   template<typename T> /// @tparam <T> AbstractMatcher or const AbstractMatcher
@@ -299,7 +299,7 @@ class AbstractMatcher {
     size_t n = in.size(); // get the (rest of the) data size, which is 0 if unknown (e.g. TTY)
     if (n > 0)
     {
-      (void)grow(n + 1); // now attempt to fetch all (remaining) data to store in the buffer, +1 for a \0
+      (void)grow(n + 1); // now attempt to fetch all (remaining) data to store in the buffer, +1 for a `\0`
       end_ = get(buf_, n);
     }
     while (in.good()) // there is more to get while good(), e.g. via wrap()
@@ -308,7 +308,7 @@ class AbstractMatcher {
       end_ += get(buf_ + end_, max_ - end_);
     }
     if (end_ == max_)
-      (void)grow(1); // room for a final \0
+      (void)grow(1); // room for a final `\0`
     return in.eof();
   }
   /// Set buffer to 1 for interactive input.
@@ -1007,7 +1007,7 @@ class AbstractMatcher {
     }
   }
 #endif
-  /// Update the newline count, column count, and character count when shifting the buffer. 
+  /// Update the newline count, column count, and character count when shifting the buffer.
   void update()
   {
 #if defined(WITH_BYTE_COLUMNO)

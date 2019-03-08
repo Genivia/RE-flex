@@ -56,7 +56,7 @@ namespace reflex {
 std::string latin1(
     int  a,               ///< lower bound of UCS range
     int  b,               ///< upper bound of UCS range
-    int  esc = 'x',       ///< escape char 'x' for hex \xXX, or '0' or '\0' for octal \0nnn and \nnn
+    int  esc = 'x',       ///< escape char 'x' for hex `\xXX`, or '0' or '\0' for octal `\0nnn` and `\nnn`
     bool brackets = true) ///< place in [ brackets ]
   /// @returns regex string to match the UCS range encoded in UTF-8.
   ;
@@ -65,7 +65,7 @@ std::string latin1(
 std::string utf8(
     int  a,                ///< lower bound of UCS range
     int  b,                ///< upper bound of UCS range
-    int  esc = 'x',        ///< escape char 'x' for hex \xXX, or '0' or '\0' for octal \0nnn and \nnn
+    int  esc = 'x',        ///< escape char 'x' for hex `\xXX`, or `0` or `\0` for octal `\0nnn` and `\nnn`
     const char *par = "(", ///< capturing or non-capturing parenthesis "(?:"
     bool strict = true)    ///< returned regex is strict UTF-8 (true) or permissive and lean UTF-8 (false)
   /// @returns regex string to match the UCS range encoded in UTF-8.

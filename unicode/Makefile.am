@@ -28,20 +28,41 @@ LEX_OUTPUT_ROOT=lex.yy
 
 AM_LFLAGS= --outfile=lex.yy.c
 
+
+
+
+
+
+
+
+
+
+
+
+
 noinst_PROGRAMS= \
   gen_block_scripts \
   gen_language_scripts \
   gen_letter_scripts
 
 gen_block_scripts_SOURCES=gen_block_scripts.ll
+gen_block_scripts_la_CPPFLAGS= \
+  -Wall -Wextra -pedantic \
+  -I$(top_srcdir)/include
 gen_block_scripts_LDADD=\
   $(top_builddir)/bootstrap/libbootstrap.la
 
 gen_language_scripts_SOURCES=gen_language_scripts.ll
+gen_block_scripts_la_CPPFLAGS= \
+  -Wall -Wextra -pedantic \
+  -I$(top_srcdir)/include
 gen_language_scripts_LDADD=\
   $(top_builddir)/bootstrap/libbootstrap.la
 
 gen_letter_scripts_SOURCES=gen_letter_scripts.ll
+gen_block_scripts_la_CPPFLAGS= \
+  -Wall -Wextra -pedantic \
+  -I$(top_srcdir)/include
 gen_letter_scripts_LDADD=\
   $(top_builddir)/bootstrap/libbootstrap.la
 

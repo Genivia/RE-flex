@@ -27,8 +27,8 @@
 \******************************************************************************/
 
 /**
-@file      language_scripts.l
-@brief     RE/Flex specification to convert Unicode Scripts.txt to a C++ map
+@file      gen_letter_scripts.ll
+@brief     RE/Flex specification to convert Unicode UnicodeData.txt to a C++ map
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2016, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
@@ -43,28 +43,22 @@
 typedef reflex::ORanges<int>        Chars;   // open-ended ranges of characters
 typedef std::map<std::string,Chars> Scripts; // maps Unicode category/script to open-ended ranges
 
-int lo, hi;
+int x;
 Scripts p;
 
 %}
 
 %o matcher=reflex
 %o nodefault
-%x SCRIPT
 
 hex			[[:xdigit:]]+
 
 %%
 
-^#.*\n			// skip comments
-^\h*\n			// skip empty lines
-^{hex}			sscanf(text(), "%x", &lo); hi = lo; start(SCRIPT);
-^{hex}".."{hex}		sscanf(text(), "%x..%x", &lo, &hi); start(SCRIPT);
-
-<SCRIPT>[^;#\n]+	// skip any except ;, #, and \n
-<SCRIPT>"; "\w+		p[text()+2].insert(lo, hi);
-<SCRIPT>"# "..		p[text()+2].insert(lo, hi);
-<SCRIPT>\n		start(INITIAL);
+^{hex};[^;\n]+;Ll;.+\n	sscanf(text(), "%x", &x); p["Ll"].insert(x);
+^{hex};[^;\n]+;Lu;.+\n	sscanf(text(), "%x", &x); p["Lu"].insert(x);
+^{hex};[^;\n]+;Lt;.+\n	sscanf(text(), "%x", &x); p["Lt"].insert(x);
+.*\n			// skip remainder
 
 %%
 
@@ -72,54 +66,20 @@ int main()
 {
   Lexer().lex();
 
-  (     p["C"] = p["Cc"]) |= p["Cf"]; // |= p["Cn"]; omitted: do not include unassigned Cn
-  ((    p["L"] = p["L&"]) |= p["Lm"]) |= p["Lo"];
-  ((    p["M"] = p["Mn"]) |= p["Mc"]) |= p["Me"];
-  ((    p["N"] = p["Nd"]) |= p["Nl"]) |= p["No"];
-  ((((((p["P"] = p["Pd"]) |= p["Ps"]) |= p["Pe"]) |= p["Pi"]) |= p["Pf"]) |= p["Pc"]) |= p["Po"];
-  (((   p["S"] = p["Sm"]) |= p["Sc"]) |= p["Sk"]) |= p["So"];
-  ((    p["Z"] = p["Zs"]) |= p["Zl"]) |= p["Zp"];
-
-  // Add ASCII and Unicode character range U+00 to U+10FFFF minus the UTF-16 surrogate halves
-   p["ASCII"]             = Chars(0x00, 0x7F);
-  (p["Unicode"]           = Chars(0x00, 0x10FFFF)) -= Chars(0xD800, 0xDFFF);
-  (p["Non_ASCII_Unicode"] = p["Unicode"])          -= p["ASCII"];
-
-  // Add Unicode Space, includes blank characters HT (9), LF (10), VT (11), FF (12), CR (13)
-  (p["Space"] = p["Zs"]) |= Chars(0x09, 0x0D);
-
-  // Add Unicode Word
-  ((p["Word"]  = p["L"]) |= p["Nd"]) |= p["Pc"];
-
-  // Add Unicode identifier properties
-  (((    p["IdentifierIgnorable"]    = Chars(0x00, 0x08)) |= Chars(0x0E, 0x1B)) |= Chars(0x7F)) |= Chars(0x80, 0x9F);
-  (      p["UnicodeIdentifierStart"] = p["L"]) |= p["Nl"];
-  (((((((p["UnicodeIdentifierPart"]  = p["L"]) |= p["Nl"]) |= p["Pc"]) |= p["Mn"]) |= p["Mc"]) |= p["Nd"]) |= p["Cf"]) |= p["IdentifierIgnorable"];
-
-  // Add Java identifier properties
-  (((     p["JavaIdentifierStart"] = p["L"]) |= p["Nl"]) |= p["Sc"]) |= p["Pc"];
-  ((((((((p["JavaIdentifierPart"]  = p["L"]) |= p["Nl"]) |= p["Sc"]) |= p["Pc"]) |= p["Mn"]) |= p["Mc"]) |= p["Nd"]) |= p["Cf"]) |= p["IdentifierIgnorable"];
-
-  // Add C# identifier properties
-  (((   p["CsIdentifierStart"] = p["L"]) |= p["Nl"]) |= p["Pc"]) |= Chars('@');
-  ((((((p["CsIdentifierPart"]  = p["L"]) |= p["Nl"]) |= p["Pc"]) |= p["Mn"]) |= p["Mc"]) |= p["Nd"]) |= p["Cf"];
-
-  // Add Python 3.x identifier properties, includes Other_ID_Start and Other_ID_Continue
-  (((((    p["PythonIdentifierStart"] = p["L"]) |= p["Nl"]) |= Chars(0x1885, 0x1886)) |= Chars(0x2118)) |= Chars(0x212E)) |= Chars(0x309B, 0x309C);
-  (((((((((p["PythonIdentifierPart"]  = p["L"]) |= p["Nl"]) |= p["Pc"]) |= p["Mn"]) |= p["Mc"]) |= p["Nd"]) |= Chars(0xB7)) |= Chars(0x0387)) |= Chars(0x1369, 0x1371)) |= Chars(0x19DA);
-
   std::cout <<
-    "// Converted from http://www.unicode.org/Public/UCD/latest/ucd/Scripts.txt by language_scripts.l\n"
+    "// Converted from http://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt by letter_scripts.l\n"
     "#include <reflex/unicode.h>\n"
-    "void reflex::Unicode::Tables::language_scripts(void)\n{\n";
+    "void reflex::Unicode::Tables::letter_scripts(void)\n{\n";
 
   // Write range[] code
   for (Scripts::const_iterator i = p.begin(); i != p.end(); ++i)
   {
-    const std::string& name = i->first.compare("L&") == 0 ? "L_" : i->first;
+    const std::string& name = i->first;
     std::cout << "  static const int " << name << "[] = {\n";
     for (Chars::const_iterator j = i->second.begin(); j != i->second.end(); ++j)
+    {
       std::cout << "    " << j->first << ", " << j->second-1 << ",\n";
+    }
     std::cout << "    0, 0\n  };" << std::endl;
     std::cout << "  range[\"" << i->first << "\"] = " << name << ";\n";
   }

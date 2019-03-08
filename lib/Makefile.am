@@ -38,10 +38,10 @@ libreflex_la_SOURCES= \
 
 
 libreflex_la_CPPFLAGS= \
-  -Wall -Wextra \
+  -Wall -Wextra -pedantic \
   -I$(top_srcdir)/include
 
-libreflex_la_LDFLAGS= -version-info 1:1:0
+libreflex_la_LDFLAGS= -version-info $(PACKAGE_VERSION)
 
 libreflex_la_LIBADD= \
   $(top_builddir)/unicode/libunicode.la

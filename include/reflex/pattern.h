@@ -272,7 +272,7 @@ class Pattern {
   /// Global modifier modes, syntax flags, and compiler options.
   struct Option {
     bool                     b; ///< disable escapes in bracket lists
-    Char                     e; ///< escape character, or '\0' for none, '\\' default
+    Char                     e; ///< escape character, or `\0` for none, `\\` default
     std::vector<std::string> f; ///< output to files
     bool                     i; ///< case insensitive mode, also `(?i:X)`
     bool                     l; ///< lex mode
@@ -291,9 +291,9 @@ class Pattern {
     META_MIN = 0x100,
     META_NWB = 0x101, ///< non-word boundary at begin `\Bx`
     META_NWE = 0x102, ///< non-word boundary at end   `x\B`
-    META_BWB = 0x103, ///< begin of word at begin     `\<x` where \bx=(\<|\>)x
+    META_BWB = 0x103, ///< begin of word at begin     `\<x` where `\bx=(\<|\>)x`
     META_EWB = 0x104, ///< end of word at begin       `\>x`
-    META_BWE = 0x105, ///< begin of word at end       `x\<` where x\b=x(\<|\>)
+    META_BWE = 0x105, ///< begin of word at end       `x\<` where `x\b=x(\<|\>)`
     META_EWE = 0x106, ///< end of word at end         `x\>`
     META_BOL = 0x107, ///< begin of line              `^`
     META_EOL = 0x108, ///< end of line                `$`
@@ -531,7 +531,7 @@ class Pattern {
   }
   Option                opt_; ///< pattern compiler options
   std::string           rex_; ///< regular expression string
-  std::vector<Location> end_; ///< entries point to the subpattern's ending '|' or '\0'
+  std::vector<Location> end_; ///< entries point to the subpattern's ending '|' or `\0`
   std::vector<bool>     acc_; ///< true if subpattern n is acceptable (state is reachable)
   size_t                vno_; ///< number of finite state machine vertices |V|
   size_t                eno_; ///< number of finite state machine edges |E|

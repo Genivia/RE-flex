@@ -62,35 +62,40 @@ AC_ARG_WITH([examples],
   no) ;;
   *) AC_MSG_ERROR([bad value ${withval} for --with-examples]) ;;
 esac],[with_examples=no])
-AM_CONDITIONAL([EXAMPLES], [test "x$with_examples" == xyes])
+AM_CONDITIONAL([EXAMPLES], [test x"$with_examples" = x"yes"])
+
+
+AC_CHECK_PROG([HAVE_DOT],[dot],[YES],[NO])
+
+
+
 
 AC_PATH_PROG(DOXYGEN, doxygen)
 if test -z "$DOXYGEN"; then
-   AC_MSG_WARN([Doxygen not found])
+   AC_MSG_WARN([Doxygen-generated documentation will not be built])
 fi
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
+AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([doc/Doxyfile])])
 
-DX_HTML_FEATURE(ON)
-DX_CHM_FEATURE(OFF)
-DX_CHI_FEATURE(OFF)
-DX_MAN_FEATURE(OFF)
-DX_RTF_FEATURE(OFF)
-DX_XML_FEATURE(OFF)
-DX_PDF_FEATURE(OFF)
-DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(reflex, $(top_srcdir)/doc/Doxyfile, doc/reflex-doc)
+
+# DX_HTML_FEATURE(ON)
+# DX_CHM_FEATURE(OFF)
+# DX_CHI_FEATURE(OFF)
+# DX_MAN_FEATURE(OFF)
+# DX_RTF_FEATURE(OFF)
+# DX_XML_FEATURE(OFF)
+# DX_PDF_FEATURE(OFF)
+# DX_PS_FEATURE(OFF)
+# DX_INIT_DOXYGEN(reflex, $(top_srcdir)/doc/Doxyfile, doc/reflex-doc)
 
 
 AC_CONFIG_FILES( \
   Makefile \
-  bootstrap/Makefile \
-  unicode/Makefile \
-  lib/Makefile \
-  src/Makefile \
   include/Makefile \
+  src/Makefile \
+  doc/Makefile \
   examples/Makefile)
 
-AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([doc/Doxyfile])])
 
 AC_OUTPUT
 
