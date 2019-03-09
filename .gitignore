@@ -38,3 +38,9 @@ stamp-h1
 .deps
 .libs
 *.trs
+
+
+# Project-related things
+doc/html
+src/reflex.l
+reflex-*.tar.gz
