@@ -10,9 +10,9 @@
 #define RUNS 1
 #endif
 
-#include "test_lorem_tokenizer.cpp"  // reflex_code_tokenizer
-#include "test_lorem_filter.cpp"     // reflex_code_filter
-#include "test_lorem_splitter.cpp"   // reflex_code_splitter
+#include "test_lorem_tokenizer.h"  // reflex_code_tokenizer
+#include "test_lorem_filter.h"     // reflex_code_filter
+#include "test_lorem_splitter.h"   // reflex_code_splitter
 
 using namespace reflex;
 

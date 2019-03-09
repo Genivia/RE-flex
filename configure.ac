@@ -24,7 +24,7 @@
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 AC_PREREQ([2.69])
-AC_INIT([reflex],[1.1.0],[github.com/tegtmeye/re-flex])
+AC_INIT([reflex],[1.1.2],[github.com/tegtmeye/re-flex])
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_AUX_DIR(config)
@@ -39,6 +39,11 @@ AC_PROG_INSTALL
 
 # Check for C++11 support
 AX_CXX_COMPILE_STDCXX([11],[noext],[mandatory])
+
+# Check for boost
+AX_BOOST_BASE
+AX_BOOST_REGEX
+
 
 AC_PROG_YACC
 AC_SUBST([LEX])
@@ -91,6 +96,7 @@ AC_CONFIG_FILES( \
   Makefile \
   include/Makefile \
   src/Makefile \
+  tests/Makefile \
   doc/Makefile \
   examples/Makefile)
 

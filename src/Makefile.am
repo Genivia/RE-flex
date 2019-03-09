@@ -143,7 +143,7 @@ libreflex_la_CPPFLAGS= \
   -Wall -Wextra -pedantic \
   -I$(top_srcdir)/include
 
-libreflex_la_LDFLAGS= -version-info 1:1:0
+libreflex_la_LDFLAGS= -version-info 2:0:0
 
 libreflex_la_LIBADD= \
   libbasereflex.la

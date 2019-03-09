@@ -35,8 +35,8 @@ if HAVE_DOXYGEN
   MAYBE_DOCS=doc
 endif
 
-SUBDIRS = src include $(MAYBE_DOCS) $(MAYBE_EXAMPLES)
-DIST_SUBDIRS = src include doc examples
+SUBDIRS = src include tests $(MAYBE_DOCS) $(MAYBE_EXAMPLES)
+DIST_SUBDIRS = src include tests doc examples
 
 
 # Make sure the top level files and the files necessary to build the
