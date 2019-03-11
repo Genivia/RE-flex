@@ -1,0 +1,41 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.dylib
+
+# Compiled Dynamic libraries
+*.so
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Mac Stuff
+.DS_Store
+._*
+
+# Autotool Generated Stuff
+Makefile
+Makefile.in
+aclocal
+config.h*
+config.cache
+config.log
+config.status
+configure.scan
+aclocal.m4
+config/*[^m4]
+configure
+lt*\.m4
+libtool.m4
+autom4te.cache
+libtool
+stamp-h1
+.deps
+.libs
+*.trs
+
+# Project-related things
+doc/html

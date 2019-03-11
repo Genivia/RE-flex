@@ -1,27 +1,42 @@
-# Some of these examples require Bison or Yacc
+# Some of these examples require Bison
+#
+# Change INCBOOST and LIBBOOST below to point to your Boost install paths
 #
 # To quickly build the examples:
 # > make -f Make
 #
 # Or use configure and make to build:
-# > ./configure && make
-# > cd examples
-# > make
+# > ./configure --enable-examples && make
 #
-# Bison C++ examples are build with:
+# Bison C++ examples are built with:
 # > make -f Make examplesxx
 #
-# To build examples3.0 requires Bison 3.0 or greater:
+# flexexample9xx and reflexexample9xx require Bison 3.0 or greater:
 # > make -f Make examples3.0
+#
+# url and wc_boost require Boost:
+# > make -f Make boostexamples
 
 REFLEX    = $(top_builddir)/src/reflex
 REFLAGS   =
 LIBREFLEX = $(top_builddir)/lib/libreflex.a
 CPPFLAGS  = -I. -I$(top_srcdir)/include
 
-all-local:	examples
+YACC	  = @YACC@
+BISON	  = bison
 
-.PHONY:		examples
+INCBOOST  = /opt/local/include
+LIBBOOST  = /opt/local/lib/libboost_regex-mt.dylib
+
+CXXOFLAGS = -O2
+CXXWFLAGS = -Wall -Wunused -Wextra -Wno-unused-label
+CXXIFLAGS = -I. -I../include -I $(INCBOOST)
+CXXMFLAGS =
+CXXFLAGS  = $(CXXWFLAGS) $(CXXOFLAGS) $(CXXIFLAGS) $(CXXMFLAGS)
+
+all-local:	examples examplesxx
+
+.PHONY:		examples examplesxx examples3.0 boostexamples
 
 examples:	flexexample1 \
 		flexexample2 \
@@ -57,202 +72,299 @@ examples:	flexexample1 \
 		cows \
 		indent \
 		json \
-		csv \
 		braille \
 		unicode \
+		csv \
 		cards
 
+examplesxx:	flexexample3xx \
+		flexexample4xx \
+		flexexample5xx \
+		flexexample7xx \
+		flexexample8xx \
+		reflexexample3xx \
+		reflexexample4xx \
+		reflexexample5xx \
+		reflexexample7xx \
+		reflexexample8xx
+
+examples3.0:	flexexample9xx \
+		reflexexample9xx
+
+boostexamples:  url wc_boost
+
 flexexample1:	flexexample1.l
-		$(REFLEX) $(REFLAGS) --flex $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex flexexample1.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 		./flexexample1 < flexexample1.l
 
 flexexample2:	flexexample2.l
-		$(REFLEX) $(REFLAGS) --flex $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex flexexample2.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 		./flexexample2 < flexexample2.l
 
 flexexample3:	flexexample3.l flexexample3.y
 		$(YACC) -d flexexample3.y
-		$(REFLEX) $(REFLAGS) --flex --bison $<
-		$(CC) $(CPPFLAGS) $(CXXFLAGS) -c y.tab.c
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex --bison flexexample3.l
+		$(CC) $(CXXFLAGS) -c y.tab.c
+		$(CXX) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
 		./flexexample3 < flexexample3.test
+
+flexexample3xx:	flexexample3.lxx flexexample3.yxx
+		$(BISON) -d flexexample3.yxx
+		$(REFLEX) $(REFLAGS) --flex --bison flexexample3.lxx
+		$(CXX) $(CXXFLAGS) -o $@ flexexample3.tab.cxx lex.yy.cpp $(LIBREFLEX)
+		./flexexample3xx < flexexample3.test
 
 flexexample4:	flexexample4.l flexexample4.y
 		$(YACC) -d flexexample4.y
-		$(REFLEX) $(REFLAGS) --flex --bison-bridge --header-file $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -DWITH_NO_C -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex --bison-bridge --header-file flexexample4.l
+		$(CXX) $(CXXFLAGS) -DWITH_NO_C -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
 		./flexexample4 < flexexample4.test
+
+flexexample4xx:	flexexample4.lxx flexexample4.yxx
+		$(BISON) -d flexexample4.yxx
+		$(REFLEX) $(REFLAGS) --flex --bison-bridge --header-file flexexample4.lxx
+		$(CXX) $(CXXFLAGS) -DWITH_NO_C -o $@ flexexample4.tab.cxx lex.yy.cpp $(LIBREFLEX)
+		./flexexample4xx < flexexample4.test
 
 flexexample5:	flexexample5.l flexexample5.y
 		$(YACC) -d flexexample5.y
-		$(REFLEX) $(REFLAGS) --flex --bison-bridge --header-file $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex --bison-bridge --header-file flexexample5.l
+		$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
 		./flexexample5 < flexexample5.test
 
+flexexample5xx:	flexexample5.lxx flexexample5.yxx
+		$(BISON) -d flexexample5.yxx
+		$(REFLEX) $(REFLAGS) --flex --bison-bridge --header-file flexexample5.lxx
+		$(CXX) $(CXXFLAGS) -o $@ flexexample5.tab.cxx lex.yy.cpp $(LIBREFLEX)
+		./flexexample5xx < flexexample5.test
+
 flexexample6:	flexexample6.l
-		$(REFLEX) $(REFLAGS) --flex $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex flexexample6.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 		./flexexample6 < flexexample6.l
 
 flexexample7:	flexexample7.l flexexample7.y
 		$(YACC) -d flexexample7.y
-		$(REFLEX) $(REFLAGS) --flex --bison-locations $<
-		$(CC) $(CPPFLAGS) $(CXXFLAGS) -c y.tab.c
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex --bison-locations flexexample7.l
+		$(CC) $(CXXFLAGS) -c y.tab.c
+		$(CXX) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
 		./flexexample7 < flexexample7.test
+
+flexexample7xx:	flexexample7.lxx flexexample7.yxx
+		$(BISON) -d flexexample7.yxx
+		$(REFLEX) $(REFLAGS) --flex --bison-locations flexexample7.lxx
+		$(CXX) $(CXXFLAGS) -o $@ flexexample7.tab.cxx lex.yy.cpp $(LIBREFLEX)
+		./flexexample7xx < flexexample7.test
 
 flexexample8:	flexexample8.l flexexample8.y
 		$(YACC) -d flexexample8.y
-		$(REFLEX) $(REFLAGS) --flex --bison-locations --bison-bridge --header-file $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex --bison-locations --bison-bridge --header-file flexexample8.l
+		$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
 		./flexexample8 < flexexample8.test
 
-reflexexample3:	reflexexample3.l reflexexample3.y
-		$(YACC) -d reflexexample3.y
-		$(REFLEX) $(REFLAGS) --bison --header-file $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
-		./reflexexample3 < flexexample3.test
+flexexample8xx:	flexexample8.lxx flexexample8.yxx
+		$(BISON) -d flexexample8.yxx
+		$(REFLEX) $(REFLAGS) --flex --bison-locations --bison-bridge --header-file flexexample8.lxx
+		$(CXX) $(CXXFLAGS) -o $@ flexexample8.tab.cxx lex.yy.cpp $(LIBREFLEX)
+		./flexexample8xx < flexexample8.test
 
-reflexexample4:	reflexexample4.l flexexample4.y
-		$(YACC) -d flexexample4.y
-		$(REFLEX) $(REFLAGS) --bison-bridge --header-file $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -DWITH_NO_C -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
-		./reflexexample4 < flexexample4.test
+flexexample9xx:	flexexample9.lxx flexexample9.yxx
+		$(BISON) -d flexexample9.yxx
+		$(REFLEX) $(REFLAGS) --flex --bison-cc --bison-locations --header-file flexexample9.lxx
+		$(CXX) $(CXXFLAGS) -o $@ flexexample9.tab.cxx lex.yy.cpp $(LIBREFLEX)
+		./flexexample9xx < flexexample9.test
 
-reflexexample5:	reflexexample5.l flexexample5.y
-		$(YACC) -d flexexample5.y
-		$(REFLEX) $(REFLAGS) --bison-bridge --header-file $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
-		./reflexexample5 < flexexample5.test
+flexexample10:	flexexample10.l
+		$(REFLEX) $(REFLAGS) --flex --main --noyywrap flexexample10.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		./flexexample10 < flexexample10.test
 
-reflexexample6:	reflexexample6.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
-		./reflexexample6 < reflexexample6.l
+reflexexample3:		reflexexample3.l reflexexample3.y
+			$(YACC) -d reflexexample3.y
+			$(REFLEX) $(REFLAGS) --bison --header-file reflexexample3.l
+			$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+			./reflexexample3 < flexexample3.test
 
-reflexexample7:	reflexexample7.l flexexample7.y
-		$(YACC) -d flexexample7.y
-		$(REFLEX) $(REFLAGS) --bison-locations $<
-		$(CC) $(CPPFLAGS) $(CXXFLAGS) -c y.tab.c
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
-		./reflexexample7 < flexexample7.test
+reflexexample3xx:	reflexexample3.lxx reflexexample3.yxx
+			$(BISON) -d reflexexample3.yxx
+			$(REFLEX) $(REFLAGS) --bison --header-file reflexexample3.lxx
+			$(CXX) $(CXXFLAGS) -o $@ reflexexample3.tab.cxx lex.yy.cpp $(LIBREFLEX)
+			./reflexexample3xx < flexexample3.test
 
-reflexexample8:	reflexexample8.l flexexample8.y
-		$(YACC) -d flexexample8.y
-		$(REFLEX) $(REFLAGS) --bison-locations --bison-bridge --header-file $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
-		./reflexexample8 < flexexample8.test
+reflexexample4:		reflexexample4.l flexexample4.y
+			$(YACC) -d flexexample4.y
+			$(REFLEX) $(REFLAGS) --bison-bridge --header-file reflexexample4.l
+			$(CXX) $(CXXFLAGS) -DWITH_NO_C -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+			./reflexexample4 < flexexample4.test
 
-reflexexample10:reflexexample10.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
-		./reflexexample10 < flexexample10.test
+reflexexample4xx:	reflexexample4.lxx flexexample4.yxx
+			$(BISON) -d flexexample4.yxx
+			$(REFLEX) $(REFLAGS) --bison-bridge --header-file reflexexample4.lxx
+			$(CXX) $(CXXFLAGS) -DWITH_NO_C -o $@ flexexample4.tab.cxx lex.yy.cpp $(LIBREFLEX)
+			./reflexexample4xx < flexexample4.test
+
+reflexexample5:		reflexexample5.l flexexample5.y
+			$(YACC) -d flexexample5.y
+			$(REFLEX) $(REFLAGS) --bison-bridge --header-file reflexexample5.l
+			$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+			./reflexexample5 < flexexample5.test
+
+reflexexample5xx:	reflexexample5.lxx flexexample5.yxx
+			$(BISON) -d flexexample5.yxx
+			$(REFLEX) $(REFLAGS) --bison-bridge --header-file reflexexample5.lxx
+			$(CXX) $(CXXFLAGS) -o $@ flexexample5.tab.cxx lex.yy.cpp $(LIBREFLEX)
+			./reflexexample5xx < flexexample5.test
+
+reflexexample6:		reflexexample6.l
+			$(REFLEX) $(REFLAGS) reflexexample6.l
+			$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+			./reflexexample6 < reflexexample6.l
+
+reflexexample7:		reflexexample7.l flexexample7.y
+			$(YACC) -d flexexample7.y
+			$(REFLEX) $(REFLAGS) --bison-locations reflexexample7.l
+			$(CC) $(CXXFLAGS) -c y.tab.c
+			$(CXX) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
+			./reflexexample7 < flexexample7.test
+
+reflexexample7xx:	reflexexample7.lxx flexexample7.yxx
+			$(BISON) -d flexexample7.yxx
+			$(REFLEX) $(REFLAGS) --bison-locations reflexexample7.lxx
+			$(CXX) $(CXXFLAGS) -o $@ flexexample7.tab.cxx lex.yy.cpp $(LIBREFLEX)
+			./reflexexample7xx < flexexample7.test
+
+reflexexample8:		reflexexample8.l flexexample8.y
+			$(YACC) -d flexexample8.y
+			$(REFLEX) $(REFLAGS) --flex --bison-locations --bison-bridge --header-file reflexexample8.l
+			$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+			./reflexexample8 < flexexample8.test
+
+reflexexample8xx:	reflexexample8.lxx flexexample8.yxx
+			$(BISON) -d flexexample8.yxx
+			$(REFLEX) $(REFLAGS) --flex --bison-locations --bison-bridge --header-file reflexexample8.lxx
+			$(CXX) $(CXXFLAGS) -o $@ flexexample8.tab.cxx lex.yy.cpp $(LIBREFLEX)
+			./reflexexample8xx < flexexample8.test
+
+reflexexample9xx:	reflexexample9.lxx flexexample9.yxx
+			$(BISON) -d flexexample9.yxx
+			$(REFLEX) $(REFLAGS) --bison-cc --bison-locations --header-file reflexexample9.lxx
+			$(CXX) $(CXXFLAGS) -o $@ flexexample9.tab.cxx lex.yy.cpp $(LIBREFLEX)
+			./reflexexample9xx < flexexample9.test
+
+reflexexample10:	reflexexample10.l
+			$(REFLEX) $(REFLAGS) --main reflexexample10.l
+			$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+			./reflexexample10 < flexexample10.test
 
 ctokens:	ctokens.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) ctokens.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 jtokens:	jtokens.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) jtokens.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 ptokens:	ptokens.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) ptokens.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 echo:		echo.l
-		$(REFLEX) $(REFLAGS) --flex $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex echo.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 readline:	readline.l
-		$(REFLEX) $(REFLAGS) --flex $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX) -lreadline
+		$(REFLEX) $(REFLAGS) --flex readline.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX) -lreadline
 
 calc:		calc.l calc.y
-		$(REFLEX) $(REFLAGS) $<
+		$(REFLEX) $(REFLAGS) calc.l
 		$(YACC) -d calc.y
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+		$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
 
 wc:		wc.l
-		$(REFLEX) $(REFLAGS) --flex $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex wc.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 wcu:		wcu.l
-		$(REFLEX) $(REFLAGS) --flex $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex wcu.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 wcpp:		wcpp.l
-		$(REFLEX) $(REFLAGS) --flex $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex wcpp.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 wcwc:		wcwc.l
-		$(REFLEX) $(REFLAGS) --flex $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) --flex wcwc.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 tag:		tag.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) tag.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 tag_lazy:	tag_lazy.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) tag_lazy.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 tag_lazystates:	tag_lazystates.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) tag_lazystates.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 tag_unicode:	tag_unicode.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) tag_unicode.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 tag_tidy:	tag_tidy.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) tag_tidy.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 cow:		cow.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) cow.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 		./cow < cow.l
 
 cows:		cows.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) cows.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 		./cows < cows.l
 
 indent:		indent.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) indent.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 json:		json.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
-
-csv:		csv.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) json.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 braille:	braille.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) braille.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 unicode:	unicode.l
-		$(REFLEX) $(REFLAGS) $<
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		$(REFLEX) $(REFLAGS) unicode.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+
+csv:		csv.l
+		$(REFLEX) $(REFLAGS) csv.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
 cards:		cards.cpp
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ cards.cpp $(LIBREFLEX)
+		$(CXX) $(CXXFLAGS) -o $@ cards.cpp $(LIBREFLEX)
 
 url:		url.cpp
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(BOOSTINC) -o $@ url.cpp $(LIBREFLEX) $(BOOSTLIB)
+		$(CXX) $(CXXFLAGS) -I $(INCBOOST) -o $@ url.cpp $(LIBREFLEX) $(LIBBOOST)
+
+wc_boost:	wc.l
+		$(REFLEX) $(REFLAGS) --matcher=boost --flex wc.l
+		$(CXX) $(CXXFLAGS) -I $(INCBOOST) -o $@ lex.yy.cpp $(LIBREFLEX) $(LIBBOOST)
 
 .PHONY:		clean
 
-clean-local:
+clean:
 		-rm -rf *.dSYM
 		-rm -f *.o *.gch *.log
-		-rm -f lex.yy.h lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx reflex.*.cpp reflex.*.gv reflex.*.txt
+		-rm -f lex.yy.h lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx location.hh position.hh stack.hh reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
 		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json csv braille unicode cards url
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json braille unicode csv cards url wc_boost

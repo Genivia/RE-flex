@@ -21,7 +21,7 @@ CXXIFLAGS = -I. -I../include -I $(INCBOOST)
 CXXMFLAGS =
 CXXFLAGS  = $(CXXWFLAGS) $(CXXOFLAGS) $(CXXIFLAGS) $(CXXMFLAGS)
 
-all:		test_ranges lorem test rtest btest stest
+all:		test_ranges lorem test rtest btest
 
 lorem:		lorem.cpp
 		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX) $(LIBBOOST)

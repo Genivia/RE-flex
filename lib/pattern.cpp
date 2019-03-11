@@ -2219,7 +2219,7 @@ void Pattern::export_dfa(const State& start) const
         err = reflex::fopen_s(&fd, filename.c_str(), "w");
       if (!err && fd)
       {
-        ::fprintf(fd, "digraph %s {\n\t\trankdir=LR;\n\t\tconcentrate=true;\n\t\tnode [fontname=\"ArialNarrow\"];\n\t\tedge [fontname=\"Courier\"];\n\n\t\tinit [root=true,peripheries=0,label=\"%s\",fontname=\"Courier\"];\n\t\tinit -> N%p;\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), opt_.n.c_str(), &start);
+        ::fprintf(fd, "digraph %s {\n\t\trankdir=LR;\n\t\tconcentrate=true;\n\t\tnode [fontname=\"ArialNarrow\"];\n\t\tedge [fontname=\"Courier\"];\n\n\t\tinit [root=true,peripheries=0,label=\"%s\",fontname=\"Courier\"];\n\t\tinit -> N%p;\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), opt_.n.c_str(), (void*)&start);
         for (const State *state = &start; state; state = state->next)
         {
           if (state == &start)
@@ -2234,7 +2234,7 @@ void Pattern::export_dfa(const State& start) const
             ::fprintf(fd, "\n/*TAIL %zu*/\t", *i);
           if (state != &start && !state->accept && state->heads.empty() && state->tails.empty())
             ::fprintf(fd, "\n/*STATE*/\t");
-          ::fprintf(fd, "N%p [label=\"", state);
+          ::fprintf(fd, "N%p [label=\"", (void*)state);
 #ifdef DEBUG
           size_t k = 1;
           size_t n = std::sqrt(state->size()) + 0.5;
@@ -2293,7 +2293,7 @@ void Pattern::export_dfa(const State& start) const
 #endif
             if (!is_meta(lo))
             {
-              ::fprintf(fd, "\t\tN%p -> N%p [label=\"", state, i->second.second);
+              ::fprintf(fd, "\t\tN%p -> N%p [label=\"", (void*)state, (void*)i->second.second);
               if (lo >= '\a' && lo <= '\r')
                 ::fprintf(fd, "\\\\%c", "abtnvfr"[lo - '\a']);
               else if (lo == '"')
@@ -2328,12 +2328,12 @@ void Pattern::export_dfa(const State& start) const
             {
               do
               {
-                ::fprintf(fd, "\t\tN%p -> N%p [label=\"%s\",style=\"dashed\"];\n", state, i->second.second, meta_label[lo - META_MIN]);
+                ::fprintf(fd, "\t\tN%p -> N%p [label=\"%s\",style=\"dashed\"];\n", (void*)state, (void*)i->second.second, meta_label[lo - META_MIN]);
               } while (++lo <= hi);
             }
           }
           if (state->redo) // state->accept == IMAX)
-            ::fprintf(fd, "\t\tN%p -> R%p;\n\t\tR%p [peripheries=0,label=\"redo\"];\n", state, state, state);
+            ::fprintf(fd, "\t\tN%p -> R%p;\n\t\tR%p [peripheries=0,label=\"redo\"];\n", (void*)state, (void*)state, (void*)state);
         }
         ::fprintf(fd, "}\n");
         if (fd != stdout)

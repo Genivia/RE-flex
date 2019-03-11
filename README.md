@@ -173,6 +173,10 @@ Run configure and make:
 
     $ ./configure && make
 
+To build the examples also:
+
+    $ ./configure --enable-examples && make
+
 After this successfully completes, you can optionally run `make install` to
 install the `reflex` command and `libreflex` library:
 
@@ -372,7 +376,7 @@ License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2015-2018, All rights reserved.
+Copyright (c) 2015-2019, All rights reserved.
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.
@@ -426,6 +430,7 @@ Changelog
 - Feb 20, 2019: 1.1.0 code quality updates.
 - Mar  6, 2019: 1.1.1 fixed `configure` and `make install` header files, updated `--bison-locations` option.
 - Mar  7, 2019: 1.1.2 fixed reflex tool handling of backslashes in file paths.
+- Mar 11, 2019: 1.1.3 updated to Unicode 12, examples can now be built with `./configure --enable-examples`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

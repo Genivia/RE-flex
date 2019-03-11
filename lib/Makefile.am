@@ -3,7 +3,7 @@ reflexinclude_HEADERS   = $(top_srcdir)/include/reflex/abslexer.h $(top_srcdir)/
 
 lib_LIBRARIES           = libreflex.a
 
-libreflex_a_CPPFLAGS    = -I$(top_srcdir)/include -Wall -Wunused -Wextra
+libreflex_a_CPPFLAGS    = -I$(top_srcdir)/include -DPLATFORM=\"$(PLATFORM)\" -Wall -Wunused -Wextra
 libreflex_a_SOURCES     = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp posix.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp
 
 # lib_LTLIBRARIES       = libreflex.la
