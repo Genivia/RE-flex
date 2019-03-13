@@ -14,12 +14,14 @@
 *.pch
 
 # Libraries
-*.lib
 *.a
 *.la
 *.lo
+*.lib
+*.lai
 *.def
 *.exp
+*.slo
 
 # Shared objects (inc. Windows DLLs)
 *.dll
@@ -33,7 +35,13 @@
 # Executables
 a.out
 
+# Other
+.DS_Store
+*.dSYM
+
 # Autotools
+.deps
+.dirstamp
 Makefile
 config.h
 config.status
