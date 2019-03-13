@@ -1,40 +1,41 @@
-# Compiled Object files
-*.slo
-*.lo
+# Minimalistic .gitignore
+#
+# Project contributors: clean with ./clean.sh, do not rely on .gitignore
+
+# Object files
 *.o
+*.os
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+*.def
+*.exp
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
 *.dylib
 
-# Compiled Dynamic libraries
-*.so
+# Logs
+*.log
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+# Executables
+a.out
 
-# Mac Stuff
-.DS_Store
-._*
-
-# Autotool Generated Stuff
+# Autotools
 Makefile
-Makefile.in
-aclocal
-config.cache
-config.log
+config.h
 config.status
-configure.scan
-aclocal.m4
-config/*[^m4]
-configure
-lt*\.m4
-libtool.m4
-autom4te.cache
-libtool
+config.log
 stamp-h1
-.deps
-.libs
-*.trs
-
-# Project-related things
-doc/html
