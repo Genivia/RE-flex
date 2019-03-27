@@ -152,15 +152,10 @@ or you could statically link libreflex.a with:
 Also note that the RE/flex header files that you will need to include in your
 project are locally located in `include/reflex`.
 
-To fully install the library and the `reflex` command in `/usr/local/lib` and
-`/usr/local/bin`:
+To install the man page, the header files in `/usr/local/include/reflex`, the
+library in `/usr/local/lib` and the `reflex` command in `/usr/local/bin`:
 
     $ sudo ./allinstall.sh
-
-Or use the `make -f Make install` command to do the same:
-
-    $ cd lib; sudo make -f Make install
-    $ cd src; sudo make -f Make install
 
 ### Configure and make
 
@@ -431,6 +426,7 @@ Changelog
 - Mar  6, 2019: 1.1.1 fixed `configure` and `make install` header files, updated `--bison-locations` option.
 - Mar  7, 2019: 1.1.2 fixed reflex tool handling of backslashes in file paths.
 - Mar 11, 2019: 1.1.3 updated to Unicode 12, examples can now be built with `./configure --enable-examples`.
+- Mar 27, 2019: 1.1.4 fixed reflex tool common top code block insertion for all inclusive states.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

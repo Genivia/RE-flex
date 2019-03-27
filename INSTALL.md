@@ -53,10 +53,6 @@ For a quick clean build assuming your environment is pretty much standard:
     $ ./clean.sh
     $ ./build.sh
 
-Or use the `make -f Make` command to do the same:
-
-    $ cd src; make -f Make
-
 This compiles the **reflex** tool and installs it locally in `reflex/bin`.  You
 can add this location to your `$PATH` variable to enable the new `reflex`
 command:
@@ -68,15 +64,10 @@ The `libreflex.a` and `libreflex.so` libraries are saved locally in
 engine in your code.  The RE/flex header files are locally located in
 `include/reflex`.
 
-To install the library and the `reflex` command in `/usr/local/lib` and
-`/usr/local/bin`:
+To install the man page, the header files in `/usr/local/include/reflex`, the
+library in `/usr/local/lib` and the `reflex` command in `/usr/local/bin`:
 
     $ sudo ./allinstall.sh
-
-Or use the `make -f Make install` command to do the same:
-
-    $ cd lib; sudo make -f Make install
-    $ cd src; sudo make -f Make install
 
 ### Configure and make
 

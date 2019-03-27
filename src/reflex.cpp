@@ -1378,12 +1378,16 @@ void Reflex::parse_section_2()
         std::string code = get_code(pos);
         if (scopes.empty())
         {
-          section_2[0].push_back(Code(code, infile, lineno));
+          for (Start start = 0; start < conditions.size(); ++start)
+          {
+            if (inclusive.find(start) != inclusive.end())
+              section_2[start].push_back(Code(code, infile, lineno));
+          }
         }
         else
         {
-          for (Starts::const_iterator i = scopes.top().begin(); i != scopes.top().end(); ++i)
-            section_2[*i].push_back(Code(code, infile, lineno));
+          for (Starts::const_iterator start = scopes.top().begin(); start != scopes.top().end(); ++start)
+            section_2[*start].push_back(Code(code, infile, lineno));
         }
       }
       else if (line == "}" && !scopes.empty())

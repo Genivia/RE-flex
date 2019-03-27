@@ -129,7 +129,8 @@ std::string convert(
     const char                              *pattern,                    ///< regex string pattern to convert
     const char                              *signature = NULL,           ///< regex library signature
     convert_flag_type                        flags = convert_flag::none, ///< conversion flags
-    const std::map<std::string,std::string> *macros = NULL);             ///< {name} macros to expand
+    const std::map<std::string,std::string> *macros = NULL)              ///< {name} macros to expand
+  ;
 
 inline std::string convert(
     const std::string&                       pattern,
