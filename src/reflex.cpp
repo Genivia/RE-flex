@@ -311,16 +311,24 @@ void Reflex::init(int argc, char **argv)
   {
     const char *arg = argv[i];
     if (*arg == '-'
+     || (arg[0] == '\xE2' && arg[1] == '\x88' && arg[2] == '\x92') // UTF-8 Unicode minus sign U+2212
 #ifdef OS_WIN
      || *arg == '/'
 #endif
      )
     {
       bool is_grouped = true;
+      if (arg[1] == '\x88' && arg[2] == '\x92') // UTF-8 Unicode minus sign U+2212
+        arg += 2;
       while (is_grouped && *++arg)
       {
         switch (*arg)
         {
+          case '\xE2':
+             if (arg[1] != '\x88' || arg[2] != '\x92') // UTF-8 Unicode minus sign U+2212
+               break;
+             arg += 2;
+             // fall through
           case '-':
             ++arg;
             if (strcmp(arg, "help") == 0)

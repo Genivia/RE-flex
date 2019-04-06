@@ -427,6 +427,7 @@ Changelog
 - Mar  7, 2019: 1.1.2 fixed reflex tool handling of backslashes in file paths.
 - Mar 11, 2019: 1.1.3 updated to Unicode 12, examples can now be built with `./configure --enable-examples`.
 - Mar 27, 2019: 1.1.4 fixed reflex tool common top code block insertion for all inclusive states.
+- Apr  6, 2019: 1.1.5 improved reflex tool command-line option handling, updated documentation.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

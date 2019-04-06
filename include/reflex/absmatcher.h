@@ -108,7 +108,7 @@ class AbstractMatcher {
         N(false),
         T(8)
     { }
-    bool A; ///< accept any/all (?^X) negative patterns
+    bool A; ///< accept any/all (?^X) negative patterns as 65535 accept index codes
     bool N; ///< nullable, find may return empty match (N/A to scan, split, matches)
     char T; ///< tab size, must be a power of 2, default is 8, for indent \i and \j
   };
@@ -245,9 +245,9 @@ class AbstractMatcher {
     DBGLOG("AbstractMatcher::reset(%s)", opt ? opt : "(null)");
     if (opt)
     {
-      opt_.A = false;
-      opt_.N = false;
-      opt_.T = 8;
+      opt_.A = false; // when true: accept any/all (?^X) negative patterns as 65535 accept index codes
+      opt_.N = false; // when true: find may return empty match (N/A to scan, split, matches)
+      opt_.T = 8;     // tab size 2, 4, or 8
       if (opt)
       {
         for (const char *s = opt; *s != '\0'; ++s)

@@ -935,11 +935,26 @@ In summary:
 The RE/flex scanner generator                                         {#reflex}
 =============================
 
-The RE/flex scanner generator takes a lexer specification and generates a
-regex-based C++ lexer class that is saved in <i>`lex.yy.cpp`</i>, or saved to
-the file specified by the `-o` command-line option.  This file is then compiled
-and linked with a regex-library to produce a scanner.  A scanner can be a
-stand-alone application or part of a larger program such as a compiler:
+The RE/flex scanner generator <b>`reflex`</b> takes a lexer specification and
+generates a regex-based C++ lexer class that is saved to <i>`lex.yy.cpp`</i>,
+or saved to the file you specified by the `-o` command-line option.  This file
+is then compiled and linked with option `-lreflex` (and optionally
+`-lboost_regex` if you use Boost.Regex for matching) to produce a scanner:
+
+    reflex lexerspec.l
+    c++ lex.yy.cpp -lreflex
+
+You can use option `−−header-file` to generate <i>`lex.yy.h`</i> to include
+in the source code of your lexer application:
+
+    reflex −−header-file lexerspec.l
+    c++ mylexer.cpp lex.yy.cpp -lreflex
+
+If `libreflex` was not installed then linking with `-lreflex` fails.  See
+\ref link-errors on how to resolve this.
+
+The scanner can be a stand-alone application based on <i>`lex.yy.cpp`</i>
+alone, or be part of a larger program, such as a compiler:
 
 @dot
 digraph build {
@@ -964,8 +979,8 @@ matching.  The RE/flex regex library API is defined by the abstract class
 
 There are two regex matching engines to choose from for the generated scanner:
 the Boost.Regex library (assuming Boost.Regex is installed) or the RE/flex
-POSIX matcher engine.  The `libreflex` library should be linked and also
-`libboost_regex` when needed.
+POSIX matcher engine.  In any case, the `libreflex` library should be linked
+and `libboost_regex` should be linked when needed.
 
 The input class `reflex::Input` of the `libreflex` library manages input from
 strings, wide strings, streams, and data from `FILE` descriptors.  File data
@@ -1003,6 +1018,14 @@ from the specified file (usually with extension <i>`.l`</i>, <i>`.ll`</i>,
 <i>`.l++`</i>, <i>`.lxx`</i>, or <i>`.lpp`</i>) and generates a C++ scanner
 class that is saved to the <i>`lex.yy.cpp`</i> source code file.
 
+The <i>`lex.yy.cpp`</i> source code output is structured in sections that are
+clean, readable, and reusable.
+
+Use <b>`reflex`</b> option `−−header-file` to generate <i>`lex.yy.h`</i> to
+include in the source code of your application:
+
+    reflex −−header-file lexerspec.l
+
 The <b>`reflex`</b> command accepts `−−flex` and `−−bison` options for
 compatibility with Flex and Bison/Yacc, respectively.  These options allow
 <b>`reflex`</b> to be used as a replacement of the classic Flex and Lex tools:
@@ -1019,10 +1042,6 @@ variables and functions for compatibility with non-reentrant
 more details on Bison parsers that are reentrant and/or use bison-bridge and
 bison-locations options.  For Bison 3.0 C++ parsers, use `−−bison-cc` and
 optionally `−−bison-locations`.
-
-The <i>`lex.yy.cpp`</i> source code output is structured in sections that are
-clean, readable, and reusable.  To generate a C++ header file <i>`lex.yy.h`</i>
-to include in your code base, use option `−−header-file`.
 
 🔝 [Back to table of contents](#)
 
@@ -1877,10 +1896,10 @@ The `columno()` method returns the column offset of a match, starting at
 column 0.  This method takes tab spacing and wide characters into account,
 unless all of the RE/flex source code is compiled with `WITH_BYTE_COLUMNO` to
 count bytes instead of wide characters and tabs.  A wide character is counted
-as one, thus not taking into account the character width of full-width and
-combining Unicode characters.  It is recommended to use the `wcwidth` function
-or [wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to determine
-Unicode character widths.
+as one, thus it does not take the character width of full-width and combining
+Unicode characters into account.  It is recommended to use the `wcwidth`
+function or [wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to
+determine Unicode character widths.
 
 The `lines()` and `columns()` methods return the number of lines and columns
 matched, where `lines()` and `columns()` return nonzero and `columns()` takes
@@ -1896,8 +1915,11 @@ and was introduced in Lex.
 
 The `matcher().less(n)` method reduces the size of the matched text to `n`
 bytes.  This method has no effect if `n` is larger than `size()`.  The value of
-`n` should not be `0`.  The `matcher().less(n)` operation is often used in
-lexers and was introduced in Lex.
+`n` should not be `0` to prevent infinite looping on the same input as no input
+is consumed (or you could switch to another start condition state with
+`start(n)` in the action that uses `less(0)`).  The `matcher().less(n)`
+operation was introduced in Lex and is often used in lexers to place input back
+into the input stream and as a means to perform sophisticated lookaheads.
 
 The `matcher().first()` and `matcher().last()` methods return the position in
 the input stream of the match, counting in bytes from the start of the input at
@@ -3960,7 +3982,7 @@ text for error reporting.  For example:
     }
 
     %{
-      /* reflex option --bison-locations makes yylex() take yylval and yylloc */
+      /* reflex option −−bison-locations makes yylex() take yylval and yylloc */
       extern int yylex(YYSTYPE*, YYLTYPE*);
       #define YYLEX_PARAM &yylval, &yylloc
     %}
@@ -4668,6 +4690,16 @@ The RE/flex regex library consists of a set of C++ templates and classes that
 encapsulate regex engines in a standard API for scanning, tokenizing,
 searching, and splitting of strings, wide strings, files, and streams.
 
+To compile your application, simply include the applicable regex matcher of
+your choice in your source code as we will explain in the next sections.  To
+compile, link your application against the `libreflex` library (and optionally
+`-lboost_regex` if you use Boost.Regex for matching):
+
+    c++ myapp.cpp -lreflex
+
+If `libreflex` was not installed then linking with `-lreflex` fails.  See
+\ref link-errors on how to resolve this.
+
 🔝 [Back to table of contents](#)
 
 
@@ -4763,6 +4795,11 @@ containing Unicode, and groups UTF-8 multi-byte sequences in the regex string.
 The converter throws a `reflex::regex_error` exception if conversion fails,
 for example when the regex syntax is invalid.
 
+To compile your application, link your application against the `libreflex`
+library and `-lboost_regex`:
+
+    c++ myapp.cpp -lreflex -lboost_regex
+
 See \ref reflex-patterns for more details on regex patterns.
 
 See \ref regex-input for more details on the `reflex::Input` class.
@@ -4812,12 +4849,12 @@ the matching behavior differs and cannot be controlled with mode modifiers:
 - no `\b` and `\B` anchors in POSIX mode;
 - no non-capturing groups `(?:φ)` in POSIX mode;
 - empty regex patterns and matcher option `"N"` (nullable) may cause issues
-  (std::regex `match_not_null` is buggy);
+  (std::regex `match_not_null` appears not to work as documented);
 - `interactive()` is not supported.
 
-To avoid these limitations on the std::regex syntax imposed, you can convert an
-expressive regex of the form defined in section \ref reflex-patterns to a regex
-that the std::regex engine can handle:
+To work around these limitations that the std::regex syntax imposes, you can
+convert an expressive regex of the form defined in section \ref reflex-patterns
+to a regex that the std::regex engine can handle:
 
 ~~~{.cpp}
     #include <reflex/stdmatcher.h>
@@ -4835,6 +4872,11 @@ containing Unicode, and groups UTF-8 multi-byte sequences in the regex string.
 
 The converter throws a `reflex::regex_error` exception if conversion fails,
 for example when the regex syntax is invalid.
+
+To compile your application, link your application against the `libreflex`
+and enable `std::regex` with `-std=c++11`:
+
+    c++ -std=c++11 myapp.cpp -lreflex
 
 See \ref reflex-patterns for more details on regex patterns.
 
@@ -4892,6 +4934,10 @@ follows:
 The converter is specific to the matcher and translates Unicode `\p` character
 classes to UTF-8 patterns, converts bracket character classes containing
 Unicode, and groups UTF-8 multi-byte sequences in the regex string.
+
+To compile your application, link your application against the `libreflex`:
+
+    c++ myapp.cpp -lreflex
 
 See \ref reflex-patterns for more details on regex patterns.
 
@@ -6499,11 +6545,63 @@ example:
 🔝 [Back to table of contents](#)
 
 
+Undefined symbols and link errors                                {#link-errors}
+---------------------------------
+
+Some hints when dealing with undefined symbols and link errors when building
+RE/flex applications:
+
+- Compilation requires `libreflex` which is linked using compiler option
+  `-lreflex`:
+
+      c++ ... -lreflex
+
+  If `libreflex` was not installed on your system then header files cannot be
+  found and linking with `-lreflex` fails.  Instead, you can specify the
+  include path and link the library with:
+
+      c++ -I<path>/reflex/include ... -L<path>/reflex/lib -lreflex
+
+  where `<path>` is the directory path to the top directory of the downloaded
+  RE/flex package.
+
+- When using an IDE such as Visual Studio C++, compile all of the <i>.cpp</i>
+  source code files located in the <i>`reflex/lib`</i> and the
+  <i>`reflex/unicode`</i> directories of the RE/flex download package.  The
+  header files are located in the <i>`reflex/include/reflex`</i> directory.
+
+- When Boost.Regex is used as a matcher engine, also link `libboost_regex`:
+
+      c++ ... -lreflex -lboost_regex
+
+- If you get compilation errors with the `std::regex` matching engine, you
+  should upgrade C++ to C++11:
+
+      c++ -std=c++11 ... -lreflex
+
+- When generating scanners with the <b>`reflex`</b> tool, the generated
+  <i>`lex.yy.cpp`</i> lexer logic should be compiled and linked with your
+  application.  Use <b>`reflex`</b> option `−−header-file` to generate
+  <i>`lex.yy.h`</i> with the lexer class to include in the source code of your
+  lexer application.
+
+🔝 [Back to contents](#)
+
+
+Bugs                                                                    {#bugs}
+====
+
+Please report bugs as RE/flex GitHub
+[issues](https://github.com/Genivia/RE-flex/issues).
+
+🔝 [Back to contents](#)
+
+
 Getting RE/flex                                                     {#download}
 ===============
 
 Download RE/flex from [SourceForge](https://sourceforge.net/projects/re-flex)
-or visit the RE/flex [GitHub repository](https://github.com/Genivia/RE-flex).
+or visit the RE/flex GitHub [repository](https://github.com/Genivia/RE-flex).
 
 🔝 [Back to table of contents](#)
 
