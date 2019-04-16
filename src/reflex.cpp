@@ -57,6 +57,7 @@ static const char *options_table[] = {
   "bison_cc",
   "bison_cc_namespace",
   "bison_cc_parser",
+  "bison_complete",
   "bison_locations",
   "case_insensitive",
   "class",
@@ -112,6 +113,7 @@ static const char *options_table[] = {
   "stdout",
   "tables_file",
   "tabs",
+  "token_type",
   "unicode",
   "unput",
   "verbose",
@@ -560,6 +562,10 @@ void Reflex::help(const char *message, const char *arg)
                 use namespace NAME with bison lalr1.cc skeleton\n\
         --bison-cc-parser=NAME\n\
                 use parser class NAME with bison lalr1.cc skeleton\n\
+        --token-type=NAME\n\
+                use NAME as the return type of yylex()\n\
+        --bison-complete\n\
+                use bison complete-symbols feature\n\
         --bison-bridge\n\
                 generate reentrant yylex() scanner for bison pure parser\n\
         --bison-locations\n\
@@ -1514,6 +1520,8 @@ void Reflex::write()
     else
       options["header_file"] = std::string("lex.").append(options["prefix"]).append(".h");
   }
+  if (!options["bison_complete"].empty())
+    options["bison_cc"] = "true";
   if (!options["namespace"].empty())
     undot_namespace(options["namespace"]);
   if (!options["bison_cc_namespace"].empty())
@@ -1526,6 +1534,10 @@ void Reflex::write()
     options["YYLTYPE"] = options["bison_cc_namespace"] + "::location";
   if (!options["bison_cc"].empty() && options["YYSTYPE"].empty())
     options["YYSTYPE"] = options["bison_cc_namespace"] + "::" + options["bison_cc_parser"] + "::semantic_type";
+  if (!options["bison_complete"].empty() && options["token_type"].empty())
+    options["token_type"] = options["bison_cc_namespace"] + "::" + options["bison_cc_parser"] + "::symbol_type";
+  if (options["token_type"].empty())
+    options["token_type"] = "int";
   std::string yyltype = options["YYLTYPE"].empty() ? "YYLTYPE" : options["YYLTYPE"];
   std::string yystype = options["YYSTYPE"].empty() ? "YYSTYPE" : options["YYSTYPE"];
   std::ofstream ofs;
@@ -1839,7 +1851,38 @@ void Reflex::write_class()
       "    :\n"
       "      " << base << "(input, os)\n";
     write_section_init();
-    if (!options["bison_cc"].empty())
+    if (!options["bison_complete"].empty())
+    {
+      const std::string& ret_type = options["token_type"];
+      if (!options["bison_locations"].empty())
+        * out <<
+        "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
+        "  {\n"
+        "    yylloc.begin.line = matcher().lineno();\n"
+        "    yylloc.begin.column = matcher().columno();\n"
+        "    yylloc.end.line = yylloc.begin.line + matcher().lines() - 1;\n"
+        "    yylloc.end.column = yylloc.begin.column + matcher().columns() - 1;\n"
+        "  }\n"
+        "  virtual " << ret_type << " yylex(void)\n"
+        "  {\n"
+        "    LexerError(\"" << lexer << "::yylex invoked but %option bison-complete is used\");\n"
+        "    yyterminate();\n"
+        "  }\n"
+        "  virtual " << ret_type << " " << lex << "(" << yyltype << " *llocp)\n"
+        "  {\n"
+        "    return " << lex << "(*llocp);\n"
+        "  }\n"
+        "  virtual " << ret_type << " " << lex << "(" << yyltype << "& yylloc)";
+      else
+        *out <<
+        "  virtual " << ret_type << " yylex(void)\n"
+        "  {\n"
+        "    LexerError(\"" << lexer << "::yylex invoked but %option bison-complete is used\");\n"
+        "    yyterminate();\n"
+        "  }\n"
+        "  virtual " << ret_type << " " << lex << "(void)";
+	}
+    else if (!options["bison_cc"].empty())
     {
       if (!options["bison_locations"].empty())
         *out <<
@@ -1937,7 +1980,27 @@ void Reflex::write_class()
     for (Start start = 0; start < conditions.size(); ++start)
       *out <<
         "  static const int " << conditions[start] << " = " << start << ";\n";
-    if (!options["bison_cc"].empty())
+    if (!options["bison_complete"].empty())
+    {
+      const std::string& ret_type = options["token_type"];
+      if (!options["bison_locations"].empty())
+        * out <<
+        "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
+        "  {\n"
+        "    yylloc.begin.line = matcher().lineno();\n"
+        "    yylloc.begin.column = matcher().columno();\n"
+        "    yylloc.end.line = yylloc.begin.line + matcher().lines() - 1;\n"
+        "    yylloc.end.column = yylloc.begin.column + matcher().columns() - 1;\n"
+        "  }\n"
+        "  virtual " << ret_type << " " << lex << "(" << yyltype << " *llocp)\n"
+        "  {\n"
+        "    return " << lex << "(*llocp);\n"
+        "  }\n"
+        "  virtual " << ret_type << " " << lex << "(" << yyltype << "& yylloc)";
+      else
+        *out << "  virtual " << ret_type << " " << lex << "(void)";
+    }
+    else if (!options["bison_cc"].empty())
     {
       if (!options["bison_locations"].empty())
         *out <<
@@ -1957,7 +2020,7 @@ void Reflex::write_class()
         *out <<
           "  virtual int " << lex << "(" << yystype << " *yylval)\n"
           "  {\n"
-          "    return yylex(*yylval);\n"
+          "    return " << lex << "(*yylval);\n"
           "  }\n"
           "  virtual int " << lex << "(" << yystype << "& yylval)";
     }
@@ -2182,7 +2245,7 @@ void Reflex::write_lexer()
   std::string lex = options["lex"];
   std::string yyltype = options["YYLTYPE"].empty() ? "YYLTYPE" : options["YYLTYPE"];
   std::string yystype = options["YYSTYPE"].empty() ? "YYSTYPE" : options["YYSTYPE"];
-  if (!options["bison_cc"].empty())
+  if (!options["bison_cc"].empty() || !options["bison_complete"].empty())
   {
     write_banner("BISON C++");
   }
@@ -2345,7 +2408,10 @@ void Reflex::write_lexer()
     }
     *out << std::endl;
   }
-  *out << "int ";
+  if (options["bison_complete"].empty())
+    *out << "int ";
+  else
+    *out << options["token_type"] << " ";
   if (!options["namespace"].empty())
     write_namespace_scope();
   if (!options["yyclass"].empty())
@@ -2354,7 +2420,14 @@ void Reflex::write_lexer()
     *out << options["class"];
   else
     *out << options["lexer"];
-  if (!options["bison_locations"].empty())
+  if (!options["bison_complete"].empty())
+  {
+    if (!options["bison_locations"].empty())
+      *out << "::" << lex << "(" << yyltype << "& yylloc)\n{\n";
+    else
+      *out << "::" << lex << "()\n{\n";
+  }
+  else if (!options["bison_locations"].empty())
     *out << "::" << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc)\n{\n";
   else if (!options["bison_cc"].empty() || !options["bison_bridge"].empty())
     *out << "::" << lex << "(" << yystype << "& yylval)\n{\n";
