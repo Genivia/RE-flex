@@ -63,8 +63,10 @@ static const char *options_table[] = {
   "class",
   "debug",
   "default",
+  "default-token",
   "dotall",
   "extra_type",
+  "exception",
   "fast",
   "flex",
   "freespace",
@@ -564,8 +566,15 @@ void Reflex::help(const char *message, const char *arg)
                 use parser class NAME with bison lalr1.cc skeleton\n\
         --token-type=NAME\n\
                 use NAME as the return type of yylex()\n\
+                NOTE: bison-complete only\n\
+        --exception=NAME\n\
+                use NAME as syntax_error exception to throw\n\
+                NOTE: bison-complete only\n\
+        --default-token=VALUE\n\
+                return VALUE in default rule instead of throwing an exception\n\
+                NOTE: bison-complete only\n\
         --bison-complete\n\
-                use bison complete-symbols feature\n\
+                use bison complete-symbols feature, implies bison-complete\n\
         --bison-bridge\n\
                 generate reentrant yylex() scanner for bison pure parser\n\
         --bison-locations\n\
@@ -1521,7 +1530,11 @@ void Reflex::write()
       options["header_file"] = std::string("lex.").append(options["prefix"]).append(".h");
   }
   if (!options["bison_complete"].empty())
+  {
     options["bison_cc"] = "true";
+    if (options["exception"].empty())
+      options["exception"] = "std::runtime_error";
+  }
   if (!options["namespace"].empty())
     undot_namespace(options["namespace"]);
   if (!options["bison_cc_namespace"].empty())
@@ -1806,6 +1819,7 @@ void Reflex::write_class()
   {
     write_banner("FLEX-COMPATIBLE ABSTRACT LEXER CLASS");
     *out << "#include <reflex/flexlexer.h>" << std::endl;
+    if (!options["exception"].empty()) *out << "#include <stdexcept>" << std::endl;
     if (!options["bison"].empty() && options["reentrant"].empty() && options["bison_bridge"].empty() && options["bison_locations"].empty())
       *out <<
         "#undef yytext\n"
@@ -1829,6 +1843,7 @@ void Reflex::write_class()
   {
     write_banner("ABSTRACT LEXER CLASS");
     *out << "#include <reflex/abslexer.h>" << std::endl;
+    if (!options["exception"].empty()) *out << "#include <stdexcept>" << std::endl;
     base.append("reflex::AbstractLexer<").append(matcher).append(">");
   }
   write_banner("LEXER CLASS");
@@ -1856,23 +1871,21 @@ void Reflex::write_class()
       const std::string& ret_type = options["token_type"];
       if (!options["bison_locations"].empty())
         * out <<
-        "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
+        "  virtual " << yyltype << " location(void) const\n"
         "  {\n"
+        "    " << yyltype << " yylloc;\n"
         "    yylloc.begin.line = matcher().lineno();\n"
         "    yylloc.begin.column = matcher().columno();\n"
         "    yylloc.end.line = yylloc.begin.line + matcher().lines() - 1;\n"
         "    yylloc.end.column = yylloc.begin.column + matcher().columns() - 1;\n"
+        "    return yylloc;\n"
         "  }\n"
         "  virtual " << ret_type << " yylex(void)\n"
         "  {\n"
         "    LexerError(\"" << lexer << "::yylex invoked but %option bison-complete is used\");\n"
         "    yyterminate();\n"
         "  }\n"
-        "  virtual " << ret_type << " " << lex << "(" << yyltype << " *llocp)\n"
-        "  {\n"
-        "    return " << lex << "(*llocp);\n"
-        "  }\n"
-        "  virtual " << ret_type << " " << lex << "(" << yyltype << "& yylloc)";
+        "  virtual " << ret_type << " " << lex << "(void)";
       else
         *out <<
         "  virtual " << ret_type << " yylex(void)\n"
@@ -1985,18 +1998,16 @@ void Reflex::write_class()
       const std::string& ret_type = options["token_type"];
       if (!options["bison_locations"].empty())
         * out <<
-        "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
+        "  virtual " << yyltype << " location(void) const\n"
         "  {\n"
+        "    " << yyltype << " yylloc;\n"
         "    yylloc.begin.line = matcher().lineno();\n"
         "    yylloc.begin.column = matcher().columno();\n"
         "    yylloc.end.line = yylloc.begin.line + matcher().lines() - 1;\n"
         "    yylloc.end.column = yylloc.begin.column + matcher().columns() - 1;\n"
+        "    return yylloc;\n"
         "  }\n"
-        "  virtual " << ret_type << " " << lex << "(" << yyltype << " *llocp)\n"
-        "  {\n"
-        "    return " << lex << "(*llocp);\n"
-        "  }\n"
-        "  virtual " << ret_type << " " << lex << "(" << yyltype << "& yylloc)";
+        "  virtual " << ret_type << " " << lex << "(void)";
       else
         *out << "  virtual " << ret_type << " " << lex << "(void)";
     }
@@ -2408,10 +2419,10 @@ void Reflex::write_lexer()
     }
     *out << std::endl;
   }
-  if (options["bison_complete"].empty())
-    *out << "int ";
-  else
+  if (!options["bison_complete"].empty())
     *out << options["token_type"] << " ";
+  else
+    *out << "int ";
   if (!options["namespace"].empty())
     write_namespace_scope();
   if (!options["yyclass"].empty())
@@ -2421,12 +2432,7 @@ void Reflex::write_lexer()
   else
     *out << options["lexer"];
   if (!options["bison_complete"].empty())
-  {
-    if (!options["bison_locations"].empty())
-      *out << "::" << lex << "(" << yyltype << "& yylloc)\n{\n";
-    else
-      *out << "::" << lex << "()\n{\n";
-  }
+    *out << "::" << lex << "()\n{\n";
   else if (!options["bison_locations"].empty())
     *out << "::" << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc)\n{\n";
   else if (!options["bison_cc"].empty() || !options["bison_bridge"].empty())
@@ -2514,7 +2520,7 @@ void Reflex::write_lexer()
       *out <<
         "      case " << conditions[start] << ":\n"
         "        matcher().pattern(PATTERN_" << conditions[start] << ");\n";
-    if (!options["bison_locations"].empty())
+    if (!options["bison_locations"].empty() && options["bison_complete"].empty())
       *out <<
         "        matcher().scan();\n"
         "        yylloc_update(yylloc);\n"
@@ -2662,6 +2668,19 @@ void Reflex::write_lexer()
         "      default:\n"
         "        yyterminate();\n"
         "    }\n";
+    else if (!options["bison_complete"].empty())
+    {
+      if (options["default_token"].empty())
+        *out <<
+        "      default:\n"
+        "        return " << options["default_token"] << ";\n"
+        "    }\n";
+      else
+        *out <<
+        "      default:\n"
+        "        throw " << options["exception"] << "(\"Unexpected token.\");\n"
+        "    }\n";
+    }
     else
       *out <<
         "      default:\n"
