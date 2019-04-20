@@ -14,21 +14,24 @@ representative C source code file into 244 tokens takes only 13 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
-<tr><td><b>reflex --fast</b></td><td><b>RE/flex</b></td><td><b>13</b></td></tr>
-<tr><td>flex -+ --full</td><td>Flex</td><td>17</td></tr>
-<tr><td>reflex --full</td><td>RE/flex</td><td>29</td></tr>
-<tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex</td><td>40</td></tr>
-<tr><td>reflex -m=boost-perl</td><td>Boost.Regex</td><td>230</td></tr>
-<tr><td>pcre2_match()</td><td>PCRE2 (pre-compiled)</td><td>318</td></tr>
-<tr><td>reflex -m=boost</td><td>Boost.Regex POSIX mode</td><td>450</td></tr>
-<tr><td>flex -+</td><td>Flex</td><td>3968</td></tr>
-<tr><td>RE2::Consume()</td><td>RE2 (pre-compiled)</td><td>5088</td></tr>
-<tr><td>RE2::Consume()</td><td>RE2 POSIX mode (pre-compiled)</td><td>5420</td></tr>
-<tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>14784</td></tr>
+<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.1.5</b></td><td><b>13</b></td></tr>
+<tr><td>flex -+ --full</td><td>Flex 2.5.35</td><td>17</td></tr>
+<tr><td>reflex --full</td><td>RE/flex 1.1.5</td><td>29</td></tr>
+<tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex 1.66.0</td><td>40</td></tr>
+<tr><td>hs_compile_multi(), hs_scan()</td><td>Hyperscan 5.1.0</td><td>209</td></tr>
+<tr><td>reflex -m=boost-perl</td><td>Boost.Regex 1.66.0</td><td>230</td></tr>
+<tr><td>pcre2_match()</td><td>PCRE2 (pre-compiled) 10.30</td><td>318</td></tr>
+<tr><td>RE2::Consume()</td><td>RE2 (pre-compiled) 2018-04-01</td><td>417</td></tr>
+<tr><td>reflex -m=boost</td><td>Boost.Regex POSIX 1.66.0</td><td>450</td></tr>
+<tr><td>RE2::Consume()</td><td>RE2 POSIX (pre-compiled) 2018-04-01</td><td>1226</td></tr>
+<tr><td>flex -+</td><td>Flex 2.5.35</td><td>3968</td></tr>
+<tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>5979</td></tr>
 </table>
 
 Note: *Best times of 10 tests with average time in microseconds over 100 runs
-(using clang 8.0.0 with -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz LPDDR3).*
+(using clang 9.0.0 with -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz LPDDR3).
+Hyperscan disqualifies as a potential scanner due to its event handler
+requirements.* [Download the tests](https://www.genivia.com/files/perfcomp.zip)
 
 
 Features
@@ -375,6 +378,12 @@ Copyright (c) 2015-2019, All rights reserved.
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.
+
+
+Reporting bugs
+--------------
+
+Visit GitHub to report bugs: https://github.com/Genivia/RE-flex
 
 
 Changelog
