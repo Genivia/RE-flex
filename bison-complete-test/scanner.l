@@ -4,7 +4,7 @@
 %option bison-cc-parser=parser
 %option bison-locations
 
-%option exception="test.syntax_error"
+%option exception-type="test.syntax_error"
 
 %option tabs=8
 

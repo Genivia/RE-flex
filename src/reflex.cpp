@@ -63,10 +63,10 @@ static const char *options_table[] = {
   "class",
   "debug",
   "default",
-  "default-token",
+  "default_token",
   "dotall",
   "extra_type",
-  "exception",
+  "exception_type",
   "fast",
   "flex",
   "freespace",
@@ -1532,8 +1532,8 @@ void Reflex::write()
   if (!options["bison_complete"].empty())
   {
     options["bison_cc"] = "true";
-    if (options["exception"].empty())
-      options["exception"] = "std::runtime_error";
+    if (options["exception_type"].empty())
+      options["exception_type"] = "std::runtime_error";
   }
   if (!options["namespace"].empty())
     undot_namespace(options["namespace"]);
@@ -1819,7 +1819,7 @@ void Reflex::write_class()
   {
     write_banner("FLEX-COMPATIBLE ABSTRACT LEXER CLASS");
     *out << "#include <reflex/flexlexer.h>" << std::endl;
-    if (!options["exception"].empty()) *out << "#include <stdexcept>" << std::endl;
+    if (!options["exception_type"].empty()) *out << "#include <stdexcept>" << std::endl;
     if (!options["bison"].empty() && options["reentrant"].empty() && options["bison_bridge"].empty() && options["bison_locations"].empty())
       *out <<
         "#undef yytext\n"
@@ -1843,7 +1843,7 @@ void Reflex::write_class()
   {
     write_banner("ABSTRACT LEXER CLASS");
     *out << "#include <reflex/abslexer.h>" << std::endl;
-    if (!options["exception"].empty()) *out << "#include <stdexcept>" << std::endl;
+    if (!options["exception_type"].empty()) *out << "#include <stdexcept>" << std::endl;
     base.append("reflex::AbstractLexer<").append(matcher).append(">");
   }
   write_banner("LEXER CLASS");
@@ -2678,7 +2678,7 @@ void Reflex::write_lexer()
       else
         *out <<
         "      default:\n"
-        "        throw " << options["exception"] << "(\"Unexpected token.\");\n"
+        "        throw " << options["exception_type"] << "(\"Unexpected token.\");\n"
         "    }\n";
     }
     else
