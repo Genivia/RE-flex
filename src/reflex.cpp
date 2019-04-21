@@ -1534,6 +1534,8 @@ void Reflex::write()
     options["bison_cc"] = "true";
     if (options["exception_type"].empty())
       options["exception_type"] = "std::runtime_error";
+    else
+      undot_namespace(options["exception_type"]);
   }
   if (!options["namespace"].empty())
     undot_namespace(options["namespace"]);
