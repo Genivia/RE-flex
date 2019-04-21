@@ -1,0 +1,36 @@
+REFLEX	= $(REFLEX_PATH)/bin/reflex
+BISON	= bison
+CXX		= g++ -c -I$(REFLEX_PATH)/include $(CXXFLAGS)
+
+CXXFLAGS = -std=c++17
+
+LINK	= g++ -L$(REFLEX_PATH)/lib
+
+REFLEX_PATH = ..
+
+.PHONY: all run clean
+
+all: test
+run: test
+	LD_LIBRARY_PATH=$(REFLEX_PATH)/lib ./test test.txt
+
+clean:
+	rm -f *.o test parser.cpp parser.hpp location.hpp position.hh stack.hh scanner.cpp scanner.hpp
+
+test: parser.o scanner.o main.o
+	$(LINK) $^ -o $@ -lreflex
+
+main.o: main.cpp
+	$(CXX) $< -o $@
+
+parser.o: parser.cpp scanner.hpp
+	$(CXX) $< -o $@
+
+scanner.o: scanner.cpp parser.hpp location.hpp
+	$(CXX) $< -o $@
+
+parser.cpp parser.hpp location.hpp position.hh stack.hh: parser.yy
+	$(BISON) $^
+
+scanner.cpp scanner.hpp: scanner.l
+	$(REFLEX) $^
