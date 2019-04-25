@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Apr 6 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Apr 24 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -52,6 +52,7 @@
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
@@ -80,8 +81,14 @@ Collaboration diagram for reflex::Input:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html">file_encoding</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common constants.  <a href="structreflex_1_1_input_1_1file__encoding.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common <a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a> constants.  <a href="structreflex_1_1_input_1_1file__encoding.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a70e8550b0b1649b2cd49b1b872949cc8"><td class="memItemLeft" align="right" valign="top">typedef unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a></td></tr>
+<tr class="memdesc:a70e8550b0b1649b2cd49b1b872949cc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common <a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a> constants type.  <a href="#a70e8550b0b1649b2cd49b1b872949cc8">More...</a><br /></td></tr>
+<tr class="separator:a70e8550b0b1649b2cd49b1b872949cc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -112,9 +119,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a13135ec6cf70ed5d16396ad2db5b0c7b">Input</a> (FILE *<a class="el" href="classreflex_1_1_input.html#a948d77cb9989bf0ca0ce99ac3afd8a33">file</a>)</td></tr>
 <tr class="memdesc:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.  <a href="#a13135ec6cf70ed5d16396ad2db5b0c7b">More...</a><br /></td></tr>
 <tr class="separator:a13135ec6cf70ed5d16396ad2db5b0c7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93c5c4f5dd43521923d12ddd6ff59b1d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a93c5c4f5dd43521923d12ddd6ff59b1d">Input</a> (FILE *<a class="el" href="classreflex_1_1_input.html#a948d77cb9989bf0ca0ce99ac3afd8a33">file</a>, unsigned short enc, const unsigned short *page=NULL)</td></tr>
-<tr class="memdesc:a93c5c4f5dd43521923d12ddd6ff59b1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.  <a href="#a93c5c4f5dd43521923d12ddd6ff59b1d">More...</a><br /></td></tr>
-<tr class="separator:a93c5c4f5dd43521923d12ddd6ff59b1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a609f0e4676584113831ea9bff651dada"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a609f0e4676584113831ea9bff651dada">Input</a> (FILE *<a class="el" href="classreflex_1_1_input.html#a948d77cb9989bf0ca0ce99ac3afd8a33">file</a>, <a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a> enc, const unsigned short *page=NULL)</td></tr>
+<tr class="memdesc:a609f0e4676584113831ea9bff651dada"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.  <a href="#a609f0e4676584113831ea9bff651dada">More...</a><br /></td></tr>
+<tr class="separator:a609f0e4676584113831ea9bff651dada"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a25a1b7ebdda31f175e0139713212f1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a2a25a1b7ebdda31f175e0139713212f1">Input</a> (std::istream &amp;<a class="el" href="classreflex_1_1_input.html#a79e4205350b645d67747feeaba4ba190">istream</a>)</td></tr>
 <tr class="memdesc:a2a25a1b7ebdda31f175e0139713212f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a std::istream.  <a href="#a2a25a1b7ebdda31f175e0139713212f1">More...</a><br /></td></tr>
 <tr class="separator:a2a25a1b7ebdda31f175e0139713212f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,12 +178,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3a3830a022486d78670f01003b56d5e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get</a> (char *s, size_t n)</td></tr>
 <tr class="memdesc:a3a3830a022486d78670f01003b56d5e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy character sequence data into buffer.  <a href="#a3a3830a022486d78670f01003b56d5e5">More...</a><br /></td></tr>
 <tr class="separator:a3a3830a022486d78670f01003b56d5e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a920aef092e068d7b0f6e828a5e302d3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a920aef092e068d7b0f6e828a5e302d3e">file_encoding</a> (unsigned short enc, const unsigned short *page=NULL)</td></tr>
-<tr class="memdesc:a920aef092e068d7b0f6e828a5e302d3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set encoding for <code>FILE*</code> input.  <a href="#a920aef092e068d7b0f6e828a5e302d3e">More...</a><br /></td></tr>
-<tr class="separator:a920aef092e068d7b0f6e828a5e302d3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6014fcca0d45cb8b7ab3382097e0c749"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a6014fcca0d45cb8b7ab3382097e0c749">file_encoding</a> () const </td></tr>
-<tr class="memdesc:a6014fcca0d45cb8b7ab3382097e0c749"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get encoding of the current <code>FILE*</code> input.  <a href="#a6014fcca0d45cb8b7ab3382097e0c749">More...</a><br /></td></tr>
-<tr class="separator:a6014fcca0d45cb8b7ab3382097e0c749"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25682c7ebc7df115ade370d9d21ed888"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a25682c7ebc7df115ade370d9d21ed888">file_encoding</a> (<a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a> enc, const unsigned short *page=NULL)</td></tr>
+<tr class="memdesc:a25682c7ebc7df115ade370d9d21ed888"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set encoding for <code>FILE*</code> input.  <a href="#a25682c7ebc7df115ade370d9d21ed888">More...</a><br /></td></tr>
+<tr class="separator:a25682c7ebc7df115ade370d9d21ed888"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae553aa63a3a04e836b8aed8ef524a92e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#ae553aa63a3a04e836b8aed8ef524a92e">file_encoding</a> () const </td></tr>
+<tr class="memdesc:ae553aa63a3a04e836b8aed8ef524a92e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get encoding of the current <code>FILE*</code> input.  <a href="#ae553aa63a3a04e836b8aed8ef524a92e">More...</a><br /></td></tr>
+<tr class="separator:ae553aa63a3a04e836b8aed8ef524a92e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -222,9 +229,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a371264ce1908a198cc11a7d6990ccbcc"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a371264ce1908a198cc11a7d6990ccbcc">uidx_</a></td></tr>
 <tr class="memdesc:a371264ce1908a198cc11a7d6990ccbcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">index in utf8_[] or &gt;= 8 when unused  <a href="#a371264ce1908a198cc11a7d6990ccbcc">More...</a><br /></td></tr>
 <tr class="separator:a371264ce1908a198cc11a7d6990ccbcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e560a30d77f8c4bf277e60998e3c7db"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a2e560a30d77f8c4bf277e60998e3c7db">utfx_</a></td></tr>
-<tr class="memdesc:a2e560a30d77f8c4bf277e60998e3c7db"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">file_encoding</a>  <a href="#a2e560a30d77f8c4bf277e60998e3c7db">More...</a><br /></td></tr>
-<tr class="separator:a2e560a30d77f8c4bf277e60998e3c7db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8877e55c75a97a09e3e9e2fb564b1774"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a8877e55c75a97a09e3e9e2fb564b1774">utfx_</a></td></tr>
+<tr class="memdesc:a8877e55c75a97a09e3e9e2fb564b1774"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a>  <a href="#a8877e55c75a97a09e3e9e2fb564b1774">More...</a><br /></td></tr>
+<tr class="separator:a8877e55c75a97a09e3e9e2fb564b1774"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accc6c55cd219a6717e536bd6c9f0606d"><td class="memItemLeft" align="right" valign="top">const unsigned short *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#accc6c55cd219a6717e536bd6c9f0606d">page_</a></td></tr>
 <tr class="memdesc:accc6c55cd219a6717e536bd6c9f0606d"><td class="mdescLeft">&#160;</td><td class="mdescRight">custom code page  <a href="#accc6c55cd219a6717e536bd6c9f0606d">More...</a><br /></td></tr>
 <tr class="separator:accc6c55cd219a6717e536bd6c9f0606d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -261,7 +268,22 @@ Protected Attributes</h2></td></tr>
 <p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to convert a wide character string to UTF-8:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(L<span class="stringliteral">&quot;Copyright ©&quot;</span>); <span class="comment">// © is unicode U+00A9 and UTF-8 C2 A9</span></div><div class="line"><span class="keywordtype">size_t</span> len = input.size(); <span class="comment">// size of UTF-8 string</span></div><div class="line"><span class="keywordtype">char</span> *buf = <span class="keyword">new</span> <span class="keywordtype">char</span>[len + 1];</div><div class="line">input.get(buf, len);</div><div class="line">buf[len] = <span class="charliteral">&#39;\0&#39;</span>; <span class="comment">// make \0-terminated</span></div></div><!-- fragment --><h2>Example </h2>
 <p>The following example shows how to switch source inputs while reading input byte by byte (use a buffer as shown in other examples to improve efficiency):</p>
-<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input = <span class="stringliteral">&quot;Hello&quot;</span>;</div><div class="line">std::string message;</div><div class="line"><span class="keywordtype">char</span> c;</div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div><div class="line">input = L<span class="stringliteral">&quot; world! To ∞ and beyond.&quot;</span>; <span class="comment">// switch input to a wide string</span></div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div></div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input = <span class="stringliteral">&quot;Hello&quot;</span>;</div><div class="line">std::string message;</div><div class="line"><span class="keywordtype">char</span> c;</div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div><div class="line">input = L<span class="stringliteral">&quot; world! To ∞ and beyond.&quot;</span>; <span class="comment">// switch input to a wide string</span></div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div></div><!-- fragment --> </div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a class="anchor" id="a70e8550b0b1649b2cd49b1b872949cc8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef unsigned short <a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">reflex::Input::file_encoding_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Common <a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a> constants type. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a7c6455e576c90b478789928db6066267"></a>
 <div class="memitem">
 <div class="memproto">
@@ -543,7 +565,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a93c5c4f5dd43521923d12ddd6ff59b1d"></a>
+<a class="anchor" id="a609f0e4676584113831ea9bff651dada"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -559,7 +581,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned short&#160;</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a>&#160;</td>
           <td class="paramname"><em>enc</em>, </td>
         </tr>
         <tr>
@@ -585,8 +607,8 @@ Protected Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">file</td><td>input file </td></tr>
-    <tr><td class="paramname">enc</td><td><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">file_encoding</a> (when UTF BOM is not present) </td></tr>
-    <tr><td class="paramname">page</td><td>code page for <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a3e61805f611257e324b7e7f4c73a5dd7" title="custom code page ">file_encoding::custom</a> </td></tr>
+    <tr><td class="paramname">enc</td><td><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a> (when UTF BOM is not present) </td></tr>
+    <tr><td class="paramname">page</td><td>code page for <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a76935cbd4a24d36af7e3ebdd5772aeb9" title="custom code page ">file_encoding::custom</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -787,14 +809,14 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a920aef092e068d7b0f6e828a5e302d3e"></a>
+<a class="anchor" id="a25682c7ebc7df115ade370d9d21ed888"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="structreflex_1_1_input_1_1file__encoding.html">reflex::Input::file_encoding</a> </td>
           <td>(</td>
-          <td class="paramtype">unsigned short&#160;</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a>&#160;</td>
           <td class="paramname"><em>enc</em>, </td>
         </tr>
         <tr>
@@ -814,15 +836,15 @@ Protected Attributes</h2></td></tr>
 <p>Set encoding for <code>FILE*</code> input. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">enc</td><td><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">file_encoding</a> </td></tr>
-    <tr><td class="paramname">page</td><td>custom code page for <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a3e61805f611257e324b7e7f4c73a5dd7" title="custom code page ">file_encoding::custom</a> </td></tr>
+    <tr><td class="paramname">enc</td><td><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a> </td></tr>
+    <tr><td class="paramname">page</td><td>custom code page for <a class="el" href="structreflex_1_1_input_1_1file__encoding.html#a76935cbd4a24d36af7e3ebdd5772aeb9" title="custom code page ">file_encoding::custom</a> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a class="anchor" id="a6014fcca0d45cb8b7ab3382097e0c749"></a>
+<a class="anchor" id="ae553aa63a3a04e836b8aed8ef524a92e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -830,7 +852,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned short <a class="el" href="structreflex_1_1_input_1_1file__encoding.html">reflex::Input::file_encoding</a> </td>
+          <td class="memname"><a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a> <a class="el" href="structreflex_1_1_input_1_1file__encoding.html">reflex::Input::file_encoding</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -844,7 +866,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get encoding of the current <code>FILE*</code> input. </p>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">file_encoding</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>current <a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a> constant </dd></dl>
 
 </div>
 </div>
@@ -1499,7 +1521,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2e560a30d77f8c4bf277e60998e3c7db"></a>
+<a class="anchor" id="a8877e55c75a97a09e3e9e2fb564b1774"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1507,7 +1529,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned short reflex::Input::utfx_</td>
+          <td class="memname"><a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a> reflex::Input::utfx_</td>
         </tr>
       </table>
   </td>
@@ -1517,7 +1539,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common constants. ">file_encoding</a> </p>
+<p><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a> </p>
 
 </div>
 </div>
@@ -1549,7 +1571,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Apr 6 2019 17:09:55 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Apr 24 2019 21:41:55 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

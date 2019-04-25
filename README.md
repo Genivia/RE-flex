@@ -25,12 +25,14 @@ representative C source code file into 244 tokens takes only 13 microseconds:
 <tr><td>reflex -m=boost</td><td>Boost.Regex POSIX 1.66.0</td><td>450</td></tr>
 <tr><td>RE2::Consume()</td><td>RE2 POSIX (pre-compiled) 2018-04-01</td><td>1226</td></tr>
 <tr><td>flex -+</td><td>Flex 2.5.35</td><td>3968</td></tr>
+<tr><td>regcomp(), regexec()</td><td>GNU C POSIX.2 regex</td><td>5800</td></tr>
 <tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>5979</td></tr>
 </table>
 
 Note: *Best times of 10 tests with average time in microseconds over 100 runs
 (using clang 9.0.0 with -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz LPDDR3).
-Hyperscan disqualifies as a potential scanner due to its event handler
+Hyperscan disqualifies as a potential scanner due to its "All matches reported"
+semantics resulting in 1915 matches for his test and its event handler
 requirements.* [Download the tests](https://www.genivia.com/files/perfcomp.zip)
 
 

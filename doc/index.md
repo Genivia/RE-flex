@@ -1058,20 +1058,24 @@ be specified in the lexer specification with <i>`%%option`</i> (or as
 ~~~{.cpp}
     %option flex
     %option bison
-    %option graphs-file=mygraph
+    %option graphs-file=mygraph.gv
 ~~~
 </div>
 
-The above is equivalent to the `−−flex`, `−−bison`, and `−−graphs-file=mygraph`
-command-line options.  Multiple options can be grouped on a single line:
+The above is equivalent to the `−−flex`, `−−bison`, and
+`−−graphs-file=mygraph.gv` command-line options.
+
+Multiple options can be grouped on a single line:
 
 <div class="alt">
 ~~~{.cpp}
-    %o flex bison graphs-file=mygraph
+    %o flex bison graphs-file=mygraph.gv
 ~~~
 </div>
 
-Option parameters should be quoted when parameters contain special characters:
+An option parameter name may contain hyphens (-), dots (.), and double colons
+(::), but when other special characters are used then option parameter should
+be quoted:
 
 <div class="alt">
 ~~~{.cpp}
@@ -1079,7 +1083,16 @@ Option parameters should be quoted when parameters contain special characters:
 ~~~
 </div>
 
-Shorter forms can be used, with each option on a separate line:
+Quotes (") and backslashes (\\) should be escaped in an option parameter:
+
+<div class="alt">
+~~~{.cpp}
+    %o flex bison graphs-file="D:\\dev\\output\\mygraph.gv"
+~~~
+</div>
+
+Shorter forms can be used by omitting <i>`%%o`</i> altogether, requiring each
+option to be specified on a separate line:
 
 <div class="alt">
 ~~~{.cpp}
@@ -1106,7 +1119,7 @@ check and use RE/flex options.  For example, the lexer class name is
 
 #### `−+`, `−−flex`
 
-This generates a `yyFlexLexer` scanner class that is compatible with the
+This option generates a `yyFlexLexer` scanner class that is compatible with the
 Flex-generated `yyFlexLexer` scanner class (assuming Flex with option `−+` for
 C++).  The generated `yyFlexLexer` class has the usual `yytext` and other "yy"
 variables and functions, as defined by the Flex specification standard.  Without
@@ -1116,14 +1129,14 @@ as `text()`, `echo()` and also the lexer's matcher methods, such as
 
 #### `-a`, `−−dotall`
 
-This makes dot (`.`) in patterns match newline.  Normally dot matches a single
-character except a newline (`\n` ASCII 0x0A).
+This option makes dot (`.`) in patterns match newline.  Normally dot matches a
+single character except a newline (`\n` ASCII 0x0A).
 
 #### `-B`, `−−batch`
 
-This generates a batch input scanner that reads the entire input all at once
-when possible.  This scanner is fast, but consumes more memory depending on the
-input data size.
+This option generates a batch input scanner that reads the entire input all at
+once when possible.  This scanner is fast, but consumes more memory depending
+on the input data size.
 
 #### `-f`, `−−full`
 
@@ -1143,65 +1156,67 @@ option.
 
 #### `-i`, `−−case-insensitive`
 
-This ignore case in patterns.  Patterns match lower and upper case letters.
-This switch only applies to ASCII letters.
+This option ignores case in patterns.  Patterns match lower and upper case
+letters in the ASCII range only.
 
 #### `-I`, `−−interactive`, `−−always-interactive`
 
-This generates an interactive scanner and permits console input by sacrificing
-speed.  By contrast, the default buffered input strategy is more efficient.
+This option generates an interactive scanner and permits console input by
+sacrificing speed.  By contrast, the default buffered input strategy is more
+efficient.
 
 #### `-m reflex`, `−−matcher=reflex`
 
-This generates a scanner that uses the RE/flex `reflex::Matcher` class with a
-POSIX matcher engine.  This is the default matcher for scanning.  This option
-is best for Flex compatibility.  This matcher supports lazy quantifiers,
+This option generates a scanner that uses the RE/flex `reflex::Matcher` class
+with a POSIX matcher engine.  This is the default matcher for scanning.  This
+option is best for Flex compatibility.  This matcher supports lazy quantifiers,
 \ref reflex-pattern-unicode, \ref reflex-pattern-anchor,
 \ref reflex-pattern-dents matching, and supports FSM output for visualization
 with Graphviz.
 
 #### `-m boost`, `−−matcher=boost`
 
-This generates a scanner that uses the `reflex::BoostPosixMatcher` class with a
-Boost.Regex POSIX matcher engine for scanning.  The matcher supports Unicode
-and word boundary anchors, but not lazy quantifiers.  No Graphviz output.
+This option generates a scanner that uses the `reflex::BoostPosixMatcher` class
+with a Boost.Regex POSIX matcher engine for scanning.  The matcher supports
+Unicode and word boundary anchors, but not lazy quantifiers.  No Graphviz
+output.
 
 #### `-m boost-perl`, `−−matcher=boost-perl`
 
-This generates a scanner that uses the `reflex::BoostPerlMatcher` class with a
-Boost.Regex normal (Perl) matcher engine for scanning.  The matching behavior
-differs from the POSIX *leftmost longest rule* and results in the first
-matching rule to be applied instead of the rule that produces the longest
+This option generates a scanner that uses the `reflex::BoostPerlMatcher` class
+with a Boost.Regex normal (Perl) matcher engine for scanning.  The matching
+behavior differs from the POSIX *leftmost longest rule* and results in the
+first matching rule to be applied instead of the rule that produces the longest
 match.  The matcher supports lazy quantifiers and word boundary anchors.  No
 Graphviz output.
 
 #### `−−pattern=NAME`
 
-This defines a custom pattern class `NAME` for the custom matcher specified
-with option `-m`.
+This option defines a custom pattern class `NAME` for the custom matcher
+specified with option `-m`.
 
 #### `−−include=FILE`
 
-This defines a custom include <i>`FILE.h`</i> to include for the custom matcher
-specified with option `-m`.
+This option defines a custom include <i>`FILE.h`</i> to include for the custom
+matcher specified with option `-m`.
 
 #### `−−tabs=N`
 
-This sets the tab size to `N`, where `N` > 0 must be a power of 2.  The tab
-size is used internally to determine the column position for
-\ref reflex-pattern-dents matching and to determine the column position
-returned by `columno()` and the number of columns returned by `columns()`.  It
-has no effect otherwise.
+This option sets the tab size to `N`, where `N` > 0 must be a power of 2.  The
+tab size is used internally to determine the column position for \ref
+reflex-pattern-dents matching and to determine the column position returned by
+`columno()` and the number of columns returned by `columns()`.  It has no
+effect otherwise.
 
 #### `-u`, `−−unicode`
 
-This makes `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode.
-Also groups UTF-8 sequences in the regex, such that each UTF-8 encoded
-character in a regex is properly matched as one wide character.
+This option makes `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match
+Unicode.  Also groups UTF-8 sequences in the regex, such that each UTF-8
+encoded character in a regex is properly matched as one wide character.
 
 #### `-x`, `−−freespace`
 
-This switches the <b>`reflex`</b> scanner to *free space mode*.  Regular
+This option switches the <b>`reflex`</b> scanner to *free space mode*.  Regular
 expressions in free space mode may contain spacing to improve readability.
 Spacing within regular expressions is ignored, so use `" "` or `[ ]` to match a
 space and `\h` to match a space or a tab character.  Actions in free space mode
@@ -1215,21 +1230,21 @@ continue on the next line.
 
 #### `-o FILE`, `−−outfile=FILE`
 
-This saves the scanner to `FILE` instead of <i>`lex.yy.cpp`</i>.
+This option saves the scanner to `FILE` instead of <i>`lex.yy.cpp`</i>.
 
 #### `-t`, `−−stdout`
 
-This writes the scanner to stdout instead of to <i>`lex.yy.cpp`</i>.
+This option writes the scanner to stdout instead of to <i>`lex.yy.cpp`</i>.
 
 #### `−−graphs-file[=FILE]`
 
-(RE/flex matcher only).  This generates a Graphviz file <i>`FILE.gv`</i>, where `FILE` is
-optional.  When `FILE` is omitted the <b>`reflex`</b> command generates the file
-<i>`reflex.S.gv`</i> for each start condition state <i>`S`</i> defined in the
-lexer specification.  This includes <i>`reflex.INITIAL.gv`</i> for the
-<i>`INITIAL`</i> start condition state.  This option can be used to visualize
-the RE/flex matcher's finite state machine with the
-[Graphviz dot](http://www.graphviz.org) tool.  For example:
+(RE/flex matcher only).  This option generates a Graphviz file
+<i>`FILE.gv`</i>, where `FILE` is optional.  When `FILE` is omitted the
+<b>`reflex`</b> command generates the file <i>`reflex.S.gv`</i> for each start
+condition state <i>`S`</i> defined in the lexer specification.  This includes
+<i>`reflex.INITIAL.gv`</i> for the <i>`INITIAL`</i> start condition state.
+This option can be used to visualize the RE/flex matcher's finite state machine
+with the [Graphviz dot](http://www.graphviz.org) tool.  For example:
 
 @dot
 digraph INITIAL {
@@ -1273,27 +1288,27 @@ the next match.
 
 #### `−−header-file[=FILE]`
 
-This generates a C++ header file <i>`FILE.h`</i> that declares the lexer class,
-in addition to the generated lexer class code, where `FILE` is optional.  When
-`FILE` is omitted the <b>`reflex`</b> command generates <i>`lex.yy.h`</i>.
+This option generates a C++ header file <i>`FILE.h`</i> that declares the lexer
+class, in addition to the generated lexer class code, where `FILE` is optional.
+When `FILE` is omitted the <b>`reflex`</b> command generates <i>`lex.yy.h`</i>.
 
 #### `−−regexp-file[=FILE]`
 
-This generates a text file <i>`FILE.txt`</i> that contains the scanner's regular
-expression patterns, where `FILE` is optional.  When `FILE` is omitted the
-<b>`reflex`</b> command generates <i>`reflex.S.txt`</i> for each start
+This option generates a text file <i>`FILE.txt`</i> that contains the scanner's
+regular expression patterns, where `FILE` is optional.  When `FILE` is omitted
+the <b>`reflex`</b> command generates <i>`reflex.S.txt`</i> for each start
 condition state <i>`S`</i>.  The regular expression patterns are converted from
 the lexer specification and translated into valid C++ strings that can be used
 with a regex library for pattern matching.
 
 #### `−−tables-file[=FILE]`
 
-(RE/flex matcher only).  This generates a C++ file <i>`FILE.cpp`</i> with the
-finite state machine in source code form, where `FILE` is optional.  When
-`FILE` is omitted the <b>`reflex`</b> command generates <i>`reflex.S.cpp`</i>
-for each start condition state <i>`S`</i>.  This includes the file
-<i>`reflex.INITIAL.cpp`</i> for the <i>`INITIAL`</i> start condition state.
-When this option is used in combination with `−−full` or `−−fast`, the
+(RE/flex matcher only).  This option generates a C++ file <i>`FILE.cpp`</i>
+with the finite state machine in source code form, where `FILE` is optional.
+When `FILE` is omitted the <b>`reflex`</b> command generates
+<i>`reflex.S.cpp`</i> for each start condition state <i>`S`</i>.  This includes
+the file <i>`reflex.INITIAL.cpp`</i> for the <i>`INITIAL`</i> start condition
+state.  When this option is used in combination with `−−full` or `−−fast`, the
 `reflex::Pattern` is instantiated with the code table defined in this file.
 Therefore, when you combine this option with `−−full` or `−−fast` then you
 should compile the generated table file with the scanner.  Options `−−full` and
@@ -1306,23 +1321,24 @@ initialized.
 
 #### `−−namespace=NAME`
 
-This places the generated scanner class in the C++ namespace `NAME` scope, that
-is `NAME::Lexer` (and `NAME::yyFlexLexer` when option `−−flex` is used).
-`NAME` can be a list of nested namespaces of the form `NAME1.NAME2.NAME3` ...
+This option places the generated scanner class in the C++ namespace `NAME`
+scope, that is `NAME::Lexer` (and `NAME::yyFlexLexer` when option `−−flex` is
+used).  `NAME` can be a list of nested namespaces of the form
+`NAME1::NAME2::NAME3` ...  or by using a dot as in `NAME1.NAME2.NAME3` ...
 
 #### `−−lexer=NAME`
 
-This defines the `NAME` of the generated scanner class and replaces the default
-name `Lexer` (and replaces `yyFlexLexer` when option `−−flex` is used).
+This option defines the `NAME` of the generated scanner class and replaces the
+default name `Lexer` (and replaces `yyFlexLexer` when option `−−flex` is used).
 
 #### `−−lex=NAME`
 
-This defines the `NAME` of the generated scanner function to replace the
+This option defines the `NAME` of the generated scanner function to replace the
 function name `lex()` (and `yylex()` when option `−−flex` is used).
 
 #### `−−class=NAME`
 
-This defines the `NAME` of the user-defined scanner class that should be
+This option defines the `NAME` of the user-defined scanner class that should be
 derived from the generated base `Lexer` class.  Use this option when defining
 your own scanner class named `NAME`.  You can declare a custom lexer class in the
 first section of the lexer specification.  Because the custom lexer class is
@@ -1335,63 +1351,76 @@ This option combines options `−−flex` and `−−class=NAME`.
 
 #### `−−main`
 
-This generates a `main` function to create a stand-alone scanner that scans
-data from standard input (using `stdin`).
+This option generates a `main` function to create a stand-alone scanner that
+scans data from standard input (using `stdin`).
 
 #### `-L`, `−−noline`
 
-This suppresses the `#line` directives in the generated scanner code.
+This option suppresses the `#line` directives in the generated scanner code.
 
 #### `-P NAME`, `−−prefix=NAME`
 
-This specifies `NAME` as a prefix for the generated `yyFlexLexer` class to
-replace the default `yy` prefix.  Also renames the prefix of `yylex()`.
+This option specifies `NAME` as a prefix for the generated `yyFlexLexer` class
+to replace the default `yy` prefix.  Also renames the prefix of `yylex()`.
 Generates <i>`lex.NAME.cpp`</i> file instead of <i>`lex.yy.cpp`</i>, and
 generates <i>`lex.NAME.h`</i> with option `−−header-file`.
 
 #### `−−nostdinit`
 
-This initializes input to `std::cin` instead of using `stdin`.  Automatic
-UTF decoding is not supported.  Use `stdin` for automatic UTF BOM detection and
-UTF decoding.
+This option initializes input to `std::cin` instead of using `stdin`.
+Automatic UTF decoding is not supported.  Use `stdin` for automatic UTF BOM
+detection and UTF decoding.
 
 #### `−−bison`
 
-This generates a scanner that works with Bison parsers, by defining global
-(non-MT-safe and non-reentrant) "yy" variables and functions.  See
+This option generates a scanner that works with Bison parsers, by defining
+global (non-MT-safe and non-reentrant) "yy" variables and functions.  See
 \ref reflex-bison for more details.  Use option `−−noyywrap` to remove the
-dependency on the global `yywrap()` function.
+dependency on the global `yywrap()` function.  Use option `−−bison-locations`
+to support the Bison <i>`%%locations`</i> feature.
 
 #### `−−bison-bridge`
 
-This generates a scanner that works with Bison pure (MT-safe and reentrant)
-parsers using a Bison bridge for one ore more scanner objects.  See
-\ref reflex-bison for more details.
+This option generates a scanner that works with Bison pure (MT-safe and
+reentrant) parsers using a Bison bridge for one ore more scanner objects.
+Combine this option with `−−bison-locations` to support the Bison
+<i>`%%locations`</i> feature.  See \ref reflex-bison-bridge for more
+details.
 
 #### `−−bison-cc`
 
-This generates a scanner that works with Bison 3.0
-<i>`%%skeleton "lalr1.cc"`</i> C++ parsers that are MT-safe.  See \ref
-reflex-bison for more details.
+This option generates a scanner that works with Bison 3.0
+<i>`%%skeleton "lalr1.cc"`</i> C++ parsers that are MT-safe.  Combine this
+option with `−−bison-locations` to support the Bison <i>`%%locations`</i>
+grammar.  See \ref reflex-bison-cc for more details.
 
 #### `−−bison-cc-namespace=NAME`
 
-This specifies one or more `NAME` namespace(s) for the Bison 3.0
+This option specifies one or more `NAME` namespace(s) for the Bison 3.0
 <i>`%%skeleton "lalr1.cc"`</i> C++ parser, which is `yy` by default.
 
 #### `−−bison-cc-parser=NAME`
 
-This specifies the class `NAME` of the Bison 3.0
+This option specifies the class `NAME` of the Bison 3.0
 <i>`%%skeleton "lalr1.cc"`</i> C++ parser, which is `parser` by default.
+
+#### `−−bison-complete`
+
+This option generates a ascnner that works with Bison 3.2 C++ complete symbols,
+specified by <i>`%%define api.value.type variant`</i> and
+<i>`%%define api.token.constructor`</i> in a Bison grammar file.  This option
+also sets options `−−bison-cc` and `−−token-type`.  Combine this option with
+`−−bison-locations` to support the Bison <i>`%%locations`</i> feature.  See
+\ref reflex-bison-complete for more details.
 
 #### `−−bison-locations`
 
-This generates a scanner that works with Bison with locations enabled.  See
-\ref reflex-bison for more details.
+This option generates a scanner that works with Bison with locations enabled.
+See \ref reflex-bison-locations for more details.
 
 #### `-R`, `−−reentrant`
 
-This generates additional Flex-compatible `yylex()` reentrant scanner
+This option generates additional Flex-compatible `yylex()` reentrant scanner
 functions.  RE/flex scanners are always reentrant, assuming that
 <i>`%%class`</i> variables are used instead of the user declaring global
 variables.  This is a Flex-compatibility option and should only be used with
@@ -1407,6 +1436,23 @@ compatibility and when `−−flex`  and `−−bison` are used together.  Use
 `−−noyywrap` to disable the dependence on this global function.  This option
 has no effect for C++ lexer classes, which have a virtual `int wrap()` (or
 `yywrap()` with option `−−flex`) method that can be overridden.
+
+#### `−−exception=VALUE`
+
+This option defines the exception to be thrown by the generated scanner's
+default rule when no rule matches the input.  This option generates a default
+rule with action `throw VALUE` and replaces the standard default rule that
+ECHOs all unmatched text when no rule matches.  This option has no effect when
+option `-s` (`−−nodefault`) is specified.
+
+#### `−−token-type=NAME`
+
+This option specifies the type of the token values returned by `lex()` and
+`yylex()`.  The type of the values returned by `lex()` and `yylex()` is `int`
+by default.  This option may be used to specify an alternate token type.
+Option `−−bison-complete` automatically defines the appropriate token type
+`symbol_type` depending the the parameters specified with options
+`−−bison-cc-namespace` and `−−bison-cc-parser`.
 
 🔝 [Back to table of contents](#)
 
@@ -1438,7 +1484,7 @@ details.
 This suppresses the default rule that ECHOs all unmatched text when no rule
 matches.  With the `−−flex` option, the scanner reports "scanner jammed" when
 no rule matches.  Without the `−−flex` option, unmatched input is silently
-ignored.
+ignored.  See also option `−−exception=VALUE`.
 
 #### `-v`, `−−verbose`
 
@@ -2807,9 +2853,9 @@ namespace can be set with options:
 
 To customize the Lexer class use these options and code injection.
 
-You can declare multiple nested namespace names by separating the names with a
-dot, as for example in `namespace=NAME1.NAME2.NAME3` to declare the lexer in
-`NAME1::NAME2::NAME3`.
+You can declare multiple nested namespace names by
+`namespace=NAME1::NAME2::NAME3`, or by separating the names with a dot such as
+`namespace=NAME1.NAME2.NAME3`, to declare the lexer in `NAME1::NAME2::NAME3`.
 
 To understand the impact of these options, consider the following lex
 specification template:
@@ -3612,8 +3658,8 @@ Note that `noyywrap` is used to remove the dependency on the global `yywrap()`
 function that is not defined.
 
 This example sets the global `yylval.num` to the integer scanned or
-`yylval.str` to the string scanned.  It assumes that the yacc grammar
-specification defines the tokens `CONST_NUMBER` and `CONST_STRING` and the type
+`yylval.str` to the string scanned.  It assumes that the Bison/Yacc grammar
+file defines the tokens `CONST_NUMBER` and `CONST_STRING` and the type
 `YYSTYPE` of `yylval`.  For example:
 
 <div class="alt">
@@ -3659,8 +3705,8 @@ See the generated <i>`lex.yy.cpp`</i> BISON section, which contains
 declarations specific to Bison when the `−−bison` option is used.
 
 There are two approaches for a Bison parser to work with a scanner.  Either the
-yacc grammar specification for Bison should include the externs we need to
-import from the scanner:
+Bison/Yacc grammar file should include the externs we need to import from the
+scanner:
 
 <div class="alt">
 ~~~{.cpp}
@@ -3680,7 +3726,7 @@ import from the scanner:
 </div>
 
 or a better approach is to generate a <i>`lex.yy.h`</i> header file with option
-`−−header-file` and use this header file in the yacc grammar specification:
+`−−header-file` and use this header file in the Bison/Yacc grammar file:
 
 <div class="alt">
 ~~~{.cpp}
@@ -3722,24 +3768,28 @@ these Bison-specific features.
 The following combinations of options are available to generate scanners for
 Bison:
 
-  Options                                       | Method                                                     | Global functions and variables
-  --------------------------------------------- | ---------------------------------------------------------- | ------------------------------
-  &nbsp;                                        | `int Lexer::lex()`                                         | no global variables, but doesn't work with Bison
-  `−−flex`                                      | `int yyFlexLexer::yylex()`                                 | no global variables, but doesn't work with Bison
-  `−−bison`                                     | `int Lexer::lex()`                                         | `Lexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`
-  `−−flex` `−−bison`                            | `int yyFlexLexer::yylex()`                                 | `yyFlexLexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`, `char *yytext`, `yy_size_t yyleng`, `int yylineno`
-  `−−bison` `−−reentrant`                       | `int Lexer::lex()`                                         | `int yylex(yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
-  `−−flex` `−−bison` `−−reentrant`              | `int yyFlexLexer::lex()`                                   | `int yylex(yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)`
-  `−−bison-locations`                           | `int Lexer::lex(YYSTYPE& yylval)`                          | `Lexer YY_SCANNER`, `int yylex(YYSTYPE *yylval, YYLTYPE *yylloc)` 
-  `−−flex` `−−bison-locations`                  | `int yyFlexLexer::yylex(YYSTYPE& yylval)`                  | `yyFlexLexer YY_SCANNER`, `int yylex(YYSTYPE *yylval, YYLTYPE *yylloc)` 
-  `−−bison-cc`                                  | `int Lexer::lex(YYSTYPE *yylval)`                          | no global variables
-  `−−flex` `−−bison-cc`                         | `int yyFlexLexer::yylex(YYSTYPE *yylval)`                  | no global variables
-  `−−bison-cc` `−−bison-locations`              | `int Lexer::lex(YYSTYPE *yylval, YYLTYPE *yylloc)`         | no global variables
-  `−−flex` `−−bison-cc` `−−bison-locations`     | `int yyFlexLexer::yylex(YYSTYPE *yylval, YYLTYPE *yylloc)` | no global variables
-  `−−bison-bridge`                              | `int Lexer::lex(YYSTYPE& yylval)`                          | `int yylex(YYSTYPE *yylval, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)`
-  `−−flex` `−−bison-bridge`                     | `int yyFlexLexer::yylex(YYSTYPE& yylval)`                  | `int yylex(YYSTYPE *yylval, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
-  `−−bison-bridge` `−−bison-locations`          | `int Lexer::lex(YYSTYPE& yylval)`                          | `int yylex(YYSTYPE *yylval, YYLTYPE *yylloc, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
-  `−−flex` `−−bison-bridge` `−−bison-locations` | `int yyFlexLexer::yylex(YYSTYPE& yylval)`                  | `int yylex(YYSTYPE *yylval, YYLTYPE *yylloc, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
+  Options                                         | Method                                                     | Global functions and variables
+  ----------------------------------------------- | ---------------------------------------------------------- | ------------------------------
+  &nbsp;                                          | `int Lexer::lex()`                                         | no global variables, but doesn't work with Bison
+  `−−flex`                                        | `int yyFlexLexer::yylex()`                                 | no global variables, but doesn't work with Bison
+  `−−bison`                                       | `int Lexer::lex()`                                         | `Lexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`
+  `−−flex` `−−bison`                              | `int yyFlexLexer::yylex()`                                 | `yyFlexLexer YY_SCANNER`, `int yylex()`, `YYSTYPE yylval`, `char *yytext`, `yy_size_t yyleng`, `int yylineno`
+  `−−bison` `−−reentrant`                         | `int Lexer::lex()`                                         | `int yylex(yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
+  `−−flex` `−−bison` `−−reentrant`                | `int yyFlexLexer::lex()`                                   | `int yylex(yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)`
+  `−−bison-locations`                             | `int Lexer::lex(YYSTYPE& yylval)`                          | `Lexer YY_SCANNER`, `int yylex(YYSTYPE *yylval, YYLTYPE *yylloc)` 
+  `−−flex` `−−bison-locations`                    | `int yyFlexLexer::yylex(YYSTYPE& yylval)`                  | `yyFlexLexer YY_SCANNER`, `int yylex(YYSTYPE *yylval, YYLTYPE *yylloc)` 
+  `−−bison-bridge`                                | `int Lexer::lex(YYSTYPE& yylval)`                          | `int yylex(YYSTYPE *yylval, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)`
+  `−−flex` `−−bison-bridge`                       | `int yyFlexLexer::yylex(YYSTYPE& yylval)`                  | `int yylex(YYSTYPE *yylval, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
+  `−−bison-bridge` `−−bison-locations`            | `int Lexer::lex(YYSTYPE& yylval)`                          | `int yylex(YYSTYPE *yylval, YYLTYPE *yylloc, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
+  `−−flex` `−−bison-bridge` `−−bison-locations`   | `int yyFlexLexer::yylex(YYSTYPE& yylval)`                  | `int yylex(YYSTYPE *yylval, YYLTYPE *yylloc, yyscan_t)`, `void yylex_init(yyscan_t*)`, `void yylex_destroy(yyscan_t)` 
+  `−−bison-cc`                                    | `int Lexer::yylex(YYSTYPE *yylval)`                        | no global variables
+  `−−flex` `−−bison-cc`                           | `int yyFlexLexer::yylex(YYSTYPE *yylval)`                  | no global variables
+  `−−bison-cc` `−−bison-locations`                | `int Lexer::yylex(YYSTYPE *yylval, YYLTYPE *yylloc)`       | no global variables
+  `−−flex` `−−bison-cc` `−−bison-locations`       | `int yyFlexLexer::yylex(YYSTYPE *yylval, YYLTYPE *yylloc)` | no global variables
+  `−−bison-complete`                              | `int Lexer::yylex()`                                       | no global variables
+  `−−flex` `−−bison-complete`                     | `int yyFlexLexer::yylex()`                                 | no global variables
+  `−−bison-complete` `−−bison-locations`          | `int Lexer::yylex()`                                       | no global variables
+  `−−flex` `−−bison-complete` `−−bison-locations` | `int yyFlexLexer::yylex()`                                 | no global variables
 
 Option `−−prefix` may be used with option `−−flex` to change the prefix of the
 generated `yyFlexLexer` and `yylex`.  This option can be combined with option
@@ -3760,15 +3810,15 @@ The following sections explain the `−−bison-cc`, `−−bison-bridge`,
 ### Bison-cc                                                 {#reflex-bison-cc}
 
 The <b>`reflex`</b> option `−−bison-cc` expects a Bison 3.0
-<i>`%%skeleton "lalr1.cc"`</i> C++ parser that is declared as follows in a Yacc
-specification:
+<i>`%%skeleton "lalr1.cc"`</i> C++ parser that is declared as follows in a
+Bison grammar file:
 
 <div class="alt">
 ~~~{.cpp}
     /* yacc grammar (.yxx file) for C++ */
 
-    %skeleton "lalr1.cc"
     %require  "3.0"
+    %skeleton "lalr1.cc"
 
     %code requires{
       namespace yy {
@@ -3776,21 +3826,23 @@ specification:
       }
     }
 
+    %defines
+
     %parse-param { yy::Lexer& lexer }  // Construct parser object with lexer
 
     %code{
-      #include "lex.yy.h"
+      #include "lex.yy.h"  // header file generated with reflex --header-file
       #undef yylex
       #define yylex lexer.yylex  // Within bison's parse() we should invoke lexer.yylex(), not the global yylex()
     }
 
-    %union {         // yy::parser::semantic_type yylval is a union:
-      int num;       // type of yylval.num is int
-      char* str;     // type of yylval.str is char*
+    %union {      // yy::parser::semantic_type yylval is a union:
+      int num;    // type of yylval.num is int
+      char* str;  // type of yylval.str is char*
     }
 
-    %token <num> CONST_NUMBER       // This defines yy::parser::token::CONST_NUMBER
-    %token <str> CONST_STRING       // This defines yy::parser::token::CONST_STRING
+    %token <num> CONST_NUMBER  // This defines yy::parser::token::CONST_NUMBER
+    %token <str> CONST_STRING  // This defines yy::parser::token::CONST_STRING
 
     %%
     ...  // grammar rules
@@ -3808,8 +3860,8 @@ With the `−−bison-cc` option of <b>`reflex`</b>, the `yylex()` function take
 in the lexer rules to assign semantic values to.
 
 The scanner is generated with <b>`reflex`</b> options `−−bison-cc`,
-`−−namespace=yy`, `−−lexer=Lexer` and `−−lex=yylex`.  The lexer specification
-should `#include` the Bison-generated header file to ensure that the
+`−−namespace=yy` and `−−lexer=Lexer`.  The lexer specification should
+`#include` the Bison-generated header file to ensure that the
 `yy::parser::token` enums `CONST_NUMBER` and `CONST_STRING` are defined.
 
 Using the code above, we can now initialize a Bison parser.  We first should
@@ -3829,7 +3881,8 @@ the namespace and parser class name of the Bison 3.0
 <i>`%%skeleton "lalr1.cc"`</i> C++ parser you are generating with Bison.  These
 are `yy` and `parser` by default, respectively. For option
 `−−bison-cc-namespace=NAME` the `NAME` can be a list of nested namespaces of
-the form `NAME1.NAME2.NAME3` ...
+the form `NAME1::NAME2::NAME3` or by separating the names by a dot as in
+`NAME1.NAME2.NAME3`.
 
 🔝 [Back to table of contents](#)
 
@@ -3838,14 +3891,14 @@ the form `NAME1.NAME2.NAME3` ...
 
 The <b>`reflex`</b> option `−−bison-cc` with `−−bison-locations` expects a
 Bison 3.0 <i>`%%skeleton "lalr1.cc"`</i> C++ parser that is declared as follows
-in a Yacc specification:
+in a Bison grammar file:
 
 <div class="alt">
 ~~~{.cpp}
     /* yacc grammar (.yxx file) for C++ */
 
-    %skeleton "lalr1.cc"
     %require  "3.0"
+    %skeleton "lalr1.cc"
 
     %code requires{
       namespace yy {
@@ -3853,23 +3906,25 @@ in a Yacc specification:
       }
     }
 
+    %defines
+
     %locations
 
     %parse-param { yy::Lexer& lexer }  // Construct parser object with lexer
 
     %code{
-      #include "lex.yy.h"
+      #include "lex.yy.h"  // header file generated with reflex --header-file
       #undef yylex
       #define yylex lexer.yylex  // Within bison's parse() we should invoke lexer.yylex(), not the global yylex()
     }
 
-    %union {         // yy::parser::semantic_type yylval is a union:
-      int num;       // type of yylval.num is int
-      char* str;     // type of yylval.str is char*
+    %union {      // yy::parser::semantic_type yylval is a union:
+      int num;    // type of yylval.num is int
+      char* str;  // type of yylval.str is char*
     }
 
-    %token <num> CONST_NUMBER       // This defines yy::parser::token::CONST_NUMBER
-    %token <str> CONST_STRING       // This defines yy::parser::token::CONST_STRING
+    %token <num> CONST_NUMBER  // This defines yy::parser::token::CONST_NUMBER
+    %token <str> CONST_STRING  // This defines yy::parser::token::CONST_STRING
 
     %%
     ...  // grammar rules
@@ -3887,15 +3942,14 @@ With the `−−bison-cc` and `−−bison-locations` options of <b>`reflex`</b>
 argument that makes the `yylval` visible in the lexer rules to assign semantic
 values to.   The second argument `yy::location yylloc` is set automatically by
 by invoking the lexer's `yylloc_update()` in `yylex()` to update the line and
-column of the match.  The virtual `yylloc_update()` method can be overriden by
-a user-defined lexer class that extends `Lexer` (or extends `yyFlexLexer` when
-option `−−flex` is used).
+column of the match.  The auto-generated virtual `yylloc_update()` method can
+be overriden by a user-defined lexer class that extends `Lexer` (or extends
+`yyFlexLexer` when option `−−flex` is used).
 
 The scanner is generated with <b>`reflex`</b> options `−−bison-cc`,
-`−−bison-locations`, `−−namespace=yy`, `−−lexer=Lexer` and `−−lex=yylex`.  The
-lexer specification should `#include` the Bison-generated header file to ensure
-that the `yy::parser::token` enums `CONST_NUMBER` and `CONST_STRING` are
-defined.
+`−−bison-locations`, `−−namespace=yy` and `−−lexer=Lexer`.  The lexer
+specification should `#include` the Bison-generated header file to ensure that
+the `yy::parser::token` enums `CONST_NUMBER` and `CONST_STRING` are defined.
 
 Using the code above, we can now initialize a Bison parser.  We first should
 create a scanner and pass it to the `parser` constructor as follows:
@@ -3912,10 +3966,301 @@ create a scanner and pass it to the `parser` constructor as follows:
 🔝 [Back to table of contents](#)
 
 
+### Bison-complete                                     {#reflex-bison-complete}
+
+The <b>`reflex`</b> option `−−bison-complete` expects a Bison 3.2 C++ parser
+which uses both <i>`%%define api.value.type variant`</i> and
+<i>`%%define api.token.constructor`</i>.  This parser defines the type
+`symbol_type` variant and the parser expects `yylex` to have the type
+`yy::parser::symbol_type  yylex()`.  Here is an example Bison 3.2 C++ complete
+symbols grammar file:
+
+<div class="alt">
+~~~{.cpp}
+    /* yacc grammar (.yxx file) for C++ */
+
+    %require "3.2"
+    %language "c++"
+
+    %define api.namespace {yy}
+    %define api.parser.class {parser}
+    %define api.value.type variant
+    %define api.token.constructor
+
+    %defines
+    %output "parser.cpp"
+
+    %code requires{
+      namespace yy {
+        class Lexer;  // Generated by reflex with namespace=yy lexer=Lexer lex=yylex
+      }
+    }
+
+    %parse-param { yy::Lexer& lexer }  // Construct parser object with lexer
+
+    %code{
+      #include "lex.yy.h"  // header file generated with reflex --header-file
+      #undef yylex
+      #define yylex lexer.yylex  // Within bison's parse() we should invoke lexer.yylex(), not the global yylex()
+    }
+
+    %define api.token.prefix {TOK_}
+    %token <std::string> IDENTIFIER "identifier"  // This defines TOK_IDENTIFIER
+    %token <int> NUMBER "number"                  // This defines TOK_NUMBER
+    %token EOF 0 "end of file"                    // This defines TOK_EOF with value 0
+
+    %%
+    ...  // grammar rules
+    %%
+
+    void yy::parser::error(const std::string& msg)
+    {
+      std::cerr << msg << std::endl;
+    }
+~~~
+</div>
+
+With the `−−bison-complete` option of <b>`reflex`</b>, the `yylex()` function
+takes no arguments by default and returns a value of type
+`yy::parser::symbol_type`.  This means that the lexer's action should return
+values of this type, constructed with `yy::parser::symbol_type` or with
+`make_TOKENNAME` as follows:
+
+<div class="alt">
+~~~{.cpp}
+    %top{
+    #include "parser.hpp"  /* Generated by bison. */
+    %}
+
+    %option bison-complete
+    %option bison-cc-namespace=yy
+    %option bison-cc-parser=parser
+
+    %option exception="yy::parser::syntax_error(\"Unknown token.\")"
+
+    %option namespace=yy
+    %option lexer=Lexer
+
+    %%
+    \s+      // skip space
+    [a-z]+   return yy::parser::make_IDENTIFIER(str());
+    [0-9]+   return yy::parser::make_NUMBER(atoi(text()));
+    ":"      return yy::parser::symbol_type(':');
+    <<EOF>>  return yy::parser::make_EOF();
+    %%
+~~~
+</div>
+
+The scanner is generated with <b>`reflex`</b> options `−−bison-complete`,
+`−−namespace=yy` and `−−lexer=Lexer`.  Option `−−bison-complete` automatically
+defines the appropriate token type `symbol_type` depending on
+`−−bison-cc-namespace` and on `−−bison-cc-parser`.  We also used options
+`−−bison-cc-namespace=NAME` and `−−bison-cc-parser=NAME` to specify the
+namespace and parser class name of the Bison 3.2 C++ parser.  These are `yy`
+and `parser` by default, respectively (<i>`%%define api.namespace {yy}`</i> and
+<i>`%%define api.parser.class {parser}`</i> are actually superfluous in the
+example grammer specification because their values are the defaults).  We use
+option `−−exception` to specify that the scanner's default rule should
+throw a `yy::parser::syntax_error("Unknown token.")`.  This exception is caught
+by the parser which calls `yy::parser::error` with the string
+`"Unknown token."` as argument.
+
+We have to be careful with option `−−exception`.  Because no input is consumed,
+we should not invoke the scanner again or risk looping on the unmatched input.
+Alternatively, we can define a "catch all else" rule with pattern `.` that
+consumes the offending input and and use option option `-s` (or `−−nodefault`)
+to suppress the default rule:
+
+<div class="alt">
+~~~{.cpp}
+    %option nodefault
+
+    %%
+    \s+      // skip space
+    [a-z]+   return yy::parser::make_IDENTIFIER(str());
+    [0-9]+   return yy::parser::make_NUMBER(atoi(text()));
+    ":"      return yy::parser::symbol_type(':');
+    <<EOF>>  return yy::parser::make_EOF();
+    .        throw yy::parser::syntax_error("Unknown token.");
+    %%
+~~~
+</div>
+
+For option `−−bison-cc-namespace=NAME` the `NAME` can be a list of nested
+namespaces of the form `NAME1::NAME2::NAME3` or by separating the names by a
+dot as in `NAME1.NAME2.NAME3`.
+
+Using the code above, we can now initialize a Bison parser in our main program.
+We first should create a scanner and pass it to the `parser` constructor as
+follows:
+
+<div class="alt">
+~~~{.cpp}
+    yy::Lexer lexer(std::cin);  // read from stdin (or a stream, string or FILE)
+    yy::parser parser(lexer);
+    if (parser.parse() != 0)
+      ... // error
+~~~
+</div>
+
+🔝 [Back to table of contents](#)
+
+
+### Bison-complete & locations               {#reflex-bison-complete-locations}
+
+The <b>`reflex`</b> option `−−bison-complete` expects a Bison 3.2 C++ parser
+which uses both <i>`%%define api.value.type variant`</i> and
+<i>`%%define api.token.constructor`</i>.  This parser defines the type
+`symbol_type` variant and the parser expects `yylex` to have the type
+`parser::symbol_type::yylex()`.  Here is an example Bison 3.2 C++ complete
+symbols grammar file with Bison <i>`%%locations`</i> enabled:
+
+<div class="alt">
+~~~{.cpp}
+    /* yacc grammar (.yxx file) for C++ */
+
+    %require "3.2"
+    %language "c++"
+
+    %define api.namespace {yy}
+    %define api.parser.class {parser}
+    %define api.value.type variant
+    %define api.token.constructor
+
+    %define parse.error verbose
+
+    %defines
+    %output "parser.cpp"
+
+    %locations
+    %define api.location.file "location.hpp"
+
+    %code requires{
+      namespace yy {
+        class Lexer;  // Generated by reflex with namespace=yy lexer=Lexer lex=yylex
+      }
+    }
+
+    %parse-param { yy::Lexer& lexer }  // Construct parser object with lexer
+
+    %code{
+      #include "lex.yy.h"  // header file generated with reflex --header-file
+      #undef yylex
+      #define yylex lexer.yylex  // Within bison's parse() we should invoke lexer.yylex(), not the global yylex()
+    }
+
+    %define api.token.prefix {TOK_}
+    %token <std::string> IDENTIFIER "identifier"  // This defines TOK_IDENTIFIER
+    %token <int> NUMBER "number"                  // This defines TOK_NUMBER
+    %token EOF 0 "end of file"                    // This defines TOK_EOF with value 0
+
+    %%
+    ...  // grammar rules
+    %%
+
+    void yy::parser::error(const location& loc, const std::string& msg)
+    {
+      std::cerr << loc << ": " << msg << std::endl;
+    }
+~~~
+</div>
+
+With the `−−bison-complete` option of <b>`reflex`</b>, the `yylex()` function
+takes no arguments by default and returns a value of type
+`yy::parser::symbol_type`.  This means that the lexer's action should return
+values of this type, constructed with `yy::parser::symbol_type` or with
+`make_TOKENNAME` as follows:
+
+<div class="alt">
+~~~{.cpp}
+    %top{
+    #include "parser.hpp"    /* Generated by bison. */
+    #include "location.hpp"  /* Generated by bison %locations. */
+    %}
+
+    %option bison-complete
+    %option bison-cc-namespace=yy
+    %option bison-cc-parser=parser
+    %option bison-locations
+
+    %option exception="yy::parser::syntax_error(location(), \"Unknown token.\")"
+
+    %option namespace=yy
+    %option lexer=Lexer
+
+    %%
+    \s+      // skip space
+    [a-z]+   return yy::parser::make_IDENTIFIER(str(), location());
+    [0-9]+   return yy::parser::make_NUMBER(atoi(text()), location());
+    ":"      return yy::parser::symbol_type(':', location());
+    <<EOF>>  return yy::parser::make_EOF(location());
+    %%
+~~~
+</div>
+
+The scanner is generated with <b>`reflex`</b> options `−−bison-complete`,
+`−−bison-locations`, `−−namespace=yy` and `−−lexer=Lexer`.  Option
+`−−bison-complete` automatically defines the appropriate token type
+`symbol_type` depending on `−−bison-cc-namespace` and on `−−bison-cc-parser`.
+We also used options `−−bison-cc-namespace=NAME` and `−−bison-cc-parser=NAME`
+to specify the namespace and parser class name of the Bison 3.2 C++ parser.
+These are `yy` and `parser` by default, respectively (i.e.
+`%define api.namespace {yy}` and `%define api.parser.class {parser}` are
+actually superfluous in the example grammer specification because their values
+are the defaults).  We use option `−−exception` to specify that the scanner's
+default rule should throw a
+`yy::parser::syntax_error(location(), "Unknown token.")`.  This exception is
+caught by the parser which calls `yy::parser::error` with the value of
+`location()` and the string `"Unknown token."` as arguments.  The
+auto-generated virtual lexer class method `location()` method can be overriden
+by a user-defined lexer class that extends `Lexer` (or extends `yyFlexLexer`
+when option `−−flex` is used).
+
+We have to be careful with option `−−exception`.  Because no input is consumed,
+We should not invoke the scanner again or risk looping on the unmatched input.
+Alternatively, we can define a "catch all else" rule with pattern `.` that
+consumes the offending input and use option option `-s` (or `−−nodefault`) to
+suppress the default rule:
+
+<div class="alt">
+~~~{.cpp}
+    %option nodefault
+
+    %%
+    \s+      // skip space
+    [a-z]+   return yy::parser::make_IDENTIFIER(str(), location());
+    [0-9]+   return yy::parser::make_NUMBER(atoi(text()), location());
+    ":"      return yy::parser::symbol_type(':', location());
+    <<EOF>>  return yy::parser::make_EOF(location());
+    .        throw yy::parser::syntax_error(location(), "Unknown token.");
+    %%
+~~~
+</div>
+
+For option `−−bison-cc-namespace=NAME` the `NAME` can be a list of nested
+namespaces of the form `NAME1::NAME2::NAME3` or by separating the names by a
+dot as in `NAME1.NAME2.NAME3`.
+
+Using the code above, we can now initialize a Bison parser in our main program.
+We first should create a scanner and pass it to the `parser` constructor as
+follows:
+
+<div class="alt">
+~~~{.cpp}
+    yy::Lexer lexer(std::cin);  // read from stdin (or a stream, string or FILE)
+    yy::parser parser(lexer);
+    if (parser.parse() != 0)
+      ... // error
+~~~
+</div>
+
+🔝 [Back to table of contents](#)
+
+
 ### Bison-bridge                                         {#reflex-bison-bridge}
 
 The <b>`reflex`</b> option `−−bison-bridge` expects a Bison "pure parser" that
-is declared as follows in a Yacc specification:
+is declared as follows in a Bison grammar file:
 
 <div class="alt">
 ~~~{.cpp}
@@ -4013,9 +4358,9 @@ The `yylval` value is passed to the lex function.  The `yylloc` structure is
 automatically updated by the RE/flex scanner, so you do not need to define a
 `YY_USER_ACTION` macro as you have to with Flex.  Instead, this is done
 automatically in `yylex()` by invoking the lexer's `yylloc_update()` to update
-the line and column of the match.  The virtual `yylloc_update()` method can be
-overriden by a user-defined lexer class that extends `Lexer` (or extends
-`yyFlexLexer` when option `−−flex` is used).
+the line and column of the match.  The auto-generated virtual `yylloc_update()`
+method can be overriden by a user-defined lexer class that extends `Lexer` (or
+extends `yyFlexLexer` when option `−−flex` is used).
 
 Note that with the `−−bison-location` option, `yylex()` takes an additional
 `YYLTYPE` argument that a Bison parser provides.  You can set `YYLTYPE` as
@@ -4212,50 +4557,101 @@ does not matter as long as the length of the matches differ.  When matches are
 of the same length because multiple patterns match, then the first rule is
 selected.
 
-Consider for example the following specification if a lexer with rules that are
-intended to match keywords and identifiers in some input text:
+Consider for example the following `lexer.l` specification if a lexer with
+rules that are intended to match keywords and identifiers in some input text:
 
 <div class="alt">
 ~~~{.cpp}
     %%
 
-    int                     out() << "int keyword\n;
-    interface               out() << "interface keyword\n;
-    float                   out() << "float keyword\n;
-    [A-Za-z][A-Za-z0-9]*    out() << "identifier\n";
+    int                     out() << "=> int keyword\n;
+    interface               out() << "=> interface keyword\n;
+    float                   out() << "=> float keyword\n;
+    [A-Za-z][A-Za-z0-9]*    out() << "=> identifier\n";
 
     %%
 ~~~
 </div>
 
-When the input to the scanner is the text `integer` then a POSIX matcher
-selects the last rule, which is what we want because it is an identifier.
+When the input to the scanner is the text `integer`, a POSIX matcher selects
+the last rule that matches it by *leftmost longest matching* policy.  This
+matching policy selects the rule that matches the longest text.  If more than
+one pattern matches the same length of text then the first pattern that matches
+takes precedence.  This is what we want because it is an identifier in our
+example programming language:
 
-By contrast, a Perl matcher selects the first rule because it matches the first
-part `int` of `integer`.  This is NOT what we want.  The same problem occurs
-when the text `interface` is encountered on the input, which we want to
-recognize as a separate keyword and not match against `int`.  Switching the
-rules for `int` and `interface` fixes that problem.  But note that we cannot do
-the same to fix matching `integer` as an identifier: when moving the last rule
-up to the top we cannot match `int` any longer!
+    reflex -m reflex −−main lexer.l
+    c++ -o lexer lex.yy.cpp -lreflex
+    echo "integer" | ./lexer
+    => identifier
 
-@note To prevent a Perl matcher from matching a keyword when an identifier
-starts with the name of that keyword, we could use a lookahead pattern such as
-`int(?=[^A-Za-z0-9_])` which is written in a lexer specification as
-`int/[^A-Za-z0-9_]` with the `/` lookahead meta symbol.
+By contrast, a Perl matcher uses a *greedy matching* policy, which selects the
+first rule that matches.  In this case it matches the first part `int` of the
+text `integer` and leaves `erface` to be matched next as an identifier:
+
+    reflex -m boost-perl −−main lexer.l
+    c++ -o lexer lex.yy.cpp -lreflex -lboost_regex
+    echo "integer" | ./lexer
+    => int keyword
+    => identifier
+
+Note that the same greedy matching happens when the text `interface` is
+encountered on the input, which we want to recognize as a separate keyword and
+not match against `int`:
+
+    reflex -m boost-perl −−main lexer.l
+    c++ -o lexer lex.yy.cpp -lreflex -lboost_regex
+    echo "interface" | ./lexer
+    => int keyword
+    => identifier
+
+Switching the rules for `int` and `interface` fixes that specific problem.
+
+<div class="alt">
+~~~{.cpp}
+    %%
+
+    interface               out() << "=> interface keyword\n;
+    int                     out() << "=> int keyword\n;
+    float                   out() << "=> float keyword\n;
+    [A-Za-z][A-Za-z0-9]*    out() << "=> identifier\n";
+
+    %%
+~~~
+</div>
+
+    reflex -m boost-perl −−main lexer.l
+    c++ -o lexer lex.yy.cpp -lreflex -lboost_regex
+    echo "interface" | ./lexer
+    => interface keyword
+
+But we cannot do the same to fix matching `integer` as an identifier: when
+moving the last rule up to the top we cannot match `int` and `interface` any
+longer!
+
+<div class="alt">
+~~~{.cpp}
+    %%
+
+    [A-Za-z][A-Za-z0-9]*    out() << "=> identifier\n";
+    interface               out() << "=> interface keyword\n;
+    int                     out() << "=> int keyword\n;
+    float                   out() << "=> float keyword\n;
+
+    %%
+~~~
+</div>
+
+    reflex -m boost-perl −−main lexer.l
+    c++ -o lexer lex.yy.cpp -lreflex -lboost_regex
+    echo "int" | ./lexer
+    => identifier
+    echo "interface" | ./lexer
+    => identifier
 
 Basically, a Perl matcher works in an *operational* mode by working the regex
 pattern as a sequence of *operations* for matching, usually using backtracking
 to find a matching pattern.
-
-A POSIX matcher on the other hand is *declarative* and have a deeper foundation
-in formal language theory.  An advantage of POSIX matchers is that regular
-expressions can be compiled to deterministic finite state machines for
-efficient matching.
-
-@note POSIX matching still require moving the `int` matching rule before the
-identifier matching rule.  Otherwise an `int` on the input will be matched by
-the identifier rule.
 
 Perl matchers generally support lazy quantifiers and group captures, while most
 POSIX matchers do not (Boost.Regex in POSIX mode does not support lazy
@@ -4263,6 +4659,58 @@ quantifiers).  The RE/flex POSIX matcher supports lazy quantifiers, but not
 group captures.  The added support for lazy quantifiers and word boundary
 anchors in RE/flex matching offers a reasonably new and useful feature for
 scanners that require POSIX mode matching.
+
+To prevent a Perl matcher from matching a keyword when an identifier starts
+with the name of that keyword, we could use a lookahead pattern such as
+`int(?=[^A-Za-z0-9_])` which is written in a lexer specification with a
+trailing context `int/[^A-Za-z0-9_]` with the `/` lookahead meta symbol.
+
+A POSIX matcher on the other hand is *declarative* with a deeper foundation
+in formal language theory.  An advantage of POSIX matchers is that a regular
+expression can always be compiled to a deterministic finite state machine for
+efficient matching.
+
+POSIX matching still requires the `int` matching rule before the identifier
+matching rule, as in the original lexer specification shown in this section.
+Otherwise an `int` on the input will be matched by the identifier rule.
+
+Lookaheads can also be used with POSIX matchers to prioratize rules.  Adding
+a lookahead lengthens the pattern while keeping only the part that matches
+before the lookahead.  For example, the following lexer specification
+attempts to remove leading `0` from numbers:
+
+<div class="alt">
+~~~{.cpp}
+    %%
+
+    0                       // no action
+    [0-9]+                  out() << text() << std::endl;
+
+    %%
+~~~
+</div>
+
+However, in POSIX mode the first rule only matches if the text is exactly one
+`0` because the second rule matches longer texts.  The trick here is to use a
+trailing context with the first rule as follows:
+
+<div class="alt">
+~~~{.cpp}
+    %%
+
+    0/[0-9]+                // no action
+    [0-9]+                  out() << text() << std::endl;
+
+    %%
+~~~
+</div>
+
+    reflex -m reflex −−main lexer.l
+    c++ -o lexer lex.yy.cpp -lreflex
+    echo "00123" | ./lexer
+    => 123
+    echo "0" | ./lexer
+    => 0
 
 🔝 [Back to table of contents](#)
 
@@ -4692,10 +5140,13 @@ searching, and splitting of strings, wide strings, files, and streams.
 
 To compile your application, simply include the applicable regex matcher of
 your choice in your source code as we will explain in the next sections.  To
-compile, link your application against the `libreflex` library (and optionally
-`-lboost_regex` if you use Boost.Regex for matching):
+compile, link your application against the `libreflex` library:
 
     c++ myapp.cpp -lreflex
+
+And optionally `-lboost_regex` if you use Boost.Regex for matching:
+
+    c++ myapp.cpp -lreflex -lboost_regex
 
 If `libreflex` was not installed then linking with `-lreflex` fails.  See
 \ref link-errors on how to resolve this.
@@ -4998,27 +5449,32 @@ when the regex string has problems:
     }
     catch (reflex::regex_error& e)
     {
-      std::cerr << e.what();
       switch (e.code())
       {
         case reflex::regex_error::mismatched_parens:    std::cerr << "mismatched ( )"; break;
         case reflex::regex_error::mismatched_braces:    std::cerr << "mismatched { }"; break;
         case reflex::regex_error::mismatched_brackets:  std::cerr << "mismatched [ ]"; break;
-        case reflex::regex_error::mismatched_quotation: std::cerr << "mismatched \Q...\E quotation"; break;
+        case reflex::regex_error::mismatched_quotation: std::cerr << "mismatched \\Q...\\E quotation"; break;
         case reflex::regex_error::empty_expression:     std::cerr << "regex (sub)expression should not be empty"; break;
-        case reflex::regex_error::empty_class:          std::cerr << "class [...] is empty, e.g. [a&&[b]]"; break;
+        case reflex::regex_error::empty_class:          std::cerr << "character class [...] is empty, e.g. [a&&[b]]"; break;
         case reflex::regex_error::invalid_class:        std::cerr << "invalid character class name"; break;
-        case reflex::regex_error::invalid_class_range:  std::cerr << "invalid class range, e.g. [Z-A]"; break;
+        case reflex::regex_error::invalid_class_range:  std::cerr << "invalid character class range, e.g. [Z-A]"; break;
         case reflex::regex_error::invalid_escape:       std::cerr << "invalid escape character"; break;
-        case reflex::regex_error::invalid_anchor:       std::cerr << "invalid anchor"; break;
+        case reflex::regex_error::invalid_anchor:       std::cerr << "invalid anchor or boundary"; break;
         case reflex::regex_error::invalid_repeat:       std::cerr << "invalid repeat range, e.g. {10,1}"; break;
-        case reflex::regex_error::invalid_quantifier:   std::cerr << "invalid lazy/possessive quantifier"; break;
+        case reflex::regex_error::invalid_quantifier:   std::cerr << "invalid lazy or possessive quantifier"; break;
         case reflex::regex_error::invalid_modifier:     std::cerr << "invalid (?ismux:) modifier"; break;
         case reflex::regex_error::invalid_syntax:       std::cerr << "invalid regex syntax"; break;
         case reflex::regex_error::exceeds_limits:       std::cerr << "exceeds complexity limits: {n,m} range too large"; break;
       }
+      std::cerr << std::endl << e.what();
     }
 ~~~
+
+Likewise, the `reflex::Matcher::convert`, `reflex::BoostPerlMatcher::convert`,
+`reflex::BoostMatcher::convert`, and `reflex::BoostPosixMatcher::convert`
+functions may throw a `reflex_error` exception.  See the next section for
+details.
 
 🔝 [Back to table of contents](#)
 
@@ -5059,6 +5515,7 @@ following `reflex::convert_flag` flags:
 
   Flag        | Effect
   ----------- | ---------------------------------------------------------------
+  `none`      | no conversion
   `unicode`   | `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode, same as `(?u)`
   `recap`     | remove capturing groups, add capturing groups to the top level
   `lex`       | convert Lex/Flex regular expression syntax
@@ -5111,15 +5568,15 @@ example when the regex syntax is invalid:
         case reflex::regex_error::mismatched_parens:    std::cerr << "mismatched ( )"; break;
         case reflex::regex_error::mismatched_braces:    std::cerr << "mismatched { }"; break;
         case reflex::regex_error::mismatched_brackets:  std::cerr << "mismatched [ ]"; break;
-        case reflex::regex_error::mismatched_quotation: std::cerr << "mismatched \Q...\E quotation"; break;
+        case reflex::regex_error::mismatched_quotation: std::cerr << "mismatched \\Q...\\E quotation"; break;
         case reflex::regex_error::empty_expression:     std::cerr << "regex (sub)expression should not be empty"; break;
-        case reflex::regex_error::empty_class:          std::cerr << "class [...] is empty, e.g. [a&&[b]]"; break;
+        case reflex::regex_error::empty_class:          std::cerr << "character class [...] is empty, e.g. [a&&[b]]"; break;
         case reflex::regex_error::invalid_class:        std::cerr << "invalid character class name"; break;
-        case reflex::regex_error::invalid_class_range:  std::cerr << "invalid class range, e.g. [Z-A]"; break;
+        case reflex::regex_error::invalid_class_range:  std::cerr << "invalid character class range, e.g. [Z-A]"; break;
         case reflex::regex_error::invalid_escape:       std::cerr << "invalid escape character"; break;
-        case reflex::regex_error::invalid_anchor:       std::cerr << "invalid anchor"; break;
+        case reflex::regex_error::invalid_anchor:       std::cerr << "invalid anchor or boundary"; break;
         case reflex::regex_error::invalid_repeat:       std::cerr << "invalid repeat range, e.g. {10,1}"; break;
-        case reflex::regex_error::invalid_quantifier:   std::cerr << "invalid lazy/possessive quantifier"; break;
+        case reflex::regex_error::invalid_quantifier:   std::cerr << "invalid lazy or possessive quantifier"; break;
         case reflex::regex_error::invalid_modifier:     std::cerr << "invalid (?ismux:) modifier"; break;
         case reflex::regex_error::invalid_syntax:       std::cerr << "invalid regex syntax"; break;
       }
@@ -5701,7 +6158,8 @@ translated to UTF-8 on the fly for matching by means of specifying encodings.
 
 The current file encoding used by a matcher is obtained with the
 `reflex::Input::file_encoding()` method, which returns an
-`reflex::Input::file_encoding` constant:
+`reflex::Input::file_encoding` constant of type
+`reflex::Input::file_encoding_type`:
 
   Constant                                | File encoding
   --------------------------------------- | -----------------------------------

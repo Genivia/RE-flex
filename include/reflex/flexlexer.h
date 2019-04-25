@@ -30,7 +30,7 @@
 @file      flexlexer.h
 @brief     RE/flex Flex-compatible FlexLexer base class and Lex/Flex-compatible macros
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -74,7 +74,7 @@
 #if (defined(REFLEX_OPTION_yywrap) || defined(REFLEX_OPTION_bison)) && !defined(REFLEX_OPTION_noyywrap)
 #if defined(REFLEX_OPTION_reentrant)
 
-/// Flex-compatible global yywrap() is enabled with `%%option yywrap` or `%%option bison`
+/// Flex-compatible global yywrap() is enabled with `%%option yywrap` or `%%option bison`.
 #if defined(YY_EXTERN_C)
 YY_EXTERN_C int yywrap(yyscan_t);
 #else
@@ -83,7 +83,7 @@ int yywrap(yyscan_t);
 
 #else
 
-/// Flex-compatible global yywrap() is enabled with `%%option yywrap` or `%%option bison`
+/// Flex-compatible global yywrap() is enabled with `%%option yywrap` or `%%option bison`.
 #if defined(YY_EXTERN_C)
 YY_EXTERN_C int yywrap(void);
 #else
@@ -93,7 +93,7 @@ int yywrap(void);
 #endif
 #endif
 
-/// Flex-compatible macro: returned upon end-of-file
+/// Flex-compatible macro: the token value returned upon end-of-file.
 #ifndef YY_NULL
 #define YY_NULL                 (0)
 #endif

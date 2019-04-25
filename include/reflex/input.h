@@ -232,28 +232,30 @@ byte by byte (use a buffer as shown in other examples to improve efficiency):
 */
 class Input {
  public:
-  /// Common constants.
+  /// Common file_encoding constants type.
+  typedef unsigned short file_encoding_type;
+  /// Common file_encoding constants.
   struct file_encoding {
-    static const unsigned short plain   =  0; ///< plain octets: 7-bit ASCII, 8-bit binary or UTF-8 without BOM detected
-    static const unsigned short utf8    =  1; ///< UTF-8 with BOM detected
-    static const unsigned short utf16be =  2; ///< UTF-16 big endian
-    static const unsigned short utf16le =  3; ///< UTF-16 little endian
-    static const unsigned short utf32be =  4; ///< UTF-32 big endian
-    static const unsigned short utf32le =  5; ///< UTF-32 little endian
-    static const unsigned short latin   =  6; ///< Basic Latin ASCII and Latin-1 supplement, ISO-8859-1
-    static const unsigned short cp437   =  7; ///< CP 427
-    static const unsigned short cp850   =  8; ///< CP 850 (updated to CP 858)
-    static const unsigned short ebcdic  =  9; ///< EBCDIC
-    static const unsigned short cp1250  = 10; ///< CP-1250
-    static const unsigned short cp1251  = 11; ///< CP-1251
-    static const unsigned short cp1252  = 12; ///< CP-1252
-    static const unsigned short cp1253  = 13; ///< CP-1253
-    static const unsigned short cp1254  = 14; ///< CP-1254
-    static const unsigned short cp1255  = 15; ///< CP-1255
-    static const unsigned short cp1256  = 16; ///< CP-1256
-    static const unsigned short cp1257  = 17; ///< CP-1257
-    static const unsigned short cp1258  = 18; ///< CP-1258
-    static const unsigned short custom  = 19; ///< custom code page
+    static const file_encoding_type plain   =  0; ///< plain octets: 7-bit ASCII, 8-bit binary or UTF-8 without BOM detected
+    static const file_encoding_type utf8    =  1; ///< UTF-8 with BOM detected
+    static const file_encoding_type utf16be =  2; ///< UTF-16 big endian
+    static const file_encoding_type utf16le =  3; ///< UTF-16 little endian
+    static const file_encoding_type utf32be =  4; ///< UTF-32 big endian
+    static const file_encoding_type utf32le =  5; ///< UTF-32 little endian
+    static const file_encoding_type latin   =  6; ///< Basic Latin ASCII and Latin-1 supplement, ISO-8859-1
+    static const file_encoding_type cp437   =  7; ///< CP 427
+    static const file_encoding_type cp850   =  8; ///< CP 850 (updated to CP 858)
+    static const file_encoding_type ebcdic  =  9; ///< EBCDIC
+    static const file_encoding_type cp1250  = 10; ///< CP-1250
+    static const file_encoding_type cp1251  = 11; ///< CP-1251
+    static const file_encoding_type cp1252  = 12; ///< CP-1252
+    static const file_encoding_type cp1253  = 13; ///< CP-1253
+    static const file_encoding_type cp1254  = 14; ///< CP-1254
+    static const file_encoding_type cp1255  = 15; ///< CP-1255
+    static const file_encoding_type cp1256  = 16; ///< CP-1256
+    static const file_encoding_type cp1257  = 17; ///< CP-1257
+    static const file_encoding_type cp1258  = 18; ///< CP-1258
+    static const file_encoding_type custom  = 19; ///< custom code page
   };
   /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
   Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects)
@@ -351,8 +353,8 @@ class Input {
   }
   /// Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.
   Input(
-      FILE          *file,               ///< input file
-      unsigned short enc,                ///< file_encoding (when UTF BOM is not present)
+      FILE                 *file,        ///< input file
+      file_encoding_type    enc,         ///< file_encoding (when UTF BOM is not present)
       const unsigned short *page = NULL) ///< code page for file_encoding::custom
     :
       cstring_(NULL),
@@ -633,12 +635,12 @@ class Input {
   }
   /// Set encoding for `FILE*` input.
   void file_encoding(
-      unsigned short enc,                ///< file_encoding
+      file_encoding_type    enc,         ///< file_encoding
       const unsigned short *page = NULL) ///< custom code page for file_encoding::custom
     ;
   /// Get encoding of the current `FILE*` input.
-  unsigned short file_encoding() const
-    /// @returns file_encoding
+  file_encoding_type file_encoding() const
+    /// @returns current file_encoding constant
   {
     return utfx_;
   }
@@ -680,7 +682,7 @@ class Input {
   size_t                size_;    ///< size of the input in bytes, when known
   char                  utf8_[8]; ///< UTF-8 conversion buffer
   unsigned short        uidx_;    ///< index in utf8_[] or >= 8 when unused
-  unsigned short        utfx_;    ///< file_encoding
+  file_encoding_type    utfx_;    ///< file_encoding
   const unsigned short *page_;    ///< custom code page
 };
 

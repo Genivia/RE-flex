@@ -53,17 +53,19 @@ RE/flex scanner examples
 - `reflexexample8.l` example RE/flex scanner adapted from the Flex documentation with C bison-bridge and bison-locations
 - `reflexexample8.lxx` example RE/flex scanner adapted from the Flex documentation with C++ bison-bridge and bison-locations
 - `reflexexample9.lxx` example RE/flex scanner with Bison 3.0 %skeleton "lalr1.cc" C++ parser with bison-cc and bison-locations
-- `flexexample10.l` example RE/flex scanner adapted from the Flex documentation to use multiple buffers
+- `reflexexample10.l` example RE/flex scanner adapted from the Flex documentation to use multiple buffers
+- `reflexexample11.lxx` example RE/flex scanner with Bison 3.2 C++ parser with bison-complete and bison-locations
 - `tag.l` simple lexer to print out all XML/HTML tags
 - `tag_lazy.l` simple lexer to print XML/HTML tags, uses lazy quants
 - `tag_lazystates.l` lexer to print XML tags, uses lazy quants and states
 - `tag_unicode.l` lexer to print XML tags, uses lazy quants and states, checks UTF-8 validity
 - `tag_tidy.l` lexer to tidy and normalize HTML
 
-Stand-alone C++ regex matching example
---------------------------------------
+Regex pattern matching with RE/Flex
+-----------------------------------
 
 - `cards.cpp` matches credit card numbers
+- `ugrep.cpp` Unicode-aware grep, uses the RE/flex regex engine
 - `url.cpp` capture domain, path, and query keys from URLs (requires Boost.Regex for captures)
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png

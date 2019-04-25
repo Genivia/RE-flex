@@ -11,8 +11,8 @@
 # Bison C++ examples are built with:
 # > make -f Make examplesxx
 #
-# flexexample9xx and reflexexample9xx require Bison 3.0 or greater:
-# > make -f Make examples3.0
+# flexexample9xx, reflexexample9xx, flexexample11xx, reflexexample11xx require Bison 3.0 or greater:
+# > make -f Make examples3.2
 #
 # url and wc_boost require Boost:
 # > make -f Make boostexamples
@@ -37,7 +37,7 @@ CXXFLAGS  = $(CXXWFLAGS) $(CXXOFLAGS) $(CXXIFLAGS) $(CXXMFLAGS)
 
 all:		examples examplesxx
 
-.PHONY:		examples examplesxx examples3.0 boostexamples
+.PHONY:		examples examplesxx examples3.2 boostexamples
 
 examples:	flexexample1 \
 		flexexample2 \
@@ -76,7 +76,8 @@ examples:	flexexample1 \
 		braille \
 		unicode \
 		csv \
-		cards
+		cards \
+		ugrep
 
 examplesxx:	flexexample3xx \
 		flexexample4xx \
@@ -89,8 +90,9 @@ examplesxx:	flexexample3xx \
 		reflexexample7xx \
 		reflexexample8xx
 
-examples3.0:	flexexample9xx \
-		reflexexample9xx
+examples3.2:	flexexample9xx \
+		reflexexample9xx \
+		reflexexample11xx
 
 boostexamples:  url wc_boost
 
@@ -259,6 +261,12 @@ reflexexample10:	reflexexample10.l
 			$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 			./reflexexample10 < flexexample10.test
 
+reflexexample11xx:	reflexexample11.lxx reflexexample11.yxx
+			$(BISON) -d reflexexample11.yxx
+			$(REFLEX) $(REFLAGS) --bison-complete --bison-locations reflexexample11.lxx
+			$(CXX) $(CXXFLAGS) -o $@ parser.cpp scanner.cpp $(LIBREFLEX)
+			./reflexexample11xx reflexexample11.test
+
 ctokens:	ctokens.l
 		$(REFLEX) $(REFLAGS) ctokens.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
@@ -356,6 +364,9 @@ cards:		cards.cpp
 url:		url.cpp
 		$(CXX) $(CXXFLAGS) -I $(INCBOOST) -o $@ url.cpp $(LIBREFLEX) $(LIBBOOST)
 
+ugrep:		ugrep.cpp
+		$(CXX) -std=c++11 $(CXXFLAGS) -o $@ ugrep.cpp $(LIBREFLEX)
+
 wc_boost:	wc.l
 		$(REFLEX) $(REFLAGS) --matcher=boost --flex wc.l
 		$(CXX) $(CXXFLAGS) -I $(INCBOOST) -o $@ lex.yy.cpp $(LIBREFLEX) $(LIBBOOST)
@@ -365,7 +376,7 @@ wc_boost:	wc.l
 clean:
 		-rm -rf *.dSYM
 		-rm -f *.o *.gch *.log
-		-rm -f lex.yy.h lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx location.hh position.hh stack.hh reflex.*.cpp reflex.*.gv reflex.*.txt
+		-rm -f lex.yy.h lex.yy.hpp lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx parser.hpp parser.cpp scanner.hpp scanner.cpp location.hh location.hpp position.hh position.hpp stack.hh stack.hpp reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
 		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json braille unicode csv cards url wc_boost
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json braille unicode csv cards url ugrep wc_boost

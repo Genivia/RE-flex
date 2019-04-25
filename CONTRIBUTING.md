@@ -41,6 +41,29 @@ We love to hear from you!  [Contact us](https://www.genivia.com/contact.html).
 
 Contributions are covered under the [BSD-3 license](LICENSE.txt).
 
+Prepating a pull request
+-------------------------------------------------------------
+
+When creating a pull request, please consider the following steps before
+commiting your changes:
+
+~~~
+./clean.sh                       # clean all before we start
+./build.sh                       # make sure this step works
+cd tests; make -f Make; cd ..    # make sure this step works
+cd examples; make -f Make; cd .. # make sure this step works
+./clean.sh
+aclocal
+autoheader
+rm -f config.guess config.sub ar-lib compile depcomp install-sh missing
+automake --add-missing --foreign
+autoconf
+automake
+~~~
+
+When these steps succeed, the Travis continuous integration builds and tests
+can succeed.
+
 Thanks!
 
 Robert van Engelen, Genivia Inc.

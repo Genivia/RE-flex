@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Reflex Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Apr 6 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Apr 24 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -324,7 +324,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a0963af89d24f447bf7abac97dbfc02fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if current line starts a block of init code.  <a href="#a0963af89d24f447bf7abac97dbfc02fb">More...</a><br /></td></tr>
 <tr class="separator:a0963af89d24f447bf7abac97dbfc02fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a41d48dd0b0bc995cd1561d96a924fdb4">get_name</a> (size_t &amp;pos)</td></tr>
-<tr class="memdesc:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over name (letters, digits, hyphen/underscore, or any non-ASCII character), return name.  <a href="#a41d48dd0b0bc995cd1561d96a924fdb4">More...</a><br /></td></tr>
+<tr class="memdesc:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over name (letters, digits, ., -, _ or any non-ASCII character &gt; U+007F), return name.  <a href="#a41d48dd0b0bc995cd1561d96a924fdb4">More...</a><br /></td></tr>
 <tr class="separator:a41d48dd0b0bc995cd1561d96a924fdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a697c1ceadc811605b46acd46a94350e7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a697c1ceadc811605b46acd46a94350e7">get_option</a> (size_t &amp;pos)</td></tr>
 <tr class="memdesc:a697c1ceadc811605b46acd46a94350e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over option name (letters, digits, +/hyphen/underscore), return name.  <a href="#a697c1ceadc811605b46acd46a94350e7">More...</a><br /></td></tr>
@@ -339,7 +339,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:ae7e968de28376a4a4084bae5aea663ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get regex string, converted to a format understood by the selected regex engine library.  <a href="#ae7e968de28376a4a4084bae5aea663ff">More...</a><br /></td></tr>
 <tr class="separator:ae7e968de28376a4a4084bae5aea663ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a4f4833e68b7bf0ba0309d3179a5d2fce">get_namespace</a> (size_t &amp;pos)</td></tr>
-<tr class="memdesc:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over namespaces (letters, digits, ::, ., -, _ , or any non-ASCII character), return name.  <a href="#a4f4833e68b7bf0ba0309d3179a5d2fce">More...</a><br /></td></tr>
+<tr class="memdesc:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over option name or namespace (letters, digits, ::, ., -, _ or any non-ASCII character &gt; U+007F), return name.  <a href="#a4f4833e68b7bf0ba0309d3179a5d2fce">More...</a><br /></td></tr>
 <tr class="separator:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9853a89f918acd624f9a59553e93d54f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Starts</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9853a89f918acd624f9a59553e93d54f">get_starts</a> (size_t &amp;pos)</td></tr>
 <tr class="memdesc:a9853a89f918acd624f9a59553e93d54f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get start conditions &lt;start1,start2,...&gt; of a rule.  <a href="#a9853a89f918acd624f9a59553e93d54f">More...</a><br /></td></tr>
@@ -771,7 +771,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Advance pos over name (letters, digits, hyphen/underscore, or any non-ASCII character), return name. </p>
+<p>Advance pos over name (letters, digits, ., -, _ or any non-ASCII character &gt; U+007F), return name. </p>
 
 </div>
 </div>
@@ -797,7 +797,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Advance pos over namespaces (letters, digits, ::, ., -, _ , or any non-ASCII character), return name. </p>
+<p>Advance pos over option name or namespace (letters, digits, ::, ., -, _ or any non-ASCII character &gt; U+007F), return name. </p>
 
 </div>
 </div>
@@ -2451,7 +2451,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Apr 6 2019 17:09:55 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Apr 24 2019 21:41:54 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
