@@ -246,7 +246,7 @@ inline int lower(int c)
   return std::isalpha(c) ? (c | 0x20) : c;
 }
 
-/// Add file extension if not present
+/// Add file extension if not present, modifies the string argument and returns a copy
 static std::string file_ext(std::string& name, const char *ext)
   /// @returns copy of file `name` string with extension `ext`
 {
@@ -398,10 +398,10 @@ void Reflex::init(int argc, char **argv)
             ++arg;
             if (*arg)
               options["matcher"] = &arg[*arg == '='];
-            else if (i < argc && argv[++i] && *argv[i] != '-')
+            else if (++i < argc && *argv[i] != '-')
               options["matcher"] = argv[i];
             else
-              help("missing NAME with -m NAME");
+              help("missing NAME for option -m NAME");
             is_grouped = false;
             break;
           case 'n':
@@ -410,10 +410,10 @@ void Reflex::init(int argc, char **argv)
             ++arg;
             if (*arg)
               options["outfile"] = &arg[*arg == '='];
-            else if (i < argc && argv[++i] && *argv[i] != '-')
+            else if (++i < argc && *argv[i] != '-')
               options["outfile"] = argv[i];
             else
-              help("missing FILE with -o FILE");
+              help("missing FILE for option -o FILE");
             is_grouped = false;
             break;
           case 'p':
@@ -423,10 +423,10 @@ void Reflex::init(int argc, char **argv)
             ++arg;
             if (*arg)
               options["prefix"] = &arg[*arg == '='];
-            else if (i < argc && argv[++i] && *argv[i] != '-')
+            else if (++i < argc && *argv[i] != '-')
               options["prefix"] = argv[i];
             else
-              help("missing NAME with -P NAME");
+              help("missing NAME for option -P NAME");
             is_grouped = false;
             break;
           case 'R':
@@ -464,7 +464,7 @@ void Reflex::init(int argc, char **argv)
     else
     {
       if (!infile.empty())
-        help("one FILE, also found ", argv[i]);
+        help("one input FILE argument can be specified, also found ", argv[i]);
       infile = argv[i];
     }
   }

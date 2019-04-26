@@ -2279,6 +2279,7 @@ The 7-bit ASCII character categories are:
 
   Category     | POSIX form   | Matches
   ------------ | ------------ | -----------------------------------------------
+  `\p{ASCII}`  | `[:ascii:]`  | matches any ASCII character
   `\p{Space}`  | `[:space:]`  | matches a white space character `[ \t\n\v\f\r]` same as `\s`
   `\p{Xdigit}` | `[:xdigit:]` | matches a hex digit `[0-9A-Fa-f]`
   `\p{Cntrl}`  | `[:cntrl:]`  | matches a control character `[\x00-\0x1f\x7f]`
@@ -2307,6 +2308,15 @@ The 7-bit ASCII character categories are:
 
 The POSIX form can only be used in bracket lists, for example
 `[[:lower:][:digit:]]` matches an ASCII lower case letter or a digit.  
+
+You can also use the capitalized `\P{C}` form that has the same meaning as
+`\p{^C}`, which matches any character except characters in the class `C`.
+For example, `\P{ASCII}` is the same as `\p{^ASCII}` which is the same as
+`[^[:ascii:]]`.  A word of caution: because POSIX character categories only
+cover ASCII, `[[:^ascii]]` is empty and invalid to use.  By contrast,
+`[^[:ascii]]` is a Unicode character class that excludes the ASCII character
+category.  Unicode character classes and categories require the <b>`reflex`</b>
+`−−unicode` option.
 
 The following Unicode character categories are enabled with the <b>`reflex`</b>
 `−−unicode` option or \ref reflex-pattern-unicode `(?u:φ)` and with the regex
@@ -2572,9 +2582,6 @@ In addition, the `−−unicode` option enables standard Unicode language script
   `\p{Takri}`, `\p{Tamil}`, `\p{Tangut}`, `\p{Telugu}`, `\p{Thaana}`,
   `\p{Thai}`, `\p{Tibetan}`, `\p{Tifinagh}`, `\p{Tirhuta}`, `\p{Ugaritic}`,
   `\p{Vai}`, `\p{Warang_Citi}`, `\p{Yi}`, `\p{Zanabazar_Square}`.
-
-You can also use the capitalized `\P{C}` form that has the same meaning as
-`\p{^C}`, which matches any character except characters in the class `C`.
 
 @note Unicode language script character classes differ from the Unicode blocks
 that have a similar name.  For example, the `\p{Greek}` class represents Greek

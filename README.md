@@ -43,8 +43,8 @@ Features
   RE/flex frustration-free.
 - Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for
   Python code, a tokenizer for Java code, and more.
-- Works with Bison and supports reentrant, bison-bridge, bison-locations and
-  Bison 3.0 C++ interface `%skeleton "lalr1.cc"`.
+- Works with Bison and supports reentrant, bison-bridge, bison-locations,
+  Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison complete symbols.
 - Extensive documentation in the online [User Guide][manual-url].
 - Adds Unicode support with Unicode property matching `\p{C}` and C++11, Java,
   C#, and Python Unicode properties for identifier name matching.
