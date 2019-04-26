@@ -2,8 +2,8 @@
 
 The examples with Bison require the installation of [Bison][bison-url].
 
-Flex scanner examples
----------------------
+RE/flex scanner examples using Flex lexer syntax
+------------------------------------------------
 
 - `ctokens.l` and `cdefs.l` a C/C++ tokenizer
 - `jtokens.l` and `jdefs.l` a Java tokenizer, meets Java Lexical Structure requirements
@@ -30,14 +30,14 @@ Flex scanner examples
 - `readline.l` interactive scanner to echo input using readline (requires readline)
 - `json.l` JSON parser (validated against <http://seriot.ch/parsing_json.php>)
 
-RE/flex scanner examples
-------------------------
+RE/flex scanner examples using RE/flex lexer syntax that extends Flex
+---------------------------------------------------------------------
 
 - `ptokens.l` and `pdefs.l` a Python tokenizer
 - `calc.l` and `calc.y` calculator, supports Unicode identifier variables
 - `cow.l` scanner to convert cows
 - `cows.l` scanner to convert cows, uses word boundary anchors
-- `csv.l` scanner to read cleaned-up CSV rows into a vector
+- `csv.l` scanner to parse CSV rows from a file into a C++ vector
 - `indent.l` indentation detection and reformatting example
 - `braille.l` a braille translator, inspired by the re2c example but expanded
 - `unicode.l` a very simple Unicode word matcher to demonstrate Unicode matching
@@ -61,8 +61,8 @@ RE/flex scanner examples
 - `tag_unicode.l` lexer to print XML tags, uses lazy quants and states, checks UTF-8 validity
 - `tag_tidy.l` lexer to tidy and normalize HTML
 
-Regex pattern matching with RE/Flex
------------------------------------
+Regex pattern matching with the RE/flex pattern matching library
+----------------------------------------------------------------
 
 - `cards.cpp` matches credit card numbers
 - `ugrep.cpp` Unicode-aware grep, uses the RE/flex regex engine

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Apr 24 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Fri Apr 26 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -1088,6 +1088,8 @@ Character categories</h3>
 <tr>
 <th>Category </th><th>POSIX form </th><th>Matches  </th></tr>
 <tr>
+<td><code>\p{ASCII}</code> </td><td><code>[:ascii:]</code> </td><td>matches any ASCII character </td></tr>
+<tr>
 <td><code>\p{Space}</code> </td><td><code>[:space:]</code> </td><td>matches a white space character <code>[ \t\n\v\f\r]</code> same as <code>\s</code> </td></tr>
 <tr>
 <td><code>\p{Xdigit}</code> </td><td><code>[:xdigit:]</code> </td><td>matches a hex digit <code>[0-9A-Fa-f]</code> </td></tr>
@@ -1139,6 +1141,7 @@ Character categories</h3>
 <td><code>\W</code> </td><td><code>[:^word:]</code> </td><td>matches a non-word character <code>[^0-9A-Za-z_]</code> </td></tr>
 </table>
 <p>The POSIX form can only be used in bracket lists, for example <code>[[:lower:][:digit:]]</code> matches an ASCII lower case letter or a digit.</p>
+<p>You can also use the capitalized <code>\P{C}</code> form that has the same meaning as <code>\p{^C}</code>, which matches any character except characters in the class <code>C</code>. For example, <code>\P{ASCII}</code> is the same as <code>\p{^ASCII}</code> which is the same as <code>[^[:ascii:]]</code>. A word of caution: because POSIX character categories only cover ASCII, <code>[[:^ascii]]</code> is empty and invalid to use. By contrast, <code>[^[:ascii]]</code> is a Unicode character class that excludes the ASCII character category. Unicode character classes and categories require the <b><code>reflex</code></b> <code>−−unicode</code> option.</p>
 <p>The following Unicode character categories are enabled with the <b><code>reflex</code></b> <code>−−unicode</code> option or <a class="el" href="index.html#reflex-pattern-unicode">Unicode mode</a> <code>(?u:φ)</code> and with the regex matcher converter flag <code><a class="el" href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39" title="convert . (dot), \s, \w, \l, \u, \S, \W, \L, \U to Unicode ">reflex::convert_flag::unicode</a></code> when using a regex library:</p>
 <table class="doxtable">
 <tr>
@@ -1581,7 +1584,6 @@ Character categories</h3>
 </table>
 <p>In addition, the <code>−−unicode</code> option enables standard Unicode language scripts:</p>
 <p><code>\p{Adlam}</code>, <code>\p{Ahom}</code>, <code>\p{Anatolian_Hieroglyphs}</code>, <code>\p{Arabic}</code>, <code>\p{Armenian}</code>, <code>\p{Avestan}</code>, <code>\p{Balinese}</code>, <code>\p{Bamum}</code>, <code>\p{Bassa_Vah}</code>, <code>\p{Batak}</code>, <code>\p{Bengali}</code>, <code>\p{Bhaiksuki}</code>, <code>\p{Bopomofo}</code>, <code>\p{Brahmi}</code>, <code>\p{Braille}</code>, <code>\p{Buginese}</code>, <code>\p{Buhid}</code>, <code>\p{Canadian_Aboriginal}</code>, <code>\p{Carian}</code>, <code>\p{Caucasian_Albanian}</code>, <code>\p{Chakma}</code>, <code>\p{Cham}</code>, <code>\p{Cherokee}</code>, <code>\p{Coptic}</code>, <code>\p{Cuneiform}</code>, <code>\p{Cypriot}</code>, <code>\p{Cyrillic}</code>, <code>\p{Deseret}</code>, <code>\p{Devanagari}</code>, <code>\p{Duployan}</code>, <code>\p{Egyptian_Hieroglyphs}</code>, <code>\p{Elbasan}</code>, <code>\p{Ethiopic}</code>, <code>\p{Georgian}</code>, <code>\p{Glagolitic}</code>, <code>\p{Gothic}</code>, <code>\p{Grantha}</code>, <code>\p{Greek}</code>, <code>\p{Gujarati}</code>, <code>\p{Gurmukhi}</code>, <code>\p{Han}</code>, <code>\p{Hangul}</code>, <code>\p{Hanunoo}</code>, <code>\p{Hatran}</code>, <code>\p{Hebrew}</code>, <code>\p{Hiragana}</code>, <code>\p{Imperial_Aramaic}</code>, <code>\p{Inscriptional_Pahlavi}</code>, <code>\p{Inscriptional_Parthian}</code>, <code>\p{Javanese}</code>, <code>\p{Kaithi}</code>, <code>\p{Kannada}</code>, <code>\p{Katakana}</code>, <code>\p{Kayah_Li}</code>, <code>\p{Kharoshthi}</code>, <code>\p{Khmer}</code>, <code>\p{Khojki}</code>, <code>\p{Khudawadi}</code>, <code>\p{Lao}</code>, <code>\p{Latin}</code>, <code>\p{Lepcha}</code>, <code>\p{Limbu}</code>, <code>\p{Linear_A}</code>, <code>\p{Linear_B}</code>, <code>\p{Lisu}</code>, <code>\p{Lycian}</code>, <code>\p{Lydian}</code>, <code>\p{Mahajani}</code>, <code>\p{Malayalam}</code>, <code>\p{Mandaic}</code>, <code>\p{Manichaean}</code>, <code>\p{Marchen}</code>, <code>\p{Masaram_Gondi}</code>, <code>\p{Meetei_Mayek}</code>, <code>\p{Mende_Kikakui}</code>, <code>\p{Meroitic_Cursive}</code>, <code>\p{Meroitic_Hieroglyphs}</code>, <code>\p{Miao}</code>, <code>\p{Modi}</code>, <code>\p{Mongolian}</code>, <code>\p{Mro}</code>, <code>\p{Multani}</code>, <code>\p{Myanmar}</code>, <code>\p{Nabataean}</code>, <code>\p{New_Tai_Lue}</code>, <code>\p{Newa}</code>, <code>\p{Nko}</code>, <code>\p{Nushu}</code>, <code>\p{Ogham}</code>, <code>\p{Ol_Chiki}</code>, <code>\p{Old_Hungarian}</code>, <code>\p{Old_Italic}</code>, <code>\p{Old_North_Arabian}</code>, <code>\p{Old_Permic}</code>, <code>\p{Old_Persian}</code>, <code>\p{Old_South_Arabian}</code>, <code>\p{Old_Turkic}</code>, <code>\p{Oriya}</code>, <code>\p{Osage}</code>, <code>\p{Osmanya}</code>, <code>\p{Pahawh_Hmong}</code>, <code>\p{Palmyrene}</code>, <code>\p{Pau_Cin_Hau}</code>, <code>\p{Phags_Pa}</code>, <code>\p{Phoenician}</code>, <code>\p{Psalter_Pahlavi}</code>, <code>\p{Rejang}</code>, <code>\p{Runic}</code>, <code>\p{Samaritan}</code>, <code>\p{Saurashtra}</code>, <code>\p{Sharada}</code>, <code>\p{Shavian}</code>, <code>\p{Siddham}</code>, <code>\p{SignWriting}</code>, <code>\p{Sinhala}</code>, <code>\p{Sora_Sompeng}</code>, <code>\p{Soyombo}</code>, <code>\p{Sundanese}</code>, <code>\p{Syloti_Nagri}</code>, <code>\p{Syriac}</code>, <code>\p{Tagalog}</code>, <code>\p{Tagbanwa}</code>, <code>\p{Tai_Le}</code>, <code>\p{Tai_Tham}</code>, <code>\p{Tai_Viet}</code>, <code>\p{Takri}</code>, <code>\p{Tamil}</code>, <code>\p{Tangut}</code>, <code>\p{Telugu}</code>, <code>\p{Thaana}</code>, <code>\p{Thai}</code>, <code>\p{Tibetan}</code>, <code>\p{Tifinagh}</code>, <code>\p{Tirhuta}</code>, <code>\p{Ugaritic}</code>, <code>\p{Vai}</code>, <code>\p{Warang_Citi}</code>, <code>\p{Yi}</code>, <code>\p{Zanabazar_Square}</code>.</p>
-<p>You can also use the capitalized <code>\P{C}</code> form that has the same meaning as <code>\p{^C}</code>, which matches any character except characters in the class <code>C</code>.</p>
 <dl class="section note"><dt>Note</dt><dd>Unicode language script character classes differ from the Unicode blocks that have a similar name. For example, the <code>\p{Greek}</code> class represents Greek and Coptic letters and differs from the Unicode block <code>\p{IsGreek}</code> that spans a specific Unicode block of Greek and Coptic characters only, which also includes unassigned characters.</dd></dl>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-pattern-anchor"></a>
@@ -2830,7 +2832,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Apr 24 2019 21:42:01 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Fri Apr 26 2019 14:52:34 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

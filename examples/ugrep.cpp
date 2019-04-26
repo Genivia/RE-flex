@@ -39,28 +39,40 @@ Features:
   - Unicode support for \p{} character categories, bracket list classes, etc.
   - File encoding support for UTF-8/16/32, EBCDIC, and many other code pages.
 
+Differences with grep:
+
+  - When option -b is used with option -o or option -g, ugrep displays the
+    exact byte offset of the pattern match instead of the byte offset of the
+    matched line.
+
 Examples:
 
-  # find all capitalized Unicode words in places.txt
+  # display the lines in places.txt that contain capitalized Unicode words
   ugrep '\p{Upper}\p{Lower}*' places.txt
 
-  # find all capitalized Unicode words in places.txt and color highlight them
+  # display the lines in places.txt with capitalized Unicode words highlighted
   ugrep --color=auto '\p{Upper}\p{Lower}*' places.txt
 
-  # find the names Gödel (or Goedel), Escher, and Bach in GEB.txt and wiki.txt
-  ugrep 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
+  # display a list of capitalized Unicode words in places.txt
+  ugrep -o '\p{Upper}\p{Lower}*' places.txt
+
+  # display lines with the names Gödel (or Goedel), Escher, and Bach in GEB.txt and wiki.txt
+  ugrep --color=auto 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
+
+  # count the number of lines with the names Gödel (or Goedel), Escher, and Bach in GEB.txt and wiki.txt
+  ugrep -c 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
 
   # count the number of occurrences of the names Gödel (or Goedel), Escher, and Bach in GEB.txt and wiki.txt
-  ugrep -c 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
+  ugrep -c -g 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
 
   # check if some.txt file contains any non-ASCII (i.e. Unicode) characters
   ugrep -q '[^[:ascii:]]' some.txt && echo "some.txt contains Unicode"
 
-  # find word-anchored 'lorem' in UTF-16 formatted file utf16lorem.txt that contains a UTF-16 BOM
-  ugrep -o '\<[Ll]orem\>' utf16lorem.txt
+  # display word-anchored 'lorem' in UTF-16 formatted file utf16lorem.txt that contains a UTF-16 BOM
+  ugrep '\<[Ll]orem\>' utf16lorem.txt
 
-  # find word-anchored 'lorem' in UTF-16 formatted file utf16lorem.txt that does not contain a UTF-16 BOM
-  ugrep -o --file-format=UTF-16 '\<[Ll]orem\>' utf16lorem.txt
+  # display word-anchored 'lorem' in UTF-16 formatted file utf16lorem.txt that does not contain a UTF-16 BOM
+  ugrep --file-format=UTF-16 '\<[Ll]orem\>' utf16lorem.txt
 
 Compile:
 
@@ -95,6 +107,10 @@ const char *grep_color = NULL;
 // ugrep command-line options
 bool flag_filename           = false;
 bool flag_no_filename        = false;
+bool flag_no_group           = false;
+bool flag_no_messages        = false;
+bool flag_byte_offset        = false;
+bool flag_line_number        = false;
 bool flag_line_buffered      = false;
 bool flag_count              = false;
 bool flag_only_matching      = false;
@@ -103,7 +119,7 @@ const char *flag_color       = NULL;
 const char *flag_file_format = NULL;
 
 // function protos
-bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_type encoding, const char *infile = NULL);
+bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_type encoding, const char *infile);
 void help(const char *message = NULL, const char *arg = NULL);
 void version();
 
@@ -144,7 +160,7 @@ int main(int argc, char **argv)
   bool color_term = false;
 
 #ifndef OS_WIN
-  // check weather we have a color terminal
+  // check whether we have a color terminal
   const char *term = getenv("TERM");
   color_term = term && (strstr(term, "ansi") || strstr(term, "xterm") || strstr(term, "color"));
   grep_color = getenv("GREP_COLOR");
@@ -170,7 +186,9 @@ int main(int argc, char **argv)
         {
           case '-':
             ++arg;
-            if (strcmp(arg, "color") == 0 || strcmp(arg, "colour") == 0)
+            if (strcmp(arg, "byte-offset") == 0)
+              flag_byte_offset = true;
+            else if (strcmp(arg, "color") == 0 || strcmp(arg, "colour") == 0)
               flag_color = "auto";
             else if (strncmp(arg, "color=", 6) == 0)
               flag_color = arg + 6;
@@ -182,8 +200,14 @@ int main(int argc, char **argv)
               flag_file_format = arg + 12;
             else if (strcmp(arg, "help") == 0)
               help();
+            else if (strcmp(arg, "no-group") == 0)
+              flag_no_group = true;
+            else if (strcmp(arg, "line-number") == 0)
+              flag_line_number = true;
             else if (strcmp(arg, "no-filename") == 0)
               flag_no_filename = true;
+            else if (strcmp(arg, "no-messages") == 0)
+              flag_no_messages = true;
             else if (strcmp(arg, "only-matching") == 0)
               flag_only_matching = true;
             else if (strcmp(arg, "quiet") == 0 || strcmp(arg, "silent") == 0)
@@ -195,6 +219,10 @@ int main(int argc, char **argv)
             else
               help("unknown option --", arg);
             is_grouped = false;
+            break;
+
+          case 'b':
+            flag_byte_offset = true;
             break;
 
           case 'c':
@@ -212,16 +240,34 @@ int main(int argc, char **argv)
             is_grouped = false;
             break;
 
-          case 'h':
+          case 'g':
+            flag_no_group = true;
+            break;
+
+          case 'H':
+            flag_filename = true;
             flag_no_filename = false;
+            break;
+
+          case 'h':
+            flag_filename = false;
+            flag_no_filename = true;
+            break;
+
+          case 'n':
+            flag_line_number = true;
+            break;
+
+          case 'o':
+            flag_only_matching = true;
             break;
 
           case 'q':
             flag_quiet = true;
             break;
 
-          case 'o':
-            flag_only_matching = true;
+          case 's':
+            flag_no_messages = true;
             break;
 
           default:
@@ -248,8 +294,8 @@ int main(int argc, char **argv)
   // remove the ending '|' from the |-concatenated regexes in the regex string
   regex.pop_back();
 
-  // enable line buffering if the input is a TTY and options -c -o -q are not specified
-  if (isatty(1) && !flag_count && !flag_only_matching && !flag_quiet)
+  // enable line buffering if options -c -o -q are not specified
+  if (!flag_count && !flag_only_matching && !flag_quiet)
     flag_line_buffered = true;
 
   // display file name if more than one input file is specified and option --no-filename is not specified
@@ -268,14 +314,14 @@ int main(int argc, char **argv)
   }
   else if (strcmp(flag_color, "auto") == 0)
   {
-    if (!color_term)
+    if (!color_term || !isatty(1))
       grep_color = NULL;
     else if (!grep_color)
       grep_color = "1";
   }
   else
   {
-    help("unknown --color option");
+    help("unknown --color=when value");
   }
 
   // if any match was found in any of the input files then we set found==true
@@ -296,7 +342,7 @@ int main(int argc, char **argv)
           break;
 
       if (format_table[i].format == NULL)
-        help("Unknown file format specified");
+        help("unknown --file-format=format encoding");
 
       // encoding is the file format used by all input files, if no BOM is present
       encoding = format_table[i].encoding;
@@ -307,7 +353,7 @@ int main(int argc, char **argv)
     if (infiles.empty())
     {
       // read standard input to find pattern matches
-      found |= ugrep(pattern, stdin, encoding);
+      found |= ugrep(pattern, stdin, encoding, "(standard input)");
     }
     else
     {
@@ -318,6 +364,9 @@ int main(int argc, char **argv)
 
         if (file == NULL)
         {
+          if (flag_no_messages)
+            continue;
+
           perror("Cannot open file for reading");
           exit(EXIT_ERROR);
         }
@@ -344,7 +393,7 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
 
   std::string label, mark, unmark;
 
-  if (flag_filename)
+  if (flag_filename && infile)
     label.assign(infile).append(":");
 
   if (grep_color)
@@ -363,24 +412,37 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
   }
   else if (flag_count)
   {
-    size_t lineno = 0;
-    size_t lines = 0;
-
-    // -c count mode: count the number of lines that matched
-    for (auto& match : reflex::Matcher(pattern, input).find)
+    if (flag_no_group)
     {
-      if (lineno != match.lineno())
-      {
-        lineno = match.lineno();
-        ++lines;
-      }
-      found = true;
+      // -c count mode w/o option -g: count the number of patterns matched in the file
+      reflex::Matcher matcher(pattern, input);
+      size_t matches = std::distance(matcher.find.begin(), matcher.find.end());
+      std::cout << label << matches << std::endl;
+      found = matches > 0;
     }
+    else
+    {
+      size_t lineno = 0;
+      size_t lines = 0;
 
-    std::cout << label << lines << std::endl;
+      // -c count mode w/ option -g: count the number of lines that matched
+      for (auto& match : reflex::Matcher(pattern, input).find)
+      {
+        if (lineno != match.lineno())
+        {
+          lineno = match.lineno();
+          ++lines;
+        }
+      }
+
+      std::cout << label << lines << std::endl;
+      found = lines > 0;
+    }
   }
   else if (flag_line_buffered)
   {
+    size_t byte_offset = 0;
+    size_t lineno = 1;
     std::string line;
 
     // line-buffered mode: read input line-by-line and display lines that matched the pattern
@@ -393,20 +455,71 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
       while ((ch = input.get()) != EOF && ch != '\n')
         line.push_back(ch);
 
-      // search the line for pattern matches
-      for (auto& match : reflex::Matcher(pattern, line).find)
+      if (flag_no_group)
       {
-        std::cout << label << line.substr(0, match.first()) << mark << match.text() << unmark << line.substr(match.last()) << std::endl;
-        found = true;
+        // search the line for pattern matches and display the entire line (with exact offset) for each pattern match
+        for (auto& match : reflex::Matcher(pattern, line).find)
+        {
+          std::cout << label;
+          if (flag_line_number)
+            std::cout << lineno << ":";
+          if (flag_byte_offset)
+            std::cout << byte_offset << ":";
+          std::cout << line.substr(0, match.first()) << mark << match.text() << unmark << line.substr(match.last()) << std::endl;
+          found = true;
+        }
       }
+      else
+      {
+        size_t last = 0;
+
+        // search the line for pattern matches and display the line just once with all matches
+        for (auto& match : reflex::Matcher(pattern, line).find)
+        {
+          if (last == 0)
+          {
+            std::cout << label;
+            if (flag_line_number)
+              std::cout << lineno << ":";
+            if (flag_byte_offset)
+              std::cout << byte_offset + match.first() << ":";
+            std::cout << line.substr(0, match.first()) << mark << match.text() << unmark;
+            last = match.last();
+            found = true;
+          }
+          else
+          {
+            std::cout << line.substr(last, match.first() - last) << mark << match.text() << unmark;
+            last = match.last();
+          }
+        }
+
+        if (last > 0)
+          std::cout << line.substr(last) << std::endl;
+      }
+
+      // update byte offset and line number
+      byte_offset += line.size() + 1;
+      ++lineno;
     }
   }
   else
   {
+    size_t lineno = 0;
+
     // block-buffered mode: echo all pattern matches
     for (auto& match : reflex::Matcher(pattern, input).find)
     {
-      std::cout << label << mark << match.text() << unmark << std::endl;
+      if (flag_no_group || lineno != match.lineno())
+      {
+        lineno = match.lineno();
+        std::cout << label;
+        if (flag_line_number)
+          std::cout << lineno << ":";
+        if (flag_byte_offset)
+          std::cout << match.first() << ":";
+      }
+      std::cout << mark << match.text() << unmark << std::endl;
       found = true;
     }
   }
@@ -419,10 +532,14 @@ void help(const char *message, const char *arg)
 {
   if (message)
     std::cout << "ugrep: " << message << (arg != NULL ? arg : "") << std::endl;
-  std::cout << "Usage: ugrep [-cehoqV] [--line-buffered] pattern [file ...]\n\
+  std::cout << "Usage: ugrep [-bcgHhnoqsV] [--colour[=when]|--color[=when]] [-e pattern] [--line-buffered] [pattern] [file ...]\n\
 \n\
+     -b, --byte-offset\n\
+             The offset in bytes of a matched pattern is displayed in front of\n\
+             the respective matched line.\n\
      -c, --count\n\
              Only a count of selected lines is written to standard output.\n\
+             With option -g counts the number of patterns matched.\n\
      --colour[=when], --color[=when]\n\
              Mark up the matching text with the expression stored in\n\
              GREP_COLOR environment variable.  The possible values of when can\n\
@@ -433,14 +550,27 @@ void help(const char *message, const char *arg)
              This option is most useful when multiple -e options are used to\n\
              specify multiple patterns, or when a pattern begins with a dash\n\
              (`-').\n\
+     -g, --no-group\n\
+             Do not group pattern matches on the same line.  Display each\n\
+             matched output line again for each pattern match.\n\
+     -H      Always print filename headers with output lines.\n\
      -h, --no-filename\n\
              Never print filename headers (i.e. filenames) with output lines.\n\
+     --help  Print a brief help message.\n\
+     -n, --line-number\n\
+             Each output line is preceded by its relative line number in the\n\
+             file, starting at line 1.  The line number counter is reset for\n\
+             each file processed.  This option is ignored if -c, -L, -l, or -q\n\
+             is specified.\n\
      -o, --only-matching\n\
              Prints only the matching part of the lines.\n\
      -q, --quiet, --silent\n\
              Quiet mode: suppress normal output.  ugrep will only search a file\n\
              until a match has been found, making searches potentially less\n\
              expensive.\n\
+     -s, --no-messages\n\
+             Silent mode.  Nonexistent and unreadable files are ignored (i.e.\n\
+             their error messages are suppressed).\n\
      --file-format=format\n\
              The input file format:";
   for (int i = 0; format_table[i].format != NULL; ++i)
