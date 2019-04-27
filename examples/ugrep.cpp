@@ -28,10 +28,14 @@
 
 /**
 @file      ugrep.cpp
-@brief     Unicode-aware grep utility
+@brief     Universal grep utility - Unicode-aware grep
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
+
+The ugrep utility extends grep with Unicode patterns.  ugrep accepts Unicode
+regex patterns and scans files encoded in UTF-8/16/32, ASCII, ISO-8859-1,
+EBCDIC, and other code pages.  ugrep requires the RE/flex library.
 
 Features:
 
@@ -41,9 +45,13 @@ Features:
 
 Differences with grep:
 
-  - When option -b is used with option -o or option -g, ugrep displays the
+  - Adds option -g, --no-group to not group matches per line.  This option
+    displays a matched input line again for each additional pattern match.
+    This option also changes option -c to report the total number of pattern
+    matches per file instead of the number of lines matched.
+  - When option -b is used with option -o or with option -g, ugrep displays the
     exact byte offset of the pattern match instead of the byte offset of the
-    matched line.
+    start of the matched line.
 
 Examples:
 
@@ -69,14 +77,25 @@ Examples:
   ugrep -q '[^[:ascii:]]' some.txt && echo "some.txt contains Unicode"
 
   # display word-anchored 'lorem' in UTF-16 formatted file utf16lorem.txt that contains a UTF-16 BOM
-  ugrep '\<[Ll]orem\>' utf16lorem.txt
+  ugrep -w '[Ll]orem' utf16lorem.txt
 
   # display word-anchored 'lorem' in UTF-16 formatted file utf16lorem.txt that does not contain a UTF-16 BOM
-  ugrep --file-format=UTF-16 '\<[Ll]orem\>' utf16lorem.txt
+  ugrep --file-format=UTF-16 -w '[Ll]orem' utf16lorem.txt
 
 Compile:
 
   c++ -std=c++11 -o ugrep ugrep.cpp -lreflex
+
+Bugs:
+
+  - Empty patterns should match any line.
+  - Pattern '^$' does not select empty lines.
+
+Wanted TODO:
+
+  - Options -A, -B, and -C to display the context of a match.
+  - Option -v to invert the matches, selecting lines that do not match the specified patterns.
+  - Option -f, --file=file to read patterns from a file.
 
 */
 
@@ -110,11 +129,15 @@ bool flag_no_filename        = false;
 bool flag_no_group           = false;
 bool flag_no_messages        = false;
 bool flag_byte_offset        = false;
+bool flag_count              = false;
+bool flag_ignore_case        = false;
+bool flag_invert_match       = false; // TODO not implemented yet
 bool flag_line_number        = false;
 bool flag_line_buffered      = false;
-bool flag_count              = false;
 bool flag_only_matching      = false;
 bool flag_quiet              = false;
+bool flag_word_regexp        = false;
+bool flag_line_regexp        = false;
 const char *flag_color       = NULL;
 const char *flag_file_format = NULL;
 
@@ -130,10 +153,10 @@ const struct { const char *format; reflex::Input::file_encoding_type encoding; }
   { "ASCII",      reflex::Input::file_encoding::utf8    },
   { "EBCDIC",     reflex::Input::file_encoding::ebcdic  },
   { "UTF-8",      reflex::Input::file_encoding::utf8    },
-  { "UTF-16",     reflex::Input::file_encoding::utf16be },
+  { "UTF-16",     reflex::Input::file_encoding::utf16le },
   { "UTF-16BE",   reflex::Input::file_encoding::utf16be },
   { "UTF-16LE",   reflex::Input::file_encoding::utf16le },
-  { "UTF-32",     reflex::Input::file_encoding::utf32be },
+  { "UTF-32",     reflex::Input::file_encoding::utf32le },
   { "UTF-32BE",   reflex::Input::file_encoding::utf32be },
   { "UTF-32LE",   reflex::Input::file_encoding::utf32le },
   { "CP-437",     reflex::Input::file_encoding::cp437   },
@@ -200,10 +223,18 @@ int main(int argc, char **argv)
               flag_file_format = arg + 12;
             else if (strcmp(arg, "help") == 0)
               help();
+            else if (strcmp(arg, "ignore-case") == 0)
+              flag_ignore_case = true;
+            else if (strcmp(arg, "invert-match") == 0)
+              flag_invert_match = true;
             else if (strcmp(arg, "no-group") == 0)
               flag_no_group = true;
+            else if (strcmp(arg, "line-buffered") == 0)
+              flag_line_buffered = true;
             else if (strcmp(arg, "line-number") == 0)
               flag_line_number = true;
+            else if (strcmp(arg, "line-regexp") == 0)
+              flag_line_regexp = true;
             else if (strcmp(arg, "no-filename") == 0)
               flag_no_filename = true;
             else if (strcmp(arg, "no-messages") == 0)
@@ -216,6 +247,8 @@ int main(int argc, char **argv)
               regex.append(arg + 7).push_back('|');
             else if (strcmp(arg, "version") == 0)
               version();
+            else if (strcmp(arg, "word-regexp") == 0)
+              flag_word_regexp = true;
             else
               help("unknown option --", arg);
             is_grouped = false;
@@ -254,6 +287,10 @@ int main(int argc, char **argv)
             flag_no_filename = true;
             break;
 
+          case 'i':
+            flag_ignore_case = true;
+            break;
+
           case 'n':
             flag_line_number = true;
             break;
@@ -268,6 +305,22 @@ int main(int argc, char **argv)
 
           case 's':
             flag_no_messages = true;
+            break;
+
+          case 'V':
+            version();
+            break;
+
+          case 'v':
+            flag_invert_match = true;
+            break;
+
+          case 'w':
+            flag_word_regexp = true;
+            break;
+
+          case 'x':
+            flag_line_regexp = true;
             break;
 
           default:
@@ -293,6 +346,12 @@ int main(int argc, char **argv)
 
   // remove the ending '|' from the |-concatenated regexes in the regex string
   regex.pop_back();
+
+  // make the regex word- or line-anchored
+  if (flag_word_regexp)
+    regex.insert(0, "\\<").append("\\>");
+  else if (flag_line_regexp)
+    regex.insert(0, "^").append("$");
 
   // enable line buffering if options -c -o -q are not specified
   if (!flag_count && !flag_only_matching && !flag_quiet)
@@ -348,7 +407,10 @@ int main(int argc, char **argv)
       encoding = format_table[i].encoding;
     }
 
-    reflex::Pattern pattern(reflex::Matcher::convert(regex, reflex::convert_flag::unicode));
+    reflex::convert_flag_type convert_flags = reflex::convert_flag::multiline | reflex::convert_flag::unicode;
+    if (flag_ignore_case)
+      convert_flags |= reflex::convert_flag::anycase;
+    reflex::Pattern pattern(reflex::Matcher::convert(regex, convert_flags));
 
     if (infiles.empty())
     {
@@ -417,6 +479,7 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
       // -c count mode w/o option -g: count the number of patterns matched in the file
       reflex::Matcher matcher(pattern, input);
       size_t matches = std::distance(matcher.find.begin(), matcher.find.end());
+
       std::cout << label << matches << std::endl;
       found = matches > 0;
     }
@@ -532,7 +595,7 @@ void help(const char *message, const char *arg)
 {
   if (message)
     std::cout << "ugrep: " << message << (arg != NULL ? arg : "") << std::endl;
-  std::cout << "Usage: ugrep [-bcgHhnoqsV] [--colour[=when]|--color[=when]] [-e pattern] [--line-buffered] [pattern] [file ...]\n\
+  std::cout << "Usage: ugrep [-bcgHhinoqsVvwx] [--colour[=when]|--color[=when]] [-e pattern] [--line-buffered] [pattern] [file ...]\n\
 \n\
      -b, --byte-offset\n\
              The offset in bytes of a matched pattern is displayed in front of\n\
@@ -551,12 +614,16 @@ void help(const char *message, const char *arg)
              specify multiple patterns, or when a pattern begins with a dash\n\
              (`-').\n\
      -g, --no-group\n\
-             Do not group pattern matches on the same line.  Display each\n\
-             matched output line again for each pattern match.\n\
+             Do not group pattern matches on the same line.  Display the\n\
+             input line again for each additional pattern match.\n\
      -H      Always print filename headers with output lines.\n\
      -h, --no-filename\n\
              Never print filename headers (i.e. filenames) with output lines.\n\
      --help  Print a brief help message.\n\
+     -i, --ignore-case\n\
+             Perform case insensitive matching. This option applies\n\
+             case-insensitive matching of ASCII characters in the input.\n\
+             By default, ugrep is case sensitive.\n\
      -n, --line-number\n\
              Each output line is preceded by its relative line number in the\n\
              file, starting at line 1.  The line number counter is reset for\n\
@@ -582,6 +649,12 @@ void help(const char *message, const char *arg)
              otherwise.\n\
      -V, --version\n\
              Display version information and exit.\n\
+     -w, --word-regexp\n\
+             The pattern is searched for as a word (as if surrounded by\n\
+             `\\<' and `\\>').\n\
+     -x, --line-regexp\n\
+             Only input lines selected against an entire pattern are considered\n\
+             to be matching lines (as if surrounded by ^ and $).\n\
 \n\
      The ugrep utility exits with one of the following values:\n\
 \n\
