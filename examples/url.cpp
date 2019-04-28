@@ -1,4 +1,10 @@
-// Split a URL into parts - this example requires Boost.Regex
+// Split a URL into parts: host, path, list of query key-value pairs, and #-anchor
+// This example requires Boost.Regex
+// For example:
+//   url https://www.genivia.com/doc/reflex/html/index.html#regex
+//   host: www.genivia.com
+//   path: doc/reflex/html/index.html
+//   anchor: regex
 
 #include <reflex/boostmatcher.h>
 #include <iostream>
@@ -10,27 +16,30 @@ int main(int argc, char **argv)
   if (argc < 2)
   {
     std::cerr << "Usage: url 'URL'" << std::endl;
-    exit(EXIT_SUCCESS);
+    exit(EXIT_FAILURE);
   }
 
+  // create a Boost.Regex matcher with a regex and string input argv[1]
   BoostMatcher re("https?://([^:/]*):?(\\d*)/?([^?#]*)", argv[1]);
 
+  // scan the input from the beginning
   if (re.scan())
   {
     // found a partial match at start, now check if we have a host
     if (re[1].first != NULL)
     {
+      // capture group 1 is not empty, so we have a host
       std::string host(re[1].first, re[1].second);
       std::cout << "host: " << host << std::endl;
 
-      // check of we have a port
+      // if capture group2 is not empty we have a port
       if (re[2].first != NULL && re[2].second != 0)
       {
         std::string port(re[2].first, re[2].second);
         std::cout << "port: " << port << std::endl;
       }
 
-      // check of we have a path
+      // if capture group 3 is not empty we have a path
       if (re[3].first != NULL && re[3].second != 0)
       {
         std::string path(re[3].first, re[3].second);
@@ -38,7 +47,7 @@ int main(int argc, char **argv)
       }
     }
 
-    // check if we have a query string
+    // check if we have a query string, i.e. if input is now at a '?'
     if (re.input() == '?')
     {
       // now switch patterns to match the rest of the input
@@ -68,5 +77,5 @@ int main(int argc, char **argv)
     std::cout << "Error, not a http/s URL: " << re.rest() << std::endl;
   }
 
-  return EXIT_SUCCESS;
+  exit(EXIT_SUCCESS);
 }

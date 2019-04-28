@@ -42,16 +42,19 @@ Features:
   - Patterns are ERE POSIX syntax compliant, extended with RE/flex pattern syntax.
   - Unicode support for \p{} character categories, bracket list classes, etc.
   - File encoding support for UTF-8/16/32, EBCDIC, and many other code pages.
+  - ugrep command-line options are the same as grep, simulates grep behavior.
 
 Differences with grep:
 
+  - When option -b is used with option -o or with option -g, ugrep displays the
+    exact byte offset of the pattern match instead of the byte offset of the
+    start of the matched line.
   - Adds option -g, --no-group to not group matches per line.  This option
     displays a matched input line again for each additional pattern match.
     This option also changes option -c to report the total number of pattern
     matches per file instead of the number of lines matched.
-  - When option -b is used with option -o or with option -g, ugrep displays the
-    exact byte offset of the pattern match instead of the byte offset of the
-    start of the matched line.
+  - Adds option -k, --column-number to display the column number, taking tab
+    spacing into account by expanding tabs.
 
 Examples:
 
@@ -63,6 +66,9 @@ Examples:
 
   # display a list of capitalized Unicode words in places.txt
   ugrep -o '\p{Upper}\p{Lower}*' places.txt
+
+  # search and display laughing face emojis (Unicode code points U+1F600 to U+1F60F) in birthday.txt 
+  ugrep -o '[😀-😏]' birthday.txt
 
   # display lines with the names Gödel (or Goedel), Escher, and Bach in GEB.txt and wiki.txt
   ugrep --color=auto 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
@@ -86,16 +92,18 @@ Compile:
 
   c++ -std=c++11 -o ugrep ugrep.cpp -lreflex
 
-Bugs:
+Bugs FIXME:
 
-  - Empty patterns should match any line.
-  - Pattern '^$' does not select empty lines.
+  - Pattern '^$' does not select empty lines, because find() does not permit empty matches.
 
 Wanted TODO:
 
-  - Options -A, -B, and -C to display the context of a match.
-  - Option -v to invert the matches, selecting lines that do not match the specified patterns.
-  - Option -f, --file=file to read patterns from a file.
+  - Like grep, we want to traverse directory contents to search files, and support options -R and -r, --recursive.
+  - Like grep, we want -A, -B, and -C, --context to display the context of a match.
+  - Like grep, we want -f, --file=file to read patterns from a file.
+  - Should we detect "binary files" and skip them?
+  - Should we open files in binary mode "rb" when --binary-files option is specified?
+  - ... anything else?
 
 */
 
@@ -130,8 +138,10 @@ bool flag_no_group           = false;
 bool flag_no_messages        = false;
 bool flag_byte_offset        = false;
 bool flag_count              = false;
+bool flag_fixed_strings      = false;
 bool flag_ignore_case        = false;
-bool flag_invert_match       = false; // TODO not implemented yet
+bool flag_invert_match       = false;
+bool flag_column_number      = false;
 bool flag_line_number        = false;
 bool flag_line_buffered      = false;
 bool flag_only_matching      = false;
@@ -217,18 +227,22 @@ int main(int argc, char **argv)
               flag_color = arg + 6;
             else if (strncmp(arg, "colour=", 7) == 0)
               flag_color = arg + 7;
+            else if (strcmp(arg, "column-number") == 0)
+              flag_column_number = true;
             else if (strcmp(arg, "count") == 0)
               flag_count = true;
+            else if (strcmp(arg, "extended-regexp") == 0)
+              ;
             else if (strncmp(arg, "file-format=", 12) == 0)
               flag_file_format = arg + 12;
+            else if (strcmp(arg, "fixed-strings") == 0)
+              flag_fixed_strings = true;
             else if (strcmp(arg, "help") == 0)
               help();
             else if (strcmp(arg, "ignore-case") == 0)
               flag_ignore_case = true;
             else if (strcmp(arg, "invert-match") == 0)
               flag_invert_match = true;
-            else if (strcmp(arg, "no-group") == 0)
-              flag_no_group = true;
             else if (strcmp(arg, "line-buffered") == 0)
               flag_line_buffered = true;
             else if (strcmp(arg, "line-number") == 0)
@@ -237,6 +251,8 @@ int main(int argc, char **argv)
               flag_line_regexp = true;
             else if (strcmp(arg, "no-filename") == 0)
               flag_no_filename = true;
+            else if (strcmp(arg, "no-group") == 0)
+              flag_no_group = true;
             else if (strcmp(arg, "no-messages") == 0)
               flag_no_messages = true;
             else if (strcmp(arg, "only-matching") == 0)
@@ -262,6 +278,9 @@ int main(int argc, char **argv)
             flag_count = true;
             break;
 
+          case 'E':
+            break;
+
           case 'e':
             ++arg;
             if (*arg)
@@ -271,6 +290,10 @@ int main(int argc, char **argv)
             else
               help("missing pattern for option -e");
             is_grouped = false;
+            break;
+
+          case 'F':
+            flag_fixed_strings = true;
             break;
 
           case 'g':
@@ -289,6 +312,10 @@ int main(int argc, char **argv)
 
           case 'i':
             flag_ignore_case = true;
+            break;
+
+          case 'k':
+            flag_column_number = true;
             break;
 
           case 'n':
@@ -323,6 +350,9 @@ int main(int argc, char **argv)
             flag_line_regexp = true;
             break;
 
+          case '?':
+            help();
+
           default:
             help("unknown option -", arg);
         }
@@ -347,21 +377,36 @@ int main(int argc, char **argv)
   // remove the ending '|' from the |-concatenated regexes in the regex string
   regex.pop_back();
 
-  // make the regex word- or line-anchored
+  // if the specified regex is empty then it matches every line
+  if (regex.empty())
+    regex.assign(".*");
+
+  // if -F --fixed-strings: make regex literal with \Q and \E
+  if (flag_fixed_strings)
+    regex.insert(0, "\\Q").append("\\E");
+
+  // if -w or -x: make the regex word- or line-anchored, respectively
   if (flag_word_regexp)
     regex.insert(0, "\\<").append("\\>");
   else if (flag_line_regexp)
     regex.insert(0, "^").append("$");
 
-  // enable line buffering if options -c -o -q are not specified
+  // if -v invert-match: options -g --no-group and -o --only-matching options cannot be used
+  if (flag_invert_match)
+  {
+    flag_no_group = false;
+    flag_only_matching = false;
+  }
+
+  // enable line buffering if options -c --count -o --only-matching -q --quiet are not specified
   if (!flag_count && !flag_only_matching && !flag_quiet)
     flag_line_buffered = true;
 
-  // display file name if more than one input file is specified and option --no-filename is not specified
+  // display file name if more than one input file is specified and option -h --no-filename is not specified
   if (infiles.size() > 1 && !flag_no_filename)
     flag_filename = true;
 
-  // (re)set grep_color depending on color_term and the ugrep command-line options
+  // (re)set grep_color depending on color_term, isatty(), and the ugrep --color option
   if (!flag_color || strcmp(flag_color, "never") == 0)
   {
     grep_color = NULL;
@@ -470,13 +515,47 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
   if (flag_quiet)
   {
     // -q quite mode: report if a single pattern match was found in the input
+
     found = reflex::Matcher(pattern, input).find();
+
+    if (flag_invert_match)
+      found = !found;
   }
   else if (flag_count)
   {
-    if (flag_no_group)
+    // -c count mode: count the number of lines/patterns matched
+
+    if (flag_invert_match)
     {
-      // -c count mode w/o option -g: count the number of patterns matched in the file
+      size_t lines = 0;
+      std::string line;
+
+      // -c count mode w/ -v: count the number of non-matching lines
+      while (input)
+      {
+        int ch;
+
+        // read the next line
+        line.clear();
+        while ((ch = input.get()) != EOF && ch != '\n')
+          line.push_back(ch);
+        if (ch == EOF && line.empty())
+          break;
+
+        // count this line if not matched
+        if (!reflex::Matcher(pattern, line).find())
+        {
+          found = true;
+          ++lines;
+        }
+      }
+
+      std::cout << label << lines << std::endl;
+    }
+    else if (flag_no_group)
+    {
+      // -c count mode w/ -g: count the number of patterns matched in the file
+
       reflex::Matcher matcher(pattern, input);
       size_t matches = std::distance(matcher.find.begin(), matcher.find.end());
 
@@ -485,10 +564,11 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
     }
     else
     {
+      // -c count mode w/o -g: count the number of matching lines
+
       size_t lineno = 0;
       size_t lines = 0;
 
-      // -c count mode w/ option -g: count the number of lines that matched
       for (auto& match : reflex::Matcher(pattern, input).find)
       {
         if (lineno != match.lineno())
@@ -504,11 +584,12 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
   }
   else if (flag_line_buffered)
   {
+    // line-buffered mode: read input line-by-line and display lines that matched the pattern
+
     size_t byte_offset = 0;
     size_t lineno = 1;
     std::string line;
 
-    // line-buffered mode: read input line-by-line and display lines that matched the pattern
     while (input)
     {
       int ch;
@@ -517,15 +598,35 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
       line.clear();
       while ((ch = input.get()) != EOF && ch != '\n')
         line.push_back(ch);
+      if (ch == EOF && line.empty())
+        break;
 
-      if (flag_no_group)
+      if (flag_invert_match)
       {
-        // search the line for pattern matches and display the entire line (with exact offset) for each pattern match
+        // -v invert match: display non-matching line
+
+        if (!reflex::Matcher(pattern, line).find())
+        {
+          std::cout << label;
+          if (flag_line_number)
+            std::cout << lineno << ":";
+          if (flag_byte_offset)
+            std::cout << byte_offset << ":";
+          std::cout << line << std::endl;
+          found = true;
+        }
+      }
+      else if (flag_no_group)
+      {
+        // search the line for pattern matches and display the line again (with exact offset) for each pattern match
+
         for (auto& match : reflex::Matcher(pattern, line).find)
         {
           std::cout << label;
           if (flag_line_number)
             std::cout << lineno << ":";
+          if (flag_column_number)
+            std::cout << match.columno() + 1 << ":";
           if (flag_byte_offset)
             std::cout << byte_offset << ":";
           std::cout << line.substr(0, match.first()) << mark << match.text() << unmark << line.substr(match.last()) << std::endl;
@@ -534,9 +635,10 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
       }
       else
       {
+        // search the line for pattern matches and display the line just once with all matches
+
         size_t last = 0;
 
-        // search the line for pattern matches and display the line just once with all matches
         for (auto& match : reflex::Matcher(pattern, line).find)
         {
           if (last == 0)
@@ -544,6 +646,8 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
             std::cout << label;
             if (flag_line_number)
               std::cout << lineno << ":";
+            if (flag_column_number)
+              std::cout << match.columno() + 1 << ":";
             if (flag_byte_offset)
               std::cout << byte_offset + match.first() << ":";
             std::cout << line.substr(0, match.first()) << mark << match.text() << unmark;
@@ -568,9 +672,10 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
   }
   else
   {
+    // block-buffered mode: echo all pattern matches
+
     size_t lineno = 0;
 
-    // block-buffered mode: echo all pattern matches
     for (auto& match : reflex::Matcher(pattern, input).find)
     {
       if (flag_no_group || lineno != match.lineno())
@@ -579,6 +684,8 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
         std::cout << label;
         if (flag_line_number)
           std::cout << lineno << ":";
+        if (flag_column_number)
+          std::cout << match.columno() + 1 << ":";
         if (flag_byte_offset)
           std::cout << match.first() << ":";
       }
@@ -595,7 +702,7 @@ void help(const char *message, const char *arg)
 {
   if (message)
     std::cout << "ugrep: " << message << (arg != NULL ? arg : "") << std::endl;
-  std::cout << "Usage: ugrep [-bcgHhinoqsVvwx] [--colour[=when]|--color[=when]] [-e pattern] [--line-buffered] [pattern] [file ...]\n\
+  std::cout << "Usage: ugrep [-bcEFgHhiknoqsVvwx] [--colour[=when]|--color[=when]] [-e pattern] [--line-buffered] [pattern] [file ...]\n\
 \n\
      -b, --byte-offset\n\
              The offset in bytes of a matched pattern is displayed in front of\n\
@@ -607,15 +714,20 @@ void help(const char *message, const char *arg)
              Mark up the matching text with the expression stored in\n\
              GREP_COLOR environment variable.  The possible values of when can\n\
              be `never', `always' or `auto'.\n\
+     -E, --extended-regexp\n\
+             Ignored (ugrep patterns use extended regular expression syntax).\n\
      -e pattern, --regexp=pattern\n\
              Specify a pattern used during the search of the input: an input\n\
              line is selected if it matches any of the specified patterns.\n\
              This option is most useful when multiple -e options are used to\n\
              specify multiple patterns, or when a pattern begins with a dash\n\
              (`-').\n\
+     -F, --fixed-strings\n\
+             Interpret pattern as a set of fixed strings (i.e. force ugrep to\n\
+             behave as fgrep).\n\
      -g, --no-group\n\
              Do not group pattern matches on the same line.  Display the\n\
-             input line again for each additional pattern match.\n\
+             matched line again for each additional pattern match.\n\
      -H      Always print filename headers with output lines.\n\
      -h, --no-filename\n\
              Never print filename headers (i.e. filenames) with output lines.\n\
@@ -624,11 +736,13 @@ void help(const char *message, const char *arg)
              Perform case insensitive matching. This option applies\n\
              case-insensitive matching of ASCII characters in the input.\n\
              By default, ugrep is case sensitive.\n\
+     -k, --column-number\n\
+             The column number of a matched pattern is displayed in front of\n\
+             the respective matched line, starting with 1.  Expands tabs.\n\
      -n, --line-number\n\
              Each output line is preceded by its relative line number in the\n\
              file, starting at line 1.  The line number counter is reset for\n\
-             each file processed.  This option is ignored if -c, -L, -l, or -q\n\
-             is specified.\n\
+             each file processed.\n\
      -o, --only-matching\n\
              Prints only the matching part of the lines.\n\
      -q, --quiet, --silent\n\
@@ -639,7 +753,7 @@ void help(const char *message, const char *arg)
              Silent mode.  Nonexistent and unreadable files are ignored (i.e.\n\
              their error messages are suppressed).\n\
      --file-format=format\n\
-             The input file format:";
+             The input file format.  The possible values of format can be:";
   for (int i = 0; format_table[i].format != NULL; ++i)
     std::cout << (i % 8 ? " " : "\n             ") << format_table[i].format;
   std::cout << "\n\
@@ -649,6 +763,9 @@ void help(const char *message, const char *arg)
              otherwise.\n\
      -V, --version\n\
              Display version information and exit.\n\
+     -v, --invert-match\n\
+             Selected lines are those not matching any of the specified\n\
+             patterns.\n\
      -w, --word-regexp\n\
              The pattern is searched for as a word (as if surrounded by\n\
              `\\<' and `\\>').\n\
