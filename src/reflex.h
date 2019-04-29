@@ -60,12 +60,12 @@
 # if defined(OS_WIN)
 #  define PLATFORM "WIN"
 # else
-#  define PLATFORM "(unknown OS)"
+#  define PLATFORM ""
 # endif
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "1.1.5"
+#define REFLEX_VERSION "1.2.0"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**

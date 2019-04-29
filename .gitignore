@@ -42,6 +42,7 @@ a.out
 # Autotools
 .deps
 .dirstamp
+autom4te.cache
 Makefile
 config.h
 config.status

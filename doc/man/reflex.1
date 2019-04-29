@@ -1,4 +1,4 @@
-.TH REFLEX "1" "April 06, 2019" "reflex 1.1.5" "User Commands"
+.TH REFLEX "1" "April 29, 2019" "reflex 1.2.0" "User Commands"
 .SH NAME
 reflex \- the regex\-centric fast and flexible lexical analyzer generator
 .SH SYNOPSIS
@@ -9,168 +9,183 @@ Generates C++ source code programs that perform pattern\-matching on text.
 \fIFILE\fR is a lexer specification source file, usually with extension .l.
 Generates lex.yy.cpp unless option \fB-o\fR specifies otherwise.
 .SH OPTIONS
-.SS "Scanner:"
+.PP
+.B Scanner:
 .TP
-\fB\-+\fR, \fB\-\-flex\fR
+  \fB\-+\fR, \fB\-\-flex\fR
 generate Flex\-compatible C++ scanner
 .TP
-\fB\-a\fR, \fB\-\-dotall\fR
+  \fB\-a\fR, \fB\-\-dotall\fR
 dot in patterns match newline
 .TP
-\fB\-B\fR, \fB\-\-batch\fR
+  \fB\-B\fR, \fB\-\-batch\fR
 generate scanner for batch input by buffering the entire input
 .TP
-\fB\-f\fR, \fB\-\-full\fR
+  \fB\-f\fR, \fB\-\-full\fR
 generate full scanner with FSM opcode tables
 .TP
-\fB\-F\fR, \fB\-\-fast\fR
+  \fB\-F\fR, \fB\-\-fast\fR
 generate fast scanner with FSM code
 .TP
-\fB\-i\fR, \fB\-\-case\-insensitive\fR
+  \fB\-i\fR, \fB\-\-case\-insensitive\fR
 ignore case in patterns
 .TP
-\fB\-I\fR, \fB\-\-interactive\fR, \fB\-\-always\-interactive\fR
+  \fB\-I\fR, \fB\-\-interactive\fR, \fB\-\-always\-interactive\fR
 generate interactive scanner
 .TP
-\fB\-m\fR, \fB\-\-matcher\fR=\fINAME\fR
+  \fB\-m\fR, \fB\-\-matcher\fR=\fINAME\fR
 use matcher NAME library [boost|boost_perl|reflex|std_ecma|...]
 .TP
-\fB\-\-pattern\fR=\fINAME\fR
+  \fB\-\-pattern\fR=\fINAME\fR
 use custom pattern class NAME for custom matcher option \fB\-m\fR
 .TP
-\fB\-\-include\fR=\fIFILE\fR
+  \fB\-\-include\fR=\fIFILE\fR
 include header FILE.h for custom matcher option \fB\-m\fR
 .TP
-\fB\-\-tabs\fR=\fIN\fR
+  \fB\-\-tabs\fR=\fIN\fR
 set tab size to N (1,2,4,8) for indent and dedent matching
 .TP
-\fB\-u\fR, \fB\-\-unicode\fR
+  \fB\-u\fR, \fB\-\-unicode\fR
 match Unicode . (dot), \\p, \\s, \\w, ..., and group UTF\-8
 .TP
-\fB\-x\fR, \fB\-\-freespace\fR
+  \fB\-x\fR, \fB\-\-freespace\fR
 ignore space in patterns
-.SS "Generated files:"
+.PP
+.B Generated files:
 .TP
-\fB\-o\fR, \fB\-\-outfile\fR=\fIFILE\fR
+  \fB\-o\fR, \fB\-\-outfile\fR=\fIFILE\fR
 specify output FILE instead of lex.yy.cpp
 .TP
-\fB\-t\fR, \fB\-\-stdout\fR
+  \fB\-t\fR, \fB\-\-stdout\fR
 write scanner on stdout instead of lex.yy.cpp
 .TP
-\fB\-\-graphs\-file\fR[=\fI\fR\fIFILE\fR]
+  \fB\-\-graphs\-file\fR[=\fI\fR\fIFILE\fR]
 write the scanner's DFA in Graphviz format to FILE.gv
 .TP
-\fB\-\-header\-file\fR[=\fI\fR\fIFILE\fR]
+  \fB\-\-header\-file\fR[=\fI\fR\fIFILE\fR]
 write a C++ header FILE.h in addition to the scanner
 .TP
-\fB\-\-regexp\-file\fR[=\fI\fR\fIFILE\fR]
+  \fB\-\-regexp\-file\fR[=\fI\fR\fIFILE\fR]
 write the scanner's regular expression patterns to FILE.txt
 .TP
-\fB\-\-tables\-file\fR[=\fI\fR\fIFILE\fR]
+  \fB\-\-tables\-file\fR[=\fI\fR\fIFILE\fR]
 write the scanner's FSM opcode tables or FSM code to FILE.cpp
-.SS "Generated code:"
+.PP
+.B Generated code:
 .TP
-\fB\-\-namespace\fR=\fINAME\fR
+  \fB\-\-namespace\fR=\fINAME\fR
 use C++ namespace NAME for the generated scanner class, where
 multiple namespaces can be specified as NAME1.NAME2.NAME3 ...
 .TP
-\fB\-\-lexer\fR=\fINAME\fR
+  \fB\-\-lexer\fR=\fINAME\fR
 use lexer class NAME instead of Lexer or yyFlexLexer
 .TP
-\fB\-\-lex\fR=\fINAME\fR
+  \fB\-\-lex\fR=\fINAME\fR
 use lex function NAME instead of lex or yylex
 .TP
-\fB\-\-class\fR=\fINAME\fR
+  \fB\-\-class\fR=\fINAME\fR
 declare a user\-defined scanner class NAME
 .TP
-\fB\-\-yyclass\fR=\fINAME\fR
+  \fB\-\-yyclass\fR=\fINAME\fR
 generate Flex\-compatible scanner with user\-defined class NAME
 .TP
-\fB\-\-main\fR
+  \fB\-\-main\fR
 generate main() to invoke lex() or yylex()
 .TP
-\fB\-L\fR, \fB\-\-noline\fR
+  \fB\-L\fR, \fB\-\-noline\fR
 suppress #line directives in scanner
 .TP
-\fB\-P\fR, \fB\-\-prefix\fR=\fINAME\fR
+  \fB\-P\fR, \fB\-\-prefix\fR=\fINAME\fR
 use NAME as prefix to FlexLexer class name and its members
 .TP
-\fB\-\-nostdinit\fR
+  \fB\-\-nostdinit\fR
 initialize input to std::cin instead of stdin
 .TP
-\fB\-\-bison\fR
+  \fB\-\-bison\fR
 generate global yylex() scanner for bison
 .TP
-\fB\-\-bison\-cc\fR
-generate bison C++ interface code for bison lalr1.cc skeleton
-.TP
-\fB\-\-bison\-cc\-namespace\fR=\fINAME\fR
-use namespace NAME with bison lalr1.cc skeleton
-.TP
-\fB\-\-bison\-cc\-parser\fR=\fINAME\fR
-use parser class NAME with bison lalr1.cc skeleton
-.TP
-\fB\-\-bison\-bridge\fR
+  \fB\-\-bison\-bridge\fR
 generate reentrant yylex() scanner for bison pure parser
 .TP
-\fB\-\-bison\-locations\fR
+  \fB\-\-bison\-cc\fR
+generate bison C++ interface code for bison lalr1.cc skeleton
+.TP
+  \fB\-\-bison\-cc\-namespace\fR=\fINAME\fR
+use namespace NAME with bison lalr1.cc skeleton
+.TP
+  \fB\-\-bison\-cc\-parser\fR=\fINAME\fR
+use parser class NAME with bison lalr1.cc skeleton
+.TP
+  \fB\-\-bison\-complete\fR
+use bison complete\-symbols feature, implies bison\-complete
+.TP
+  \fB\-\-bison\-locations\fR
 include bison yylloc support
 .TP
-\fB\-R\fR, \fB\-\-reentrant\fR
+  \fB\-R\fR, \fB\-\-reentrant\fR
 generate Flex\-compatible yylex() reentrant scanner functions
 NOTE: adds functions only, reflex scanners are always reentrant
 .TP
-\fB\-\-noyywrap\fR
+  \fB\-\-noyywrap\fR
 do not call global yywrap() on EOF, requires option \fB\-\-flex\fR
-.SS "Debugging:"
 .TP
-\fB\-d\fR, \fB\-\-debug\fR
+  \fB\-\-exception\fR=\fIVALUE\fR
+use exception VALUE to throw in the default rule of the scanner
+.TP
+  \fB\-\-token\-type\fR=\fINAME\fR
+use NAME as the return type of lex() and yylex() instead of int
+.PP
+.B Debugging:
+.TP
+  \fB\-d\fR, \fB\-\-debug\fR
 enable debug mode in scanner
 .TP
-\fB\-p\fR, \fB\-\-perf\-report\fR
+  \fB\-p\fR, \fB\-\-perf\-report\fR
 scanner reports performance statistics to stderr
 .TP
-\fB\-s\fR, \fB\-\-nodefault\fR
-suppress default rule in scanner to ECHO unmatched text
+  \fB\-s\fR, \fB\-\-nodefault\fR
+suppress default rule in scanner, disabling ECHO unmatched text
 .TP
-\fB\-v\fR, \fB\-\-verbose\fR
+  \fB\-v\fR, \fB\-\-verbose\fR
 report summary of scanner statistics to stdout
 .TP
-\fB\-w\fR, \fB\-\-nowarn\fR
+  \fB\-w\fR, \fB\-\-nowarn\fR
 do not generate warnings
-.SS "Miscellaneous:"
+.PP
+.B Miscellaneous:
 .TP
-\fB\-c\fR, \fB\-n\fR
+  \fB\-c\fR, \fB\-n\fR
 do\-nothing POSIX options
 .TP
-\fB\-?\fR, \fB\-h\fR, \fB\-\-help\fR
-display this help message
+  \fB\-?\fR, \fB\-h\fR, \fB\-\-help\fR
+produce this help message and exit
 .TP
-\fB\-V\fR, \fB\-\-version\fR
-display reflex release version
-.SS "Lex/Flex\-like options that are enabled by default or have no effect:"
+  \fB\-V\fR, \fB\-\-version\fR
+report reflex version and exit
+.PP
+.B Lex/Flex\-like options that are enabled by default or have no effect:
 .TP
-\fB\-\-c++\fR                  default
+  \fB\-\-c++\fR                  default
 .TP
-\fB\-\-lex\-compat\fR           n/a
+  \fB\-\-lex\-compat\fR           n/a
 .TP
-\fB\-\-never\-interactive\fR    default
+  \fB\-\-never\-interactive\fR    default
 .TP
-\fB\-\-nounistd\fR             n/a
+  \fB\-\-nounistd\fR             n/a
 .TP
-\fB\-\-posix\fR                n/a
+  \fB\-\-posix\fR                n/a
 .TP
-\fB\-\-stack\fR                n/a
+  \fB\-\-stack\fR                n/a
 .TP
-\fB\-\-warn\fR                 default
+  \fB\-\-warn\fR                 default
 .TP
-\fB\-\-yylineno\fR             default
+  \fB\-\-yylineno\fR             default
 .TP
-\fB\-\-yymore\fR               default
+  \fB\-\-yymore\fR               default
 .TP
-\fB\-\-7bit\fR                 n/a
+  \fB\-\-7bit\fR                 n/a
 .TP
-\fB\-\-8bit\fR                 default
+  \fB\-\-8bit\fR                 default
 .SH DEPENDENCIES
 None, except when option \fB-m\fR specifies an external pattern\-matcher engine
 such as boost that requires the Boost.Regex library installed.
@@ -179,18 +194,15 @@ The full documentation for \fBreflex\fR is maintained as a Doxygen\-generated
 manual reflex/doc/html/index.html located in the source directory of the reflex
 installation.  Or visit:
 .IP
-.B http://re-flex.sourceforge.net
+https://www.genivia.com/doc/reflex/html/index.html
 .PP
 to browse the reflex user guide.
 .SH BUGS
 REJECT is not functional and not available.
-
+.PP
 Report bugs at:
 .IP
-.B https://github.com/Genivia/RE-flex/issues
-.PP
-.SH AUTHOR
-Robert van Engelen <engelen@acm.org> was the original author of \fBreflex\fR.
+https://github.com/Genivia/RE-flex/issues
 .SH LICENSE
 \fBreflex\fR is released under the BSD\-3 license.  All parts of the software
 have reasonable copyright terms permitting free redistribution.  This includes

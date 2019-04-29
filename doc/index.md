@@ -2325,7 +2325,7 @@ library:
 
   Category                               | Matches
   -------------------------------------- | ------------------------------------
-  `.`                                    | matches any Unicode character (beware of \ref invalid-utf)
+  `.`                                    | matches any single Unicode character except newline (including \ref invalid-utf)
   `\X`                                   | matches any ISO-8859-1 or Unicode character (with or without the `−−unicode` option)
   `\R`                                   | matches a Unicode line break
   `\s`, `\p{Zs}`                         | matches a white space character with Unicode sub-propert Zs
@@ -2333,7 +2333,7 @@ library:
   `\u`, `\p{Lu}`                         | matches an upper case letter with Unicode sub-property Lu
   `\w`, `\p{Word}`                       | matches a Unicode word character with property L, Nd, or Pc
   `\p{Unicode}`                          | matches any Unicode character (U+00 to U+10FFFF minus U+D800 to U+DFFF)
-  `\p{ASCII}`                            | matches an ASCII character U+00 to U+007F)
+  `\p{ASCII}`                            | matches an ASCII character U+0000 to U+007F)
   `\p{Non_ASCII_Unicode}`                | matches a non-ASCII character U+80 to U+10FFFF minus U+D800 to U+DFFF)
   `\p{Letter}`                           | matches a character with Unicode property Letter
   `\p{Mark}`                             | matches a character with Unicode property Mark
@@ -2661,22 +2661,6 @@ that is a multiple of 8.  The tab multiplier can be changed by setting the
 `−−tabs=N` option where `N` must be a positive integer that is a power of 2
 and between 1 and 8 (1, 2, 4, 8).
 
-To add a pattern that consumes line continuations without affecting the
-indentation levels defined by `\i`, use a negative match, which is a new
-RE/flex feature:
-
-<div class="alt">
-~~~{.cpp}
-    (?^\\\n\h*)  // lines ending in \ will continue on the next line
-~~~
-</div>
-
-The negative pattern `(?^\\\n\h+)` consumes input internally as if we are
-repeately calling `input()` (or `yyinput()` with `−−flex`).  We used it here to
-consume the line-ending `\` and the indent that followed it, as if this text
-was not part of the input, which ensures that the current indent positions that
-are defined by `\i` are not affected.
-
 To scan input that continues on the next new line(s) (which may affect indent
 stops) while preserving the current indent stop positions, use the RE/flex
 matcher `matcher().push_stops()` and `matcher().pop_stops()`:
@@ -2720,6 +2704,43 @@ The `matcher().stops()` method returns a reference to the current
 and/or removing indent stop positions.  Make sure to keep the vector sorted.
 
 See \ref reflex-states for more information about start condition states.
+
+🔝 [Back to table of contents](#)
+
+### Negative patterns                                {#reflex-pattern-negative}
+
+A "negative pattern" can be used to consume line continuations without
+affecting the indentation levels defined by indent marker `\i`.  Negative
+patterns are a RE/flex feature.  For example:
+
+<div class="alt">
+~~~{.cpp}
+<div class="alt">
+~~~{.cpp}
+    %o tabs=8
+    %%
+    ^\h+         out() << "| "; // nodent: text is aligned to current indent
+    ^\h*\i       out() << "> "; // indent: matched and added with \i
+    ^\h*\j       out() << "< "; // dedent: matched with \j
+    \j           out() << "< "; // dedent: for each extra level dedented
+    (?^\\\n\h+)  /* lines ending in \ will continue on the next line
+                    without affecting the current \i tab positions */
+    %%
+~~~
+</div>
+
+The negative pattern `(?^\\\n\h+)` consumes input internally as if we are
+repeately calling `input()` (or `yyinput()` with `−−flex`).  We used it here to
+consume the line-ending `\` and the indent that followed it, as if this text
+was not part of the input, which ensures that the current indent positions
+defined by `\i` are not affected.
+
+Negative patterns can also be used to enhance pattern matching with the RE/flex
+regex library.  For example, to search input for a given word while ignoring
+quoted strings that may contain that word we use the pattern `word|(?^".*?")`
+where `(?^".*?")` matches all quoted strings that are not reported as matches.
+To skip C/C++ quoted strings in source code input files, use the pattern
+`(?^"(\\.|\\\r?\n|[^\\\n"])*")`.
 
 🔝 [Back to table of contents](#)
 
@@ -2800,10 +2821,11 @@ in <i>`%{`</i> and <i>`%}`</i> instead of indented.
 To enable free space mode in <b>`reflex`</b> use the `−−freespace` option (or
 <i>`%%option freespace`</i>).
 
-When converting regex patterns for use with a C++ regex library, use regex
-matcher converter flag `reflex::convert_flag::freespace` to convert the regex
-or use `(?x:φ)` to locally enable free-space mode in a pattern `φ`.  See
-\ref regex-convert for more details.
+When converting regex patterns for use with a C++ regex library, prepend `(?x)`
+to the regex to specify free-space mode or use `(?x:φ)` to locally enable
+free-space mode in the sub-pattern `φ`.  The regex pattern may require
+conversion when the regex library does not support free-space mode modifiers,
+see \ref regex-convert for more details.
 
 🔝 [Back to table of contents](#)
 
@@ -2813,10 +2835,11 @@ Multi-line mode makes the anchors `^` and `$` match the start and end of a
 line, respectively.  Multi-line mode is the default mode in lexer
 specifications.
 
-When converting regex patterns for use with a C++ regex library, use regex
-matcher converter flag `reflex::convert_flag::multiline` to convert the regex
-or use `(?m:φ)` to locally enable multi-line mode in a pattern `φ`.  See
-\ref regex-convert for more details.
+When converting regex patterns for use with a C++ regex library, prepend `(?m)`
+to the regex to specify multi-line mode or use `(?m:φ)` to locally enable
+multi-line mode in the sub-pattern `φ`.  The regex pattern may require
+conversion when the regex library does not support multi-line mode modifiers,
+see \ref regex-convert for more details.
 
 🔝 [Back to table of contents](#)
 
@@ -2825,10 +2848,11 @@ or use `(?m:φ)` to locally enable multi-line mode in a pattern `φ`.  See
 To enable dotall mode in <b>`reflex`</b> use the `-a` or `−−dotall` option (or
 <i>`%%option dotall`</i>).
 
-When converting regex patterns for use with a C++ regex library, use regex
-matcher converter flag `reflex::convert_flag::dotall` to convert the regex
-or use `(?s:φ)` to locally enable dotall mode in a pattern `φ`.  See
-\ref regex-convert for more details.
+When converting regex patterns for use with a C++ regex library, prepend `(?s)`
+to the regex to specify dotall mode or use `(?s:φ)` to locally enable dotall
+mode in the sub-pattern `φ`.  The regex pattern may require conversion when the
+regex library does not support dotall mode modifiers, see \ref regex-convert
+for more details.
 
 🔝 [Back to table of contents](#)
 
@@ -2837,10 +2861,11 @@ or use `(?s:φ)` to locally enable dotall mode in a pattern `φ`.  See
 To enable case-insensitive mode in <b>`reflex`</b> use the `-i` or
 `−−case-insensitive` option (or <i>`%%option case-insensitive`</i>).
 
-When converting regex patterns for use with a C++ regex library, use regex
-matcher converter flag `reflex::convert_flag::anycase` to convert the regex
-or use `(?i:φ)` to locally enable case-insensitive mode in a pattern `φ`.  See
-\ref regex-convert for more details.
+When converting regex patterns for use with a C++ regex library, prepend `(?i)`
+to the regex to specify case-insensitive mode or use `(?i:φ)` to locally enable
+case-insensitive mode in the sub-pattern `φ`.  The regex pattern may require
+conversion when the regex library does not support case-insensitive mode
+modifiers, see \ref regex-convert for more details.
 
 🔝 [Back to table of contents](#)
 
@@ -5520,19 +5545,27 @@ matcher of your choice:
 where `flags` is optional.  When specified, it can be a combination of the
 following `reflex::convert_flag` flags:
 
-  Flag        | Effect
-  ----------- | ---------------------------------------------------------------
-  `none`      | no conversion
-  `unicode`   | `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode, same as `(?u)`
-  `recap`     | remove capturing groups, add capturing groups to the top level
-  `lex`       | convert Lex/Flex regular expression syntax
-  `u4`        | convert `\uXXXX` (shorthand of `\u{XXXX}`)
-  `anycase`   | convert regex to ignore case, same as `(?i)`
-  `multiline` | regex has multiline anchors `^` and `$`, same as `(?m)`
-  `dotall`    | convert `.` (dot) to match all, same as `(?s)`
-  `freespace` | convert regex by removing spacing, same as `(?x)`
+  Flag                              | Effect
+  --------------------------------- | ---------------------------------------------------------------
+  `reflex::convert_flag::none`      | no conversion
+  `reflex::convert_flag::unicode`   | `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode, same as `(?u)`
+  `reflex::convert_flag::recap`     | remove capturing groups, add capturing groups to the top level
+  `reflex::convert_flag::lex`       | convert Lex/Flex regular expression syntax
+  `reflex::convert_flag::u4`        | convert `\uXXXX` (shorthand of `\u{XXXX}`)
 
-For example:
+The following `reflex::convert_flag` flags are internally used by the
+converters to convert a regex pattern that contains `(?isx)` modifiers when one
+or more modifiers is not supported byt the regex library:
+
+  Flag                              | Effect
+  --------------------------------- | ---------------------------------------------------------------
+  `reflex::convert_flag::anycase`   | convert regex to ignore case, to replace `(?i)`
+  `reflex::convert_flag::freespace` | convert regex by removing spacing, to replace `(?x)`
+  `reflex::convert_flag::dotall`    | convert `.` (dot) to match all, same as `(?s)`
+  `reflex::convert_flag::multiline` | no conversion (asserts multiline anchors `^` and `$`)
+
+The following example enables Unicode matching by converting the regex pattern
+with the `reflex::convert_flag::unicode` flag:
 
 ~~~{.cpp}
     #include <reflex/matcher.h> // reflex::Matcher, reflex::Input, reflex::Pattern
@@ -5543,20 +5576,20 @@ For example:
       std::cout << "This is Greek" << std::endl;
 ~~~
 
-For example, the `unicode` flag and `dotall` flag can be used with a `.`
-regex pattern to count wide characters in some `example` input:
+The following example enables dotall mode to count the number of characters
+(including newlines) in the given `example` input:
 
 ~~~{.cpp}
     #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 
     // construct a Boost.Regex matcher to count wide characters:
-    std::string regex = reflex::BoostMatcher::convert(".", reflex::convert_flag::unicode | reflex::convert_flag::dotall);
+    std::string regex = reflex::BoostMatcher::convert("(?su).");
     reflex::BoostMatcher boostmatcher(regex, example);
     size_t n = std::distance(boostmatcher.scan.begin(), boostmatcher.scan.end());
 ~~~
 
-You can also use the regex `"\X"` to match any wide character without using
-these flags.
+Note that we could have used `"\X"` instead to match any wide character without
+using the `(?su)` modifiers.
 
 A converter throws a `reflex::regex_error` exception if conversion fails, for
 example when the regex syntax is invalid:
@@ -7040,7 +7073,7 @@ RE/flex applications:
       c++ ... -lreflex -lboost_regex
 
 - If you get compilation errors with the `std::regex` matching engine, you
-  should upgrade C++ to C++11:
+  should compile the source code as C++11:
 
       c++ -std=c++11 ... -lreflex
 
@@ -7062,8 +7095,8 @@ Please report bugs as RE/flex GitHub
 🔝 [Back to contents](#)
 
 
-Getting RE/flex                                                     {#download}
-===============
+Installing RE/flex                                                  {#download}
+==================
 
 Download RE/flex from [SourceForge](https://sourceforge.net/projects/re-flex)
 or visit the RE/flex GitHub [repository](https://github.com/Genivia/RE-flex).

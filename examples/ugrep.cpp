@@ -1,5 +1,5 @@
 /******************************************************************************\
-* Copyright (c) 2016, Robert van Engelen, Genivia Inc. All rights reserved.    *
+* Copyright (c) 2019, Robert van Engelen, Genivia Inc. All rights reserved.    *
 *                                                                              *
 * Redistribution and use in source and binary forms, with or without           *
 * modification, are permitted provided that the following conditions are met:  *
@@ -28,14 +28,21 @@
 
 /**
 @file      ugrep.cpp
-@brief     Universal grep utility - Unicode-aware grep
+@brief     Universal grep utility - search Unicode files
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2019-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 
-The ugrep utility extends grep with Unicode patterns.  ugrep accepts Unicode
-regex patterns and scans files encoded in UTF-8/16/32, ASCII, ISO-8859-1,
-EBCDIC, and other code pages.  ugrep requires the RE/flex library.
+Universal grep utility - search UTF-8/16/32, ASCII, ISO-8859-1, EBCDIC, and
+other files faster with RE/flex high-performance Unicode pattern matching.
+
+Download and installation:
+
+  https://github.com/Genivia/ugrep
+
+Requires:
+
+  RE/flex - https://github.com/Genivia/RE-flex
 
 Features:
 
@@ -61,32 +68,44 @@ Examples:
   # display the lines in places.txt that contain capitalized Unicode words
   ugrep '\p{Upper}\p{Lower}*' places.txt
 
-  # display the lines in places.txt with capitalized Unicode words highlighted
+  # display the lines in places.txt with capitalized Unicode words color-highlighted
   ugrep --color=auto '\p{Upper}\p{Lower}*' places.txt
 
-  # display a list of capitalized Unicode words in places.txt
+  # list all capitalized Unicode words in places.txt
   ugrep -o '\p{Upper}\p{Lower}*' places.txt
 
-  # search and display laughing face emojis (Unicode code points U+1F600 to U+1F60F) in birthday.txt 
+  # list all laughing face emojis (Unicode code points U+1F600 to U+1F60F) in birthday.txt 
   ugrep -o '[😀-😏]' birthday.txt
 
-  # display lines with the names Gödel (or Goedel), Escher, and Bach in GEB.txt and wiki.txt
-  ugrep --color=auto 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
+  # list all laughing face emojis (Unicode code points U+1F600 to U+1F60F) in birthday.txt 
+  ugrep -o '[\x{1F600}-\x{1F60F}]' birthday.txt
 
-  # count the number of lines with the names Gödel (or Goedel), Escher, and Bach in GEB.txt and wiki.txt
+  # display lines containing the names Gödel (or Goedel), Escher, or Bach in GEB.txt and wiki.txt
+  ugrep 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
+
+  # display lines that do not contain the names Gödel (or Goedel), Escher, or Bach in GEB.txt and wiki.txt
+  ugrep -v 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
+
+  # count the number of lines containing the names Gödel (or Goedel), Escher, or Bach in GEB.txt and wiki.txt
   ugrep -c 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
 
-  # count the number of occurrences of the names Gödel (or Goedel), Escher, and Bach in GEB.txt and wiki.txt
+  # count the number of occurrences of the names Gödel (or Goedel), Escher, or Bach in GEB.txt and wiki.txt
   ugrep -c -g 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
 
   # check if some.txt file contains any non-ASCII (i.e. Unicode) characters
   ugrep -q '[^[:ascii:]]' some.txt && echo "some.txt contains Unicode"
 
   # display word-anchored 'lorem' in UTF-16 formatted file utf16lorem.txt that contains a UTF-16 BOM
-  ugrep -w '[Ll]orem' utf16lorem.txt
+  ugrep -w -i 'lorem' utf16lorem.txt
 
   # display word-anchored 'lorem' in UTF-16 formatted file utf16lorem.txt that does not contain a UTF-16 BOM
-  ugrep --file-format=UTF-16 -w '[Ll]orem' utf16lorem.txt
+  ugrep --file-format=UTF-16 -w -i 'lorem' utf16lorem.txt
+
+  # list the lines to fix in a C/C++ source file by looking for the word FIXME while skipping any FIXME in quoted strings by using a negative pattern `(?^X)' to ignore quoted strings:
+  ugrep -n -o -e 'FIXME' -e '(?^"(\\.|\\\r?\n|[^\\\n"])*")' file.cpp
+
+  # check if 'main' is defined in a C/C++ source file, skipping the word 'main' in comments and strings:
+  ugrep -q -e '\<main\>' -e '(?^"(\\.|\\\r?\n|[^\\\n"])*"|//.*|/[*](.|\n)*?[*]/)' file.cpp
 
 Compile:
 
@@ -101,7 +120,7 @@ Wanted TODO:
   - Like grep, we want to traverse directory contents to search files, and support options -R and -r, --recursive.
   - Like grep, we want -A, -B, and -C, --context to display the context of a match.
   - Like grep, we want -f, --file=file to read patterns from a file.
-  - Should we detect "binary files" and skip them?
+  - Should we detect "binary files" like grep and skip them?
   - Should we open files in binary mode "rb" when --binary-files option is specified?
   - ... anything else?
 
@@ -109,18 +128,28 @@ Wanted TODO:
 
 #include <reflex/matcher.h>
 
-// ugrep version
-#define VERSION "1.0.0"
-
 // check if we are on a windows OS
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
 # define OS_WIN
 #endif
 
+// windows has no isatty()
 #ifdef OS_WIN
 #define isatty(fildes) ((fildes) == 1)
 #else
 #include <unistd.h>
+#endif
+
+// ugrep version
+#define VERSION "1.0.0"
+
+// ugrep platform -- see configure.ac
+#if !defined(PLATFORM)
+# if defined(OS_WIN)
+#  define PLATFORM "WIN"
+# else
+#  define PLATFORM ""
+# endif
 #endif
 
 // ugrep exit codes
@@ -139,6 +168,7 @@ bool flag_no_messages        = false;
 bool flag_byte_offset        = false;
 bool flag_count              = false;
 bool flag_fixed_strings      = false;
+bool flag_free_space         = false;
 bool flag_ignore_case        = false;
 bool flag_invert_match       = false;
 bool flag_column_number      = false;
@@ -150,6 +180,7 @@ bool flag_word_regexp        = false;
 bool flag_line_regexp        = false;
 const char *flag_color       = NULL;
 const char *flag_file_format = NULL;
+int flag_tabs                = 8;
 
 // function protos
 bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_type encoding, const char *infile);
@@ -237,14 +268,14 @@ int main(int argc, char **argv)
               flag_file_format = arg + 12;
             else if (strcmp(arg, "fixed-strings") == 0)
               flag_fixed_strings = true;
+            else if (strcmp(arg, "free-space") == 0)
+              flag_free_space = true;
             else if (strcmp(arg, "help") == 0)
               help();
             else if (strcmp(arg, "ignore-case") == 0)
               flag_ignore_case = true;
             else if (strcmp(arg, "invert-match") == 0)
               flag_invert_match = true;
-            else if (strcmp(arg, "line-buffered") == 0)
-              flag_line_buffered = true;
             else if (strcmp(arg, "line-number") == 0)
               flag_line_number = true;
             else if (strcmp(arg, "line-regexp") == 0)
@@ -261,6 +292,8 @@ int main(int argc, char **argv)
               flag_quiet = true;
             else if (strncmp(arg, "regexp=", 7) == 0)
               regex.append(arg + 7).push_back('|');
+            else if (strncmp(arg, "tabs=", 5) == 0)
+              flag_tabs = atoi(arg + 5);
             else if (strcmp(arg, "version") == 0)
               version();
             else if (strcmp(arg, "word-regexp") == 0)
@@ -377,19 +410,23 @@ int main(int argc, char **argv)
   // remove the ending '|' from the |-concatenated regexes in the regex string
   regex.pop_back();
 
-  // if the specified regex is empty then it matches every line
   if (regex.empty())
+  {
+    // if the specified regex is empty then it matches every line
     regex.assign(".*");
+  }
+  else
+  {
+    // if -F --fixed-strings: make regex literal with \Q and \E
+    if (flag_fixed_strings)
+      regex.insert(0, "\\Q").append("\\E");
 
-  // if -F --fixed-strings: make regex literal with \Q and \E
-  if (flag_fixed_strings)
-    regex.insert(0, "\\Q").append("\\E");
-
-  // if -w or -x: make the regex word- or line-anchored, respectively
-  if (flag_word_regexp)
-    regex.insert(0, "\\<").append("\\>");
-  else if (flag_line_regexp)
-    regex.insert(0, "^").append("$");
+    // if -w or -x: make the regex word- or line-anchored, respectively
+    if (flag_word_regexp)
+      regex.insert(0, "\\<(").append(")\\>");
+    else if (flag_line_regexp)
+      regex.insert(0, "^(").append(")$");
+  }
 
   // if -v invert-match: options -g --no-group and -o --only-matching options cannot be used
   if (flag_invert_match)
@@ -398,7 +435,7 @@ int main(int argc, char **argv)
     flag_only_matching = false;
   }
 
-  // enable line buffering if options -c --count -o --only-matching -q --quiet are not specified
+  // input is line-buffered if options -c --count -o --only-matching -q --quiet are not specified
   if (!flag_count && !flag_only_matching && !flag_quiet)
     flag_line_buffered = true;
 
@@ -452,10 +489,23 @@ int main(int argc, char **argv)
       encoding = format_table[i].encoding;
     }
 
-    reflex::convert_flag_type convert_flags = reflex::convert_flag::multiline | reflex::convert_flag::unicode;
+    std::string modifiers = "(?m";
     if (flag_ignore_case)
-      convert_flags |= reflex::convert_flag::anycase;
-    reflex::Pattern pattern(reflex::Matcher::convert(regex, convert_flags));
+      modifiers.append("i");
+    if (flag_free_space)
+      modifiers.append("x");
+    modifiers.append(")");
+
+    std::string pattern_options;
+    if (flag_tabs)
+    {
+      if (flag_tabs == 1 || flag_tabs == 2 || flag_tabs == 4 || flag_tabs == 8)
+        pattern_options.assign("T=").push_back(flag_tabs + '0');
+      else
+        help("invalid value for option --tabs");
+    }
+
+    reflex::Pattern pattern(modifiers + reflex::Matcher::convert(regex, reflex::convert_flag::unicode), pattern_options);
 
     if (infiles.empty())
     {
@@ -584,7 +634,7 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
   }
   else if (flag_line_buffered)
   {
-    // line-buffered mode: read input line-by-line and display lines that matched the pattern
+    // line-buffered input: read input line-by-line and display lines that matched the pattern
 
     size_t byte_offset = 0;
     size_t lineno = 1;
@@ -672,7 +722,7 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
   }
   else
   {
-    // block-buffered mode: echo all pattern matches
+    // block-buffered input: echo all pattern matches
 
     size_t lineno = 0;
 
@@ -702,82 +752,86 @@ void help(const char *message, const char *arg)
 {
   if (message)
     std::cout << "ugrep: " << message << (arg != NULL ? arg : "") << std::endl;
-  std::cout << "Usage: ugrep [-bcEFgHhiknoqsVvwx] [--colour[=when]|--color[=when]] [-e pattern] [--line-buffered] [pattern] [file ...]\n\
+  std::cout << "Usage: ugrep [-bcEFgHhiknoqsVvwx] [--colour[=when]|--color[=when]] [-e pattern] [pattern] [file ...]\n\
 \n\
-     -b, --byte-offset\n\
-             The offset in bytes of a matched pattern is displayed in front of\n\
-             the respective matched line.\n\
-     -c, --count\n\
-             Only a count of selected lines is written to standard output.\n\
-             With option -g counts the number of patterns matched.\n\
-     --colour[=when], --color[=when]\n\
-             Mark up the matching text with the expression stored in\n\
-             GREP_COLOR environment variable.  The possible values of when can\n\
-             be `never', `always' or `auto'.\n\
-     -E, --extended-regexp\n\
-             Ignored (ugrep patterns use extended regular expression syntax).\n\
-     -e pattern, --regexp=pattern\n\
-             Specify a pattern used during the search of the input: an input\n\
-             line is selected if it matches any of the specified patterns.\n\
-             This option is most useful when multiple -e options are used to\n\
-             specify multiple patterns, or when a pattern begins with a dash\n\
-             (`-').\n\
-     -F, --fixed-strings\n\
-             Interpret pattern as a set of fixed strings (i.e. force ugrep to\n\
-             behave as fgrep).\n\
-     -g, --no-group\n\
-             Do not group pattern matches on the same line.  Display the\n\
-             matched line again for each additional pattern match.\n\
-     -H      Always print filename headers with output lines.\n\
-     -h, --no-filename\n\
-             Never print filename headers (i.e. filenames) with output lines.\n\
-     --help  Print a brief help message.\n\
-     -i, --ignore-case\n\
-             Perform case insensitive matching. This option applies\n\
-             case-insensitive matching of ASCII characters in the input.\n\
-             By default, ugrep is case sensitive.\n\
-     -k, --column-number\n\
-             The column number of a matched pattern is displayed in front of\n\
-             the respective matched line, starting with 1.  Expands tabs.\n\
-     -n, --line-number\n\
-             Each output line is preceded by its relative line number in the\n\
-             file, starting at line 1.  The line number counter is reset for\n\
-             each file processed.\n\
-     -o, --only-matching\n\
-             Prints only the matching part of the lines.\n\
-     -q, --quiet, --silent\n\
-             Quiet mode: suppress normal output.  ugrep will only search a file\n\
-             until a match has been found, making searches potentially less\n\
-             expensive.\n\
-     -s, --no-messages\n\
-             Silent mode.  Nonexistent and unreadable files are ignored (i.e.\n\
-             their error messages are suppressed).\n\
-     --file-format=format\n\
-             The input file format.  The possible values of format can be:";
+    -b, --byte-offset\n\
+            The offset in bytes of a matched pattern is displayed in front of\n\
+            the respective matched line.\n\
+    -c, --count\n\
+            Only a count of selected lines is written to standard output.\n\
+            When used with option -g, counts the number of patterns matched.\n\
+    --colour[=when], --color[=when]\n\
+            Mark up the matching text with the expression stored in the\n\
+            GREP_COLOR environment variable.  The possible values of when can\n\
+            be `never', `always' or `auto'.\n\
+    -E, --extended-regexp\n\
+            Ignored, intended for grep compatibility.\n\
+    -e pattern, --regexp=pattern\n\
+            Specify a pattern used during the search of the input: an input\n\
+            line is selected if it matches any of the specified patterns.\n\
+            This option is most useful when multiple -e options are used to\n\
+            specify multiple patterns, or when a pattern begins with a dash\n\
+            (`-').\n\
+    --file-format=format\n\
+            The input file format.  The possible values of format can be:";
   for (int i = 0; format_table[i].format != NULL; ++i)
-    std::cout << (i % 8 ? " " : "\n             ") << format_table[i].format;
+    std::cout << (i % 8 ? " " : "\n            ") << format_table[i].format;
   std::cout << "\n\
-     --line-buffered\n\
-             Force output to be line buffered.  By default, output is line\n\
-             buffered when standard output is a terminal and block buffered\n\
-             otherwise.\n\
-     -V, --version\n\
-             Display version information and exit.\n\
-     -v, --invert-match\n\
-             Selected lines are those not matching any of the specified\n\
-             patterns.\n\
-     -w, --word-regexp\n\
-             The pattern is searched for as a word (as if surrounded by\n\
-             `\\<' and `\\>').\n\
-     -x, --line-regexp\n\
-             Only input lines selected against an entire pattern are considered\n\
-             to be matching lines (as if surrounded by ^ and $).\n\
+    -F, --fixed-strings\n\
+            Interpret pattern as a set of fixed strings (i.e. force ugrep to\n\
+            behave as fgrep).\n\
+    --free-space\n\
+            Spacing (blanks and tabs) in regular expressions are ignored.\n\
+    -g, --no-group\n\
+            Do not group pattern matches on the same line.  Display the\n\
+            matched line again for each additional pattern match.\n\
+    -H\n\
+            Always print filename headers with output lines.\n\
+    -h, --no-filename\n\
+            Never print filename headers (i.e. filenames) with output lines.\n\
+    -?, --help\n\
+            Print a help message.\n\
+    -i, --ignore-case\n\
+            Perform case insensitive matching. This option applies\n\
+            case-insensitive matching of ASCII characters in the input.\n\
+            By default, ugrep is case sensitive.\n\
+    -k, --column-number\n\
+            The column number of a matched pattern is displayed in front of\n\
+            the respective matched line, starting at column 1.  Tabs are\n\
+            expanded before columns are counted.\n\
+    -n, --line-number\n\
+            Each output line is preceded by its relative line number in the\n\
+            file, starting at line 1.  The line number counter is reset for\n\
+            each file processed.\n\
+    -o, --only-matching\n\
+            Prints only the matching part of the lines.  Allows a pattern\n\
+            match to span multiple lines.\n\
+    -q, --quiet, --silent\n\
+            Quiet mode: suppress normal output.  ugrep will only search a file\n\
+            until a match has been found, making searches potentially less\n\
+            expensive.  Allows a pattern match to span multiple lines.\n\
+    -s, --no-messages\n\
+            Silent mode.  Nonexistent and unreadable files are ignored (i.e.\n\
+            their error messages are suppressed).\n\
+    --tabs=size\n\
+            Set the tab size to 1, 2, 4, or 8 to expand tabs for option -k.\n\
+    -V, --version\n\
+            Display version information and exit.\n\
+    -v, --invert-match\n\
+            Selected lines are those not matching any of the specified\n\
+            patterns.\n\
+    -w, --word-regexp\n\
+            The pattern is searched for as a word (as if surrounded by\n\
+            `\\<' and `\\>').\n\
+    -x, --line-regexp\n\
+            Only input lines selected against an entire pattern are considered\n\
+            to be matching lines (as if surrounded by ^ and $).\n\
 \n\
-     The ugrep utility exits with one of the following values:\n\
+    The ugrep utility exits with one of the following values:\n\
 \n\
-     0     One or more lines were selected.\n\
-     1     No lines were selected.\n\
-     >1    An error occurred.\n\
+    0       One or more lines were selected.\n\
+    1       No lines were selected.\n\
+    >1      An error occurred.\n\
 " << std::endl;
   exit(EXIT_ERROR);
 }
@@ -785,6 +839,6 @@ void help(const char *message, const char *arg)
 // Display version info
 void version()
 {
-  std::cout << "ugrep " VERSION << std::endl;
+  std::cout << "ugrep " VERSION " " PLATFORM << std::endl;
   exit(EXIT_OK);
 }

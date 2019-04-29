@@ -490,7 +490,7 @@ void Reflex::help(const char *message, const char *arg)
       << std::endl;
   std::cout << "Usage: reflex [OPTIONS] [FILE]\n\
 \n\
-   Scanner:\n\
+    Scanner:\n\
         -+, --flex\n\
                 generate Flex-compatible C++ scanner\n\
         -a, --dotall\n\
@@ -521,7 +521,7 @@ void Reflex::help(const char *message, const char *arg)
         -x, --freespace\n\
                 ignore space in patterns\n\
 \n\
-   Generated files:\n\
+    Generated files:\n\
         -o, --outfile=FILE\n\
                 specify output FILE instead of lex.yy.cpp\n\
         -t, --stdout\n\
@@ -535,7 +535,7 @@ void Reflex::help(const char *message, const char *arg)
         --tables-file[=FILE]\n\
                 write the scanner's FSM opcode tables or FSM code to FILE.cpp\n\
 \n\
-   Generated code:\n\
+    Generated code:\n\
         --namespace=NAME\n\
                 use C++ namespace NAME for the generated scanner class, where\n\
                 multiple namespaces can be specified as NAME1.NAME2.NAME3 ...\n\
@@ -579,7 +579,7 @@ void Reflex::help(const char *message, const char *arg)
         --token-type=NAME\n\
                 use NAME as the return type of lex() and yylex() instead of int\n\
 \n\
-   Debugging:\n\
+    Debugging:\n\
         -d, --debug\n\
                 enable debug mode in scanner\n\
         -p, --perf-report\n\
@@ -591,15 +591,15 @@ void Reflex::help(const char *message, const char *arg)
         -w, --nowarn\n\
                 do not generate warnings\n\
 \n\
-   Miscellaneous:\n\
+    Miscellaneous:\n\
         -c, -n\n\
                 do-nothing POSIX options\n\
         -?, -h, --help\n\
-                display this help message\n\
+                produce this help message and exit\n\
         -V, --version\n\
-                display reflex release version\n\
+                report reflex version and exit\n\
 \n\
-   Lex/Flex-like options that are enabled by default or have no effect:\n\
+    Lex/Flex-like options that are enabled by default or have no effect:\n\
         --c++                  default\n\
         --lex-compat           n/a\n\
         --never-interactive    default\n\

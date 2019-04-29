@@ -1171,9 +1171,13 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           regex.append(&pattern[loc], pos - loc).append("(?=");
           lap = lev + 1;
           loc = pos + 1;
+          beg = true;
+        }
+        else
+        {
+          beg = false;
         }
         anc = false;
-        beg = true;
         break;
       case '(':
         ++lev;
