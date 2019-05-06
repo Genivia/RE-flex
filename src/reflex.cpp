@@ -566,7 +566,7 @@ void Reflex::help(const char *message, const char *arg)
         --bison-cc-parser=NAME\n\
                 use parser class NAME with bison lalr1.cc skeleton\n\
         --bison-complete\n\
-                use bison complete-symbols feature, implies bison-complete\n\
+                use bison complete-symbols feature, implies bison-cc\n\
         --bison-locations\n\
                 include bison yylloc support\n\
         -R, --reentrant\n\
