@@ -566,7 +566,7 @@ void Reflex::help(const char *message, const char *arg)
         --bison-cc-parser=NAME\n\
                 use parser class NAME with bison lalr1.cc skeleton\n\
         --bison-complete\n\
-                use bison complete-symbols feature, implies bison-complete\n\
+                use bison complete-symbols feature, implies bison-cc\n\
         --bison-locations\n\
                 include bison yylloc support\n\
         -R, --reentrant\n\
@@ -1858,10 +1858,10 @@ void Reflex::write_class()
           "  virtual " << yyltype << " location(void) const\n"
           "  {\n"
           "    " << yyltype << " yylloc;\n"
-          "    yylloc.begin.line = matcher().lineno();\n"
-          "    yylloc.begin.column = matcher().columno();\n"
-          "    yylloc.end.line = yylloc.begin.line + matcher().lines() - 1;\n"
-          "    yylloc.end.column = yylloc.begin.column + matcher().columns() - 1;\n"
+          "    yylloc.begin.line = static_cast<unsigned int>(matcher().lineno());\n"
+          "    yylloc.begin.column = static_cast<unsigned int>(matcher().columno());\n"
+          "    yylloc.end.line = static_cast<unsigned int>(yylloc.begin.line + matcher().lines() - 1);\n"
+          "    yylloc.end.column = static_cast<unsigned int>(yylloc.begin.column + matcher().columns() - 1);\n"
           "    return yylloc;\n"
           "  }\n";
       *out <<
@@ -1873,10 +1873,10 @@ void Reflex::write_class()
         *out <<
           "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
           "  {\n"
-          "    yylloc.begin.line = matcher().lineno();\n"
-          "    yylloc.begin.column = matcher().columno();\n"
-          "    yylloc.end.line = yylloc.begin.line + matcher().lines() - 1;\n"
-          "    yylloc.end.column = yylloc.begin.column + matcher().columns() - 1;\n"
+          "    yylloc.begin.line = static_cast<unsigned int>(matcher().lineno());\n"
+          "    yylloc.begin.column = static_cast<unsigned int>(matcher().columno());\n"
+          "    yylloc.end.line = static_cast<unsigned int>(yylloc.begin.line + matcher().lines() - 1);\n"
+          "    yylloc.end.column = static_cast<unsigned int>(yylloc.begin.column + matcher().columns() - 1);\n"
           "  }\n"
           "  virtual " << token_type << " yylex(void)\n"
           "  {\n"
@@ -1906,10 +1906,10 @@ void Reflex::write_class()
       *out <<
         "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
         "  {\n"
-        "    yylloc.first_line = matcher().lineno();\n"
-        "    yylloc.first_column = matcher().columno();\n"
-        "    yylloc.last_line = yylloc.first_line + matcher().lines() - 1;\n"
-        "    yylloc.last_column = yylloc.first_column + matcher().columns() - 1;\n"
+        "    yylloc.first_line = static_cast<unsigned int>(matcher().lineno());\n"
+        "    yylloc.first_column = static_cast<unsigned int>(matcher().columno());\n"
+        "    yylloc.last_line = static_cast<unsigned int>(yylloc.first_line + matcher().lines() - 1);\n"
+        "    yylloc.last_column = static_cast<unsigned int>(yylloc.first_column + matcher().columns() - 1);\n"
         "  }\n"
         "  virtual " << token_type << " yylex(void)\n"
         "  {\n"
@@ -1972,10 +1972,10 @@ void Reflex::write_class()
           "  virtual " << yyltype << " location(void) const\n"
           "  {\n"
           "    " << yyltype << " yylloc;\n"
-          "    yylloc.begin.line = matcher().lineno();\n"
-          "    yylloc.begin.column = matcher().columno();\n"
-          "    yylloc.end.line = yylloc.begin.line + matcher().lines() - 1;\n"
-          "    yylloc.end.column = yylloc.begin.column + matcher().columns() - 1;\n"
+          "    yylloc.begin.line = static_cast<unsigned int>(matcher().lineno());\n"
+          "    yylloc.begin.column = static_cast<unsigned int>(matcher().columno());\n"
+          "    yylloc.end.line = static_cast<unsigned int>(yylloc.begin.line + matcher().lines() - 1);\n"
+          "    yylloc.end.column = static_cast<unsigned int>(yylloc.begin.column + matcher().columns() - 1);\n"
           "    return yylloc;\n"
           "  }\n";
       *out <<
@@ -1987,10 +1987,10 @@ void Reflex::write_class()
         *out <<
           "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
           "  {\n"
-          "    yylloc.begin.line = matcher().lineno();\n"
-          "    yylloc.begin.column = matcher().columno();\n"
-          "    yylloc.end.line = yylloc.begin.line + matcher().lines() - 1;\n"
-          "    yylloc.end.column = yylloc.begin.column + matcher().columns() - 1;\n"
+          "    yylloc.begin.line = static_cast<unsigned int>(matcher().lineno());\n"
+          "    yylloc.begin.column = static_cast<unsigned int>(matcher().columno());\n"
+          "    yylloc.end.line = static_cast<unsigned int>(yylloc.begin.line + matcher().lines() - 1);\n"
+          "    yylloc.end.column = static_cast<unsigned int>(yylloc.begin.column + matcher().columns() - 1);\n"
           "  }\n"
           "  virtual " << token_type << " " << lex << "(" << yystype << " *lvalp, " << yyltype << " *llocp)\n"
           "  {\n"
@@ -2010,10 +2010,10 @@ void Reflex::write_class()
       *out <<
         "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
         "  {\n"
-        "    yylloc.first_line = matcher().lineno();\n"
-        "    yylloc.first_column = matcher().columno();\n"
-        "    yylloc.last_line = yylloc.first_line + matcher().lines() - 1;\n"
-        "    yylloc.last_column = yylloc.first_column + matcher().columns() - 1;\n"
+        "    yylloc.first_line = static_cast<unsigned int>(matcher().lineno());\n"
+        "    yylloc.first_column = static_cast<unsigned int>(matcher().columno());\n"
+        "    yylloc.last_line = static_cast<unsigned int>(yylloc.first_line + matcher().lines() - 1);\n"
+        "    yylloc.last_column = static_cast<unsigned int>(yylloc.first_column + matcher().columns() - 1);\n"
         "  }\n"
         "  virtual " << token_type << " " << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc)";
     }
