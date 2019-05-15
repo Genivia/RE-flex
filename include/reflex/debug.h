@@ -131,8 +131,9 @@ Techniques used:
 
 #define DBGCHK(c) assert(c)
 
-extern FILE *DBGFD_;
-extern void DBGOUT_(const char *log, const char *file, int line);
+extern FILE *REFLEX_DBGFD_;
+
+extern "C" void REFLEX_DBGOUT_(const char *log, const char *file, int line);
 
 #define DBGXIFY(S) DBGIFY_(S)
 #define DBGIFY_(S) #S
@@ -143,11 +144,11 @@ extern void DBGOUT_(const char *log, const char *file, int line);
 #endif
 #define DBGSTR(S) (S?S:"(NULL)")
 #define DBGLOG(...) \
-( DBGOUT_(DBGFILE, __FILE__, __LINE__), ::fprintf(DBGFD_, "" __VA_ARGS__), ::fflush(DBGFD_))
+( REFLEX_DBGOUT_(DBGFILE, __FILE__, __LINE__), ::fprintf(REFLEX_DBGFD_, "" __VA_ARGS__), ::fflush(REFLEX_DBGFD_))
 #define DBGLOGN(...) \
-( ::fprintf(DBGFD_, "\n                                        " __VA_ARGS__), ::fflush(DBGFD_) )
+( ::fprintf(REFLEX_DBGFD_, "\n                                        " __VA_ARGS__), ::fflush(REFLEX_DBGFD_) )
 #define DBGLOGA(...) \
-( ::fprintf(DBGFD_, "" __VA_ARGS__), ::fflush(DBGFD_) )
+( ::fprintf(REFLEX_DBGFD_, "" __VA_ARGS__), ::fflush(REFLEX_DBGFD_) )
 
 #else
 

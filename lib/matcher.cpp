@@ -348,13 +348,14 @@ done:
     {
       set_current(cur_);
       DBGLOG("Reject empty match at EOF");
-      cap_ = 0;
+      if (!opt_.N || !bob) // allow FIND and SCAN with "N" to match empty input, with ^$ etc.
+        cap_ = 0;
     }
     else if (method == Const::FIND)
     {
       set_current(++cur_); // skip one char to ensure we're advancing later
-      DBGLOG("Reject and continue?");
-      if (cap_ == 0 || !opt_.N)
+      DBGLOG("Reject empty match and continue?");
+      if (cap_ == 0 || !opt_.N || (!bol && c1 == '\n')) // allow FIND with "N" to match an empty line, with ^$ etc.
         goto scan;
       DBGLOG("Accept empty match");
     }

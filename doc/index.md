@@ -565,7 +565,8 @@ RE/flex iterators are useful in C++11 range-based loops.  For example:
     #include <reflex/stdmatcher.h> // reflex::StdMatcher, reflex::Input, std::regex
 
     // use a StdMatcher to search for words in a sentence using an iterator
-    for (auto& match : reflex::StdMatcher("\\w+", "How now brown cow.").find)
+    reflex::StdMatcher matcher("\\w+", "How now brown cow.");
+    for (auto& match : matcher.find)
       std::cout << "Found " << match.text() << std::endl;
 ~~~
 
@@ -906,14 +907,16 @@ The RE/flex `reflex::Pattern` construction options are given as a string:
   `n=name;`     | use `reflex_code_name` for the machine (instead of `FSM`)
   `o`           | only with option `f`: generate optimized FSM native C++ code
   `q`           | Lex-style quotations "..." equal `\Q...\E`, same as `(?q)X`
-  `r`           | throw regex syntax error exceptions (not just fatal errors)
+  `r`           | throw regex syntax error exceptions
   `s`           | dot matches all (aka. single line mode), same as `(?s)X`
   `x`           | free space mode with inline comments, same as `(?x)X`
   `w`           | display regex syntax errors before raising them as exceptions
 
 For example, `reflex::Pattern pattern(pattern, "isr")` enables case-insensitive
 dot-all matching with syntax errors thrown as `reflex::Pattern::Error` types of
-exceptions.  
+exceptions.  By default, the `reflex::Pattern` constructor only throws the
+`reflex::regex_error::exceeds_limits` exception as it silently ignores syntax
+errors, see \ref regex-pattern.
 
 In summary:
 
@@ -2138,11 +2141,11 @@ patterns `φ` and `ψ`:
   `\n`      | matches a newline, others are `\a` (BEL), `\b` (BS), `\t` (HT), `\v` (VT), `\f` (FF), and `\r` (CR)
   `\0`      | matches the NUL character
   `\cX`     | matches the control character `X` mod 32 (e.g. `\cA` is `\x01`)
-  `\0177`   | matches an 8-bit character with octal value `177` (use `\177` in lexer specifications instea, see below)
+  `\0177`   | matches an 8-bit character with octal value `177` (use `\177` in lexer specifications instead, see below)
   `\x7f`    | matches an 8-bit character with hexadecimal value `7f`
   `\x{7f}`  | matches an 8-bit character with hexadecimal value `7f`
   `\p{C}`   | matches a character in category C of \ref reflex-pattern-cat
-  `\Q..\E`  | matches the quoted content between `\Q` and `\E` literally
+  `\Q...\E` | matches the quoted content between `\Q` and `\E` literally
   `[abc]`   | matches one of `a`, `b`, or `c` as \ref reflex-pattern-class
   `[0-9]`   | matches a digit `0` to `9` as \ref reflex-pattern-class
   `[^0-9]`  | matches any character except a digit as \ref reflex-pattern-class
@@ -2183,7 +2186,7 @@ patterns `φ` and `ψ`:
   `(?s:φ)`  | \ref reflex-pattern-dotall `.` (dot) in `φ` matches newline
   `(?u:φ)`  | \ref reflex-pattern-unicode `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode
   `(?x:φ)`  | \ref reflex-pattern-freespace ignore all whitespace and comments in `φ`
-  `(?#:..)` | all of `..` is skipped as a comment
+  `(?#:X)`  | all of `X` is skipped as a comment
 
 @note The lazy quantifier `?` for optional patterns `φ??` and repetitions `φ*?`
 `φ+?` is not supported by Boost.Regex in POSIX mode.  In general, POSIX
@@ -2196,7 +2199,7 @@ patterns syntax.  These pattern should only be used in lexer specifications:
   Pattern            | Matches
   ------------------ | --------------------------------------------------------
   `\177`             | matches an 8-bit character with octal value `177`
-  `".."`             | matches the quoted content literally
+  `"..."`            | matches the quoted content literally
   `φ/ψ`              | matches `φ` if followed by `ψ` as a \ref reflex-pattern-trailing
   `<S>φ`             | matches `φ` only if state `S` is enabled in \ref reflex-states
   `<S1,S2,S3>φ`      | matches `φ` only if state `S1`, `S2`, or state `S3` is enabled in \ref reflex-states
@@ -2275,36 +2278,36 @@ intersection.
 
 ### Character categories                                  {#reflex-pattern-cat}
 
-The 7-bit ASCII character categories are:
+The 7-bit ASCII POSIX character categories are:
 
-  Category     | POSIX form   | Matches
-  ------------ | ------------ | -----------------------------------------------
-  `\p{ASCII}`  | `[:ascii:]`  | matches any ASCII character
-  `\p{Space}`  | `[:space:]`  | matches a white space character `[ \t\n\v\f\r]` same as `\s`
-  `\p{Xdigit}` | `[:xdigit:]` | matches a hex digit `[0-9A-Fa-f]`
-  `\p{Cntrl}`  | `[:cntrl:]`  | matches a control character `[\x00-\0x1f\x7f]`
-  `\p{Print}`  | `[:print:]`  | matches a printable character `[\x20-\x7e]`
-  `\p{Alnum}`  | `[:alnum:]`  | matches a alphanumeric character `[0-9A-Za-z]`
-  `\p{Alpha}`  | `[:alpha:]`  | matches a letter `[A-Za-z]`
-  `\p{Blank}`  | `[:blank:]`  | matches a blank `[ \t]` same as `\h`
-  `\p{Digit}`  | `[:digit:]`  | matches a digit `[0-9]` same as `\d`
-  `\p{Graph}`  | `[:graph:]`  | matches a visible character `[\x21-\x7e]`
-  `\p{Lower}`  | `[:lower:]`  | matches a lower case letter `[a-z]` same as `\l`
-  `\p{Punct}`  | `[:punct:]`  | matches a punctuation character `[\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]`
-  `\p{Upper}`  | `[:upper:]`  | matches an upper case letter `[A-Z]` same as `\u`
-  `\p{Word}`   | `[:word:]`   | matches a word character `[0-9A-Za-z_]` same as `\w`
-  `\d`         | `[:digit:]`  | matches a digit `[0-9]`
-  `\D`         | `[:^digit:]` | matches a non-digit `[^0-9]`
-  `\h`         | `[:blank:]`  | matches a blank character `[ \t]`
-  `\H`         | `[:^blank:]` | matches a non-blank character `[^ \t]`
-  `\s`         | `[:space:]`  | matches a white space character `[ \t\n\v\f\r]`
-  `\S`         | `[:^space:]` | matches a non-white space `[^ \t\n\v\f\r]`
-  `\l`         | `[:lower:]`  | matches a lower case letter `[a-z]`
-  `\L`         | `[:^lower:]` | matches a non-lower case letter `[^a-z]`
-  `\u`         | `[:upper:]`  | matches an upper case letter `[A-Z]`
-  `\U`         | `[:^upper:]` | matches a nonupper case letter `[^A-Z]`
-  `\w`         | `[:word:]`   | matches a word character `[0-9A-Za-z_]`
-  `\W`         | `[:^word:]`  | matches a non-word character `[^0-9A-Za-z_]`
+  POSIX form   | POSIX category | Matches
+  ------------ | -------------- | ---------------------------------------------
+  `[:ascii:]`  | `\p{ASCII}`    | matches any ASCII character
+  `[:space:]`  | `\p{Space}`    | matches a white space character `[ \t\n\v\f\r]` same as `\s`
+  `[:xdigit:]` | `\p{Xdigit}`   | matches a hex digit `[0-9A-Fa-f]`
+  `[:cntrl:]`  | `\p{Cntrl}`    | matches a control character `[\x00-\0x1f\x7f]`
+  `[:print:]`  | `\p{Print}`    | matches a printable character `[\x20-\x7e]`
+  `[:alnum:]`  | `\p{Alnum}`    | matches a alphanumeric character `[0-9A-Za-z]`
+  `[:alpha:]`  | `\p{Alpha}`    | matches a letter `[A-Za-z]`
+  `[:blank:]`  | `\p{Blank}`    | matches a blank `[ \t]` same as `\h`
+  `[:digit:]`  | `\p{Digit}`    | matches a digit `[0-9]` same as `\d`
+  `[:graph:]`  | `\p{Graph}`    | matches a visible character `[\x21-\x7e]`
+  `[:lower:]`  | `\p{Lower}`    | matches a lower case letter `[a-z]` same as `\l`
+  `[:punct:]`  | `\p{Punct}`    | matches a punctuation character `[\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]`
+  `[:upper:]`  | `\p{Upper}`    | matches an upper case letter `[A-Z]` same as `\u`
+  `[:word:]`   | `\p{Word}`     | matches a word character `[0-9A-Za-z_]` same as `\w`
+  `[:digit:]`  | `\d`           | matches a digit `[0-9]`
+  `[:^digit:]` | `\D`           | matches a non-digit `[^0-9]`
+  `[:blank:]`  | `\h`           | matches a blank character `[ \t]`
+  `[:^blank:]` | `\H`           | matches a non-blank character `[^ \t]`
+  `[:space:]`  | `\s`           | matches a white space character `[ \t\n\v\f\r]`
+  `[:^space:]` | `\S`           | matches a non-white space `[^ \t\n\v\f\r]`
+  `[:lower:]`  | `\l`           | matches a lower case letter `[a-z]`
+  `[:^lower:]` | `\L`           | matches a non-lower case letter `[^a-z]`
+  `[:upper:]`  | `\u`           | matches an upper case letter `[A-Z]`
+  `[:^upper:]` | `\U`           | matches a nonupper case letter `[^A-Z]`
+  `[:word:]`   | `\w`           | matches a word character `[0-9A-Za-z_]`
+  `[:^word:]`  | `\W`           | matches a non-word character `[^0-9A-Za-z_]`
 
 The POSIX form can only be used in bracket lists, for example
 `[[:lower:][:digit:]]` matches an ASCII lower case letter or a digit.  
@@ -2323,18 +2326,20 @@ The following Unicode character categories are enabled with the <b>`reflex`</b>
 matcher converter flag `reflex::convert_flag::unicode` when using a regex
 library:
 
-  Category                               | Matches
+  Unicode category                       | Matches
   -------------------------------------- | ------------------------------------
   `.`                                    | matches any single Unicode character except newline (including \ref invalid-utf)
   `\X`                                   | matches any ISO-8859-1 or Unicode character (with or without the `−−unicode` option)
+  `\x{3B1}`                              | matches Unicode character U+03B1, i.e. `α`
+  `\u{3B1}`                              | matches Unicode character U+03B1, i.e. `α`
   `\R`                                   | matches a Unicode line break
   `\s`, `\p{Zs}`                         | matches a white space character with Unicode sub-propert Zs
   `\l`, `\p{Ll}`                         | matches a lower case letter with Unicode sub-property Ll
   `\u`, `\p{Lu}`                         | matches an upper case letter with Unicode sub-property Lu
   `\w`, `\p{Word}`                       | matches a Unicode word character with property L, Nd, or Pc
-  `\p{Unicode}`                          | matches any Unicode character (U+00 to U+10FFFF minus U+D800 to U+DFFF)
+  `\p{Unicode}`                          | matches any Unicode character (U+0000 to U+10FFFF minus U+D800 to U+DFFF)
   `\p{ASCII}`                            | matches an ASCII character U+0000 to U+007F)
-  `\p{Non_ASCII_Unicode}`                | matches a non-ASCII character U+80 to U+10FFFF minus U+D800 to U+DFFF)
+  `\p{Non_ASCII_Unicode}`                | matches a non-ASCII character U+0080 to U+10FFFF minus U+D800 to U+DFFF)
   `\p{Letter}`                           | matches a character with Unicode property Letter
   `\p{Mark}`                             | matches a character with Unicode property Mark
   `\p{Separator}`                        | matches a character with Unicode property Separator
@@ -5463,18 +5468,18 @@ The following options are combined in a string and passed to the
   `m`           | multiline mode, same as `(?m)X`
   `n=name;`     | use `reflex_code_name` for the machine (instead of FSM)
   `q`           | Lex-style quotations "..." equals `\Q...\E`, same as `(?q)X`
-  `r`           | throw regex syntax error exceptions (not just fatal errors)
+  `r`           | throw regex syntax error exceptions 
   `s`           | dot matches all (aka. single line mode), same as `(?s)X`
   `x`           | inline comments, same as `(?x)X`
   `w`           | display regex syntax errors before raising them as exceptions
 
 The compilation of a `reflex::Pattern` object into a FSM may throw an exception
-when the regex string has problems:
+with option `"r"` when the regex string has problems:
 
 ~~~{.cpp}
     try
     {
-      reflex::Pattern pattern(argv[1]);
+      reflex::Pattern pattern(argv[1], "r");
       ...
       // code that uses the pattern object
       ...
@@ -5502,6 +5507,10 @@ when the regex string has problems:
       std::cerr << std::endl << e.what();
     }
 ~~~
+
+By default, the `reflex::Pattern` constructor only throws the
+`reflex::regex_error::exceeds_limits` exception as it silently ignores syntax
+errors.
 
 Likewise, the `reflex::Matcher::convert`, `reflex::BoostPerlMatcher::convert`,
 `reflex::BoostMatcher::convert`, and `reflex::BoostPosixMatcher::convert`
@@ -5548,10 +5557,11 @@ following `reflex::convert_flag` flags:
   Flag                              | Effect
   --------------------------------- | ---------------------------------------------------------------
   `reflex::convert_flag::none`      | no conversion
+  `reflex::convert_flag::basic`     | convert basic regular expression syntax (BRE) to extended regular expression syntax (ERE)
   `reflex::convert_flag::unicode`   | `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode, same as `(?u)`
   `reflex::convert_flag::recap`     | remove capturing groups, add capturing groups to the top level
   `reflex::convert_flag::lex`       | convert Lex/Flex regular expression syntax
-  `reflex::convert_flag::u4`        | convert `\uXXXX` (shorthand of `\u{XXXX}`)
+  `reflex::convert_flag::u4`        | convert `\uXXXX` (shorthand for `\u{XXXX}`)
 
 The following `reflex::convert_flag` flags are internally used by the
 converters to convert a regex pattern that contains `(?isx)` modifiers when one
@@ -6136,7 +6146,7 @@ file encodings.  If a UTF Byte Order Mark (BOM) is detected then the UTF input
 will be normalized to UTF-8.  When no UTF BOM is detected then the input is
 considered plain ASCII, binary, or UTF-8 and passed through unconverted.  To
 override the file encoding when no UTF BOM was present, and normalize Latin-1,
-ISO-8859-1, CP-1252, CP 434, CP 850, EBCDIC, and other encodings to UTF-8, see
+ISO-8859-1, CP 1252, CP 434, CP 850, EBCDIC, and other encodings to UTF-8, see
 \ref regex-input-file.
 
 🔝 [Back to table of contents](#)
@@ -6186,7 +6196,7 @@ or may contain UTF-8 when Unicode patterns are used.
 ### FILE encodings                                          {#regex-input-file}
 
 File content specified with a `FILE*` file descriptor can be encoded in ASCII,
-binary, UTF-8/16/32, ISO-8859-1, CP-1250 to CP-1258, CP 434, CP 850, or EBCDIC.
+binary, UTF-8/16/32, ISO-8859-1, CP 1250 to CP 1258, CP 434, CP 850, or EBCDIC.
 
 A [UTF Byte Order Mark (BOM)](www.unicode.org/faq/utf_bom.html) is detected in
 the content of a file scanned by the matcher, which enables UTF-8 normalization
@@ -6213,15 +6223,15 @@ The current file encoding used by a matcher is obtained with the
   `reflex::Input::file_encoding::cp437`   | CP 437
   `reflex::Input::file_encoding::cp850`   | CP 850 (updated to CP 858)
   `reflex::Input::file_encoding::ebcdic`  | EBCDIC
-  `reflex::Input::file_encoding::cp1250`  | CP-1250
-  `reflex::Input::file_encoding::cp1251`  | CP-1251
-  `reflex::Input::file_encoding::cp1252`  | CP-1252
-  `reflex::Input::file_encoding::cp1253`  | CP-1253
-  `reflex::Input::file_encoding::cp1254`  | CP-1254
-  `reflex::Input::file_encoding::cp1255`  | CP-1255
-  `reflex::Input::file_encoding::cp1256`  | CP-1256
-  `reflex::Input::file_encoding::cp1257`  | CP-1257
-  `reflex::Input::file_encoding::cp1258`  | CP-1258
+  `reflex::Input::file_encoding::cp1250`  | CP 1250
+  `reflex::Input::file_encoding::cp1251`  | CP 1251
+  `reflex::Input::file_encoding::cp1252`  | CP 1252
+  `reflex::Input::file_encoding::cp1253`  | CP 1253
+  `reflex::Input::file_encoding::cp1254`  | CP 1254
+  `reflex::Input::file_encoding::cp1255`  | CP 1255
+  `reflex::Input::file_encoding::cp1256`  | CP 1256
+  `reflex::Input::file_encoding::cp1257`  | CP 1257
+  `reflex::Input::file_encoding::cp1258`  | CP 1258
   `reflex::Input::file_encoding::custom`  | User-defined custom code page
 
 To set the file encoding when assigning a file to read with `reflex::Input`,
@@ -6301,7 +6311,8 @@ This section includes several examples to demonstrate the concepts discussed.
 ### Example 1
 
 This example illustrates the `find` and `split` methods and iterators with a
-RE/flex `reflex::Matcher` and a `reflex::BoostMatcher`:
+RE/flex `reflex::Matcher` and a `reflex::BoostMatcher` using a C++11
+range-based loop:
 
 ~~~{.cpp}
     #include <reflex/matcher.h>
@@ -6472,7 +6483,8 @@ stream:
 ### Example 5
 
 This example tokenizes a string by grouping the subpatterns in a regex and by
-using the group index of the capture obtained with `accept()`:
+using the group index of the capture obtained with `accept()` in a C++11
+range-based loop:
 
 ~~~{.cpp}
     #include <reflex/matcher.h>
@@ -6532,7 +6544,8 @@ numbers are sorted into five sets for each type of major credit card:
 
     std::set<std::string> cards[5];
 
-    for (auto& match : Matcher(card_patterns, card_file).find)
+    Matcher matcher(card_patterns, card_data);
+    for (Matcher::iterator match = matcher.find.begin(); match != matcher.find.end(); ++match)
       cards[match.accept() - 1].insert(match.text());
 
     for (int i = 0; i < 5; ++i)
@@ -6702,15 +6715,15 @@ file's state is accessed through the matcher's member variable `in`:
         case Input::file_encoding::cp437:   std::cout << "CP 437";                   break;
         case Input::file_encoding::cp850:   std::cout << "CP 850";                   break;
         case Input::file_encoding::ebcdic:  std::cout << "EBCDIC";                   break;
-        case Input::file_encoding::cp1250:  std::cout << "CP-1250";                  break;
-        case Input::file_encoding::cp1251:  std::cout << "CP-1251";                  break;
-        case Input::file_encoding::cp1252:  std::cout << "CP-1252";                  break;
-        case Input::file_encoding::cp1253:  std::cout << "CP-1253";                  break;
-        case Input::file_encoding::cp1254:  std::cout << "CP-1254";                  break;
-        case Input::file_encoding::cp1255:  std::cout << "CP-1255";                  break;
-        case Input::file_encoding::cp1256:  std::cout << "CP-1256";                  break;
-        case Input::file_encoding::cp1257:  std::cout << "CP-1257";                  break;
-        case Input::file_encoding::cp1258:  std::cout << "CP-1258";                  break;
+        case Input::file_encoding::cp1250:  std::cout << "CP 1250";                  break;
+        case Input::file_encoding::cp1251:  std::cout << "CP 1251";                  break;
+        case Input::file_encoding::cp1252:  std::cout << "CP 1252";                  break;
+        case Input::file_encoding::cp1253:  std::cout << "CP 1253";                  break;
+        case Input::file_encoding::cp1254:  std::cout << "CP 1254";                  break;
+        case Input::file_encoding::cp1255:  std::cout << "CP 1255";                  break;
+        case Input::file_encoding::cp1256:  std::cout << "CP 1256";                  break;
+        case Input::file_encoding::cp1257:  std::cout << "CP 1257";                  break;
+        case Input::file_encoding::cp1258:  std::cout << "CP 1258";                  break;
       }
       std::cout << " of " << matcher.in.size() << " converted bytes to read\n";
       matcher.buffer(); // because Boost.Regex partial_match is broken!
@@ -6784,16 +6797,17 @@ impossible to write a "catch all else" rule that catches input format errors!
 The dot in Unicode mode is self-synchronizing and consumes text up to to the
 next ASCII or Unicode character.
 
-To reject invalid UTF-8 input in regex patterns, make sure to avoid `.` (dot)
+To accept valid Unicode input in regex patterns, make sure to avoid `.` (dot)
 and use `\p{Unicode}` or `\X` instead, and reserve dot to catch anything,
-including invalid UTF-8 and UTF-16 encodings, except for `\n` because dot
-does not match newline by default.  Use `.|\n` or <i>`%%option dotall`</i> to
-catch anything including `\n` and invalid UTF-8 and UTF-16 encodings.
+such as invalid UTF encodings.  Use `.|\n` or <i>`%%option dotall`</i> to catch
+anything including `\n` and invalid UTF-8/16/32 encodings.
 
-Invalid UTF-16 is detected automatically by the `reflex::Input` class and
-replaced with the `REFLEX_NONCHAR` code point U+200000 that lies outside the
-valid Unicode range.  This code point is never matched by non-dot regex
-patterns and is easy to detect by a regex pattern with a dot.
+Furthermore, before matching any input, invalid UTF-16 input is detected
+automatically by the `reflex::Input` class and replaced with the
+`::REFLEX_NONCHAR` code point U+200000 that lies outside the valid Unicode
+range.  This code point is never matched by non-dot regex patterns and is easy
+to detect by a regex pattern with a dot and a corresponding error action as
+shown above.
 
 Note that character classes written as bracket lists may produce invalid
 Unicode ranges when used improperly.  This is not a problem for matching, but
@@ -7082,6 +7096,29 @@ RE/flex applications:
   application.  Use <b>`reflex`</b> option `−−header-file` to generate
   <i>`lex.yy.h`</i> with the lexer class to include in the source code of your
   lexer application.
+
+🔝 [Back to contents](#)
+
+
+MSVC++ compiler bug                                                     {#msvc}
+===================
+
+Some MSVC++ compilers may cause problems with C++11 range-based loops.  When a
+matcher object is constructed in a range-based loop it is destroyed before the
+first loop iteration.  This means that the following example crashes:
+
+~~~{.cpp}
+    for (auto& match : reflex::BoostMatcher("\\w+", "How now brown cow.").find)
+      std::cout << match.text() << std::endl;
+~~~
+
+Instead, we should write the following:
+
+~~~{.cpp}
+    reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
+    for (auto& match : matcher.find)
+      std::cout << match.text() << std::endl;
+~~~
 
 🔝 [Back to contents](#)
 

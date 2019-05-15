@@ -9,7 +9,7 @@
 %o dotall main unicode
 
 dot                     \p{Unicode}
-name                    [A-Za-z_:\x80-\xFF][-.0-9A-Za-z_:\x80-\xFF]*
+name                    [A-Za-z_:\p{Non_ASCII_Unicode}][-.0-9A-Za-z_:\p{Non_ASCII_Unicode}]*
 pi                      <\?{name}
 comment                 <!--{dot}*?-->
 open                    <{name}

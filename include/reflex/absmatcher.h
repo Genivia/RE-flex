@@ -39,6 +39,7 @@
 
 /// This compile-time option speeds up buffer reallocation.
 #define WITH_REALLOC
+
 /// This compile-time option speeds up matching, but slows input().
 #define WITH_FAST_GET
 
@@ -75,7 +76,7 @@ buf_ // points to buffered input, grows to fit long matches
 cur_ // current position in buf_ while matching text, cur_ = pos_ afterwards, can be changed by more()
 pos_ // position in buf_ to start the next match
 end_ // position in buf_ that is free to fill with more input
-max_ // allocated size of buf_, must ensure that max_ > end_ for text() to add a \0
+max_ // allocated size of buf_, must ensure that max_ > end_ for text() to add a final \0
 txt_ // buf_ + cur_ points to the match, 0-terminated
 len_ // length of the match
 chr_ // char located at txt_[len_] when txt_[len_] is set to \0
@@ -110,7 +111,7 @@ class AbstractMatcher {
     { }
     bool A; ///< accept any/all (?^X) negative patterns as 65535 accept index codes
     bool N; ///< nullable, find may return empty match (N/A to scan, split, matches)
-    char T; ///< tab size, must be a power of 2, default is 8, for indent \i and \j
+    char T; ///< tab size, must be a power of 2, default is 8, for column count and indent \i and \j
   };
   /// AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences.
   template<typename T> /// @tparam <T> AbstractMatcher or const AbstractMatcher
@@ -285,7 +286,7 @@ class AbstractMatcher {
     blk_ = 0;
   }
   /// Set buffer block size for reading: use 1 for interactive input, 0 (or omit argument) to buffer all input in which case returns true if all the data could be read and false if a read error occurred.
-  bool buffer(size_t blk = 0) ///< new block size between 1 and Const::BLOCK, or 0 to buffer all
+  bool buffer(size_t blk = 0) ///< new block size between 1 and Const::BLOCK, or 0 to buffer all input
     /// @returns true when successful to buffer all input when n=0.
   {
     if (blk > Const::BLOCK)
@@ -308,7 +309,7 @@ class AbstractMatcher {
       end_ += get(buf_ + end_, max_ - end_);
     }
     if (end_ == max_)
-      (void)grow(1); // room for a final \0
+      (void)grow(1); // we need room for a final \0
     return in.eof();
   }
   /// Set buffer to 1 for interactive input.
@@ -347,19 +348,19 @@ class AbstractMatcher {
   {
     return cap_;
   }
-  /// Returns pointer to the begin of the matched text (non-0-terminated), a fast constant-time operation, use with end() or use size() for text end/length.
+  /// Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation, use with end() or use size() for text end/length.
   const char *begin() const
     /// @returns const char* pointer to the matched text in the buffer.
   {
     return txt_;
   }
-  /// Returns pointer to the end of the matched text, a fast constant-time operation.
+  /// Returns pointer to the end of the matched text, a constant-time operation.
   const char *end() const
     /// @returns const char* pointer to the end of the matched text in the buffer.
   {
     return txt_ + len_;
   }
-  /// Returns 0-terminated string of the text matched, a constant-time operation.
+  /// Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operation.
   const char *text()
     /// @returns 0-terminated const char* string with text matched.
   {
@@ -370,13 +371,13 @@ class AbstractMatcher {
     }
     return txt_;
   }
-  /// Returns the text matched as a string, a copy of text().
+  /// Returns the text matched as a string, a copy of text(), may include matched \0s.
   std::string str() const
     /// @returns string with text matched.
   {
     return std::string(txt_, len_);
   }
-  /// Returns the match as a wide string, converted from UTF-8 text().
+  /// Returns the match as a wide string, converted from UTF-8 text(), may include matched \0s.
   std::wstring wstr() const
     /// @returns wide string with text matched.
   {
@@ -413,7 +414,7 @@ class AbstractMatcher {
     }
     return ws;
   }
-  /// Returns the length of the matched text in number of bytes, a constant-time operation.
+  /// Returns the length of the matched text in number of bytes, including matched \0s, a constant-time operation.
   size_t size() const
     /// @returns match size in bytes.
   {
@@ -819,8 +820,6 @@ class AbstractMatcher {
     init();
     opt_ = opt;
   }
-  /// Destruct base abstract matcher
-  // TODO
   /// Delete abstract matcher, deletes this matcher's internal buffer.
   virtual ~AbstractMatcher()
   {
@@ -842,7 +841,7 @@ class AbstractMatcher {
 #endif
     reset(opt);
   }
-  /// Returns more input (method can be overriden, as by reflex::FlexLexer::get(s, n) for example that invokes reflex::FlexLexer::LexerInput(s, n)).
+  /// Returns more input directly from the source (method can be overriden, as by reflex::FlexLexer::get(s, n) for example that invokes reflex::FlexLexer::LexerInput(s, n)).
   virtual size_t get(
       /// @returns the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF.
       char  *s, ///< points to the string buffer to fill with input

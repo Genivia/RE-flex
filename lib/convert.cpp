@@ -30,7 +30,7 @@
 @file      convert.cpp
 @brief     RE/flex regex converter
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -1029,6 +1029,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
   std::string regex;
   bool anc = false;
   bool beg = true;
+  bool bre = false;
   size_t pos = 0;
   size_t loc = 0;
   size_t lev = 0;
@@ -1153,6 +1154,13 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           loc = pos + 1;
           beg = false;
         }
+        else if ((flags & convert_flag::basic) && (c == '?' || c == '+' || c == '|' || c == '(' || c == ')' || c == '{' || c == '}'))
+        {
+          regex.append(&pattern[loc], pos - loc - 1);
+          loc = pos;
+          bre = true;
+          continue;
+        }
         else
         {
           convert_escape(pattern, len, loc, pos, flags, esc, mod, par, regex);
@@ -1180,121 +1188,154 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
         anc = false;
         break;
       case '(':
-        ++lev;
-        if (pos + 1 < len && pattern[pos + 1] == '?')
+        if ((flags & convert_flag::basic) && !bre)
         {
-          ++pos;
-          if (pos + 1 < len)
-          {
-            ++pos;
-            if (pattern[pos] == '#')
-            {
-              size_t k = pos++;
-              while (pos < len && pattern[pos] != ')')
-                ++pos;
-              if (pos >= len || pattern[pos] != ')')
-                throw regex_error(regex_error::mismatched_parens, pattern, k);
-              if (!supports_modifier(mod, '#'))
-              {
-                // no # modifier: remove (?#...)
-                regex.append(&pattern[loc], k - loc - 2);
-                loc = pos + 1;
-              }
-              --lev;
-            }
-            else
-            {
-              std::string mods;
-              size_t k = pos;
-              while (k < len && std::isalpha(pattern[k]))
-              {
-                if (enable_modifier(pattern[k], pattern, k, mod, lev + 1))
-                  mods.push_back(pattern[k]);
-                ++k;
-              }
-              if (k >= len)
-                throw regex_error(regex_error::mismatched_parens, pattern, pos);
-              if (pattern[k] == ':' || pattern[k] == ')')
-              {
-                if (can)
-                  regex.append(&pattern[loc], pos - loc).append(mods).push_back(pattern[k]);
-                else if (pattern[k] == ')')
-                  regex.append(&pattern[loc], pos - loc - 2);
-                else
-                  regex.append(&pattern[loc], pos - loc - 1);
-                if (pattern[k] == ')')
-                {
-                  // (?imsx)...
-                  for (std::map<int,size_t>::iterator i = mod.begin(); i != mod.end(); ++i)
-                    if (i->second == lev + 1)
-                      i->second = lev;
-                  --lev;
-                }
-                pos = k;
-                loc = pos + 1;
-              }
-              else if (supports_modifier(mod, pattern[pos]))
-              {
-                // (?=...), (?!...), (?<...) etc
-                beg = true;
-              }
-              else
-              {
-                throw regex_error(regex_error::invalid_syntax, pattern, pos);
-              }
-            }
-          }
+          // BRE: translate ( to \(
+          regex.append(&pattern[loc], pos - loc).push_back('\\');
+          loc = pos;
+          anc = false;
+          beg = false;
         }
         else
         {
-          beg = true;
-          if ((flags & convert_flag::recap) || (flags & convert_flag::lex))
+          ++lev;
+          if (pos + 1 < len && pattern[pos + 1] == '?')
           {
-            // recap: translate ( to (?:
-            regex.append(&pattern[loc], pos - loc).append("(?:");
-            loc = pos + 1;
+            ++pos;
+            if (pos + 1 < len)
+            {
+              ++pos;
+              if (pattern[pos] == '#')
+              {
+                size_t k = pos++;
+                while (pos < len && pattern[pos] != ')')
+                  ++pos;
+                if (pos >= len || pattern[pos] != ')')
+                  throw regex_error(regex_error::mismatched_parens, pattern, k);
+                if (!supports_modifier(mod, '#'))
+                {
+                  // no # modifier: remove (?#...)
+                  regex.append(&pattern[loc], k - loc - 2);
+                  loc = pos + 1;
+                }
+                --lev;
+              }
+              else
+              {
+                std::string mods;
+                size_t k = pos;
+                while (k < len && std::isalpha(pattern[k]))
+                {
+                  if (enable_modifier(pattern[k], pattern, k, mod, lev + 1))
+                    mods.push_back(pattern[k]);
+                  ++k;
+                }
+                if (k >= len)
+                  throw regex_error(regex_error::mismatched_parens, pattern, pos);
+                if (pattern[k] == ':' || pattern[k] == ')')
+                {
+                  if (can)
+                    regex.append(&pattern[loc], pos - loc).append(mods).push_back(pattern[k]);
+                  else if (pattern[k] == ')')
+                    regex.append(&pattern[loc], pos - loc - 2);
+                  else
+                    regex.append(&pattern[loc], pos - loc - 1);
+                  if (pattern[k] == ')')
+                  {
+                    // (?imsx)...
+                    for (std::map<int,size_t>::iterator i = mod.begin(); i != mod.end(); ++i)
+                      if (i->second == lev + 1)
+                        i->second = lev;
+                    --lev;
+                  }
+                  pos = k;
+                  loc = pos + 1;
+                }
+                else if (supports_modifier(mod, pattern[pos]))
+                {
+                  // (?=...), (?!...), (?<...) etc
+                  beg = true;
+                }
+                else
+                {
+                  throw regex_error(regex_error::invalid_syntax, pattern, pos);
+                }
+              }
+            }
+          }
+          else
+          {
+            beg = true;
+            if ((flags & convert_flag::recap) || (flags & convert_flag::lex))
+            {
+              // recap: translate ( to (?:
+              regex.append(&pattern[loc], pos - loc).append("(?:");
+              loc = pos + 1;
+            }
           }
         }
         break;
       case ')':
-        if (lev == 0)
-          throw regex_error(regex_error::mismatched_parens, pattern, pos);
-        if (beg)
-          throw regex_error(regex_error::empty_expression, pattern, pos);
-        if (lap == lev + 1)
+        if ((flags & convert_flag::basic) && !bre)
         {
-          // lex lookahead: translate ) to ))
-          regex.append(&pattern[loc], pos - loc).append(")");
+          // BRE: translate ) to \)
+          regex.append(&pattern[loc], pos - loc).push_back('\\');
           loc = pos;
-          lap = 0;
+          anc = false;
+          beg = false;
         }
-        // terminate (?isx:...)
-        for (std::map<int,size_t>::iterator i = mod.begin(); i != mod.end(); )
+        else
         {
-          if (i->second == lev + 1)
-            mod.erase(i++);
-          else
-            ++i;
+          if (lev == 0)
+            throw regex_error(regex_error::mismatched_parens, pattern, pos);
+          if (beg)
+            throw regex_error(regex_error::empty_expression, pattern, pos);
+          if (lap == lev + 1)
+          {
+            // lex lookahead: translate ) to ))
+            regex.append(&pattern[loc], pos - loc).append(")");
+            loc = pos;
+            lap = 0;
+          }
+          // terminate (?isx:...)
+          for (std::map<int,size_t>::iterator i = mod.begin(); i != mod.end(); )
+          {
+            if (i->second == lev + 1)
+              mod.erase(i++);
+            else
+              ++i;
+          }
+          --lev;
         }
-        --lev;
         break;
       case '|':
-        if (beg)
-          throw regex_error(regex_error::empty_expression, pattern, pos);
-        if (lap == lev + 1)
+        if ((flags & convert_flag::basic) && !bre)
         {
-          // lex lookahead: translate | to )|
-          regex.append(&pattern[loc], pos - loc).append(")");
+          // BRE: translate | to \|
+          regex.append(&pattern[loc], pos - loc).push_back('\\');
           loc = pos;
-          lap = 0;
+          anc = false;
+          beg = false;
         }
-        else if ((flags & convert_flag::recap) && lev == 0)
+        else
         {
-          // recap: translate x|y to (x)|(y)
-          regex.append(&pattern[loc], pos - loc).append(")|(");
-          loc = pos + 1;
+          if (beg)
+            throw regex_error(regex_error::empty_expression, pattern, pos);
+          if (lap == lev + 1)
+          {
+            // lex lookahead: translate | to )|
+            regex.append(&pattern[loc], pos - loc).append(")");
+            loc = pos;
+            lap = 0;
+          }
+          else if ((flags & convert_flag::recap) && lev == 0)
+          {
+            // recap: translate x|y to (x)|(y)
+            regex.append(&pattern[loc], pos - loc).append(")|(");
+            loc = pos + 1;
+          }
+          beg = true;
         }
-        beg = true;
         break;
       case '[':
         if (pos + 1 < len && pattern[pos + 1] == '^')
@@ -1421,62 +1462,94 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
         anc = false;
         break;
       case '{':
-        if (macros != NULL && pos + 1 < len && (std::isalpha(pattern[pos + 1]) || pattern[pos + 1] == '_' || pattern[pos + 1] == '$' || (pattern[pos + 1] & 0x80) == 0x80))
+        if ((flags & convert_flag::basic) && !bre)
         {
-          // if macros are provided: lookup {name} and expand without converting
-          regex.append(&pattern[loc], pos - loc);
-          ++pos;
-          size_t k = pos++;
-          while (pos < len && (std::isalnum(pattern[pos]) || pattern[pos] == '_' || (pattern[pos] & 0x80) == 0x80))
-            ++pos;
-          std::string name;
-          name.append(&pattern[k], pos - k);
-          if (pos >= len || pattern[pos] != '}')
-            throw regex_error(regex_error::undefined_name, pattern, pos);
-          std::map<std::string,std::string>::const_iterator i = macros->find(name);
-          if (i == macros->end())
-            throw regex_error(regex_error::undefined_name, pattern, k);
-          regex.append(par).append(i->second).append(")");
-          loc = pos + 1;
+          // BRE: translate { to \{
+          regex.append(&pattern[loc], pos - loc).push_back('\\');
+          loc = pos;
           anc = false;
           beg = false;
         }
         else
         {
-          if (anc)
-            throw regex_error(regex_error::invalid_syntax, pattern, pos);
-          if (beg)
-            throw regex_error(regex_error::empty_expression, pattern, pos);
-          ++pos;
-          if (pos >= len || !std::isdigit(pattern[pos]))
-            throw regex_error(regex_error::invalid_repeat, pattern, pos);
-          char *s;
-          size_t n = static_cast<size_t>(std::strtoul(&pattern[pos], &s, 10));
-          pos = s - pattern;
-          if (pattern[pos] == ',')
+          if (macros != NULL && pos + 1 < len && (std::isalpha(pattern[pos + 1]) || pattern[pos + 1] == '_' || pattern[pos + 1] == '$' || (pattern[pos + 1] & 0x80) == 0x80))
           {
+            // if macros are provided: lookup {name} and expand without converting
+            regex.append(&pattern[loc], pos - loc);
             ++pos;
+            size_t k = pos++;
+            while (pos < len && (std::isalnum(pattern[pos]) || pattern[pos] == '_' || (pattern[pos] & 0x80) == 0x80))
+              ++pos;
+            std::string name;
+            name.append(&pattern[k], pos - k);
+            if (pos >= len && pattern[pos] != '\\' && pattern[pos] != '}')
+              throw regex_error(regex_error::undefined_name, pattern, pos);
+            std::map<std::string,std::string>::const_iterator i = macros->find(name);
+            if (i == macros->end())
+              throw regex_error(regex_error::undefined_name, pattern, k);
+            regex.append(par).append(i->second).append(")");
+            loc = pos + (pattern[pos] == '\\') + 1;
+            anc = false;
+            beg = false;
+          }
+          else
+          {
+            if (anc)
+              throw regex_error(regex_error::invalid_syntax, pattern, pos);
+            if (beg)
+              throw regex_error(regex_error::empty_expression, pattern, pos);
+            ++pos;
+            if (pos >= len || !std::isdigit(pattern[pos]))
+              throw regex_error(regex_error::invalid_repeat, pattern, pos);
+            char *s;
+            size_t n = static_cast<size_t>(std::strtoul(&pattern[pos], &s, 10));
+            pos = s - pattern;
+            if (pattern[pos] == ',')
+            {
+              ++pos;
+              if (pattern[pos] != '\\' && pattern[pos] != '}')
+              {
+                size_t m = static_cast<size_t>(std::strtoul(&pattern[pos], &s, 10));
+                if (m < n)
+                  throw regex_error(regex_error::invalid_repeat, pattern, pos);
+                pos = s - pattern;
+              }
+            }
+            if ((flags & convert_flag::basic) && pattern[pos] == '\\')
+            {
+              // BRE: translate \} to }
+              if (pos + 1 < len)
+              {
+                regex.append(&pattern[loc], pos - loc);
+                loc = ++pos;
+              }
+            }
             if (pattern[pos] != '}')
             {
-              size_t m = static_cast<size_t>(std::strtoul(&pattern[pos], &s, 10));
-              if (m < n)
+              if (pos + 1 < len)
                 throw regex_error(regex_error::invalid_repeat, pattern, pos);
-              pos = s - pattern;
+              else
+                throw regex_error(regex_error::mismatched_braces, pattern, pos);
             }
+            if (pos + 1 < len && (pattern[pos + 1] == '?' || pattern[pos + 1] == '+') && !supports_escape(esc, pattern[pos + 1]))
+              throw regex_error(regex_error::invalid_quantifier, pattern, pos + 1);
           }
-          if (pattern[pos] != '}')
-          {
-            if (pos + 1 < len)
-              throw regex_error(regex_error::invalid_repeat, pattern, pos);
-            else
-              throw regex_error(regex_error::mismatched_braces, pattern, pos);
-          }
-          if (pos + 1 < len && (pattern[pos + 1] == '?' || pattern[pos + 1] == '+') && !supports_escape(esc, pattern[pos + 1]))
-            throw regex_error(regex_error::invalid_quantifier, pattern, pos + 1);
         }
         break;
       case '}':
-        throw regex_error(regex_error::mismatched_braces, pattern, pos);
+        if ((flags & convert_flag::basic) && !bre)
+        {
+          // BRE: translate } to \}
+          regex.append(&pattern[loc], pos - loc).push_back('\\');
+          loc = pos;
+          anc = false;
+          beg = false;
+        }
+        else
+        {
+          throw regex_error(regex_error::mismatched_braces, pattern, pos);
+        }
+        break;
       case '#':
         if ((flags & convert_flag::lex) && (flags & convert_flag::freespace))
         {
@@ -1526,9 +1599,19 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
         anc = false;
         beg = false;
         break;
-      case '*':
-      case '+':
       case '?':
+      case '+':
+        if ((flags & convert_flag::basic) && !bre)
+        {
+          // BRE: translate ? and + to \? and \+
+          regex.append(&pattern[loc], pos - loc).push_back('\\');
+          loc = pos;
+          anc = false;
+          beg = false;
+          break;
+        }
+        // fall through
+      case '*':
         if (anc)
           throw regex_error(regex_error::invalid_syntax, pattern, pos);
         if (beg)
@@ -1590,6 +1673,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
         beg = false;
         break;
     }
+    bre = false;
     ++pos;
   }
   if (lev > 0)

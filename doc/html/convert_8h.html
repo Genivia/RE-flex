@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">convert.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Apr 29 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed May 15 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -109,44 +109,47 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:af5c6fe22fc79bb893e135d583d525930"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">reflex::convert_flag::none</a> = 0x00</td></tr>
+<tr class="memitem:af5c6fe22fc79bb893e135d583d525930"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">reflex::convert_flag::none</a> = 0x0000</td></tr>
 <tr class="memdesc:af5c6fe22fc79bb893e135d583d525930"><td class="mdescLeft">&#160;</td><td class="mdescRight">no conversion (default)  <a href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">More...</a><br /></td></tr>
 <tr class="separator:af5c6fe22fc79bb893e135d583d525930"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1c057a380f8673a13064c755652dc39"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39">reflex::convert_flag::unicode</a> = 0x01</td></tr>
+<tr class="memitem:ae9e0ae7e5abd19e8499a638e8dfff5d3"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#ae9e0ae7e5abd19e8499a638e8dfff5d3">reflex::convert_flag::basic</a> = 0x0001</td></tr>
+<tr class="memdesc:ae9e0ae7e5abd19e8499a638e8dfff5d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert basic regex (BRE) to extended regex (ERE)  <a href="namespacereflex_1_1convert__flag.html#ae9e0ae7e5abd19e8499a638e8dfff5d3">More...</a><br /></td></tr>
+<tr class="separator:ae9e0ae7e5abd19e8499a638e8dfff5d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1c057a380f8673a13064c755652dc39"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39">reflex::convert_flag::unicode</a> = 0x0002</td></tr>
 <tr class="memdesc:ab1c057a380f8673a13064c755652dc39"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert . (dot), <code>\s</code>, <code>\w</code>, <code>\l</code>, <code>\u</code>, <code>\S</code>, <code>\W</code>, <code>\L</code>, <code>\U</code> to <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a>  <a href="namespacereflex_1_1convert__flag.html#ab1c057a380f8673a13064c755652dc39">More...</a><br /></td></tr>
 <tr class="separator:ab1c057a380f8673a13064c755652dc39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f27c083368a4cb0d50b4a613adef897"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a1f27c083368a4cb0d50b4a613adef897">reflex::convert_flag::recap</a> = 0x02</td></tr>
+<tr class="memitem:a1f27c083368a4cb0d50b4a613adef897"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a1f27c083368a4cb0d50b4a613adef897">reflex::convert_flag::recap</a> = 0x0004</td></tr>
 <tr class="memdesc:a1f27c083368a4cb0d50b4a613adef897"><td class="mdescLeft">&#160;</td><td class="mdescRight">remove capturing groups, add capturing groups to the top level  <a href="namespacereflex_1_1convert__flag.html#a1f27c083368a4cb0d50b4a613adef897">More...</a><br /></td></tr>
 <tr class="separator:a1f27c083368a4cb0d50b4a613adef897"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7222821c0cc6579424c71c261e9b8805"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805">reflex::convert_flag::lex</a> = 0x04</td></tr>
+<tr class="memitem:a7222821c0cc6579424c71c261e9b8805"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805">reflex::convert_flag::lex</a> = 0x0008</td></tr>
 <tr class="memdesc:a7222821c0cc6579424c71c261e9b8805"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert Lex/Flex regular expression syntax  <a href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805">More...</a><br /></td></tr>
 <tr class="separator:a7222821c0cc6579424c71c261e9b8805"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e3e66422498b8e4c6fd7770393ea988"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a1e3e66422498b8e4c6fd7770393ea988">reflex::convert_flag::u4</a> = 0x08</td></tr>
+<tr class="memitem:a1e3e66422498b8e4c6fd7770393ea988"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a1e3e66422498b8e4c6fd7770393ea988">reflex::convert_flag::u4</a> = 0x0010</td></tr>
 <tr class="memdesc:a1e3e66422498b8e4c6fd7770393ea988"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert <code>\uXXXX</code> and UTF-16 surrogate pairs  <a href="namespacereflex_1_1convert__flag.html#a1e3e66422498b8e4c6fd7770393ea988">More...</a><br /></td></tr>
 <tr class="separator:a1e3e66422498b8e4c6fd7770393ea988"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70281ca46dbef31569206d4c110c2308"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a70281ca46dbef31569206d4c110c2308">reflex::convert_flag::anycase</a> = 0x10</td></tr>
+<tr class="memitem:a70281ca46dbef31569206d4c110c2308"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a70281ca46dbef31569206d4c110c2308">reflex::convert_flag::anycase</a> = 0x0020</td></tr>
 <tr class="memdesc:a70281ca46dbef31569206d4c110c2308"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert regex to ignore case, same as <code>(?i)</code>  <a href="namespacereflex_1_1convert__flag.html#a70281ca46dbef31569206d4c110c2308">More...</a><br /></td></tr>
 <tr class="separator:a70281ca46dbef31569206d4c110c2308"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c4525aa454d95740eac25f4bd0934c7"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a3c4525aa454d95740eac25f4bd0934c7">reflex::convert_flag::multiline</a> = 0x20</td></tr>
+<tr class="memitem:a3c4525aa454d95740eac25f4bd0934c7"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a3c4525aa454d95740eac25f4bd0934c7">reflex::convert_flag::multiline</a> = 0x0040</td></tr>
 <tr class="memdesc:a3c4525aa454d95740eac25f4bd0934c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">regex with multiline anchors <code>^</code> and <code>$</code>, same as <code>(?m)</code>  <a href="namespacereflex_1_1convert__flag.html#a3c4525aa454d95740eac25f4bd0934c7">More...</a><br /></td></tr>
 <tr class="separator:a3c4525aa454d95740eac25f4bd0934c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6a63c3a106c2dbcbad7b86797453f58"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#ab6a63c3a106c2dbcbad7b86797453f58">reflex::convert_flag::dotall</a> = 0x40</td></tr>
+<tr class="memitem:ab6a63c3a106c2dbcbad7b86797453f58"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#ab6a63c3a106c2dbcbad7b86797453f58">reflex::convert_flag::dotall</a> = 0x0080</td></tr>
 <tr class="memdesc:ab6a63c3a106c2dbcbad7b86797453f58"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert <code>.</code> (dot) to match all, same as <code>(?s)</code>  <a href="namespacereflex_1_1convert__flag.html#ab6a63c3a106c2dbcbad7b86797453f58">More...</a><br /></td></tr>
 <tr class="separator:ab6a63c3a106c2dbcbad7b86797453f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32e4f47592b2442c814a32502365a8e3"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a32e4f47592b2442c814a32502365a8e3">reflex::convert_flag::freespace</a> = 0x80</td></tr>
+<tr class="memitem:a32e4f47592b2442c814a32502365a8e3"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a32e4f47592b2442c814a32502365a8e3">reflex::convert_flag::freespace</a> = 0x0100</td></tr>
 <tr class="memdesc:a32e4f47592b2442c814a32502365a8e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert regex by removing spacing, same as <code>(?x)</code>  <a href="namespacereflex_1_1convert__flag.html#a32e4f47592b2442c814a32502365a8e3">More...</a><br /></td></tr>
 <tr class="separator:a32e4f47592b2442c814a32502365a8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex regex converter. </p>
 <dl class="section author"><dt>Author</dt><dd>Robert van Engelen - <a href="#" onclick="location.href='mai'+'lto:'+'eng'+'el'+'en@'+'ge'+'niv'+'ia'+'.co'+'m'; return false;">engel<span style="display: none;">.nosp@m.</span>en@g<span style="display: none;">.nosp@m.</span>enivi<span style="display: none;">.nosp@m.</span>a.co<span style="display: none;">.nosp@m.</span>m</a> </dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>(c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
+<dl class="section copyright"><dt>Copyright</dt><dd>(c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
 <dd>
 (c) BSD-3 License - see LICENSE.txt </dd></dl>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Apr 29 2019 09:00:37 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed May 15 2019 13:56:34 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

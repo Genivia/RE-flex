@@ -244,18 +244,19 @@ class Input {
     static const file_encoding_type utf32le =  5; ///< UTF-32 little endian
     static const file_encoding_type latin   =  6; ///< Basic Latin ASCII and Latin-1 supplement, ISO-8859-1
     static const file_encoding_type cp437   =  7; ///< CP 427
-    static const file_encoding_type cp850   =  8; ///< CP 850 (updated to CP 858)
-    static const file_encoding_type ebcdic  =  9; ///< EBCDIC
-    static const file_encoding_type cp1250  = 10; ///< CP-1250
-    static const file_encoding_type cp1251  = 11; ///< CP-1251
-    static const file_encoding_type cp1252  = 12; ///< CP-1252
-    static const file_encoding_type cp1253  = 13; ///< CP-1253
-    static const file_encoding_type cp1254  = 14; ///< CP-1254
-    static const file_encoding_type cp1255  = 15; ///< CP-1255
-    static const file_encoding_type cp1256  = 16; ///< CP-1256
-    static const file_encoding_type cp1257  = 17; ///< CP-1257
-    static const file_encoding_type cp1258  = 18; ///< CP-1258
-    static const file_encoding_type custom  = 19; ///< custom code page
+    static const file_encoding_type cp850   =  8; ///< CP 850
+    static const file_encoding_type cp858   =  9; ///< CP 858
+    static const file_encoding_type ebcdic  = 10; ///< EBCDIC
+    static const file_encoding_type cp1250  = 11; ///< CP 1250
+    static const file_encoding_type cp1251  = 12; ///< CP 1251
+    static const file_encoding_type cp1252  = 13; ///< CP 1252
+    static const file_encoding_type cp1253  = 14; ///< CP 1253
+    static const file_encoding_type cp1254  = 15; ///< CP 1254
+    static const file_encoding_type cp1255  = 16; ///< CP 1255
+    static const file_encoding_type cp1256  = 17; ///< CP 1256
+    static const file_encoding_type cp1257  = 18; ///< CP 1257
+    static const file_encoding_type cp1258  = 19; ///< CP 1258
+    static const file_encoding_type custom  = 20; ///< custom code page
   };
   /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
   Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects)

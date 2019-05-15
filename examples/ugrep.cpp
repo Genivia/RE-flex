@@ -28,21 +28,18 @@
 
 /**
 @file      ugrep.cpp
-@brief     Universal grep utility - search Unicode files
+@brief     Universal grep - high-performance Unicode file search utility
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2019-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 
-Universal grep utility - search UTF-8/16/32, ASCII, ISO-8859-1, EBCDIC, and
-other files faster with RE/flex high-performance Unicode pattern matching.
+Universal grep - high-performance universal search utility finds Unicode
+patterns in UTF-8/16/32, ASCII, ISO-8859-1, EBCDIC, code pages 437, 850, 1250
+to 1258, and other file formats.
 
-Download and installation:
+For download and installation of the latest version, see:
 
   https://github.com/Genivia/ugrep
-
-Requires:
-
-  RE/flex - https://github.com/Genivia/RE-flex
 
 Features:
 
@@ -110,19 +107,6 @@ Examples:
 Compile:
 
   c++ -std=c++11 -o ugrep ugrep.cpp -lreflex
-
-Bugs FIXME:
-
-  - Pattern '^$' does not select empty lines, because find() does not permit empty matches.
-
-Wanted TODO:
-
-  - Like grep, we want to traverse directory contents to search files, and support options -R and -r, --recursive.
-  - Like grep, we want -A, -B, and -C, --context to display the context of a match.
-  - Like grep, we want -f, --file=file to read patterns from a file.
-  - Should we detect "binary files" like grep and skip them?
-  - Should we open files in binary mode "rb" when --binary-files option is specified?
-  - ... anything else?
 
 */
 
@@ -194,24 +178,23 @@ const struct { const char *format; reflex::Input::file_encoding_type encoding; }
   { "ASCII",      reflex::Input::file_encoding::utf8    },
   { "EBCDIC",     reflex::Input::file_encoding::ebcdic  },
   { "UTF-8",      reflex::Input::file_encoding::utf8    },
-  { "UTF-16",     reflex::Input::file_encoding::utf16le },
+  { "UTF-16",     reflex::Input::file_encoding::utf16be },
   { "UTF-16BE",   reflex::Input::file_encoding::utf16be },
   { "UTF-16LE",   reflex::Input::file_encoding::utf16le },
-  { "UTF-32",     reflex::Input::file_encoding::utf32le },
+  { "UTF-32",     reflex::Input::file_encoding::utf32be },
   { "UTF-32BE",   reflex::Input::file_encoding::utf32be },
   { "UTF-32LE",   reflex::Input::file_encoding::utf32le },
-  { "CP-437",     reflex::Input::file_encoding::cp437   },
-  { "CP-850",     reflex::Input::file_encoding::cp850   },
-  { "CP-855",     reflex::Input::file_encoding::cp850   },
-  { "CP-1250",    reflex::Input::file_encoding::cp1250  },
-  { "CP-1251",    reflex::Input::file_encoding::cp1251  },
-  { "CP-1252",    reflex::Input::file_encoding::cp1252  },
-  { "CP-1253",    reflex::Input::file_encoding::cp1253  },
-  { "CP-1254",    reflex::Input::file_encoding::cp1254  },
-  { "CP-1255",    reflex::Input::file_encoding::cp1255  },
-  { "CP-1256",    reflex::Input::file_encoding::cp1256  },
-  { "CP-1257",    reflex::Input::file_encoding::cp1257  },
-  { "CP-1258",    reflex::Input::file_encoding::cp1258  },
+  { "CP437",      reflex::Input::file_encoding::cp437   },
+  { "CP850",      reflex::Input::file_encoding::cp850   },
+  { "CP1250",     reflex::Input::file_encoding::cp1250  },
+  { "CP1251",     reflex::Input::file_encoding::cp1251  },
+  { "CP1252",     reflex::Input::file_encoding::cp1252  },
+  { "CP1253",     reflex::Input::file_encoding::cp1253  },
+  { "CP1254",     reflex::Input::file_encoding::cp1254  },
+  { "CP1255",     reflex::Input::file_encoding::cp1255  },
+  { "CP1256",     reflex::Input::file_encoding::cp1256  },
+  { "CP1257",     reflex::Input::file_encoding::cp1257  },
+  { "CP1258",     reflex::Input::file_encoding::cp1258  },
   { NULL, 0 }
 };
 
@@ -619,7 +602,8 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
       size_t lineno = 0;
       size_t lines = 0;
 
-      for (auto& match : reflex::Matcher(pattern, input).find)
+      reflex::Matcher matcher(pattern, input);
+      for (auto& match : matcher.find)
       {
         if (lineno != match.lineno())
         {
@@ -670,7 +654,8 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
       {
         // search the line for pattern matches and display the line again (with exact offset) for each pattern match
 
-        for (auto& match : reflex::Matcher(pattern, line).find)
+        reflex::Matcher matcher(pattern, line);
+        for (auto& match : matcher.find)
         {
           std::cout << label;
           if (flag_line_number)
@@ -689,7 +674,8 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
 
         size_t last = 0;
 
-        for (auto& match : reflex::Matcher(pattern, line).find)
+        reflex::Matcher matcher(pattern, line);
+        for (auto& match : matcher.find)
         {
           if (last == 0)
           {
@@ -726,7 +712,8 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
 
     size_t lineno = 0;
 
-    for (auto& match : reflex::Matcher(pattern, input).find)
+    reflex::Matcher matcher(pattern, input);
+    for (auto& match : matcher.find)
     {
       if (flag_no_group || lineno != match.lineno())
       {

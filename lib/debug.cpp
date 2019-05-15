@@ -39,24 +39,27 @@ See `debug.h` for details.
 #include <stdio.h>
 #include <cstring>
 
-FILE *DBGFD_;
+FILE *REFLEX_DBGFD_ = NULL;
+
+extern "C" {
 
 #if (defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__BORLANDC__)) && !defined(__CYGWIN__) && !defined(__MINGW32__) && !defined(__MINGW64__)
 
 #include <windows.h>
-void DBGOUT_(const char *log, const char *file, int line)
+void REFLEX_DBGOUT_(const char *log, const char *file, int line)
 {
   SYSTEMTIME tm;
-  if (DBGFD_ == NULL && (log[0] == '.' || ::fopen_s(&DBGFD_, log, "a")))
-    DBGFD_ = stderr;
+  if (REFLEX_DBGFD_ == NULL && (log[0] == '.' || ::fopen_s(&REFLEX_DBGFD_, log, "a")))
+    REFLEX_DBGFD_ = stderr;
   GetLocalTime(&tm);
-  ::fprintf(DBGFD_, "\n%02d%02d%02d/%02d%02d%02d.%03d%14.14s:%-5d", tm.wYear%100, tm.wMonth, tm.wDay, tm.wHour, tm.wMinute, tm.wSecond, tm.wMilliseconds, file, line);
+  ::fprintf(REFLEX_DBGFD_, "\n%02d%02d%02d/%02d%02d%02d.%03d%14.14s:%-5d", tm.wYear%100, tm.wMonth, tm.wDay, tm.wHour, tm.wMinute, tm.wSecond, tm.wMilliseconds, file, line);
 }
+
 #else
 
 #include <time.h>
 #include <sys/time.h>
-void DBGOUT_(const char *log, const char *file, int line)
+void REFLEX_DBGOUT_(const char *log, const char *file, int line)
 {
   struct timeval tv;
   struct tm tm;
@@ -65,11 +68,13 @@ void DBGOUT_(const char *log, const char *file, int line)
     name++;
   else
     name = file;
-  if (DBGFD_ == NULL && (log[0] == '.' || (DBGFD_ = ::fopen(log, "a")) == NULL))
-    DBGFD_ = stderr;
+  if (REFLEX_DBGFD_ == NULL && (log[0] == '.' || (REFLEX_DBGFD_ = ::fopen(log, "a")) == NULL))
+    REFLEX_DBGFD_ = stderr;
   gettimeofday(&tv, NULL);
   localtime_r(&tv.tv_sec, &tm);
-  ::fprintf(DBGFD_, "\n%02d%02d%02d/%02d%02d%02d.%06ld%14.14s:%-5d", tm.tm_year%100, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, static_cast<long>(tv.tv_usec), name, line);
+  ::fprintf(REFLEX_DBGFD_, "\n%02d%02d%02d/%02d%02d%02d.%06ld%14.14s:%-5d", tm.tm_year%100, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, static_cast<long>(tv.tv_usec), name, line);
 }
 
 #endif
+
+}

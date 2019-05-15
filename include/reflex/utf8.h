@@ -41,7 +41,7 @@
 #include <string>
 
 #if defined(WITH_STANDARD_REPLACEMENT_CHARACTER)
-/// Replace invalid UTF-8 with the standard replacement character.
+/// Replace invalid UTF-8 with the standard replacement character U+FFFD.  This is not the default in RE/flex.
 # define REFLEX_NONCHAR      (0xFFFD)
 # define REFLEX_NONCHAR_UTF8 "\xef\xbf\xbd"
 #else

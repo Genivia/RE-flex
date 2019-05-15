@@ -65,7 +65,8 @@ Regex pattern matching with the RE/flex pattern matching library
 ----------------------------------------------------------------
 
 - `cards.cpp` matches credit card numbers
-- `ugrep.cpp` Unicode-aware grep, uses the RE/flex regex engine
+- `cvt2utf` demonstrates `reflex::Input` UTF-8 normalization to convert files to UTF-8/16/32
+- `ugrep.cpp` [universal grep](https://github.com/Genivia/ugrep) to search files with Unicode patterns, uses the RE/flex regex engine
 - `url.cpp` capture domain, path, and query keys from URLs (requires Boost.Regex for captures)
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png

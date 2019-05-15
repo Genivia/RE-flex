@@ -9,7 +9,7 @@ Flex reimagined.  Fast, flexible, adds Boost 💪
 
 [RE/flex][reflex-url] is faster than Flex while providing a wealth of new
 features.  RE/flex is also much faster than regex libraries such as
-Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a
+Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
 representative C source code file into 244 tokens takes only 13 microseconds:
 
 <table>
@@ -32,7 +32,7 @@ representative C source code file into 244 tokens takes only 13 microseconds:
 Note: *Best times of 10 tests with average time in microseconds over 100 runs
 (using clang 9.0.0 with -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz LPDDR3).
 Hyperscan disqualifies as a potential scanner due to its "All matches reported"
-semantics resulting in 1915 matches for his test and its event handler
+semantics resulting in 1915 matches for this test, and due to its event handler
 requirements.* [Download the tests](https://www.genivia.com/files/perfcomp.zip)
 
 
@@ -90,7 +90,7 @@ Use `reflex/bin/reflex.exe` from the command line or add a **Custom Build
 Step** in MSVC++ as follows:
 
 1. select the project name in **Solution Explorer** then **Property Pages**
-   from the **View** menu (see also
+   from the **Project** menu (see also
    [custom-build steps in Visual Studio](http://msdn.microsoft.com/en-us/library/hefydhhy.aspx));
 
 2. add an extra path to the `reflex/include` folder in the **Include
@@ -113,8 +113,8 @@ Before compiling your program with MSVC++, drag the folders `reflex/lib` and
 `reflex/unicode` to the **Source Files** in the **Solution Explorer** panel of
 your project.  Next, run `reflex.exe` simply by compiling your project (which
 may fail, but that is OK for now as long as we executed the custom build step
-to run `reflex.exe`).  Drag the generated `lex.yy.h` and `lex.yy.cpp` files to
-the **Source Files**.  Now you are all set!
+to run `reflex.exe`).  Drag the generated `lex.yy.h` (if present) and
+`lex.yy.cpp` files to the **Source Files**.  Now you are all set!
 
 In addition, the `reflex/vs` directory contains batch scripts to build projects
 with MS Visual Studio C++.
@@ -328,7 +328,8 @@ Use C++11 range-based loops with RE/flex iterators:
 ```{.cpp}
 #include <reflex/stdmatcher.h> // reflex::StdMatcher, reflex::Input, std::regex
 // use a StdMatcher with std::regex to to search for words in a sentence
-for (auto& match : reflex::StdMatcher("\\w+", "How now brown cow.").find)
+reflex::StdMatcher matcher("\\w+", "How now brown cow.");
+for (auto& match : matcher.find)
   std::cout << "Found " << match.text() << std::endl;
 ```
 
@@ -440,6 +441,7 @@ Changelog
 - Mar 27, 2019: 1.1.4 fixed reflex tool common top code block insertion for all inclusive states.
 - Apr  6, 2019: 1.1.5 improved reflex tool command-line option handling, updated documentation.
 - Apr 29, 2019: 1.2.0 added `--bison-complete` option, new ugrep utility example, updated manual, fixes minor issues.
+- May 15, 2019: 1.2.1 added `reflex::convert_flag::basic` to convert BRE syntax to ERE syntax, used by [ugrep](https://github.com/Genivia/ugrep).
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
