@@ -67,7 +67,7 @@ namespace convert_flag {
   const convert_flag_type multiline = 0x0040; ///< regex with multiline anchors `^` and `$`, same as `(?m)`
   const convert_flag_type dotall    = 0x0080; ///< convert `.` (dot) to match all, same as `(?s)`
   const convert_flag_type freespace = 0x0100; ///< convert regex by removing spacing, same as `(?x)`
-};
+}
 
 /// @brief Returns the converted regex string given a regex library signature and conversion flags, throws regex_error.
 ///
