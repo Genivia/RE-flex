@@ -1,8 +1,12 @@
 // An interactive calculator with Unicode identifier variables
 // Builds with bison-bridge to pass Lexer object 'lexer' to bison parser
+// $ reflex calc.l
+// $ bison -y -d calc.y
+// $ c++ -o calc y.tab.c lex.yy.cpp -lreflex
 // Example:
-// ./calc
+// $ ./calc
 // π = 3.14
+// => 3.14
 // π/2
 // => 1.57
 
@@ -12,7 +16,7 @@
   #include <map>
 
   // fixes problem with Bison 2.7 that needs the Lexer class type:
-  class REFLEX_OPTION_lexer;  // = %option lexer ('Lexer' by default)
+  class REFLEX_OPTION_lexer;  // = %option lexer (which is 'Lexer' by default)
 
   #include "y.tab.h"
 %}

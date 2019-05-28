@@ -1,7 +1,7 @@
 /* Braille translator, inspired by the re2c example but expanded to be useful.
    To learn more:
    https://en.wikipedia.org/wiki/English_Braille
-   New mathematical symbols and punctuation are not translated.
+   New mathematical symbols and new punctuation are not translated.
 
    Article 1 of the Universal Declaration of Human Rights:
 
@@ -10,6 +10,9 @@
 ⠠⠮⠽⠀⠜⠑⠀⠢⠙⠪⠫⠀⠾⠀⠗⠂⠎⠕⠝⠀⠯⠀⠒⠎⠉⠊⠰⠑⠀⠯⠀⠩⠙⠀⠁⠉⠞⠀⠞⠪⠜⠙⠎⠀⠐⠕⠀⠁⠝⠕⠤
 ⠮⠗⠀⠔⠀⠁⠀⠸⠎⠀⠷⠀⠃⠗⠕⠮⠗⠓⠕⠕⠙⠲
 END
+All human beings are born free and equal in dignity and rights.
+They are endowed with reason and conscience and should act towards one ano-
+ther in a spirit of brotherhood.
 
 */
 
@@ -19,9 +22,10 @@ END
   #include <iostream>
 %}
 
-// we define a Braille class with translate() lexer (this is purely cosmetic):
+// we declare a Braille class with translate() lexer (this is purely cosmetic):
 %o class=Braille lex=translate
 
+// define the Braille class
 %{
 class Braille: public Lexer {
  public:
@@ -40,7 +44,10 @@ class Braille: public Lexer {
 };
 %}
 
+// enable unicode and disable the default lexer rule
 %o unicode nodefault
+
+// exclusive start conditions
 %x letters numbers
 
 // lookaheads for contractions to be valid, spacing and punctuation !?("'-
@@ -310,7 +317,8 @@ la [\u{2800} \t\n\r⠖⠦⠶⠴⠄⠤]
 %%
 
 // The main program parses braille from file or stdin and translates it
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   FILE *fd = stdin;
   if (argc > 1 && (fd = fopen(argv[1], "r")) == NULL)
   {

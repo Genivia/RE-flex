@@ -41,6 +41,7 @@ const struct { const char *format; reflex::Input::file_encoding_type encoding; }
   { "UTF-32LE",   reflex::Input::file_encoding::utf32le },
   { "CP437",      reflex::Input::file_encoding::cp437   },
   { "CP850",      reflex::Input::file_encoding::cp850   },
+  { "CP858",      reflex::Input::file_encoding::cp858   },
   { "CP1250",     reflex::Input::file_encoding::cp1250  },
   { "CP1251",     reflex::Input::file_encoding::cp1251  },
   { "CP1252",     reflex::Input::file_encoding::cp1252  },

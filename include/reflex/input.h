@@ -547,12 +547,12 @@ class Input {
       return istream_->eof();
     return true;
   }
-  /// Get a single character or EOF when end-of-input is reached.
+  /// Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached.
   int get()
   {
     char c;
     if (get(&c, 1))
-      return c;
+      return static_cast<unsigned char>(c);
     return EOF;
   }
   /// Copy character sequence data into buffer.
