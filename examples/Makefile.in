@@ -750,6 +750,7 @@ cows:		cows.l
 indent:		indent.l
 		$(REFLEX) $(REFLAGS) indent.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		./indent < indent.test
 
 json:		json.l
 		$(REFLEX) $(REFLAGS) json.l

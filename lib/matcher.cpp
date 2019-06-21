@@ -43,6 +43,7 @@ size_t Matcher::match(Method method)
   DBGLOG("BEGIN Matcher::match()");
   reset_text();
 scan:
+  mrk_ = false;
   txt_ = buf_ + cur_;
   len_ = 0;
   bool bob = at_bob();
@@ -280,7 +281,7 @@ redo:
     }
   }
 done:
-  if (bol && cap_ != Const::EMPTY)
+  if (mrk_ && cap_ != Const::EMPTY)
   {
     if (col > 0 && (tab_.empty() || tab_.back() < col))
     {
@@ -339,6 +340,8 @@ done:
     DBGLOG("END Matcher::match()");
     return cap_;
   }
+  if (cap_ == 0)
+    cur_ = txt_ - buf_; // no match: backup to begin of text
   len_ = cur_ - (txt_ - buf_);
   if (len_ == 0 && !nul)
   {

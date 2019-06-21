@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue May 28 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Fri Jun 21 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -406,7 +406,7 @@ Private Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The abstract matcher base class template defines an interface for all pattern matcher engines. </p>
 <p>The buffer expands when matches do not fit. The buffer size is initially 2*BLOCK size.</p>
-<div class="fragment"><div class="line">      _________________</div><div class="line">     |  |    |    |    |</div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a>=|  |<a class="code" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1">text</a>|<a class="code" href="classreflex_1_1_abstract_matcher.html#ab39dc592de42a7e044296f03bee4fdb3">rest</a>|free|</div><div class="line">     |__|____|____|____|</div><div class="line">        ^    ^    ^    ^</div><div class="line">        <a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a></div><div class="line"></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a> <span class="comment">// points to buffered input, grows to fit long matches</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <span class="comment">// current position in buf_ while matching text, cur_ = pos_ afterwards, can be changed by more()</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <span class="comment">// position in buf_ to start the next match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <span class="comment">// position in buf_ that is free to fill with more input</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a> <span class="comment">// allocated size of buf_, must ensure that max_ &gt; end_ for text() to add a final \0</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8f6c1781c265bafe81b8b147a3d20a04">txt_</a> <span class="comment">// buf_ + cur_ points to the match, 0-terminated</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a63c1bbabe9a7e0dd1a8b43b9bce58dfc">len_</a> <span class="comment">// length of the match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#ae712053969ae8fadeee28c1e08421cf5">chr_</a> <span class="comment">// char located at txt_[len_] when txt_[len_] is set to \0</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a15e3fb0e851b132fd1e902de9ab56dba">got_</a> <span class="comment">// buf_[cur_-1] character before this match (assigned before each match)</span></div></div><!-- fragment --><p>More info TODO </p>
+<div class="fragment"><div class="line">      _________________</div><div class="line">     |  |    |    |    |</div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a>=|  |<a class="code" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1">text</a>|<a class="code" href="classreflex_1_1_abstract_matcher.html#ab39dc592de42a7e044296f03bee4fdb3">rest</a>|free|</div><div class="line">     |__|____|____|____|</div><div class="line">        ^    ^    ^    ^</div><div class="line">        <a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a></div><div class="line"></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a> <span class="comment">// points to buffered input, grows to fit long matches</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <span class="comment">// current position in buf_ while matching text, cur_ = pos_ afterwards, can be changed by more()</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <span class="comment">// position in buf_ to start the next match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <span class="comment">// position in buf_ that is free to fill with more input</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a> <span class="comment">// allocated size of buf_, must ensure that max_ &gt; end_ for text() to add a final \0</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8f6c1781c265bafe81b8b147a3d20a04">txt_</a> <span class="comment">// buf_ + cur_ points to the match, 0-terminated</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a63c1bbabe9a7e0dd1a8b43b9bce58dfc">len_</a> <span class="comment">// length of the match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#ae712053969ae8fadeee28c1e08421cf5">chr_</a> <span class="comment">// char located at txt_[len_] when txt_[len_] is set to \0, is \0 otherwise</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a15e3fb0e851b132fd1e902de9ab56dba">got_</a> <span class="comment">// buf_[cur_-1] character before this match (assigned before each match)</span></div></div><!-- fragment --><p>More info TODO </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a24336f3d3f122aa0e904fc18954943f8"></a>
 <div class="memitem">
@@ -1931,6 +1931,12 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the begin of a new line state. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bol</td><td>if true: set new line state </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -2742,7 +2748,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue May 28 2019 12:04:41 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Fri Jun 21 2019 11:58:06 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

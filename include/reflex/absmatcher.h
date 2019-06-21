@@ -79,7 +79,7 @@ end_ // position in buf_ that is free to fill with more input
 max_ // allocated size of buf_, must ensure that max_ > end_ for text() to add a final \0
 txt_ // buf_ + cur_ points to the match, 0-terminated
 len_ // length of the match
-chr_ // char located at txt_[len_] when txt_[len_] is set to \0
+chr_ // char located at txt_[len_] when txt_[len_] is set to \0, is \0 otherwise
 got_ // buf_[cur_-1] character before this match (assigned before each match)
 ```
  
@@ -582,7 +582,7 @@ class AbstractMatcher {
     return got_ == '\n';
   }
   /// Set the begin of a new line state.
-  void set_bol(bool bol)
+  void set_bol(bool bol) ///< if true: set new line state
   {
     if (bol)
       got_ = '\n';

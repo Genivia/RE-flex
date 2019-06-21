@@ -9,7 +9,7 @@
    Enable the following option to match Unicode characters with . (dot):
    %option unicode
    but dot also matches invalid UTF-8 (e.g. overruns). To match valid Unicode
-   only, use \p{Unicode} instead of dot.
+   only, use \p{Unicode} (or its alternative \X) instead of dot.
    To run ./echo on an EBCDIC file, change the body of main():
       reflex::Input input(stdin, reflex::Input::file_encoding::ebcdic);
       return yyFlexLexer(input).yylex();

@@ -33,8 +33,8 @@ Features:
 - generates scanners that are thread-safe by default;
 - works with Bison, supports reentrant, C++, bison-bridge and bison-locations;
 - includes a regex class library that is extensible;
-- Boost.Regex can be used as a regex engine;
-- C++11 std::regex can be used as a regex engine (but not with a scanner);
+- Boost.Regex may be used as a regex engine;
+- C++11 std::regex may be used as a regex engine (but not with a scanner);
 - conversion of regex expressions, for regex engines that lack regex features;
 - released under a permissive open source license (BSD-3).
 
@@ -455,7 +455,7 @@ The Boost.Regex engines are all initialized with `match_not_dot_newline`, which
 disables dotall matching as the default setting.  Dotall can be re-enabled with
 the `(?s)` regex mode modifier.  This is done for compatibility with scanners.
 
-A matcher can be applied to strings and wide strings, such as `std::string` and
+A matcher may be applied to strings and wide strings, such as `std::string` and
 `std::wstring`, `char*` and `wchar_t*`.  Wide strings are converted to UTF-8 to
 enable matching with regular expressions that contain Unicode patterns.
 
@@ -484,7 +484,7 @@ Conversion is fast (it runs in linear time in the size of the regex), but it is
 not without some overhead.  You can make the converted regex patterns `static`,
 as shown above, to eliminate the cost of repeated conversions.
 
-A `reflex::Pattern` object is immutable (it stores a constant table) and can be
+A `reflex::Pattern` object is immutable (it stores a constant table) and may be
 shared among threads.
 
 Use `convert` with option `reflex::convert_flag::unicode` to change the meaning
@@ -687,7 +687,7 @@ groups, because only the outer top-level groups are recognized.  Because groups
 are specified at the top level only, the grouping parenthesis are optional.  We
 can simplify the regex to `"a(b)c|[A-Z]"` and still capture the two patterns.
 
-Three special methods can be used to manipulate the input stream directly:
+Three special methods may be used to manipulate the input stream directly:
 
   Method     | Result
   ---------- | ----------------------------------------------------------------
@@ -784,7 +784,7 @@ recommend to construct static pattern objects to create the FSMs only once:
       std::cout << "Found " << matcher.text() << std::endl;
 ~~~
 
-A `reflex::Pattern` object is immutable (it stores a constant table) and can be
+A `reflex::Pattern` object is immutable (it stores a constant table) and may be
 shared among threads.
 
 The RE/flex matcher only supports POSIX mode matching and does not support Perl
@@ -847,7 +847,7 @@ which in this case is the following table of 11 code words:
     };
 ~~~
 
-Option `o` can be used with `f=machine.cpp` to emit optimized native C++ code
+Option `o` may be used with `f=machine.cpp` to emit optimized native C++ code
 for the finite state machine:
 
 ~~~{.cpp}
@@ -1094,7 +1094,7 @@ Quotes (") and backslashes (\\) should be escaped in an option parameter:
 ~~~
 </div>
 
-Shorter forms can be used by omitting <i>`%%o`</i> altogether, requiring each
+Shorter forms may be used by omitting <i>`%%o`</i> altogether, requiring each
 option to be specified on a separate line:
 
 <div class="alt">
@@ -1209,7 +1209,8 @@ This option sets the tab size to `N`, where `N` > 0 must be a power of 2.  The
 tab size is used internally to determine the column position for \ref
 reflex-pattern-dents matching and to determine the column position returned by
 `columno()` and the number of columns returned by `columns()`.  It has no
-effect otherwise.
+effect otherwise.  This option assigns the `T=N` value of the `reflex::Matcher`
+constructor options at runtime.
 
 #### `-u`, `−−unicode`
 
@@ -1438,7 +1439,7 @@ function when EOF is reached.  Only applicable when `−−flex` is used for
 compatibility and when `−−flex`  and `−−bison` are used together.  Use
 `−−noyywrap` to disable the dependence on this global function.  This option
 has no effect for C++ lexer classes, which have a virtual `int wrap()` (or
-`yywrap()` with option `−−flex`) method that can be overridden.
+`yywrap()` with option `−−flex`) method that may be overridden.
 
 #### `−−exception=VALUE`
 
@@ -2329,7 +2330,7 @@ library:
   Unicode category                       | Matches
   -------------------------------------- | ------------------------------------
   `.`                                    | matches any single Unicode character except newline (including \ref invalid-utf)
-  `\X`                                   | matches any ISO-8859-1 or Unicode character (with or without the `−−unicode` option)
+  `\X`                                   | matches any Unicode character (with or without the `−−unicode` option)
   `\x{3B1}`                              | matches Unicode character U+03B1, i.e. `α`
   `\u{3B1}`                              | matches Unicode character U+03B1, i.e. `α`
   `\R`                                   | matches a Unicode line break
@@ -2645,9 +2646,10 @@ An indent and a dedent position is defined and matched with:
   `\j`    | dedent: matches a previous indent position, removes one indent stop
 
 These patterns should be used in combination with the start of a line anchor
-`^` followed by a pattern that represents left margin spacing for indentations.
-This spacing pattern may include any characters that are considered part of the
-left margin, but must exclude `\n`.  For example:
+`^` followed by a pattern that represents left margin spacing for indentations,
+followed by a `\i` or a `\j` at the end of the pattern.  The margin spacing
+pattern may include any characters that are considered part of the left margin,
+but should exclude `\n`.  For example:
 
 <div class="alt">
 ~~~{.cpp}
@@ -2657,6 +2659,7 @@ left margin, but must exclude `\n`.  For example:
     ^\h*\i    out() << "> "; // indent: matched and added with \i
     ^\h*\j    out() << "< "; // dedent: matched with \j
     \j        out() << "< "; // dedent: for each extra level dedented
+    .|\n      echo();
     %%
 ~~~
 </div>
@@ -2694,32 +2697,67 @@ and `*/`:
     ^\h*\i        out() << "> "; // indent
     ^\h*\j        out() << "< "; // dedent
     \j            out() << "< "; // dedent, for each extra indent level on the same line
+    (?^^\h+/"/*") // eat white space before /*-comments without affecting indent stops
     "/*"          matcher().push_stops(); // save the indent margin/tab stops
                   start(CONTINUE);        // continue w/o indent matching
+    .|\n          echo();
     <CONTINUE>{
     "*/"          matcher().pop_stops();  // restore the indent margin/tab stops
                   start(INITIAL);         // go back to the initial scanning state
-    .|\n          /* ignore */
+    .|\n          // ignore all content in comments
     }
 ~~~
 </div>
+
+The multi-line comments enclosed in `/*` `*/` are processed by the exclusive
+`CONTINUE` start condition rules.  Because the indent stops are not
+automatically saved and restored when switching start conditions, and because
+indent stops may be affected in rules associated with other conditions, we use
+`matcher().push_stops()` and `matcher().pop_stops()` to save and restore stops.
+
+In this example we added rules so that comments on a line do not affect the
+current indent stops.  This is done by using the negative pattern
+`(?^^\h+/"/*")` with a trailing context `/"/*"`.  We used a negative pattern to
+eat the margin spacing without affecting indent stops.  The trailing context
+looks ahead for a `/*` but does not consume the `/*`.  Likewise, we can add
+single line `//`-comments to this lexer specification.  To prevent margin
+spacing before `//`-comments from affecting indents, we can add a rule with
+pattern `(?^^\h+/"//")`.  Then adding a rule with pattern `"//".*\n` suffices
+to handle (i.e. ignore) `//`-comments.
+
+We can add the negative pattern `(?^^\h*\n)` to ignore empty lines, if desired.
+This allows empty lines in the input without affecting indent stops.
 
 The `matcher().stops()` method returns a reference to the current
 `std::vector<size_t>` of indent stop positions, which may be modified by adding
 and/or removing indent stop positions.  Make sure to keep the vector sorted.
 
-See \ref reflex-states for more information about start condition states.
+See \ref reflex-states for more information about start condition states.  See
+\ref reflex-pattern-negative for more information on negative patterns.
 
 🔝 [Back to table of contents](#)
 
 ### Negative patterns                                {#reflex-pattern-negative}
 
-A "negative pattern" can be used to consume line continuations without
-affecting the indentation levels defined by indent marker `\i`.  Negative
+When negative patterns of the form `(?^φ)` match, they are simply ignored by
+the matcher and never returned as matches.  They are useful to return matches
+for some given pattern except when this pattern is more specific.  For example,
+to match any sequence of digits except digits starting with a zero the pattern
+`\d+|(?^0\d+)` can be used instead of `[1-9]\d+`.  While these two patterns may
+look similar at first glance, these two patterns differ in that the first
+pattern (with the negative sub-pattern `(?^0\d+)`) ignores numbers with leading
+zeros such as `012` while the second pattern will match the `12` in `012`.
+
+As another example, say we are searching for a given word while ignoring
+occurrences of the word in quoted strings.  We can use the pattern
+`word|(?^".*?")` for this, where `(?^".*?")` matches all quoted strings that we
+want to ignore (to skip C/C++ quoted strings in source code input files, use
+the longer pattern `(?^"(\\.|\\\r?\n|[^\\\n"])*")`).
+
+A negative pattern can also be used to consume line continuations without
+affecting the indentation stops defined by indent marker `\i`.  Negative
 patterns are a RE/flex feature.  For example:
 
-<div class="alt">
-~~~{.cpp}
 <div class="alt">
 ~~~{.cpp}
     %o tabs=8
@@ -2729,7 +2767,8 @@ patterns are a RE/flex feature.  For example:
     ^\h*\j       out() << "< "; // dedent: matched with \j
     \j           out() << "< "; // dedent: for each extra level dedented
     (?^\\\n\h+)  /* lines ending in \ will continue on the next line
-                    without affecting the current \i tab positions */
+                    without affecting the current \i stop positions */
+    .|\n         echo();
     %%
 ~~~
 </div>
@@ -2740,12 +2779,18 @@ consume the line-ending `\` and the indent that followed it, as if this text
 was not part of the input, which ensures that the current indent positions
 defined by `\i` are not affected.
 
-Negative patterns can also be used to enhance pattern matching with the RE/flex
-regex library.  For example, to search input for a given word while ignoring
-quoted strings that may contain that word we use the pattern `word|(?^".*?")`
-where `(?^".*?")` matches all quoted strings that are not reported as matches.
-To skip C/C++ quoted strings in source code input files, use the pattern
-`(?^"(\\.|\\\r?\n|[^\\\n"])*")`.
+Note that any actions corresponding to negative patterns in the lexer
+specification are never executed, because negative pattern matches are never
+returned by the matcher engine.
+
+Negative patterns may be followed by other patterns.  So for example `(?^ab)c?`
+is correct and matches `abc` but ignores input `ab` when not followed by a `c`
+(in fact, `(?^ab)c?` can be written as `(?^ab)c`, because the negative pattern
+`ab` is the first choice and the second choice is the non-negative pattern
+`abc`).
+
+See \ref reflex-pattern-dents for more examples related to indentation
+matching.
 
 🔝 [Back to table of contents](#)
 
@@ -3084,7 +3129,7 @@ inherits Lexer and declares a public `int lex()` method:
 The `int MyLexer::lex()` method code is generated by <b>`reflex`</b> for this lexer
 specification.
 
-Options `−−lexer=NAME` and `−−lex=NAME` can be combined with `−−class=NAME` to
+Options `−−lexer=NAME` and `−−lex=NAME` may be combined with `−−class=NAME` to
 change the name of the inherited Lexer class and change the name of the `lex()`
 method, respectively.
 
@@ -3611,7 +3656,7 @@ the rules by placing them in a *start condition scope*:
 </div>
 
 Contrary to some Flex manuals, rules cannot be indented in a start condition
-scope.  Indentation is used to specify code blocks.  Code blocks can be
+scope.  Indentation is used to specify code blocks.  Code blocks may be
 indented or placed within <i>`%{`</i> and <i>`%}`</i>.  These code blocks are
 executed when the scanner is invoked.  A code block at the start of a condition
 scope is executed when the scanner is invoked and if it is in the corresponding
@@ -3829,7 +3874,7 @@ Bison:
   `−−flex` `−−bison-complete` `−−bison-locations` | `int yyFlexLexer::yylex()`                                 | no global variables
 
 Option `−−prefix` may be used with option `−−flex` to change the prefix of the
-generated `yyFlexLexer` and `yylex`.  This option can be combined with option
+generated `yyFlexLexer` and `yylex`.  This option may be combined with option
 `−−bison` to also change the prefix of the generated `yytext`, `yyleng`, and
 `yylineno`.
 
@@ -4123,7 +4168,7 @@ to suppress the default rule:
 ~~~
 </div>
 
-For option `−−bison-cc-namespace=NAME` the `NAME` can be a list of nested
+For option `−−bison-cc-namespace=NAME` the `NAME` may be a list of nested
 namespaces of the form `NAME1::NAME2::NAME3` or by separating the names by a
 dot as in `NAME1.NAME2.NAME3`.
 
@@ -4249,7 +4294,7 @@ default rule should throw a
 `yy::parser::syntax_error(location(), "Unknown token.")`.  This exception is
 caught by the parser which calls `yy::parser::error` with the value of
 `location()` and the string `"Unknown token."` as arguments.  The
-auto-generated virtual lexer class method `location()` method can be overriden
+auto-generated virtual lexer class method `location()` method may be overriden
 by a user-defined lexer class that extends `Lexer` (or extends `yyFlexLexer`
 when option `−−flex` is used).
 
@@ -4274,7 +4319,7 @@ suppress the default rule:
 ~~~
 </div>
 
-For option `−−bison-cc-namespace=NAME` the `NAME` can be a list of nested
+For option `−−bison-cc-namespace=NAME` the `NAME` may be a list of nested
 namespaces of the form `NAME1::NAME2::NAME3` or by separating the names by a
 dot as in `NAME1.NAME2.NAME3`.
 
@@ -4396,7 +4441,7 @@ automatically updated by the RE/flex scanner, so you do not need to define a
 `YY_USER_ACTION` macro as you have to with Flex.  Instead, this is done
 automatically in `yylex()` by invoking the lexer's `yylloc_update()` to update
 the line and column of the match.  The auto-generated virtual `yylloc_update()`
-method can be overriden by a user-defined lexer class that extends `Lexer` (or
+method may be overriden by a user-defined lexer class that extends `Lexer` (or
 extends `yyFlexLexer` when option `−−flex` is used).
 
 Note that with the `−−bison-location` option, `yylex()` takes an additional
@@ -4458,7 +4503,7 @@ used, `yyerror` has the signature `void yyerror(YYLTYPE *locp, char const
 with Bison pure-parsers.
 
 @note `yylval` is not a pointer argument but is always passed by reference and
-can be used as such in the scanner's rules.
+should be used as such in the scanner's rules.
 
 @note Because `YYSTYPE` is declared by the parser, do not forget to add a
 `#include "y.tab.h"` to the top of the specification of your lexer:
@@ -4493,7 +4538,7 @@ the scanner in your program:
 ### Reentrant Bison                                         {#reflex-reentrant}
 
 When <b>`reflex`</b> is used as a Flex replacement with option `−−flex` and
-`−−bison`, option `-R` or `−−reentrant` can be used to generate a reentrant
+`−−bison`, option `-R` or `−−reentrant` may be used to generate a reentrant
 scanner.  This is only useful if you use both options `−−flex` and `−−bison`,
 for example when migrating an existing project from Flex to <b>`reflex`</b>, because
 <b>`reflex`</b> by defaul generates is MT-safe scanners.  See also \ref
@@ -5218,7 +5263,7 @@ and `match_not_dot_newline`.
 
 Boost.Regex is a powerful library.  The RE/flex regex API enhances this library
 with operations to match, search, scan, and split data from a given input.  The
-input can be a file, a string, or a stream.  Files that are UTF-8/16/32-encoded
+input may be a file, a string, or a stream.  Files that are UTF-8/16/32-encoded
 are automatically decoded.  Further, streams can be of unlimited length because
 internal buffering is used by the RE/flex regex API enhancements to efficiently
 apply Boost.Regex pattern matching to streaming data.  This enhancement permits
@@ -5551,7 +5596,7 @@ matcher of your choice:
 - `std::string reflex::Matcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
   converts `regex` for use with the RE/flex POSIX regex library;
 
-where `flags` is optional.  When specified, it can be a combination of the
+where `flags` is optional.  When specified, it may be a combination of the
 following `reflex::convert_flag` flags:
 
   Flag                              | Effect
@@ -5969,7 +6014,7 @@ All methods take constant time to execute except for `str()`, `wstr()`,
 `pair()`, `wpair()`, `wsize()`, `lines()`, `columns()`, `lineno()`, and
 `columno()` that require an extra pass over the matched text.
 
-In addition, the following type casts of matcher objects and iterators can be
+In addition, the following type casts of matcher objects and iterators may be
 used for convenience:
 
 - Casting to `size_t` gives the matcher's `accept()` index.
@@ -6037,7 +6082,7 @@ the following methods:
   `pattern()`     | get the pattern object, `reflex::Pattern` or `boost::regex`
 
 The first method returns a reference to the matcher, so multiple method
-invocations can be chained together.
+invocations may be chained together.
 
 🔝 [Back to table of contents](#)
 
@@ -6057,9 +6102,9 @@ interactive, you can use the following methods:
   `reset(o)`      | resets the matcher with new options string `o` ("A?N?T?")
 
 The first method returns a reference to the matcher, so multiple method
-invocations can be chained together.
+invocations may be chained together.
 
-Four special methods can be used to read the input stream provided to a matcher
+Four special methods may be used to read the input stream provided to a matcher
 directly, even when you use the matcher's search and match methods:
 
   Method     | Result
@@ -6075,18 +6120,18 @@ code and EOF (-1) when the end of input is reached.
 A matcher reads from the specified input source using its virtual method
 `size_t get(char *s, size_t n)` that simply returns `in.get(s, n)`, that is,
 the result of the `reflex::Input::get(s, n)` method of the `reflex::Input`
-object.  This method can be overriden by a derived matcher class to customize
+object.  This method may be overriden by a derived matcher class to customize
 reading.
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
   `get(s, n)` | fill `s[0..n-1]` with next input, returns number of bytes read
-  `wrap()`    | returns false (can be overriden to wrap input after EOF)
+  `wrap()`    | returns false (may be overriden to wrap input after EOF)
 
 When a matcher reaches the end of input, it invokes the virtual method `wrap()`
 to check if more input is available.  This method returns false by default, but
-this behavior can be changed by overring `wrap()` to set a new input source and
-return `true`, for example:
+this behavior may be changed by overriding `wrap()` to set a new input source
+and return `true`, for example:
 
 ~~~{.cpp}
     class WrappedInputMatcher : public reflex::Matcher {
@@ -6135,8 +6180,8 @@ source at a time.  Input to a matcher is represented by a single
 
 ### Assigning input                                       {#regex-input-assign}
 
-An input object can be constructed by specifying a string, a file, or a stream
-to read from.  You can also reassign input to read from new input.
+An input object is constructed by specifying a string, a file, or a stream to
+read from.  You can also reassign input to read from new input.
 
 More specifically, you can pass a `std::string`, `char*`, `std::wstring`,
 `wchar_t*`, `FILE*`, or a `std::istream` to the constructor.
@@ -7128,6 +7173,10 @@ Bugs                                                                    {#bugs}
 
 Please report bugs as RE/flex GitHub
 [issues](https://github.com/Genivia/RE-flex/issues).
+
+Please make sure to rebuild and re-install the RE/flex library when new RE/flex
+versions are downloaded, because stale library versions may be incompatible
+with updated library header files of newer versions.
 
 🔝 [Back to contents](#)
 

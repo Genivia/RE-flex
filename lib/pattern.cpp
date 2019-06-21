@@ -2368,7 +2368,9 @@ void Pattern::export_code() const
         err = reflex::fopen_s(&fd, filename.c_str(), "w");
       if (!err && fd)
       {
-        ::fprintf(fd, "#ifndef REFLEX_CODE_DECL\n#include <reflex/pattern.h>\n#define REFLEX_CODE_DECL const reflex::Pattern::Opcode\n#endif\n\nREFLEX_CODE_DECL reflex_code_%s[%hu] =\n{\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), nop_);
+        ::fprintf(fd, "#ifndef REFLEX_CODE_DECL\n#include <reflex/pattern.h>\n#define REFLEX_CODE_DECL const reflex::Pattern::Opcode\n#endif\n\n");
+        write_namespace_open(fd);
+        ::fprintf(fd, "REFLEX_CODE_DECL reflex_code_%s[%hu] =\n{\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), nop_);
         for (Index i = 0; i < nop_; ++i)
         {
           Opcode opcode = opc_[i];
@@ -2419,6 +2421,7 @@ void Pattern::export_code() const
           }
         }
         ::fprintf(fd, "};\n\n");
+        write_namespace_close(fd);
         if (fd != stdout)
           ::fclose(fd);
       }
@@ -2428,32 +2431,32 @@ void Pattern::export_code() const
 
 void Pattern::write_namespace_open(FILE* fd) const
 {
-    if (opt_.z.empty())
-        return;
+  if (opt_.z.empty())
+    return;
 
-    const std::string& s = opt_.z;
-    size_t i = 0, j;
-    while ((j = s.find('.', i)) != std::string::npos)
-    {
-        ::fprintf(fd, "namespace %s {\n", s.substr(i, j - i).c_str());
-        i = j + 1;
-    }
-    ::fprintf(fd, "namespace %s {\n\n", s.substr(i).c_str());
+  const std::string& s = opt_.z;
+  size_t i = 0, j;
+  while ((j = s.find("::", i)) != std::string::npos)
+  {
+    ::fprintf(fd, "namespace %s {\n", s.substr(i, j - i).c_str());
+    i = j + 2;
+  }
+  ::fprintf(fd, "namespace %s {\n\n", s.substr(i).c_str());
 }
 
 void Pattern::write_namespace_close(FILE* fd) const
 {
-    if (opt_.z.empty())
-        return;
+  if (opt_.z.empty())
+    return;
 
-    const std::string& s = opt_.z;
-    size_t i = 0, j;
-    while ((j = s.find('.', i)) != std::string::npos)
-    {
-        ::fprintf(fd, "} // namespace %s\n", s.substr(i, j - i).c_str());
-        i = j + 1;
-    }
-    ::fprintf(fd, "} // namespace %s\n", s.substr(i).c_str());
+  const std::string& s = opt_.z;
+  size_t i = 0, j;
+  while ((j = s.find("::", i)) != std::string::npos)
+  {
+    ::fprintf(fd, "} // namespace %s\n", s.substr(i, j - i).c_str());
+    i = j + 2;
+  }
+  ::fprintf(fd, "} // namespace %s\n", s.substr(i).c_str());
 }
 
 

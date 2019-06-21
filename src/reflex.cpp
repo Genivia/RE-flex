@@ -832,9 +832,6 @@ std::string Reflex::get_name(size_t& pos)
   size_t loc = pos++;
   while (pos < linelen)
   {
-    // if (line.at(pos) == '-') // normalize - to _
-      // line[pos] = '_';
-    // else
     if (!std::isalnum(line.at(pos)) && line.at(pos) != '_' && line.at(pos) != '-' && line.at(pos) != '.' && (line.at(pos) & 0x80) != 0x80)
       break;
     ++pos;
@@ -850,13 +847,10 @@ std::string Reflex::get_namespace(size_t& pos)
   size_t loc = pos++;
   while (pos < linelen)
   {
-    // if (line.at(pos) == '-') // normalize - to _
-      // line[pos] = '_';
-    // else 
-    if (!std::isalnum(line.at(pos)) && line.at(pos) != '_' && line.at(pos) != '-' && line.at(pos) != '.' && (line.at(pos) & 0x80) != 0x80)
-      break;
-    if (line.at(pos) == ':' && pos + 1 < linelen && line.at(pos + 1) == ':')
+    if (line.at(pos) == ':' && pos + 1 < linelen && line.at(pos + 1) == ':') // parse ::
       ++pos;
+    else if (!std::isalnum(line.at(pos)) && line.at(pos) != '_' && line.at(pos) != '-' && line.at(pos) != '.' && (line.at(pos) & 0x80) != 0x80)
+      break;
     ++pos;
   }
   return line.substr(loc, pos - loc);
@@ -1601,7 +1595,7 @@ void Reflex::write()
           out = &ofs;
         }
       }
-      write_regex(patterns[start]);
+      write_regex(NULL, patterns[start]);
       *out << std::endl;
       if (!ofs.good())
         abort("error in writing");
@@ -2420,16 +2414,14 @@ void Reflex::write_lexer()
       }
       else
       {
-        *out << "  static const reflex::Pattern PATTERN_" << conditions[start] << "(";
-        write_regex(patterns[start]);
-        *out << ");\n";
+        write_regex(&conditions[start], patterns[start]);
+        *out << "  static const reflex::Pattern PATTERN_" << conditions[start] << "(REGEX_" << conditions[start] << ");\n";
       }
     }
     else
     {
-      *out << "  static const " << library->pattern << " PATTERN_" << conditions[start] << "(";
-      write_regex(patterns[start]);
-      *out << ");\n";
+      write_regex(&conditions[start], patterns[start]);
+      *out << "  static const " << library->pattern << " PATTERN_" << conditions[start] << "(REGEX_" << conditions[start] << ");\n";
     }
   }
   *out <<
@@ -2676,19 +2668,49 @@ void Reflex::write_main()
   }
 }
 
-/// Write regex string to lex.yy.cpp by escaping \ and ", prevent trigraphs
-void Reflex::write_regex(const std::string& regex)
+/// Write regex string to lex.yy.cpp by escaping \ and ", prevent trigraphs, very long strings are represented by character arrays
+void Reflex::write_regex(const std::string *condition, const std::string& regex)
 {
-  *out << "\"";
-  int c = '\0';
-  for (std::string::const_iterator i = regex.begin(); i != regex.end(); ++i)
+  // output a string if start condition == NULL (--regexp-file option) or when the string is not too long
+  if (!condition ||
+#ifdef OS_WIN
+      regex.size() <= 16384
+#else
+      regex.size() <= 65536
+#endif
+     )
   {
-    if (*i == '\\' || *i == '"' || (*i == '?' && c == '?'))
-      *out << "\\";
-    *out << *i;
-    c = *i;
+    if (condition)
+      *out << "  static const char *REGEX_" << *condition << " = ";
+    *out << "\"";
+    int c = '\0';
+    for (std::string::const_iterator i = regex.begin(); i != regex.end(); ++i)
+    {
+      if (*i == '\\' || *i == '"' || (*i == '?' && c == '?'))
+        *out << "\\";
+      *out << *i;
+      c = *i;
+    }
+    *out << "\"";
   }
-  *out << "\"";
+  else
+  {
+    if (condition)
+      *out << "  static const char REGEX_" << *condition << "[" << regex.size() + 1 << "] = ";
+    *out << "{ ";
+    for (std::string::const_iterator i = regex.begin(); i != regex.end(); ++i)
+    {
+      if (*i == '\\')
+        *out << "'\\\\',";
+      else if (std::isprint(*i))
+        *out << "'" << *i << "', ";
+      else
+        *out << static_cast<unsigned int>(*i) << ", ";
+    }
+    *out << "0 }";
+  }
+  if (condition)
+    *out << ";\n";
 }
 
 /// Write namespace openings NAME {
@@ -2769,7 +2791,7 @@ void Reflex::stats()
       std::string option = "r";
       option.append(";n=").append(conditions[start]);
       if (!options["namespace"].empty())
-          option.append(";z=").append(options["namespace"]);
+        option.append(";z=").append(options["namespace"]);
       if (options["graphs_file"] == "true")
         option.append(";f=reflex.").append(conditions[start]).append(".gv");
       else if (!options["graphs_file"].empty())

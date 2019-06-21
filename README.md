@@ -443,6 +443,7 @@ Changelog
 - Apr 29, 2019: 1.2.0 added `--bison-complete` option, new ugrep utility example, updated manual, fixes minor issues.
 - May 15, 2019: 1.2.1 added `reflex::convert_flag::basic` to convert BRE syntax to ERE syntax, used by [ugrep](https://github.com/Genivia/ugrep).
 - May 28, 2019: 1.2.2 fixed MinGW builds, fixed `reflex::Input::get()` to return positive character code, matcher option `"N"` for `scan` and `find` matches empty input (`^$`).
+- Jun 21, 2019: 1.2.3 fixed reflex long regex string generation, namespaces with option `--full`, updated documentation and other improvements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

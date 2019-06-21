@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Reflex Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue May 28 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Fri Jun 21 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -273,9 +273,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a73708c3b7e0c165a4199abc159c6c2ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a73708c3b7e0c165a4199abc159c6c2ef">write_main</a> ()</td></tr>
 <tr class="memdesc:a73708c3b7e0c165a4199abc159c6c2ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write <a class="el" href="class_reflex.html#a27dfea948be151721bc24f15e1918a89" title="Main program. ">main()</a> to lex.yy.cpp.  <a href="#a73708c3b7e0c165a4199abc159c6c2ef">More...</a><br /></td></tr>
 <tr class="separator:a73708c3b7e0c165a4199abc159c6c2ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e6d38447a7f80104078f52437ca38f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a1e6d38447a7f80104078f52437ca38f8">write_regex</a> (const std::string &amp;regex)</td></tr>
-<tr class="memdesc:a1e6d38447a7f80104078f52437ca38f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write regex string to lex.yy.cpp by escaping \ and ", prevent trigraphs.  <a href="#a1e6d38447a7f80104078f52437ca38f8">More...</a><br /></td></tr>
-<tr class="separator:a1e6d38447a7f80104078f52437ca38f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac53cf0387ce042bb427f666ab2b9b614"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ac53cf0387ce042bb427f666ab2b9b614">write_regex</a> (const std::string *condition, const std::string &amp;regex)</td></tr>
+<tr class="memdesc:ac53cf0387ce042bb427f666ab2b9b614"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write regex string to lex.yy.cpp by escaping \ and ", prevent trigraphs, very long strings are represented by character arrays.  <a href="#ac53cf0387ce042bb427f666ab2b9b614">More...</a><br /></td></tr>
+<tr class="separator:ac53cf0387ce042bb427f666ab2b9b614"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35b38c4bff914c0a8cbb2bc8d2200f16"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a35b38c4bff914c0a8cbb2bc8d2200f16">write_namespace_open</a> ()</td></tr>
 <tr class="memdesc:a35b38c4bff914c0a8cbb2bc8d2200f16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write namespace openings NAME {.  <a href="#a35b38c4bff914c0a8cbb2bc8d2200f16">More...</a><br /></td></tr>
 <tr class="separator:a35b38c4bff914c0a8cbb2bc8d2200f16"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1804,7 +1804,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a1e6d38447a7f80104078f52437ca38f8"></a>
+<a class="anchor" id="ac53cf0387ce042bb427f666ab2b9b614"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1814,9 +1814,19 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reflex::write_regex </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>regex</em></td><td>)</td>
+          <td class="paramtype">const std::string *&#160;</td>
+          <td class="paramname"><em>condition</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>regex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -1826,7 +1836,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Write regex string to lex.yy.cpp by escaping \ and ", prevent trigraphs. </p>
+<p>Write regex string to lex.yy.cpp by escaping \ and ", prevent trigraphs, very long strings are represented by character arrays. </p>
 
 </div>
 </div>
@@ -2451,7 +2461,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue May 28 2019 12:04:41 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Fri Jun 21 2019 11:58:06 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

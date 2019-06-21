@@ -328,6 +328,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   bool indent(size_t& col) ///< indent column counter
     /// @returns true if indent.
   {
+    mrk_ = true;
     newline(col);
     return col > 0 && (tab_.empty() || tab_.back() < col);
   }
@@ -335,6 +336,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   bool dedent(size_t& col) ///< indent column counter
     /// @returns true if dedent.
   {
+    mrk_ = true;
     newline(col);
     return !tab_.empty() && tab_.back() > col;
   }
@@ -343,6 +345,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   std::vector<int>  lap_; ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
   std::stack<Stops> stk_; ///< stack to push/pop stops
   FSM               fsm_; ///< local state for FSM code
+  bool              mrk_; ///< indent \i or dedent \j in pattern found: should check and update indent stops
 };
 
 } // namespace reflex
