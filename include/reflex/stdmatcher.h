@@ -83,7 +83,8 @@ class StdMatcher : public PatternMatcher<std::regex> {
   virtual void reset(const char *opt = NULL)
   {
     DBGLOG("StdMatcher::reset()");
-    itr_ = fin_;
+    flg_ = std::regex_constants::match_flag_type();
+    itr_ = fin_ = std::cregex_iterator();
     PatternMatcher::reset(opt);
     buffer(); // no partial matching supported: buffer all input
   }
@@ -179,6 +180,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
         if (grow()) // make sure we have enough storage to read input
           itr_ = fin_; // buffer shifting/growing invalidates iterator
         end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_); // get() may also wrap()
+        DBGLOGN("Got more input pos = %zu end = %zu max = %zu", pos_, end_, max_);
       }
       if (pos_ == end_) // if pos_ is hitting the end_ then
       {
@@ -230,6 +232,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
       {
         DBGLOGN("Match, pos = %zu", pos_);
         pos_ = (*itr_)[0].second - buf_; // set pos_ to last of the match
+        DBGLOGN("Match, new pos = %zu end_ = %zu", pos_, end_);
       }
       else // no match
       {

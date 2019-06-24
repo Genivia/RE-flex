@@ -85,7 +85,8 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   virtual void reset(const char *opt = NULL)
   {
     DBGLOG("BoostMatcher::reset()");
-    itr_ = fin_;
+    flg_ = boost::match_flag_type();
+    itr_ = fin_ = boost::cregex_iterator();
     PatternMatcher::reset(opt);
   }
   using PatternMatcher::pattern;
@@ -164,6 +165,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
         if (grow()) // make sure we have enough storage to read input
           itr_ = fin_; // buffer shifting/growing invalidates iterator
         end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
+        DBGLOGN("Got more input pos = %zu end = %zu max = %zu", pos_, end_, max_);
       }
       if (pos_ == end_) // if pos_ is hitting the end_ then
       {

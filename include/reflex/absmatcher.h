@@ -179,12 +179,8 @@ class AbstractMatcher {
         matcher_(matcher),
         method_(method)
     {
-      if (matcher_)
-      {
-        matcher_->reset();
-        if (matcher_->match(method_) == 0)
-          matcher_ = NULL;
-      }
+      if (matcher_ && matcher_->match(method_) == 0)
+        matcher_ = NULL;
     }
    private:
     AbstractMatcher *matcher_; ///< the matcher used by this iterator
@@ -301,7 +297,7 @@ class AbstractMatcher {
     if (n > 0)
     {
       (void)grow(n + 1); // now attempt to fetch all (remaining) data to store in the buffer, +1 for a \0
-      end_ = get(buf_, n);
+      end_ += get(buf_, n);
     }
     while (in.good()) // there is more to get while good(), e.g. via wrap()
     {
@@ -550,7 +546,7 @@ class AbstractMatcher {
   {
     return first() + size();
   }
-  /// Returns true if this matcher is at the start of an input character sequence. Use reset() to restart input.
+  /// Returns true if this matcher is at the start of an input character sequence. Use reset() to restart reading new input.
   bool at_bob() const
     /// @returns true if at the begin of an input sequence.
   {
