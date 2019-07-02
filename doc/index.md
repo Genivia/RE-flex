@@ -215,7 +215,7 @@ scan over C/C++ source code input to match multiline comments that start with a
 
 Another argument to use this code with Flex is that the internal Flex buffer is
 limited to 16KB.  By contrast, RE/flex buffers are dynamically resized and will
-accept long matches.
+never run out to accept long matches.
 
 Workarounds such as these are not necessary with RE/flex.  The RE/flex scanners
 use regex libraries with expressive pattern syntax.  We can use lazy repetition
@@ -253,7 +253,7 @@ before `ASCII_IDENTIFIER`.
 
 For this reason, RE/flex scanners use a regex library in POSIX mode by default.
 
-In summary, the advantages that RE/flex has to offer include:
+In summary:
 
 - RE/flex is fully compatible with Flex and Bison, by using the `−−flex` and/or
   `−−bison` options.  This eliminates a learning curve to use RE/flex.
@@ -2020,29 +2020,27 @@ when the stack is empty.  When `false`, `has_matcher()` returns `false` and
 `ptr_matcher()` returns `NULL`.  See also \ref reflex-multiple-input.
 
 The following Flex functions are also supported with <b>`reflex`</b> option
-`−−flex` and take `std::string` and `char*` arguments:
+`−−flex`:
 
   Flex action                   | Result
   ----------------------------- | ---------------------------------------------
-  `yy_scan_string(string)`      | scan `string`
-  `yy_scan_buffer(string, len)` | scan `string` upto length `len`
-  `yy_scan_bytes(bytes, len)`   | scan `bytes` upto length `len`
+  `yy_scan_string(string)`      | scan `string` (`std::string` or `char*`)
+  `yy_scan_buffer(string, len)` | scan `char *string` up to length `size_t len`
+  `yy_scan_bytes(bytes, len)`   | scan `char *bytes` up to length `int len`
 
-In addition, the following wide string versions take `std::wstring` and
-`wchar_t*` arguments:
+In addition, the following wide string version is available in RE/flex:
   
   RE/flex action                 | Result
   ------------------------------ | --------------------------------------------
-  `yy_scan_wstring(string)`      | scan wide `string`
-  `yy_scan_wbuffer(string, len)` | scan wide `string` upto length `len`
+  `yy_scan_wstring(string)`      | scan `string` (`std::wstring` or `wchar_t*`)
 
 These functions create a new buffer (i.e. a new matcher in RE/flex).  A pointer
 to the new buffer is returned, which becomes the `YY_CURRENT_BUFFER`.  You
 should delete this new buffer with `yy_delete_buffer(YY_CURRENT_BUFFER)` when
 you are done with it.
 
-These functions take an extra last `yyscan_t` argument for reentrant Flex
-scanners generated with option `−−reentrant`.
+These functions take an extra last `yyscan_t` argument for reentrant scanners
+generated with option `−−reentrant`.
 
 The generated scanner reads from the standard input by default or from an input
 source specified as a `reflex::Input` object, such as a string, wide string,
@@ -3204,21 +3202,59 @@ To switch input to another source while using the scanner, use `in(i)` with
 `reflex::Input i`:
 
 ~~~{.cpp}
-    // read from a file, this also decodes UTF-16/32 encodings automatically
+    // read from a file, this also decodes UTF-8/16/32 encodings automatically
     FILE *fd = fopen("cow.txt", "r");
     if (fd)
       lexer.in(fd);
 
-    // read from a stream (as is, can be ASCII or UTF-8)
+    // read from a stream (ASCII or UTF-8)
     std::istream i = std::ifstream("file", std::ifstream::in);
     lexer.in(i);
 
-    // read from a string (as is, can be ASCII or UTF-8)
+    // read from a string (0-terminated, ASCII or UTF-8)
     lexer.in("How now brown cow.");
 
-    // read from a wide string, encoding it to UTF-8 for matching
+    // read from a memory segment (raw bytes, ASCII, or UTF-8)
+    const char *memptr = ...; // points to segment
+    size_t memlen = ...;      // length of the memory segment
+    lexer.in(reflex::Input(memptr, memlen));
+
+    // read from a wide string, 0-terminated, encoding it to UTF-8 for matching
     lexer.in(L"How now brown cow.");
 ~~~
+
+With options `−−flex` and `−−bison` you can also use Flex functions:
+
+~~~{.cpp}
+    // read from a file, this also decodes UTF-8/16/32 encodings automatically
+    FILE *fd = fopen("cow.txt", "r");
+    if (fd)
+      yyin = fd;
+
+    // read from a stream (ASCII or UTF-8)
+    std::istream i = std::ifstream("file", std::ifstream::in);
+    yyin = &i;
+
+    // read from a string (0-terminated, ASCII or UTF-8)
+    yy_scan_string("How now brown cow."); // new buffer to scan a string
+    // yyin = "How now brown cow.";       // alternative, does not create a new buffer
+
+    // read from a memory segment (raw bytes, ASCII, or UTF-8)
+    const char *memptr = ...; // points to memory segment
+    size_t memlen = ...;      // length of the memory segment
+    yy_scan_buffer(memptr, memlen); // new buffer to scan memory
+
+    // read from a wide string, 0-terminated, encoding it to UTF-8 for matching
+    yy_scan_wstring(L"How now brown cow."); // new buffer to scan a wide string
+    // yyin = L"How now brown cow.";        // alternative, does not create a new buffer
+~~~
+
+The `yy_scan_string`, `yy_scan_buffer`, and `yy_scan_wstring` functions create
+a new buffer (i.e. a new matcher in RE/flex).  A pointer to the new buffer is
+returned, which becomes the `YY_CURRENT_BUFFER`.  You should delete this new
+buffer with `yy_delete_buffer(YY_CURRENT_BUFFER)` when you are done with it.
+These functions take an extra last `yyscan_t` argument for reentrant scanners
+generated with option `−−reentrant`.
 
 Invoking `in(i)` also resets the lexer's matcher (internally with
 `matcher.reset()`).  This clears the line and column counters, resets the
@@ -3276,7 +3312,7 @@ the scanner terminates and returns zero to its caller.  If `wrap()` returns
 zero (0) then the scanner continues.  In this case `wrap()` should set up a new
 input source to scan.
 
-For example, continuing reading from `std:in` after some other input source
+For example, continuing reading from `std:cin` after some other input source
 reached EOF:
 
 <div class="alt">
@@ -3284,7 +3320,7 @@ reached EOF:
     %class{
       virtual int wrap() // note: yywrap() when option −−flex is used
       {
-        in(std::in);
+        in(std::cin);
         return in().good() ? 0 : 1;
       }
     %}
@@ -3304,7 +3340,7 @@ derived lexer class with option `class=NAME` (or `yyclass=NAME`), override the
        public:
         virtual int wrap() // note: yywrap() when option −−flex is used
         {
-          in(std::in);
+          in(std::cin);
           return in().good() ? 0 : 1;
         }
       };
@@ -6233,8 +6269,8 @@ raw binary content that contains zeros, use a `std::istringstream`.
 ### Input streams                                        {#regex-input-streams}
 
 An input object constructed from a `std::istream` (or a derived class) just
-passes the input text to the matcher engine.  The stream should contain ASCII,
-or may contain UTF-8 when Unicode patterns are used.
+passes the input text to the matcher engine.  The stream should contain ASCII
+and may contain UTF-8.
 
 🔝 [Back to table of contents](#)
 
@@ -6335,13 +6371,37 @@ To obtain the properties of an input source use the following methods:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
-  `size()`    | size of the input in total bytes (encoded) or zero when unknown
+  `size()`    | size in bytes of the remaining input, zero when EOF or unknown
   `good()`    | input is available to read (no error and not EOF)
   `eof()`     | end of input (but use only `at_end()` with matchers!)
   `cstring()` | the current `const char*` (of a `std::string`) or NULL
   `wstring()` | the current `const wchar_t*` (of a `std::wstring`) or NULL
   `file()`    | the current `FILE*` file descriptor or NULL
   `istream()` | a `std::istream*` pointer to the current stream object or NULL
+
+🔝 [Back to table of contents](#)
+
+### Input streambuf                                    {#regex-input-streambuf}
+
+We can use a `reflex::Input` object as a `std::streambuf` and pass it to a
+`std::istream`.  This means that the stream automatically normalizes the input
+to UTF-8.
+
+~~~{.cpp}
+    reflex::Input input(...);                  // create an Input object for some given input
+    reflex::Input::streambuf streambuf(input); // create a streambuf
+    std::istream is(&streambuf);
+    if (is.good())
+    {
+      // read the stream
+    }
+~~~
+
+The `reflex::Input` object may be created from strings, wide strings, streams,
+and `FILE*` values.  These are readable as a `std::istream` via
+`reflex::Input::streambuf` that returns normalized UTF-8 characters.  For
+`FILE*` values we can specify \ref regex-input-file to normalize the encoded
+input to UTF-8.
 
 🔝 [Back to table of contents](#)
 

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Jun 24 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Jul 2 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -54,8 +54,7 @@
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classreflex_1_1_input-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">reflex::Input Class Reference</div>  </div>
@@ -83,6 +82,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1file__encoding.html">file_encoding</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common <a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a> constants.  <a href="structreflex_1_1_input_1_1file__encoding.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1streambuf.html">streambuf</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream buffer for <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a>, derived from std::streambuf.  <a href="classreflex_1_1_input_1_1streambuf.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -98,6 +100,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8b27ba4af25d4add45d0e09bc2420e22"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a8b27ba4af25d4add45d0e09bc2420e22">Input</a> ()</td></tr>
 <tr class="memdesc:a8b27ba4af25d4add45d0e09bc2420e22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct empty input character sequence.  <a href="#a8b27ba4af25d4add45d0e09bc2420e22">More...</a><br /></td></tr>
 <tr class="separator:a8b27ba4af25d4add45d0e09bc2420e22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a578996e4f28eed9c8ee2a7997d51a3c6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a578996e4f28eed9c8ee2a7997d51a3c6">Input</a> (const char *<a class="el" href="classreflex_1_1_input.html#ac242a6592c2f0b8e06766197981558fc">cstring</a>, size_t <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31">size</a>)</td></tr>
+<tr class="memdesc:a578996e4f28eed9c8ee2a7997d51a3c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a char* string.  <a href="#a578996e4f28eed9c8ee2a7997d51a3c6">More...</a><br /></td></tr>
+<tr class="separator:a578996e4f28eed9c8ee2a7997d51a3c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09465211ad37559885e2e85e9fc18791"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a09465211ad37559885e2e85e9fc18791">Input</a> (const char *<a class="el" href="classreflex_1_1_input.html#ac242a6592c2f0b8e06766197981558fc">cstring</a>)</td></tr>
 <tr class="memdesc:a09465211ad37559885e2e85e9fc18791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a NUL-terminated string.  <a href="#a09465211ad37559885e2e85e9fc18791">More...</a><br /></td></tr>
 <tr class="separator:a09465211ad37559885e2e85e9fc18791"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,32 +189,29 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae553aa63a3a04e836b8aed8ef524a92e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#ae553aa63a3a04e836b8aed8ef524a92e">file_encoding</a> () const </td></tr>
 <tr class="memdesc:ae553aa63a3a04e836b8aed8ef524a92e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get encoding of the current <code>FILE*</code> input.  <a href="#ae553aa63a3a04e836b8aed8ef524a92e">More...</a><br /></td></tr>
 <tr class="separator:ae553aa63a3a04e836b8aed8ef524a92e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
 <tr class="memitem:a3b77d701d8ad80bd4e235e397c180bd5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a3b77d701d8ad80bd4e235e397c180bd5">init</a> ()</td></tr>
 <tr class="memdesc:a3b77d701d8ad80bd4e235e397c180bd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the file size is known.  <a href="#a3b77d701d8ad80bd4e235e397c180bd5">More...</a><br /></td></tr>
 <tr class="separator:a3b77d701d8ad80bd4e235e397c180bd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2504b809d5be558d426618737c3e168d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a2504b809d5be558d426618737c3e168d">file_init</a> ()</td></tr>
-<tr class="memdesc:a2504b809d5be558d426618737c3e168d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a3b77d701d8ad80bd4e235e397c180bd5" title="Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the f...">init()</a> on a FILE*.  <a href="#a2504b809d5be558d426618737c3e168d">More...</a><br /></td></tr>
+<tr class="memdesc:a2504b809d5be558d426618737c3e168d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by <a class="el" href="classreflex_1_1_input.html#a3b77d701d8ad80bd4e235e397c180bd5" title="Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the f...">init()</a> for a FILE*.  <a href="#a2504b809d5be558d426618737c3e168d">More...</a><br /></td></tr>
 <tr class="separator:a2504b809d5be558d426618737c3e168d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ba3f1e2d412fafce6245f38b4381fcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a7ba3f1e2d412fafce6245f38b4381fcb">wstring_size</a> ()</td></tr>
+<tr class="memdesc:a7ba3f1e2d412fafce6245f38b4381fcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> for a wstring.  <a href="#a7ba3f1e2d412fafce6245f38b4381fcb">More...</a><br /></td></tr>
+<tr class="separator:a7ba3f1e2d412fafce6245f38b4381fcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d09f141e2ced0bc27129809cdbfc4f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a7d09f141e2ced0bc27129809cdbfc4f1">file_size</a> ()</td></tr>
+<tr class="memdesc:a7d09f141e2ced0bc27129809cdbfc4f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> for a FILE*.  <a href="#a7d09f141e2ced0bc27129809cdbfc4f1">More...</a><br /></td></tr>
+<tr class="separator:a7d09f141e2ced0bc27129809cdbfc4f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a603cfde978e8ff1153073540ff39aae8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a603cfde978e8ff1153073540ff39aae8">istream_size</a> ()</td></tr>
+<tr class="memdesc:a603cfde978e8ff1153073540ff39aae8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> for a std::istream.  <a href="#a603cfde978e8ff1153073540ff39aae8">More...</a><br /></td></tr>
+<tr class="separator:a603cfde978e8ff1153073540ff39aae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37dd7c46da3413a52866bee4bb060cc5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a37dd7c46da3413a52866bee4bb060cc5">file_get</a> (char *s, size_t n)</td></tr>
 <tr class="memdesc:a37dd7c46da3413a52866bee4bb060cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a> on a FILE*.  <a href="#a37dd7c46da3413a52866bee4bb060cc5">More...</a><br /></td></tr>
 <tr class="separator:a37dd7c46da3413a52866bee4bb060cc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d09f141e2ced0bc27129809cdbfc4f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a7d09f141e2ced0bc27129809cdbfc4f1">file_size</a> ()</td></tr>
-<tr class="memdesc:a7d09f141e2ced0bc27129809cdbfc4f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> on a FILE*.  <a href="#a7d09f141e2ced0bc27129809cdbfc4f1">More...</a><br /></td></tr>
-<tr class="separator:a7d09f141e2ced0bc27129809cdbfc4f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afcc853661b71a0e10a1a37cb477d16fd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#afcc853661b71a0e10a1a37cb477d16fd">file_good</a> ()</td></tr>
-<tr class="memdesc:afcc853661b71a0e10a1a37cb477d16fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">good()</a> operation on a FILE*.  <a href="#afcc853661b71a0e10a1a37cb477d16fd">More...</a><br /></td></tr>
-<tr class="separator:afcc853661b71a0e10a1a37cb477d16fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5ac0b2d8793081840a6dfdb9766a3a9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#ac5ac0b2d8793081840a6dfdb9766a3a9">file_eof</a> ()</td></tr>
-<tr class="memdesc:ac5ac0b2d8793081840a6dfdb9766a3a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931" title="Check if input reached EOF. ">eof()</a> on a FILE*.  <a href="#ac5ac0b2d8793081840a6dfdb9766a3a9">More...</a><br /></td></tr>
-<tr class="separator:ac5ac0b2d8793081840a6dfdb9766a3a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
 <tr class="memitem:ac621d556b409c90464780ea44b8d6570"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#ac621d556b409c90464780ea44b8d6570">cstring_</a></td></tr>
-<tr class="memdesc:ac621d556b409c90464780ea44b8d6570"><td class="mdescLeft">&#160;</td><td class="mdescRight">NUL-terminated char string input (when non-null)  <a href="#ac621d556b409c90464780ea44b8d6570">More...</a><br /></td></tr>
+<tr class="memdesc:ac621d556b409c90464780ea44b8d6570"><td class="mdescLeft">&#160;</td><td class="mdescRight">char string input (when non-null) of length <a class="el" href="classreflex_1_1_input.html#a4ca4ea90ef6f28c106a6811ff21bcc2b" title="size of the remaining input in bytes (size_ == 0 may indicate unset value) ">reflex::Input::size_</a>  <a href="#ac621d556b409c90464780ea44b8d6570">More...</a><br /></td></tr>
 <tr class="separator:ac621d556b409c90464780ea44b8d6570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6107c7aabf9c28a777c3942442c3b22f"><td class="memItemLeft" align="right" valign="top">const wchar_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a6107c7aabf9c28a777c3942442c3b22f">wstring_</a></td></tr>
 <tr class="memdesc:a6107c7aabf9c28a777c3942442c3b22f"><td class="mdescLeft">&#160;</td><td class="mdescRight">NUL-terminated wide string input (when non-null)  <a href="#a6107c7aabf9c28a777c3942442c3b22f">More...</a><br /></td></tr>
@@ -221,7 +223,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memdesc:a5293a8f00869af77ce8036312d78591c"><td class="mdescLeft">&#160;</td><td class="mdescRight">stream input (when non-null)  <a href="#a5293a8f00869af77ce8036312d78591c">More...</a><br /></td></tr>
 <tr class="separator:a5293a8f00869af77ce8036312d78591c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ca4ea90ef6f28c106a6811ff21bcc2b"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a4ca4ea90ef6f28c106a6811ff21bcc2b">size_</a></td></tr>
-<tr class="memdesc:a4ca4ea90ef6f28c106a6811ff21bcc2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">size of the input in bytes, when known  <a href="#a4ca4ea90ef6f28c106a6811ff21bcc2b">More...</a><br /></td></tr>
+<tr class="memdesc:a4ca4ea90ef6f28c106a6811ff21bcc2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">size of the remaining input in bytes (size_ == 0 may indicate unset value)  <a href="#a4ca4ea90ef6f28c106a6811ff21bcc2b">More...</a><br /></td></tr>
 <tr class="separator:a4ca4ea90ef6f28c106a6811ff21bcc2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fb61be8907f3204e7b3583aaa5b72da"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a2fb61be8907f3204e7b3583aaa5b72da">utf8_</a> [8]</td></tr>
 <tr class="memdesc:a2fb61be8907f3204e7b3583aaa5b72da"><td class="mdescLeft">&#160;</td><td class="mdescRight">UTF-8 conversion buffer.  <a href="#a2fb61be8907f3204e7b3583aaa5b72da">More...</a><br /></td></tr>
@@ -250,6 +252,7 @@ Protected Attributes</h2></td></tr>
 <li><code>size_t <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">Input::size()</a>;</code> returns the number of ASCII/UTF-8 bytes available to read from the source input or zero (zero is also returned when the size is not determinable). Use this function only before reading input with <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a>. Wide character strings and UTF-16 <code>FILE*</code> content is counted as the total number of UTF-8 bytes that will be produced by <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a>. The size of a <code>std::istream</code> cannot be determined.</li>
 <li><code>bool <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">Input::good()</a>;</code> returns true if the input is readable and has no EOF or error state. Returns false on EOF or if an error condition is present.</li>
 <li><code>bool <a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931" title="Check if input reached EOF. ">Input::eof()</a>;</code> returns true if the input reached EOF. Note that <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">good()</a> == ! <a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931" title="Check if input reached EOF. ">eof()</a> for string source input only, since files and streams may have error conditions that prevent reading. That is, for files and streams <a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931" title="Check if input reached EOF. ">eof()</a> implies <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">good()</a> == false, but not vice versa. Thus, an error is diagnosed when the condition <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">good()</a> == false &amp;&amp; <a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931" title="Check if input reached EOF. ">eof()</a> == false holds. Note that get(buf, len) == 0 &amp;&amp; len &gt; 0 implies <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">good()</a> == false.</li>
+<li><code>class Input::streambbuf(const Input&amp;)</code> creates a <code>std::istream</code> for the given <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a></code> object.</li>
 <li>Compile with <code>WITH_UTF8_UNRESTRICTED</code> to enable unrestricted UTF-8 beyond U+10FFFF, permitting lossless UTF-8 encoding of 32 bit words without limits.</li>
 </ul>
 <h2>Example </h2>
@@ -268,7 +271,8 @@ Protected Attributes</h2></td></tr>
 <p>The following example shows how to use the <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class to convert a wide character string to UTF-8:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(L<span class="stringliteral">&quot;Copyright ©&quot;</span>); <span class="comment">// © is unicode U+00A9 and UTF-8 C2 A9</span></div><div class="line"><span class="keywordtype">size_t</span> len = input.size(); <span class="comment">// size of UTF-8 string</span></div><div class="line"><span class="keywordtype">char</span> *buf = <span class="keyword">new</span> <span class="keywordtype">char</span>[len + 1];</div><div class="line">input.get(buf, len);</div><div class="line">buf[len] = <span class="charliteral">&#39;\0&#39;</span>; <span class="comment">// make \0-terminated</span></div></div><!-- fragment --><h2>Example </h2>
 <p>The following example shows how to switch source inputs while reading input byte by byte (use a buffer as shown in other examples to improve efficiency):</p>
-<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input = <span class="stringliteral">&quot;Hello&quot;</span>;</div><div class="line">std::string message;</div><div class="line"><span class="keywordtype">char</span> c;</div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div><div class="line">input = L<span class="stringliteral">&quot; world! To ∞ and beyond.&quot;</span>; <span class="comment">// switch input to a wide string</span></div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div></div><!-- fragment --> </div><h2 class="groupheader">Member Typedef Documentation</h2>
+<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input = <span class="stringliteral">&quot;Hello&quot;</span>;</div><div class="line">std::string message;</div><div class="line"><span class="keywordtype">char</span> c;</div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div><div class="line">input = L<span class="stringliteral">&quot; world! To ∞ and beyond.&quot;</span>; <span class="comment">// switch input to a wide string</span></div><div class="line"><span class="keywordflow">while</span> (input.<a class="code" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114">get</a>(&amp;c, 1))</div><div class="line">  message.append(c);</div></div><!-- fragment --><h2>Example </h2>
+<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(fopen(<span class="stringliteral">&quot;legacy.txt&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>), <a class="code" href="structreflex_1_1_input_1_1file__encoding.html#ad80ba65b2eb9e237939b29a4758d8dda">reflex::Input::file_encoding::ebcdic</a>);</div><div class="line"><span class="keywordflow">if</span> (input.<a class="code" href="classreflex_1_1_input.html#a948d77cb9989bf0ca0ce99ac3afd8a33">file</a>() == NULL)</div><div class="line">  abort();</div><div class="line"><a class="code" href="classreflex_1_1_input_1_1streambuf.html">reflex::Input::streambuf</a> streambuf(input);</div><div class="line">std::istream stream(&amp;streambuf);</div><div class="line">std::string data;</div><div class="line"><span class="keywordtype">int</span> c;</div><div class="line"><span class="keywordflow">while</span> ((c = stream.get()) != EOF)</div><div class="line">  data.append(c);</div><div class="line">fclose(input.<a class="code" href="classreflex_1_1_input.html#a948d77cb9989bf0ca0ce99ac3afd8a33">file</a>());</div></div><!-- fragment --> </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a70e8550b0b1649b2cd49b1b872949cc8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -338,6 +342,49 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Construct empty input character sequence. </p>
+
+</div>
+</div>
+<a class="anchor" id="a578996e4f28eed9c8ee2a7997d51a3c6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">reflex::Input::Input </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>cstring</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct input character sequence from a char* string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cstring</td><td>char string </td></tr>
+    <tr><td class="paramname">size</td><td>length of the string </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -870,37 +917,9 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ac5ac0b2d8793081840a6dfdb9766a3a9"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool reflex::Input::file_eof </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classreflex_1_1_input.html#ac2e32c2296b088477df764d2cc743931" title="Check if input reached EOF. ">eof()</a> on a FILE*. </p>
-
-</div>
-</div>
 <a class="anchor" id="a37dd7c46da3413a52866bee4bb060cc5"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">size_t reflex::Input::file_get </td>
@@ -920,11 +939,6 @@ Protected Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a> on a FILE*. </p>
@@ -938,37 +952,9 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="afcc853661b71a0e10a1a37cb477d16fd"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool reflex::Input::file_good </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classreflex_1_1_input.html#accdb33345ab137716292270e71a5698f" title="Check if input is available. ">good()</a> operation on a FILE*. </p>
-
-</div>
-</div>
 <a class="anchor" id="a2504b809d5be558d426618737c3e168d"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void reflex::Input::file_init </td>
@@ -977,23 +963,15 @@ Protected Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classreflex_1_1_input.html#a3b77d701d8ad80bd4e235e397c180bd5" title="Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the f...">init()</a> on a FILE*. </p>
+<p>Called by <a class="el" href="classreflex_1_1_input.html#a3b77d701d8ad80bd4e235e397c180bd5" title="Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the f...">init()</a> for a FILE*. </p>
 
 </div>
 </div>
 <a class="anchor" id="a7d09f141e2ced0bc27129809cdbfc4f1"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void reflex::Input::file_size </td>
@@ -1002,14 +980,9 @@ Protected Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> on a FILE*. </p>
+<p>Called by <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> for a FILE*. </p>
 
 </div>
 </div>
@@ -1124,7 +1097,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1156,6 +1129,23 @@ Protected Attributes</h2></td></tr>
 
 <p>Get the std::istream of this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object, returns NULL when this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> is not a std::istream. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to current std::istream or NULL. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a603cfde978e8ff1153073540ff39aae8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Input::istream_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Called by <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> for a std::istream. </p>
 
 </div>
 </div>
@@ -1205,7 +1195,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Cast this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object to a string, returns NULL when this <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> is not a string. </p>
-<dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of the NUL-terminated string or NULL. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>remaining unbuffered part of a NUL-terminated string or NULL. </dd></dl>
 
 </div>
 </div>
@@ -1335,8 +1325,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a <code>FILE*</code> or <code>std::istream</code> source). </p>
-<dl class="section return"><dt>Returns</dt><dd>the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable. </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>This function SHOULD NOT be used after <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a> as the "cursor" has moved it changes the result. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable e.g. when reading from standard input. </dd></dl>
 
 </div>
 </div>
@@ -1366,45 +1355,46 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a7ba3f1e2d412fafce6245f38b4381fcb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Input::wstring_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Called by <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> for a wstring. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a class="anchor" id="ac621d556b409c90464780ea44b8d6570"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const char* reflex::Input::cstring_</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>NUL-terminated char string input (when non-null) </p>
+<p>char string input (when non-null) of length <a class="el" href="classreflex_1_1_input.html#a4ca4ea90ef6f28c106a6811ff21bcc2b" title="size of the remaining input in bytes (size_ == 0 may indicate unset value) ">reflex::Input::size_</a> </p>
 
 </div>
 </div>
 <a class="anchor" id="ae9eac97d0e608b436ab2c10620e68fb5"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">FILE* reflex::Input::file_</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>FILE* input (when non-null) </p>
@@ -1414,19 +1404,11 @@ Protected Attributes</h2></td></tr>
 <a class="anchor" id="a5293a8f00869af77ce8036312d78591c"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::istream* reflex::Input::istream_</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>stream input (when non-null) </p>
@@ -1436,19 +1418,11 @@ Protected Attributes</h2></td></tr>
 <a class="anchor" id="accc6c55cd219a6717e536bd6c9f0606d"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const unsigned short* reflex::Input::page_</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>custom code page </p>
@@ -1458,41 +1432,25 @@ Protected Attributes</h2></td></tr>
 <a class="anchor" id="a4ca4ea90ef6f28c106a6811ff21bcc2b"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">size_t reflex::Input::size_</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>size of the input in bytes, when known </p>
+<p>size of the remaining input in bytes (size_ == 0 may indicate unset value) </p>
 
 </div>
 </div>
 <a class="anchor" id="a371264ce1908a198cc11a7d6990ccbcc"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">unsigned short reflex::Input::uidx_</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>index in utf8_[] or &gt;= 8 when unused </p>
@@ -1502,19 +1460,11 @@ Protected Attributes</h2></td></tr>
 <a class="anchor" id="a2fb61be8907f3204e7b3583aaa5b72da"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">char reflex::Input::utf8_[8]</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>UTF-8 conversion buffer. </p>
@@ -1524,19 +1474,11 @@ Protected Attributes</h2></td></tr>
 <a class="anchor" id="a8877e55c75a97a09e3e9e2fb564b1774"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a> reflex::Input::utfx_</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a> </p>
@@ -1546,19 +1488,11 @@ Protected Attributes</h2></td></tr>
 <a class="anchor" id="a6107c7aabf9c28a777c3942442c3b22f"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const wchar_t* reflex::Input::wstring_</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>NUL-terminated wide string input (when non-null) </p>
@@ -1571,7 +1505,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Jun 24 2019 11:30:28 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Jul 2 2019 16:16:02 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

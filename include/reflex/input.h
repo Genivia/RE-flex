@@ -97,6 +97,9 @@ sequence of characters:
   diagnosed when the condition good() == false && eof() == false holds. Note
   that get(buf, len) == 0 && len > 0 implies good() == false.
 
+- `class Input::streambbuf(const Input&)` creates a `std::istream` for the
+  given `Input` object.
+
 - Compile with `WITH_UTF8_UNRESTRICTED` to enable unrestricted UTF-8 beyond
   U+10FFFF, permitting lossless UTF-8 encoding of 32 bit words without limits.
 
@@ -229,6 +232,21 @@ byte by byte (use a buffer as shown in other examples to improve efficiency):
       message.append(c);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Example
+-------
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
+    reflex::Input input(fopen("legacy.txt", "r"), reflex::Input::file_encoding::ebcdic);
+    if (input.file() == NULL)
+      abort();
+    reflex::Input::streambuf streambuf(input);
+    std::istream stream(&streambuf);
+    std::string data;
+    int c;
+    while ((c = stream.get()) != EOF)
+      data.append(c);
+    fclose(input.file());
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 class Input {
  public:
@@ -258,6 +276,8 @@ class Input {
     static const file_encoding_type cp1258  = 19; ///< CP 1258
     static const file_encoding_type custom  = 20; ///< custom code page
   };
+  /// Stream buffer for Input, derived from std::streambuf.
+  class streambuf;
   /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
   Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects)
     :
@@ -278,7 +298,21 @@ class Input {
       cstring_(NULL),
       wstring_(NULL),
       file_(NULL),
-      istream_(NULL)
+      istream_(NULL),
+      size_(0)
+  {
+    init();
+  }
+  /// Construct input character sequence from a char* string
+  Input(
+      const char *cstring, ///< char string
+      size_t size)         ///< length of the string
+    :
+      cstring_(cstring),
+      wstring_(NULL),
+      file_(NULL),
+      istream_(NULL),
+      size_(size)
   {
     init();
   }
@@ -288,7 +322,8 @@ class Input {
       cstring_(cstring),
       wstring_(NULL),
       file_(NULL),
-      istream_(NULL)
+      istream_(NULL),
+      size_(cstring != NULL ? std::strlen(cstring) : 0)
   {
     init();
   }
@@ -298,17 +333,19 @@ class Input {
       cstring_(string.c_str()),
       wstring_(NULL),
       file_(NULL),
-      istream_(NULL)
+      istream_(NULL),
+      size_(string.size())
   {
     init();
   }
   /// Construct input character sequence from a pointer to a std::string.
   Input(const std::string *string) ///< input string
     :
-      cstring_(string ? string->c_str() : NULL),
+      cstring_(string != NULL ? string->c_str() : NULL),
       wstring_(NULL),
       file_(NULL),
-      istream_(NULL)
+      istream_(NULL),
+      size_(string != NULL ? string->size() : 0)
   {
     init();
   }
@@ -318,7 +355,8 @@ class Input {
       cstring_(NULL),
       wstring_(wstring),
       file_(NULL),
-      istream_(NULL)
+      istream_(NULL),
+      size_(0)
   {
     init();
   }
@@ -328,7 +366,8 @@ class Input {
       cstring_(NULL),
       wstring_(wstring.c_str()),
       file_(NULL),
-      istream_(NULL)
+      istream_(NULL),
+      size_(0)
   {
     init();
   }
@@ -336,9 +375,10 @@ class Input {
   Input(const std::wstring *wstring) ///< input wide string
     :
       cstring_(NULL),
-      wstring_(wstring ? wstring->c_str() : NULL),
+      wstring_(wstring != NULL ? wstring->c_str() : NULL),
       file_(NULL),
-      istream_(NULL)
+      istream_(NULL),
+      size_(0)
   {
     init();
   }
@@ -348,7 +388,8 @@ class Input {
       cstring_(NULL),
       wstring_(NULL),
       file_(file),
-      istream_(NULL)
+      istream_(NULL),
+      size_(0)
   {
     init();
   }
@@ -361,7 +402,8 @@ class Input {
       cstring_(NULL),
       wstring_(NULL),
       file_(file),
-      istream_(NULL)
+      istream_(NULL),
+      size_(0)
   {
     init();
     if (file_encoding() == file_encoding::plain)
@@ -373,7 +415,8 @@ class Input {
       cstring_(NULL),
       wstring_(NULL),
       file_(NULL),
-      istream_(&istream)
+      istream_(&istream),
+      size_(0)
   {
     init();
   }
@@ -383,7 +426,8 @@ class Input {
       cstring_(NULL),
       wstring_(NULL),
       file_(NULL),
-      istream_(istream)
+      istream_(istream),
+      size_(0)
   {
     init();
   }
@@ -403,7 +447,7 @@ class Input {
   }
   /// Cast this Input object to a string, returns NULL when this Input is not a string.
   operator const char *()
-    /// @returns remaining unbuffered part of the NUL-terminated string or NULL.
+    /// @returns remaining unbuffered part of a NUL-terminated string or NULL.
   {
     return cstring_;
   }
@@ -457,51 +501,24 @@ class Input {
   }
   /// Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a `FILE*` or `std::istream` source).
   size_t size()
-    /// @returns the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable.
-    /// @warning This function SHOULD NOT be used after get() as the "cursor" has moved it changes the result.
+    /// @returns the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable e.g. when reading from standard input.
   {
-    if (size_ > 0)
-      return size_;
     if (cstring_)
+      return size_;
+    if (wstring_)
     {
-      size_ = std::strlen(cstring_);
-    }
-    else if (wstring_)
-    {
-      unsigned int c;
-      for (const wchar_t *s = wstring_; (c = *s) != L'\0'; ++s)
-      {
-        if (c >= 0xD800 && c < 0xE000)
-        {
-          size_ += 4;
-          if (c < 0xDC00 && (s[1] & 0xFC00) == 0xDC00)
-            ++s;
-        }
-        else
-        {
-#ifndef WITH_UTF8_UNRESTRICTED
-          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
-#else
-          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
-#endif
-        }
-      }
+      if (size_ == 0)
+        wstring_size();
     }
     else if (file_)
     {
-      file_size();
+      if (size_ == 0)
+        file_size();
     }
     else if (istream_)
     {
-      std::streampos k = istream_->tellg();
-      if (k >= 0)
-      {
-        istream_->seekg(0, istream_->end);
-        std::streampos n = istream_->tellg();
-        if (n >= k)
-          size_ = (size_t)(n - k);
-        istream_->seekg(k, istream_->beg);
-      }
+      if (size_ == 0)
+        istream_size();
     }
     return size_;
   }
@@ -518,17 +535,18 @@ class Input {
     wstring_ = NULL;
     file_ = NULL;
     istream_ = NULL;
+    size_ = 0;
   }
   /// Check if input is available.
   bool good()
     /// @returns true if a non-empty sequence of characters is available to get.
   {
     if (cstring_)
-      return *cstring_ != '\0';
+      return size_ > 0;
     if (wstring_)
       return *wstring_ != L'\0';
     if (file_)
-      return file_good();
+      return !::feof(file_) && !::ferror(file_);
     if (istream_)
       return istream_->good();
     return false;
@@ -538,11 +556,11 @@ class Input {
     /// @returns true if input is at EOF and no characters are available.
   {
     if (cstring_)
-      return *cstring_ == '\0';
+      return size_ == 0;
     if (wstring_)
       return *wstring_ == L'\0';
     if (file_)
-      return file_eof();
+      return ::feof(file_) != 0;
     if (istream_)
       return istream_->eof();
     return true;
@@ -563,11 +581,12 @@ class Input {
   {
     if (cstring_)
     {
-      size_t k = std::strlen(cstring_);
+      size_t k = size_;
       if (k > n)
         k = n;
       std::memcpy(s, cstring_, k);
       cstring_ += k;
+      size_ -= k;
       return k;
     }
     if (wstring_)
@@ -582,7 +601,11 @@ class Input {
         uidx_ += static_cast<unsigned short>(l);
         k -= l;
         if (k == 0)
+        {
+          if (size_ > 0)
+            size_ -= n;
           return n;
+        }
         s += l;
         uidx_ = sizeof(utf8_);
       }
@@ -626,12 +649,24 @@ class Input {
         }
         ++wstring_;
       }
+      if (size_ > 0)
+        size_ -= n - k;
       return n - k;
     }
     if (file_)
-      return file_get(s, n);
+    {
+      size_t k = file_get(s, n);
+      if (size_ > 0)
+        size_ -= k;
+      return k;
+    }
     if (istream_)
-      return static_cast<size_t>(n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, static_cast<std::streamsize>(n)).gcount());
+    {
+      size_t k = static_cast<size_t>(n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, static_cast<std::streamsize>(n)).gcount());
+      if (size_ > 0)
+        size_ -= k;
+      return k;
+    }
     return 0;
   }
   /// Set encoding for `FILE*` input.
@@ -645,11 +680,9 @@ class Input {
   {
     return utfx_;
   }
- protected:
   /// Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the file size is known.
   void init()
   {
-    size_ = 0;
     std::memset(utf8_, 0, sizeof(utf8_));
     uidx_ = sizeof(utf8_);
     utfx_ = 0;
@@ -657,34 +690,60 @@ class Input {
     if (file_)
       file_init();
   }
-  /// Implements init() on a FILE*.
+  /// Called by init() for a FILE*.
   void file_init();
+  /// Called by size() for a wstring.
+  void wstring_size();
+  /// Called by size() for a FILE*.
+  void file_size();
+  /// Called by size() for a std::istream.
+  void istream_size();
   /// Implements get() on a FILE*.
   size_t file_get(
       char  *s, ///< points to the string buffer to fill with input
       size_t n) ///< size of buffer pointed to by s
       ;
-  /// Implements size() on a FILE*.
-  void file_size();
-  /// Implements good() operation on a FILE*.
-  bool file_good()
-  {
-    return !::feof(file_) && !::ferror(file_);
-  }
-  /// Implements eof() on a FILE*.
-  bool file_eof()
-  {
-    return ::feof(file_) != 0;
-  }
-  const char           *cstring_; ///< NUL-terminated char string input (when non-null)
+  const char           *cstring_; ///< char string input (when non-null) of length reflex::Input::size_
   const wchar_t        *wstring_; ///< NUL-terminated wide string input (when non-null)
   FILE                 *file_;    ///< FILE* input (when non-null)
   std::istream         *istream_; ///< stream input (when non-null)
-  size_t                size_;    ///< size of the input in bytes, when known
+  size_t                size_;    ///< size of the remaining input in bytes (size_ == 0 may indicate unset value)
   char                  utf8_[8]; ///< UTF-8 conversion buffer
   unsigned short        uidx_;    ///< index in utf8_[] or >= 8 when unused
   file_encoding_type    utfx_;    ///< file_encoding
   const unsigned short *page_;    ///< custom code page
+};
+
+/// Stream buffer for Input, derived from std::streambuf.
+class Input::streambuf : public std::streambuf {
+ public:
+  streambuf(const reflex::Input& input)
+    :
+      input_(input),
+      ch_(input_.get())
+  { }
+ private:
+  virtual int_type underflow()
+  {
+    if (input_.eof())
+      return traits_type::eof();
+    return traits_type::to_int_type(ch_);
+  }
+  virtual int_type uflow()
+  {
+    if (input_.eof())
+      return traits_type::eof();
+    int c = ch_;
+    ch_ = input_.get();
+    return traits_type::to_int_type(c);
+  }
+  virtual std::streamsize showmanyc()
+  {
+    return input_.size();
+  }
+ protected:
+  reflex::Input input_;
+  int ch_;
 };
 
 } // namespace reflex

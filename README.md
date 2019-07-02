@@ -121,10 +121,11 @@ with MS Visual Studio C++.
 
 ### Unix/Linux and Mac OS X
 
-On Mac OS X you can use [homebrew](https://brew.sh) to install RE/flex with
-`brew install re-flex`.  Otherwise:
-
 You have two options: 1) quick install or 2) configure and make.
+
+**Note:** GCC 8 and greater may produce warnings of the sort *"note: parameter
+passing for argument ... changed in GCC 7.1"*.  These warnings can be ignored
+because RE/flex is built and tested with GCC 8.3.
 
 ### Quick install
 
@@ -445,6 +446,7 @@ Changelog
 - May 28, 2019: 1.2.2 fixed MinGW builds, fixed `reflex::Input::get()` to return positive character code, matcher option `"N"` for `scan` and `find` matches empty input (`^$`).
 - Jun 21, 2019: 1.2.3 fixed reflex long regex string generation, namespaces with option `--full`, updated documentation and other improvements.
 - Jun 24, 2019: 1.2.4 fixed an issue with `reflex::StdMatcher` (`std::regex`) causing failures to match input with `split`.
+- Jul  2, 2019: 1.2.5 added `reflex::Input::in(const char *memptr, size_t memlen)` to read a memory segment (for scanning etc.), added `reflex::Input::streambuf` class to use a `reflex::Input` object as a `std::streambuf`, improved `yy_scan_buffer` and `yy_scan_bytes`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

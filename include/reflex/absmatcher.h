@@ -870,7 +870,8 @@ class AbstractMatcher {
       ind_ -= gap;
       pos_ -= gap;
       end_ -= gap;
-      std::memmove(buf_, txt_, end_);
+      if (end_ > 0)
+        std::memmove(buf_, txt_, end_);
       txt_ = buf_;
     }
     else
@@ -893,7 +894,8 @@ class AbstractMatcher {
           txt_ = buf_ = newbuf;
 #else
         char *newbuf = new char[max_];
-        std::memcpy(newbuf, txt_, end_);
+        if (end_ > 0)
+          std::memcpy(newbuf, txt_, end_);
         delete[] buf_;
         txt_ = buf_ = newbuf;
 #endif

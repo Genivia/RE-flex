@@ -21,7 +21,7 @@ CXXIFLAGS = -I. -I../include -I $(INCBOOST)
 CXXMFLAGS =
 CXXFLAGS  = $(CXXWFLAGS) $(CXXOFLAGS) $(CXXIFLAGS) $(CXXMFLAGS)
 
-all:		test_ranges lorem test rtest btest
+all:		test_ranges lorem test rtest btest stest streams
 
 lorem:		lorem.cpp
 		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX) $(LIBBOOST)
@@ -43,6 +43,10 @@ stest:		stest.cpp
 		$(CXX) -std=c++11 $(CXXFLAGS) -o $@ $< $(LIBREFLEX)
 		./stest
 
+streams:	streams.cpp
+		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX)
+		./streams
+
 test_bits:	test_bits.cpp
 		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX)
 		./test_bits
@@ -61,4 +65,4 @@ clean:
 		-rm -f *.o *.gch *.log
 		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f a.out test_regex_history dump.gv dump.pdf dump.cpp
-		-rm -f lorem test rtest btest stest test_bits test_ranges
+		-rm -f lorem test rtest btest stest streams test_bits test_ranges

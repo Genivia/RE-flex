@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">flexlexer.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Jun 24 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Jul 2 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -196,11 +196,9 @@ Macros</h2></td></tr>
 <tr class="separator:a3d2545b35aec7c35e6939755777e2a58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acaf921bfaed6dc25af86fae7ceadc946"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#acaf921bfaed6dc25af86fae7ceadc946">yy_scan_wstring</a>(i)        &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(i)</td></tr>
 <tr class="separator:acaf921bfaed6dc25af86fae7ceadc946"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0872a059892f77ba25bd253e1ac32d2d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a0872a059892f77ba25bd253e1ac32d2d">yy_scan_buffer</a>(b,  n)      &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(std::string(b, n))</td></tr>
+<tr class="memitem:a0872a059892f77ba25bd253e1ac32d2d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a0872a059892f77ba25bd253e1ac32d2d">yy_scan_buffer</a>(b,  n)      &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(<a class="el" href="classreflex_1_1_input.html">reflex::Input</a>(b, n))</td></tr>
 <tr class="separator:a0872a059892f77ba25bd253e1ac32d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f2f3bc64d22a59c802883b8006e277d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a5f2f3bc64d22a59c802883b8006e277d">yy_scan_wbuffer</a>(b,  n)    &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(std::wstring(b, n))</td></tr>
-<tr class="separator:a5f2f3bc64d22a59c802883b8006e277d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cef4ba504e54ab2cf998d34ffe047cf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a8cef4ba504e54ab2cf998d34ffe047cf">yy_scan_bytes</a>(b,  n)        &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(std::string(b, n))</td></tr>
+<tr class="memitem:a8cef4ba504e54ab2cf998d34ffe047cf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a8cef4ba504e54ab2cf998d34ffe047cf">yy_scan_bytes</a>(b,  n)        &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a0872a059892f77ba25bd253e1ac32d2d">yy_scan_buffer</a>(b, static_cast&lt;size_t&gt;(n))</td></tr>
 <tr class="separator:a8cef4ba504e54ab2cf998d34ffe047cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add62fdebca5f1fac074d8c918dc45eec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#add62fdebca5f1fac074d8c918dc45eec">yyterminate</a>()                  &#160;&#160;&#160;return <a class="el" href="flexlexer_8h.html#a8e0bcf8f8a5b613ea583347f8bc31cbf">YY_NULL</a></td></tr>
 <tr class="memdesc:add62fdebca5f1fac074d8c918dc45eec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the terminating action.  <a href="#add62fdebca5f1fac074d8c918dc45eec">More...</a><br /></td></tr>
@@ -534,7 +532,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(std::string(b, n))</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(<a class="el" href="classreflex_1_1_input.html">reflex::Input</a>(b, n))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -560,7 +558,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(std::string(b, n))</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a0872a059892f77ba25bd253e1ac32d2d">yy_scan_buffer</a>(b, static_cast&lt;size_t&gt;(n))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -582,32 +580,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Flex-compatible macro: scan a string. </p>
-
-</div>
-</div>
-<a class="anchor" id="a5f2f3bc64d22a59c802883b8006e277d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define yy_scan_wbuffer</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">b, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">n&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(std::wstring(b, n))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -1079,7 +1051,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Jun 24 2019 11:30:28 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Jul 2 2019 16:16:02 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

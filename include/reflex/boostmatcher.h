@@ -205,7 +205,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
           return cap_;
         }
         eof_ = true;
-        if (pos_ == cur_ && method == Const::FIND && opt_.N)
+        if (pos_ == end_ && method == Const::FIND && opt_.N)
 	{
 	  DBGLOGN("No match, pos = %zu", pos_);
 	  DBGLOG("END BoostMatcher::match()");

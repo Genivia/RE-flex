@@ -47,7 +47,7 @@ scan:
   txt_ = buf_ + cur_;
   len_ = 0;
   bool bob = at_bob();
-  if (hit_end() && ded_ == 0 && tab_.empty())
+  if (ded_ == 0 && hit_end() && tab_.empty())
   {
     if (method == Const::SPLIT && !bob && cap_ != 0 && cap_ != Const::EMPTY)
     {
@@ -272,8 +272,24 @@ redo:
         break;
       Pattern::Opcode lo = c1 << 24;
       Pattern::Opcode hi = lo | 0x00ffffff;
-      while (hi < opcode || lo > (opcode << 8))
+unrolled:
+      if (hi < opcode || lo > (opcode << 8))
+      {
         opcode = *++pc;
+        if (hi < opcode || lo > (opcode << 8))
+        {
+          opcode = *++pc;
+          if (hi < opcode || lo > (opcode << 8))
+          {
+            opcode = *++pc;
+            if (hi < opcode || lo > (opcode << 8))
+            {
+              opcode = *++pc;
+              goto unrolled;
+            }
+          }
+        }
+      }
       index = Pattern::index_of(opcode);
       if (index == Pattern::IMAX)
         break;
@@ -369,26 +385,23 @@ done:
       cap_ = 0;
     }
   }
+  else if (cur_ == end_ && len_ == 0)
+  {
+    DBGLOG("Hit end: got = %d", got_);
+    if (cap_ == Const::EMPTY && !opt_.A)
+      cap_ = 0; // cannot goto scan?
+  }
   else
   {
-    if (cur_ == end_ && len_ == 0)
+    set_current(cur_);
+    if (len_ > 0)
     {
-      DBGLOG("Hit end: got = %d", got_);
       if (cap_ == Const::EMPTY && !opt_.A)
-        cap_ = 0; // cannot goto scan?
-    }
-    else
-    {
-      set_current(cur_);
-      if (len_ > 0)
       {
-        if (cap_ == Const::EMPTY && !opt_.A)
-        {
-          DBGLOG("Ignore accept and continue: len = %zu", len_);
-          if (method != Const::MATCH)
-            goto scan;
-          cap_ = 0;
-        }
+        DBGLOG("Ignore accept and continue: len = %zu", len_);
+        if (method != Const::MATCH)
+          goto scan;
+        cap_ = 0;
       }
     }
   }

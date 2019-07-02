@@ -300,7 +300,7 @@ static const unsigned short codepages[][256] =
   },
 };
 
-void Input::file_init(void)
+void Input::file_init()
 {
   // attempt to determine the file size with fstat()
 #if !defined(HAVE_CONFIG_H) || defined(HAVE_FSTAT)
@@ -372,7 +372,8 @@ void Input::file_init(void)
             utf8_[3] = '\0';
             if (utf8_[2] == '\xbf') // UTF-8 BOM EFBBBF?
             {
-              size_ -= 3;
+              if (size_ >= 3)
+                size_ -= 3;
               uidx_ = sizeof(utf8_);
               utfx_ = file_encoding::utf8;
             }
@@ -608,114 +609,152 @@ size_t Input::file_get(char *s, size_t n)
   }
 }
 
-void Input::file_size(void)
+void Input::wstring_size()
 {
-  if (size_ == 0)
+  unsigned int c;
+  for (const wchar_t *s = wstring_; (c = *s) != L'\0'; ++s)
   {
-    off_t k = ftello(file_);
-    if (k >= 0)
+    if (c >= 0xD800 && c < 0xE000)
     {
-      unsigned char buf[4];
-      switch (utfx_)
+      if (c < 0xDC00 && (s[1] & 0xFC00) == 0xDC00)
       {
-        case file_encoding::latin:
-          while (::fread(buf, 1, 1, file_) == 1)
-            size_ += 1 + (buf[0] >= 0x80);
-          break;
-        case file_encoding::cp437:
-        case file_encoding::cp850:
-        case file_encoding::cp858:
-        case file_encoding::ebcdic:
-        case file_encoding::cp1250:
-        case file_encoding::cp1251:
-        case file_encoding::cp1252:
-        case file_encoding::cp1253:
-        case file_encoding::cp1254:
-        case file_encoding::cp1255:
-        case file_encoding::cp1256:
-        case file_encoding::cp1257:
-        case file_encoding::cp1258:
-        case file_encoding::custom:
-          while (::fread(buf, 1, 1, file_) == 1)
-          {
-            int c = page_[buf[0]];
-            size_ += 1 + (c >= 0x80) + (c >= 0x0800); // + (c >= 0x010000); NOTE: page_[] value range < Unicode range
-          }
-          break;
-        case file_encoding::utf16be:
-          while (::fread(buf, 2, 1, file_) == 1)
-          {
-            int c = buf[0] << 8 | buf[1];
-            if (c >= 0xD800 && c < 0xE000)
-            {
-              // UTF-16 surrogate pair
-              if (c < 0xDC00 && ::fread(buf + 2, 2, 1, file_) == 1 && (buf[2] & 0xFC) == 0xDC)
-                c = 0x010000 - 0xDC00 + ((c - 0xD800) << 10) + (buf[2] << 8 | buf[3]);
-              else
-                c = REFLEX_NONCHAR;
-            }
-#ifndef WITH_UTF8_UNRESTRICTED
-            else if (c > 0x10FFFF)
-            {
-              c = REFLEX_NONCHAR;
-            }
-#endif
-            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
-          }
-          break;
-        case file_encoding::utf16le:
-          while (::fread(buf, 2, 1, file_) == 1)
-          {
-            int c = buf[0] | buf[1] << 8;
-            if (c >= 0xD800 && c < 0xE000)
-            {
-              // UTF-16 surrogate pair
-              if (c < 0xDC00 && ::fread(buf + 2, 2, 1, file_) == 1 && (buf[2] & 0xFC) == 0xDC)
-                c = 0x010000 - 0xDC00 + ((c - 0xD800) << 10) + (buf[2] << 8 | buf[3]);
-              else
-                c = REFLEX_NONCHAR;
-            }
-#ifndef WITH_UTF8_UNRESTRICTED
-            else if (c > 0x10FFFF)
-            {
-              c = REFLEX_NONCHAR;
-            }
-#endif
-            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
-          }
-          break;
-        case file_encoding::utf32be:
-          while (::fread(buf, 4, 1, file_) == 1)
-          {
-            int c = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3];
-#ifndef WITH_UTF8_UNRESTRICTED
-            if (c > 0x10FFFF)
-              c = REFLEX_NONCHAR;
-#endif
-            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
-          }
-          break;
-        case file_encoding::utf32le:
-          while (::fread(buf, 4, 1, file_) == 1)
-          {
-            int c = buf[0] | buf[1] << 8 | buf[2] << 16 | buf[3] << 24;
-#ifndef WITH_UTF8_UNRESTRICTED
-            if (c > 0x10FFFF)
-              c = REFLEX_NONCHAR;
-#endif
-            size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
-          }
-          break;
-        default:
-          fseeko(file_, k, SEEK_END);
-          off_t n = ftello(file_);
-          if (n >= k)
-            size_ = static_cast<size_t>(n - k);
+        ++s;
+        size_ += 4;
       }
-      ::clearerr(file_);
-      fseeko(file_, k, SEEK_SET);
+      else
+      {
+        size_ += sizeof(REFLEX_NONCHAR_UTF8) - 1; // REFLEX_NONCHAR_UTF8 is a literal string, not a pointer
+      }
+    }
+    else
+    {
+#ifndef WITH_UTF8_UNRESTRICTED
+      size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000);
+#else
+      size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000) + (c >= 0x04000000);
+#endif
+    }
+  }
+}
+
+void Input::file_size()
+{
+  off_t k = ftello(file_);
+  if (k >= 0)
+  {
+    unsigned char buf[4];
+    switch (utfx_)
+    {
+      case file_encoding::latin:
+        while (::fread(buf, 1, 1, file_) == 1)
+          size_ += 1 + (buf[0] >= 0x80);
+        break;
+      case file_encoding::cp437:
+      case file_encoding::cp850:
+      case file_encoding::cp858:
+      case file_encoding::ebcdic:
+      case file_encoding::cp1250:
+      case file_encoding::cp1251:
+      case file_encoding::cp1252:
+      case file_encoding::cp1253:
+      case file_encoding::cp1254:
+      case file_encoding::cp1255:
+      case file_encoding::cp1256:
+      case file_encoding::cp1257:
+      case file_encoding::cp1258:
+      case file_encoding::custom:
+        while (::fread(buf, 1, 1, file_) == 1)
+        {
+          int c = page_[buf[0]];
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800); // + (c >= 0x010000); NOTE: page_[] value range < Unicode range
+        }
+        break;
+      case file_encoding::utf16be:
+        while (::fread(buf, 2, 1, file_) == 1)
+        {
+          int c = buf[0] << 8 | buf[1];
+          if (c >= 0xD800 && c < 0xE000)
+          {
+            // UTF-16 surrogate pair
+            if (c < 0xDC00 && ::fread(buf + 2, 2, 1, file_) == 1 && (buf[2] & 0xFC) == 0xDC)
+              c = 0x010000 - 0xDC00 + ((c - 0xD800) << 10) + (buf[2] << 8 | buf[3]);
+            else
+              c = REFLEX_NONCHAR;
+          }
+#ifndef WITH_UTF8_UNRESTRICTED
+          else if (c > 0x10FFFF)
+          {
+            c = REFLEX_NONCHAR;
+          }
+#endif
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
+        }
+        break;
+      case file_encoding::utf16le:
+        while (::fread(buf, 2, 1, file_) == 1)
+        {
+          int c = buf[0] | buf[1] << 8;
+          if (c >= 0xD800 && c < 0xE000)
+          {
+            // UTF-16 surrogate pair
+            if (c < 0xDC00 && ::fread(buf + 2, 2, 1, file_) == 1 && (buf[2] & 0xFC) == 0xDC)
+              c = 0x010000 - 0xDC00 + ((c - 0xD800) << 10) + (buf[2] << 8 | buf[3]);
+            else
+              c = REFLEX_NONCHAR;
+          }
+#ifndef WITH_UTF8_UNRESTRICTED
+          else if (c > 0x10FFFF)
+          {
+            c = REFLEX_NONCHAR;
+          }
+#endif
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
+        }
+        break;
+      case file_encoding::utf32be:
+        while (::fread(buf, 4, 1, file_) == 1)
+        {
+          int c = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3];
+#ifndef WITH_UTF8_UNRESTRICTED
+          if (c > 0x10FFFF)
+            c = REFLEX_NONCHAR;
+#endif
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
+        }
+        break;
+      case file_encoding::utf32le:
+        while (::fread(buf, 4, 1, file_) == 1)
+        {
+          int c = buf[0] | buf[1] << 8 | buf[2] << 16 | buf[3] << 24;
+#ifndef WITH_UTF8_UNRESTRICTED
+          if (c > 0x10FFFF)
+            c = REFLEX_NONCHAR;
+#endif
+          size_ += 1 + (c >= 0x80) + (c >= 0x0800) + (c >= 0x010000) + (c >= 0x200000);
+        }
+        break;
+      default:
+        fseeko(file_, k, SEEK_END);
+        off_t n = ftello(file_);
+        if (n >= k)
+          size_ = static_cast<size_t>(n - k);
     }
     ::clearerr(file_);
+    fseeko(file_, k, SEEK_SET);
+  }
+  ::clearerr(file_);
+}
+
+void Input::istream_size()
+{
+  std::streampos k = istream_->tellg();
+  if (k >= 0)
+  {
+    istream_->seekg(0, istream_->end);
+    std::streampos n = istream_->tellg();
+    if (n >= k)
+      size_ = (size_t)(n - k);
+    istream_->seekg(k, istream_->beg);
   }
 }
 

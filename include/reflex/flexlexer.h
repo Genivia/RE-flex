@@ -232,15 +232,13 @@ inline std::wstring yy_scan_buffer_string(const std::wstring& b, size_t n) { ret
 #if defined(REFLEX_OPTION_reentrant)
 #define yy_scan_string(i,s)    (static_cast<FlexLexer*>(s)->has_matcher() ? (static_cast<FlexLexer*>(s)->matcher(static_cast<FlexLexer*>(s)->new_matcher(i)), static_cast<FlexLexer*>(s)->ptr_matcher()) : (static_cast<FlexLexer*>(s)->in(i), static_cast<YY_BUFFER_STATE>(NULL)))
 #define yy_scan_wstring(i,s)    yy_scan_string(i, s)
-#define yy_scan_buffer(b,n,s)   yy_scan_string(std::string(b, n), s)
-#define yy_scan_wbuffer(b,n,s)  yy_scan_string(std::wstring(b, n), s)
-#define yy_scan_bytes(b,n,s)    yy_scan_string(std::string(b, n), s)
+#define yy_scan_buffer(b,n,s)   yy_scan_string(reflex::Input(b, n), s)
+#define yy_scan_bytes(b,n,s)    yy_scan_buffer(b, static_cast<size_t>(n), s)
 #else
 #define yy_scan_string(i)       (YY_SCANNER.has_matcher() ? (YY_SCANNER.matcher(YY_SCANNER.new_matcher(i)), YY_CURRENT_BUFFER) : (YY_SCANNER.in(i), static_cast<YY_BUFFER_STATE>(NULL)))
 #define yy_scan_wstring(i)      yy_scan_string(i)
-#define yy_scan_buffer(b,n)     yy_scan_string(std::string(b, n))
-#define yy_scan_wbuffer(b,n)    yy_scan_string(std::wstring(b, n))
-#define yy_scan_bytes(b,n)      yy_scan_string(std::string(b, n))
+#define yy_scan_buffer(b,n)     yy_scan_string(reflex::Input(b, n))
+#define yy_scan_bytes(b,n)      yy_scan_buffer(b, static_cast<size_t>(n))
 #endif
 
 /// Flex-compatible macro: the terminating action.
