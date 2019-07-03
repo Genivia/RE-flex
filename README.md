@@ -3,9 +3,8 @@
 
 [![build status][travis-image]][travis-url] [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url]
 
-"The regex-centric, fast and flexible lexical analyzer generator for C++"
-
-Flex reimagined.  Fast, flexible, adds Boost 💪
+The regex-centric, fast and flexible lexical analyzer generator for C++ with
+full Unicode support.  Flex reimagined: fast, flexible, adds Boost 💪
 
 [RE/flex][reflex-url] is faster than Flex while providing a wealth of new
 features.  RE/flex is also much faster than regex libraries such as
@@ -41,10 +40,10 @@ Features
 
 - Compatible with Flex to eliminate a learning curve, making a transition to
   RE/flex frustration-free.
-- Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for
-  Python code, a tokenizer for Java code, and more.
 - Works with Bison and supports reentrant, bison-bridge, bison-locations,
   Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison complete symbols.
+- Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for
+  Python code, a tokenizer for Java code, and more.
 - Extensive documentation in the online [User Guide][manual-url].
 - Adds Unicode support with Unicode property matching `\p{C}` and C++11, Java,
   C#, and Python Unicode properties for identifier name matching.
@@ -447,6 +446,7 @@ Changelog
 - Jun 21, 2019: 1.2.3 fixed reflex long regex string generation, namespaces with option `--full`, updated documentation and other improvements.
 - Jun 24, 2019: 1.2.4 fixed an issue with `reflex::StdMatcher` (`std::regex`) causing failures to match input with `split`.
 - Jul  2, 2019: 1.2.5 added `reflex::Input::in(const char *memptr, size_t memlen)` to read a memory segment (for scanning etc.), added `reflex::Input::streambuf` class to use a `reflex::Input` object as a `std::streambuf`, improved `yy_scan_buffer` and `yy_scan_bytes`.
+- Jul  3, 2019: 1.2.6 fixed a problem with lazy quantifiers used within negative patterns.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

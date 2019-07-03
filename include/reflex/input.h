@@ -725,13 +725,13 @@ class Input::streambuf : public std::streambuf {
  private:
   virtual int_type underflow()
   {
-    if (input_.eof())
+    if (ch_ == EOF)
       return traits_type::eof();
     return traits_type::to_int_type(ch_);
   }
   virtual int_type uflow()
   {
-    if (input_.eof())
+    if (ch_ == EOF)
       return traits_type::eof();
     int c = ch_;
     ch_ = input_.get();

@@ -1185,12 +1185,14 @@ void Pattern::trim_lazy(Positions& pos) const
     {
       pos.insert(p->lazy(0)); // make lazy accept/anchor a non-lazy accept/anchor
       pos.erase(--p.base());
-      while (p != pos.rend() && p->lazy() == l)
+      while (p != pos.rend() && !p->accept() && p->lazy() == l)
+      {
 #if 0 // CHECKED algorithmic options: set to 1 to turn lazy trimming off
         ++p;
 #else
         pos.erase(--p.base());
 #endif
+      }
     }
     else
     {
@@ -1219,6 +1221,22 @@ void Pattern::trim_lazy(Positions& pos) const
     pos.erase(--p.base());
   }
 #endif
+  // trims accept positions keeping the first only, and keeping redo (positions with accept == 0)
+  Positions::iterator q = pos.begin(), a = pos.end();
+  while (q != pos.end())
+  {
+    if (q->accept() && q->accepts() != 0)
+    {
+      if (a == pos.end())
+        a = q++;
+      else
+        pos.erase(q++);
+    }
+    else
+    {
+      ++q;
+    }
+  }
 #ifdef DEBUG
   DBGLOG("END trim_lazy({");
   for (Positions::const_iterator q = pos.begin(); q != pos.end(); ++q)
@@ -1243,7 +1261,7 @@ void Pattern::compile_transition(
       Index accept = k->accepts();
       if (state->accept == 0 || accept < state->accept)
         state->accept = accept; // pick lowest nonzero accept index
-      if (!accept)
+      if (accept == 0)
         state->redo = true;
     }
     else
