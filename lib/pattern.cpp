@@ -1424,7 +1424,7 @@ void Pattern::compile_transition(
                       break;
                     default:
                       c = compile_esc(loc + 1, chars);
-                      if (std::isalpha(c) && (opt_.i || is_modified('i', modifiers, loc)))
+                      if (c <= 255 && std::isalpha(c) && (opt_.i || is_modified('i', modifiers, loc)))
                       {
                         chars.insert(upper(c));
                         chars.insert(lower(c));

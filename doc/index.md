@@ -6384,13 +6384,15 @@ To obtain the properties of an input source use the following methods:
 ### Input streambuf                                    {#regex-input-streambuf}
 
 We can use a `reflex::Input` object as a `std::streambuf` and pass it to a
-`std::istream`.  This means that the stream automatically normalizes the input
-to UTF-8.
+`std::istream`.  This is useful when a `std::istream` is required where a
+`reflex::Input` object cannot be directly used.  The `std::istream`
+automatically normalizes the input to UTF-8 using the underlying
+`reflex::Input` object.  For example:
 
 ~~~{.cpp}
-    reflex::Input input(...);                  // create an Input object for some given input
-    reflex::Input::streambuf streambuf(input); // create a streambuf
-    std::istream is(&streambuf);
+    reflex::Input input(...);            // create an Input object for some given input
+    reflex::Input::streambuf buf(input); // create a streambuf
+    std::istream is(&buf);
     if (is.good())
     {
       // read the stream
@@ -6402,6 +6404,63 @@ and `FILE*` values.  These are readable as a `std::istream` via
 `reflex::Input::streambuf` that returns normalized UTF-8 characters.  For
 `FILE*` values we can specify \ref regex-input-file to normalize the encoded
 input to UTF-8.
+
+Keep in mind that adding a `std::istream` with `reflex::Input::streambuf` layer
+on top of the efficient `reflex::Input` class will impact file reading
+performance.
+
+See also \ref regex-input-dosstreambuf.
+
+🔝 [Back to table of contents](#)
+
+### DOS CRLF newlines                               {#regex-input-dosstreambuf}
+
+DOS files and other DOS or Windows input sources typically end lines with CRLF
+byte pairs.  To automatically replace CRLF by LF you can use the
+`reflex::Input::dos_streambuf` class to construct a `std::istream` object.
+This normalized stream can then be used as input to a RE/flex scanner or to a
+regex matcher:
+
+~~~{.cpp}
+    reflex::Input input(...);                // create an Input object for some given input
+    reflex::Input::dos_streambuf buf(input); // create a dos_streambuf
+    std::istream is(&buf);
+    if (is.good())
+    {
+      // read the stream
+    }
+~~~
+
+Once the stream object is created it can be used to create a new input object
+for a RE/flex scanner, for example:
+
+~~~{.cpp}
+    if (is.good())
+    {
+      Lexer lexer(is); // create a lexer
+      lexer.lex();     // scan the normalized input (DOS CRLF -> LF)
+    }
+~~~
+
+or for a regex matcher:
+
+~~~{.cpp}
+    if (is.good())
+    {
+      reflex::BoostMatcher matcher("\\w+", is); // read normalized input (DOS CRLF -> LF)
+      while (matcher.find() != 0)
+        std::cout << "Found " << matcher.text() << std::endl;
+    }
+~~~
+
+Note that when the input is a `FILE*`, CRLF pairs are replaced by LF and
+UTF-16/32 encodings are automatically normalized to UTF-8 (when a UTF BOM is
+present in the file or you can specify \ref regex-input-file).
+
+@warning The `reflex::Input::size` method returns the number of bytes available
+that includes CRLF pairs.  The actual number of bytes read may be smaller.
+
+See also \ref regex-input-streambuf.
 
 🔝 [Back to table of contents](#)
 
@@ -7001,6 +7060,35 @@ file has a [UTF Byte Order Mark (BOM)](www.unicode.org/faq/utf_bom.html).  When
 a BOM is detected the scanner switches to UTF scanning.
 
 See \ref regex-input-file to set file encodings.
+
+🔝 [Back to contents](#)
+
+
+Dealing with DOS CRLF input                                             {#crlf}
+---------------------------
+
+DOS files and other DOS or Windows input sources typically end lines with CRLF
+byte pairs.  There are two ways to deal with CRLF pairs:
+
+1. Use `reflex::Input::dos_streambuf` to automatically convert
+   \ref regex-input-dosstreambuf by creating a `std::istream` for the
+   specified `reflex::Input::dos_streambuf`.  Due to the extra layer
+   introduced in the input processing stack, this option adds some overhead but
+   requires no changes to the patterns and application code.
+
+2. Rewrite the patterns to match both `\n` and `\r\n` to allow DOS CRLF input.
+   This is option is fast to process input, but requires specialized patterns
+   and the matched text will include `\r` (CR) characters that may need to be
+   dealt with by the application code.
+
+To rewrite your patterns to support DOS CRLF matching:
+
+- Replace `\n` in patterns by `\r?\n`.
+
+- Replace `.*` in patterns by `([^\n\r]|\r[^\n])*` to match any non-newline
+  characters.  Likewise replace `.+` by its longer version.  Note that a single
+  `.` can still be used in patterns but may match a `\r` just before a `\n`
+  when a DOS CRLF is encountered.
 
 🔝 [Back to contents](#)
 

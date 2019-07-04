@@ -108,8 +108,12 @@ static bool is_keyword(const char *text)
 
 // Read the file and convert \uxxxx (including UTF-16 surrogate pairs) to UTF-8.
 // This is a simple way to do it, by reading the entire input into a buffer.
-// Another way to do this more elegantly is to override the
-// reflex::Matcher::input(s, n) method that passes text to the matcher engine.
+// There are two other ways to do this without copying the whole file to memory:
+// 1. override the reflex::Matcher::input(s, n) method, which passes text to
+//    the matcher engine and replace the \uxxxx there.
+// 2. create a streambuf class that converts \uxxxx on the fly, similar to the
+//    way reflex::Input::dos_streambuf converts CFLF to LF on the fly.
+// The second option is easier to implement than the first.
 static size_t convert_unicode_escapes(char *buf, size_t len)
 {
   char *t = buf;

@@ -447,6 +447,7 @@ Changelog
 - Jun 24, 2019: 1.2.4 fixed an issue with `reflex::StdMatcher` (`std::regex`) causing failures to match input with `split`.
 - Jul  2, 2019: 1.2.5 added `reflex::Input::in(const char *memptr, size_t memlen)` to read a memory segment (for scanning etc.), added `reflex::Input::streambuf` class to use a `reflex::Input` object as a `std::streambuf`, improved `yy_scan_buffer` and `yy_scan_bytes`.
 - Jul  3, 2019: 1.2.6 fixed a problem with lazy quantifiers used within negative patterns.
+- Jul  4, 2019: 1.2.7 added `reflex::Input::dos_streambuf` to convert DOS CRLF to LF, other improvements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

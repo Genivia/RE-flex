@@ -276,8 +276,10 @@ class Input {
     static const file_encoding_type cp1258  = 19; ///< CP 1258
     static const file_encoding_type custom  = 20; ///< custom code page
   };
-  /// Stream buffer for Input, derived from std::streambuf.
+  /// Stream buffer for reflex::Input, derived from std::streambuf.
   class streambuf;
+  /// Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf.
+  class dos_streambuf;
   /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
   Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects)
     :
@@ -714,7 +716,7 @@ class Input {
   const unsigned short *page_;    ///< custom code page
 };
 
-/// Stream buffer for Input, derived from std::streambuf.
+/// Stream buffer for reflex::Input, derived from std::streambuf.
 class Input::streambuf : public std::streambuf {
  public:
   streambuf(const reflex::Input& input)
@@ -744,6 +746,62 @@ class Input::streambuf : public std::streambuf {
  protected:
   reflex::Input input_;
   int ch_;
+};
+
+/// Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf.
+class Input::dos_streambuf : public std::streambuf {
+ public:
+  dos_streambuf(const reflex::Input& input)
+    :
+      input_(input),
+      ch1_(input_.get()),
+      ch2_(EOF)
+  { }
+ private:
+  virtual int_type underflow()
+  {
+    if (ch1_ == EOF)
+      return traits_type::eof();
+    if (ch1_ == '\r')
+    {
+      ch2_ = input_.get();
+      if (ch2_ == '\n')
+      {
+        ch1_ = ch2_;
+        ch2_ = EOF;
+      }
+    }
+    return traits_type::to_int_type(ch1_);
+  }
+  virtual int_type uflow()
+  {
+    if (ch1_ == EOF)
+      return traits_type::eof();
+    int c = ch1_;
+    if (ch2_ == EOF)
+    {
+      ch1_ = input_.get();
+    }
+    else
+    {
+      ch1_ = ch2_;
+      ch2_ = EOF;
+    }
+    if (c == '\r' && ch1_ == '\n')
+    {
+      c = ch1_;
+      ch1_ = input_.get();
+    }
+    return traits_type::to_int_type(c);
+  }
+  virtual std::streamsize showmanyc()
+  {
+    return input_.size();
+  }
+ protected:
+  reflex::Input input_;
+  int ch1_;
+  int ch2_;
 };
 
 } // namespace reflex
