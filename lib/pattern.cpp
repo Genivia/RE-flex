@@ -72,16 +72,6 @@
 
 namespace reflex {
 
-inline char lower(int c)
-{
-  return c | 0x20;
-}
-
-inline char upper(int c)
-{
-  return c & ~0x20;
-}
-
 #if (defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__BORLANDC__)) && !defined(__CYGWIN__) && !defined(__MINGW32__) && !defined(__MINGW64__)
 inline int fopen_s(FILE **fd, const char *name, const char *mode) { return ::fopen_s(fd, name, mode); }
 #else
@@ -286,6 +276,44 @@ void Pattern::parse(
   Index      iter;
   timer_type t;
   timer_start(t);
+  if (at(0) == '(' && at(1) == '?')
+  {
+    loc = 2;
+    while (at(loc) == '-' || std::isalnum(at(loc)))
+      ++loc;
+    if (at(loc) == ')')
+    {
+      bool active = true;
+      loc = 2;
+      Char c;
+      while ((c = at(loc)) != ')')
+      {
+        c = at(loc);
+        if (c == '-')
+          active = !active;
+        else if (c == 'i')
+          opt_.i = active;
+        else if (c == 'l')
+          opt_.l = active;
+        else if (c == 'm')
+          opt_.m = active;
+        else if (c == 'q')
+          opt_.q = active;
+        else if (c == 's')
+          opt_.s = active;
+        else if (c == 'x')
+          opt_.x = active;
+        else
+          error(regex_error::invalid_modifier, loc);
+        ++loc;
+      }
+      ++loc;
+    }
+    else
+    {
+      loc = 0;
+    }
+  }
   do
   {
     Positions lazypos;
@@ -328,6 +356,12 @@ void Pattern::parse(
     }
     ++choice;
   } while (at(loc++) == '|');
+  if (opt_.i)
+    update_modified('i', modifiers, 0, rex_.size() - 1);
+  if (opt_.m)
+    update_modified('m', modifiers, 0, rex_.size() - 1);
+  if (opt_.s)
+    update_modified('s', modifiers, 0, rex_.size() - 1);
   pms_ = timer_elapsed(t);
 #ifdef DEBUG
   DBGLOGN("startpos = {");
@@ -356,7 +390,7 @@ void Pattern::parse1(
     Follow&    followpos,
     Positions& lazypos,
     Map&       modifiers,
-    Ranges&    lookahead,
+    Locations& lookahead,
     Index&     iter)
 {
   DBGLOG("BEGIN parse1(%zu)", loc);
@@ -410,7 +444,7 @@ void Pattern::parse2(
     Follow&    followpos,
     Positions& lazypos,
     Map&       modifiers,
-    Ranges&    lookahead,
+    Locations& lookahead,
     Index&     iter)
 {
   DBGLOG("BEGIN parse2(%zu)", loc);
@@ -538,7 +572,7 @@ void Pattern::parse3(
     Follow&    followpos,
     Positions& lazypos,
     Map&       modifiers,
-    Ranges&    lookahead,
+    Locations& lookahead,
     Index&     iter)
 {
   DBGLOG("BEGIN parse3(%zu)", loc);
@@ -720,7 +754,7 @@ void Pattern::parse4(
     Follow&    followpos,
     Positions& lazypos,
     Map&       modifiers,
-    Ranges&    lookahead,
+    Locations& lookahead,
     Index&     iter)
 {
   DBGLOG("BEGIN parse4(%zu)", loc);
@@ -805,70 +839,57 @@ void Pattern::parse4(
       else
       {
         Location m_loc = loc;
-        bool opt_i = opt_.i;
+        bool opt_l = opt_.l;
         bool opt_q = opt_.q;
-        bool opt_m = opt_.m;
-        bool opt_s = opt_.s;
         bool opt_x = opt_.x;
+        bool active = true;
         do
         {
-          if (c == 'i')
-            opt_.i = true;
+          if (c == '-')
+            active = !active;
           else if (c == 'l')
-            opt_.l = true;
-          else if (c == 'm')
-            opt_.m = true;
+            opt_.l = active;
           else if (c == 'q')
-            opt_.q = true;
-          else if (c == 's')
-            opt_.s = true;
+            opt_.q = active;
           else if (c == 'x')
-            opt_.x = true;
-          else
+            opt_.x = active;
+          else if (c != 'i' && c != 'm' && c != 's')
             error(regex_error::invalid_modifier, loc);
           c = at(++loc);
         } while (c != '\0' && c != ':' && c != ')');
         if (c != '\0')
           ++loc;
-        if (m_loc == 2 && c == ')') // enforce (?imqsx)global options
+        // enforce (?ilmqsx) modes
+        parse1(
+            begin,
+            loc,
+            firstpos,
+            lastpos,
+            nullable,
+            followpos,
+            lazypos,
+            modifiers,
+            lookahead,
+            iter);
+        active = true;
+        do
         {
-          parse2(
-              begin,
-              loc,
-              firstpos,
-              lastpos,
-              nullable,
-              followpos,
-              lazypos,
-              modifiers,
-              lookahead,
-              iter);
-        }
-        else
-        {
-          parse1(
-              begin,
-              loc,
-              firstpos,
-              lastpos,
-              nullable,
-              followpos,
-              lazypos,
-              modifiers,
-              lookahead,
-              iter);
-          do
+          c = at(m_loc++);
+          if (c == '-')
           {
-            c = at(m_loc++);
-            if (c != '\0' && c != 'q' && c != 'x' && c != ':' && c != ')')
-              modifiers[c].insert(m_loc, loc);
-          } while (c != '\0' && c != ':' && c != ')');
-          opt_.i = opt_i;
-          opt_.q = opt_q;
-          opt_.m = opt_m;
-          opt_.s = opt_s;
-          opt_.x = opt_x;
-        }
+            active = !active;
+          }
+          else if (c != '\0' && c != 'l' && c != 'q' && c != 'x' && c != ':' && c != ')')
+          {
+            if (active)
+              update_modified(c, modifiers, m_loc, loc);
+            else
+              update_modified(uppercase(c), modifiers, m_loc, loc);
+          }
+        } while (c != '\0' && c != ':' && c != ')');
+        opt_.l = opt_l;
+        opt_.q = opt_q;
+        opt_.x = opt_x;
       }
     }
     else
@@ -1276,7 +1297,7 @@ void Pattern::compile_transition(
         DBGLOG("LOOKAHEAD");
         for (Map::const_iterator i = lookahead.begin(); i != lookahead.end(); ++i)
         {
-          Ranges::const_iterator j = i->second.find(loc);
+          Locations::const_iterator j = i->second.find(loc);
           DBGLOGN("%d %d (%d) %lu", state->accept, i->first, j != i->second.end(), n.loc());
           if (j != i->second.end())
           {
@@ -1294,7 +1315,7 @@ void Pattern::compile_transition(
         DBGLOG("LOOKAHEAD HEAD");
         for (Map::const_iterator i = lookahead.begin(); i != lookahead.end(); ++i)
         {
-          Ranges::const_iterator j = i->second.find(loc);
+          Locations::const_iterator j = i->second.find(loc);
           DBGLOGN("%d %d (%d) %lu", state->accept, i->first, j != i->second.end(), n.loc());
           if (j != i->second.end())
             state->heads.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
@@ -1311,7 +1332,7 @@ void Pattern::compile_transition(
           DBGLOG("LOOKAHEAD TAIL");
           for (Map::const_iterator i = lookahead.begin(); i != lookahead.end(); ++i)
           {
-            Ranges::const_iterator j = i->second.find(loc);
+            Locations::const_iterator j = i->second.find(loc);
             DBGLOGN("%d %d (%d) %lu", state->accept, i->first, j != i->second.end(), n.loc());
             if (j != i->second.end() /* CHECKED algorithmic options: 7/18 && state->accept == i->first */ ) // only add lookstop when part of the proper accept state
               state->tails.insert(static_cast<Index>(n + std::distance(i->second.begin(), j)));
@@ -1359,7 +1380,7 @@ void Pattern::compile_transition(
             switch (c)
             {
               case '.':
-                if (opt_.s || is_modified('s', modifiers, loc))
+                if (is_modified('s', modifiers, loc))
                 {
                   chars.insert(0, 0xFF);
                 }
@@ -1370,10 +1391,10 @@ void Pattern::compile_transition(
                 }
                 break;
               case '^':
-                chars.insert(opt_.m || is_modified('m', modifiers, loc) ? META_BOL : META_BOB);
+                chars.insert(is_modified('m', modifiers, loc) ? META_BOL : META_BOB);
                 break;
               case '$':
-                chars.insert(opt_.m || is_modified('m', modifiers, loc) ? META_EOL : META_EOB);
+                chars.insert(is_modified('m', modifiers, loc) ? META_EOL : META_EOB);
                 break;
               default:
                 if (c == '[' && !escapes_at(loc, "AzBb<>ij"))
@@ -1412,10 +1433,10 @@ void Pattern::compile_transition(
                       chars.insert(k->anchor() ? META_EWB : META_EWE);
                       break;
                     case '\0': // no escape at current loc
-                      if (std::isalpha(c) && (opt_.i || is_modified('i', modifiers, loc)))
+                      if (std::isalpha(c) && is_modified('i', modifiers, loc))
                       {
-                        chars.insert(upper(c));
-                        chars.insert(lower(c));
+                        chars.insert(uppercase(c));
+                        chars.insert(lowercase(c));
                       }
                       else
                       {
@@ -1424,10 +1445,10 @@ void Pattern::compile_transition(
                       break;
                     default:
                       c = compile_esc(loc + 1, chars);
-                      if (c <= 255 && std::isalpha(c) && (opt_.i || is_modified('i', modifiers, loc)))
+                      if (c <= 255 && std::isalpha(c) && is_modified('i', modifiers, loc))
                       {
-                        chars.insert(upper(c));
-                        chars.insert(lower(c));
+                        chars.insert(uppercase(c));
+                        chars.insert(lowercase(c));
                       }
                   }
                 }
@@ -1613,24 +1634,24 @@ void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) con
             chars.insert(lo, c);
           else
             error(regex_error::invalid_class_range, loc);
-          if (opt_.i || is_modified('i', modifiers, loc))
+          if (is_modified('i', modifiers, loc))
           {
             for (Char a = lo; a <= c; ++a)
             {
               if (std::isupper(a))
-                chars.insert(lower(a));
+                chars.insert(lowercase(a));
               else if (std::islower(a))
-                chars.insert(upper(a));
+                chars.insert(uppercase(a));
             }
           }
           c = META_EOL;
         }
         else
         {
-          if (std::isalpha(c) && (opt_.i || is_modified('i', modifiers, loc)))
+          if (std::isalpha(c) && is_modified('i', modifiers, loc))
           {
-            chars.insert(upper(c));
-            chars.insert(lower(c));
+            chars.insert(uppercase(c));
+            chars.insert(lowercase(c));
           }
           else
           {

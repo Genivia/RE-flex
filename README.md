@@ -40,6 +40,7 @@ Features
 
 - Compatible with Flex to eliminate a learning curve, making a transition to
   RE/flex frustration-free.
+- Generates reusable source code that is readable by humans.
 - Works with Bison and supports reentrant, bison-bridge, bison-locations,
   Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison complete symbols.
 - Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for
@@ -448,6 +449,7 @@ Changelog
 - Jul  2, 2019: 1.2.5 added `reflex::Input::in(const char *memptr, size_t memlen)` to read a memory segment (for scanning etc.), added `reflex::Input::streambuf` class to use a `reflex::Input` object as a `std::streambuf`, improved `yy_scan_buffer` and `yy_scan_bytes`.
 - Jul  3, 2019: 1.2.6 fixed a problem with lazy quantifiers used within negative patterns.
 - Jul  4, 2019: 1.2.7 added `reflex::Input::dos_streambuf` to convert DOS CRLF to LF, other improvements.
+- Jul  8, 2019: 1.2.8 added support for inverted mode modifiers `(?-imsux)` to `reflex::convert` and `reflex::Pattern`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Ranges&lt; T &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Jul 4 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Jul 8 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -140,7 +140,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab0aa356a5eec364aad70a795aeab68f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update ranges to insert the ranges of the given range set, same as Ranges::operator|=(rs).  <a href="#ab0aa356a5eec364aad70a795aeab68f5">More...</a><br /></td></tr>
 <tr class="separator:ab0aa356a5eec364aad70a795aeab68f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d2feb520bce89afdf80f7d06d8c3bcd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_ranges.html">Ranges</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_ranges.html#a3d2feb520bce89afdf80f7d06d8c3bcd">operator&amp;=</a> (const <a class="el" href="classreflex_1_1_ranges.html">Ranges</a> &amp;rs)</td></tr>
-<tr class="memdesc:a3d2feb520bce89afdf80f7d06d8c3bcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update ranges to intersect the ranges of the given range set.  <a href="#a3d2feb520bce89afdf80f7d06d8c3bcd">More...</a><br /></td></tr>
+<tr class="memdesc:a3d2feb520bce89afdf80f7d06d8c3bcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update ranges to intersect the ranges with the given range set.  <a href="#a3d2feb520bce89afdf80f7d06d8c3bcd">More...</a><br /></td></tr>
 <tr class="separator:a3d2feb520bce89afdf80f7d06d8c3bcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a658a2b69b4e435ecf079e0e5cc98c880"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_ranges.html">Ranges</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_ranges.html#a658a2b69b4e435ecf079e0e5cc98c880">operator|</a> (const <a class="el" href="classreflex_1_1_ranges.html">Ranges</a> &amp;rs) const </td></tr>
 <tr class="memdesc:a658a2b69b4e435ecf079e0e5cc98c880"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the union of two range sets.  <a href="#a658a2b69b4e435ecf079e0e5cc98c880">More...</a><br /></td></tr>
@@ -189,7 +189,7 @@ class reflex::Ranges&lt; T &gt;</h3>
 <li><code>const_iterator <a class="el" href="classreflex_1_1_ranges.html#a0e426ff9650fddac27e0433db0811bc9" title="Find the range [lo&#39;,hi&#39;] that includes the given value val, i.e. lo&#39; &lt;= val &lt;= hi&#39;. ">find(const bound_type&amp; val) const</a></code> searches for the range that includes the given value. Returns an iterator to the range found or the end iterator.</li>
 <li><code><a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">Ranges</a>&amp; <a class="el" href="classreflex_1_1_ranges.html#ad86ade66b0f5c3003dbc11e1d4e2d738" title="Update ranges to insert the given range set, where this method has lower complexity than iterating in...">operator|=(const Ranges&amp; rs)</a></code> inserts ranges rs. Returns reference to this object.</li>
 <li><code><a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">Ranges</a>&amp; <a class="el" href="classreflex_1_1_ranges.html#ab0aa356a5eec364aad70a795aeab68f5" title="Update ranges to insert the ranges of the given range set, same as Ranges::operator|=(rs). ">operator+=(const Ranges&amp; rs)</a></code> same as above.</li>
-<li><code><a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">Ranges</a>&amp; <a class="el" href="classreflex_1_1_ranges.html#a3d2feb520bce89afdf80f7d06d8c3bcd" title="Update ranges to intersect the ranges of the given range set. ">operator&amp;=(const Ranges&amp; rs)</a></code> update ranges to intersect with ranges rs. Returns reference to this object.</li>
+<li><code><a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">Ranges</a>&amp; <a class="el" href="classreflex_1_1_ranges.html#a3d2feb520bce89afdf80f7d06d8c3bcd" title="Update ranges to intersect the ranges with the given range set. ">operator&amp;=(const Ranges&amp; rs)</a></code> update ranges to intersect with ranges rs. Returns reference to this object.</li>
 <li><code><a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">Ranges</a> <a class="el" href="classreflex_1_1_ranges.html#a658a2b69b4e435ecf079e0e5cc98c880" title="Returns the union of two range sets. ">operator|(const Ranges&amp; rs) const</a></code> returns union of ranges.</li>
 <li><code><a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">Ranges</a> <a class="el" href="classreflex_1_1_ranges.html#a14efc99f9c25db9e9b4ef0dbb72e3801" title="Returns the union of two range sets, same as Ranges::operator|(rs). ">operator+(const Ranges&amp; rs) const</a></code> same as above.</li>
 <li><code><a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">Ranges</a> <a class="el" href="classreflex_1_1_ranges.html#a2bc03786da54f6077febdea2f83110e2" title="Returns the intersection of two range sets. ">operator&amp;(const Ranges&amp; rs) const</a></code> returns intersection of ranges.</li>
@@ -807,7 +807,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Update ranges to intersect the ranges of the given range set. </p>
+<p>Update ranges to intersect the ranges with the given range set. </p>
 <dl class="section return"><dt>Returns</dt><dd>reference to this object. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1104,7 +1104,7 @@ template&lt;typename T&gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Jul 4 2019 14:32:45 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Jul 8 2019 11:12:53 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -290,7 +290,7 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
   {
     return operator|=(rs);
   }
-  /// Update ranges to intersect the ranges of the given range set.
+  /// Update ranges to intersect the ranges with the given range set.
   Ranges& operator&=(const Ranges& rs) ///< ranges to intersect
     /// @returns reference to this object.
   {
@@ -881,7 +881,7 @@ class ORanges : public Ranges<T> {
   static bound_type bump(bound_type val) ///< the value to bump
     /// @returns val + 1 or val when signed or unsigned max integer.
   {
-    bound_type lav = ~val - 1; // trick to get around -Wstrict-overflow for signed types
+    bound_type lav = ~val - 1; // trick to get around -Wstrict-overflow warning for signed types
     if (std::less<bound_type>()(~lav, val)) // check integer overflow 
       return val;
     return ~lav;

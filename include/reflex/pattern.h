@@ -30,7 +30,7 @@
 @file      pattern.h
 @brief     RE/flex regular expression pattern compiler
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -146,9 +146,9 @@ class Pattern {
   {
     return static_cast<Index>(end_.size());
   }
-  /// Get subpattern of this pattern object.
+  /// Get subpattern regex of this pattern object or the while regex with index 0.
   const std::string operator[](Index choice) const
-    /// @returns subpattern string or "".
+    /// @returns subpattern string or "" when not set.
     ;
   /// Check is subpattern is reachable by a match.
   bool reachable(Index choice) const
@@ -201,16 +201,16 @@ class Pattern {
       size_t           pos = 0) ///< optional location of the error in regex string Pattern::rex_
     const;
  private:
-  typedef unsigned int         Char;
+  typedef unsigned int            Char;
 #if defined(WITH_BITS)
-  typedef Bits                 Chars; ///< represent 8-bit char (+ meta char) set as a bitvector
+  typedef Bits                    Chars; ///< represent 8-bit char (+ meta char) set as a bitvector
 #else
-  typedef ORanges<Char>        Chars; ///< represent (wide) char set as a set of ranges
+  typedef ORanges<Char>           Chars; ///< represent (wide) char set as a set of ranges
 #endif
-  typedef size_t               Location;
-  typedef ORanges<Location>    Ranges;
-  typedef std::set<Location>   Set;
-  typedef std::map<int,Ranges> Map;
+  typedef size_t                  Location;
+  typedef ORanges<Location>       Locations;
+  typedef std::set<Location>      Set;
+  typedef std::map<int,Locations> Map;
   /// Finite state machine construction position information.
   struct Position {
     typedef uint64_t        value_type;
@@ -320,7 +320,7 @@ class Pattern {
       Follow&    followpos,
       Positions& lazypos,
       Map&       modifiers,
-      Ranges&    lookahead,
+      Locations& lookahead,
       Index&     iter);
   void parse2(
       bool       begin,
@@ -331,7 +331,7 @@ class Pattern {
       Follow&    followpos,
       Positions& lazypos,
       Map&       modifiers,
-      Ranges&    lookahead,
+      Locations& lookahead,
       Index&     iter);
   void parse3(
       bool       begin,
@@ -342,7 +342,7 @@ class Pattern {
       Follow&    followpos,
       Positions& lazypos,
       Map&       modifiers,
-      Ranges&    lookahead,
+      Locations& lookahead,
       Index&     iter);
   void parse4(
       bool       begin,
@@ -353,7 +353,7 @@ class Pattern {
       Follow&    followpos,
       Positions& lazypos,
       Map&       modifiers,
-      Ranges&    lookahead,
+      Locations& lookahead,
       Index&     iter);
   void parse_esc(Location& loc) const;
   void compile(
@@ -440,12 +440,30 @@ class Pattern {
     return '\0';
   }
   static bool is_modified(
-      int        mode,
+      Char       mode,
       const Map& modifiers,
       Location   loc)
   {
     Map::const_iterator i = modifiers.find(mode);
-    return (i != modifiers.end() && i->second.find(loc) != i->second.end());
+    return i != modifiers.end() && i->second.find(loc) != i->second.end();
+  }
+  static void update_modified(
+      Char     mode,
+      Map&     modifiers,
+      Location from,
+      Location to)
+  {
+    // mode modifiers i, m, s (enabled) I, M, S (disabled)
+    if (modifiers.find(reversecase(mode)) != modifiers.end())
+    {
+      Locations modified(from, to);
+      modified -= modifiers[reversecase(mode)];
+      modifiers[mode] += modified;
+    }
+    else
+    {
+      modifiers[mode].insert(from, to);
+    }
   }
   static bool is_meta(Char c)
   {
@@ -528,6 +546,18 @@ class Pattern {
   static Index index_of(Opcode opcode)
   {
     return opcode & 0xFFFF;
+  }
+  static Char lowercase(Char c)
+  {
+    return static_cast<unsigned char>(c | 0x20);
+  }
+  static Char uppercase(Char c)
+  {
+    return static_cast<unsigned char>(c & ~0x20);
+  }
+  static Char reversecase(Char c)
+  {
+    return static_cast<unsigned char>(c ^ 0x20);
   }
   Option                opt_; ///< pattern compiler options
   std::string           rex_; ///< regular expression string

@@ -30,7 +30,7 @@
 @file      absmatcher.h
 @brief     RE/flex abstract matcher base class and pattern matcher class
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -1178,7 +1178,7 @@ class PatternMatcher : public AbstractMatcher {
   {
     return own_ && pat_ != NULL;
   }
-  /// Returns the pattern object associated with this matcher.
+  /// Returns a reference to the pattern object associated with this matcher.
   const Pattern& pattern() const
     /// @returns reference to pattern object.
   {

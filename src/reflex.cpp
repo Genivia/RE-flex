@@ -195,6 +195,7 @@ static const char *options_table[] = {
 /// - `+` possessive quantifiers for repeats are supported
 ///
 /// The optional `"."` (dot) specifies that dot matches any character except newline.
+/// A dot is implied by the presence of the 's' modifier, and can be omitted in that case.
 static const Reflex::Library library_table[] = {
   {
     "reflex",

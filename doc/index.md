@@ -18,21 +18,25 @@ What is RE/flex?                                                       {#intro}
 RE/flex is a flexible scanner-generator framework for generating regex-centric,
 Flex-compatible scanners.  The RE/flex command-line tool is compatible with the
 Flex command-line tool.  RE/flex accepts standard Flex specification syntax and
-supports Flex options.
+supports Flex options.  RE/flex also includes a fast regex engine.  The library
+of this regex engine can be used to implement critically-fast regex matching in
+any C++ application.
 
-Features:
+RE/flex features:
 
+- includes a flexible library of regex classes that is extensible;
+- the scanner generator is compatible with Flex/Lex lexer specifications;
+- the scanner generator produces source code that is understandable by humans;
+- options for intuitive customization of the lexer class source code output;
+- works with Bison, supports reentrant, C++, bison-bridge and bison-locations;
+- generates scanners that are thread-safe by default;
+- efficient matching in direct code or with finite state machine tables;
 - integrated support for Unicode, auto-detects BOM in files (UTF-8/16/32);
 - optional "free space mode" improves readability of lexer specifications;
 - regular expressions may contain lazy quantifiers;
 - regular expressions may contain word boundary anchors;
 - regular expressions may contain indent/dedent markers for matching;
-- intuitive customization of the C++ lexer class code output;
-- efficient matching in direct code or with finite state machine tables;
-- visualization of finite state machines;
-- generates scanners that are thread-safe by default;
-- works with Bison, supports reentrant, C++, bison-bridge and bison-locations;
-- includes a regex class library that is extensible;
+- generates graphviz files for visualization of finite state machines;
 - Boost.Regex may be used as a regex engine;
 - C++11 std::regex may be used as a regex engine (but not with a scanner);
 - conversion of regex expressions, for regex engines that lack regex features;
@@ -67,20 +71,21 @@ expressions refers to the formal concept of *regular languages*, wheras *regex*
 refers to backtracking-based regex matching that Perl introduced, that could no
 longer be said to be regular in a true mathematical sense.
 
-In summary, RE/flex is
+In summary, the design goals of RE/flex are:
 
 - a *feature-rich replacement* of both [Flex](dinosaur.compilertools.net/#flex)
   and [Lex](dinosaur.compilertools.net/#lex), preserving the compatibility with
-  the Bison (Yacc) parser generators;
-
-- an *enhancement* of [Boost.Regex](www.boost.org/libs/regex) to use its engine
-  for matching, seaching, splitting and for scanning of tokens on various types
-  of data sources, such as strings, files, and streams of unlimited length.
+  these tools and with the Bison (Yacc) parser generators, but producing source
+  code that is faster than Flex/Lex and is in fact readable by humans.
 
 - a stand-alone *regex library* is included with RE/flex for fast matching with
   efficient deterministic finite state machines (FSMs) contructed from patterns
   of POSIX-mode regular expressions that are extended with lazy quantifiers for
   lazy repeats, word boundary anchors, Unicode UTF-8, and much more;
+
+- an *enhancement* of [Boost.Regex](www.boost.org/libs/regex) to use its engine
+  for matching, seaching, splitting and for scanning of tokens on various types
+  of data sources, such as strings, files, and streams of unlimited length.
 
 - a *flexible regex framework* that combines the above with a collection of C++
   class templates that are easy to use and that offer a rich API for searching,
@@ -96,6 +101,10 @@ The typographical conventions used by this document are:
 
 * <b>`Courier`</b> denotes commands and command or program output displayed in
   a terminal window.
+
+@note This is a note to clarify a technical matter.
+
+@warning Look out for warnings.
 
 🔝 [Back to table of contents](#)
 
@@ -141,11 +150,11 @@ The tokenizer returns zero (0) when the end of the input is reached.
 
 Lex and Flex have remained relatively stable (inert) tools while the demand has
 increased for tokenizing Unicode texts encoded in common wide character formats
-such as UTF-8, UCS/UTF-16, and UTF-32.  Lex/Flex still use 8-bit character sets
-for regex patterns.  Regex pattern syntax in Lex/Flex is also limited.  No lazy
+such as UTF-8, UCS/UTF-16, and UTF-32.  Flex/Lex still use 8-bit character sets
+for regex patterns.  Regex pattern syntax in Flex/Lex is also limited.  No lazy
 repetitions.  No word boundary anchors.  No indent and dedent matching.
 
-It is possible, but not trivial to implement scanners with Lex/Flex to tokenize
+It is possible, but not trivial to implement scanners with Flex/Lex to tokenize
 the source code of more modern programming languages with Unicode-based lexical
 structures, such as Java, C#, and C++11.
 
@@ -154,12 +163,12 @@ for matching.  However, the UTF-8 patterns for common Unicode character classes
 are unrecognizable by humans and are prone to errors when written by hand.  The
 UTF-8 pattern to match a Unicode letter `\p{L}` is hundreds of lines long!
 
-Furthermore, the regular expression syntax in Lex/Flex is limited to meet POSIX
+Furthermore, the regular expression syntax in Flex/Lex is limited to meet POSIX
 mode matching constraints.  Scanners should use POSIX mode matching, as we will
 explain below.  To make things even more interesting, scanners should avoid the
 "greedy trap" when matching input.
 
-Lex/Flex scanners use POSIX pattern matching, meaning that the leftmost longest 
+Flex/Lex scanners use POSIX pattern matching, meaning that the leftmost longest 
 match is returned (among a set of patterns that match the same input).  Because
 POSIX matchers produce the longest match for any given input text, we should be
 careful when using patterns with "greedy" repetitions (`X*`, `X+` etc.) because
@@ -171,7 +180,7 @@ pattern `<!−−.*−−>`.  The problem is that the repetition `X*` is greedy 
 `.*−−>` pattern matches everything until the last `−−>` while moving over `−−>` 
 that are between the `<!−−` and the last `−−>`.
 
-@note Dot `.` normally does not match newline `\n` in Lex/Flex patterns, unless
+@note Dot `.` normally does not match newline `\n` in Flex/Lex patterns, unless
 we use *dot-all mode* that is sometimes confusingly called "single line mode".
 
 We can use much more complex patterns such as `<!−−([^−]|−[^−]|−−+[^−>])*−*−−>`
@@ -188,7 +197,7 @@ of the `X*?` repeat to match only `X` repeately if the rest of the pattern does
 not match.  Therefore, the regex `<!−−.*?−−>` matches HTML comments and nothing
 more.
 
-But Lex/Flex does not permit us to be lazy!
+But Flex/Lex does not permit us to be lazy!
 
 Not surprising, even the Flex manual shows ad-hoc code rather than a pattern to
 scan over C/C++ source code input to match multiline comments that start with a
@@ -705,10 +714,10 @@ change its pattern, you can use the following methods:
   Method          | Result
   --------------- | -----------------------------------------------------------
   `input(i)`      | set input to `reflex::Input i` (string, stream, or `FILE*`)
-  `pattern(p)`    | set pattern `p` string, `reflex::Pattern` or `boost::regex`
+  `pattern(p)`    | set pattern `p`, `reflex::Pattern` or `boost::regex`
   `has_pattern()` | true if the matcher has a pattern assigned to it
   `own_pattern()` | true if the matcher has a pattern to manage and delete
-  `pattern()`     | get the pattern object, `reflex::Pattern` or `boost::regex`
+  `pattern()`     | a reference to the pattern object, `reflex::Pattern` or `boost::regex`
   `buffer()`      | buffer all input at once, returns true if successful
   `buffer(n)`     | set the adaptive buffer size to `n` bytes to buffer input
   `interactive()` | sets buffer size to 1 for console-based (TTY) input
@@ -902,11 +911,11 @@ The RE/flex `reflex::Pattern` construction options are given as a string:
   `f=file.cpp;` | save finite state machine code to `file.cpp`
   `f=file.gv;`  | save deterministic finite state machine to `file.gv`
   `i`           | case-insensitive matching, same as `(?i)X`
-  `l`           | Lex-style trailing context with `/`, same as `(?l)X`
+  `l`           | Flex/Lex-style trailing context with `/`, same as `(?l)X`
   `m`           | multiline mode, same as `(?m)X`
   `n=name;`     | use `reflex_code_name` for the machine (instead of `FSM`)
   `o`           | only with option `f`: generate optimized FSM native C++ code
-  `q`           | Lex-style quotations "..." equal `\Q...\E`, same as `(?q)X`
+  `q`           | Flex/Lex-style quotations "..." equal `\Q...\E`, same as `(?q)X`
   `r`           | throw regex syntax error exceptions
   `s`           | dot matches all (aka. single line mode), same as `(?s)X`
   `x`           | free space mode with inline comments, same as `(?x)X`
@@ -1911,9 +1920,9 @@ input is reached, which makes it impossible to distinguish `\0` (NUL) from EOF.
 By contrast, `matcher().input()` returns EOF (-1) when the end of the input is
 reached.
 
-@warning Do not invoke `matcher()` before `lex()` (or `yylex()` with option
-`−−flex`) is invoked!  A matcher is not initially assigned to the lexer when it
-is constructed.
+@warning Do not invoke `matcher()` before the `lex()` (or `yylex()` with option
+`−−flex`) is invoked!  A matcher is not initially assigned to a lexer when the
+lexer is constructed, leaving `matcher()` undefined.
 
 Use <b>`reflex`</b> options `−−flex` and `−−bison` to enable global Flex
 actions and variables.  This makes Flex actions and variables globally
@@ -2223,12 +2232,12 @@ The order of precedence for composing larger patterns from sub-patterns is as
 follows, from high to low precedence:
 
 1. Characters, character classes (bracket expressions), escapes, quotation
-2. Grouping `(φ)`, `(?:φ)`, `(?=φ)`, and inline modifiers `(?imsux:φ)`
+2. Grouping `(φ)`, `(?:φ)`, `(?=φ)`, and inline modifiers `(?imsux-imsux:φ)`
 3. Quantifiers `?`, `*`, `+`, `{n,m}`
 4. Concatenation `φψ` (including trailing context `φ/ψ`)
 5. Anchoring `^`, `$`, `\<`, `\>`, `\b`, `\B`, `\A`, `\z` 
 6. Alternation `φ|ψ`
-7. Global modifiers `(?imsux)φ`
+7. Global modifiers `(?imsux-imsux)φ`
 
 @note When using regex patterns in C++ literal strings, make sure that "regex
 escapes are escaped", meaning that an extra backslash is needed for every
@@ -2329,8 +2338,7 @@ library:
   -------------------------------------- | ------------------------------------
   `.`                                    | matches any single Unicode character except newline (including \ref invalid-utf)
   `\X`                                   | matches any Unicode character (with or without the `−−unicode` option)
-  `\x{3B1}`                              | matches Unicode character U+03B1, i.e. `α`
-  `\u{3B1}`                              | matches Unicode character U+03B1, i.e. `α`
+  `\x{3B1}`, `\u{3B1}`                   | matches Unicode character U+03B1, i.e. `α`
   `\R`                                   | matches a Unicode line break
   `\s`, `\p{Zs}`                         | matches a white space character with Unicode sub-propert Zs
   `\l`, `\p{Ll}`                         | matches a lower case letter with Unicode sub-property Ll
@@ -2626,9 +2634,9 @@ the underscore.
   `φ\<`     | matches `φ` that ends as a non-word
   `φ\>`     | matches `φ` that ends as a word
 
-@note The RE/flex regex library requires word boundaries to be specified in
-patterns at the start or end of the pattern.  Boundaries are not permitted in
-the middle of a pattern, see \ref reflex-limitations.
+@note The RE/flex regex library requires anchors and word boundaries to be
+specified in patterns at the start or end of the pattern.  Boundaries are not
+permitted in the middle of a pattern, see \ref reflex-limitations.
 
 🔝 [Back to table of contents](#)
 
@@ -2775,20 +2783,19 @@ The negative pattern `(?^\\\n\h+)` consumes input internally as if we are
 repeately calling `input()` (or `yyinput()` with `−−flex`).  We used it here to
 consume the line-ending `\` and the indent that followed it, as if this text
 was not part of the input, which ensures that the current indent positions
-defined by `\i` are not affected.
+defined by `\i` are not affected.  See \ref reflex-pattern-dents for more
+details on indentation matching.
 
 Note that any actions corresponding to negative patterns in the lexer
 specification are never executed, because negative pattern matches are never
 returned by the matcher engine.
 
-Negative patterns may be followed by other patterns.  So for example `(?^ab)c?`
-is correct and matches `abc` but ignores input `ab` when not followed by a `c`
-(in fact, `(?^ab)c?` can be written as `(?^ab)c`, because the negative pattern
-`ab` is the first choice and the second choice is the non-negative pattern
-`abc`).
-
-See \ref reflex-pattern-dents for more examples related to indentation
-matching.
+@warning Negative patterns may be preceded by any pattern to enlarge the
+negative pattern.  That is, `X(?^Y)` equals `(?^XY)`.  However, when followed
+by a pattern `(?^X)Y` the matching behavior is currently not well defined.  For
+example `(?^ab)c` matches `abc` but ignores input `ab` when not followed by a
+`c`, as if the pattern was `(?^ab)c?`.  Future RE/flex updates will meet the
+requirement that patterns of the form `(?^X)Y` equal `(?^XY)`.
 
 🔝 [Back to table of contents](#)
 
@@ -2831,7 +2838,8 @@ apply to trailing context and lookaheads that the RE/flex matcher implements.
 
 Use <b>`reflex`</b> option `−−unicode` (or <i>`%%option unicode`</i>) to
 globally enable Unicode.  Use `(?u:φ)` to locally enable Unicode in a pattern
-`φ`.  Unicode mode enables the following patterns to be used:
+`φ`.  Use `(?-u:φ)` to locally disable Unicode in `φ`.  Unicode mode enables
+the following patterns to be used:
 
   Pattern            | Matches
   ------------------ | --------------------------------------------------------
@@ -2858,20 +2866,25 @@ regex libraries, see \ref regex-convert for more details.
 ### Free space mode                                 {#reflex-pattern-freespace}
 
 Free space mode can be useful to improve readability of patterns.  Free space
-mode permits spacing between concatenations and alternations in patterns.  As
-always, to match a single space use `" "` or `[ ]`.  Long patterns can continue
-on the next line(s) when lines end with an escape `\`.
+mode permits spacing between concatenations and alternations in patterns.  To
+to match a single space use `[ ]`, to match a tab use `[\t]`, to match either
+use `\h`.  Long patterns may continue on the next line when the line ends with
+an escape `\`.  Comments are ignored in patterns in free-space mode.  Comments
+start with a `#` and end at the end of the line.  To specify a `#` use `[#]`.
+
+In addition, `/*...*/` comments are permitted in lexer specifications in
+free-space mode when the `−−matcher=reflex` option is used (by default).
 
 Free space mode requires lexer actions in \ref reflex-spec-rules of a lexer
 specification to be placed in <i>`{`</i> and <i>`}`</i> blocks and other code
-in <i>`%{`</i> and <i>`%}`</i> instead of indented.
+to be placed in <i>`%{`</i> and <i>`%}`</i> instead of indented.
 
 To enable free space mode in <b>`reflex`</b> use the `−−freespace` option (or
 <i>`%%option freespace`</i>).
 
-When converting regex patterns for use with a C++ regex library, prepend `(?x)`
-to the regex to specify free-space mode or use `(?x:φ)` to locally enable
-free-space mode in the sub-pattern `φ`.  The regex pattern may require
+Prepend `(?x)` to the regex to specify free-space mode or use `(?x:φ)` to
+locally enable free-space mode in the sub-pattern `φ`.  Use `(?-x:φ)` to
+locally disable free-space mode in `φ`.  The regex pattern may require
 conversion when the regex library does not support free-space mode modifiers,
 see \ref regex-convert for more details.
 
@@ -2883,11 +2896,9 @@ Multi-line mode makes the anchors `^` and `$` match the start and end of a
 line, respectively.  Multi-line mode is the default mode in lexer
 specifications.
 
-When converting regex patterns for use with a C++ regex library, prepend `(?m)`
-to the regex to specify multi-line mode or use `(?m:φ)` to locally enable
-multi-line mode in the sub-pattern `φ`.  The regex pattern may require
-conversion when the regex library does not support multi-line mode modifiers,
-see \ref regex-convert for more details.
+Prepend `(?m)` to the regex to specify multi-line mode or use `(?m:φ)` to
+locally enable multi-line mode in the sub-pattern `φ`.  Use `(?-m:φ)` to
+locally disable multi-line mode in `φ`.
 
 🔝 [Back to table of contents](#)
 
@@ -2896,11 +2907,11 @@ see \ref regex-convert for more details.
 To enable dotall mode in <b>`reflex`</b> use the `-a` or `−−dotall` option (or
 <i>`%%option dotall`</i>).
 
-When converting regex patterns for use with a C++ regex library, prepend `(?s)`
-to the regex to specify dotall mode or use `(?s:φ)` to locally enable dotall
-mode in the sub-pattern `φ`.  The regex pattern may require conversion when the
-regex library does not support dotall mode modifiers, see \ref regex-convert
-for more details.
+Prepend `(?s)` to the regex to specify dotall mode or use `(?s:φ)` to locally
+enable dotall mode in the sub-pattern `φ`.  Use `(?-s:φ)` to locally disable
+dotall mode in `φ`.  The regex pattern may require conversion when the regex
+library does not support dotall mode modifiers, see \ref regex-convert for more
+details.
 
 🔝 [Back to table of contents](#)
 
@@ -2909,11 +2920,22 @@ for more details.
 To enable case-insensitive mode in <b>`reflex`</b> use the `-i` or
 `−−case-insensitive` option (or <i>`%%option case-insensitive`</i>).
 
-When converting regex patterns for use with a C++ regex library, prepend `(?i)`
-to the regex to specify case-insensitive mode or use `(?i:φ)` to locally enable
-case-insensitive mode in the sub-pattern `φ`.  The regex pattern may require
+Prepend `(?i)` to the regex to specify case-insensitive mode or use `(?i:φ)` to
+locally enable case-insensitive mode in the sub-pattern `φ`.  Use `(?-i:φ)` to
+locally disable case-insensitive mode in `φ`.  The regex pattern may require
 conversion when the regex library does not support case-insensitive mode
 modifiers, see \ref regex-convert for more details.
+
+🔝 [Back to table of contents](#)
+
+### Multiple mode modifiers                         {#reflex-pattern-modifiers}
+
+Multiple `(?i:φ)` \ref reflex-pattern-anycase, `(?m:φ)`
+\ref reflex-pattern-multiline, `(?s:φ)` \ref reflex-pattern-dotall, `(?u:φ)`
+\ref reflex-pattern-unicode, and `(?x:φ)` \ref reflex-pattern-freespace
+modifiers may be applied to the same pattern `φ` by combining them in one
+inline modifier `(?imsux-imsux:φ)`, where the mode modifiers before the dash
+are enabled and the mode modifiers after the dash are disabled.
 
 🔝 [Back to table of contents](#)
 
@@ -5206,7 +5228,7 @@ Limitations                                               {#reflex-limitations}
 -----------
 
 The RE/flex matcher engine uses an efficient FSM.  There are known limitations
-to FSM matching that apply to Lex/Flex and therefore also apply to the
+to FSM matching that apply to Flex/Lex and therefore also apply to the
 <b>`reflex`</b> scanner generator and to the RE/flex matcher engine:
 
 - Lookaheads (trailing contexts) must appear at the end of a pattern when using
@@ -5413,7 +5435,7 @@ the matching behavior differs and cannot be controlled with mode modifiers:
 - `\x7f` is not supported in POSIX mode;
 - `\cX` is not supported in POSIX mode;
 - `\Q..\E` is not supported;
-- no mode modifiers `(?imsux:φ)`;
+- no mode modifiers `(?imsux-imsux:φ)`;
 - no `\A`, `\z`, `\<` and `\>` anchors;
 - no `\b` and `\B` anchors in POSIX mode;
 - no non-capturing groups `(?:φ)` in POSIX mode;
@@ -5458,7 +5480,7 @@ See \ref regex-convert for more details on regex converters.
 🔝 [Back to table of contents](#)
 
 
-The RE/flex matcher class                                      {#regex-matcher}
+The reflex::Matcher class                                      {#regex-matcher}
 -------------------------
 
 The RE/flex framework includes a POSIX regex matching library `reflex::Matcher`
@@ -5519,21 +5541,26 @@ See \ref regex-convert for more details on regex converters.
 🔝 [Back to table of contents](#)
 
 
-The RE/flex pattern class                                      {#regex-pattern}
+The reflex::Pattern class                                      {#regex-pattern}
 -------------------------
 
 The `reflex::Pattern` class is used by the `reflex::matcher` for pattern
 matching.  The `reflex::Pattern` class converts a regex pattern to an efficient
-FSM and takes a regex string and options to construct the FSM internally:
+FSM and takes a regex string and options to construct the FSM internally.
+The pattern instance is passed to a `reflex::Matcher` constructor:
 
 ~~~{.cpp}
     #include <reflex/matcher.h>
 
     [static] reflex:Pattern pattern(string [, "options"] )
+
+    reflex::Matcher matcher(pattern, reflex::Input [, "options"] )
 ~~~
 
+It may also be used to replace a matcher's current pattern, see \ref intro2.
+
 It is recommended to create a static instance of the pattern if the regex
-string is fixed.  This avoids repeated FSM construction.
+string is fixed.  This avoids repeated FSM construction at run time.
 
 The following options are combined in a string and passed to the
 `reflex::Pattern` contructor:
@@ -5545,10 +5572,10 @@ The following options are combined in a string and passed to the
   `f=file.cpp;` | save finite state machine code to `file.cpp`
   `f=file.gv;`  | save deterministic finite state machine to `file.gv`
   `i`           | case-insensitive matching, same as `(?i)X`
-  `l`           | Lex-style trailing context with `/`, same as `(?l)X`
+  `l`           | Flex/Lex-style trailing context with `/`
   `m`           | multiline mode, same as `(?m)X`
   `n=name;`     | use `reflex_code_name` for the machine (instead of FSM)
-  `q`           | Lex-style quotations "..." equals `\Q...\E`, same as `(?q)X`
+  `q`           | Flex/Lex-style quotations "..." equals `\Q...\E`
   `r`           | throw regex syntax error exceptions 
   `s`           | dot matches all (aka. single line mode), same as `(?s)X`
   `x`           | inline comments, same as `(?x)X`
@@ -5560,7 +5587,7 @@ with option `"r"` when the regex string has problems:
 ~~~{.cpp}
     try
     {
-      reflex::Pattern pattern(argv[1], "r");
+      reflex::Pattern pattern(argv[1], "r"); // "r" option throws syntax error exceptions
       ...
       // code that uses the pattern object
       ...
@@ -5598,6 +5625,44 @@ Likewise, the `reflex::Matcher::convert`, `reflex::BoostPerlMatcher::convert`,
 functions may throw a `reflex_error` exception.  See the next section for
 details.
 
+The `reflex::Pattern` class has the following public methods:
+
+  Method        | Result
+  ------------- | -------------------------------------------------------------
+  `size()`      | returns the number of top-level sub-patterns
+  `[0]`         | operator returns the regex string of the pattern
+  `[n]`         | operator returns the `n`th sub-pattern regex string
+  `reachable(n)`| true if sub-pattern `n` is reachable in the FSM
+
+The `reflex::Pattern::reachable` method verifies which top-level grouped
+alternations are reachable.  This means that the sub-pattern of an alternation
+has a FSM accepting state that identifies the sub-pattern.  For example:
+
+~~~{.cpp}
+    #include <reflex/matcher.h>
+
+    reflex::Pattern pattern("(a+)|(a)", "r");
+    std::cout << "regex = " << pattern[0] << std::endl;
+    for (size_t i = 1; i <= pattern.size(); ++i)
+      if (!pattern.reachable(i))
+        std::cerr << pattern[i] << " is not reachable" << std::endl;
+~~~
+
+When executed this code prints:
+
+    regex = (a+)|(a)
+    (a) is not reachable
+
+For this example regex, `(a)` is not reachable as the pattern is subsumed by
+`(a+)`.  The `reflex::Matcher::accept` method will never return 2 when
+matching the input `a` and always return 1, as per leftmost longest match
+policy.  The same observation holds for the `reflex::Matcher::matches`,
+`reflex::Matcher::find`, `reflex::Matcher::scan`, and `reflex::Matcher::split`
+method and functors.  Reversing the alternations resolves this: `(a)|(a+)`.
+
+@note The `reflex::Pattern` regex forms support capturing groups at the
+top-level only, i.e. among the top-level alternations.
+
 🔝 [Back to table of contents](#)
 
 
@@ -5611,8 +5676,8 @@ that the selected regex engines can handle.
 
 The converters translate `\p` Unicode classes, translate character
 class set operations such as `[a-z−−[aeiou]]`, convert escapes such as `\X`,
-and enforce `(?imsux:φ)` mode modifiers to a regex string that the underlying
-regex library understands and can use.
+and enable/disable `(?imsux-imsux:φ)` mode modifiers to a regex string that the
+underlying regex library understands and can use.
 
 Each converter is specific to the regex engine.  Use a converter for the
 matcher of your choice:
@@ -5640,9 +5705,9 @@ following `reflex::convert_flag` flags:
   `reflex::convert_flag::none`      | no conversion
   `reflex::convert_flag::basic`     | convert basic regular expression syntax (BRE) to extended regular expression syntax (ERE)
   `reflex::convert_flag::unicode`   | `.`, `\s`, `\w`, `\l`, `\u`, `\S`, `\W`, `\L`, `\U` match Unicode, same as `(?u)`
-  `reflex::convert_flag::recap`     | remove capturing groups, add capturing groups to the top level
-  `reflex::convert_flag::lex`       | convert Lex/Flex regular expression syntax
-  `reflex::convert_flag::u4`        | convert `\uXXXX` (shorthand for `\u{XXXX}`)
+  `reflex::convert_flag::recap`     | remove capturing groups and add capturing groups to the top level
+  `reflex::convert_flag::lex`       | convert Flex/Lex regular expression syntax
+  `reflex::convert_flag::u4`        | convert `\uXXXX` (shorthand for `\u{XXXX}`), may conflict with `\u` (upper case letter).
 
 The following `reflex::convert_flag` flags are internally used by the
 converters to convert a regex pattern that contains `(?isx)` modifiers when one
@@ -5650,10 +5715,10 @@ or more modifiers is not supported byt the regex library:
 
   Flag                              | Effect
   --------------------------------- | ---------------------------------------------------------------
-  `reflex::convert_flag::anycase`   | convert regex to ignore case, to replace `(?i)`
-  `reflex::convert_flag::freespace` | convert regex by removing spacing, to replace `(?x)`
-  `reflex::convert_flag::dotall`    | convert `.` (dot) to match all, same as `(?s)`
-  `reflex::convert_flag::multiline` | no conversion (asserts multiline anchors `^` and `$`)
+  `reflex::convert_flag::anycase`   | convert regex to ignore case
+  `reflex::convert_flag::freespace` | convert regex by removing all freespace-mode spacing
+  `reflex::convert_flag::dotall`    | convert `.` (dot) to match all (match newline)
+  `reflex::convert_flag::multiline` | asserts if `(?m)` is supported for multiline anchors `^` and `$`
 
 The following example enables Unicode matching by converting the regex pattern
 with the `reflex::convert_flag::unicode` flag:
@@ -5720,8 +5785,8 @@ example when the regex syntax is invalid:
 Methods and iterators                                          {#regex-methods}
 ---------------------
 
-The RE/flex abstract matcher provides four operations for matching with an
-instance of a regex engine:
+The RE/flex abstract matcher, that every other RE/flex matcher inherits,
+provides four operations for matching with an instance of a regex engine:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
@@ -6261,8 +6326,9 @@ regex-convert, for example as follows:
 Here we made the converted pattern static to avoid repeated conversion and
 construction overheads.
 
-@note Strings cannot contain the terminating `\0` (NUL) character.  To match
-raw binary content that contains zeros, use a `std::istringstream`.
+@note The `char*`, `wchar_t*`, and `std::wstring` strings cannot contain a `\0`
+(NUL) character and the first `\0` terminates matching.  To match strings
+and binary input that contain `\0`, use `std::string` or `std::istringstream`.
 
 🔝 [Back to table of contents](#)
 
@@ -6458,7 +6524,8 @@ UTF-16/32 encodings are automatically normalized to UTF-8 (when a UTF BOM is
 present in the file or you can specify \ref regex-input-file).
 
 @warning The `reflex::Input::size` method returns the number of bytes available
-that includes CRLF pairs.  The actual number of bytes read may be smaller.
+that includes CRLF pairs.  The actual number of bytes read may be smaller after
+replacing CRLF by LF.
 
 See also \ref regex-input-streambuf.
 
@@ -7292,9 +7359,8 @@ RE/flex applications:
 
 🔝 [Back to contents](#)
 
-
 MSVC++ compiler bug                                                     {#msvc}
-===================
+-------------------
 
 Some MSVC++ compilers may cause problems with C++11 range-based loops.  When a
 matcher object is constructed in a range-based loop it is destroyed before the
