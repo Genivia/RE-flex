@@ -211,7 +211,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// FSM code HEAD.
   inline void FSM_HEAD(Pattern::Index la)
   {
-    if (lap_.size() <= la)
+    if (lap_.size() <= la && la < Pattern::IMAX)
       lap_.resize(la + 1, -1);
     lap_[la] = static_cast<int>(pos_ - (txt_ - buf_));
   }
@@ -321,7 +321,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   void newline(size_t& col) ///< indent column counter
   {
     while (ind_ + 1 < pos_)
-      col += buf_[ind_++] == '\t' ? 1 + ((-1 - col) & (opt_.T - 1)) : 1;
+      col += buf_[ind_++] == '\t' ? 1 + (~col & (opt_.T - 1)) : 1;
     DBGLOG("Newline with indent/dedent? col = %zu", col);
   }
   /// Returns true if looking at indent.

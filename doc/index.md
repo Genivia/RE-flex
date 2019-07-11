@@ -15,23 +15,24 @@ RE/flex user guide                                                  {#mainpage}
 What is RE/flex?                                                       {#intro}
 ================
 
-RE/flex is a flexible scanner-generator framework for generating regex-centric,
-Flex-compatible scanners.  The RE/flex command-line tool is compatible with the
-Flex command-line tool.  RE/flex accepts standard Flex specification syntax and
-supports Flex options.  RE/flex also includes a fast regex engine.  The library
-of this regex engine can be used to implement critically-fast regex matching in
-any C++ application.
+RE/flex is the regex-centric, fast lexical analyzer generator with full Unicode
+support, indent/nodent/dedent anchors, lazy quantifiers, word boundaries, and
+many other modern features.  RE/flex also includes a fast regex engine written
+in C++ with options to generate finite state machine tables or direct code to
+match input more efficiently.  RE/flex includes a smart input class to
+normalize input from files, streams, strings, and memory.  RE/flex is
+compatible with Flex and Bison.
 
-RE/flex features:
+Features:
 
 - includes a flexible library of regex classes that is extensible;
 - the scanner generator is compatible with Flex/Lex lexer specifications;
-- the scanner generator produces source code that is understandable by humans;
-- options for intuitive customization of the lexer class source code output;
 - works with Bison, supports reentrant, C++, bison-bridge and bison-locations;
+- generates source code that is easy to understand;
 - generates scanners that are thread-safe by default;
+- options for intuitive customization of the lexer class source code output;
 - efficient matching in direct code or with finite state machine tables;
-- integrated support for Unicode, auto-detects BOM in files (UTF-8/16/32);
+- fully supports Unicode, auto-detects BOM in files (UTF-8/16/32);
 - optional "free space mode" improves readability of lexer specifications;
 - regular expressions may contain lazy quantifiers;
 - regular expressions may contain word boundary anchors;
@@ -42,15 +43,14 @@ RE/flex features:
 - conversion of regex expressions, for regex engines that lack regex features;
 - released under a permissive open source license (BSD-3).
 
-RE/flex is not merely designed to fix the limitations of Flex and Lex!  RE/flex
-balances efficiency with flexibility by offering a choice of regex engines that
-are used by the generated scanner.  The choice includes Boost.Regex and RE/flex
-matcher engines that offer a rich regex syntax.  The RE/flex POSIX matcher adds
-lazy quantifiers, word boundary anchors, and other useful patterns to the POSIX
-mode of matching.  Also Unicode character sets and ASCII/UTF-8/16/32 file input
-is supported by RE/flex, without any additional coding required.  RE/flex regex
-patterns are converted to efficient deterministic finite state machines.  These
-machines differ from Flex in supporting the new pattern-matching features.
+RE/flex balances efficiency with flexibility by offering a choice of regex
+engines that are used by the generated scanner.  The choice includes
+Boost.Regex and RE/flex matcher engines that offer a rich regex syntax.  The
+RE/flex POSIX matcher adds lazy quantifiers, word boundary anchors, and other
+useful patterns to the POSIX mode of matching.  Also Unicode character sets and
+ASCII/UTF-8/16/32 file input is supported by RE/flex, without any additional
+coding required.  RE/flex regex patterns are converted to efficient
+deterministic finite state machines.
 
 RE/flex incorporates proper object-oriented design principles and does not rely
 on macros and globals as Flex does.  Macros and globals are added to the source
@@ -273,7 +273,7 @@ In summary:
   
 - The RE/flex scanner generator option `−−bison` generates a scanner compatible
   with [Bison](dinosaur.compilertools.net/#bison).  RE/flex also supports Bison
-  bridge (pure reentrant and MT-safe) parsers.
+  bridge (pure reentrant and thread-safe) parsers.
 
 - The regular expression syntax in Flex and Lex specifications is restricted to
   POSIX ERE.  By contrast, the RE/flex specification syntax is regex-centric by
@@ -283,7 +283,8 @@ In summary:
   abstract base matcher class template.
 
 - RE/flex scanners are not implemented as a set of global functions and tables.
-  RE/flex scanners are instances of generated lexer classes.  Thus are MT-safe.
+  RE/flex scanners are instances of generated lexer classes, which ensures that
+  scanners are thread-safe (by contrast, Flex and Flex++ are not thread-safe).
   A lexer class is derived from an abstract base lexer class template and it is
   instantiated with a regex matcher engine class that is provided as a template
   parameter.
@@ -1215,11 +1216,11 @@ matcher specified with option `-m`.
 #### `−−tabs=N`
 
 This option sets the tab size to `N`, where `N` > 0 must be a power of 2.  The
-tab size is used internally to determine the column position for \ref
-reflex-pattern-dents matching and to determine the column position returned by
-`columno()` and the number of columns returned by `columns()`.  It has no
-effect otherwise.  This option assigns the `T=N` value of the `reflex::Matcher`
-constructor options at runtime.
+tab size is used internally to determine the column position for
+\ref reflex-pattern-dents matching and to determine the column position
+returned by `columno()` and the number of columns returned by `columns()`.  It
+has no effect otherwise.  This option assigns the `T=N` value of the
+`reflex::Matcher` constructor options at runtime.
 
 #### `-u`, `−−unicode`
 
@@ -1387,23 +1388,22 @@ detection and UTF decoding.
 #### `−−bison`
 
 This option generates a scanner that works with Bison parsers, by defining
-global (non-MT-safe and non-reentrant) "yy" variables and functions.  See
+global (i.e. non-thread-safe and non-reentrant) "yy" variables and functions.  See
 \ref reflex-bison for more details.  Use option `−−noyywrap` to remove the
 dependency on the global `yywrap()` function.  Use option `−−bison-locations`
 to support the Bison <i>`%%locations`</i> feature.
 
 #### `−−bison-bridge`
 
-This option generates a scanner that works with Bison pure (MT-safe and
-reentrant) parsers using a Bison bridge for one ore more scanner objects.
+This option generates a scanner that works with Bison pure (reentrant
+thead-safe) parsers using a Bison bridge for one ore more scanner objects.
 Combine this option with `−−bison-locations` to support the Bison
-<i>`%%locations`</i> feature.  See \ref reflex-bison-bridge for more
-details.
+<i>`%%locations`</i> feature.  See \ref reflex-bison-bridge for more details.
 
 #### `−−bison-cc`
 
 This option generates a scanner that works with Bison 3.0
-<i>`%%skeleton "lalr1.cc"`</i> C++ parsers that are MT-safe.  Combine this
+<i>`%%skeleton "lalr1.cc"`</i> C++ parsers that are thread-safe.  Combine this
 option with `−−bison-locations` to support the Bison <i>`%%locations`</i>
 grammar.  See \ref reflex-bison-cc for more details.
 
@@ -1706,9 +1706,9 @@ the end of the input marked by the `<<EOF>>` rule:
 </div>
 
 The above works fine, but we are using a global counter which is not a best
-practice and is not MT-safe or reentrant: multiple Lexer class instances may
-compete to bump the counter.  Another problem is that the Lexer can only be
-used once, there is no proper initialization to restart the Lexer on new input.
+practice and is not thread-safe: multiple Lexer class instances may compete to
+bump the counter.  Another problem is that the Lexer can only be used once,
+there is no proper initialization to restart the Lexer on new input.
 
 RE/flex allows you to inject code in the generated Lexer class, meaning that
 class members and constructor code can be added to manage the Lexer class
@@ -1825,8 +1825,8 @@ within a <i>`{`</i> and </i>`}`</i> code block.  When local variables are
 declared in an action then the code should always be placed in a code block.
 
 In free space mode you MUST place actions in <i>`{`</i> and <i>`}`</i> blocks
-and other code in <i>`%{`</i> and <i>`%}`</i> instead of indented, see \ref
-reflex-pattern-freespace.
+and other code in <i>`%{`</i> and <i>`%}`</i> instead of indented, see
+\ref reflex-pattern-freespace.
 
 Actions in the rules section can use predefined RE/flex variables and
 functions.  With <b>`reflex`</b> option `−−flex`, the variables and functions
@@ -1934,8 +1934,8 @@ accessible outside of \ref reflex-spec-rules, with the exception of
 cannot be (re)declared or accessed as global variables, but they can be used as
 if these were variables.  To avoid compilation errors, use <b>`reflex`</b>
 option `−−header-file` to generate a header file <i>`lex.yy.h`</i> to include
-in your code to use the global use Flex actions and variables.  See \ref
-reflex-bison for more details on the `−−bison` options to use.
+in your code to use the global use Flex actions and variables.  See
+\ref reflex-bison for more details on the `−−bison` options to use.
 
 When using <b>`reflex`</b> options `−−flex`, `−−bison` and `−−reentrant`, most
 Flex functions take a `yyscan_t` scanner as an extra last argument.  See
@@ -4599,8 +4599,8 @@ When <b>`reflex`</b> is used as a Flex replacement with option `−−flex` and
 `−−bison`, option `-R` or `−−reentrant` may be used to generate a reentrant
 scanner.  This is only useful if you use both options `−−flex` and `−−bison`,
 for example when migrating an existing project from Flex to <b>`reflex`</b>, because
-<b>`reflex`</b> by defaul generates is MT-safe scanners.  See also \ref
-reflex-bison.
+<b>`reflex`</b> by defaul generates is thread-safe scanners.  See also
+\ref reflex-bison.
 
 When using reentrant scanners, your code should create a `yyscan_t` scanner
 object with `yylex_init(&scanner)` and destroy it with
@@ -5503,8 +5503,8 @@ string regex, and some given input:
     reflex::Matcher matcher( reflex::Pattern or string, reflex::Input [, "options"] )
 ~~~
 
-The regex is specified as a string or a `reflex::Pattern` object, see \ref
-regex-pattern below.
+The regex is specified as a string or a `reflex::Pattern` object, see
+\ref regex-pattern below.
 
 Use option `"N"` to permit empty matches (nullable results).  Option `"T=8"`
 sets the tab size to 8 for \ref reflex-pattern-dents matching.
@@ -6314,8 +6314,8 @@ UTF-8 sequence `C2 A9` of `©`:
       std::cout << "copyright symbol matches\n";
 ~~~
 
-To ensure that Unicode patterns in UTF-8 strings are grouped properly, use \ref
-regex-convert, for example as follows:
+To ensure that Unicode patterns in UTF-8 strings are grouped properly, use
+\ref regex-convert, for example as follows:
 
 ~~~{.cpp}
     static reflex::Pattern CR(reflex::Matcher::convert("(?u:\u{00A9})"));

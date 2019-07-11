@@ -271,6 +271,7 @@ class Pattern {
   };
   /// Global modifier modes, syntax flags, and compiler options.
   struct Option {
+    Option() : b(), e(), f(), i(), l(), m(), n(), o(), q(), r(), s(), w(), x(), z() { }
     bool                     b; ///< disable escapes in bracket lists
     Char                     e; ///< escape character, or '\0' for none, '\\' default
     std::vector<std::string> f; ///< output to files

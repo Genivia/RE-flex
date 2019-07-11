@@ -123,7 +123,8 @@ class AbstractMatcher {
     /// Construct an AbstractMatcher::Iterator such that Iterator() == AbstractMatcher::Operation(*this, method).end().
     Iterator()
       :
-        matcher_(NULL)
+        matcher_(NULL),
+        method_()
     { }
     /// Copy constructor.
     Iterator(const Iterator<typename reflex::TypeOp<T>::NonConstType>& it)
@@ -258,7 +259,7 @@ class AbstractMatcher {
               opt_.N = true;
               break;
             case 'T':
-              opt_.T = isdigit(*(s += (s[1] == '=') + 1)) ? *s - '0' : 0;
+              opt_.T = isdigit(*(s += (s[1] == '=') + 1)) ? static_cast<char>(*s - '0') : 0;
               break;
           }
         }
@@ -480,7 +481,7 @@ class AbstractMatcher {
     for (++s; s < txt_; ++s)
     {
       if (*s == '\t')
-        n += 1 + ((-1 - n) & (opt_.T - 1));
+        n += 1 + (~n & (opt_.T - 1));
       else
         n += (*s & 0xC0) != 0x80;
     }
@@ -515,7 +516,7 @@ class AbstractMatcher {
       if (s == txt_)
         m = n;
       if (*s == '\t')
-        n += 1 + ((-1 - n) & (opt_.T - 1));
+        n += 1 + (~n & (opt_.T - 1));
       else
         n += (*s & 0xC0) != 0x80;
     }
@@ -1076,7 +1077,7 @@ class AbstractMatcher {
       else if (*s == '\t')
       {
         // count tab spacing
-        cno_ += 1 + ((-1 - cno_) & (opt_.T - 1));
+        cno_ += 1 + (~cno_ & (opt_.T - 1));
       }
       else
       {

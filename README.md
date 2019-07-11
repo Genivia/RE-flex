@@ -3,8 +3,8 @@
 
 [![build status][travis-image]][travis-url] [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url]
 
-The regex-centric, fast and flexible lexical analyzer generator for C++ with
-full Unicode support.  Flex reimagined: fast, flexible, adds Boost 💪
+The regex-centric, fast lexical analyzer generator for C++ with full Unicode
+support.  Flex reimagined: fast, flexible, adds Boost 💪
 
 [RE/flex][reflex-url] is faster than Flex while providing a wealth of new
 features.  RE/flex is also much faster than regex libraries such as
@@ -40,35 +40,36 @@ Features
 
 - Compatible with Flex to eliminate a learning curve, making a transition to
   RE/flex frustration-free.
-- Generates reusable source code that is readable by humans.
+- Generates reusable source code that is easy to understand.
 - Works with Bison and supports reentrant, bison-bridge, bison-locations,
   Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison complete symbols.
-- Includes many examples, such as a tokenizer for C/C++ code, a tokenizer for
-  Python code, a tokenizer for Java code, and more.
+- Includes many examples, such as a tokenizer for C/C++ source code, a
+  tokenizer for Python source code, a tokenizer for Java source code, and more.
 - Extensive documentation in the online [User Guide][manual-url].
-- Adds Unicode support with Unicode property matching `\p{C}` and C++11, Java,
+- Full Unicode support with Unicode property matching `\p{C}` and C++11, Java,
   C#, and Python Unicode properties for identifier name matching.
-- Adds indent/nodent/dedent anchors to match text with indentation, including
+- Indent/nodent/dedent anchors to match text with indentation, including
   `\t` (tab) adjustments.
-- Adds lazy quantifiers to the POSIX regular expression syntax, so hacks are
-  no longer needed to work around greedy repetitions in Flex.
-- Adds word boundary anchors to the POSIX regular expression syntax.
-- Adds an extensible hierarchy of pattern matcher engines, with a choice of
+- Lazy quantifiers, so hacks are no longer needed to work around greedy
+  repetitions in Flex.
+- Word boundary anchors.
+- Freespace mode option to improve readability of lexer specifications.
+- `%class` and `%init` to customize the generated Lexer classes.
+- `%include` to modularize lexer specifications.
+- Includes an extensible hierarchy of pattern matcher engines, with a choice of
   regex engines, including the RE/flex regex engine and Boost.Regex.
-- Adds freespace mode option to improve readability of lexer specifications.
-- Adds `%class` and `%init` to customize the generated Lexer classes.
-- Adds `%include` to modularize lexer specifications.
-- Generates clean source code that defines an MT-safe (reentrant) C++ Lexer
+- Generates clean source code that defines an thread-safe (reentrant) C++ Lexer
   class derived from an abstract lexer class template, parameterized by matcher
   class type.
-- Multiple lexer classes can be combined and used in one application.
+- Multiple lexer classes can be combined and used in one application, e.g. by
+  multiple threads.
 - Configurable Lexer class generation to customize the interface for various
   parsers, including Yacc and Bison.
 - Generates scanners for lexical analysis on files, C++ streams, and (wide)
   strings, with automatic fast conversion of UTF-16/32 to UTF-8 for matching
   Unicode on UTF-encoded input files.
-- Generates lex.yy.cpp files while Flex generates lex.yy.cc files (in C++ mode
-  with flex option -+), to distinguish the generated files.
+- Generates lex.yy.cpp files while Flex++ generates lex.yy.cc files, to
+  distinguish the generated files.
 - Generates Graphviz files to visualize FSMs with the Graphviz dot tool.
 - Conversion of regex expressions, for regex engines that lack regex features.
 - The RE/flex regex library makes C++11 std::regex and Boost.Regex much easier
@@ -450,6 +451,7 @@ Changelog
 - Jul  3, 2019: 1.2.6 fixed a problem with lazy quantifiers used within negative patterns.
 - Jul  4, 2019: 1.2.7 added `reflex::Input::dos_streambuf` to convert DOS CRLF to LF, other improvements.
 - Jul  8, 2019: 1.2.8 added support for inverted mode modifiers `(?-imsux)` to `reflex::convert` and `reflex::Pattern`.
+- Jul 11, 2019: 1.2.9 portability improvements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

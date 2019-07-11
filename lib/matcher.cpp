@@ -67,11 +67,11 @@ scan:
   if (isword(c1))
   {
     bow = false;
-    eow = !isword(peek());
+    eow = isword(peek()) == 0;
   }
   else
   {
-    bow = isword(peek());
+    bow = isword(peek()) != 0;
     eow = false;
   }
   ind_ = pos_; // ind scans input in buf[] in newline() up to pos - 1

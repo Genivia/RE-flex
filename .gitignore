@@ -38,6 +38,8 @@ a.out
 # Other
 .DS_Store
 *.dSYM
+.*.swp
+.*.swa
 
 # Autotools
 .deps

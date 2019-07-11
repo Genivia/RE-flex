@@ -253,7 +253,7 @@ static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, c
   }
   else if (std::strchr(regex_meta, c) == NULL)
   {
-    char buf[3] = { '^', lowercase(c), '\0' };
+    char buf[3] = { '^', static_cast<char>(lowercase(c)), '\0' };
     const char *name = buf + (std::islower(c) != 0);
     std::string translated;
     int esc = hex_or_octal_escape(signature);
@@ -577,7 +577,7 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
 static void insert_escape_class(const char *pattern, size_t& pos, const std::map<size_t,std::string>& mod, ORanges<int>& ranges)
 {
   int c = pattern[pos];
-  char name[2] = { lowercase(c), '\0' };
+  char name[2] = { static_cast<char>(lowercase(c)), '\0' };
   const int *translated = NULL;
   if (is_modified(mod, 'u'))
     translated = Unicode::range(name);
