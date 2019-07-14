@@ -547,11 +547,19 @@ class AbstractMatcher {
   {
     return first() + size();
   }
-  /// Returns true if this matcher is at the start of an input character sequence. Use reset() to restart reading new input.
+  /// Returns true if this matcher is at the start of a buffer to read an input character sequence. Use reset() to restart reading new input.
   bool at_bob() const
     /// @returns true if at the begin of an input sequence.
   {
     return got_ == Const::BOB;
+  }
+  /// Set/reset the begin of a buffer state.
+  void set_bob(bool bob) ///< if true: set begin of buffer state
+  {
+    if (bob)
+      got_ = Const::BOB;
+    else if (got_ == Const::BOB)
+      got_ = Const::UNK;
   }
   /// Returns true if this matcher has no more input to read from the input character sequence.
   bool at_end()
@@ -578,8 +586,8 @@ class AbstractMatcher {
   {
     return got_ == '\n';
   }
-  /// Set the begin of a new line state.
-  void set_bol(bool bol) ///< if true: set new line state
+  /// Set/reset the begin of a new line state.
+  void set_bol(bool bol) ///< if true: set begin of a new line state
   {
     if (bol)
       got_ = '\n';
@@ -647,6 +655,36 @@ class AbstractMatcher {
     }
     buf_[pos_] = c;
     cur_ = pos_;
+  }
+  /// Peek at the next character available for reading from the current input source.
+  int peek()
+    /// @returns the character (unsigned char 0..255) or EOF (-1).
+  {
+    DBGLOG("AbstractMatcher::peek()");
+#if defined(WITH_FAST_GET)
+    return pos_ < end_ ? static_cast<unsigned char>(buf_[pos_]) : peek_more();
+#else
+    if (pos_ < end_)
+      return static_cast<unsigned char>(buf_[pos_]);
+    if (eof_)
+      return EOF;
+    if (end_ + blk_ >= max_)
+      (void)grow();
+    while (true)
+    {
+      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
+      if (pos_ < end_)
+        return static_cast<unsigned char>(buf_[pos_]);
+      DBGLOGN("peek(): EOF");
+      if (!wrap())
+      {
+        if (end_ == max_)
+          (void)grow(1); // room for a final \0
+        eof_ = true;
+        return EOF;
+      }
+    }
+#endif
   }
   /// Fetch the rest of the input as text, useful for searching/splitting up to n times after which the rest is needed.
   const char *rest()
@@ -924,36 +962,6 @@ class AbstractMatcher {
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_++]);
       DBGLOGN("get(): EOF");
-      if (!wrap())
-      {
-        if (end_ == max_)
-          (void)grow(1); // room for a final \0
-        eof_ = true;
-        return EOF;
-      }
-    }
-#endif
-  }
-  /// Peek at the next character available for reading from the current input source.
-  int peek()
-    /// @returns the character (unsigned char 0..255) or EOF (-1).
-  {
-    DBGLOG("AbstractMatcher::peek()");
-#if defined(WITH_FAST_GET)
-    return pos_ < end_ ? static_cast<unsigned char>(buf_[pos_]) : peek_more();
-#else
-    if (pos_ < end_)
-      return static_cast<unsigned char>(buf_[pos_]);
-    if (eof_)
-      return EOF;
-    if (end_ + blk_ >= max_)
-      (void)grow();
-    while (true)
-    {
-      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
-      if (pos_ < end_)
-        return static_cast<unsigned char>(buf_[pos_]);
-      DBGLOGN("peek(): EOF");
       if (!wrap())
       {
         if (end_ == max_)

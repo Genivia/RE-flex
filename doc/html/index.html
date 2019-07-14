@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Jul 11 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Jul 14 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -390,7 +390,7 @@ Found cow
 <tr>
 <td><code>at_bol()</code> </td><td>true if matcher reached the begin of a new line <code>\n</code> </td></tr>
 <tr>
-<td><code>at_bob()</code> </td><td>true if matcher is at the start of input, no matches consumed </td></tr>
+<td><code>at_bob()</code> </td><td>true if matcher is at the begin of input and no input consumed </td></tr>
 <tr>
 <td><code>at_end()</code> </td><td>true if matcher is at the end of input </td></tr>
 <tr>
@@ -407,7 +407,7 @@ Found cow
 <dd>
 The <code>operator[]</code> method returns a pair with the match info of the n'th group, which is a non-0-terminated <code>const char*</code> pointer (or NULL) and its size in bytes of the captured match. The string <em>should not be used</em> after matching continues.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>When using the <code><a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a></code> class, the <code>accept()</code> method returns the accepted pattern among the alternations in the regex that are specified only at the top level in the regex. For example, the regex <code>"(a(b)c)|([A-Z])"</code> has two groups, because only the outer top-level groups are recognized. Because groups are specified at the top level only, the grouping parenthesis are optional. We can simplify the regex to <code>"a(b)c|[A-Z]"</code> and still capture the two patterns.</dd></dl>
-<p>Three special methods may be used to manipulate the input stream directly:</p>
+<p>The following methods may be used to manipulate the input stream directly:</p>
 <table class="doxtable">
 <tr>
 <th>Method </th><th>Result  </th></tr>
@@ -419,6 +419,8 @@ The <code>operator[]</code> method returns a pair with the match info of the n't
 <td><code>unput(c)</code> </td><td>put char <code>c</code> back unto the stream, matcher then takes it </td></tr>
 <tr>
 <td><code>peek()</code> </td><td>returns next 8-bit char from the input without consuming it </td></tr>
+<tr>
+<td><code>rest()</code> </td><td>returns the remaining input as a non-NULL <code>char*</code> string </td></tr>
 </table>
 <p>The <code>input()</code>, <code>winput()</code>, and <code>peek()</code> methods return a non-negative character code and EOF (-1) when the end of input is reached.</p>
 <p>To initialize a matcher for interactive use, to assign a new input source or to change its pattern, you can use the following methods:</p>
@@ -846,9 +848,11 @@ Do not invoke <code>matcher()</code> before the <code><a class="el" href="namesp
 <tr>
 <td><code>matcher().get(s, n)</code> </td><td><code>LexerInput(s, n)</code> </td><td>read <code>s[0..n-1]</code> </td></tr>
 <tr>
-<td><code>matcher().set_bol(b)</code> </td><td><code><a class="el" href="flexlexer_8h.html#afc284777204fb44a0af09386a3516e57" title="Flex-compatible macro: a begin-of-line forced set (use only when scanner has started). ">yy_set_bol(b)</a></code> </td><td>set begin of line </td></tr>
+<td><code>matcher().set_bol(b)</code> </td><td><code><a class="el" href="flexlexer_8h.html#afc284777204fb44a0af09386a3516e57" title="Flex-compatible macro: a begin-of-line forced set (use only when scanner has started). ">yy_set_bol(b)</a></code> </td><td>(re)set begin of line </td></tr>
 <tr>
-<td><code>matcher().set_end(b)</code> </td><td><em>n/a</em> </td><td>set EOF flag to <code>b</code> </td></tr>
+<td><code>matcher().set_bob(b)</code> </td><td><em>n/a</em> </td><td>(re)set begin of input </td></tr>
+<tr>
+<td><code>matcher().set_end(b)</code> </td><td><em>n/a</em> </td><td>(re)set end of input </td></tr>
 <tr>
 <td><code>matcher().reset()</code> </td><td><em>n/a</em> </td><td>reset the state as new </td></tr>
 </table>
@@ -979,11 +983,11 @@ Pattern syntax</h3>
 <tr>
 <td><code>(?^φ)</code> </td><td>matches <code>φ</code> and ignore it to continue matching (RE/flex matcher only) </td></tr>
 <tr>
-<td><code>^φ</code> </td><td>matches <code>φ</code> at the start of input or start of a line (requires multi-line mode) </td></tr>
+<td><code>^φ</code> </td><td>matches <code>φ</code> at the begin of input or begin of a line (requires multi-line mode) </td></tr>
 <tr>
 <td><code>φ$</code> </td><td>matches <code>φ</code> at the end of input or end of a line (requires multi-line mode) </td></tr>
 <tr>
-<td><code>\Aφ</code> </td><td>matches <code>φ</code> at the start of input </td></tr>
+<td><code>\Aφ</code> </td><td>matches <code>φ</code> at the begin of input </td></tr>
 <tr>
 <td><code>φ\z</code> </td><td>matches <code>φ</code> at the end of input </td></tr>
 <tr>
@@ -2510,9 +2514,9 @@ Properties of a match</h3>
 <tr>
 <td><code>last()</code> </td><td>returns input position of the last + 1 character of the match </td></tr>
 <tr>
-<td><code>at_bol()</code> </td><td>true if matcher reached the begin of a new line <code>\n</code> </td></tr>
+<td><code>at_bol()</code> </td><td>true if matcher reached the begin of a new line </td></tr>
 <tr>
-<td><code>at_bob()</code> </td><td>true if matcher is at the start of input, no matches consumed </td></tr>
+<td><code>at_bob()</code> </td><td>true if matcher is at the begin of input and no input consumed </td></tr>
 <tr>
 <td><code>at_end()</code> </td><td>true if matcher is at the end of input </td></tr>
 <tr>
@@ -2613,9 +2617,11 @@ Input methods</h3>
 <td><code>unput(c)</code> </td><td>put char <code>c</code> back unto the stream, matcher then takes it </td></tr>
 <tr>
 <td><code>peek()</code> </td><td>returns next 8-bit char from the input without consuming it </td></tr>
+<tr>
+<td><code>rest()</code> </td><td>returns the remaining input as a non-NULL <code>char*</code> string </td></tr>
 </table>
 <p>The <code>input()</code>, <code>winput()</code>, and <code>peek()</code> methods return a non-negative character code and EOF (-1) when the end of input is reached.</p>
-<p>A matcher reads from the specified input source using its virtual method <code>size_t get(char *s, size_t n)</code> that simply returns <code>in.get(s, n)</code>, that is, the result of the <code>reflex::Input::get(s, n)</code> method of the <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> object. This method may be overriden by a derived matcher class to customize reading.</p>
+<p>A matcher reads from the specified input source using its virtual method <code>size_t get(char *s, size_t n)</code> that simply returns <code>in.get(s, n)</code>, that is, the result of the <code>reflex::Input::get(s, n)</code> method of the <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> object. The following protected methods may be overriden by a derived matcher class to customize reading:</p>
 <table class="doxtable">
 <tr>
 <th>Method </th><th>Result  </th></tr>
@@ -2871,8 +2877,8 @@ Where is FlexLexer.h?                                              </h2>
 Interactive input with GNU readline                                 </h2>
 <p>Option <code>-I</code> for interactive input generates a scanner that uses <code>fgetc()</code> to read input from a <code>FILE*</code> descriptor (stdin by default). Interactive input is made more user-friendly with the GNU readline library that provides basic line editing and a history mechanism.</p>
 <p>To use <code>readline()</code> in your lexer, call <code>readline()</code> in your Lexer's constructor and in the <code>wrap()</code> method as follows:</p>
-<div class="alt"> <div class="fragment"><div class="line">%top{</div><div class="line"><span class="preprocessor">  #include &lt;stdlib.h&gt;</span></div><div class="line"><span class="preprocessor">  #include &lt;stdio.h&gt;</span></div><div class="line"><span class="preprocessor">  #include &lt;readline/readline.h&gt;</span></div><div class="line"><span class="preprocessor">  #include &lt;readline/history.h&gt;</span></div><div class="line">%}</div><div class="line"></div><div class="line">%<span class="keyword">class</span>{</div><div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span> *prompt;</div><div class="line">  <span class="comment">// we use wrap() to read the next line</span></div><div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">int</span> wrap() {</div><div class="line">    <span class="keywordflow">if</span> (line)</div><div class="line">    {</div><div class="line">      free((<span class="keywordtype">void</span>*)line);</div><div class="line">      line = readline(prompt);</div><div class="line">      <span class="keywordflow">if</span> (line != NULL)</div><div class="line">      {</div><div class="line">        <span class="keywordflow">if</span> (*line)</div><div class="line">          add_history(line);</div><div class="line">        linen.assign(line).push_back(<span class="charliteral">&#39;\n&#39;</span>);</div><div class="line">        in(linen);</div><div class="line">      }</div><div class="line">    }</div><div class="line">    <span class="comment">// wrap() == 0 means OK: wrapped after EOF</span></div><div class="line">    <span class="keywordflow">return</span> line == NULL ? 1 : 0;</div><div class="line">  }</div><div class="line">  <span class="comment">// the line returned by readline() without \n</span></div><div class="line">  <span class="keywordtype">char</span> *line;</div><div class="line">  <span class="comment">// the line with \n appended</span></div><div class="line">  std::string linen;</div><div class="line">%}</div><div class="line"></div><div class="line">%init{</div><div class="line">  prompt = NULL;</div><div class="line">  line = readline(prompt);</div><div class="line">  <span class="keywordflow">if</span> (line != NULL)</div><div class="line">  {</div><div class="line">    <span class="keywordflow">if</span> (*line)</div><div class="line">      add_history(line);</div><div class="line">    linen.assign(line).push_back(<span class="charliteral">&#39;\n&#39;</span>);</div><div class="line">  }</div><div class="line">  in(linen);</div><div class="line">%}</div></div><!-- fragment --> </div><p>With option <code>−−flex</code> you will need to replace <code>wrap()</code> by <code>yywrap()</code>.</p>
-<p>The rules can be matched as usual, where <code>\n</code> matches the end of a line, for example:</p>
+<div class="alt"> <div class="fragment"><div class="line">%top{</div><div class="line"><span class="preprocessor">  #include &lt;stdlib.h&gt;</span></div><div class="line"><span class="preprocessor">  #include &lt;stdio.h&gt;</span></div><div class="line"><span class="preprocessor">  #include &lt;readline/readline.h&gt;</span></div><div class="line"><span class="preprocessor">  #include &lt;readline/history.h&gt;</span></div><div class="line">%}</div><div class="line"></div><div class="line">%<span class="keyword">class</span>{</div><div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span> *prompt;</div><div class="line">  <span class="comment">// we use wrap() to read the next line</span></div><div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> wrap() {</div><div class="line">    <span class="keywordflow">if</span> (line)</div><div class="line">    {</div><div class="line">      free((<span class="keywordtype">void</span>*)line);</div><div class="line">      line = readline(prompt);</div><div class="line">      <span class="keywordflow">if</span> (line != NULL)</div><div class="line">      {</div><div class="line">        <span class="keywordflow">if</span> (*line)</div><div class="line">          add_history(line);</div><div class="line">        linen.assign(line).push_back(<span class="charliteral">&#39;\n&#39;</span>);</div><div class="line">        in(linen);</div><div class="line">      }</div><div class="line">    }</div><div class="line">    <span class="comment">// wrap() == true means OK: wrapped after EOF</span></div><div class="line">    <span class="keywordflow">return</span> line != NULL;</div><div class="line">  }</div><div class="line">  <span class="comment">// the line returned by readline() without \n</span></div><div class="line">  <span class="keywordtype">char</span> *line;</div><div class="line">  <span class="comment">// the line with \n appended</span></div><div class="line">  std::string linen;</div><div class="line">%}</div><div class="line"></div><div class="line">%init{</div><div class="line">  prompt = NULL;</div><div class="line">  line = readline(prompt);</div><div class="line">  <span class="keywordflow">if</span> (line != NULL)</div><div class="line">  {</div><div class="line">    <span class="keywordflow">if</span> (*line)</div><div class="line">      add_history(line);</div><div class="line">    linen.assign(line).push_back(<span class="charliteral">&#39;\n&#39;</span>);</div><div class="line">  }</div><div class="line">  in(linen);</div><div class="line">%}</div></div><!-- fragment --> </div><p>With option <code>−−flex</code> you will need to replace <code>wrap()</code> by a Flex-like <code>yywrap()</code> and change it to return 0 on success:</p>
+<div class="alt"> <div class="fragment"><div class="line"><span class="comment">// we use yywrap() in Flex mode to read the next line</span></div><div class="line"><span class="keyword">virtual</span> <span class="keywordtype">int</span> yywrap() {</div><div class="line">  <span class="keywordflow">if</span> (line)</div><div class="line">  {</div><div class="line">    free((<span class="keywordtype">void</span>*)line);</div><div class="line">    line = readline(prompt);</div><div class="line">    <span class="keywordflow">if</span> (line != NULL)</div><div class="line">    {</div><div class="line">      <span class="keywordflow">if</span> (*line)</div><div class="line">        add_history(line);</div><div class="line">      linen.assign(line).push_back(<span class="charliteral">&#39;\n&#39;</span>);</div><div class="line">      in(linen);</div><div class="line">    }</div><div class="line">  }</div><div class="line">  <span class="comment">// yywrap() == 0 means OK: wrapped after EOF</span></div><div class="line">  <span class="keywordflow">return</span> line != NULL ? 0 : 1;</div><div class="line">}</div></div><!-- fragment --> </div><p>The rules can be matched as usual, where <code>\n</code> matches the end of a line, for example:</p>
 <div class="alt"> <div class="fragment"><div class="line">%%</div><div class="line"></div><div class="line">.+  echo(); <span class="comment">// ECHO the entire line</span></div><div class="line">\n  echo(); <span class="comment">// ECHO end of the line</span></div><div class="line"></div><div class="line">%%</div></div><!-- fragment --> </div><p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="link-errors"></a>
 Undefined symbols and link errors                                </h2>
@@ -2921,7 +2927,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Jul 11 2019 10:59:28 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Jul 14 2019 08:17:38 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -288,8 +288,8 @@ while (matcher.split())
   std::cout << "Found " << matcher.text() << std::endl;
 ```
 
-To pattern match the content of a file that may use UTF-8, 16, or 32
-encodings:
+To pattern match the content of a file, where the file may use UTF-8, 16, or 32
+encodings that are automatically converted when a UTF BOM is present:
 
 ```{.cpp}
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
@@ -452,6 +452,7 @@ Changelog
 - Jul  4, 2019: 1.2.7 added `reflex::Input::dos_streambuf` to convert DOS CRLF to LF, other improvements.
 - Jul  8, 2019: 1.2.8 added support for inverted mode modifiers `(?-imsux)` to `reflex::convert` and `reflex::Pattern`.
 - Jul 11, 2019: 1.2.9 portability improvements.
+- Jul 14, 2019: 1.2.10 added `AbstractMatcher::set_bob()`, moved `AbstractMatcher::peek()` to public, minor improvements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

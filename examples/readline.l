@@ -1,4 +1,4 @@
-/* echo input to output using the readline library (required) */
+/* echo input to output using the readline library */
 
 %top{
   #include <stdlib.h>
@@ -9,7 +9,8 @@
 
 %class{
   const char *prompt;
-  // we use yywrap() to read the next line
+#if REFLEX_OPTION_flex == true
+  // yywrap() in Flex mode (%option flex) to read the next line
   virtual int yywrap() {
     if (line)
     {
@@ -23,9 +24,28 @@
         in(linen);
       }
     }
-    // yywrap() == 0 means OK: wrapped after EOF
-    return line == NULL ? 1 : 0;
+    // IMPORTANT: yywrap() == 0 means OK: wrapped after EOF
+    return line != NULL ? 0 : 1;
   }
+#else
+  // when not using Flex mode, wrap() should be defined as follows
+  virtual bool wrap() {
+    if (line)
+    {
+      free((void*)line);
+      line = readline(prompt);
+      if (line != NULL)
+      {
+        if (*line)
+          add_history(line);
+        linen.assign(line).push_back('\n');
+        in(linen);
+      }
+    }
+    // IMPORTANT: wrap() == true means OK: wrapped after EOF
+    return line != NULL;
+  }
+#endif
   // the line returned by readline() without \n
   char *line;
   // the line with \n appended

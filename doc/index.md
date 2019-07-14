@@ -646,7 +646,7 @@ You can use this method and other methods to obtain the details of a match:
   `first()`   | returns input position of the first character of the match
   `last()`    | returns input position of the last + 1 character of the match
   `at_bol()`  | true if matcher reached the begin of a new line `\n`
-  `at_bob()`  | true if matcher is at the start of input, no matches consumed
+  `at_bob()`  | true if matcher is at the begin of input and no input consumed
   `at_end()`  | true if matcher is at the end of input
   `[0]`       | operator returns `std::pair<const char*,size_t>(begin(),size())`
   `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
@@ -697,7 +697,7 @@ groups, because only the outer top-level groups are recognized.  Because groups
 are specified at the top level only, the grouping parenthesis are optional.  We
 can simplify the regex to `"a(b)c|[A-Z]"` and still capture the two patterns.
 
-Three special methods may be used to manipulate the input stream directly:
+The following methods may be used to manipulate the input stream directly:
 
   Method     | Result
   ---------- | ----------------------------------------------------------------
@@ -705,6 +705,7 @@ Three special methods may be used to manipulate the input stream directly:
   `winput()` | returns next wide character from the input, matcher skips it
   `unput(c)` | put char `c` back unto the stream, matcher then takes it
   `peek()`   | returns next 8-bit char from the input without consuming it
+  `rest()`   | returns the remaining input as a non-NULL `char*` string
 
 The `input()`, `winput()`, and `peek()` methods return a non-negative character
 code and EOF (-1) when the end of input is reached.
@@ -1999,8 +2000,9 @@ actions are also supported:
   `matcher().interactive()` | `yy_set_interactive(1)` | set interactive input
   `matcher().flush()`       | `YY_FLUSH_BUFFER`       | flush input buffer
   `matcher().get(s, n)`     | `LexerInput(s, n)`      | read `s[0..n-1]`
-  `matcher().set_bol(b)`    | `yy_set_bol(b)`         | set begin of line
-  `matcher().set_end(b)`    | *n/a*                   | set EOF flag to `b`
+  `matcher().set_bol(b)`    | `yy_set_bol(b)`         | (re)set begin of line
+  `matcher().set_bob(b)`    | *n/a*                   | (re)set begin of input
+  `matcher().set_end(b)`    | *n/a*                   | (re)set end of input
   `matcher().reset()   `    | *n/a*                   | reset the state as new
 
 You can switch to a new matcher while scanning input, and use operations to
@@ -2175,9 +2177,9 @@ patterns `φ` and `ψ`:
   `(?=φ)`   | matches `φ` without consuming it (\ref reflex-pattern-lookahead)
   `(?<=φ)`  | matches `φ` to the left without consuming it (\ref reflex-pattern-lookbehind, not supported by the RE/flex matcher)
   `(?^φ)`   | matches `φ` and ignore it to continue matching (RE/flex matcher only)
-  `^φ`      | matches `φ` at the start of input or start of a line (requires multi-line mode)
+  `^φ`      | matches `φ` at the begin of input or begin of a line (requires multi-line mode)
   `φ$`      | matches `φ` at the end of input or end of a line (requires multi-line mode)
-  `\Aφ`     | matches `φ` at the start of input
+  `\Aφ`     | matches `φ` at the begin of input
   `φ\z`     | matches `φ` at the end of input
   `\bφ`     | matches `φ` starting at a word boundary
   `φ\b`     | matches `φ` ending at a word boundary
@@ -6055,8 +6057,8 @@ To obtain properties of a match, use the following methods:
   `columno()` | returns column number of the match, starting at 0
   `first()`   | returns input position of the first character of the match
   `last()`    | returns input position of the last + 1 character of the match
-  `at_bol()`  | true if matcher reached the begin of a new line `\n`
-  `at_bob()`  | true if matcher is at the start of input, no matches consumed
+  `at_bol()`  | true if matcher reached the begin of a new line
+  `at_bob()`  | true if matcher is at the begin of input and no input consumed
   `at_end()`  | true if matcher is at the end of input
   `[0]`       | operator returns `std::pair<const char*,size_t>(begin(),size())`
   `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
@@ -6214,6 +6216,7 @@ directly, even when you use the matcher's search and match methods:
   `winput()` | returns next wide character from the input, matcher skips it
   `unput(c)` | put char `c` back unto the stream, matcher then takes it
   `peek()`   | returns next 8-bit char from the input without consuming it
+  `rest()`   | returns the remaining input as a non-NULL `char*` string
 
 The `input()`, `winput()`, and `peek()` methods return a non-negative character
 code and EOF (-1) when the end of input is reached.
@@ -6221,8 +6224,8 @@ code and EOF (-1) when the end of input is reached.
 A matcher reads from the specified input source using its virtual method
 `size_t get(char *s, size_t n)` that simply returns `in.get(s, n)`, that is,
 the result of the `reflex::Input::get(s, n)` method of the `reflex::Input`
-object.  This method may be overriden by a derived matcher class to customize
-reading.
+object.  The following protected methods may be overriden by a derived matcher
+class to customize reading:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
@@ -7262,7 +7265,7 @@ constructor and in the `wrap()` method as follows:
     %class{
       const char *prompt;
       // we use wrap() to read the next line
-      virtual int wrap() {
+      virtual bool wrap() {
         if (line)
         {
           free((void*)line);
@@ -7275,8 +7278,8 @@ constructor and in the `wrap()` method as follows:
             in(linen);
           }
         }
-        // wrap() == 0 means OK: wrapped after EOF
-        return line == NULL ? 1 : 0;
+        // wrap() == true means OK: wrapped after EOF
+        return line != NULL;
       }
       // the line returned by readline() without \n
       char *line;
@@ -7298,7 +7301,30 @@ constructor and in the `wrap()` method as follows:
 ~~~
 </div>
 
-With option `−−flex` you will need to replace `wrap()` by `yywrap()`.
+With option `−−flex` you will need to replace `wrap()` by a Flex-like
+`yywrap()` and change it to return 0 on success:
+
+<div class="alt">
+~~~{.cpp}
+      // we use yywrap() in Flex mode to read the next line
+      virtual int yywrap() {
+        if (line)
+        {
+          free((void*)line);
+          line = readline(prompt);
+          if (line != NULL)
+          {
+            if (*line)
+              add_history(line);
+            linen.assign(line).push_back('\n');
+            in(linen);
+          }
+        }
+        // yywrap() == 0 means OK: wrapped after EOF
+        return line != NULL ? 0 : 1;
+      }
+~~~
+</div>
 
 The rules can be matched as usual, where `\n` matches the end of a line, for
 example:

@@ -1278,9 +1278,10 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
                   throw regex_error(regex_error::mismatched_parens, pattern, pos);
                 if (pattern[k] == ':' || pattern[k] == ')')
                 {
+                  regex.append(&pattern[loc], pos - loc - 2);
                   if (pattern[k] == ')')
                   {
-                    regex.append(&pattern[loc], pos - loc - 2);
+                    // (?imsx)...
                     if (can && (!mods.empty() || !unmods.empty()))
                     {
                       regex.append("(?");
@@ -1290,29 +1291,22 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
                         regex.append("-").append(unmods);
                       regex.push_back(')');
                     }
+                    mod[lev - 1] = mod[lev] + mod[lev - 1];
+                    mod[lev].clear();
+                    --lev;
                   }
                   else
                   {
-                    regex.append(&pattern[loc], pos - loc);
-                    if (can && (!mods.empty() || !unmods.empty()))
+                    // (?imsx:...)
+                    if (can)
                     {
+                      regex.append("(?");
                       if (!mods.empty())
                         regex.append(mods);
                       if (!unmods.empty())
                         regex.append("-").append(unmods);
                       regex.push_back(':');
                     }
-                    else if ((flags & convert_flag::recap) || (flags & convert_flag::lex))
-                    {
-                      regex.push_back(':');
-                    }
-                  }
-                  if (pattern[k] == ')')
-                  {
-                    // (?imsx)...
-                    mod[lev - 1] = mod[lev] + mod[lev - 1];
-                    mod[lev].clear();
-                    --lev;
                   }
                   pos = k;
                   loc = pos + 1;
