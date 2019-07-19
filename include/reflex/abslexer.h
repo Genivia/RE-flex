@@ -331,6 +331,12 @@ class AbstractLexer {
     ASSERT(!state_.empty());
     return state_.top();
   }
+
+  bool states_empty() const
+  {
+      return state_.empty();
+  }
+
  protected:
   Matcher             *matcher_; ///< the matcher used for scanning
   Input                in_;      ///< the input character sequence to scan
