@@ -117,6 +117,19 @@ class Reflex
     std::string regex;
     Code        code;
   };
+  
+  typedef size_t                            Start;      ///< Start condition state type
+  typedef std::set<Start>                   Starts;     ///< Set of start conditions
+
+/// A starts info including exclude indicator (<^...)
+struct StartsInfo {
+  StartsInfo()
+    :
+      exclude(false)
+  { }
+  Starts starts;
+  bool   exclude;
+};
 
   typedef std::map<std::string,Library>     LibraryMap; ///< Dictionary of regex libraries
   typedef std::vector<Code>                 Codes;      ///< Collection of ordered lines of code
@@ -124,8 +137,6 @@ class Reflex
   typedef std::vector<std::string>          Strings;    ///< Collection of ordered strings
   typedef std::map<std::string,std::string> StringMap;  ///< Dictionary (std::string)
   typedef std::map<std::string,const char*> Dictionary; ///< Dictionary (const char*)
-  typedef size_t                            Start;      ///< Start condition state type
-  typedef std::set<Start>                   Starts;     ///< Set of start conditions
   typedef std::map<Start,Codes>             CodesMap;   ///< Map of start conditions to lines of code
   typedef std::map<Start,Rules>             RulesMap;   ///< Map of start conditions to rules
 
@@ -177,8 +188,9 @@ class Reflex
   std::string get_string(size_t& pos);
   std::string get_regex(size_t& pos);
   std::string get_namespace(size_t& pos);
-  Starts      get_starts(size_t& pos);
+  StartsInfo  get_starts(size_t& pos);
   std::string get_code(size_t& pos);
+  void        add_rule(const StartsInfo& starts_info, const Rule& rule);
   std::string escape_bs(const std::string& s);
   void        abort(const char *message, const char *arg = NULL);
   void        error(const char *message, const char *arg = NULL, size_t at_lineno = 0);

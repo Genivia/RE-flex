@@ -1011,13 +1011,18 @@ std::string Reflex::get_regex(size_t& pos)
   return regex;
 }
 
-/// Get start conditions <start1,start2,...> of a rule
-Reflex::Starts Reflex::get_starts(size_t& pos)
+/// Get start conditions <[^]start1,start2,...> of a rule
+Reflex::StartsInfo Reflex::get_starts(size_t& pos)
 {
   pos = 0;
-  Starts starts;
-  if (linelen > 1 && line.at(0) == '<' && (std::isalpha(line.at(1)) || line.at(1) == '_'))
+  StartsInfo starts_info;
+
+  if (linelen > 1 && line.at(0) == '<' &&
+      (std::isalpha(line.at(1)) || line.at(1) == '_' || line.at(1) == '^'))
   {
+    starts_info.exclude = (line.at(1) == '^');
+    if (starts_info.exclude)
+      ++pos;
     do
     {
       ++pos;
@@ -1027,7 +1032,7 @@ Reflex::Starts Reflex::get_starts(size_t& pos)
         continue;
       if (start == conditions.size())
         error("undeclared start condition ", name.c_str());
-      starts.insert(start);
+      starts_info.starts.insert(start);
     } while (pos + 1 < linelen && line.at(pos) == ',');
     if (pos + 1 >= linelen || line.at(pos) != '>')
       error("bad start condition: ", line.c_str());
@@ -1036,14 +1041,35 @@ Reflex::Starts Reflex::get_starts(size_t& pos)
   else if (linelen > 1 && line.at(0) == '<' && line.at(1) == '*' && line.at(2) == '>')
   {
     for (Start start = 0; start < conditions.size(); ++start)
-      starts.insert(start);
+      starts_info.starts.insert(start);
     pos = 3;
   }
   else
   {
-    starts = inclusive;
+    starts_info.starts = inclusive;
   }
-  return starts;
+  return starts_info;
+}
+
+/// Add rule to given start states or if ^excluded to other inclusive states
+void Reflex::add_rule(const StartsInfo& starts_info, const Rule& rule)
+{
+  if (starts_info.exclude)
+  {
+    for (Start start = 0; start < conditions.size(); ++start)
+    {
+      if (starts_info.starts.find(start) == starts_info.starts.end() &&
+          inclusive.find(start) != inclusive.end())
+      {
+        rules[start].push_back(rule);
+      }
+    }
+  }
+  else
+  {
+    for (Starts::const_iterator start = starts_info.starts.begin(); start != starts_info.starts.end(); ++start)
+      rules[*start].push_back(rule);
+  }
 }
 
 /// Get line(s) of code, %{ %}, %%top{ %}, %%class{ %}, and %%init{ %}
@@ -1369,7 +1395,7 @@ void Reflex::parse_section_2()
   if (in.eof())
     error("missing %% section 2");
   bool init = true;
-  std::stack<Starts> scopes;
+  std::stack<StartsInfo> scopes;
   if (!get_line())
     return;
   while (line != "%%")
@@ -1385,18 +1411,31 @@ void Reflex::parse_section_2()
       if (init && is_code())
       {
         std::string code = get_code(pos);
+        Code codeLine(code, infile, lineno);
         if (scopes.empty())
         {
           for (Start start = 0; start < conditions.size(); ++start)
           {
             if (inclusive.find(start) != inclusive.end())
-              section_2[start].push_back(Code(code, infile, lineno));
+              section_2[start].push_back(codeLine);
           }
         }
         else
         {
-          for (Starts::const_iterator start = scopes.top().begin(); start != scopes.top().end(); ++start)
-            section_2[*start].push_back(Code(code, infile, lineno));
+          if (scopes.top().exclude)
+          {
+            for (Start start = 0; start < conditions.size(); ++start)
+            {
+              if (scopes.top().starts.find(start) == scopes.top().starts.end() &&
+                  inclusive.find(start) != inclusive.end())
+                section_2[start].push_back(codeLine);
+            }
+          }
+          else
+          {
+            for (Starts::const_iterator start = scopes.top().starts.begin(); start != scopes.top().starts.end(); ++start)
+              section_2[*start].push_back(codeLine);
+          }
         }
       }
       else if (line == "}" && !scopes.empty())
@@ -1409,38 +1448,40 @@ void Reflex::parse_section_2()
       {
         if (!skip_comment(pos) || line == "%%")
           break;
-        Starts starts = get_starts(pos);
+        StartsInfo starts_info = get_starts(pos);
+        bool no_starts = pos == 0;
+        if (!scopes.empty() && !no_starts && (starts_info.exclude || scopes.top().exclude))
+        {
+          error("<^...> start states are not allowed to be nested");
+        }
         if (pos + 1 == linelen && line.at(pos) == '{')
         {
-          scopes.push(starts);
+          scopes.push(starts_info);
           if (!get_line())
             error("EOF encountered inside an action, %} or %% expected");
           init = true;
         }
         else
         {
-          bool no_starts = pos == 0;
           std::string regex = get_regex(pos);
           if (regex.empty())
             error("bad line in section 2: ", line.c_str());
-          size_t rule_lineno = lineno;
           std::string code = get_code(pos);
+          Rule rule(regex, Code(code, infile, lineno));
           if (no_starts && scopes.empty() && regex == "<<EOF>>")
           {
             if (code == "|")
               error("bad <<EOF>> action | in section 2: ", line.c_str());
             for (Start start = 0; start < conditions.size(); ++start)
-              rules[start].push_back(Rule(regex, Code(code, infile, rule_lineno))); // only the first <<EOF>> code will be used
+              rules[start].push_back(rule); // only the first <<EOF>> code will be used
           }
           else if (no_starts && !scopes.empty())
           {
-            for (Starts::const_iterator start = scopes.top().begin(); start != scopes.top().end(); ++start)
-              rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
+            add_rule(scopes.top(), rule);
           }
           else
           {
-            for (Starts::const_iterator start = starts.begin(); start != starts.end(); ++start)
-              rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
+            add_rule(starts_info, rule);
           }
           init = false;
         }
@@ -1449,7 +1490,7 @@ void Reflex::parse_section_2()
   }
   if (!scopes.empty())
   {
-    const char *name = conditions.at(*scopes.top().begin()).c_str();
+    const char *name = conditions.at(*scopes.top().starts.begin()).c_str();
     if (in.eof())
       error("EOF encountered inside scope ", name);
     else
