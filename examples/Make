@@ -71,7 +71,8 @@ examples:	flexexample1 \
 		tag_tidy \
 		cow \
 		cows \
-		indent \
+		indent1 \
+		indent2 \
 		json \
 		braille \
 		unicode \
@@ -339,10 +340,15 @@ cows:		cows.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 		./cows < cows.l
 
-indent:		indent.l
-		$(REFLEX) $(REFLAGS) indent.l
+indent1:	indent1.l
+		$(REFLEX) $(REFLAGS) indent1.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
-		./indent < indent.test
+		./indent1 < indent.test
+
+indent2:	indent2.l
+		$(REFLEX) $(REFLAGS) indent2.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		./indent2 < indent.test
 
 json:		json.l
 		$(REFLEX) $(REFLAGS) json.l
@@ -384,4 +390,4 @@ clean:
 		-rm -f lex.yy.h lex.yy.hpp lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx parser.hpp parser.cpp scanner.hpp scanner.cpp location.hh location.hpp position.hh position.hpp stack.hh stack.hpp reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
 		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent json braille unicode csv cards url cvt2utf ugrep wc_boost
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent1 indent2 json braille unicode csv cards url cvt2utf ugrep wc_boost

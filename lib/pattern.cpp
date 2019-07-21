@@ -30,7 +30,7 @@
 @file      pattern.cpp
 @brief     RE/flex regular expression pattern compiler
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -125,6 +125,7 @@ static const char *meta_label[] = {
   "EOL",
   "BOB",
   "EOB",
+  "UND",
   "IND",
   "DED",
 };
@@ -290,7 +291,7 @@ void Pattern::parse(
       {
         c = at(loc);
         if (c == '-')
-          active = !active;
+          active = false;
         else if (c == 'i')
           opt_.i = active;
         else if (c == 'l')
@@ -846,7 +847,7 @@ void Pattern::parse4(
         do
         {
           if (c == '-')
-            active = !active;
+            active = false;
           else if (c == 'l')
             opt_.l = active;
           else if (c == 'q')
@@ -877,7 +878,7 @@ void Pattern::parse4(
           c = at(m_loc++);
           if (c == '-')
           {
-            active = !active;
+            active = false;
           }
           else if (c != '\0' && c != 'l' && c != 'q' && c != 'x' && c != ':' && c != ')')
           {
@@ -1410,6 +1411,9 @@ void Pattern::compile_transition(
                       break;
                     case 'j':
                       chars.insert(META_DED);
+                      break;
+                    case 'k':
+                      chars.insert(META_UND);
                       break;
                     case 'A':
                       chars.insert(META_BOB);
@@ -1965,7 +1969,7 @@ void Pattern::gencode_dfa(const State& start) const
         err = reflex::fopen_s(&fd, filename.c_str(), "w");
       if (!err && fd)
       {
-        ::fprintf(fd, "#include <reflex/matcher.h>\n\n");
+        ::fprintf(fd, "#include <reflex/matcher.h>\n\n#ifdef OS_WIN\n#pragma warning(push)\n#pragma warning(disable:4102)\n#endif\n\n");
         write_namespace_open(fd);
         ::fprintf(fd, "void reflex_code_%s(reflex::Matcher& m)\n{\n  int c0 = 0, c1 = c0;\n  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
         for (const State *state = &start; state; state = state->next)
@@ -2162,6 +2166,7 @@ void Pattern::gencode_dfa(const State& start) const
         }
         ::fprintf(fd, "}\n\n");
         write_namespace_close(fd);
+        ::fprintf(fd, "#ifdef OS_WIN\n#pragma warning(pop)\n#endif\n");
         if (fd != stdout)
           ::fclose(fd);
       }
@@ -2178,6 +2183,8 @@ void Pattern::gencode_dfa_closure(FILE *fd, const State *state, int nest) const
     ::fprintf(fd, "%*sm.FSM_TAKE(%u, c1);\n", 2*nest, "", state->accept);
   for (Set::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
     ::fprintf(fd, "%*sm.FSM_TAIL(%zu);\n", 2*nest, "", *i);
+  if (nest > 5)
+    return;
   for (State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
   {
 #if WITH_COMPACT_DFA == -1
@@ -2198,7 +2205,7 @@ void Pattern::gencode_dfa_closure(FILE *fd, const State *state, int nest) const
             ::fprintf(fd, "%*s", 2*nest, "");
             if (elif)
               ::fprintf(fd, "else ");
-            ::fprintf(fd, "if (m.FSM_META_%s(c1))\n {\n", meta_label[lo - META_MIN]);
+            ::fprintf(fd, "if (m.FSM_META_%s(c1)) {\n", meta_label[lo - META_MIN]);
             gencode_dfa_closure(fd, i->second.second, nest + 1);
             ::fprintf(fd, "%*s}\n", 2*nest, "");
             elif = true;
@@ -2492,10 +2499,10 @@ void Pattern::write_namespace_close(FILE* fd) const
   size_t i = 0, j;
   while ((j = s.find("::", i)) != std::string::npos)
   {
-    ::fprintf(fd, "} // namespace %s\n", s.substr(i, j - i).c_str());
+    ::fprintf(fd, "} // namespace %s\n\n", s.substr(i, j - i).c_str());
     i = j + 2;
   }
-  ::fprintf(fd, "} // namespace %s\n", s.substr(i).c_str());
+  ::fprintf(fd, "} // namespace %s\n\n", s.substr(i).c_str());
 }
 
 

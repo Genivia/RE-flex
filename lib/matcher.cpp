@@ -30,7 +30,7 @@
 @file      matcher.cpp
 @brief     RE/flex matcher engine
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -177,14 +177,22 @@ redo:
               continue;
             case 0xff00 | Pattern::META_DED:
               DBGLOG("DED? %d", c1);
-              if (index == Pattern::IMAX && bol && dedent(col))
+              if (index == Pattern::IMAX && back == Pattern::IMAX && bol && dedent(col))
                 index = Pattern::index_of(opcode);
               opcode = *++pc;
               continue;
             case 0xff00 | Pattern::META_IND:
               DBGLOG("IND? %d", c1);
-              if (index == Pattern::IMAX && bol && indent(col))
+              if (index == Pattern::IMAX && back == Pattern::IMAX && bol && indent(col))
                 index = Pattern::index_of(opcode);
+              opcode = *++pc;
+              continue;
+            case 0xff00 | Pattern::META_UND:
+              DBGLOG("UND");
+              if (mrk_)
+                index = Pattern::index_of(opcode);
+              mrk_ = false;
+              ded_ = 0;
               opcode = *++pc;
               continue;
             case 0xff00 | Pattern::META_EOB:
@@ -333,7 +341,7 @@ done:
   }
   if (method == Const::SPLIT)
   {
-    DBGLOG("Split: len = %zu cap = %zu cur = %zu pos = %zu end = %zu txt-buf = %zu eob = %d", len_, cap_, cur_, pos_, end_, txt_-buf_, (int)eof_);
+    DBGLOG("Split: len = %zu cap = %zu cur = %zu pos = %zu end = %zu txt-buf = %zu eob = %d got = %d", len_, cap_, cur_, pos_, end_, txt_-buf_, (int)eof_, got_);
     if (cap_ == 0 || (cur_ == static_cast<size_t>(txt_ - buf_) && !bob))
     {
       if (!hit_end())
@@ -343,8 +351,12 @@ done:
         set_current(++cur_);
         goto redo;
       }
-      cap_ = Const::EMPTY;
-      set_current(pos_); // chr_ = static_cast<unsigned char>(buf_[pos_]);
+      if (got_ != Const::EOB)
+      {
+        cap_ = Const::EMPTY;
+        set_current(pos_); // chr_ = static_cast<unsigned char>(buf_[pos_]);
+        got_ = Const::EOB;
+      }
       DBGLOG("Split at eof: cap = %zu txt = '%s' len = %zu", cap_, std::string(txt_, len_).c_str(), len_);
       DBGLOG("END Matcher::match()");
       return cap_;

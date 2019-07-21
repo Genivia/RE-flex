@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jul 14 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Jul 21 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -205,8 +205,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2bc3e098fc89e5bdc1f6d44af0d85c8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the stack start condition state and transition to that state.  <a href="#a2bc3e098fc89e5bdc1f6d44af0d85c8f">More...</a><br /></td></tr>
 <tr class="separator:a2bc3e098fc89e5bdc1f6d44af0d85c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5ccbfb254360056a679cef8702228f6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#ae5ccbfb254360056a679cef8702228f6">top_state</a> () const </td></tr>
-<tr class="memdesc:ae5ccbfb254360056a679cef8702228f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stack top start condition state.  <a href="#ae5ccbfb254360056a679cef8702228f6">More...</a><br /></td></tr>
+<tr class="memdesc:ae5ccbfb254360056a679cef8702228f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stack top start condition state or 0 (INITIAL) if the stack is empty.  <a href="#ae5ccbfb254360056a679cef8702228f6">More...</a><br /></td></tr>
 <tr class="separator:ae5ccbfb254360056a679cef8702228f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ef7b75dfc67ee897a77e70ed7ca46d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a4ef7b75dfc67ee897a77e70ed7ca46d2">states_empty</a> () const </td></tr>
+<tr class="memdesc:a4ef7b75dfc67ee897a77e70ed7ca46d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the condition state stack is empty.  <a href="#a4ef7b75dfc67ee897a77e70ed7ca46d2">More...</a><br /></td></tr>
+<tr class="separator:a4ef7b75dfc67ee897a77e70ed7ca46d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -1122,6 +1125,34 @@ template&lt;typename M &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a4ef7b75dfc67ee897a77e70ed7ca46d2"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt; M &gt;::states_empty </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns true if the condition state stack is empty. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if the stack is empty, false otherwise </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="aa5b88719f4d035a4aefc2f67fd09f8d2"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1229,7 +1260,7 @@ template&lt;typename M &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the stack top start condition state. </p>
+<p>Returns the stack top start condition state or 0 (INITIAL) if the stack is empty. </p>
 <dl class="section return"><dt>Returns</dt><dd>start condition (integer). </dd></dl>
 
 </div>
@@ -1521,7 +1552,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jul 14 2019 08:17:31 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Jul 21 2019 16:11:35 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

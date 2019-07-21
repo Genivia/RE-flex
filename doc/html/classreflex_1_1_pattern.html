@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jul 14 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Jul 21 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -195,9 +195,10 @@ Private Types</h2></td></tr>
 &#160;&#160;<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bad4d665a6389e2021c333c82ccd7326ba">META_EOL</a> = 0x108, 
 <a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bafb92ecb707da8d19d22a680acafb5e59">META_BOB</a> = 0x109, 
 <a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba3564384fa20ade8e086b725eec12401a">META_EOB</a> = 0x10A, 
-<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba1d18a927ad1bb4c58b066e5f4f914337">META_IND</a> = 0x10B, 
+<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bafe1b7d462a9d651bfe15f7494e121179">META_UND</a> = 0x10B, 
 <br />
-&#160;&#160;<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bae47cfcacf92488d19d3589339a5c5e4d">META_DED</a> = 0x10C, 
+&#160;&#160;<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba1d18a927ad1bb4c58b066e5f4f914337">META_IND</a> = 0x10C, 
+<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bae47cfcacf92488d19d3589339a5c5e4d">META_DED</a> = 0x10D, 
 <a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba2323c5c35b832fc9820b2e57a87f2f97">META_MAX</a>
 <br />
  }<tr class="memdesc:a2776a201661c958c38e3deadceaf4d2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Meta characters.  <a href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2b">More...</a><br /></td></tr>
@@ -715,8 +716,11 @@ Friends</h2></td></tr>
 <tr><td class="fieldname"><a class="anchor" id="a2776a201661c958c38e3deadceaf4d2ba3564384fa20ade8e086b725eec12401a"></a>META_EOB&#160;</td><td class="fielddoc">
 <p>end of buffer <code>\Z</code> </p>
 </td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a2776a201661c958c38e3deadceaf4d2bafe1b7d462a9d651bfe15f7494e121179"></a>META_UND&#160;</td><td class="fielddoc">
+<p>undent boundary <code>\k</code> </p>
+</td></tr>
 <tr><td class="fieldname"><a class="anchor" id="a2776a201661c958c38e3deadceaf4d2ba1d18a927ad1bb4c58b066e5f4f914337"></a>META_IND&#160;</td><td class="fielddoc">
-<p>indent boundary <code>\i</code> </p>
+<p>indent boundary <code>\i</code> (must be one but the largest META code) </p>
 </td></tr>
 <tr><td class="fieldname"><a class="anchor" id="a2776a201661c958c38e3deadceaf4d2bae47cfcacf92488d19d3589339a5c5e4d"></a>META_DED&#160;</td><td class="fielddoc">
 <p>dedent boundary <code>\j</code> (must be the largest META code) </p>
@@ -3453,7 +3457,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jul 14 2019 08:17:32 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Jul 21 2019 16:11:36 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

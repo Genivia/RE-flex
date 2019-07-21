@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Reflex Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jul 14 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Jul 21 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -341,15 +341,15 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a4f4833e68b7bf0ba0309d3179a5d2fce">get_namespace</a> (size_t &amp;pos)</td></tr>
 <tr class="memdesc:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over option name or namespace (letters, digits, ::, ., -, _ or any non-ASCII character &gt; U+007F), return name.  <a href="#a4f4833e68b7bf0ba0309d3179a5d2fce">More...</a><br /></td></tr>
 <tr class="separator:a4f4833e68b7bf0ba0309d3179a5d2fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9853a89f918acd624f9a59553e93d54f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Starts</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9853a89f918acd624f9a59553e93d54f">get_starts</a> (size_t &amp;pos)</td></tr>
-<tr class="memdesc:a9853a89f918acd624f9a59553e93d54f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get start conditions &lt;start1,start2,...&gt; of a rule.  <a href="#a9853a89f918acd624f9a59553e93d54f">More...</a><br /></td></tr>
-<tr class="separator:a9853a89f918acd624f9a59553e93d54f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cace7a8eefcd0e9175880e4f4da9398"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9cace7a8eefcd0e9175880e4f4da9398">get_code</a> (size_t &amp;pos)</td></tr>
 <tr class="memdesc:a9cace7a8eefcd0e9175880e4f4da9398"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get line(s) of code, %{ %}, %top{ %}, %class{ %}, and %init{ %}.  <a href="#a9cace7a8eefcd0e9175880e4f4da9398">More...</a><br /></td></tr>
 <tr class="separator:a9cace7a8eefcd0e9175880e4f4da9398"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9843fc0bf423b75570a7500754bddeb2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9843fc0bf423b75570a7500754bddeb2">escape_bs</a> (const std::string &amp;s)</td></tr>
 <tr class="memdesc:a9843fc0bf423b75570a7500754bddeb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns string with all \ replaced by \ to stringify file paths.  <a href="#a9843fc0bf423b75570a7500754bddeb2">More...</a><br /></td></tr>
 <tr class="separator:a9843fc0bf423b75570a7500754bddeb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada6385c27620e6465a83d45556d38c27"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#ada6385c27620e6465a83d45556d38c27">get_starts</a> (size_t &amp;pos, <a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Starts</a> &amp;starts)</td></tr>
+<tr class="memdesc:ada6385c27620e6465a83d45556d38c27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add start conditions &lt;start1,start2,...&gt; or subtract them with &lt;-start1,-start2,...&gt;  <a href="#ada6385c27620e6465a83d45556d38c27">More...</a><br /></td></tr>
+<tr class="separator:ada6385c27620e6465a83d45556d38c27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c000b6b962698eecec3c82e93f75bd2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a9c000b6b962698eecec3c82e93f75bd2">abort</a> (const char *message, const char *arg=NULL)</td></tr>
 <tr class="memdesc:a9c000b6b962698eecec3c82e93f75bd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abort with an error message.  <a href="#a9c000b6b962698eecec3c82e93f75bd2">More...</a><br /></td></tr>
 <tr class="separator:a9c000b6b962698eecec3c82e93f75bd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -879,7 +879,7 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9853a89f918acd624f9a59553e93d54f"></a>
+<a class="anchor" id="ada6385c27620e6465a83d45556d38c27"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -887,11 +887,21 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Reflex::Starts</a> Reflex::get_starts </td>
+          <td class="memname">bool Reflex::get_starts </td>
           <td>(</td>
           <td class="paramtype">size_t &amp;&#160;</td>
-          <td class="paramname"><em>pos</em></td><td>)</td>
+          <td class="paramname"><em>pos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="class_reflex.html#a8c6779ef74206e028a5d08eeecfe785d">Starts</a> &amp;&#160;</td>
+          <td class="paramname"><em>starts</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -901,7 +911,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get start conditions &lt;start1,start2,...&gt; of a rule. </p>
+<p>Add start conditions &lt;start1,start2,...&gt; or subtract them with &lt;-start1,-start2,...&gt; </p>
 
 </div>
 </div>
@@ -2461,7 +2471,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jul 14 2019 08:17:31 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Jul 21 2019 16:11:35 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

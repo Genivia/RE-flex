@@ -37,7 +37,7 @@
 \r?\n                   |
 #{any}*?\r?\n           emit("NEWLINE");
 
-^\f?\h*\i               emit("INDENT");
+^\f?\h+\i               emit("INDENT");
 
 ^\f?\h*\j               |
 \j                      emit("DEDENT");

@@ -288,7 +288,7 @@ static void convert_escape_char(const char *pattern, size_t& loc, size_t& pos, c
       {
         if (!supports_escape(signature, 'z') || !supports_modifier(signature, '='))
           throw regex_error(regex_error::invalid_anchor, pattern, pos);
-        // translate \Z to (?=[\n\r]*\z)
+        // translate \Z to (?=(\r?\n)?\z)
         regex.append(&pattern[loc], pos - loc - 1).append("(?=(\\r?\\n)?\\z)");
         loc = pos + 1;
       }
@@ -1072,7 +1072,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
     {
       if (pattern[k] == '-')
       {
-        invert = !invert;
+        invert = true;
       }
       else if (!invert)
       {
@@ -1256,7 +1256,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
                 {
                   if (pattern[k] == '-')
                   {
-                    invert = !invert;
+                    invert = true;
                   }
                   else if (!invert)
                   {
@@ -1392,65 +1392,106 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
         }
         break;
       case '[':
-        if (pos + 1 < len && pattern[pos + 1] == '^')
+        if (strncmp(&pattern[pos], "[[:<:]]", 7) == 0)
         {
-          ORanges<int> ranges;
-          regex.append(&pattern[loc], pos - loc);
-          pos += 2;
-          insert_list(pattern, len, pos, flags, mod, ranges);
-          if (is_modified(mod, 'i'))
-            convert_anycase_ranges(ranges);
-          if (is_modified(mod, 'u'))
+          // translate [[:<:]] to \<
+          if (!supports_escape(signature, '<'))
           {
-            // Unicode: translate [^ ] to new [ ] regex with inverted content
-            ORanges<int> inverse(0x00, 0x10FFFF);
-            inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
-            inverse -= ranges;
-            if (inverse.empty())
-              throw regex_error(regex_error::empty_class, pattern, loc);
-            regex.append(convert_unicode_ranges(inverse, signature, par));
+            if (!supports_escape(signature, 'b') || !supports_escape(signature, 'w') || !supports_modifier(signature, '='))
+              throw regex_error(regex_error::invalid_anchor, pattern, pos);
+            // translate \< to \b(?=\w)
+            regex.append(&pattern[loc], pos - loc).append("\\b(?=\\w)");
           }
           else
           {
-            ORanges<int>::const_reverse_iterator i = ranges.rbegin();
-            if (i == ranges.rend())
-              throw regex_error(regex_error::empty_class, pattern, loc);
-            if (i->second - 1 > 0xFF)
-              throw regex_error(regex_error::invalid_class, pattern, pos);
-            // ASCII: translate [^ ] to new [^ ] regex
-            regex.append("[^").append(convert_posix_ranges(ranges, signature));
+            regex.append(&pattern[loc], pos - loc).append("\\<");
           }
+          pos += 6;
           loc = pos + 1;
+          anc = true;
+          beg = false;
+        }
+        else if (strncmp(&pattern[pos], "[[:>:]]", 7) == 0)
+        {
+          // translate [[:>:]] to \>
+          if (!supports_escape(signature, '>'))
+          {
+            if (!supports_escape(signature, 'b') || !supports_escape(signature, 'w') || !supports_modifier(signature, '<'))
+              throw regex_error(regex_error::invalid_anchor, pattern, pos);
+            // translate \< to \b(?<=\w)
+            regex.append(&pattern[loc], pos - loc - 1).append("\\b(?<=\\w)");
+          }
+          else
+          {
+            regex.append(&pattern[loc], pos - loc).append("\\<");
+          }
+          pos += 6;
+          loc = pos + 1;
+          anc = true;
+          beg = false;
         }
         else
         {
-          ORanges<int> ranges;
-          regex.append(&pattern[loc], pos - loc);
-          ++pos;
-          insert_list(pattern, len, pos, flags, mod, ranges);
-          if (is_modified(mod, 'i'))
-            convert_anycase_ranges(ranges);
-          if (is_modified(mod, 'u'))
+          if (pos + 1 < len && pattern[pos + 1] == '^')
           {
-            if (ranges.empty())
-              throw regex_error(regex_error::empty_class, pattern, loc);
-            // Unicode: translate [ ] to new regex
-            regex.append(convert_unicode_ranges(ranges, signature, par));
+            ORanges<int> ranges;
+            regex.append(&pattern[loc], pos - loc);
+            pos += 2;
+            insert_list(pattern, len, pos, flags, mod, ranges);
+            if (is_modified(mod, 'i'))
+              convert_anycase_ranges(ranges);
+            if (is_modified(mod, 'u'))
+            {
+              // Unicode: translate [^ ] to new [ ] regex with inverted content
+              ORanges<int> inverse(0x00, 0x10FFFF);
+              inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
+              inverse -= ranges;
+              if (inverse.empty())
+                throw regex_error(regex_error::empty_class, pattern, loc);
+              regex.append(convert_unicode_ranges(inverse, signature, par));
+            }
+            else
+            {
+              ORanges<int>::const_reverse_iterator i = ranges.rbegin();
+              if (i == ranges.rend())
+                throw regex_error(regex_error::empty_class, pattern, loc);
+              if (i->second - 1 > 0xFF)
+                throw regex_error(regex_error::invalid_class, pattern, pos);
+              // ASCII: translate [^ ] to new [^ ] regex
+              regex.append("[^").append(convert_posix_ranges(ranges, signature));
+            }
+            loc = pos + 1;
           }
           else
           {
-            ORanges<int>::const_reverse_iterator i = ranges.rbegin();
-            if (i == ranges.rend())
-              throw regex_error(regex_error::empty_class, pattern, loc);
-            if (i->second - 1 > 0xFF)
-              throw regex_error(regex_error::invalid_class, pattern, pos);
-            // ASCII: translate [ ] to new regex
-            regex.append("[").append(convert_posix_ranges(ranges, signature));
+            ORanges<int> ranges;
+            regex.append(&pattern[loc], pos - loc);
+            ++pos;
+            insert_list(pattern, len, pos, flags, mod, ranges);
+            if (is_modified(mod, 'i'))
+              convert_anycase_ranges(ranges);
+            if (is_modified(mod, 'u'))
+            {
+              if (ranges.empty())
+                throw regex_error(regex_error::empty_class, pattern, loc);
+              // Unicode: translate [ ] to new regex
+              regex.append(convert_unicode_ranges(ranges, signature, par));
+            }
+            else
+            {
+              ORanges<int>::const_reverse_iterator i = ranges.rbegin();
+              if (i == ranges.rend())
+                throw regex_error(regex_error::empty_class, pattern, loc);
+              if (i->second - 1 > 0xFF)
+                throw regex_error(regex_error::invalid_class, pattern, pos);
+              // ASCII: translate [ ] to new regex
+              regex.append("[").append(convert_posix_ranges(ranges, signature));
+            }
+            loc = pos + 1;
           }
-          loc = pos + 1;
+          anc = false;
+          beg = false;
         }
-        anc = false;
-        beg = false;
         break;
       case '"':
         if ((flags & convert_flag::lex))

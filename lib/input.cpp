@@ -328,7 +328,7 @@ void Input::file_init()
         utf8_[2] = '\0';
         if (utf8_[0] == '\0' && utf8_[1] == '\0')  // UTF-32 big endian BOM 0000XXXX?
         {
-          if (::fread(utf8_ + 2, 1, 2, file_) == 2)
+          if (::fread(utf8_ + 2, 2, 1, file_) == 1)
           {
             utf8_[4] = '\0';
             if (utf8_[2] == '\xfe' && utf8_[3] == '\xff') // UTF-32 big endian BOM 0000FEFF?
@@ -347,7 +347,7 @@ void Input::file_init()
         }
         else if (utf8_[0] == '\xff' && utf8_[1] == '\xfe') // UTF-16 or UTF-32 little endian BOM FFFEXXXX?
         {
-          if (::fread(utf8_ + 2, 1, 2, file_) == 2)
+          if (::fread(utf8_ + 2, 2, 1, file_) == 1)
           {
             utf8_[4] = '\0';
             if (utf8_[2] == '\0' && utf8_[3] == '\0') // UTF-32 little endian BOM FFFE0000?
@@ -833,7 +833,7 @@ void Input::file_encoding(unsigned short enc, const unsigned short *page)
           // enforcing non-BOM UTF-16: translate utf8_[] to UTF-16 then to UTF-8
           if (b[1] == '\0' && ::fread(b + 1, 1, 1, file_) == 1)
           {
-            if (b[2] == '\0' ? ::fread(b + 2, 1, 2, file_) == 1 :
+            if (b[2] == '\0' ? ::fread(b + 2, 2, 1, file_) == 1 :
                 b[3] == '\0' ? ::fread(b + 3, 1, 1, file_) == 1 :
                 false
                )
@@ -863,7 +863,7 @@ void Input::file_encoding(unsigned short enc, const unsigned short *page)
           // enforcing non-BOM UTF-16: translate utf8_[] to UTF-16 then to UTF-8
           if (b[1] == '\0' && ::fread(b + 1, 1, 1, file_) == 1)
           {
-            if (b[2] == '\0' ? ::fread(b + 2, 1, 2, file_) == 1 :
+            if (b[2] == '\0' ? ::fread(b + 2, 2, 1, file_) == 1 :
                 b[3] == '\0' ? ::fread(b + 3, 1, 1, file_) == 1 :
                 false
                )
@@ -891,8 +891,8 @@ void Input::file_encoding(unsigned short enc, const unsigned short *page)
           break;
         case file_encoding::utf32be:
           // enforcing non-BOM UTF-32: translate utf8_[] to UTF-32 then to UTF-8
-          if (b[1] == '\0' ? ::fread(b + 1, 1, 3, file_) == 1 :
-              b[2] == '\0' ? ::fread(b + 2, 1, 2, file_) == 1 :
+          if (b[1] == '\0' ? ::fread(b + 1, 3, 1, file_) == 1 :
+              b[2] == '\0' ? ::fread(b + 2, 2, 1, file_) == 1 :
               b[3] == '\0' ? ::fread(b + 3, 1, 1, file_) == 1 :
               false
              )
@@ -905,8 +905,8 @@ void Input::file_encoding(unsigned short enc, const unsigned short *page)
           break;
         case file_encoding::utf32le:
           // enforcing non-BOM UTF-32: translate utf8_[] to UTF-32 then to UTF-8
-          if (b[1] == '\0' ? ::fread(b + 1, 1, 3, file_) == 1 :
-              b[2] == '\0' ? ::fread(b + 2, 1, 2, file_) == 1 :
+          if (b[1] == '\0' ? ::fread(b + 1, 3, 1, file_) == 1 :
+              b[2] == '\0' ? ::fread(b + 2, 2, 1, file_) == 1 :
               b[3] == '\0' ? ::fread(b + 3, 1, 1, file_) == 1 :
               false
              )

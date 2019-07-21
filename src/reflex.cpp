@@ -202,7 +202,7 @@ static const Reflex::Library library_table[] = {
     "reflex/matcher.h",
     "reflex::Pattern",
     "reflex::Matcher",
-    "imsx#=^:abcdefhijlnprstuvwxzABDHLPQSUW<>?+.",
+    "imsx#=^:abcdefhijklnprstuvwxzABDHLPQSUW<>?+.",
   },
   {
     "boost",
@@ -1011,41 +1011,6 @@ std::string Reflex::get_regex(size_t& pos)
   return regex;
 }
 
-/// Get start conditions <start1,start2,...> of a rule
-Reflex::Starts Reflex::get_starts(size_t& pos)
-{
-  pos = 0;
-  Starts starts;
-  if (linelen > 1 && line.at(0) == '<' && (std::isalpha(line.at(1)) || line.at(1) == '_'))
-  {
-    do
-    {
-      ++pos;
-      std::string name = get_start(pos);
-      Start start;
-      for (start = 0; start < conditions.size() && name != conditions.at(start); ++start)
-        continue;
-      if (start == conditions.size())
-        error("undeclared start condition ", name.c_str());
-      starts.insert(start);
-    } while (pos + 1 < linelen && line.at(pos) == ',');
-    if (pos + 1 >= linelen || line.at(pos) != '>')
-      error("bad start condition: ", line.c_str());
-    ++pos;
-  }
-  else if (linelen > 1 && line.at(0) == '<' && line.at(1) == '*' && line.at(2) == '>')
-  {
-    for (Start start = 0; start < conditions.size(); ++start)
-      starts.insert(start);
-    pos = 3;
-  }
-  else
-  {
-    starts = inclusive;
-  }
-  return starts;
-}
-
 /// Get line(s) of code, %{ %}, %%top{ %}, %%class{ %}, and %%init{ %}
 std::string Reflex::get_code(size_t& pos)
 {
@@ -1159,6 +1124,68 @@ std::string Reflex::escape_bs(const std::string& s)
     i += 2;
   }
   return t;
+}
+
+/// Add start conditions <start1,start2,...> or subtract them with <-start1,-start2,...>
+bool Reflex::get_starts(size_t& pos, Starts& starts)
+{
+  pos = 0;
+  if (linelen > 1 && line.at(0) == '<' && (std::isalpha(line.at(1)) || line.at(1) == '_' || line.at(1) == '*' || (line.at(1) & 0x80) == 0x80 || line.at(1) == '^'))
+  {
+    do
+    {
+      ++pos;
+      if (pos >= linelen - 1)
+        break;
+      bool reverse = line.at(pos) == '^';
+      if (reverse)
+        ++pos;
+      if (line.at(pos) == '*')
+      {
+        if (reverse)
+        {
+          starts.clear();
+        }
+        else
+        {
+          for (Start start = 0; start < conditions.size(); ++start)
+            starts.insert(start);
+        }
+        ++pos;
+      }
+      else
+      {
+        std::string name = get_start(pos);
+        if (name.empty())
+          break;
+        Start start;
+        for (start = 0; start < conditions.size() && name != conditions.at(start); ++start)
+          continue;
+        if (start == conditions.size())
+          error("undeclared start condition ", name.c_str());
+        Starts::iterator i = starts.find(start);
+        if (i != starts.end())
+        {
+          if (reverse)
+            starts.erase(i);
+          else
+            warning("scope already includes start condition ", name.c_str());
+        }
+        else
+        {
+          if (reverse)
+            warning("scope does not include start condition ", name.c_str());
+          else
+            starts.insert(start);
+        }
+      }
+    } while (pos < linelen && line.at(pos) == ',');
+    if (pos + 1 >= linelen || line.at(pos) != '>')
+      error("bad start condition: ", line.c_str());
+    ++pos;
+    return true;
+  }
+  return false;
 }
 
 /// Abort with an error message
@@ -1409,8 +1436,11 @@ void Reflex::parse_section_2()
       {
         if (!skip_comment(pos) || line == "%%")
           break;
-        Starts starts = get_starts(pos);
-        if (pos + 1 == linelen && line.at(pos) == '{')
+        Starts starts;
+        if (!scopes.empty())
+          starts = scopes.top();
+        bool has_starts = get_starts(pos, starts);
+        if (has_starts && pos < linelen && line.at(pos) == '{' && (pos + 1 == linelen || std::isspace(line.at(pos + 1))))
         {
           scopes.push(starts);
           if (!get_line())
@@ -1419,27 +1449,34 @@ void Reflex::parse_section_2()
         }
         else
         {
-          bool no_starts = pos == 0;
+          if ((has_starts && starts.empty()) || (!has_starts && !scopes.empty() && scopes.top().empty()))
+            warning("rule cannot be matched because the scope of start conditions is empty");
           std::string regex = get_regex(pos);
           if (regex.empty())
             error("bad line in section 2: ", line.c_str());
           size_t rule_lineno = lineno;
           std::string code = get_code(pos);
-          if (no_starts && scopes.empty() && regex == "<<EOF>>")
+          if (has_starts)
           {
+            for (Starts::const_iterator start = starts.begin(); start != starts.end(); ++start)
+              rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
+          }
+          else if (scopes.empty() && regex == "<<EOF>>")
+          {
+            // only the first <<EOF>> code should be used
             if (code == "|")
               error("bad <<EOF>> action | in section 2: ", line.c_str());
             for (Start start = 0; start < conditions.size(); ++start)
-              rules[start].push_back(Rule(regex, Code(code, infile, rule_lineno))); // only the first <<EOF>> code will be used
+              rules[start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
           }
-          else if (no_starts && !scopes.empty())
+          else if (!scopes.empty())
           {
             for (Starts::const_iterator start = scopes.top().begin(); start != scopes.top().end(); ++start)
               rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
           }
           else
           {
-            for (Starts::const_iterator start = starts.begin(); start != starts.end(); ++start)
+            for (Starts::const_iterator start = inclusive.begin(); start != inclusive.end(); ++start)
               rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
           }
           init = false;

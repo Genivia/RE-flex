@@ -2,10 +2,14 @@ procedure main
    if testing
       print one
 
+/* a
+   comment
+*/
       print two
-            /* some comment */
+            /* another comment */
       while true
-         print /* in loop */
+         print /* in
+                  loop */
    print \
      this is a \
      long line that is \

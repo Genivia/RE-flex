@@ -604,7 +604,7 @@ class Input {
         k -= l;
         if (k == 0)
         {
-          if (size_ > 0)
+          if (size_ >= n)
             size_ -= n;
           return n;
         }
@@ -651,21 +651,21 @@ class Input {
         }
         ++wstring_;
       }
-      if (size_ > 0)
+      if (size_ >= n - k)
         size_ -= n - k;
       return n - k;
     }
     if (file_)
     {
       size_t k = file_get(s, n);
-      if (size_ > 0)
+      if (size_ >= k)
         size_ -= k;
       return k;
     }
     if (istream_)
     {
       size_t k = static_cast<size_t>(n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, static_cast<std::streamsize>(n)).gcount());
-      if (size_ > 0)
+      if (size_ >= k)
         size_ -= k;
       return k;
     }

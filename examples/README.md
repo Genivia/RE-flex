@@ -38,7 +38,8 @@ RE/flex scanner examples using RE/flex lexer syntax that extends Flex
 - `cow.l` scanner to convert cows
 - `cows.l` scanner to convert cows, uses word boundary anchors
 - `csv.l` scanner to parse CSV rows from a file into a C++ vector
-- `indent.l` indentation detection and reformatting example
+- `indent1.l` indentation detection and reformatting example, basic
+- `indent2.l` indentation detection and reformatting example, advanced with start conditions
 - `braille.l` a braille translator, inspired by the re2c example but expanded
 - `unicode.l` a very simple Unicode word matcher to demonstrate Unicode matching
 - `reflexexample3.l` example RE/flex scanner adapted from the Flex documentation with C bison

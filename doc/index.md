@@ -1822,8 +1822,8 @@ following defines an action for a pattern:
 </div>
 
 To add action code that spans multiple lines, indent the code or place the code
-within a <i>`{`</i> and </i>`}`</i> code block.  When local variables are
-declared in an action then the code should always be placed in a code block.
+within a <i>`{`</i> and </i>`}`</i> block.  When local variables are declared
+in an action then the code should always be placed in a block.
 
 In free space mode you MUST place actions in <i>`{`</i> and <i>`}`</i> blocks
 and other code in <i>`%{`</i> and <i>`%}`</i> instead of indented, see
@@ -1858,6 +1858,7 @@ are the classic Flex actions shown in the second column of this table:
   `push_state(n)`      | `yy_push_state(n)`   | push current state, start `n`
   `pop_state()`        | `yy_pop_state()`     | pop state and make it current
   `top_state()`        | `yy_top_state()`     | get top state start condition
+  `states_empty()`     | *n/a*                | true if state stack is empty
   `matcher().accept()` | `yy_act`             | number of the matched rule
   `matcher().text()`   | `YYText()`, `yytext` | same as `text()`
   `matcher().str()`    | *n/a*                | same as `str()`
@@ -2177,20 +2178,21 @@ patterns `φ` and `ψ`:
   `(?=φ)`   | matches `φ` without consuming it (\ref reflex-pattern-lookahead)
   `(?<=φ)`  | matches `φ` to the left without consuming it (\ref reflex-pattern-lookbehind, not supported by the RE/flex matcher)
   `(?^φ)`   | matches `φ` and ignore it to continue matching (RE/flex matcher only)
-  `^φ`      | matches `φ` at the begin of input or begin of a line (requires multi-line mode)
-  `φ$`      | matches `φ` at the end of input or end of a line (requires multi-line mode)
-  `\Aφ`     | matches `φ` at the begin of input
-  `φ\z`     | matches `φ` at the end of input
-  `\bφ`     | matches `φ` starting at a word boundary
-  `φ\b`     | matches `φ` ending at a word boundary
-  `\Bφ`     | matches `φ` starting at a non-word boundary
-  `φ\B`     | matches `φ` ending at a non-word boundary
-  `\<φ`     | matches `φ` that starts a word
-  `\>φ`     | matches `φ` that starts a non-word
-  `φ\<`     | matches `φ` that ends a non-word
-  `φ\>`     | matches `φ` that ends a word
+  `^φ`      | matches `φ` at the begin of input or begin of a line (requires multi-line mode) (top-level `φ`, not nested in a sub-pattern)
+  `φ$`      | matches `φ` at the end of input or end of a line (requires multi-line mode) (top-level `φ`, not nested in a sub-pattern)
+  `\Aφ`     | matches `φ` at the begin of input (top-level `φ`, not nested in a sub-pattern)
+  `φ\z`     | matches `φ` at the end of input (top-level `φ`, not nested in a sub-pattern)
+  `\bφ`     | matches `φ` starting at a word boundary (top-level `φ`, not nested in a sub-pattern)
+  `φ\b`     | matches `φ` ending at a word boundary (top-level `φ`, not nested in a sub-pattern)
+  `\Bφ`     | matches `φ` starting at a non-word boundary (top-level `φ`, not nested in a sub-pattern)
+  `φ\B`     | matches `φ` ending at a non-word boundary (top-level `φ`, not nested in a sub-pattern)
+  `\<φ`     | matches `φ` that starts a word (top-level `φ`, not nested in a sub-pattern)
+  `\>φ`     | matches `φ` that starts a non-word (top-level `φ`, not nested in a sub-pattern)
+  `φ\<`     | matches `φ` that ends a non-word (top-level `φ`, not nested in a sub-pattern)
+  `φ\>`     | matches `φ` that ends a word (top-level `φ`, not nested in a sub-pattern)
   `\i`      | matches an indent for \ref reflex-pattern-dents matching
   `\j`      | matches a dedent for \ref reflex-pattern-dents matching
+  `\k`      | matches if indent depth changed and restores indent stops for \ref reflex-pattern-dents matching
   `(?i:φ)`  | \ref reflex-pattern-anycase matches `φ` ignoring case
   `(?m:φ)`  | \ref reflex-pattern-multiline `^` and `$` in `φ` match begin and end of a line (default in lexer specifications)
   `(?s:φ)`  | \ref reflex-pattern-dotall `.` (dot) in `φ` matches newline
@@ -2290,34 +2292,24 @@ intersection.
 
 The 7-bit ASCII POSIX character categories are:
 
-  POSIX form   | POSIX category | Matches
-  ------------ | -------------- | ---------------------------------------------
-  `[:ascii:]`  | `\p{ASCII}`    | matches any ASCII character
-  `[:space:]`  | `\p{Space}`    | matches a white space character `[ \t\n\v\f\r]` same as `\s`
-  `[:xdigit:]` | `\p{Xdigit}`   | matches a hex digit `[0-9A-Fa-f]`
-  `[:cntrl:]`  | `\p{Cntrl}`    | matches a control character `[\x00-\0x1f\x7f]`
-  `[:print:]`  | `\p{Print}`    | matches a printable character `[\x20-\x7e]`
-  `[:alnum:]`  | `\p{Alnum}`    | matches a alphanumeric character `[0-9A-Za-z]`
-  `[:alpha:]`  | `\p{Alpha}`    | matches a letter `[A-Za-z]`
-  `[:blank:]`  | `\p{Blank}`    | matches a blank `[ \t]` same as `\h`
-  `[:digit:]`  | `\p{Digit}`    | matches a digit `[0-9]` same as `\d`
-  `[:graph:]`  | `\p{Graph}`    | matches a visible character `[\x21-\x7e]`
-  `[:lower:]`  | `\p{Lower}`    | matches a lower case letter `[a-z]` same as `\l`
-  `[:punct:]`  | `\p{Punct}`    | matches a punctuation character `[\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]`
-  `[:upper:]`  | `\p{Upper}`    | matches an upper case letter `[A-Z]` same as `\u`
-  `[:word:]`   | `\p{Word}`     | matches a word character `[0-9A-Za-z_]` same as `\w`
-  `[:digit:]`  | `\d`           | matches a digit `[0-9]`
-  `[:^digit:]` | `\D`           | matches a non-digit `[^0-9]`
-  `[:blank:]`  | `\h`           | matches a blank character `[ \t]`
-  `[:^blank:]` | `\H`           | matches a non-blank character `[^ \t]`
-  `[:space:]`  | `\s`           | matches a white space character `[ \t\n\v\f\r]`
-  `[:^space:]` | `\S`           | matches a non-white space `[^ \t\n\v\f\r]`
-  `[:lower:]`  | `\l`           | matches a lower case letter `[a-z]`
-  `[:^lower:]` | `\L`           | matches a non-lower case letter `[^a-z]`
-  `[:upper:]`  | `\u`           | matches an upper case letter `[A-Z]`
-  `[:^upper:]` | `\U`           | matches a nonupper case letter `[^A-Z]`
-  `[:word:]`   | `\w`           | matches a word character `[0-9A-Za-z_]`
-  `[:^word:]`  | `\W`           | matches a non-word character `[^0-9A-Za-z_]`
+  POSIX form   | POSIX category    | Matches
+  ------------ | ----------------- | ---------------------------------------------
+  `[:ascii:]`  | `\p{ASCII}`       | matches any ASCII character
+  `[:space:]`  | `\p{Space}`       | matches a white space character `[ \t\n\v\f\r]`
+  `[:xdigit:]` | `\p{Xdigit}`      | matches a hex digit `[0-9A-Fa-f]`
+  `[:cntrl:]`  | `\p{Cntrl}`       | matches a control character `[\x00-\0x1f\x7f]`
+  `[:print:]`  | `\p{Print}`       | matches a printable character `[\x20-\x7e]`
+  `[:alnum:]`  | `\p{Alnum}`       | matches a alphanumeric character `[0-9A-Za-z]`
+  `[:alpha:]`  | `\p{Alpha}`       | matches a letter `[A-Za-z]`
+  `[:blank:]`  | `\p{Blank}`, `\h` | matches a blank `[ \t]`
+  `[:digit:]`  | `\p{Digit}`, `\d` | matches a digit `[0-9]`
+  `[:graph:]`  | `\p{Graph}`       | matches a visible character `[\x21-\x7e]`
+  `[:lower:]`  | `\p{Lower}`       | matches a lower case letter `[a-z]`
+  `[:punct:]`  | `\p{Punct}`       | matches a punctuation character `[\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]`
+  `[:upper:]`  | `\p{Upper}`       | matches an upper case letter `[A-Z]`
+  `[:word:]`   | `\p{Word}`        | matches a word character `[0-9A-Za-z_]`
+  `[:^blank:]` | `\P{Blank}`, `\H` | matches a non-blank character `[^ \t]`
+  `[:^digit:]` | `\P{Digit}`, `\D` | matches a non-digit `[^0-9]`
 
 The POSIX form can only be used in bracket lists, for example
 `[[:lower:][:digit:]]` matches an ASCII lower case letter or a digit.  
@@ -2617,10 +2609,14 @@ of a line:
   `\Aφ`     | matches `φ` at the start of input
   `φ\z`     | matches `φ` at the end of input
 
-Anchors in lexer specifications require context, meaning that `φ` cannot be
-empty.  Note that `<<EOF>>` in lexer specifications match the end of input
-without requiring any context.  Actions for the start of input can be specified
-in the code block preceding the rules.
+Anchors in lexer specifications require pattern context, meaning that `φ`
+cannot be empty.
+
+Note that `<<EOF>>` in lexer specifications match the end of input, which 
+can be used in place of the pattern `\z`.
+
+Actions for the start of input can be specified
+in an initial code block preceding the rules, see \ref reflex-code-blocks.
 
 Word boundaries demarcate words.  Word characters `\w` are letters, digits, and
 the underscore.
@@ -2653,18 +2649,18 @@ An indent and a dedent position is defined and matched with:
   `\i`    | indent: matches and adds a new indent stop position
   `\j`    | dedent: matches a previous indent position, removes one indent stop
 
-These patterns should be used in combination with the start of a line anchor
-`^` followed by a pattern that represents left margin spacing for indentations,
-followed by a `\i` or a `\j` at the end of the pattern.  The margin spacing
-pattern may include any characters that are considered part of the left margin,
-but should exclude `\n`.  For example:
+The `\i` and `\j` anchors should be used in combination with the start of a
+line anchor `^` followed by a pattern that represents left margin spacing for
+indentations, followed by a `\i` or a `\j` at the end of the pattern.  The
+margin spacing pattern may include any characters that are considered part of
+the left margin, but should exclude `\n`.  For example:
 
 <div class="alt">
 ~~~{.cpp}
     %o tabs=8
     %%
     ^\h+      out() << "| "; // nodent: text is aligned to current indent
-    ^\h*\i    out() << "> "; // indent: matched and added with \i
+    ^\h+\i    out() << "> "; // indent: matched and added with \i
     ^\h*\j    out() << "< "; // dedent: matched with \j
     \j        out() << "< "; // dedent: for each extra level dedented
     .|\n      echo();
@@ -2677,9 +2673,34 @@ that is a multiple of 8.  The tab multiplier can be changed by setting the
 `−−tabs=N` option where `N` must be a positive integer that is a power of 2
 and between 1 and 8 (1, 2, 4, 8).
 
+Using negative patterns we can ignore empty lines and multi-line comments that
+would otherwise affect indent stops:
+
+<div class="alt">
+~~~{.cpp}
+    %o main tabs=8
+    %%
+    ^\h+                      out() << "| "; // nodent, text is aligned to current margin column
+    ^\h+\i                    out() << "> "; // indent
+    ^\h*\j                    out() << "< "; // dedent
+    \j                        out() << "< "; // dedent, for each extra level dedented
+    (?^^\h*\n)                // eat empty lines without affecting indent stops
+    (?^^\h*"/*"(.|\n)*?"*/")  // eat /*-comments that start a line without affecting indent stops
+    (?^\\\n\h*)               // lines ending in \ continue on the next line
+    (?^"/*"(.|\n)*?"*/")      // eat /*-comments
+    .|\n                      echo(); // ECHO character
+    %%
+~~~
+</div>
+
+Likewise, we can add rules to ignore inline `//`-comments to our lexer
+specification.  To do so, we should add a rule with pattern `(?^^\h*"//".*)` to
+ignore `//`-comments without affecting stop positions.
+
 To scan input that continues on the next new line(s) (which may affect indent
 stops) while preserving the current indent stop positions, use the RE/flex
-matcher `matcher().push_stops()` and `matcher().pop_stops()`:
+matcher `matcher().push_stops()` and `matcher().pop_stops()`, or
+`matcher().stops()` to directlye access the vector of indent stops to modify:
 
   RE/flex action             | Result
   -------------------------- | ------------------------------------------------
@@ -2692,53 +2713,121 @@ matcher `matcher().push_stops()` and `matcher().pop_stops()`:
   `matcher().delete_stop(n)` | remove stop positions from position `n` and up
 
 For example, to continue scanning after a `/*` for multiple lines without
-indentation matching and up to a `*/` you can save the current indent positions
-and transition to a new start condition state to scan the content between `/*`
-and `*/`:
+indentation matching, allowing for possible nested `/*`-comments, up to a `*/`
+you can save the current indent stop positions and transition to a new start
+condition state to scan the content between `/*` and `*/`:
 
 <div class="alt">
 ~~~{.cpp}
+    %{
+      int level;                 // a variable to track the /*-comment nesting level
+      std::vector<size_t> stops; // a variable to save the stop positions after indent
+    %}
     %o tabs=8
-    %x CONTINUE
+    %x COMMENT
     %%
-    ^\h+          out() << "| "; // nodent, text is aligned to current margin
-    ^\h*\i        out() << "> "; // indent
-    ^\h*\j        out() << "< "; // dedent
-    \j            out() << "< "; // dedent, for each extra indent level on the same line
-    (?^^\h+/"/*") // eat white space before /*-comments without affecting indent stops
-    "/*"          matcher().push_stops(); // save the indent margin/tab stops
-                  start(CONTINUE);        // continue w/o indent matching
-    .|\n          echo();
-    <CONTINUE>{
-    "*/"          matcher().pop_stops();  // restore the indent margin/tab stops
-                  start(INITIAL);         // go back to the initial scanning state
-    .|\n          // ignore all content in comments
+    ^\h+           out() << "| ";               // nodent, text is aligned to current margin column
+    ^\h+\i         out() << "> ";               // indent
+                   stops = matcher().stops();   // save the stop positions
+    ^"/*"\j        level = 1;                   // do not count dedent(s) to the first line that has a /*-comment
+                   start(COMMENT);              // skip comment
+    ^\h*\j         out() << "< ";               // dedent
+    \j             out() << "< ";               // dedent, triggered for each extra level dedented
+    (?^^\h*\n)     // eat empty lines without affecting indent stops
+    (?^^\h+/"/*")  // eat white space before /*-comments without affecting indent stops
+    "/*"           level = 1;
+                   start(COMMENT);              // continue w/o indent matching
+    (?^\\\n\h*)    // lines ending in \ continue on the next line
+    .|\n           echo();                      // ECHO character
+    <COMMENT>{
+    "/*"           ++level;                     // allow nested /*-comments 
+    "*/"           if (--level == 0)
+                   {
+                     matcher().stops() = stops; // restore the indent margin/tab stops
+                     start(INITIAL);            // back to initial state
+                   }
+    .|\n           // ignore all content in comments
     }
+    %%
 ~~~
 </div>
 
 The multi-line comments enclosed in `/*` `*/` are processed by the exclusive
-`CONTINUE` start condition rules.  Because the indent stops are not
-automatically saved and restored when switching start conditions, and because
-indent stops may be affected in rules associated with other conditions, we use
-`matcher().push_stops()` and `matcher().pop_stops()` to save and restore stops.
+`COMMENT` start condition rules.  The rules allow for `/*`-comment nesting.
+We use `stops = matcher().stops()` and `matcher().stops() = stops` to save and
+restore stops.
 
 In this example we added rules so that comments on a line do not affect the
 current indent stops.  This is done by using the negative pattern
-`(?^^\h+/"/*")` with a trailing context `/"/*"`.  We used a negative pattern to
-eat the margin spacing without affecting indent stops.  The trailing context
-looks ahead for a `/*` but does not consume the `/*`.  Likewise, we can add
-single line `//`-comments to this lexer specification.  To prevent margin
-spacing before `//`-comments from affecting indents, we can add a rule with
-pattern `(?^^\h+/"//")`.  Then adding a rule with pattern `"//".*\n` suffices
-to handle (i.e. ignore) `//`-comments.
+`(?^^\h+/"/*")` with a trailing context `/"/*"`.  Here we used a negative
+pattern to eat the margin spacing without affecting indent stops.  The trailing
+context looks ahead for a `/*` but does not consume the `/*`.
 
-We can add the negative pattern `(?^^\h*\n)` to ignore empty lines, if desired.
-This allows empty lines in the input without affecting indent stops.
+However, when a `/*`-comment starts at the first column of a line, the pattern
+`(?^^\h+/"/*")` does not match it, even when we change it to `(?^^\h*/"/*")`.
+This is because the `\h*` cannot be an empty match since the trailing context
+does not return a match, and matches cannot be empty.  Therefore, adding the
+rule with pattern `^"/*"\j` adjusts for that, but accepting the dedents caused
+by the `/*`-comment.  This is fine, because  the stop positions are restored
+after scanning the `/*`-comment.
 
-The `matcher().stops()` method returns a reference to the current
-`std::vector<size_t>` of indent stop positions, which may be modified by adding
-and/or removing indent stop positions.  Make sure to keep the vector sorted.
+We added the negative pattern `(?^^\h*\n)` to ignore empty lines.  This allows
+empty lines in the input without affecting indent stops.
+
+@warning when using the `matcher().stops()` method to access the vector of
+stops to modify, we must make sure to keep the stop positions in the vector
+sorted.
+
+In addition to the `\i` and `\j` indent and dedent anchors, the `\k` undent
+anchor matches when the indent depth changed before the position of `\k` in the
+input, and restores the indent stops by undoing these changes ("undenting"):
+
+  Pattern | Matches
+  ------- | -------------------------------------------------------------------
+  `\k`    | undent: matches when indent depth changed and restores indent stops
+
+The example shown above can be simplified with `\k`.  We no longer need to
+explicitly save and restore indent stops in a variable:
+
+<div class="alt">
+~~~{.cpp}
+    %{
+      int level;   // a variable to track the /*-comment nesting level
+    %}
+    %o tabs=8
+    %x COMMENT
+    %%
+    ^\h+           out() << "| ";    // nodent, text is aligned to current margin column
+    ^\h+\i         out() << "> ";    // indent
+    ^\h*\j         out() << "< ";    // dedent
+    \j             out() << "< ";    // dedent, triggered for each extra level dedented
+    (?^^\h*\n)     // eat empty lines without affecting indent stops
+    \h*"/*"\k?     level = 1;        // /*-comment after spacing, \k matches indent stop changes and then restores them
+                   start(COMMENT);   // continue w/o indent matching
+    (?^\\\n\h*)    // lines ending in \ continue on the next line
+    .|\n           echo();           // ECHO character
+    <COMMENT>{
+    "/*"           ++level;          // allow nested /*-comments 
+    "*/"           if (--level == 0)
+                     start(INITIAL); // back to initial state
+    .|\n           // ignore all content in comments
+    }
+    %%
+~~~
+</div>
+
+The pattern `\h*"/*"\k?` matches a `/*`-comment with leading white space.  The
+`\k` anchor matches if the indent depth changed in the leading white space,
+which is also matched by the first three patterns in the lexer specification
+before their `\i` and `\j` indent and dedent anchors, respectively.  If the
+indent depth changed, the `\k` anchor matches and restores the indent stops.
+Because we also want to match `\*` when the indent depth does not change, we
+made `\k` optional in pattern `\h*"/*"\k?`.  Alternatively, two patterns
+`^\h*"/*"\k` and `\h*"/*"` can be used, where the first matches if and only if
+the indent stops changed on a new line and were undone.
+
+@note Anchors `\i`, `\j`, and `\k` should appear at the end of a regex pattern.
+Otherwise the accuracy of indent/dedent matching cannot be guaranteed.
 
 See \ref reflex-states for more information about start condition states.  See
 \ref reflex-pattern-negative for more information on negative patterns.
@@ -3601,10 +3690,10 @@ is in state `B` rules 1 and 3 are active.
 
 Start conditions are declared in \ref reflex-spec-defs (the first section) of
 the lexer specification using <i>`%%state`</i> or <i>`%%xstate`</i> (or
-<i>`%%s`</i> and <i>`%%x`</i> for short) followed by a list of names called
-*start symbols*.  Start conditions declared with `%%s` are *inclusive start
-conditions*.  Start conditions declared with <i>`%%x`</i> are *exclusive start
-conditions*.
+<i>`%%s`</i> and <i>`%%x`</i> for short) followed by a space-separated list of
+names called *start symbols*.  Start conditions declared with `%%s` are
+*inclusive start conditions*.  Start conditions declared with <i>`%%x`</i> are
+*exclusive start conditions*:
 
 If a start condition is inclusive, then all rules without a start condition and
 rules with the corresponding start condition will be active.
@@ -3615,7 +3704,7 @@ condition will be active.
 When declaring start symbol names it is recommended to use all upper case to
 avoid name clashes with other Lexer class members.  For example, we cannot use
 `text` as a start symbol name because `text()` is a Lexer method.  When option
-`−−flex` is used, start symbol names are simple macros for compatibility.
+`−−flex` is used, start symbol names are macros for compatibility with Flex.
 
 The scanner is initially in the `INITIAL` start condition state.  The `INITIAL`
 start condtion is inclusive: all rules without a start condition and those
@@ -3624,24 +3713,24 @@ the `INITIAL` start condition state.
 
 The special start condition prefix `<*>` matches every start condition.
 The prefix `<*>` is not needed for `<<EOF>>` rules, because unprefixed
-`<<EOF>>` rules are always active, as a special case (`<<EOF>>` and this
-special exception were introduced by Flex).
+`<<EOF>>` rules are always active as a special case.  The `<<EOF>>` pattern and
+this exception were originally introduced by Flex.
 
 For example:
 
 <div class="alt">
 ~~~{.cpp}
     %s A
-    %x B
+    %x X
 
     %%
 
-    <A,B>pattern1    action1    // rule for states A and B
+    <A,X>pattern1    action1    // rule for states A and X
     <A>pattern2      action2    // rule for state A
-    <B>pattern3      action3    // rule for state B
-    <*>pattern4      action4    // rule for states INITIAL, A and B
+    <X>pattern3      action3    // rule for state X
+    <*>pattern4      action4    // rule for states INITIAL, A and X
     pattern5         action5    // rule for states INITIAL and A
-    <<EOF>>          action6    // rule for states INITIAL, A and B
+    <<EOF>>          action6    // rule for states INITIAL, A and X
 
     %%
 ~~~
@@ -3649,8 +3738,8 @@ For example:
 
 When the scanner is in state `INITIAL` rules 4, 5, and 6 are active.  When the
 scanner is in state `A` rules 1, 2, 4, 5, and 6 are active.  When the scanner is
-in state `B` rules 1, 3, 4, and 6 are active.  Note that `A` is inclusive
-whereas `B` is exclusive.
+in state `X` rules 1, 3, 4, and 6 are active.  Note that `A` is inclusive
+whereas `X` is exclusive.
 
 To switch to a start condition state, use `start(START)` (or `BEGIN START` when
 option `−−flex` is used).  To get the current state use `start()` (or
@@ -3715,50 +3804,135 @@ the rules by placing them in a *start condition scope*:
 ~~~
 </div>
 
-Contrary to some Flex manuals, rules cannot be indented in a start condition
-scope.  Indentation is used to specify code blocks.  Code blocks may be
-indented or placed within <i>`%{`</i> and <i>`%}`</i>.  These code blocks are
-executed when the scanner is invoked.  A code block at the start of a condition
-scope is executed when the scanner is invoked and if it is in the corresponding
-start condition state:
+Start condition scopes may be nested.  A nested scope extends the scope of
+start conditions that will be associated with the rules in the nested scope.
+
+For example:
 
 <div class="alt">
 ~~~{.cpp}
     %s A
-    %x B
+    %x X
 
     %%
 
-    %{
-      // Code for all inclusive states (INITIAL and A)
-    %}
-    pattern    action
-    ...
-    pattern    action
+    pattern    action    // rule for states INITIAL and A
 
-    <B>{
-    %{
-      // Code for state B
-    %}
-    pattern    action
-    ...
-    pattern    action
+    <A>{
+    pattern    action    // rule for state A
+    <X>{
+    pattern    action    // rule for states A and X
+    }
     }
 
-    <*>{
-    %{
-      // Code for all inclusive and exclusive states (INITIAL, A and B)
-    %}
-    pattern    action
-    ...
-    pattern    action
+    <X>{
+    pattern    action    // rule for state X
+    <A>{
+    pattern    action    // rule for states A and X
+    }
     }
 
     %%
 ~~~
 </div>
 
-Start condition scopes may be nested.
+Designating a start condition as inclusive or exclusive is effective only for
+rules that are not associated with a start condition scope.  That is, inclusive
+start condition states are implicitly associated with rules unless a rule has a
+start condition scope that explicitly associates start condition states with
+the rule.
+
+RE/flex extends the syntax of start conditions scopes beyond Flex syntax,
+allowing the removal of start conditions from the current scope.  A start
+condition name prefixed with the `^` operator is removed from the current
+scope:
+
+<div class="alt">
+~~~{.cpp}
+    %s A B C
+
+    %%
+
+    <B,C>{
+    pattern    action    // rule for states B and C
+    <A,^B>{
+    pattern    action    // rule for states A and C
+    }
+    }
+
+    <*,^A,^C>pattern    action    // rule for states INITIAL and B (all states except A and C)
+
+    %%
+~~~
+</div>
+
+Note that scopes should be read from outer to inner scope, and from left to
+right in a `<...>` scope declaration.  This means that `<*,^A,^C>` first
+extends the scope to include all start conditions and then removes `A` and `C`.
+
+A start condition cannot be removed when it is not included in the current
+scope.  For example, `<*,^A>` is correct but `<^A,*>` is incorrect when used as
+a top-level scope.
+
+Empty `<>` without start condition states cannot be specified because this is a
+valid regex pattern.  To remove all states from a scope use `<^*>`.  This
+construct is only useful when the empty scope is extended by start conditions
+specified in sub-scopes.
+
+@note Contrary to some Flex manuals, rules cannot be indented in a start
+condition scope in Flex and RE/flex.  When a code block is specified indented
+at the begin of a start condition scope it is considered an initial code block,
+see \ref reflex-code-blocks.
+
+🔝 [Back to table of contents](#)
+
+
+Initial code blocks                                       {#reflex-code-blocks}
+-------------------
+
+An initial code block may be placed at the start of the rules section or in a
+condition scope.  This code block is executed each time the scanner is invoked
+(i.e. when `lex()` or `yylex()` is called) before matching a pattern.  Initial
+code blocks may be associated with start condition states as follows:
+
+<div class="alt">
+~~~{.cpp}
+    %s A
+    %x X
+
+    %%
+
+    %{
+      // Code block for all inclusive states (INITIAL and A)
+    %}
+    pattern    action    // rule for states INITIAL and A
+    ...
+    pattern    action    // rule for states INITIAL and A
+
+    <X>{
+    %{
+      // Code block for state X
+    %}
+    pattern    action    // rule for state X
+    ...
+    pattern    action    // rule for state X
+    }
+
+    <*>{
+    %{
+      // Code block for all inclusive and exclusive states (INITIAL, A, and X)
+    %}
+    pattern    action    // rule for states INITIAL, A, and X
+    ...
+    pattern    action    // rule for states INITIAL, A, and X
+    }
+
+    %%
+~~~
+</div>
+
+Initial code blocks should be indented or should be placed within <i>`%{`</i>
+and <i>`%}`</i>.
 
 🔝 [Back to table of contents](#)
 
@@ -4557,7 +4731,7 @@ locations enabled:
 ~~~
 </div>
 
-@note when Bison <i>`%%locations`</i> with <i>`%%define api.pure full`</i> is
+@note When Bison <i>`%%locations`</i> with <i>`%%define api.pure full`</i> is
 used, `yyerror` has the signature `void yyerror(YYLTYPE *locp, char const
 *msg)`.  This function signature is required to obtain the location information
 with Bison pure-parsers.

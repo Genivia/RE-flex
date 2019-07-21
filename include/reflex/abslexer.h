@@ -164,8 +164,7 @@ class AbstractLexer {
   std::ostream& out() const
     /// @returns reference to the current std::ostream object.
   {
-    ASSERT(os_ != NULL);
-    return *os_;
+    return os_ != NULL ? *os_ : std::cout;
   }
   /// Returns true if a matcher was assigned to this lexer for scanning.
   bool has_matcher() const
@@ -184,7 +183,7 @@ class AbstractLexer {
   Matcher& matcher() const
     /// @returns reference to the current matcher.
   {
-    ASSERT(matcher_ != NULL);
+    ASSERT(has_matcher());
     return *matcher_;
   }
   /// Returns a pointer to the current matcher, NULL if none was set.
@@ -320,16 +319,25 @@ class AbstractLexer {
   /// Pop the stack start condition state and transition to that state.
   void pop_state()
   {
-    ASSERT(!state_.empty());
-    start_ = state_.top();
-    state_.pop();
+    if (!state_.empty())
+    {
+      start_ = state_.top();
+      state_.pop();
+    }
   }
-  /// Returns the stack top start condition state.
+  /// Returns the stack top start condition state or 0 (INITIAL) if the stack is empty.
   int top_state() const
     /// @returns start condition (integer).
   {
-    ASSERT(!state_.empty());
-    return state_.top();
+    if (!state_.empty())
+      return state_.top();
+    return 0;
+  }
+  /// Returns true if the condition state stack is empty.
+  bool states_empty() const
+    /// @returns true if the stack is empty, false otherwise
+  {
+    return state_.empty();
   }
  protected:
   Matcher             *matcher_; ///< the matcher used for scanning

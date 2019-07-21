@@ -51,7 +51,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   template<typename T>
   static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
   {
-    return reflex::convert(regex, "imsx#=^:abcdefhijlnprstuvwxzABDHLPQSUW<>?+", flags);
+    return reflex::convert(regex, "imsx#=^:abcdefhijklnprstuvwxzABDHLPQSUW<>?+", flags);
   }
   /// Default constructor.
   Matcher() : PatternMatcher<reflex::Pattern>()
@@ -251,6 +251,14 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   {
     return fsm_.bol && indent(fsm_.col);
   }
+  /// FSM code META UND.
+  inline bool FSM_META_UND()
+  {
+    bool mrk = mrk_;
+    mrk_ = false;
+    ded_ = 0;
+    return mrk;
+  }
   /// FSM code META EOB.
   inline bool FSM_META_EOB(int c1)
   {
@@ -320,6 +328,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// Update indentation column counter for indent() and dedent().
   void newline(size_t& col) ///< indent column counter
   {
+    mrk_ = true;
     while (ind_ + 1 < pos_)
       col += buf_[ind_++] == '\t' ? 1 + (~col & (opt_.T - 1)) : 1;
     DBGLOG("Newline with indent/dedent? col = %zu", col);
@@ -328,7 +337,6 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   bool indent(size_t& col) ///< indent column counter
     /// @returns true if indent.
   {
-    mrk_ = true;
     newline(col);
     return col > 0 && (tab_.empty() || tab_.back() < col);
   }
@@ -336,7 +344,6 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   bool dedent(size_t& col) ///< indent column counter
     /// @returns true if dedent.
   {
-    mrk_ = true;
     newline(col);
     return !tab_.empty() && tab_.back() > col;
   }

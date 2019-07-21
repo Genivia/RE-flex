@@ -300,8 +300,9 @@ class Pattern {
     META_EOL = 0x108, ///< end of line                `$`
     META_BOB = 0x109, ///< begin of buffer            `\A`
     META_EOB = 0x10A, ///< end of buffer              `\Z`
-    META_IND = 0x10B, ///< indent boundary            `\i`
-    META_DED = 0x10C, ///< dedent boundary            `\j` (must be the largest META code)
+    META_UND = 0x10B, ///< undent boundary            `\k`
+    META_IND = 0x10C, ///< indent boundary            `\i` (must be one but the largest META code)
+    META_DED = 0x10D, ///< dedent boundary            `\j` (must be the largest META code)
     META_MAX          ///< max meta characters
   };
   /// Initialize the pattern at construction.
