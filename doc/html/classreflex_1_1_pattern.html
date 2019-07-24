@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jul 21 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jul 24 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -121,6 +121,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a0aabd5b85ce3128619e5cd0016e9a5ff"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a0aabd5b85ce3128619e5cd0016e9a5ff">Pattern</a> ()</td></tr>
+<tr class="memdesc:a0aabd5b85ce3128619e5cd0016e9a5ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an unset pattern.  <a href="#a0aabd5b85ce3128619e5cd0016e9a5ff">More...</a><br /></td></tr>
+<tr class="separator:a0aabd5b85ce3128619e5cd0016e9a5ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36f1a567185c44a31b700fcf9a54b25f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a36f1a567185c44a31b700fcf9a54b25f">Pattern</a> (const char *regex, const char *options=NULL)</td></tr>
 <tr class="memdesc:a36f1a567185c44a31b700fcf9a54b25f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a pattern object given a regex string.  <a href="#a36f1a567185c44a31b700fcf9a54b25f">More...</a><br /></td></tr>
 <tr class="separator:a36f1a567185c44a31b700fcf9a54b25f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,11 +145,47 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a35612bed740e5d6761f5e212a6620e44"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a35612bed740e5d6761f5e212a6620e44">~Pattern</a> ()</td></tr>
 <tr class="memdesc:a35612bed740e5d6761f5e212a6620e44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor, deletes internal code array when owned and allocated.  <a href="#a35612bed740e5d6761f5e212a6620e44">More...</a><br /></td></tr>
 <tr class="separator:a35612bed740e5d6761f5e212a6620e44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e09054af04bea1f99c87fc4b71f952a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a7e09054af04bea1f99c87fc4b71f952a">clear</a> ()</td></tr>
+<tr class="memdesc:a7e09054af04bea1f99c87fc4b71f952a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear and delete pattern data.  <a href="#a7e09054af04bea1f99c87fc4b71f952a">More...</a><br /></td></tr>
+<tr class="separator:a7e09054af04bea1f99c87fc4b71f952a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb90ee07db1a540e99307c20d4e5cbf0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#adb90ee07db1a540e99307c20d4e5cbf0">assign</a> (const char *regex, const char *options=NULL)</td></tr>
+<tr class="memdesc:adb90ee07db1a540e99307c20d4e5cbf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#adb90ee07db1a540e99307c20d4e5cbf0">More...</a><br /></td></tr>
+<tr class="separator:adb90ee07db1a540e99307c20d4e5cbf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaf639d28f4a76a578b936e9c7eb46eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#adaf639d28f4a76a578b936e9c7eb46eb">assign</a> (const char *regex, const std::string &amp;options)</td></tr>
+<tr class="memdesc:adaf639d28f4a76a578b936e9c7eb46eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#adaf639d28f4a76a578b936e9c7eb46eb">More...</a><br /></td></tr>
+<tr class="separator:adaf639d28f4a76a578b936e9c7eb46eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84ad0cc4002b502b307b769945d5923c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a84ad0cc4002b502b307b769945d5923c">assign</a> (const std::string &amp;regex, const char *options=NULL)</td></tr>
+<tr class="memdesc:a84ad0cc4002b502b307b769945d5923c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#a84ad0cc4002b502b307b769945d5923c">More...</a><br /></td></tr>
+<tr class="separator:a84ad0cc4002b502b307b769945d5923c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a718bdc527e32d97bf7f4a9fbe53749d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a718bdc527e32d97bf7f4a9fbe53749d8">assign</a> (const std::string &amp;regex, const std::string &amp;options)</td></tr>
+<tr class="memdesc:a718bdc527e32d97bf7f4a9fbe53749d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#a718bdc527e32d97bf7f4a9fbe53749d8">More...</a><br /></td></tr>
+<tr class="separator:a718bdc527e32d97bf7f4a9fbe53749d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fb1f3b7dff91aa4350055ff206d1993"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a4fb1f3b7dff91aa4350055ff206d1993">assign</a> (const <a class="el" href="classreflex_1_1_pattern.html#a4d44677873f6377230f2513218101c1c">Opcode</a> *code)</td></tr>
+<tr class="memdesc:a4fb1f3b7dff91aa4350055ff206d1993"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#a4fb1f3b7dff91aa4350055ff206d1993">More...</a><br /></td></tr>
+<tr class="separator:a4fb1f3b7dff91aa4350055ff206d1993"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ed0a742ccb925dd9109e5869988f2c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a3ed0a742ccb925dd9109e5869988f2c6">assign</a> (<a class="el" href="classreflex_1_1_pattern.html#a6bd5471ccfee49021fd76a135bd52db0">FSM</a> fsm)</td></tr>
+<tr class="memdesc:a3ed0a742ccb925dd9109e5869988f2c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#a3ed0a742ccb925dd9109e5869988f2c6">More...</a><br /></td></tr>
+<tr class="separator:a3ed0a742ccb925dd9109e5869988f2c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a405dc0bc89070a8c694e6d012c00a807"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a405dc0bc89070a8c694e6d012c00a807">operator=</a> (const <a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;pattern)</td></tr>
+<tr class="memdesc:a405dc0bc89070a8c694e6d012c00a807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#a405dc0bc89070a8c694e6d012c00a807">More...</a><br /></td></tr>
+<tr class="separator:a405dc0bc89070a8c694e6d012c00a807"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a013662647ab3f2b4404893fd05040e2c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a013662647ab3f2b4404893fd05040e2c">operator=</a> (const char *regex)</td></tr>
+<tr class="memdesc:a013662647ab3f2b4404893fd05040e2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#a013662647ab3f2b4404893fd05040e2c">More...</a><br /></td></tr>
+<tr class="separator:a013662647ab3f2b4404893fd05040e2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa7bfc08bcd9236f035cc0732e6437a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aaa7bfc08bcd9236f035cc0732e6437a3">operator=</a> (const std::string &amp;regex)</td></tr>
+<tr class="memdesc:aaa7bfc08bcd9236f035cc0732e6437a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#aaa7bfc08bcd9236f035cc0732e6437a3">More...</a><br /></td></tr>
+<tr class="separator:aaa7bfc08bcd9236f035cc0732e6437a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88c716035ab6d17770bd3bcb7db517b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a88c716035ab6d17770bd3bcb7db517b4">operator=</a> (const <a class="el" href="classreflex_1_1_pattern.html#a4d44677873f6377230f2513218101c1c">Opcode</a> *code)</td></tr>
+<tr class="memdesc:a88c716035ab6d17770bd3bcb7db517b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#a88c716035ab6d17770bd3bcb7db517b4">More...</a><br /></td></tr>
+<tr class="separator:a88c716035ab6d17770bd3bcb7db517b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add516e864534d6704b43592232b81366"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#add516e864534d6704b43592232b81366">operator=</a> (<a class="el" href="classreflex_1_1_pattern.html#a6bd5471ccfee49021fd76a135bd52db0">FSM</a> fsm)</td></tr>
+<tr class="memdesc:add516e864534d6704b43592232b81366"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#add516e864534d6704b43592232b81366">More...</a><br /></td></tr>
+<tr class="separator:add516e864534d6704b43592232b81366"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8041717ba77c753a8a8b61df40c7b050"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a8041717ba77c753a8a8b61df40c7b050">size</a> () const </td></tr>
 <tr class="memdesc:a8041717ba77c753a8a8b61df40c7b050"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of subpatterns of this pattern object.  <a href="#a8041717ba77c753a8a8b61df40c7b050">More...</a><br /></td></tr>
 <tr class="separator:a8041717ba77c753a8a8b61df40c7b050"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dd78d5f44f64407561e6cf7945d34ea"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a5dd78d5f44f64407561e6cf7945d34ea">operator[]</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Index</a> choice) const </td></tr>
-<tr class="memdesc:a5dd78d5f44f64407561e6cf7945d34ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get subpattern regex of this pattern object or the while regex with index 0.  <a href="#a5dd78d5f44f64407561e6cf7945d34ea">More...</a><br /></td></tr>
+<tr class="memdesc:a5dd78d5f44f64407561e6cf7945d34ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get subpattern regex of this pattern object or the whole regex with index 0.  <a href="#a5dd78d5f44f64407561e6cf7945d34ea">More...</a><br /></td></tr>
 <tr class="separator:a5dd78d5f44f64407561e6cf7945d34ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3c1d4a0277c81673d05324dfe8d3a6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ae3c1d4a0277c81673d05324dfe8d3a6e">reachable</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Index</a> choice) const </td></tr>
 <tr class="memdesc:ae3c1d4a0277c81673d05324dfe8d3a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check is subpattern is reachable by a match.  <a href="#ae3c1d4a0277c81673d05324dfe8d3a6e">More...</a><br /></td></tr>
@@ -733,6 +772,31 @@ Friends</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a0aabd5b85ce3128619e5cd0016e9a5ff"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">reflex::Pattern::Pattern </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct an unset pattern. </p>
+
+</div>
+</div>
 <a class="anchor" id="a36f1a567185c44a31b700fcf9a54b25f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -979,6 +1043,202 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="adb90ee07db1a540e99307c20d4e5cbf0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::assign </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>regex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>options</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
+<a class="anchor" id="adaf639d28f4a76a578b936e9c7eb46eb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::assign </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>regex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>options</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
+<a class="anchor" id="a84ad0cc4002b502b307b769945d5923c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::assign </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>regex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>options</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
+<a class="anchor" id="a718bdc527e32d97bf7f4a9fbe53749d8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::assign </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>regex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>options</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4fb1f3b7dff91aa4350055ff206d1993"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::assign </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#a4d44677873f6377230f2513218101c1c">Opcode</a> *&#160;</td>
+          <td class="paramname"><em>code</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
+<a class="anchor" id="a3ed0a742ccb925dd9109e5869988f2c6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::assign </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a6bd5471ccfee49021fd76a135bd52db0">FSM</a>&#160;</td>
+          <td class="paramname"><em>fsm</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
 <a class="anchor" id="a3164013e5d501f11e6224e371961a5d4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1000,6 +1260,31 @@ Friends</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7e09054af04bea1f99c87fc4b71f952a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Pattern::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clear and delete pattern data. </p>
 
 </div>
 </div>
@@ -2355,6 +2640,136 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a405dc0bc89070a8c694e6d012c00a807"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html">Pattern</a> &amp;&#160;</td>
+          <td class="paramname"><em>pattern</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
+<a class="anchor" id="a013662647ab3f2b4404893fd05040e2c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>regex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
+<a class="anchor" id="aaa7bfc08bcd9236f035cc0732e6437a3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>regex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
+<a class="anchor" id="a88c716035ab6d17770bd3bcb7db517b4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#a4d44677873f6377230f2513218101c1c">Opcode</a> *&#160;</td>
+          <td class="paramname"><em>code</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
+<a class="anchor" id="add516e864534d6704b43592232b81366"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html">Pattern</a>&amp; reflex::Pattern::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a6bd5471ccfee49021fd76a135bd52db0">FSM</a>&#160;</td>
+          <td class="paramname"><em>fsm</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign a (new) pattern. </p>
+
+</div>
+</div>
 <a class="anchor" id="a5dd78d5f44f64407561e6cf7945d34ea"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2369,7 +2784,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get subpattern regex of this pattern object or the while regex with index 0. </p>
+<p>Get subpattern regex of this pattern object or the whole regex with index 0. </p>
 <dl class="section return"><dt>Returns</dt><dd>subpattern string or "" when not set. </dd></dl>
 
 </div>
@@ -3457,7 +3872,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jul 21 2019 16:11:36 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jul 24 2019 13:08:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

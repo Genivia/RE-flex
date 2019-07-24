@@ -454,6 +454,7 @@ Changelog
 - Jul 11, 2019: 1.2.9 portability improvements.
 - Jul 14, 2019: 1.2.10 added `AbstractMatcher::set_bob()`, moved `AbstractMatcher::peek()` to public, minor improvements.
 - Jul 21, 2019: 1.3.0 added subtractive start condition scoping with `<^...>`, added undent `\k` anchor to undo indenting changes ("undenting") with an example in `examples/indent2.l`, improved indent `\i` and dedent `\j` anchors and other improvements.
+- Jul 24, 2019: 1.3.1 added `matcher().tabs(n)` to set tab size, used by `columno()` and indent `\i` and dedent `\j` anchors, new `reflex::Pattern` methods, other improvements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

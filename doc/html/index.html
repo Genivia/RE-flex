@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jul 21 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jul 24 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -575,7 +575,7 @@ Scanner options</h3>
 <h4><code>−−include=FILE</code></h4>
 <p>This option defines a custom include <em><code>FILE.h</code></em> to include for the custom matcher specified with option <code>-m</code>.</p>
 <h4><code>−−tabs=N</code></h4>
-<p>This option sets the tab size to <code>N</code>, where <code>N</code> &gt; 0 must be a power of 2. The tab size is used internally to determine the column position for <a class="el" href="index.html#reflex-pattern-dents">Indent/nodent/dedent</a> matching and to determine the column position returned by <code>columno()</code> and the number of columns returned by <code>columns()</code>. It has no effect otherwise. This option assigns the <code>T=N</code> value of the <code><a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a></code> constructor options at runtime.</p>
+<p>This option sets the tab size to <code>N</code>, where <code>N</code> must 1, 2, 4, or 8. The tab size is used internally to determine the column position for <a class="el" href="index.html#reflex-pattern-dents">Indent/nodent/dedent</a> matching and to determine the column position returned by <code>columno()</code> and the number of columns returned by <code>columns()</code>. It has no effect otherwise. This option assigns the <code>T=N</code> value of the <code><a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a></code> constructor options at runtime. The value may be set at runtime with <code>matcher().tabs(N)</code> with <code>N</code> 1, 2, 4, or 8.</p>
 <h4><code>-u</code>, <code>−−unicode</code></h4>
 <p>This option makes <code>.</code>, <code>\s</code>, <code>\w</code>, <code>\l</code>, <code>\u</code>, <code>\S</code>, <code>\W</code>, <code>\L</code>, <code>\U</code> match Unicode. Also groups UTF-8 sequences in the regex, such that each UTF-8 encoded character in a regex is properly matched as one wide character.</p>
 <h4><code>-x</code>, <code>−−freespace</code></h4>
@@ -1638,7 +1638,15 @@ Indent/nodent/dedent</h3>
 <td><code>\j</code> </td><td>dedent: matches a previous indent position, removes one indent stop </td></tr>
 </table>
 <p>The <code>\i</code> and <code>\j</code> anchors should be used in combination with the start of a line anchor <code>^</code> followed by a pattern that represents left margin spacing for indentations, followed by a <code>\i</code> or a <code>\j</code> at the end of the pattern. The margin spacing pattern may include any characters that are considered part of the left margin, but should exclude <code>\n</code>. For example:</p>
-<div class="alt"> <div class="fragment"><div class="line">%o tabs=8</div><div class="line">%%</div><div class="line">^\h+      out() &lt;&lt; <span class="stringliteral">&quot;| &quot;</span>; <span class="comment">// nodent: text is aligned to current indent</span></div><div class="line">^\h+\i    out() &lt;&lt; <span class="stringliteral">&quot;&gt; &quot;</span>; <span class="comment">// indent: matched and added with \i</span></div><div class="line">^\h*\j    out() &lt;&lt; <span class="stringliteral">&quot;&lt; &quot;</span>; <span class="comment">// dedent: matched with \j</span></div><div class="line">\j        out() &lt;&lt; <span class="stringliteral">&quot;&lt; &quot;</span>; <span class="comment">// dedent: for each extra level dedented</span></div><div class="line">.|\n      echo();</div><div class="line">%%</div></div><!-- fragment --> </div><p>The <code>\h</code> pattern matches space and tabs, where tabs advance to the next column that is a multiple of 8. The tab multiplier can be changed by setting the <code>−−tabs=N</code> option where <code>N</code> must be a positive integer that is a power of 2 and between 1 and 8 (1, 2, 4, 8).</p>
+<div class="alt"> <div class="fragment"><div class="line">%o tabs=8</div><div class="line">%%</div><div class="line">^\h+      out() &lt;&lt; <span class="stringliteral">&quot;| &quot;</span>; <span class="comment">// nodent: text is aligned to current indent</span></div><div class="line">^\h+\i    out() &lt;&lt; <span class="stringliteral">&quot;&gt; &quot;</span>; <span class="comment">// indent: matched and added with \i</span></div><div class="line">^\h*\j    out() &lt;&lt; <span class="stringliteral">&quot;&lt; &quot;</span>; <span class="comment">// dedent: matched with \j</span></div><div class="line">\j        out() &lt;&lt; <span class="stringliteral">&quot;&lt; &quot;</span>; <span class="comment">// dedent: for each extra level dedented</span></div><div class="line">.|\n      echo();</div><div class="line">%%</div></div><!-- fragment --> </div><p>The <code>\h</code> pattern matches space and tabs, where tabs advance to the next column that is a multiple of 8. The tab multiplier can be changed by setting the <code>−−tabs=N</code> option where <code>N</code> must be 1, 2, 4, or 8. The tabs value can be changed at runtime with <code>matcher().tabs(N)</code>:</p>
+<table class="doxtable">
+<tr>
+<th>RE/flex action </th><th>Result  </th></tr>
+<tr>
+<td><code>matcher().tabs()</code> </td><td>returns the current tabs value 1, 2, 4, or 8 </td></tr>
+<tr>
+<td><code>matcher().tabs(n)</code> </td><td>set the tabs value <code>n</code> where <code>n</code> is 1, 2, 4 or 8 </td></tr>
+</table>
 <p>Using negative patterns we can ignore empty lines and multi-line comments that would otherwise affect indent stops:</p>
 <div class="alt"> <div class="fragment"><div class="line">%o <a class="code" href="reflex_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> tabs=8</div><div class="line">%%</div><div class="line">^\h+                      out() &lt;&lt; <span class="stringliteral">&quot;| &quot;</span>; <span class="comment">// nodent, text is aligned to current margin column</span></div><div class="line">^\h+\i                    out() &lt;&lt; <span class="stringliteral">&quot;&gt; &quot;</span>; <span class="comment">// indent</span></div><div class="line">^\h*\j                    out() &lt;&lt; <span class="stringliteral">&quot;&lt; &quot;</span>; <span class="comment">// dedent</span></div><div class="line">\j                        out() &lt;&lt; <span class="stringliteral">&quot;&lt; &quot;</span>; <span class="comment">// dedent, for each extra level dedented</span></div><div class="line">(?^^\h*\n)                <span class="comment">// eat empty lines without affecting indent stops</span></div><div class="line">(?^^\h*<span class="stringliteral">&quot;/*&quot;</span>(.|\n)*?<span class="stringliteral">&quot;*/&quot;</span>)  <span class="comment">// eat /*-comments that start a line without affecting indent stops</span></div><div class="line">(?^\\\n\h*)               <span class="comment">// lines ending in \ continue on the next line</span></div><div class="line">(?^<span class="stringliteral">&quot;/*&quot;</span>(.|\n)*?<span class="stringliteral">&quot;*/&quot;</span>)      <span class="comment">// eat /*-comments</span></div><div class="line">.|\n                      echo(); <span class="comment">// ECHO character</span></div><div class="line">%%</div></div><!-- fragment --> </div><p>Likewise, we can add rules to ignore inline <code>//</code>-comments to our lexer specification. To do so, we should add a rule with pattern <code>(?^^\h*"//".*)</code> to ignore <code>//</code>-comments without affecting stop positions.</p>
 <p>To scan input that continues on the next new line(s) (which may affect indent stops) while preserving the current indent stop positions, use the RE/flex matcher <code>matcher().push_stops()</code> and <code>matcher().pop_stops()</code>, or <code>matcher().stops()</code> to directlye access the vector of indent stops to modify:</p>
@@ -2285,7 +2293,7 @@ The reflex::Matcher class                                      </h2>
 The reflex::Pattern class                                      </h2>
 <p>The <code><a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a></code> class is used by the <code>reflex::matcher</code> for pattern matching. The <code><a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a></code> class converts a regex pattern to an efficient FSM and takes a regex string and options to construct the FSM internally. The pattern instance is passed to a <code><a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a></code> constructor:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="matcher_8h.html">reflex/matcher.h</a>&gt;</span></div><div class="line"></div><div class="line">[<span class="keyword">static</span>] <a class="code" href="namespacereflex.html">reflex</a>:Pattern pattern(<span class="keywordtype">string</span> [, <span class="stringliteral">&quot;options&quot;</span>] )</div><div class="line"></div><div class="line"><a class="code" href="namespacereflex.html">reflex</a>::Matcher matcher(pattern, <a class="code" href="namespacereflex.html">reflex</a>::Input [, &quot;options&quot;] )</div></div><!-- fragment --><p>It may also be used to replace a matcher's current pattern, see <a class="el" href="index.html#intro2">A flexible regex library </a>.</p>
-<p>It is recommended to create a static instance of the pattern if the regex string is fixed. This avoids repeated FSM construction at run time.</p>
+<p>It is recommended to create a <code>static</code> instance of the pattern if the regex string is fixed. This avoids repeated FSM construction at run time.</p>
 <p>The following options are combined in a string and passed to the <code><a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a></code> contructor:</p>
 <table class="doxtable">
 <tr>
@@ -2325,6 +2333,12 @@ The reflex::Pattern class                                      </h2>
 <tr>
 <th>Method </th><th>Result  </th></tr>
 <tr>
+<td><code>assign(r,o)</code> </td><td>(re)assign regex string <code>r</code> with string of options <code>o</code> </td></tr>
+<tr>
+<td><code>assign(r)</code> </td><td>(re)assign regex string <code>r</code> with default options </td></tr>
+<tr>
+<td><code>=r</code> </td><td>same as above </td></tr>
+<tr>
 <td><code>size()</code> </td><td>returns the number of top-level sub-patterns </td></tr>
 <tr>
 <td><code>[0]</code> </td><td>operator returns the regex string of the pattern </td></tr>
@@ -2333,6 +2347,7 @@ The reflex::Pattern class                                      </h2>
 <tr>
 <td><code>reachable(n)</code></td><td>true if sub-pattern <code>n</code> is reachable in the FSM </td></tr>
 </table>
+<p>The assignment methods may throw exceptions, which are the same as the constructor may throw.</p>
 <p>The <code><a class="el" href="classreflex_1_1_pattern.html#ae3c1d4a0277c81673d05324dfe8d3a6e" title="Check is subpattern is reachable by a match. ">reflex::Pattern::reachable</a></code> method verifies which top-level grouped alternations are reachable. This means that the sub-pattern of an alternation has a FSM accepting state that identifies the sub-pattern. For example:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="matcher_8h.html">reflex/matcher.h</a>&gt;</span></div><div class="line"></div><div class="line"><a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> pattern(<span class="stringliteral">&quot;(a+)|(a)&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>);</div><div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;regex = &quot;</span> &lt;&lt; pattern[0] &lt;&lt; std::endl;</div><div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 1; i &lt;= pattern.size(); ++i)</div><div class="line">  <span class="keywordflow">if</span> (!pattern.reachable(i))</div><div class="line">    std::cerr &lt;&lt; pattern[i] &lt;&lt; <span class="stringliteral">&quot; is not reachable&quot;</span> &lt;&lt; std::endl;</div></div><!-- fragment --><p>When executed this code prints: </p><pre class="fragment">regex = (a+)|(a)
 (a) is not reachable
@@ -2938,7 +2953,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jul 21 2019 16:11:41 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jul 24 2019 13:08:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

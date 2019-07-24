@@ -429,7 +429,7 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
       loc = pos + 1;
     }
   }
-  else if (c >= '0' && c <= '7')
+  else if (c >= '0' && c <= '7' && pattern[pos + 1] >= '0' && pattern[pos + 1] <= '7')
   {
     size_t k = pos;
     size_t n = k + 3 + (pattern[k] == '0');

@@ -156,6 +156,7 @@ void Pattern::error(regex_error_type code, size_t pos) const
 
 void Pattern::init(const char *opt)
 {
+  init_options(opt);
   if (opc_)
   {
     nop_ = 0;
@@ -166,7 +167,6 @@ void Pattern::init(const char *opt)
     Follow    followpos;
     Map       modifiers;
     Map       lookahead;
-    init_options(opt);
     parse(startpos, followpos, modifiers, lookahead);
     State start(startpos);
     compile(start, followpos, modifiers, lookahead);

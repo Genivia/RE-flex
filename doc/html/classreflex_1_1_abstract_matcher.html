@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jul 21 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jul 24 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -280,6 +280,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a99e23c24c8e576f4f6463eda78539d05"><td class="memItemLeft" align="right" valign="top">virtual std::pair&lt; const char *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a99e23c24c8e576f4f6463eda78539d05">operator[]</a> (size_t n) const  =0</td></tr>
 <tr class="memdesc:a99e23c24c8e576f4f6463eda78539d05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns captured text as a std::pair&lt;const char*,size_t&gt; with string pointer (non-0-terminated) and length.  <a href="#a99e23c24c8e576f4f6463eda78539d05">More...</a><br /></td></tr>
 <tr class="separator:a99e23c24c8e576f4f6463eda78539d05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae56a20f5b1cb4d25faea0e40508900c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae56a20f5b1cb4d25faea0e40508900c0">tabs</a> (char n)</td></tr>
+<tr class="memdesc:ae56a20f5b1cb4d25faea0e40508900c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set tab size 1, 2, 4, or 8.  <a href="#ae56a20f5b1cb4d25faea0e40508900c0">More...</a><br /></td></tr>
+<tr class="separator:ae56a20f5b1cb4d25faea0e40508900c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfeac276b47b376ed2d8ace623d75efe"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#adfeac276b47b376ed2d8ace623d75efe">tabs</a> ()</td></tr>
+<tr class="memdesc:adfeac276b47b376ed2d8ace623d75efe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns current tab size 1, 2, 4, or 8.  <a href="#adfeac276b47b376ed2d8ace623d75efe">More...</a><br /></td></tr>
+<tr class="separator:adfeac276b47b376ed2d8ace623d75efe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -1302,7 +1308,7 @@ Private Member Functions</h2></td></tr>
 <p>The abstract match operation implemented by pattern matching engines derived from <a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">AbstractMatcher</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>nonzero when input matched the pattern using method <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a57efdf6e79f50205036bc4d55e9908e7" title="AbstractMatcher::match method is to scan input (tokenizer) ">Const::SCAN</a>, <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#af03daba13cf299ee0e6be2e37ebe59b7" title="AbstractMatcher::match method is to find pattern in input. ">Const::FIND</a>, <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a48f6d3e22c2f018fef95b2367a2a9aa4" title="AbstractMatcher::match method is to split input at pattern matches. ">Const::SPLIT</a>, or <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#aa1fe9eb434ef5ff539b01a601977f9ee" title="AbstractMatcher::match method is to match the entire input. ">Const::MATCH</a>. </dd></dl>
 
-<p>Implemented in <a class="el" href="classreflex_1_1_matcher.html#ab8a1264b3ede06dbba853b1ca0baead5">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#abf3a32ee06cd50c2ec10c1825ea2aee7">reflex::StdMatcher</a>, and <a class="el" href="classreflex_1_1_boost_matcher.html#a90178f2e17c8dea08fcc8efc2b85339e">reflex::BoostMatcher</a>.</p>
+<p>Implemented in <a class="el" href="classreflex_1_1_matcher.html#ab8a1264b3ede06dbba853b1ca0baead5">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a90178f2e17c8dea08fcc8efc2b85339e">reflex::BoostMatcher</a>, and <a class="el" href="classreflex_1_1_std_matcher.html#abf3a32ee06cd50c2ec10c1825ea2aee7">reflex::StdMatcher</a>.</p>
 
 </div>
 </div>
@@ -2085,6 +2091,63 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ae56a20f5b1cb4d25faea0e40508900c0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::AbstractMatcher::tabs </td>
+          <td>(</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set tab size 1, 2, 4, or 8. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n</td><td>tab size 1, 2, 4, or 8 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="adfeac276b47b376ed2d8ace623d75efe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char reflex::AbstractMatcher::tabs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns current tab size 1, 2, 4, or 8. </p>
+
+</div>
+</div>
 <a class="anchor" id="a009bad2d87f9bc2f18a9ae52cc08b9e1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2783,7 +2846,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jul 21 2019 16:11:35 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jul 24 2019 13:08:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

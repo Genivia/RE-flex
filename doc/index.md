@@ -1216,12 +1216,13 @@ matcher specified with option `-m`.
 
 #### `−−tabs=N`
 
-This option sets the tab size to `N`, where `N` > 0 must be a power of 2.  The
+This option sets the tab size to `N`, where `N` must 1, 2, 4, or 8.  The
 tab size is used internally to determine the column position for
 \ref reflex-pattern-dents matching and to determine the column position
 returned by `columno()` and the number of columns returned by `columns()`.  It
 has no effect otherwise.  This option assigns the `T=N` value of the
-`reflex::Matcher` constructor options at runtime.
+`reflex::Matcher` constructor options at runtime.  The value may be set
+at runtime with `matcher().tabs(N)` with `N` 1, 2, 4, or 8.
 
 #### `-u`, `−−unicode`
 
@@ -2670,8 +2671,13 @@ the left margin, but should exclude `\n`.  For example:
 
 The `\h` pattern matches space and tabs, where tabs advance to the next column
 that is a multiple of 8.  The tab multiplier can be changed by setting the
-`−−tabs=N` option where `N` must be a positive integer that is a power of 2
-and between 1 and 8 (1, 2, 4, 8).
+`−−tabs=N` option where `N` must be 1, 2, 4, or 8.  The tabs value can be
+changed at runtime with `matcher().tabs(N)`:
+
+  RE/flex action      | Result
+  ------------------- | -------------------------------------------------------
+  `matcher().tabs()`  | returns the current tabs value 1, 2, 4, or 8
+  `matcher().tabs(n)` | set the tabs value `n` where `n` is 1, 2, 4 or 8
 
 Using negative patterns we can ignore empty lines and multi-line comments that
 would otherwise affect indent stops:
@@ -5735,7 +5741,7 @@ The pattern instance is passed to a `reflex::Matcher` constructor:
 
 It may also be used to replace a matcher's current pattern, see \ref intro2.
 
-It is recommended to create a static instance of the pattern if the regex
+It is recommended to create a `static` instance of the pattern if the regex
 string is fixed.  This avoids repeated FSM construction at run time.
 
 The following options are combined in a string and passed to the
@@ -5805,10 +5811,16 @@ The `reflex::Pattern` class has the following public methods:
 
   Method        | Result
   ------------- | -------------------------------------------------------------
+  `assign(r,o)` | (re)assign regex string `r` with string of options `o`
+  `assign(r)`   | (re)assign regex string `r` with default options
+  `=r`          | same as above
   `size()`      | returns the number of top-level sub-patterns
   `[0]`         | operator returns the regex string of the pattern
   `[n]`         | operator returns the `n`th sub-pattern regex string
   `reachable(n)`| true if sub-pattern `n` is reachable in the FSM
+
+The assignment methods may throw exceptions, which are the same as the
+constructor may throw.
 
 The `reflex::Pattern::reachable` method verifies which top-level grouped
 alternations are reachable.  This means that the sub-pattern of an alternation

@@ -245,7 +245,7 @@ class AbstractMatcher {
     {
       opt_.A = false; // when true: accept any/all (?^X) negative patterns as 65535 accept index codes
       opt_.N = false; // when true: find may return empty match (N/A to scan, split, matches)
-      opt_.T = 8;     // tab size 2, 4, or 8
+      opt_.T = 8;     // tab size 1, 2, 4, or 8
       if (opt)
       {
         for (const char *s = opt; *s != '\0'; ++s)
@@ -825,6 +825,16 @@ class AbstractMatcher {
   virtual std::pair<const char*,size_t> operator[](size_t n)
     /// @returns std::pair of string pointer and length in the captured text, where [0] returns std::pair(begin(), size()).
     const = 0;
+  /// Set tab size 1, 2, 4, or 8
+  void tabs(char n) ///< tab size 1, 2, 4, or 8
+  {
+    opt_.T = n & 0xf;
+  }
+  /// Returns current tab size 1, 2, 4, or 8
+  char tabs()
+  {
+    return opt_.T;
+  }
   Operation scan;  ///< functor to scan input (to tokenize input)
   Operation find;  ///< functor to search input
   Operation split; ///< functor to split input

@@ -193,10 +193,13 @@ class AbstractLexer {
     return matcher_;
   }
   /// Returns a new matcher for the given input.
-  virtual Matcher *new_matcher(const Input& input) ///< reflex::Input character sequence to match
+  virtual Matcher *new_matcher(
+      const Input& input,     ///< reflex::Input character sequence to match
+      const char *opt = NULL) ///< options, if any
     /// @returns pointer to new reflex::AbstractLexer::Matcher.
   {
-    return new Matcher(matcher().pattern(), input, this);
+    char tab[4] = "T=n";
+    return new Matcher(matcher().pattern(), input, this, opt ? opt : (tab[2] = matcher().tabs() + '0', tab));
   }
   /// Delete a matcher.
   void del_matcher(Matcher *matcher)

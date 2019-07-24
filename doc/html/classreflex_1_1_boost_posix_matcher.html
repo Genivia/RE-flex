@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::BoostPosixMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jul 21 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jul 24 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -142,7 +142,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa4745ef2579a9bfe8c5d2b5d96514e37 inherit pub_methods_classreflex_1_1_boost_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the pattern from a regex string to use with this matcher.  <a href="#aa4745ef2579a9bfe8c5d2b5d96514e37">More...</a><br /></td></tr>
 <tr class="separator:aa4745ef2579a9bfe8c5d2b5d96514e37 inherit pub_methods_classreflex_1_1_boost_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafdb43bb11cab6eac43ba846e17ca33e inherit pub_methods_classreflex_1_1_boost_matcher"><td class="memItemLeft" align="right" valign="top">virtual std::pair&lt; const char *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_boost_matcher.html#aafdb43bb11cab6eac43ba846e17ca33e">operator[]</a> (size_t n) const </td></tr>
-<tr class="memdesc:aafdb43bb11cab6eac43ba846e17ca33e inherit pub_methods_classreflex_1_1_boost_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns captured text as a std::pair&lt;const char*,size_t&gt; with string pointer (non-0-terminated) and length.  <a href="#aafdb43bb11cab6eac43ba846e17ca33e">More...</a><br /></td></tr>
+<tr class="memdesc:aafdb43bb11cab6eac43ba846e17ca33e inherit pub_methods_classreflex_1_1_boost_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of pointer and length of the captured match for n &gt; 0 capture index or &lt;<a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a>,<a class="el" href="classreflex_1_1_abstract_matcher.html#adb5fec59e6c6a86b8cf405c40f93d1de" title="Returns the length of the matched text in number of bytes, including matched \0s, a constant-time ope...">size()</a> for n == 0.  <a href="#aafdb43bb11cab6eac43ba846e17ca33e">More...</a><br /></td></tr>
 <tr class="separator:aafdb43bb11cab6eac43ba846e17ca33e inherit pub_methods_classreflex_1_1_boost_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreflex_1_1_pattern_matcher"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreflex_1_1_pattern_matcher')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreflex_1_1_pattern_matcher.html">reflex::PatternMatcher&lt; boost::regex &gt;</a></td></tr>
 <tr class="memitem:a7b32893191d6bfb4af05e33b5643b2b2 inherit pub_methods_classreflex_1_1_pattern_matcher"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern_matcher.html#a7b32893191d6bfb4af05e33b5643b2b2">PatternMatcher</a> (const <a class="el" href="classreflex_1_1_pattern_matcher.html">PatternMatcher</a> &amp;matcher)</td></tr>
@@ -311,6 +311,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7157e28939ecc094dca648b3bf9759a2 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7157e28939ecc094dca648b3bf9759a2">operator!=</a> (int rhs) const </td></tr>
 <tr class="memdesc:a7157e28939ecc094dca648b3bf9759a2 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if capture index is not equal to a given int value, useful for std::algorithm.  <a href="#a7157e28939ecc094dca648b3bf9759a2">More...</a><br /></td></tr>
 <tr class="separator:a7157e28939ecc094dca648b3bf9759a2 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae56a20f5b1cb4d25faea0e40508900c0 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae56a20f5b1cb4d25faea0e40508900c0">tabs</a> (char n)</td></tr>
+<tr class="memdesc:ae56a20f5b1cb4d25faea0e40508900c0 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set tab size 1, 2, 4, or 8.  <a href="#ae56a20f5b1cb4d25faea0e40508900c0">More...</a><br /></td></tr>
+<tr class="separator:ae56a20f5b1cb4d25faea0e40508900c0 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfeac276b47b376ed2d8ace623d75efe inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#adfeac276b47b376ed2d8ace623d75efe">tabs</a> ()</td></tr>
+<tr class="memdesc:adfeac276b47b376ed2d8ace623d75efe inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns current tab size 1, 2, 4, or 8.  <a href="#adfeac276b47b376ed2d8ace623d75efe">More...</a><br /></td></tr>
+<tr class="separator:adfeac276b47b376ed2d8ace623d75efe inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -658,7 +664,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jul 21 2019 16:11:36 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jul 24 2019 13:08:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

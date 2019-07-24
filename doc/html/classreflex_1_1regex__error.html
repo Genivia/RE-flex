@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::regex_error Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jul 21 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jul 24 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -87,10 +87,13 @@ Collaboration diagram for reflex::regex_error:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac20c6ffb9fbf9fae91d9a2ef697ce783"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1regex__error.html#ac20c6ffb9fbf9fae91d9a2ef697ce783">regex_error</a> (<a class="el" href="namespacereflex.html#a776c689092282b15974a151328083b2d">regex_error_type</a> <a class="el" href="classreflex_1_1regex__error.html#a9db1cdde85bfe6f8f7807357addca122">code</a>, const char *pattern, size_t <a class="el" href="classreflex_1_1regex__error.html#a48b97d698aaf312d39a67bbfccbd6dc6">pos</a>=0)</td></tr>
+<tr class="memdesc:ac20c6ffb9fbf9fae91d9a2ef697ce783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct regex error info.  <a href="#ac20c6ffb9fbf9fae91d9a2ef697ce783">More...</a><br /></td></tr>
 <tr class="separator:ac20c6ffb9fbf9fae91d9a2ef697ce783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9db1cdde85bfe6f8f7807357addca122"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacereflex.html#a776c689092282b15974a151328083b2d">regex_error_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1regex__error.html#a9db1cdde85bfe6f8f7807357addca122">code</a> () const </td></tr>
+<tr class="memdesc:a9db1cdde85bfe6f8f7807357addca122"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns error code, a <a class="el" href="namespacereflex.html#a776c689092282b15974a151328083b2d" title="Regex syntax error exception error code. ">reflex::regex_error_type</a> constant.  <a href="#a9db1cdde85bfe6f8f7807357addca122">More...</a><br /></td></tr>
 <tr class="separator:a9db1cdde85bfe6f8f7807357addca122"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48b97d698aaf312d39a67bbfccbd6dc6"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1regex__error.html#a48b97d698aaf312d39a67bbfccbd6dc6">pos</a> () const </td></tr>
+<tr class="memdesc:a48b97d698aaf312d39a67bbfccbd6dc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns position of the error in the regex.  <a href="#a48b97d698aaf312d39a67bbfccbd6dc6">More...</a><br /></td></tr>
 <tr class="separator:a48b97d698aaf312d39a67bbfccbd6dc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
@@ -141,7 +144,6 @@ Static Public Attributes</h2></td></tr>
 <tr class="memdesc:a0c63bf6cff5be3ddb509de3ea84d6e41"><td class="mdescLeft">&#160;</td><td class="mdescRight">regex exceeds complexity limits (<a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a> class only)  <a href="#a0c63bf6cff5be3ddb509de3ea84d6e41">More...</a><br /></td></tr>
 <tr class="separator:a0c63bf6cff5be3ddb509de3ea84d6e41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8058b668201592beed319595158dfdc5"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="namespacereflex.html#a776c689092282b15974a151328083b2d">regex_error_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1regex__error.html#a8058b668201592beed319595158dfdc5">undefined_name</a> = 15</td></tr>
-<tr class="memdesc:a8058b668201592beed319595158dfdc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">undefined macro name (reflex tool only)  <a href="#a8058b668201592beed319595158dfdc5">More...</a><br /></td></tr>
 <tr class="separator:a8058b668201592beed319595158dfdc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
@@ -197,6 +199,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Construct regex error info. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -221,6 +225,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns error code, a <a class="el" href="namespacereflex.html#a776c689092282b15974a151328083b2d" title="Regex syntax error exception error code. ">reflex::regex_error_type</a> constant. </p>
+
 </div>
 </div>
 <a class="anchor" id="a48b97d698aaf312d39a67bbfccbd6dc6"></a>
@@ -243,6 +249,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns position of the error in the regex. </p>
 
 </div>
 </div>
@@ -674,7 +682,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
 <p>undefined macro name (reflex tool only) </p>
 
 </div>
@@ -685,7 +692,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jul 21 2019 16:11:36 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jul 24 2019 13:08:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

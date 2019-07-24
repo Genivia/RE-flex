@@ -50,7 +50,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   template<typename T>
   static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
   {
-    return reflex::convert(regex, "imsx!#<=:abcdefghlnprstuvwxzABDHLPQSUWZ0<>?+", flags);
+    return reflex::convert(regex, "imsx!#<=:abcdefghlnprstuvwxzABDHLPQSUWZ0123456789<>?+", flags);
   }
   /// Default constructor.
   BoostMatcher() : PatternMatcher<boost::regex>()
@@ -126,7 +126,10 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
     itr_ = fin_;
     return PatternMatcher::pattern(pattern);
   }
-  virtual std::pair<const char*,size_t> operator[](size_t n) const
+  /// Returns a pair of pointer and length of the captured match for n > 0 capture index or <text(),size() for n == 0.
+  virtual std::pair<const char*,size_t> operator[](size_t n) ///< nth capture index > 0 or 0
+    /// @returns pair.
+    const
   {
     if (n == 0)
       return std::pair<const char*,size_t>(txt_, len_);

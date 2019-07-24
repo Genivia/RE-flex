@@ -70,6 +70,13 @@ class Pattern {
   enum Const {
     IMAX = 0xFFFF, ///< max index, also serves as a marker
   };
+  /// Construct an unset pattern.
+  explicit Pattern()
+    :
+      opc_(NULL),
+      nop_(0),
+      fsm_(NULL)
+  { }
   /// Construct a pattern object given a regex string.
   explicit Pattern(
       const char *regex,
@@ -135,10 +142,112 @@ class Pattern {
   /// Destructor, deletes internal code array when owned and allocated.
   virtual ~Pattern()
   {
+    clear();
+  }
+  /// Clear and delete pattern data.
+  void clear()
+  {
+    rex_.clear();
     if (nop_ && opc_)
       delete[] opc_;
     opc_ = NULL;
+    nop_ = 0;
     fsm_ = NULL;
+  }
+  /// Assign a (new) pattern.
+  Pattern&  assign(
+      const char *regex,
+      const char *options = NULL)
+  {
+    clear();
+    rex_ = regex;
+    init(options);
+    return *this;
+  }
+  /// Assign a (new) pattern.
+  Pattern& assign(
+      const char        *regex,
+      const std::string& options)
+  {
+    return assign(regex, options.c_str());
+  }
+  /// Assign a (new) pattern.
+  Pattern& assign(
+      const std::string& regex,
+      const char        *options = NULL)
+  {
+    return assign(regex.c_str(), options);
+  }
+  /// Assign a (new) pattern.
+  Pattern& assign(
+      const std::string& regex,
+      const std::string& options)
+  {
+    return assign(regex.c_str(), options.c_str());
+  }
+  /// Assign a (new) pattern.
+  Pattern& assign(const Opcode *code)
+  {
+    clear();
+    opc_ = code;
+    init(NULL);
+    return *this;
+  }
+  /// Assign a (new) pattern.
+  Pattern& assign(FSM fsm)
+  {
+    clear();
+    fsm_ = fsm;
+    init(NULL);
+    return *this;
+  }
+  /// Assign a (new) pattern.
+  Pattern& operator=(const Pattern& pattern)
+  {
+    clear();
+    opt_ = pattern.opt_;
+    rex_ = pattern.rex_;
+    end_ = pattern.end_;
+    acc_ = pattern.acc_;
+    vno_ = pattern.vno_;
+    eno_ = pattern.eno_;
+    pms_ = pattern.pms_;
+    vms_ = pattern.vms_;
+    ems_ = pattern.ems_;
+    wms_ = pattern.wms_;
+    if (pattern.nop_ && pattern.opc_)
+    {
+      nop_ = pattern.nop_;
+      Opcode *code = new Opcode[nop_];
+      for (Index i = 0; i < nop_; ++i)
+        code[i] = pattern.opc_[i];
+      opc_ = code;
+    }
+    else
+    {
+      fsm_ = pattern.fsm_;
+    }
+    return *this;
+  }
+  /// Assign a (new) pattern.
+  Pattern& operator=(const char *regex)
+  {
+    return assign(regex);
+  }
+  /// Assign a (new) pattern.
+  Pattern& operator=(const std::string& regex)
+  {
+    return assign(regex);
+  }
+  /// Assign a (new) pattern.
+  Pattern& operator=(const Opcode *code)
+  {
+    return assign(code);
+  }
+  /// Assign a (new) pattern.
+  Pattern& operator=(FSM fsm)
+  {
+    return assign(fsm);
   }
   /// Number of subpatterns of this pattern object.
   Index size() const
@@ -146,7 +255,7 @@ class Pattern {
   {
     return static_cast<Index>(end_.size());
   }
-  /// Get subpattern regex of this pattern object or the while regex with index 0.
+  /// Get subpattern regex of this pattern object or the whole regex with index 0.
   const std::string operator[](Index choice) const
     /// @returns subpattern string or "" when not set.
     ;

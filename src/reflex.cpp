@@ -173,7 +173,6 @@ static const char *options_table[] = {
 /// - `x` for `\xXX` 8-bit character encoding in hexadecimal
 /// - `y` for `\y` word boundary
 /// - `z` for `\z` end of input anchor
-/// - `0` for `\0nnn` 8-bit character encoding in octal requires a leading `0`
 /// - ``` for `\`` begin of input anchor
 /// - `'` for `\'` end of input anchor
 /// - `<` for `\<` left word boundary
@@ -189,6 +188,8 @@ static const char *options_table[] = {
 /// - `U` for `\U` ASCII non-upper case letter `[^A-Z]`
 /// - `W` for `\W` ASCII non-word-like character `[^0-9A-Z_a-z]`
 /// - `Z` for `\Z` end of input anchor, before the final line break
+/// - `0` for `\0nnn` 8-bit character encoding in octal requires a leading `0`
+/// - '1' to '9' for backreferences (not applicable to lexer specifications)
 ///
 /// The optional `"?+"` specify lazy and possessive support:
 /// - `?` lazy quantifiers for repeats are supported

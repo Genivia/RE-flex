@@ -30,7 +30,7 @@
 @file      error.h
 @brief     RE/flex regex errors
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -64,6 +64,7 @@ class regex_error : public std::runtime_error {
   static const regex_error_type invalid_syntax       = 13; ///< invalid regex syntax
   static const regex_error_type exceeds_limits       = 14; ///< regex exceeds complexity limits (reflex::Pattern class only)
   static const regex_error_type undefined_name       = 15; ///< undefined macro name (reflex tool only)
+  /// Construct regex error info.
   regex_error(
       regex_error_type code,
       const char      *pattern,
@@ -73,11 +74,13 @@ class regex_error : public std::runtime_error {
       code_(code),
       pos_(pos)
   { }
+  /// Returns error code, a reflex::regex_error_type constant.
   regex_error_type code()
     const
   {
     return code_;
   }
+  /// Returns position of the error in the regex.
   size_t pos()
     const
   {

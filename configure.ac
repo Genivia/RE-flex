@@ -1,4 +1,4 @@
-AC_INIT(re-flex,1.1)
+AC_INIT(re-flex,1.3)
 AM_INIT_AUTOMAKE([foreign])
 AM_CONFIG_HEADER(config.h)
 AC_COPYRIGHT([Copyright (C) 2016-2019 Robert van Engelen, Genivia Inc.])
