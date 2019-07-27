@@ -710,7 +710,7 @@ class Input {
   FILE                 *file_;    ///< FILE* input (when non-null)
   std::istream         *istream_; ///< stream input (when non-null)
   size_t                size_;    ///< size of the remaining input in bytes (size_ == 0 may indicate unset value)
-  char                  utf8_[8]; ///< UTF-8 conversion buffer
+  char                  utf8_[8]; ///< UTF-8 normalization buffer
   unsigned short        uidx_;    ///< index in utf8_[] or >= 8 when unused
   file_encoding_type    utfx_;    ///< file_encoding
   const unsigned short *page_;    ///< custom code page

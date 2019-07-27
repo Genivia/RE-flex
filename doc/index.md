@@ -2219,10 +2219,13 @@ patterns syntax.  These pattern should only be used in lexer specifications:
   `<*>φ`             | matches `φ` in any state of the \ref reflex-states
   `<<EOF>>`          | matches EOF in any state of the \ref reflex-states
   `<S><<EOF>>`       | matches EOF only if state `S` is enabled in \ref reflex-states
-  `[a-z]{+}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]` \ref reflex-pattern-class
-  `[a-z]{-}[aeiou]`  | matches a consonant, same as `[a-z−−[aeiou]]` \ref reflex-pattern-class
-  `[a-z]{&}[^aeiou]` | matches a consonant, same as `[a-z&&[^aeiou]]` \ref reflex-pattern-class
-  `[a-z]{⎮}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]` \ref reflex-pattern-class
+  `[a-z⎮⎮[A-Z]]`     | matches a letter, see \ref reflex-pattern-class
+  `[a-z&&[^aeiou]]`  | matches a consonant, see \ref reflex-pattern-class
+  `[a-z−−[aeiou]]`   | matches a consonant, see \ref reflex-pattern-class
+  `[a-z]{+}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]`, see \ref reflex-pattern-class
+  `[a-z]{⎮}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]`, see \ref reflex-pattern-class
+  `[a-z]{&}[^aeiou]` | matches a consonant, same as `[a-z&&[^aeiou]]`, see \ref reflex-pattern-class
+  `[a-z]{-}[aeiou]`  | matches a consonant, same as `[a-z−−[aeiou]]`, see \ref reflex-pattern-class
 
 Note that the characters `.` (dot), `\`, `?`, `*`, `+`, `|`, `(`, `)`, `[`,
 `]`, `{`, `}`, `^`, and `$` are meta-characters and should be escaped to match.
@@ -2267,14 +2270,17 @@ inverted, subtracted, intersected, and merged:
   ----------------- | ---------------------------------------------------------
   `[a-zA-Z]`        | matches a letter
   `[^a-zA-Z]`       | matches a non-letter (character class inversion)
-  `[a-z−−[aeiou]]`  | matches a consonant (character class subtraction)
-  `[a-z&&[^aeiou]]` | matches a consonant (character class intersection)
   `[a-z⎮⎮[A-Z]]`    | matches a letter (character class union)
+  `[a-z&&[^aeiou]]` | matches a consonant (character class intersection)
+  `[a-z−−[aeiou]]`  | matches a consonant (character class subtraction)
 
 Bracket lists cannot be empty, so `[]` and `[^]` are invalid.  In fact, the
 first character after the bracket is always part of the list.  So `[][]` is a
 list that matches a `]` and a `[`, `[^][]` is a list that matches anything but
 `]` and `[`, and `[-^]` is a list that matches a `-` and a `^`.
+
+It is an error to construct an empty character class by subtraction or by
+intersection, for example `[a&&[b]]` is invalid.
 
 Bracket lists may contain ASCII and Unicode \ref reflex-pattern-cat.
 
@@ -2284,8 +2290,52 @@ To add Unicode character categories and UTF-8 characters to bracket lists
 An inverted Unicode character class is constructed by subtracting the character
 class from the Unicode range U+0000 to U+D7FF and U+E000 to U+10FFFF.
 
-It is an error to construct an empty character class by subtraction or by
-intersection.
+The character class union, intersection, and subtraction operations are left
+associative and have the same operator precedence.  Operations can be chained
+together in a bracket list.  For example `[a-z||[A-Z]--[aeiou]--[AEIOU]]`,
+`[a-z--[aeiou]||[A-Z]--[AEIUO]]`, `[a-z&&[^aeiou]||[A-Z]&&[^AEIOU]]`, and
+`[B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]` are the same character classes.
+
+A lexer specification may use a defined name in place of the second operand of
+an union, intersection, and subtraction operation.  The defined name should
+expand into a bracket list.  For example:
+
+<div class="alt">
+~~~{.cpp}
+    lower     [a-z]
+    upper     [A-Z]
+    letter    [||{lower}||{upper}]
+    alnum     [0-9||{letter}]
+    name      {letter}{alnum}*
+    %%
+    {name}    std::cout << "name: " << text() << std::endl;
+    .|\n      // skip everything else
+    %%
+~~~
+</div>
+
+@warning defined names may only occur immediately after a `||`, `&&`, and a
+`--` operator in a bracket list.  Do not place a defined name as the first
+operand to a union, intersection, and subtraction operation, because the
+definition is not expanded.  For example, `[{lower}||{upper}]` contains
+`[A-Zelorw{}]`.  The name and the `{`, `}` characters are literally included in
+the resulting character class.  Instead, this bracket list should be written as
+`[||{lower}||{upper}]`.  Likewise, `[^{lower}||{upper}]` should be written as
+`[^||{lower}||{upper}]`.
+
+The character class operators `{+}` (or `{|}`), `{&}`, and `{-}` may be used in
+lexer specifications for compatibility with Flex that supports `{+}` and `{-}`:
+
+  Pattern            | Matches
+  ------------------ | --------------------------------------------------------
+  `[a-z]{+}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]`
+  `[a-z]{⎮}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]`
+  `[a-z]{&}[^aeiou]` | matches a consonant, same as `[a-z&&[^aeiou]]`
+  `[a-z]{-}[aeiou]`  | matches a consonant, same as `[a-z−−[aeiou]]`
+
+These operators can be chained together and support defined names, except for
+the first operand.  For example `[0-9]{+}{letter}` is valid but
+`{lower}{+}{upper}` is invalid.
 
 🔝 [Back to table of contents](#)
 

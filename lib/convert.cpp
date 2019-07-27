@@ -570,6 +570,28 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
+//  Definition name expansion                                                 //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+static const std::string& expand(const std::map<std::string,std::string> *macros, const char *pattern, size_t len, size_t& pos)
+{
+  // lookup {name} and expand without converting
+  size_t k = pos++;
+  while (pos < len && (std::isalnum(pattern[pos]) || pattern[pos] == '_' || (pattern[pos] & 0x80) == 0x80))
+    ++pos;
+  std::string name;
+  name.append(&pattern[k], pos - k);
+  if (pos >= len && (pattern[pos] != '\\' || pattern[pos + 1] != '}') && pattern[pos] != '}')
+    throw regex_error(regex_error::undefined_name, pattern, pos);
+  std::map<std::string,std::string>::const_iterator i = macros->find(name);
+  if (i == macros->end())
+    throw regex_error(regex_error::undefined_name, pattern, k);
+  return i->second;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
 //  Regex converter bracket list character class conversions                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -801,92 +823,215 @@ static void insert_posix_class(const char *pattern, size_t len, size_t& pos, ORa
   ++pos;
 }
 
-static void insert_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges);
+static void insert_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges, const std::map<std::string,std::string> *macros);
 
-static void merge_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges)
+static void merge_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges, const std::map<std::string,std::string> *macros)
 {
-  if (pattern[pos] == '^')
+  if (pattern[pos] == '[')
   {
     ++pos;
-    ORanges<int> merge;
-    insert_list(pattern, len, pos, flags, mod, merge);
-    if (is_modified(mod, 'u'))
+    if (pattern[pos] == '^')
     {
-      ORanges<int> inverse(0x00, 0x10FFFF);
-      inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
-      inverse -= merge;
-      ranges |= inverse;
+      ++pos;
+      ORanges<int> merge;
+      insert_list(pattern, len, pos, flags, mod, merge, macros);
+      if (is_modified(mod, 'u'))
+      {
+        ORanges<int> inverse(0x00, 0x10FFFF);
+        inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
+        inverse -= merge;
+        ranges |= inverse;
+      }
+      else
+      {
+        ORanges<int> inverse(0x00, 0x7F);
+        inverse -= merge;
+        ranges |= inverse;
+      }
     }
     else
     {
-      ORanges<int> inverse(0x00, 0x7F);
-      inverse -= merge;
-      ranges |= inverse;
+      insert_list(pattern, len, pos, flags, mod, ranges, macros);
     }
+  }
+  else if (pattern[pos] == '{' && macros != NULL)
+  {
+    ++pos;
+    const std::string& list = expand(macros, pattern, len, pos);
+    if (list.size() < 2 || list.front() != '[')
+      throw regex_error(regex_error::invalid_class_range, pattern, pos);
+    size_t k = 1;
+    if (list[k] == '^')
+    {
+      ++k;
+      ORanges<int> merge;
+      insert_list(list.c_str(), list.size(), k, flags, mod, merge, macros);
+      if (is_modified(mod, 'u'))
+      {
+        ORanges<int> inverse(0x00, 0x10FFFF);
+        inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
+        inverse -= merge;
+        ranges |= inverse;
+      }
+      else
+      {
+        ORanges<int> inverse(0x00, 0x7F);
+        inverse -= merge;
+        ranges |= inverse;
+      }
+    }
+    else
+    {
+      insert_list(list.c_str(), list.size(), k, flags, mod, ranges, macros);
+    }
+    if (k + 1 < list.size())
+      throw regex_error(regex_error::invalid_class_range, pattern, pos);
   }
   else
   {
-    insert_list(pattern, len, pos, flags, mod, ranges);
+    throw regex_error(regex_error::invalid_class_range, pattern, pos);
   }
 }
 
-static void intersect_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges)
+static void intersect_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges, const std::map<std::string,std::string> *macros)
 {
   ORanges<int> intersect;
-  if (pattern[pos] == '^')
+  if (pattern[pos] == '[')
   {
     ++pos;
-    insert_list(pattern, len, pos, flags, mod, intersect);
-    if (is_modified(mod, 'u'))
+    if (pattern[pos] == '^')
     {
-      ORanges<int> inverse(0x00, 0x10FFFF);
-      inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
-      inverse -= intersect;
-      ranges &= inverse;
+      ++pos;
+      insert_list(pattern, len, pos, flags, mod, intersect, macros);
+      if (is_modified(mod, 'u'))
+      {
+        ORanges<int> inverse(0x00, 0x10FFFF);
+        inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
+        inverse -= intersect;
+        ranges &= inverse;
+      }
+      else
+      {
+        ORanges<int> inverse(0x00, 0x7F);
+        inverse -= intersect;
+        ranges &= inverse;
+      }
     }
     else
     {
-      ORanges<int> inverse(0x00, 0x7F);
-      inverse -= intersect;
-      ranges &= inverse;
+      insert_list(pattern, len, pos, flags, mod, intersect, macros);
+      ranges &= intersect;
     }
+  }
+  else if (pattern[pos] == '{' && macros != NULL)
+  {
+    ++pos;
+    const std::string& list = expand(macros, pattern, len, pos);
+    if (list.size() < 2 || list.front() != '[')
+      throw regex_error(regex_error::invalid_class_range, pattern, pos);
+    size_t k = 1;
+    if (list[k] == '^')
+    {
+      ++k;
+      insert_list(list.c_str(), list.size(), k, flags, mod, intersect, macros);
+      if (is_modified(mod, 'u'))
+      {
+        ORanges<int> inverse(0x00, 0x10FFFF);
+        inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
+        inverse -= intersect;
+        ranges &= inverse;
+      }
+      else
+      {
+        ORanges<int> inverse(0x00, 0x7F);
+        inverse -= intersect;
+        ranges &= inverse;
+      }
+    }
+    else
+    {
+      insert_list(list.c_str(), list.size(), k, flags, mod, intersect, macros);
+      ranges &= intersect;
+    }
+    if (k + 1 < list.size())
+      throw regex_error(regex_error::invalid_class_range, pattern, pos);
   }
   else
   {
-    insert_list(pattern, len, pos, flags, mod, intersect);
-    ranges &= intersect;
+    throw regex_error(regex_error::invalid_class_range, pattern, pos);
   }
 }
 
-static void subtract_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges)
+static void subtract_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges, const std::map<std::string,std::string> *macros)
 {
   ORanges<int> subtract;
-  if (pattern[pos] == '^')
+  if (pattern[pos] == '[')
   {
     ++pos;
-    insert_list(pattern, len, pos, flags, mod, subtract);
-    if (is_modified(mod, 'u'))
+    if (pattern[pos] == '^')
     {
-      ORanges<int> inverse(0x00, 0x10FFFF);
-      inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
-      inverse -= subtract;
-      ranges -= inverse;
+      ++pos;
+      insert_list(pattern, len, pos, flags, mod, subtract, macros);
+      if (is_modified(mod, 'u'))
+      {
+        ORanges<int> inverse(0x00, 0x10FFFF);
+        inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
+        inverse -= subtract;
+        ranges -= inverse;
+      }
+      else
+      {
+        ORanges<int> inverse(0x00, 0x7F);
+        inverse -= subtract;
+        ranges -= inverse;
+      }
     }
     else
     {
-      ORanges<int> inverse(0x00, 0x7F);
-      inverse -= subtract;
-      ranges -= inverse;
+      insert_list(pattern, len, pos, flags, mod, subtract, macros);
+      ranges -= subtract;
     }
+  }
+  else if (pattern[pos] == '{' && macros != NULL)
+  {
+    ++pos;
+    const std::string& list = expand(macros, pattern, len, pos);
+    if (list.size() < 2 || list.front() != '[')
+      throw regex_error(regex_error::invalid_class_range, pattern, pos);
+    size_t k = 1;
+    if (list[k] == '^')
+    {
+      ++k;
+      insert_list(list.c_str(), list.size(), k, flags, mod, subtract, macros);
+      if (is_modified(mod, 'u'))
+      {
+        ORanges<int> inverse(0x00, 0x10FFFF);
+        inverse -= ORanges<int>(0xD800, 0xDFFF); // remove surrogates
+        inverse -= subtract;
+        ranges -= inverse;
+      }
+      else
+      {
+        ORanges<int> inverse(0x00, 0x7F);
+        inverse -= subtract;
+        ranges -= inverse;
+      }
+    }
+    else
+    {
+      insert_list(list.c_str(), list.size(), k, flags, mod, subtract, macros);
+      ranges -= subtract;
+    }
+    if (k + 1 < list.size())
+      throw regex_error(regex_error::invalid_class_range, pattern, pos);
   }
   else
   {
-    insert_list(pattern, len, pos, flags, mod, subtract);
-    ranges -= subtract;
+    throw regex_error(regex_error::invalid_class_range, pattern, pos);
   }
 }
 
-static void insert_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges)
+static void insert_list(const char *pattern, size_t len, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges, const std::map<std::string,std::string> *macros)
 {
   size_t loc = pos;
   bool range = false;
@@ -915,31 +1060,31 @@ static void insert_list(const char *pattern, size_t len, size_t& pos, convert_fl
       insert_posix_class(pattern, len, pos, ranges);
       pc = -1;
     }
-    else if (c == '|' && pattern[pos + 1] == '|' && pos + 3 < len && pattern[pos + 2] == '[')
+    else if (c == '|' && pattern[pos + 1] == '|' && pos + 3 < len && (pattern[pos + 2] == '[' || (pattern[pos + 2] == '{' && macros != NULL)))
     {
       // character class union [abc||[def]]
       if (range)
         throw regex_error(regex_error::invalid_class_range, pattern, pos);
-      pos += 3;
-      merge_list(pattern, len, pos, flags, mod, ranges);
+      pos += 2;
+      merge_list(pattern, len, pos, flags, mod, ranges, macros);
       pc = -1;
     }
-    else if (c == '&' && pattern[pos + 1] == '&' && pos + 3 < len && pattern[pos + 2] == '[')
+    else if (c == '&' && pattern[pos + 1] == '&' && pos + 3 < len && (pattern[pos + 2] == '[' || (pattern[pos + 2] == '{' && macros != NULL)))
     {
       // character class intersection [a-z&&[^aeiou]]
       if (range)
         throw regex_error(regex_error::invalid_class_range, pattern, pos);
-      pos += 3;
-      intersect_list(pattern, len, pos, flags, mod, ranges);
+      pos += 2;
+      intersect_list(pattern, len, pos, flags, mod, ranges, macros);
       pc = -1;
     }
-    else if (c == '-' && pattern[pos + 1] == '-' && pos + 3 < len && pattern[pos + 2] == '[')
+    else if (c == '-' && pattern[pos + 1] == '-' && pos + 3 < len && (pattern[pos + 2] == '[' || (pattern[pos + 2] == '{' && macros != NULL)))
     {
       // character class subtraction [a-z--[aeiou]]
       if (range)
         throw regex_error(regex_error::invalid_class_range, pattern, pos);
-      pos += 3;
-      subtract_list(pattern, len, pos, flags, mod, ranges);
+      pos += 2;
+      subtract_list(pattern, len, pos, flags, mod, ranges, macros);
       pc = -1;
     }
     else if (c == '-' && !range && pc != -2)
@@ -977,25 +1122,35 @@ static void insert_list(const char *pattern, size_t len, size_t& pos, convert_fl
     {
       if (range)
         ranges.insert('-');
-      if ((flags & convert_flag::lex))
-      {
-        while (pos + 5 < len && pattern[pos + 1] == '{' && ((c = pattern[pos + 2]) == '+' || c == '-' || c == '|' || c == '&') && pattern[pos + 3] == '}' && pattern[pos + 4] == '[')
-        {
-          // lex: [a-z]{+}[A-Z] character class addition, [a-z]{-}[aeiou] subtraction, [a-z]{&}[^aeiou] intersection
-          pos += 5;
-          if (c == '+' || c == '|')
-            merge_list(pattern, len, pos, flags & ~convert_flag::lex, mod, ranges);
-          else if (c == '&')
-            intersect_list(pattern, len, pos, flags & ~convert_flag::lex, mod, ranges);
-          else
-            subtract_list(pattern, len, pos, flags & ~convert_flag::lex, mod, ranges);
-        }
-      }
       break;
     }
   }
   if (pos >= len || pattern[pos] != ']')
     throw regex_error(regex_error::mismatched_brackets, pattern, loc);
+  if ((flags & convert_flag::lex))
+  {
+    int c;
+    while (pos + 5 < len && pattern[pos + 1] == '{' && ((c = pattern[pos + 2]) == '+' || c == '|' || c == '&' || c == '-') && pattern[pos + 3] == '}')
+    {
+      // lex: [a-z]{+}[A-Z] character class addition, [a-z]{-}[aeiou] subtraction, [a-z]{&}[^aeiou] intersection
+      pos += 4;
+      switch (c)
+      {
+        case '+':
+        case '|':
+          merge_list(pattern, len, pos, flags & ~convert_flag::lex, mod, ranges, macros);
+          break;
+        case '&':
+          intersect_list(pattern, len, pos, flags & ~convert_flag::lex, mod, ranges, macros);
+          break;
+        case '-':
+          subtract_list(pattern, len, pos, flags & ~convert_flag::lex, mod, ranges, macros);
+          break;
+      }
+    }
+    if (pos >= len)
+      throw regex_error(regex_error::mismatched_brackets, pattern, loc);
+  }
   if (ranges.empty())
     throw regex_error(regex_error::empty_class, pattern, loc);
 }
@@ -1437,7 +1592,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
             ORanges<int> ranges;
             regex.append(&pattern[loc], pos - loc);
             pos += 2;
-            insert_list(pattern, len, pos, flags, mod, ranges);
+            insert_list(pattern, len, pos, flags, mod, ranges, macros);
             if (is_modified(mod, 'i'))
               convert_anycase_ranges(ranges);
             if (is_modified(mod, 'u'))
@@ -1467,7 +1622,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
             ORanges<int> ranges;
             regex.append(&pattern[loc], pos - loc);
             ++pos;
-            insert_list(pattern, len, pos, flags, mod, ranges);
+            insert_list(pattern, len, pos, flags, mod, ranges, macros);
             if (is_modified(mod, 'i'))
               convert_anycase_ranges(ranges);
             if (is_modified(mod, 'u'))
@@ -1572,17 +1727,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
             // if macros are provided: lookup {name} and expand without converting
             regex.append(&pattern[loc], pos - loc);
             ++pos;
-            size_t k = pos++;
-            while (pos < len && (std::isalnum(pattern[pos]) || pattern[pos] == '_' || (pattern[pos] & 0x80) == 0x80))
-              ++pos;
-            std::string name;
-            name.append(&pattern[k], pos - k);
-            if (pos >= len && pattern[pos] != '\\' && pattern[pos] != '}')
-              throw regex_error(regex_error::undefined_name, pattern, pos);
-            std::map<std::string,std::string>::const_iterator i = macros->find(name);
-            if (i == macros->end())
-              throw regex_error(regex_error::undefined_name, pattern, k);
-            regex.append(par).append(i->second).append(")");
+            regex.append(par).append(expand(macros, pattern, len, pos)).append(")");
             loc = pos + (pattern[pos] == '\\') + 1;
             anc = false;
             beg = false;

@@ -2741,6 +2741,8 @@ void Reflex::write_regex(const std::string *condition, const std::string& regex)
     {
       if (*i == '\\')
         *out << "'\\\\',";
+      else if (*i == '\'')
+        *out << "'\\'',";
       else if (std::isprint(*i))
         *out << "'" << *i << "', ";
       else

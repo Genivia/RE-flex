@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Jul 24 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Jul 27 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -1050,13 +1050,19 @@ Pattern syntax</h3>
 <tr>
 <td><code>&lt;S&gt;&lt;&lt;EOF&gt;&gt;</code> </td><td>matches EOF only if state <code>S</code> is enabled in <a class="el" href="index.html#reflex-states">Start condition states </a> </td></tr>
 <tr>
-<td><code>[a-z]{+}[A-Z]</code> </td><td>matches a letter, same as <code>[a-z⎮⎮[A-Z]]</code> <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
+<td><code>[a-z⎮⎮[A-Z]]</code> </td><td>matches a letter, see <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
 <tr>
-<td><code>[a-z]{-}[aeiou]</code> </td><td>matches a consonant, same as <code>[a-z−−[aeiou]]</code> <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
+<td><code>[a-z&amp;&amp;[^aeiou]]</code> </td><td>matches a consonant, see <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
 <tr>
-<td><code>[a-z]{&amp;}[^aeiou]</code> </td><td>matches a consonant, same as <code>[a-z&amp;&amp;[^aeiou]]</code> <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
+<td><code>[a-z−−[aeiou]]</code> </td><td>matches a consonant, see <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
 <tr>
-<td><code>[a-z]{⎮}[A-Z]</code> </td><td>matches a letter, same as <code>[a-z⎮⎮[A-Z]]</code> <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
+<td><code>[a-z]{+}[A-Z]</code> </td><td>matches a letter, same as <code>[a-z⎮⎮[A-Z]]</code>, see <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
+<tr>
+<td><code>[a-z]{⎮}[A-Z]</code> </td><td>matches a letter, same as <code>[a-z⎮⎮[A-Z]]</code>, see <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
+<tr>
+<td><code>[a-z]{&amp;}[^aeiou]</code> </td><td>matches a consonant, same as <code>[a-z&amp;&amp;[^aeiou]]</code>, see <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
+<tr>
+<td><code>[a-z]{-}[aeiou]</code> </td><td>matches a consonant, same as <code>[a-z−−[aeiou]]</code>, see <a class="el" href="index.html#reflex-pattern-class">Character classes</a> </td></tr>
 </table>
 <p>Note that the characters <code>.</code> (dot), <code>\</code>, <code>?</code>, <code>*</code>, <code>+</code>, <code>|</code>, <code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>, <code>{</code>, <code>}</code>, <code>^</code>, and <code>$</code> are meta-characters and should be escaped to match. Lexer specifications also include the <code>"</code> and <code>/</code> as meta-characters and these should be escaped to match.</p>
 <p>Spaces and tabs cannot be matched in patterns in lexer specifications. To match the space character use <code>" "</code> or <code>[ ]</code> and to match the tab character use <code>\t</code>. Use <code>\h</code> to match a space or tab.</p>
@@ -1086,17 +1092,34 @@ Character classes</h3>
 <tr>
 <td><code>[^a-zA-Z]</code> </td><td>matches a non-letter (character class inversion) </td></tr>
 <tr>
-<td><code>[a-z−−[aeiou]]</code> </td><td>matches a consonant (character class subtraction) </td></tr>
+<td><code>[a-z⎮⎮[A-Z]]</code> </td><td>matches a letter (character class union) </td></tr>
 <tr>
 <td><code>[a-z&amp;&amp;[^aeiou]]</code> </td><td>matches a consonant (character class intersection) </td></tr>
 <tr>
-<td><code>[a-z⎮⎮[A-Z]]</code> </td><td>matches a letter (character class union) </td></tr>
+<td><code>[a-z−−[aeiou]]</code> </td><td>matches a consonant (character class subtraction) </td></tr>
 </table>
 <p>Bracket lists cannot be empty, so <code>[]</code> and <code>[^]</code> are invalid. In fact, the first character after the bracket is always part of the list. So <code>[][]</code> is a list that matches a <code>]</code> and a <code>[</code>, <code>[^][]</code> is a list that matches anything but <code>]</code> and <code>[</code>, and <code>[-^]</code> is a list that matches a <code>-</code> and a <code>^</code>.</p>
+<p>It is an error to construct an empty character class by subtraction or by intersection, for example <code>[a&amp;&amp;[b]]</code> is invalid.</p>
 <p>Bracket lists may contain ASCII and Unicode <a class="el" href="index.html#reflex-pattern-cat">Character categories</a>.</p>
 <p>To add Unicode character categories and UTF-8 characters to bracket lists <a class="el" href="index.html#reflex-pattern-unicode">Unicode mode</a> should be enabled.</p>
 <p>An inverted Unicode character class is constructed by subtracting the character class from the Unicode range U+0000 to U+D7FF and U+E000 to U+10FFFF.</p>
-<p>It is an error to construct an empty character class by subtraction or by intersection.</p>
+<p>The character class union, intersection, and subtraction operations are left associative and have the same operator precedence. Operations can be chained together in a bracket list. For example <code>[a-z||[A-Z]--[aeiou]--[AEIOU]]</code>, <code>[a-z--[aeiou]||[A-Z]--[AEIUO]]</code>, <code>[a-z&amp;&amp;[^aeiou]||[A-Z]&amp;&amp;[^AEIOU]]</code>, and <code>[B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]</code> are the same character classes.</p>
+<p>A lexer specification may use a defined name in place of the second operand of an union, intersection, and subtraction operation. The defined name should expand into a bracket list. For example:</p>
+<div class="alt"> <div class="fragment"><div class="line"><a class="code" href="reflex_8cpp.html#afd21dbba9aaf2944d477caa4caddd963">lower</a>     [a-z]</div><div class="line">upper     [A-Z]</div><div class="line">letter    [||{<a class="code" href="reflex_8cpp.html#afd21dbba9aaf2944d477caa4caddd963">lower</a>}||{upper}]</div><div class="line">alnum     [0-9||{letter}]</div><div class="line">name      {letter}{alnum}*</div><div class="line">%%</div><div class="line">{name}    std::cout &lt;&lt; <span class="stringliteral">&quot;name: &quot;</span> &lt;&lt; text() &lt;&lt; std::endl;</div><div class="line">.|\n      <span class="comment">// skip everything else</span></div><div class="line">%%</div></div><!-- fragment --> </div><dl class="section warning"><dt>Warning</dt><dd>defined names may only occur immediately after a <code>||</code>, <code>&amp;&amp;</code>, and a <code>--</code> operator in a bracket list. Do not place a defined name as the first operand to a union, intersection, and subtraction operation, because the definition is not expanded. For example, <code>[{lower}||{upper}]</code> contains <code>[A-Zelorw{}]</code>. The name and the <code>{</code>, <code>}</code> characters are literally included in the resulting character class. Instead, this bracket list should be written as <code>[||{lower}||{upper}]</code>. Likewise, <code>[^{lower}||{upper}]</code> should be written as <code>[^||{lower}||{upper}]</code>.</dd></dl>
+<p>The character class operators <code>{+}</code> (or <code>{|}</code>), <code>{&amp;}</code>, and <code>{-}</code> may be used in lexer specifications for compatibility with Flex that supports <code>{+}</code> and <code>{-}</code>:</p>
+<table class="doxtable">
+<tr>
+<th>Pattern </th><th>Matches  </th></tr>
+<tr>
+<td><code>[a-z]{+}[A-Z]</code> </td><td>matches a letter, same as <code>[a-z⎮⎮[A-Z]]</code> </td></tr>
+<tr>
+<td><code>[a-z]{⎮}[A-Z]</code> </td><td>matches a letter, same as <code>[a-z⎮⎮[A-Z]]</code> </td></tr>
+<tr>
+<td><code>[a-z]{&amp;}[^aeiou]</code> </td><td>matches a consonant, same as <code>[a-z&amp;&amp;[^aeiou]]</code> </td></tr>
+<tr>
+<td><code>[a-z]{-}[aeiou]</code> </td><td>matches a consonant, same as <code>[a-z−−[aeiou]]</code> </td></tr>
+</table>
+<p>These operators can be chained together and support defined names, except for the first operand. For example <code>[0-9]{+}{letter}</code> is valid but <code>{lower}{+}{upper}</code> is invalid.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-pattern-cat"></a>
 Character categories</h3>
@@ -2953,7 +2976,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Jul 24 2019 13:08:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Jul 27 2019 19:44:06 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
