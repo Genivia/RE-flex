@@ -858,7 +858,7 @@ static void merge_list(const char *pattern, size_t len, size_t& pos, convert_fla
   {
     ++pos;
     const std::string& list = expand(macros, pattern, len, pos);
-    if (list.size() < 2 || list.front() != '[')
+    if (list.size() < 2 || list.at(0) != '[')
       throw regex_error(regex_error::invalid_class_range, pattern, pos);
     size_t k = 1;
     if (list[k] == '^')
@@ -927,7 +927,7 @@ static void intersect_list(const char *pattern, size_t len, size_t& pos, convert
   {
     ++pos;
     const std::string& list = expand(macros, pattern, len, pos);
-    if (list.size() < 2 || list.front() != '[')
+    if (list.size() < 2 || list.at(0) != '[')
       throw regex_error(regex_error::invalid_class_range, pattern, pos);
     size_t k = 1;
     if (list[k] == '^')
@@ -996,7 +996,7 @@ static void subtract_list(const char *pattern, size_t len, size_t& pos, convert_
   {
     ++pos;
     const std::string& list = expand(macros, pattern, len, pos);
-    if (list.size() < 2 || list.front() != '[')
+    if (list.size() < 2 || list.at(0) != '[')
       throw regex_error(regex_error::invalid_class_range, pattern, pos);
     size_t k = 1;
     if (list[k] == '^')
