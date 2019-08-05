@@ -364,7 +364,7 @@ class AbstractMatcher {
     if (chr_ == '\0')
     {
       chr_ = txt_[len_];
-      const_cast<char*>(txt_)[len_] = '\0'; // cast is ugly, but OK since txt_ points in non-const buf_[]
+      txt_[len_] = '\0';
     }
     return txt_;
   }
@@ -594,9 +594,9 @@ class AbstractMatcher {
     else if (got_ == '\n')
       got_ = Const::UNK;
   }
-  /// Returns the next 8-bit character from the input character sequence, while preserving the current text() match (but pointer returned by text() may change; warning: does not preserve the yytext string pointer when options --flex and --bison are used).
+  /// Returns the next 8-bit character (unsigned char 0..255 or EOF) from the input character sequence, while preserving the current text() match (but pointer returned by text() may change; warning: does not preserve the yytext string pointer when options --flex and --bison are used).
   int input()
-    /// @returns the character read (unsigned char 0..255) read or EOF (-1).
+    /// @returns the next character (unsigned char 0..255) from input or EOF (-1).
   {
     DBGLOG("AbstractMatcher::input() pos = %zu end = %zu", pos_, end_);
     if (pos_ < end_)
@@ -618,9 +618,9 @@ class AbstractMatcher {
     cur_ = pos_;
     return got_;
   }
-  /// Returns the next wide character from the input character sequence, while preserving the current text() match (but pointer returned by text() may change; warning: does not preserve the yytext string pointer when options --flex and --bison are used).
+  /// Returns the next wide character (unsigned 0..U+10FFFF or EOF) from the input character sequence, while preserving the current text() match (but pointer returned by text() may change; warning: does not preserve the yytext string pointer when options --flex and --bison are used).
   int winput()
-    /// @returns the wide character read or EOF (-1).
+    /// @returns the next wide character (unsigned 0..U+10FFFF) or EOF (-1).
   {
     DBGLOG("AbstractMatcher::winput()");
     char tmp[6], *s = tmp;
@@ -998,24 +998,24 @@ class AbstractMatcher {
     pos_ = cur_ = loc;
     got_ = loc > 0 ? static_cast<unsigned char>(buf_[loc - 1]) : Const::UNK;
   }
-  Option      opt_; ///< options for matcher engines
-  char       *buf_; ///< input character sequence buffer
-  const char *txt_; ///< points to the matched text in buffer AbstractMatcher::buf_
-  size_t      len_; ///< size of the matched text
-  size_t      cap_; ///< nonzero capture index of an accepted match or zero
-  size_t      cur_; ///< next position in AbstractMatcher::buf_ to assign to AbstractMatcher::txt_
-  size_t      pos_; ///< position in AbstractMatcher::buf_ after AbstractMatcher::txt_
-  size_t      end_; ///< ending position of the input buffered in AbstractMatcher::buf_
-  size_t      max_; ///< total buffer size and max position + 1 to fill
-  size_t      ind_; ///< current indent position
-  size_t      blk_; ///< block size for block-based input reading, as set by AbstractMatcher::buffer
-  int         got_; ///< last unsigned character we looked at (to determine anchors and boundaries)
-  int         chr_; ///< the character located at AbstractMatcher::txt_[AbstractMatcher::len_]
-  size_t      lno_; ///< line number count (prior to this buffered input)
-  size_t      cno_; ///< column number count (prior to this buffered input)
-  size_t      num_; ///< character count (number of characters flushed prior to this buffered input)
-  bool        eof_; ///< input has reached EOF
-  bool        mat_; ///< true if AbstractMatcher::matches() was successful
+  Option opt_; ///< options for matcher engines
+  char  *buf_; ///< input character sequence buffer
+  char  *txt_; ///< points to the matched text in buffer AbstractMatcher::buf_
+  size_t len_; ///< size of the matched text
+  size_t cap_; ///< nonzero capture index of an accepted match or zero
+  size_t cur_; ///< next position in AbstractMatcher::buf_ to assign to AbstractMatcher::txt_
+  size_t pos_; ///< position in AbstractMatcher::buf_ after AbstractMatcher::txt_
+  size_t end_; ///< ending position of the input buffered in AbstractMatcher::buf_
+  size_t max_; ///< total buffer size and max position + 1 to fill
+  size_t ind_; ///< current indent position
+  size_t blk_; ///< block size for block-based input reading, as set by AbstractMatcher::buffer
+  int    got_; ///< last unsigned character we looked at (to determine anchors and boundaries)
+  int    chr_; ///< the character located at AbstractMatcher::txt_[AbstractMatcher::len_]
+  size_t lno_; ///< line number count (prior to this buffered input)
+  size_t cno_; ///< column number count (prior to this buffered input)
+  size_t num_; ///< character count (number of characters flushed prior to this buffered input)
+  bool   eof_; ///< input has reached EOF
+  bool   mat_; ///< true if AbstractMatcher::matches() was successful
  private:
 #if defined(WITH_FAST_GET)
   /// Get the next character if not currently buffered.

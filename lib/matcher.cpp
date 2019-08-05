@@ -75,7 +75,7 @@ scan:
     eow = false;
   }
   ind_ = pos_; // ind scans input in buf[] in newline() up to pos - 1
-  size_t col = 0; // count columns from BOL
+  size_t col = 0; // count columns from BOL for indent matching
   if (pat_->fsm_)
   {
     fsm_.bob = bob;

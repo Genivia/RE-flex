@@ -456,6 +456,7 @@ Changelog
 - Jul 21, 2019: 1.3.0 added subtractive start condition scoping with `<^...>`, added undent `\k` anchor to undo indenting changes ("undenting") with an example in `examples/indent2.l`, improved indent `\i` and dedent `\j` anchors and other improvements.
 - Jul 24, 2019: 1.3.1 added `matcher().tabs(n)` to set tab size, used by `columno()` and indent `\i` and dedent `\j` anchors, new `reflex::Pattern` methods, other improvements.
 - Jul 27, 2019: 1.3.2 added defined name expansion in bracket lists for the union `||`, intersection `&&`, and subtraction `--` operations, e.g. `[||{letter}||{digit}]` expands into `[a-zA-Z0-9]` when `letter` is defined as `[a-zA-Z]` and `digit` is defined as `[0-9]`, see Character Classes in the documentation.
+- Aug  5, 2019: 1.3.3 fixed `reflex::BoostMatcher` (and derived `reflex::BoostPosixMatcher`, `reflex::BoostPerlMatcher`) regression bug that crept into the 1.2.4 update.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

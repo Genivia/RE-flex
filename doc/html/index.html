@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Jul 27 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Aug 5 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -1100,11 +1100,10 @@ Character classes</h3>
 </table>
 <p>Bracket lists cannot be empty, so <code>[]</code> and <code>[^]</code> are invalid. In fact, the first character after the bracket is always part of the list. So <code>[][]</code> is a list that matches a <code>]</code> and a <code>[</code>, <code>[^][]</code> is a list that matches anything but <code>]</code> and <code>[</code>, and <code>[-^]</code> is a list that matches a <code>-</code> and a <code>^</code>.</p>
 <p>It is an error to construct an empty character class by subtraction or by intersection, for example <code>[a&amp;&amp;[b]]</code> is invalid.</p>
-<p>Bracket lists may contain ASCII and Unicode <a class="el" href="index.html#reflex-pattern-cat">Character categories</a>.</p>
-<p>To add Unicode character categories and UTF-8 characters to bracket lists <a class="el" href="index.html#reflex-pattern-unicode">Unicode mode</a> should be enabled.</p>
+<p>Bracket lists may contain ASCII and Unicode <a class="el" href="index.html#reflex-pattern-cat">Character categories</a>. To add Unicode character categories and wide characters (encoded in UTF-8) to bracket lists <a class="el" href="index.html#reflex-pattern-unicode">Unicode mode</a> should be enabled.</p>
 <p>An inverted Unicode character class is constructed by subtracting the character class from the Unicode range U+0000 to U+D7FF and U+E000 to U+10FFFF.</p>
 <p>The character class union, intersection, and subtraction operations are left associative and have the same operator precedence. Operations can be chained together in a bracket list. For example <code>[a-z||[A-Z]--[aeiou]--[AEIOU]]</code>, <code>[a-z--[aeiou]||[A-Z]--[AEIUO]]</code>, <code>[a-z&amp;&amp;[^aeiou]||[A-Z]&amp;&amp;[^AEIOU]]</code>, and <code>[B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]</code> are the same character classes.</p>
-<p>A lexer specification may use a defined name in place of the second operand of an union, intersection, and subtraction operation. The defined name should expand into a bracket list. For example:</p>
+<p>A lexer specification may use a defined name in place of the second operand of an union, intersection, and subtraction operation. The defined name should expand into a bracket list that defines an ASCII character class (i.e. full Unicode cannot be used). For example:</p>
 <div class="alt"> <div class="fragment"><div class="line"><a class="code" href="reflex_8cpp.html#afd21dbba9aaf2944d477caa4caddd963">lower</a>     [a-z]</div><div class="line">upper     [A-Z]</div><div class="line">letter    [||{<a class="code" href="reflex_8cpp.html#afd21dbba9aaf2944d477caa4caddd963">lower</a>}||{upper}]</div><div class="line">alnum     [0-9||{letter}]</div><div class="line">name      {letter}{alnum}*</div><div class="line">%%</div><div class="line">{name}    std::cout &lt;&lt; <span class="stringliteral">&quot;name: &quot;</span> &lt;&lt; text() &lt;&lt; std::endl;</div><div class="line">.|\n      <span class="comment">// skip everything else</span></div><div class="line">%%</div></div><!-- fragment --> </div><dl class="section warning"><dt>Warning</dt><dd>defined names may only occur immediately after a <code>||</code>, <code>&amp;&amp;</code>, and a <code>--</code> operator in a bracket list. Do not place a defined name as the first operand to a union, intersection, and subtraction operation, because the definition is not expanded. For example, <code>[{lower}||{upper}]</code> contains <code>[A-Zelorw{}]</code>. The name and the <code>{</code>, <code>}</code> characters are literally included in the resulting character class. Instead, this bracket list should be written as <code>[||{lower}||{upper}]</code>. Likewise, <code>[^{lower}||{upper}]</code> should be written as <code>[^||{lower}||{upper}]</code>.</dd></dl>
 <p>The character class operators <code>{+}</code> (or <code>{|}</code>), <code>{&amp;}</code>, and <code>{-}</code> may be used in lexer specifications for compatibility with Flex that supports <code>{+}</code> and <code>{-}</code>:</p>
 <table class="doxtable">
@@ -2976,7 +2975,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Jul 27 2019 19:53:40 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Aug 5 2019 16:13:08 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -2282,10 +2282,9 @@ list that matches a `]` and a `[`, `[^][]` is a list that matches anything but
 It is an error to construct an empty character class by subtraction or by
 intersection, for example `[a&&[b]]` is invalid.
 
-Bracket lists may contain ASCII and Unicode \ref reflex-pattern-cat.
-
-To add Unicode character categories and UTF-8 characters to bracket lists
-\ref reflex-pattern-unicode should be enabled.
+Bracket lists may contain ASCII and Unicode \ref reflex-pattern-cat.  To add
+Unicode character categories and wide characters (encoded in UTF-8)
+to bracket lists \ref reflex-pattern-unicode should be enabled.
 
 An inverted Unicode character class is constructed by subtracting the character
 class from the Unicode range U+0000 to U+D7FF and U+E000 to U+10FFFF.
@@ -2298,7 +2297,8 @@ together in a bracket list.  For example `[a-z||[A-Z]--[aeiou]--[AEIOU]]`,
 
 A lexer specification may use a defined name in place of the second operand of
 an union, intersection, and subtraction operation.  The defined name should
-expand into a bracket list.  For example:
+expand into a bracket list that defines an ASCII character class (i.e. full
+Unicode cannot be used).  For example:
 
 <div class="alt">
 ~~~{.cpp}

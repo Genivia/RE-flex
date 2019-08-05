@@ -53,7 +53,10 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
     return reflex::convert(regex, "imsx!#<=:abcdefghlnprstuvwxzABDHLPQSUWZ0123456789<>?+", flags);
   }
   /// Default constructor.
-  BoostMatcher() : PatternMatcher<boost::regex>()
+  BoostMatcher()
+    :
+      PatternMatcher<boost::regex>(),
+      flg_(boost::regex_constants::match_partial | boost::regex_constants::match_not_dot_newline)
   {
     reset();
   }
@@ -85,7 +88,6 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   virtual void reset(const char *opt = NULL)
   {
     DBGLOG("BoostMatcher::reset()");
-    flg_ = boost::match_flag_type();
     itr_ = fin_ = boost::cregex_iterator();
     PatternMatcher::reset(opt);
   }
@@ -276,7 +278,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
       return 0;
     }
     if (method == Const::FIND)
-      txt_ = (*itr_)[0].first;
+      txt_ = const_cast<char*>((*itr_)[0].first);
     size_t n = (*itr_).size();
     for (cap_ = 1; cap_ < n && !(*itr_)[cap_].matched; ++cap_)
       continue; // set cap_ to the capture group index

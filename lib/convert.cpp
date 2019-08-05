@@ -1095,7 +1095,7 @@ static void insert_list(const char *pattern, size_t len, size_t& pos, convert_fl
     }
     else
     {
-      if ( (c & 0xC0) == 0xC0 && is_modified(mod, 'u'))
+      if ((c & 0xC0) == 0xC0 && is_modified(mod, 'u'))
       {
         // unicode: UTF-8 sequence
         const char *r;
