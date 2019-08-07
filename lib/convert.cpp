@@ -176,14 +176,14 @@ static std::string unicode_class(const char *s, int esc, const char *par)
 
 inline void enable_modifier(int c, const char *pattern, size_t pos, std::map<size_t,std::string>& mod, size_t lev)
 {
-  if (c != 'i' && c != 's' && c != 'u' && c != 'x')
+  if (c != 'i' && c != 'm' && c != 's' && c != 'u' && c != 'x')
     throw regex_error(regex_error::invalid_modifier, pattern, pos);
   mod[lev].push_back(c);
 }
 
 inline void disable_modifier(int c, const char *pattern, size_t pos, std::map<size_t,std::string>& mod, size_t lev)
 {
-  if (c != 'i' && c != 's' && c != 'u' && c != 'x')
+  if (c != 'i' && c != 'm' && c != 's' && c != 'u' && c != 'x')
     throw regex_error(regex_error::invalid_modifier, pattern, pos);
   mod[lev].push_back(uppercase(c));
 }

@@ -64,7 +64,8 @@ class StdMatcher : public PatternMatcher<std::regex> {
       const Input& input = Input(), ///< input character sequence for this matcher
       const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      PatternMatcher(pattern, input, opt)
+      PatternMatcher(pattern, input, opt),
+      flg_()
   {
     reset();
   }
@@ -75,7 +76,8 @@ class StdMatcher : public PatternMatcher<std::regex> {
       const Input& input = Input(), ///< input character sequence for this matcher
       const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
-      PatternMatcher(pattern, input, opt)
+      PatternMatcher(pattern, input, opt),
+      flg_()
   {
     reset();
   }
@@ -83,7 +85,6 @@ class StdMatcher : public PatternMatcher<std::regex> {
   virtual void reset(const char *opt = NULL)
   {
     DBGLOG("StdMatcher::reset()");
-    flg_ = std::regex_constants::match_flag_type();
     itr_ = fin_ = std::cregex_iterator();
     PatternMatcher::reset(opt);
     buffer(); // no partial matching supported: buffer all input
@@ -279,7 +280,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
       return 0;
     }
     if (method == Const::FIND)
-      txt_ = (*itr_)[0].first;
+      txt_ = const_cast<char*>((*itr_)[0].first);
     size_t n = (*itr_).size();
     for (cap_ = 1; cap_ < n && !(*itr_)[cap_].matched; ++cap_)
       continue; // set cap_ to the capture group index

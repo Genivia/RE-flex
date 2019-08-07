@@ -992,7 +992,7 @@ std::string Reflex::get_regex(size_t& pos)
       nsp = pos;
   }
   regex.append(line.substr(loc, pos - loc));
-  reflex::convert_flag_type flags = reflex::convert_flag::lex | reflex::convert_flag::multiline;
+  reflex::convert_flag_type flags = reflex::convert_flag::lex;
   if (!options["case_insensitive"].empty())
     flags |= reflex::convert_flag::anycase;
   if (!options["dotall"].empty())
