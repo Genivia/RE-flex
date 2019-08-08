@@ -48,12 +48,13 @@ size_t Matcher::match(Method method)
 scan:
   txt_ = buf_ + cur_;
   len_ = 0;
-  bool bob = at_bob();
 #ifndef WITH_MINIMAL
   mrk_ = false;
+  ind_ = pos_; // ind scans input in buf[] in newline() up to pos - 1
+  col_ = 0; // count columns for indent matching
   if (ded_ == 0 && hit_end() && tab_.empty())
   {
-    if (method == Const::SPLIT && !bob && cap_ != 0 && cap_ != Const::EMPTY)
+    if (method == Const::SPLIT && !at_bob() && cap_ != 0 && cap_ != Const::EMPTY)
     {
       cap_ = Const::EMPTY;
       DBGLOG("Split empty at end, cap = %zu", cap_);
@@ -65,26 +66,10 @@ scan:
     return 0;
   }
 #endif
-  bool bol = bob || at_bol();
-  bool bow = false;
-  bool eow = false;
+  bool bol = at_bol();
   int c1 = got_;
-#ifndef WITH_MINIMAL
-  if (isword(c1))
-    eow = isword(peek()) == 0;
-  else
-    bow = isword(peek()) != 0;
-  ind_ = pos_; // ind scans input in buf[] in newline() up to pos - 1
-#endif
-  size_t col = 0; // count columns from BOL for indent matching
   if (pat_->fsm_)
-  {
-    fsm_.bob = bob;
-    fsm_.bow = bow;
-    fsm_.eow = eow;
-    fsm_.col = col;
     fsm_.c1 = c1;
-  }
 redo:
   lap_.resize(0);
   cap_ = 0;
@@ -95,7 +80,6 @@ redo:
     fsm_.bol = bol;
     fsm_.nul = nul;
     pat_->fsm_(*this);
-    col = fsm_.col;
     nul = fsm_.nul;
     c1 = fsm_.c1;
   }
@@ -182,13 +166,13 @@ redo:
 #ifndef WITH_MINIMAL
               case 0xff00 | Pattern::META_DED:
                 DBGLOG("DED? %d", c1);
-                if (index == Pattern::IMAX && back == Pattern::IMAX && bol && dedent(col))
+                if (index == Pattern::IMAX && back == Pattern::IMAX && bol && dedent())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
               case 0xff00 | Pattern::META_IND:
                 DBGLOG("IND? %d", c1);
-                if (index == Pattern::IMAX && back == Pattern::IMAX && bol && indent(col))
+                if (index == Pattern::IMAX && back == Pattern::IMAX && bol && indent())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
@@ -208,8 +192,8 @@ redo:
                 opcode = *++pc;
                 continue;
               case 0xff00 | Pattern::META_BOB:
-                DBGLOG("BOB? %d", bob);
-                if (index == Pattern::IMAX && bob)
+                DBGLOG("BOB? %d", at_bob());
+                if (index == Pattern::IMAX && at_bob())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
@@ -239,14 +223,14 @@ redo:
                 opcode = *++pc;
                 continue;
               case 0xff00 | Pattern::META_EWB:
-                DBGLOG("EWB? %d", eow);
-                if (index == Pattern::IMAX && eow)
+                DBGLOG("EWB? %d", at_eow());
+                if (index == Pattern::IMAX && at_eow())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
               case 0xff00 | Pattern::META_BWB:
-                DBGLOG("BWB? %d", bow);
-                if (index == Pattern::IMAX && bow)
+                DBGLOG("BWB? %d", at_bow());
+                if (index == Pattern::IMAX && at_bow())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
@@ -257,8 +241,8 @@ redo:
                 opcode = *++pc;
                 continue;
               case 0xff00 | Pattern::META_NWB:
-                DBGLOG("NWB? %d %d", bow, eow);
-                if (index == Pattern::IMAX && !bow && !eow)
+                DBGLOG("NWB? %d %d", at_bow(), at_eow());
+                if (index == Pattern::IMAX && !at_bow() && !at_eow())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
@@ -323,28 +307,28 @@ done:
 #ifndef WITH_MINIMAL
   if (mrk_ && cap_ != Const::EMPTY)
   {
-    if (col > 0 && (tab_.empty() || tab_.back() < col))
+    if (col_ > 0 && (tab_.empty() || tab_.back() < col_))
     {
-      DBGLOG("Set new stop: tab_[%zu] = %zu", tab_.size(), col);
-      tab_.push_back(col);
+      DBGLOG("Set new stop: tab_[%zu] = %zu", tab_.size(), col_);
+      tab_.push_back(col_);
     }
-    else if (!tab_.empty() && tab_.back() > col)
+    else if (!tab_.empty() && tab_.back() > col_)
     {
       size_t n;
       for (n = tab_.size() - 1; n > 0; --n)
-        if (tab_.at(n - 1) <= col)
+        if (tab_.at(n - 1) <= col_)
           break;
       ded_ += tab_.size() - n;
       DBGLOG("Dedents: ded = %zu tab_ = %zu", ded_, tab_.size());
       tab_.resize(n);
       if (n > 0)
-        tab_.back() = col; // adjust stop when indents are not aligned (Python would give an error)
+        tab_.back() = col_; // adjust stop when indents are not aligned (Python would give an error)
     }
   }
   if (ded_ > 0)
   {
     DBGLOG("Dedents: ded = %zu", ded_);
-    if (col == 0 && bol)
+    if (col_ == 0 && bol)
     {
       ded_ += tab_.size();
       tab_.resize(0);
@@ -359,9 +343,9 @@ done:
   if (method == Const::SPLIT)
   {
     DBGLOG("Split: len = %zu cap = %zu cur = %zu pos = %zu end = %zu txt-buf = %zu eob = %d got = %d", len_, cap_, cur_, pos_, end_, txt_-buf_, (int)eof_, got_);
-    if (cap_ == 0 || (cur_ == static_cast<size_t>(txt_ - buf_) && !bob))
+    if (cap_ == 0 || (cur_ == static_cast<size_t>(txt_ - buf_) && !at_bob()))
     {
-      if (!hit_end())
+      if (!hit_end() && (txt_ + len_ < buf_ + end_ || peek() != EOF))
       {
         ++len_;
         DBGLOG("Split continue: len = %zu", len_);
@@ -371,14 +355,14 @@ done:
       if (got_ != Const::EOB)
       {
         cap_ = Const::EMPTY;
-        set_current(pos_); // chr_ = static_cast<unsigned char>(buf_[pos_]);
+        set_current(pos_);
         got_ = Const::EOB;
       }
       DBGLOG("Split at eof: cap = %zu txt = '%s' len = %zu", cap_, std::string(txt_, len_).c_str(), len_);
       DBGLOG("END Matcher::match()");
       return cap_;
     }
-    if (bob && cur_ == 0 && hit_end())
+    if (cur_ == 0 && at_bob() && at_end())
       cap_ = Const::EMPTY;
     set_current(cur_);
     DBGLOG("Split: txt = '%s' len = %zu", std::string(txt_, len_).c_str(), len_);
@@ -396,7 +380,7 @@ done:
     {
       set_current(cur_);
       DBGLOG("Reject empty match at EOF");
-      if (!opt_.N || !bob) // allow FIND and SCAN with "N" to match empty input, with ^$ etc.
+      if (!opt_.N || !at_bob()) // allow FIND and SCAN with "N" to match empty input, with ^$ etc.
         cap_ = 0;
     }
     else if (method == Const::FIND)

@@ -9,13 +9,13 @@ support.  Flex reimagined: fast, flexible, adds Boost 💪
 [RE/flex][reflex-url] is faster than Flex while providing a wealth of new
 features.  RE/flex is also much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
-representative C source code file into 244 tokens takes only 13 microseconds:
+representative C source code file into 244 tokens takes only 11 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
-<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.3.4</b></td><td><b>13</b></td></tr>
+<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.3.5</b></td><td><b>11</b></td></tr>
 <tr><td>flex -+ --full</td><td>Flex 2.5.35</td><td>17</td></tr>
-<tr><td>reflex --full</td><td>RE/flex 1.3.4</td><td>23</td></tr>
+<tr><td>reflex --full</td><td>RE/flex 1.3.5</td><td>19</td></tr>
 <tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex 1.66.0</td><td>40</td></tr>
 <tr><td>hs_compile_multi(), hs_scan()</td><td>Hyperscan 5.1.0</td><td>209</td></tr>
 <tr><td>reflex -m=boost-perl</td><td>Boost.Regex 1.66.0</td><td>230</td></tr>
@@ -457,7 +457,8 @@ Changelog
 - Jul 24, 2019: 1.3.1 added `matcher().tabs(n)` to set tab size, used by `columno()` and indent `\i` and dedent `\j` anchors, new `reflex::Pattern` methods, other improvements.
 - Jul 27, 2019: 1.3.2 added defined name expansion in bracket lists for the union `||`, intersection `&&`, and subtraction `--` operations, e.g. `[||{letter}||{digit}]` expands into `[a-zA-Z0-9]` when `letter` is defined as `[a-zA-Z]` and `digit` is defined as `[0-9]`, see Character Classes in the documentation.
 - Aug  5, 2019: 1.3.3 fixed `reflex::BoostMatcher` (and derived `reflex::BoostPosixMatcher`, `reflex::BoostPerlMatcher`) regression bug that crept into the 1.2.4 update.
-- Aug  7, 2019: 1.3.4 speed improvements.
+- Aug  7, 2019: 1.3.4 speed improvements for non-fast options.
+- Aug  8, 2019: 1.3.5 further speed improvements for both fast and non-fast options (15% to 30% faster).
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

@@ -584,7 +584,7 @@ class AbstractMatcher {
   bool at_bol() const
     /// @returns true if at begin of a new line.
   {
-    return got_ == '\n';
+    return got_ == Const::BOB || got_ == '\n';
   }
   /// Set/reset the begin of a new line state.
   void set_bol(bool bol) ///< if true: set begin of a new line state
@@ -593,6 +593,18 @@ class AbstractMatcher {
       got_ = '\n';
     else if (got_ == '\n')
       got_ = Const::UNK;
+  }
+  /// Returns true if this matcher matched text that begins a word.
+  bool at_bow()
+    /// @returns true if this matcher matched text that begins a word
+  {
+    return !isword(got_) && isword(txt_ < buf_ + end_ ? static_cast<unsigned char>(*txt_) : peek_more());
+  }
+  /// Returns true if this matcher matched text that ends a word.
+  bool at_eow()
+    /// @returns true if this matcher matched text that ends a word
+  {
+    return isword(got_) && !isword(txt_ < buf_ + end_ ? static_cast<unsigned char>(*txt_) : peek_more());
   }
   /// Returns the next 8-bit character (unsigned char 0..255 or EOF) from the input character sequence, while preserving the current text() match (but pointer returned by text() may change; warning: does not preserve the yytext string pointer when options --flex and --bison are used).
   int input()

@@ -30,7 +30,7 @@
 @file      matcher.h
 @brief     RE/flex matcher engine
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -244,12 +244,12 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// FSM code META DED.
   inline bool FSM_META_DED()
   {
-    return fsm_.bol && dedent(fsm_.col);
+    return fsm_.bol && dedent();
   }
   /// FSM code META IND.
   inline bool FSM_META_IND()
   {
-    return fsm_.bol && indent(fsm_.col);
+    return fsm_.bol && indent();
   }
   /// FSM code META UND.
   inline bool FSM_META_UND()
@@ -267,7 +267,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// FSM code META BOB.
   inline bool FSM_META_BOB()
   {
-    return fsm_.bob;
+    return at_bob();
   }
   /// FSM code META EOL.
   inline bool FSM_META_EOL(int c1)
@@ -292,12 +292,12 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// FSM code META EWB.
   inline bool FSM_META_EWB()
   {
-    return fsm_.eow;
+    return at_eow();
   }
   /// FSM code META BWB.
   inline bool FSM_META_BWB()
   {
-    return fsm_.bow;
+    return at_bow();
   }
   /// FSM code META NWE.
   inline bool FSM_META_NWE(int c0, int c1)
@@ -307,18 +307,14 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// FSM code META NWB.
   inline bool FSM_META_NWB()
   {
-    return !fsm_.bow && !fsm_.eow;
+    return !at_bow() && !at_eow();
   }
  protected:
   typedef std::vector<size_t> Stops; ///< indent margin/tab stops
   /// FSM data for FSM code
   struct FSM {
-    bool bob;
     bool bol;
-    bool bow;
-    bool eow;
     bool nul;
-    size_t col;
     int c1;
   };
   /// Returns true if input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
@@ -326,28 +322,29 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     /// @returns nonzero if input matched the pattern.
     ;
   /// Update indentation column counter for indent() and dedent().
-  void newline(size_t& col) ///< indent column counter
+  void newline()
   {
     mrk_ = true;
     while (ind_ + 1 < pos_)
-      col += buf_[ind_++] == '\t' ? 1 + (~col & (opt_.T - 1)) : 1;
-    DBGLOG("Newline with indent/dedent? col = %zu", col);
+      col_ += buf_[ind_++] == '\t' ? 1 + (~col_ & (opt_.T - 1)) : 1;
+    DBGLOG("Newline with indent/dedent? col = %zu", col_);
   }
   /// Returns true if looking at indent.
-  bool indent(size_t& col) ///< indent column counter
+  bool indent()
     /// @returns true if indent.
   {
-    newline(col);
-    return col > 0 && (tab_.empty() || tab_.back() < col);
+    newline();
+    return col_ > 0 && (tab_.empty() || tab_.back() < col_);
   }
   /// Returns true if looking at dedent.
-  bool dedent(size_t& col) ///< indent column counter
+  bool dedent()
     /// @returns true if dedent.
   {
-    newline(col);
-    return !tab_.empty() && tab_.back() > col;
+    newline();
+    return !tab_.empty() && tab_.back() > col_;
   }
   size_t            ded_; ///< dedent count
+  size_t            col_; ///< column counter for indent matching, updated by newline(), indent(), and dedent()
   Stops             tab_; ///< tab stops set by detecting indent margins
   std::vector<int>  lap_; ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
   std::stack<Stops> stk_; ///< stack to push/pop stops
