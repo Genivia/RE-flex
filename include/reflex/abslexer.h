@@ -73,7 +73,7 @@ class AbstractLexer {
    protected:
     /// Returns true if matcher should wrap input after EOF (lexer wrap() should return 0 to wrap input after EOF).
     virtual bool wrap()
-      /// @returns true if reflex::AbstractLexer::wrap() == 0 indicating that input is wrapped after EOF
+      /// @returns true if reflex::AbstractLexer::wrap() == 0 indicating that input is wrapped after EOF.
     {
       return lexer_->wrap() == 0;
     }
@@ -85,11 +85,13 @@ class AbstractLexer {
       const Input&  input, ///< reflex::Input character sequence to read from
       std::ostream& os)    ///< echo the text matches to this std::ostream or to std::cout
     :
-      matcher_(NULL),
       in_(input),
       os_(&os),
-      start_(),
-      debug_(),
+      base_(NULL),
+      size_(0),
+      matcher_(NULL),
+      start_(0),
+      debug_(0),
       stack_(),
       state_()
   { }
@@ -141,7 +143,7 @@ class AbstractLexer {
   Input& stdinit()
     /// @returns reference to the current reflex::Input object with input assigned.
   {
-    if (!in_.assigned())
+    if (!in_.assigned() && base_ == NULL)
       in_ = stdin;
     return in_;
   }
@@ -149,9 +151,26 @@ class AbstractLexer {
   Input& nostdinit()
     /// @returns reference to the current reflex::Input object with input assigned.
   {
-    if (!in_.assigned())
+    if (!in_.assigned() && base_ == NULL)
       in_ = std::cin;
     return in_;
+  }
+  /// Reset the matcher and start scanning the given buffer containing 0-terminated character data (data may be modified).
+  AbstractLexer& buffer(
+      char  *base, ///< base of the buffer containing 0-terminated character data
+      size_t size) ///< nonzero size of the buffer
+    /// @returns reference to *this.
+  {
+    if (has_matcher())
+    {
+      matcher().buffer(base, size); // reset and assign new buffer
+    }
+    else
+    {
+      base_ = base;
+      size_ = size;
+    }
+    return *this;
   }
   /// Set the current output to the given output stream to echo text matches to.
   AbstractLexer& out(std::ostream& os) ///< output stream to echo text matches to
@@ -164,7 +183,13 @@ class AbstractLexer {
   std::ostream& out() const
     /// @returns reference to the current std::ostream object.
   {
-    return os_ != NULL ? *os_ : std::cout;
+    return os_ ? *os_ : std::cout;
+  }
+  /// Returns pointer to the current output stream used to echo text matches to.
+  std::ostream*& os()
+    /// @returns pointer to the current std::ostream object.
+  {
+    return os_;
   }
   /// Returns true if a matcher was assigned to this lexer for scanning.
   bool has_matcher() const
@@ -177,6 +202,12 @@ class AbstractLexer {
     /// @returns reference to *this.
   {
     matcher_ = matcher;
+    if (matcher_ != NULL && base_ != NULL)
+    {
+      matcher_->buffer(base_, size_);
+      base_ = NULL;
+      size_ = 0;
+    }
     return *this;
   }
   /// Returns a reference to the current matcher.
@@ -194,8 +225,8 @@ class AbstractLexer {
   }
   /// Returns a new matcher for the given input.
   virtual Matcher *new_matcher(
-      const Input& input,     ///< reflex::Input character sequence to match
-      const char *opt = NULL) ///< options, if any
+      const Input& input = Input(), ///< reflex::Input character sequence to match
+      const char *opt    = NULL)    ///< options, if any
     /// @returns pointer to new reflex::AbstractLexer::Matcher.
   {
     char tab[4] = "T=n";
@@ -338,14 +369,16 @@ class AbstractLexer {
   }
   /// Returns true if the condition state stack is empty.
   bool states_empty() const
-    /// @returns true if the stack is empty, false otherwise
+    /// @returns true if the stack is empty, false otherwise.
   {
     return state_.empty();
   }
  protected:
-  Matcher             *matcher_; ///< the matcher used for scanning
   Input                in_;      ///< the input character sequence to scan
   std::ostream        *os_;      ///< the output stream to echo text matches to
+  char                *base_;    ///< the buffer to scan in place, if non-NULL
+  size_t               size_;    ///< the size of the buffer to scan in place, if nonzero
+  Matcher             *matcher_; ///< the matcher used for scanning
   int                  start_;   ///< the current start condition state
   int                  debug_;   ///< 1 if -d (--debug) 0 otherwise:
   std::stack<Matcher*> stack_;   ///< a stack of pointers to matchers

@@ -17,7 +17,7 @@ int main(int argc, char **argv)
       opts = "";
     if (argc > 2)
     {
-      printf("\n** Boost.Regex Perl mode test\n");
+      printf("\n** Boost.Regex POSIX mode test\n");
       std::string regex;
       try
       {
@@ -61,10 +61,10 @@ int main(int argc, char **argv)
         std::cerr << e.what();
       }
 
-      printf("\n** C++11 std::regex ECMA mode test\n");
+      printf("\n** C++11 std::regex Ecma mode test\n");
       try
       {
-        regex = reflex::StdMatcher::convert(argv[1], reflex::convert_flag::unicode);
+        regex = reflex::StdMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
         printf("\n** using converted regex: %s\n\n", regex.c_str());
         reflex::StdMatcher stdmatcher(regex, argv[2], opts);
         if (argc > 3)

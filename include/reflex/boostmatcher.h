@@ -146,7 +146,6 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   {
     DBGLOG("BEGIN BoostMatcher::match(%d)", method);
     reset_text();
-    bool bob = at_bob();
     txt_ = buf_ + cur_; // set first of text(), cur_ was last pos_, or cur_ was set with more()
     cur_ = pos_;
     if (itr_ != fin_) // if regex iterator is still valid then
@@ -167,27 +166,37 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
     {
       if (pos_ == end_ && !eof_)
       {
-        if (grow()) // make sure we have enough storage to read input
+        if (end_ + blk_ + 1 >= max_ && grow()) // make sure we have enough storage to read input
           itr_ = fin_; // buffer shifting/growing invalidates iterator
-        end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
+        while (true)
+        {
+          end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
+          if (pos_ < end_)
+            break;
+          if (itr_ != fin_ && (*itr_)[0].matched && cur_ != pos_)
+            break; // OK if iterator is still valid and we have a non-empty match
+          if (!wrap())
+          {
+            eof_ = true;
+            break;
+          }
+        }
         DBGLOGN("Got more input pos = %zu end = %zu max = %zu", pos_, end_, max_);
       }
       if (pos_ == end_) // if pos_ is hitting the end_ then
       {
-        if (wrap())
-          continue; // continue after successful wrap
         if (method == Const::SPLIT)
         {
           DBGLOGN("Split end");
-          if (eof_)
+          if (got_ == Const::EOB)
           {
             cap_ = 0;
             len_ = 0;
           }
           else
           {
-            if (itr_ == fin_)
-              new_itr(method, bob);
+            if (!eof_ && itr_ == fin_)
+              new_itr(method);
             if (itr_ != fin_ && (*itr_)[0].matched && cur_ != pos_)
             {
               size_t n = (*itr_).size();
@@ -200,6 +209,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
               DBGLOGN("Matched empty end");
               cap_ = Const::EMPTY;
               len_ = pos_ - (txt_ - buf_); // size() spans txt_ to cur_ in buf_[]
+              got_ = Const::EOB;
               eof_ = true;
             }
             itr_ = fin_;
@@ -209,22 +219,21 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
           DBGLOG("END BoostMatcher::match()");
           return cap_;
         }
-        eof_ = true;
-        if (pos_ == end_ && method == Const::FIND && opt_.N)
-	{
-	  DBGLOGN("No match, pos = %zu", pos_);
-	  DBGLOG("END BoostMatcher::match()");
+        if (method == Const::FIND && opt_.N)
+        {
+          DBGLOGN("No match, pos = %zu", pos_);
+          DBGLOG("END BoostMatcher::match()");
           return 0;
-	}
+        }
         if (itr_ != fin_)
           break; // OK if iterator is still valid
       }
-      new_itr(method, bob); // need new iterator
+      new_itr(method); // need new iterator
       if (itr_ != fin_)
       {
         DBGLOGN("Possible (partial) match, pos = %zu", pos_);
         pos_ = (*itr_)[0].second - buf_; // set pos_ to last of the (partial) match
-        if (pos_ == cur_ && !bob) // match is at same pos as previous
+        if (pos_ == cur_ && !at_bob()) // match is at same pos as previous
         {
           ++itr_; // advance to next match
           if (itr_ != fin_)
@@ -247,6 +256,8 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
         pos_ = end_;
         if (eof_)
         {
+          if (method == Const::SPLIT)
+            continue;
           len_ = 0;
           cap_ = 0;
           DBGLOGN("No match at EOF, pos = %zu", pos_);
@@ -292,17 +303,15 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
     return cap_;
   }
   /// Create a new boost::regex iterator to (continue to) advance over input.
-  inline void new_itr(Method method, bool bob)
+  inline void new_itr(Method method)
   {
     DBGLOGN("New iterator");
-    bool bol = bob || at_bol();
-    bool eow = isword(got_);
     boost::match_flag_type flg = flg_;
-    if (!bob)
+    if (!at_bob())
       flg |= boost::regex_constants::match_not_bob;
-    if (!bol)
+    if (!at_bol())
       flg |= boost::regex_constants::match_not_bol;
-    if (eow)
+    if (isword(got_))
       flg |= boost::regex_constants::match_not_bow;
     if (method == Const::SCAN)
       flg |= boost::regex_constants::match_continuous | boost::regex_constants::match_not_null;

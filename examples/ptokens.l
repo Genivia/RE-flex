@@ -15,16 +15,16 @@
 %}
 
 // import Python 3.x token definitions
-%i "pdefs.l"
+%include "pdefs.l"
 
 // implicit line joining is done with the JOINING start condition state
 %x JOINING
 
 // use full/fast option to eliminate tokenizer startup time, set indent tabs=8
-%o fast tabs=8
+%option fast tabs=8
 
 // dot matches \n
-%o dotall
+%option dotall
 // warning: in unicode mode dot is a "catch all" and also matches invalid UTF-8
 // so we use {any} to match anything that is valid Unicode/UTF-8, where {any}
 // is defined in pdefs.l as all Unicode planes without the surrogate halves:

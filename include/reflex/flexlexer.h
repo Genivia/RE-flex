@@ -157,8 +157,8 @@ int yywrap(void);
 /// Flex-compatible macro: the current input, a reference to a reflex::Input object that can be a stream, file, or string.
 #define yyin                    YY_SCANNER.in()
 
-/// Flex-compatible macro: the current output stream.
-#define yyout                   YY_SCANNER.os_
+/// Flex-compatible macro: the current output stream, points to std::ostream or NULL.
+#define yyout                   YY_SCANNER.os()
 
 /// Flex-compatible macro: at-begin-of-line check (use only when scanner has started).
 #define YY_AT_BOL()             YY_SCANNER.matcher().at_bol()
@@ -225,20 +225,17 @@ int yywrap(void);
 #define yyrestart(i)            YY_SCANNER.in(i)
 #endif
 
-inline std::string yy_scan_buffer_string(const std::string& b, size_t n) { return std::string(b, n); }
-inline std::wstring yy_scan_buffer_string(const std::wstring& b, size_t n) { return std::wstring(b, n); }
-
 /// Flex-compatible macro: scan a string
 #if defined(REFLEX_OPTION_reentrant)
-#define yy_scan_string(i,s)    (static_cast<FlexLexer*>(s)->has_matcher() ? (static_cast<FlexLexer*>(s)->matcher(static_cast<FlexLexer*>(s)->new_matcher(i)), static_cast<FlexLexer*>(s)->ptr_matcher()) : (static_cast<FlexLexer*>(s)->in(i), static_cast<YY_BUFFER_STATE>(NULL)))
-#define yy_scan_wstring(i,s)    yy_scan_string(i, s)
-#define yy_scan_buffer(b,n,s)   yy_scan_string(reflex::Input(b, n), s)
-#define yy_scan_bytes(b,n,s)    yy_scan_buffer(b, static_cast<size_t>(n), s)
+#define yy_scan_string(i,s)     (static_cast<FlexLexer*>(s)->has_matcher() ? (static_cast<FlexLexer*>(s)->matcher(static_cast<FlexLexer*>(s)->new_matcher(i)), static_cast<FlexLexer*>(s)->ptr_matcher()) : (static_cast<FlexLexer*>(s)->in(i), static_cast<YY_BUFFER_STATE>(NULL)))
+#define yy_scan_wstring(i,s)    yy_scan_string((i), (s))
+#define yy_scan_bytes(b,n,s)    yy_scan_string(reflex::Input((b), static_cast<size_t>(n)), (s))
+#define yy_scan_buffer(b,n,s)   (static_cast<FlexLexer*>(s)->has_matcher() ? (static_cast<FlexLexer*>(s)->matcher(static_cast<FlexLexer*>(s)->new_matcher()).buffer((b), (n)-1), static_cast<FlexLexer*>(s)->ptr_matcher()) : (static_cast<FlexLexer*>(s)->buffer((b), (n)-1), static_cast<YY_BUFFER_STATE>(NULL)))
 #else
 #define yy_scan_string(i)       (YY_SCANNER.has_matcher() ? (YY_SCANNER.matcher(YY_SCANNER.new_matcher(i)), YY_CURRENT_BUFFER) : (YY_SCANNER.in(i), static_cast<YY_BUFFER_STATE>(NULL)))
 #define yy_scan_wstring(i)      yy_scan_string(i)
-#define yy_scan_buffer(b,n)     yy_scan_string(reflex::Input(b, n))
-#define yy_scan_bytes(b,n)      yy_scan_buffer(b, static_cast<size_t>(n))
+#define yy_scan_bytes(b,n)      yy_scan_string(reflex::Input((b), static_cast<size_t>(n)))
+#define yy_scan_buffer(b,n)     (YY_SCANNER.has_matcher() ? (YY_SCANNER.matcher(YY_SCANNER.new_matcher()->buffer((b), (n)-1)), YY_CURRENT_BUFFER) : (YY_SCANNER.buffer((b), (n)-1), static_cast<YY_BUFFER_STATE>(NULL)))
 #endif
 
 /// Flex-compatible macro: the terminating action.
@@ -265,6 +262,27 @@ inline std::wstring yy_scan_buffer_string(const std::wstring& b, size_t n) { ret
 #define yyoutput(c,s)           static_cast<FlexLexer*>(s)->output(c)
 #else
 #define yyoutput(c)             YY_SCANNER.output(c)
+#endif
+
+/// Flex-compatible macro: push the current start condition state on the stack and transition to the given state.
+#if defined(REFLEX_OPTION_reentrant)
+#define yy_push_state(n,s)      static_cast<FlexLexer*>(s)->push_state(n)
+#else
+#define yy_push_state(n)        YY_SCANNER.push_state(n)
+#endif
+
+/// Flex-compatible macro: pop the stack start condition state and transition to that state.
+#if defined(REFLEX_OPTION_reentrant)
+#define yy_pop_state(s)         static_cast<FlexLexer*>(s)->pop_state()
+#else
+#define yy_pop_state()          YY_SCANNER.pop_state()
+#endif
+
+/// Flex-compatible macro: returns the stack top start condition state.
+#if defined(REFLEX_OPTION_reentrant)
+#define yy_top_state(s)         static_cast<FlexLexer*>(s)->top_state()
+#else
+#define yy_top_state()          YY_SCANNER.top_state()
 #endif
 
 /// Flex-compatible macro: append the next matched text to the currently matched text (use only when scanner has started).
@@ -294,38 +312,41 @@ inline std::wstring yy_scan_buffer_string(const std::wstring& b, size_t n) { ret
 /// Flex-compatible macro: reentrant use of yyscanner.
 #define yyscanner               this
 
-/// Flex-compatible macro: the text accessor for reentrant scanner.
+/// Flex-compatible macro: the text accessor of a reentrant scanner.
 #define yyget_text(s)           static_cast<FlexLexer*>(s)->YYText()
 
-/// Flex-compatible macro: the leng accessor for reentrant scanner.
+/// Flex-compatible macro: the leng accessor of a reentrant scanner.
 #define yyget_leng(s)           static_cast<FlexLexer*>(s)->YYLeng()
 
-/// Flex-compatible macro: the lineno accessor for reentrant scanner.
+/// Flex-compatible macro: the lineno accessor of a reentrant scanner.
 #define yyget_lineno(s)         static_cast<int>(static_cast<FlexLexer*>(s)->lineno())
 
-/// Flex-compatible macro: the in accessor for reentrant scanner.
+/// Flex-compatible macro: the reflex::Input in accessor of a reentrant scanner.
 #define yyget_in(s)             static_cast<FlexLexer*>(s)->in()
 
-/// Flex-compatible macro: the in accessor for reentrant scanner.
+/// Flex-compatible macro: set the reflex::Input in accessor of a reentrant scanner.
 #define yyset_in(i,s)           static_cast<FlexLexer*>(s)->in(i)
 
-/// Flex-compatible macro: the out accessor for reentrant scanner.
-#define yyget_out(s)            static_cast<FlexLexer*>(s)->os_
+/// Flex-compatible macro: the std::ostream* out accessor of a reentrant scanner.
+#define yyget_out(s)            static_cast<FlexLexer*>(s)->os()
 
-/// Flex-compatible macro: the out accessor for reentrant scanner.
-#define yyset_out(o,s)          (static_cast<FlexLexer*>(s)->os_ = o)
+/// Flex-compatible macro: set the std::ostream* out accessor of a reentrant scanner.
+#define yyset_out(o,s)          (static_cast<FlexLexer*>(s)->os() = o)
 
-/// Flex-compatible macro: the debug accessor for reentrant scanner.
+/// Flex-compatible macro: the debug accessor of a reentrant scanner.
 #define yyget_debug(s)          static_cast<FlexLexer*>(s)->debug()
 
-/// Flex-compatible macro: the out accessor for reentrant scanner.
+/// Flex-compatible macro: set the debug accessor of a reentrant scanner.
 #define yyset_debug(f,s)        static_cast<FlexLexer*>(s)->set_debug(f)
 
-/// Flex-compatible macro: yyget_extra() for reentrant scanner.
+/// Flex-compatible macro: the yyextra accessor of a reentrant scanner.
 #define yyget_extra(s)          static_cast<FlexLexer*>(s)->yyextra
 
-/// Flex-compatible macro: yyset_extra() for reentrant scanner.
+/// Flex-compatible macro: set the yyextra accessor of a reentrant scanner.
 #define yyset_extra(x,s)        (static_cast<FlexLexer*>(s)->yyextra = x)
+
+/// Flex-compatible macro: the YY_CURRENT_BUFFER of a reentrant scanner.
+#define yyget_current_buffer(s) static_cast<FlexLexer*>(s)->ptr_matcher()
 
 #endif
 
@@ -468,24 +489,6 @@ class FlexLexer : public AbstractLexer<M> {
   {
     std::cerr << s << std::endl;
     exit(2);
-  }
-  /// Push the current start condition state on the stack and transition to the given start condition state.
-  void yy_push_state(
-      int   state,       ///< start condition state to transition to
-      void *self = NULL) ///< reentrant or self
-  {
-    (self ? static_cast<FlexLexer*>(self) : this)->push_state(state);
-  }
-  /// Pop the stack start condition state and transition to that state.
-  void yy_pop_state(void *self = NULL) ///< reentrant or self
-  {
-    (self ? static_cast<FlexLexer*>(self) : this)->pop_state();
-  }
-  /// Returns the stack top start condition state.
-  int yy_top_state()
-    /// @returns start condition (integer).
-  {
-    return this->top_state();
   }
 };
 

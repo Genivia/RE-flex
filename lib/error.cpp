@@ -43,22 +43,22 @@ namespace reflex {
 std::string regex_error::regex_error_message(regex_error_type code, const char *pattern, size_t pos)
 {
   static const char *messages[] = {
-    "mismatched ( )", 
-    "mismatched { }", 
-    "mismatched [ ]", 
-    "mismatched quotation", 
-    "empty expression", 
-    "empty character class", 
-    "invalid character class", 
-    "invalid character class range", 
-    "invalid escape", 
-    "invalid anchor or boundary", 
-    "invalid repeat range", 
-    "invalid quantifier", 
-    "invalid modifier", 
-    "invalid syntax", 
-    "exceeds complexity limits", 
-    "undefined name", 
+    "mismatched ( )",
+    "mismatched { }",
+    "mismatched [ ]",
+    "mismatched quotation",
+    "empty expression",
+    "empty character class",
+    "invalid character class",
+    "invalid character class range",
+    "invalid escape",
+    "invalid anchor or boundary",
+    "invalid repeat range",
+    "invalid quantifier",
+    "invalid modifier",
+    "invalid syntax",
+    "exceeds complexity limits",
+    "undefined name",
   };
 
   const char *s = messages[code];

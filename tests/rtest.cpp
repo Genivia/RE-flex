@@ -335,6 +335,20 @@ int main()
     error("find with nullable results");
   matcher.reset("");
   //
+  matcher.pattern(pattern6);
+  matcher.reset("N");
+  matcher.input("a a");
+  test = "";
+  while (matcher.find())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "///")
+    error("find with nullable results");
+  matcher.reset("");
+  //
   banner("TEST SPLIT");
   //
   matcher.pattern(pattern3);

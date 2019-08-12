@@ -2,18 +2,18 @@
 
 /* This scanner prints "//" comments. */
 
-%option reentrant stack noyywrap
+%option flex reentrant stack noyywrap
 
 %x COMMENT
 
 %%
 
-"//"                 yy_push_state( COMMENT, yyscanner);
+"//"                 yy_push_state(COMMENT, yyscanner);
 .|\n
 
 <COMMENT>{
-\n                   pop_state();
-([^\n]|\\\n)+        out() << text() << std::endl;
+\n                   yy_pop_state(yyscanner);
+([^\n]|\\\n)+        ECHO;
 }
 
 %%

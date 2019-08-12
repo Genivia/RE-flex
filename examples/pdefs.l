@@ -3,7 +3,7 @@
 // Requires RE/flex matcher for lazy quants
 // Enables unicode matching
 
-%o matcher=reflex unicode
+%option matcher=reflex unicode
 
 any                     \p{Unicode}
 

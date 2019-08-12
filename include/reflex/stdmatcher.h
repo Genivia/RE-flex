@@ -145,7 +145,6 @@ class StdMatcher : public PatternMatcher<std::regex> {
   {
     DBGLOG("BEGIN StdMatcher::match(%d)", method);
     reset_text();
-    bool bob = at_bob();
     txt_ = buf_ + cur_; // set first of text(), cur_ was last pos_, or cur_ was set with more()
     cur_ = pos_; // reset cur_ when changed in more()
     if (itr_ != fin_) // if regex iterator is still valid then
@@ -160,7 +159,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
           if (pos_ == cur_ && pos_ < end_) // same pos as previous?
           {
             ++txt_;
-            new_itr(method, false);
+            new_itr(method);
             if (itr_ != fin_)
             {
               pos_ = (*itr_)[0].second - buf_;
@@ -178,25 +177,37 @@ class StdMatcher : public PatternMatcher<std::regex> {
     {
       if (pos_ == end_ && !eof_)
       {
-        if (grow()) // make sure we have enough storage to read input
+        if (end_ + blk_ + 1 >= max_ && grow()) // make sure we have enough storage to read input
           itr_ = fin_; // buffer shifting/growing invalidates iterator
-        end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_); // get() may also wrap()
+        while (true)
+        {
+          end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
+          if (pos_ < end_)
+            break;
+          if (itr_ != fin_ && (*itr_)[0].matched && cur_ != pos_)
+            break; // OK if iterator is still valid and we have a non-empty match
+          if (!wrap())
+          {
+            eof_ = true;
+            break;
+          }
+        }
         DBGLOGN("Got more input pos = %zu end = %zu max = %zu", pos_, end_, max_);
       }
       if (pos_ == end_) // if pos_ is hitting the end_ then
       {
-        if (wrap())
-          continue; // continue after successful wrap
         if (method == Const::SPLIT)
         {
           DBGLOGN("Split end");
-          if (eof_)
+          if (got_ == Const::EOB)
           {
             cap_ = 0;
             len_ = 0;
           }
           else
           {
+            if (!eof_ && itr_ == fin_)
+              new_itr(method);
             if (itr_ != fin_ && (*itr_)[0].matched && cur_ != pos_)
             {
               size_t n = (*itr_).size();
@@ -209,6 +220,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
               DBGLOGN("Matched empty end");
               cap_ = Const::EMPTY;
               len_ = pos_ - (txt_ - buf_); // size() spans txt_ to cur_ in buf_[]
+              got_ = Const::EOB;
               eof_ = true;
             }
             itr_ = fin_;
@@ -218,8 +230,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
           DBGLOG("END StdMatcher::match()");
           return cap_;
         }
-        eof_ = true;
-        if (pos_ == end_ && method == Const::FIND && opt_.N)
+        if (method == Const::FIND && opt_.N)
         {
           DBGLOGN("No match, pos = %zu", pos_);
           DBGLOG("END StdMatcher::match()");
@@ -228,7 +239,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
         if (itr_ != fin_)
           break; // OK if iterator is still valid
       }
-      new_itr(method, bob); // need new iterator
+      new_itr(method); // need new iterator
       if (itr_ != fin_)
       {
         DBGLOGN("Match, pos = %zu", pos_);
@@ -249,6 +260,8 @@ class StdMatcher : public PatternMatcher<std::regex> {
         pos_ = end_;
         if (eof_)
         {
+          if (method == Const::SPLIT)
+            continue;
           len_ = 0;
           cap_ = 0;
           DBGLOGN("No match at EOF, pos = %zu", pos_);
@@ -296,15 +309,13 @@ class StdMatcher : public PatternMatcher<std::regex> {
     return cap_;
   }
   /// Create a new std::regex iterator to (continue to) advance over input.
-  inline void new_itr(Method method, bool bob)
+  inline void new_itr(Method method)
   {
     DBGLOGN("New iterator");
-    bool bol = bob || at_bol();
-    bool eow = isword(got_);
     std::regex_constants::match_flag_type flg = flg_;
-    if (!bol)
+    if (!at_bol())
       flg |= std::regex_constants::match_not_bol;
-    if (eow)
+    if (isword(got_))
       flg |= std::regex_constants::match_not_bow;
     if (method == Const::SCAN)
       flg |= std::regex_constants::match_continuous | std::regex_constants::match_not_null;

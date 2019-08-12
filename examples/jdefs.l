@@ -2,7 +2,7 @@
 // https://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html
 // Note: place IntegerLiteral before FloatingPointLiteral since the latter also matches the former
 
-%o unicode
+%option unicode
 
 NonASCIICodePoint               \p{Non_ASCII_Unicode}
 

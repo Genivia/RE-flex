@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">flexlexer.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Aug 8 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Aug 12 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -52,8 +52,7 @@
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
 <div class="title">flexlexer.h File Reference</div>  </div>
 </div><!--header-->
@@ -155,8 +154,8 @@ Macros</h2></td></tr>
 <tr class="memitem:aa789f4617e33fb99594cb04a3688a0c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aa789f4617e33fb99594cb04a3688a0c1">yyin</a>&#160;&#160;&#160;YY_SCANNER.in()</td></tr>
 <tr class="memdesc:aa789f4617e33fb99594cb04a3688a0c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the current input, a reference to a <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object that can be a stream, file, or string.  <a href="#aa789f4617e33fb99594cb04a3688a0c1">More...</a><br /></td></tr>
 <tr class="separator:aa789f4617e33fb99594cb04a3688a0c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fd44867d448dcb6fc32ea004a15de54"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a4fd44867d448dcb6fc32ea004a15de54">yyout</a>&#160;&#160;&#160;YY_SCANNER.os_</td></tr>
-<tr class="memdesc:a4fd44867d448dcb6fc32ea004a15de54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the current output stream.  <a href="#a4fd44867d448dcb6fc32ea004a15de54">More...</a><br /></td></tr>
+<tr class="memitem:a4fd44867d448dcb6fc32ea004a15de54"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a4fd44867d448dcb6fc32ea004a15de54">yyout</a>&#160;&#160;&#160;YY_SCANNER.os()</td></tr>
+<tr class="memdesc:a4fd44867d448dcb6fc32ea004a15de54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the current output stream, points to std::ostream or NULL.  <a href="#a4fd44867d448dcb6fc32ea004a15de54">More...</a><br /></td></tr>
 <tr class="separator:a4fd44867d448dcb6fc32ea004a15de54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e440c28c90cfded2ea454bd0d19616e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a6e440c28c90cfded2ea454bd0d19616e">YY_AT_BOL</a>()                      &#160;&#160;&#160;YY_SCANNER.matcher().at_bol()</td></tr>
 <tr class="memdesc:a6e440c28c90cfded2ea454bd0d19616e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: at-begin-of-line check (use only when scanner has started).  <a href="#a6e440c28c90cfded2ea454bd0d19616e">More...</a><br /></td></tr>
@@ -196,10 +195,10 @@ Macros</h2></td></tr>
 <tr class="separator:a3d2545b35aec7c35e6939755777e2a58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acaf921bfaed6dc25af86fae7ceadc946"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#acaf921bfaed6dc25af86fae7ceadc946">yy_scan_wstring</a>(i)        &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(i)</td></tr>
 <tr class="separator:acaf921bfaed6dc25af86fae7ceadc946"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0872a059892f77ba25bd253e1ac32d2d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a0872a059892f77ba25bd253e1ac32d2d">yy_scan_buffer</a>(b,  n)      &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(<a class="el" href="classreflex_1_1_input.html">reflex::Input</a>(b, n))</td></tr>
-<tr class="separator:a0872a059892f77ba25bd253e1ac32d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cef4ba504e54ab2cf998d34ffe047cf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a8cef4ba504e54ab2cf998d34ffe047cf">yy_scan_bytes</a>(b,  n)        &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a0872a059892f77ba25bd253e1ac32d2d">yy_scan_buffer</a>(b, static_cast&lt;size_t&gt;(n))</td></tr>
+<tr class="memitem:a8cef4ba504e54ab2cf998d34ffe047cf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a8cef4ba504e54ab2cf998d34ffe047cf">yy_scan_bytes</a>(b,  n)        &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(<a class="el" href="classreflex_1_1_input.html">reflex::Input</a>((b), static_cast&lt;size_t&gt;(n)))</td></tr>
 <tr class="separator:a8cef4ba504e54ab2cf998d34ffe047cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0872a059892f77ba25bd253e1ac32d2d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a0872a059892f77ba25bd253e1ac32d2d">yy_scan_buffer</a>(b,  n)      &#160;&#160;&#160;(YY_SCANNER.has_matcher() ? (YY_SCANNER.matcher(YY_SCANNER.new_matcher()-&gt;buffer((b), (n)-1)), <a class="el" href="flexlexer_8h.html#aa093d500a6330d06d8e4760c494fac33">YY_CURRENT_BUFFER</a>) : (YY_SCANNER.buffer((b), (n)-1), static_cast&lt;<a class="el" href="flexlexer_8h.html#af8ef002da9f9ba35951176ec0be7ab23">YY_BUFFER_STATE</a>&gt;(NULL)))</td></tr>
+<tr class="separator:a0872a059892f77ba25bd253e1ac32d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add62fdebca5f1fac074d8c918dc45eec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#add62fdebca5f1fac074d8c918dc45eec">yyterminate</a>()                  &#160;&#160;&#160;return <a class="el" href="flexlexer_8h.html#a8e0bcf8f8a5b613ea583347f8bc31cbf">YY_NULL</a></td></tr>
 <tr class="memdesc:add62fdebca5f1fac074d8c918dc45eec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the terminating action.  <a href="#add62fdebca5f1fac074d8c918dc45eec">More...</a><br /></td></tr>
 <tr class="separator:add62fdebca5f1fac074d8c918dc45eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,6 +211,15 @@ Macros</h2></td></tr>
 <tr class="memitem:a01e073defdea723b59e8e4415648ac47"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a01e073defdea723b59e8e4415648ac47">yyoutput</a>(c)                      &#160;&#160;&#160;YY_SCANNER.output(c)</td></tr>
 <tr class="memdesc:a01e073defdea723b59e8e4415648ac47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: output one character.  <a href="#a01e073defdea723b59e8e4415648ac47">More...</a><br /></td></tr>
 <tr class="separator:a01e073defdea723b59e8e4415648ac47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a568a847aae0d31ca8358c9c52d22f15d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a568a847aae0d31ca8358c9c52d22f15d">yy_push_state</a>(n)            &#160;&#160;&#160;YY_SCANNER.push_state(n)</td></tr>
+<tr class="memdesc:a568a847aae0d31ca8358c9c52d22f15d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: push the current start condition state on the stack and transition to the given state.  <a href="#a568a847aae0d31ca8358c9c52d22f15d">More...</a><br /></td></tr>
+<tr class="separator:a568a847aae0d31ca8358c9c52d22f15d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a650b5dd502b5fdf13563de668b7f104f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a650b5dd502b5fdf13563de668b7f104f">yy_pop_state</a>()                &#160;&#160;&#160;YY_SCANNER.pop_state()</td></tr>
+<tr class="memdesc:a650b5dd502b5fdf13563de668b7f104f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: pop the stack start condition state and transition to that state.  <a href="#a650b5dd502b5fdf13563de668b7f104f">More...</a><br /></td></tr>
+<tr class="separator:a650b5dd502b5fdf13563de668b7f104f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d315e7bf2129b110727d0deac8a2031"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a7d315e7bf2129b110727d0deac8a2031">yy_top_state</a>()                &#160;&#160;&#160;YY_SCANNER.top_state()</td></tr>
+<tr class="memdesc:a7d315e7bf2129b110727d0deac8a2031"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: returns the stack top start condition state.  <a href="#a7d315e7bf2129b110727d0deac8a2031">More...</a><br /></td></tr>
+<tr class="separator:a7d315e7bf2129b110727d0deac8a2031"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f5ae76ff361bbf03790c326d86ea600"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a8f5ae76ff361bbf03790c326d86ea600">yymore</a>()                            &#160;&#160;&#160;YY_SCANNER.matcher().more()</td></tr>
 <tr class="memdesc:a8f5ae76ff361bbf03790c326d86ea600"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: append the next matched text to the currently matched text (use only when scanner has started).  <a href="#a8f5ae76ff361bbf03790c326d86ea600">More...</a><br /></td></tr>
 <tr class="separator:a8f5ae76ff361bbf03790c326d86ea600"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -221,13 +229,6 @@ Macros</h2></td></tr>
 <tr class="memitem:a301f4439c9b191c80db45f5b1a8c7269"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a301f4439c9b191c80db45f5b1a8c7269">yy_flex_debug</a>&#160;&#160;&#160;YY_SCANNER.debug_;</td></tr>
 <tr class="memdesc:a301f4439c9b191c80db45f5b1a8c7269"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the debug flag.  <a href="#a301f4439c9b191c80db45f5b1a8c7269">More...</a><br /></td></tr>
 <tr class="separator:a301f4439c9b191c80db45f5b1a8c7269"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ab10cd6c1fbe434c7ee678c145b8891cd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#ab10cd6c1fbe434c7ee678c145b8891cd">yy_scan_buffer_string</a> (const std::string &amp;b, size_t n)</td></tr>
-<tr class="separator:ab10cd6c1fbe434c7ee678c145b8891cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a805cbfe264ce7b559411a3fd12791719"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a805cbfe264ce7b559411a3fd12791719">yy_scan_buffer_string</a> (const std::wstring &amp;b, size_t n)</td></tr>
-<tr class="separator:a805cbfe264ce7b559411a3fd12791719"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex Flex-compatible FlexLexer base class and Lex/Flex-compatible macros. </p>
@@ -513,6 +514,41 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a650b5dd502b5fdf13563de668b7f104f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yy_pop_state</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td>&#160;&#160;&#160;YY_SCANNER.pop_state()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flex-compatible macro: pop the stack start condition state and transition to that state. </p>
+
+</div>
+</div>
+<a class="anchor" id="a568a847aae0d31ca8358c9c52d22f15d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yy_push_state</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">n</td><td>)</td>
+          <td>&#160;&#160;&#160;YY_SCANNER.push_state(n)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flex-compatible macro: push the current start condition state on the stack and transition to the given state. </p>
+
+</div>
+</div>
 <a class="anchor" id="a0872a059892f77ba25bd253e1ac32d2d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -532,7 +568,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(<a class="el" href="classreflex_1_1_input.html">reflex::Input</a>(b, n))</td>
+          <td></td><td>&#160;&#160;&#160;(YY_SCANNER.has_matcher() ? (YY_SCANNER.matcher(YY_SCANNER.new_matcher()-&gt;buffer((b), (n)-1)), <a class="el" href="flexlexer_8h.html#aa093d500a6330d06d8e4760c494fac33">YY_CURRENT_BUFFER</a>) : (YY_SCANNER.buffer((b), (n)-1), static_cast&lt;<a class="el" href="flexlexer_8h.html#af8ef002da9f9ba35951176ec0be7ab23">YY_BUFFER_STATE</a>&gt;(NULL)))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -558,7 +594,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a0872a059892f77ba25bd253e1ac32d2d">yy_scan_buffer</a>(b, static_cast&lt;size_t&gt;(n))</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a3d2545b35aec7c35e6939755777e2a58">yy_scan_string</a>(<a class="el" href="classreflex_1_1_input.html">reflex::Input</a>((b), static_cast&lt;size_t&gt;(n)))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -709,6 +745,23 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a7d315e7bf2129b110727d0deac8a2031"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yy_top_state</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td>&#160;&#160;&#160;YY_SCANNER.top_state()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flex-compatible macro: returns the stack top start condition state. </p>
+
+</div>
+</div>
 <a class="anchor" id="a6198b2fcf96178b24ad4efff2a3debb0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -836,12 +889,12 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define yyout&#160;&#160;&#160;YY_SCANNER.os_</td>
+          <td class="memname">#define yyout&#160;&#160;&#160;YY_SCANNER.os()</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flex-compatible macro: the current output stream. </p>
+<p>Flex-compatible macro: the current output stream, points to std::ostream or NULL. </p>
 
 </div>
 </div>
@@ -979,79 +1032,10 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ab10cd6c1fbe434c7ee678c145b8891cd"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string yy_scan_buffer_string </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>b</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>n</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a805cbfe264ce7b559411a3fd12791719"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::wstring yy_scan_buffer_string </td>
-          <td>(</td>
-          <td class="paramtype">const std::wstring &amp;&#160;</td>
-          <td class="paramname"><em>b</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>n</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Aug 8 2019 14:05:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Aug 12 2019 10:23:47 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

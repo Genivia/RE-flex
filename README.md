@@ -459,6 +459,7 @@ Changelog
 - Aug  5, 2019: 1.3.3 fixed `reflex::BoostMatcher` (and derived `reflex::BoostPosixMatcher`, `reflex::BoostPerlMatcher`) regression bug that crept into the 1.2.4 update.
 - Aug  7, 2019: 1.3.4 speed improvements for non-fast options.
 - Aug  8, 2019: 1.3.5 further speed improvements for both fast and non-fast options (15% to 30% faster).
+- Aug 12, 2019: 1.3.6 added lexer and matcher `buffer(base, size)` methods and improved Flex-compatible `yy_scan_buffer(base, size)`, these functions scan memory fast with zero copy overhead, added `mmap.l` example to scan an mmap-ed file fast with mmap(2) and `buffer(base, size)`, other improvements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

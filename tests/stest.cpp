@@ -207,7 +207,7 @@ Test tests[] = {
   // { "[\\p{Alpha}]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } }, // TODO no \p class support
   { "[][]", "", "", "[]", { 1, 1 } },
   // Lookahead
-#if 0 // std::regex does not support lookaheads
+#if 0 // std::regex does not support lookaheads in POSIX mode
   { "a(?=bc)|ab(?=d)|bc|d", "", "", "abcdabd", { 1, 3, 4, 2, 4 } },
   // { "[ab]+(?=ab)|-|ab", "", "", "aaab-bbab", { 1, 3, 2, 1, 3 } }, // has trailing context (undefined as per POSIX)
   { "a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
@@ -218,13 +218,13 @@ Test tests[] = {
   // { "abc(?=\\w+|(?^def))|xyzabcdef", "", "", "abcxyzabcdef", { 1, 2 } }, // TODO check
 #endif
   // Word boundaries \<, \>, \b, and \B
-#if 0 // std::regex does not support boundaries \b \w etc
+#if 0 // std::regex does not correctly support boundaries \b etc in POSIX mode, but Ecma/Perl mode is fine
   { "\\<a\\>|\\<a|a\\>|a|-", "", "", "a-aaa", { 1, 5, 2, 4, 3 } },
   { "\\<.*\\>", "", "", "abc def", { 1 } },
   { "\\<.*\\>|-", "", "", "abc-", { 1, 2 } },
-  { "\\b.*\\b|-", "", "", "abc-", { 1, 2 } },
+  { "(\\b.*\\b)|(-)", "", "", "abc-", { 1, 2 } },
   { "-|\\<.*\\>", "", "", "-abc-", { 1, 2, 1 } },
-  { "-|\\b.*\\b", "", "", "-abc-", { 1, 2, 1 } },
+  { "(-)|(\\b.*\\b)", "", "", "-abc-", { 1, 2, 1 } },
   { "(-|a)\\<(-|a)\\>(-|a)", "", "", "-a-", { 1 } },
   { "(-|a)\\b(-|a)\\b(-|a)", "", "", "-a-a-a", { 1, 1 } },
   { "(-|a)\\B(-|a)\\B(-|a)", "", "", "---aaa", { 1, 1 } },
@@ -302,7 +302,7 @@ int main()
   if (test != "an/apple/a/day/")
     error("find results");
   //
-#if 0 // std::regex fails to match properly with empty patterns such as \b
+#if 0 // std::regex does not support nullable matches with boundaries \b etc
   matcher.pattern(pattern5);
   matcher.reset("N");
   matcher.input("a a");
@@ -313,10 +313,24 @@ int main()
     test.append(matcher.text()).append("/");
   }
   std::cout << std::endl;
-  if (test != "//")
+  if (test != "///")
     error("find with nullable results");
   matcher.reset("");
 #endif
+  //
+  matcher.pattern(pattern6);
+  matcher.reset("N");
+  matcher.input("a a");
+  test = "";
+  while (matcher.find())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "///")
+    error("find with nullable results");
+  matcher.reset("");
   //
   banner("TEST SPLIT");
   //
@@ -356,7 +370,7 @@ int main()
   if (test != "ab/c/d/")
     error("split results");
   //
-#if 0 // std::regex fails to match properly with empty patterns such as \b
+#if 0 // std::regex does not support nullable matches with boundaries \b etc
   matcher.pattern(pattern5);
   matcher.input("ab c  d");
   test = "";
@@ -370,7 +384,7 @@ int main()
     error("split results");
 #endif
   //
-#if 0 // std::regex fails on empty patterns such as \b
+#if 0 // std::regex fails on empty patterns, why is this different than Boost.Regex??
   matcher.pattern(pattern6);
   matcher.input("ab c  d");
   test = "";
@@ -383,6 +397,7 @@ int main()
   if (test != "/a/b/ /c/ / /d//")
     error("split results");
   //
+#endif
   matcher.pattern(pattern6);
   matcher.input("");
   test = "";
@@ -394,7 +409,6 @@ int main()
   std::cout << std::endl;
   if (test != "/")
     error("split results");
-#endif
   //
   matcher.pattern(pattern7);
   matcher.input("a-b");

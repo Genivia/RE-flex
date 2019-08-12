@@ -72,7 +72,7 @@ buf_=|  |text|rest|free|
         ^    ^    ^    ^
         cur_ pos_ end_ max_
 
-buf_ // points to buffered input, grows to fit long matches
+buf_ // points to buffered input, may grow to fit long matches
 cur_ // current position in buf_ while matching text, cur_ = pos_ afterwards, can be changed by more()
 pos_ // position in buf_ to start the next match
 end_ // position in buf_ that is free to fill with more input
@@ -265,6 +265,14 @@ class AbstractMatcher {
         }
       }
     }
+    if (!own_)
+    {
+#if defined(WITH_REALLOC)
+      buf_ = static_cast<char*>(std::malloc(max_ = 2 * Const::BLOCK));
+#else
+      buf_ = new char[max_ = 2 * Const::BLOCK];
+#endif
+    }
     buf_[0] = '\0';
     txt_ = buf_;
     len_ = 0;
@@ -273,19 +281,22 @@ class AbstractMatcher {
     pos_ = 0;
     end_ = 0;
     ind_ = 0;
+    blk_ = 0;
+    got_ = Const::BOB;
+    chr_ = '\0';
     lno_ = 1;
     cno_ = 0;
     num_ = 0;
-    got_ = Const::BOB;
-    chr_ = '\0';
+    own_ = true;
     eof_ = false;
     mat_ = false;
-    blk_ = 0;
   }
   /// Set buffer block size for reading: use 1 for interactive input, 0 (or omit argument) to buffer all input in which case returns true if all the data could be read and false if a read error occurred.
   bool buffer(size_t blk = 0) ///< new block size between 1 and Const::BLOCK, or 0 to buffer all input
     /// @returns true when successful to buffer all input when n=0.
   {
+    if (eof_)
+      return true;
     if (blk > Const::BLOCK)
       blk = Const::BLOCK;
     DBGLOG("AbstractMatcher::buffer(%zu)", blk);
@@ -297,7 +308,7 @@ class AbstractMatcher {
     size_t n = in.size(); // get the (rest of the) data size, which is 0 if unknown (e.g. TTY)
     if (n > 0)
     {
-      (void)grow(n + 1); // now attempt to fetch all (remaining) data to store in the buffer, +1 for a \0
+      (void)grow(n + 1); // now attempt to fetch all (remaining) data to store in the buffer, +1 for a final \0
       end_ += get(buf_, n);
     }
     while (in.good()) // there is more to get while good(), e.g. via wrap()
@@ -306,7 +317,7 @@ class AbstractMatcher {
       end_ += get(buf_ + end_, max_ - end_);
     }
     if (end_ == max_)
-      (void)grow(1); // we need room for a final \0
+      (void)grow(1); // make sure we have room for a final \0
     return in.eof();
   }
   /// Set buffer to 1 for interactive input.
@@ -331,6 +342,44 @@ class AbstractMatcher {
     reset();
     return *this;
   }
+  /// Set the buffer base containing 0-terminated character data to scan in place (data may be modified), reset/restart the matcher.
+  AbstractMatcher& buffer(
+      char *base,  ///< base of the buffer containing 0-terminated character data
+      size_t size) ///< nonzero size of the buffer
+    /// @returns this matcher.
+  {
+    if (size > 0)
+    {
+      if (own_)
+      {
+#if defined(WITH_REALLOC)
+        std::free(static_cast<void*>(buf_));
+#else
+        delete[] buf_;
+#endif
+      }
+      buf_ = base;
+      txt_ = buf_;
+      len_ = 0;
+      cap_ = 0;
+      cur_ = 0;
+      pos_ = 0;
+      end_ = size - 1;
+      max_ = size;
+      ind_ = 0;
+      blk_ = 0;
+      got_ = Const::BOB;
+      chr_ = '\0';
+      lno_ = 1;
+      cno_ = 0;
+      num_ = 0;
+      own_ = false;
+      eof_ = true;
+      mat_ = false;
+    }
+    return *this;
+  }
+  
   /// Returns nonzero capture index (i.e. true) if the entire input matches this matcher's pattern (and internally caches the true/false result for repeat invocations).
   size_t matches()
     /// @returns nonzero capture index (i.e. true) if the entire input matched this matcher's pattern, zero (i.e. false) otherwise.
@@ -596,13 +645,13 @@ class AbstractMatcher {
   }
   /// Returns true if this matcher matched text that begins a word.
   bool at_bow()
-    /// @returns true if this matcher matched text that begins a word
+    /// @returns true if this matcher matched text that begins a word.
   {
     return !isword(got_) && isword(txt_ < buf_ + end_ ? static_cast<unsigned char>(*txt_) : peek_more());
   }
   /// Returns true if this matcher matched text that ends a word.
   bool at_eow()
-    /// @returns true if this matcher matched text that ends a word
+    /// @returns true if this matcher matched text that ends a word.
   {
     return isword(got_) && !isword(txt_ < buf_ + end_ ? static_cast<unsigned char>(*txt_) : peek_more());
   }
@@ -647,7 +696,7 @@ class AbstractMatcher {
     }
     return utf8(tmp);
   }
-  /// Put back one character (8-bit) on the input character sequence for matching, invalidating the current match info and text.
+  /// Put back one character (8-bit) on the input character sequence for matching, invalidates the current match info and text, unput is not honored when matching in-place using buffer(base, size) and nothing has been read yet.
   void unput(char c) ///< 8-bit character to put back
   {
     DBGLOG("AbstractMatcher::unput()");
@@ -656,11 +705,11 @@ class AbstractMatcher {
     {
       --pos_;
     }
-    else
+    else if (own_)
     {
       txt_ = buf_;
       len_ = 0;
-      if (end_ + blk_ >= max_)
+      if (end_ + 1 >= max_)
         (void)grow();
       std::memmove(buf_ + 1, buf_, end_);
       ++end_;
@@ -680,18 +729,16 @@ class AbstractMatcher {
       return static_cast<unsigned char>(buf_[pos_]);
     if (eof_)
       return EOF;
-    if (end_ + blk_ >= max_)
+    if (end_ + blk_ + 1 >= max_)
       (void)grow();
     while (true)
     {
-      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
+      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_]);
       DBGLOGN("peek(): EOF");
       if (!wrap())
       {
-        if (end_ == max_)
-          (void)grow(1); // room for a final \0
         eof_ = true;
         return EOF;
       }
@@ -704,34 +751,26 @@ class AbstractMatcher {
   {
     DBGLOG("AbstractMatcher::rest()");
     reset_text();
-    if (pos_ > 0)
+    if (pos_ > 0 && !eof_)
     {
       DBGLOGN("Shift buffer to close gap of %zu bytes", pos_);
       txt_ = buf_ + pos_;
       update();
       end_ -= pos_;
       std::memmove(buf_, buf_ + pos_, end_);
+      pos_ = 0;
     }
-    txt_ = buf_;
+    cur_ = pos_;
+    txt_ = buf_ + cur_;
     while (!eof_)
     {
       (void)grow();
       pos_ = end_;
-      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
-      if (pos_ == end_)
-      {
-        DBGLOGN("rest(): EOF");
-        if (!wrap())
-        {
-          if (end_ == max_)
-            (void)grow(1); // room for a final \0
-          eof_ = true;
-          break;
-        }
-      }
+      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
+      if (pos_ == end_ && !wrap())
+        eof_ = true;
     }
-    cur_ = pos_ = 0;
-    len_ = end_;
+    len_ = end_ - cur_;
     DBGLOGN("rest() length = %zu", len_);
     return text();
   }
@@ -881,21 +920,20 @@ class AbstractMatcher {
   virtual ~AbstractMatcher()
   {
     DBGLOG("AbstractMatcher::~AbstractMatcher()");
+    if (own_)
+    {
 #if defined(WITH_REALLOC)
-    std::free(static_cast<void*>(buf_));
+      std::free(static_cast<void*>(buf_));
 #else
-    delete[] buf_;
+      delete[] buf_;
 #endif
+    }
   }
   /// Initialize the base abstract matcher at construction.
   virtual void init(const char *opt = NULL) ///< options
   {
     DBGLOG("AbstractMatcher::init(%s)", opt ? opt : "");
-#if defined(WITH_REALLOC)
-    buf_ = static_cast<char*>(std::malloc(max_ = 2 * Const::BLOCK));
-#else
-    buf_ = new char[max_ = 2 * Const::BLOCK];
-#endif
+    own_ = false; // require allocation of a buffer
     reset(opt);
   }
   /// Returns more input directly from the source (method can be overriden, as by reflex::FlexLexer::get(s, n) for example that invokes reflex::FlexLexer::LexerInput(s, n)).
@@ -918,14 +956,14 @@ class AbstractMatcher {
     = 0;
   /// Shift or expand the internal buffer when it is too small to accommodate more input, where the buffer size is doubled when needed.
   bool grow(size_t need = Const::BLOCK) ///< optional needed space = Const::BLOCK size by default
-    /// @returns true if buffer was shifted or was enlarged
+    /// @returns true if buffer was shifted or was enlarged.
   {
-    if (max_ - end_ >= need)
+    if (max_ - end_ >= need + 1)
       return false;
     size_t gap = txt_ - buf_;
     if (gap >= need)
     {
-      DBGLOGN("Shift buffer to close gap of %zu bytes", gap);
+      DBGLOG("Shift buffer to close gap of %zu bytes", gap);
       update();
       cur_ -= gap;
       ind_ -= gap;
@@ -943,7 +981,7 @@ class AbstractMatcher {
         max_ *= 2;
       if (oldmax < max_)
       {
-        DBGLOGN("Expand buffer from %zu to %zu bytes", oldmax, max_);
+        DBGLOG("Expand buffer from %zu to %zu bytes", oldmax, max_);
         update();
         cur_ -= gap;
         ind_ -= gap;
@@ -976,18 +1014,16 @@ class AbstractMatcher {
       return static_cast<unsigned char>(buf_[pos_++]);
     if (eof_)
       return EOF;
-    if (end_ + blk_ >= max_)
+    if (end_ + blk_ + 1 >= max_)
       (void)grow();
     while (true)
     {
-      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
+      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_++]);
       DBGLOGN("get(): EOF");
       if (!wrap())
       {
-        if (end_ == max_)
-          (void)grow(1); // room for a final \0
         eof_ = true;
         return EOF;
       }
@@ -1026,6 +1062,7 @@ class AbstractMatcher {
   size_t lno_; ///< line number count (prior to this buffered input)
   size_t cno_; ///< column number count (prior to this buffered input)
   size_t num_; ///< character count (number of characters flushed prior to this buffered input)
+  bool   own_; ///< true if AbstractMatcher::buf_ was allocated and should be deleted
   bool   eof_; ///< input has reached EOF
   bool   mat_; ///< true if AbstractMatcher::matches() was successful
  private:
@@ -1037,18 +1074,16 @@ class AbstractMatcher {
     DBGLOG("AbstractMatcher::get_more()");
     if (eof_)
       return EOF;
-    if (end_ + blk_ >= max_)
+    if (end_ + blk_ + 1 >= max_)
       (void)grow();
     while (true)
     {
-      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
+      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_++]);
       DBGLOGN("get_more(): EOF");
       if (!wrap())
       {
-        if (end_ == max_)
-          (void)grow(1); // room for a final \0
         eof_ = true;
         return EOF;
       }
@@ -1061,18 +1096,16 @@ class AbstractMatcher {
     DBGLOG("AbstractMatcher::peek_more()");
     if (eof_)
       return EOF;
-    if (end_ + blk_ >= max_)
+    if (end_ + blk_ + 1 >= max_)
       (void)grow();
     while (true)
     {
-      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_);
+      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_]);
       DBGLOGN("peek_more(): EOF");
       if (!wrap())
       {
-        if (end_ == max_)
-          (void)grow(1); // room for a final \0
         eof_ = true;
         return EOF;
       }
@@ -1130,8 +1163,8 @@ class PatternMatcher : public AbstractMatcher {
   PatternMatcher(const PatternMatcher& matcher) ///< matcher with pattern to use (share)
     :
       AbstractMatcher(matcher.in, matcher.opt_),
-      own_(false),
-      pat_(matcher.pat_)
+      pat_(matcher.pat_),
+      own_(false)
   { }
   /// Delete matcher, deletes pattern when owned
   virtual ~PatternMatcher()
@@ -1224,8 +1257,8 @@ class PatternMatcher : public AbstractMatcher {
       const char    *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
       AbstractMatcher(input, opt),
-      own_(false),
-      pat_(pattern)
+      pat_(pattern),
+      own_(false)
   { }
   PatternMatcher(
       const Pattern& pattern,         ///< pattern object for this matcher
@@ -1233,8 +1266,8 @@ class PatternMatcher : public AbstractMatcher {
       const char    *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
       AbstractMatcher(input, opt),
-      own_(false),
-      pat_(&pattern)
+      pat_(&pattern),
+      own_(false)
   { }
   /// Construct a base abstract matcher from a regex pattern string and an input character sequence.
   PatternMatcher(
@@ -1243,8 +1276,8 @@ class PatternMatcher : public AbstractMatcher {
       const char  *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
       AbstractMatcher(input, opt),
-      own_(true),
-      pat_(new Pattern(pattern))
+      pat_(new Pattern(pattern)),
+      own_(true)
   { }
   /// Construct a base abstract matcher from a regex pattern string and an input character sequence.
   PatternMatcher(
@@ -1253,11 +1286,11 @@ class PatternMatcher : public AbstractMatcher {
       const char        *opt = NULL)      ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
     :
       AbstractMatcher(input, opt),
-      own_(true),
-      pat_(new Pattern(pattern))
+      pat_(new Pattern(pattern)),
+      own_(true)
   { }
-  bool           own_; ///< true if PatternMatcher::pat_ was internally allocated
   const Pattern *pat_; ///< points to the pattern object used by the matcher
+  bool           own_; ///< true if PatternMatcher::pat_ was allocated and should be deleted
 };
 
 } // namespace reflex

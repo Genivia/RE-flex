@@ -36,7 +36,7 @@
 
 #include <reflex/matcher.h>
 
-// minimal anchor support for greater speed, disables \i, \j, \k, \b, \B, \<, \>
+// minimal anchor support for greater speed, disables \i, \j, \k
 // #define WITH_MINIMAL
 
 namespace reflex {
@@ -45,10 +45,10 @@ size_t Matcher::match(Method method)
 {
   DBGLOG("BEGIN Matcher::match()");
   reset_text();
+  len_ = 0; // split text length starts with 0
 scan:
   txt_ = buf_ + cur_;
-  len_ = 0;
-#ifndef WITH_MINIMAL
+#if !defined(WITH_MINIMAL)
   mrk_ = false;
   ind_ = pos_; // ind scans input in buf[] in newline() up to pos - 1
   col_ = 0; // count columns for indent matching
@@ -118,7 +118,7 @@ redo:
             lap_[index] = static_cast<int>(pos_ - (txt_ - buf_)); // mind the gap
             ++pc;
             continue;
-#ifndef WITH_MINIMAL
+#if !defined(WITH_MINIMAL)
           case 0xff00 | Pattern::META_DED:
             if (ded_ > 0)
             {
@@ -163,7 +163,7 @@ redo:
               case 0xff7f: // HEAD
                 opcode = *++pc;
                 continue;
-#ifndef WITH_MINIMAL
+#if !defined(WITH_MINIMAL)
               case 0xff00 | Pattern::META_DED:
                 DBGLOG("DED? %d", c1);
                 if (index == Pattern::IMAX && back == Pattern::IMAX && bol && dedent())
@@ -209,7 +209,7 @@ redo:
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-#ifndef WITH_MINIMAL
+#if !defined(WITH_MINIMAL)
               case 0xff00 | Pattern::META_EWE:
                 DBGLOG("EWE? %d %d %d", c0, c1, isword(c0) && !isword(c1));
                 if (index == Pattern::IMAX && isword(c0) && !isword(c1))
@@ -292,7 +292,23 @@ unrolled:
             if (hi < opcode || lo > (opcode << 8))
             {
               opcode = *++pc;
-              goto unrolled;
+              if (hi < opcode || lo > (opcode << 8))
+              {
+                opcode = *++pc;
+                if (hi < opcode || lo > (opcode << 8))
+                {
+                  opcode = *++pc;
+                  if (hi < opcode || lo > (opcode << 8))
+                  {
+                    opcode = *++pc;
+                    if (hi < opcode || lo > (opcode << 8))
+                    {
+                      opcode = *++pc;
+                      goto unrolled;
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -304,7 +320,7 @@ unrolled:
     }
   }
 done:
-#ifndef WITH_MINIMAL
+#if !defined(WITH_MINIMAL)
   if (mrk_ && cap_ != Const::EMPTY)
   {
     if (col_ > 0 && (tab_.empty() || tab_.back() < col_))
@@ -374,9 +390,9 @@ done:
   len_ = cur_ - (txt_ - buf_);
   if (len_ == 0 && !nul)
   {
-    DBGLOG("Empty match cur = %zu pos = %zu end = %zu", cur_, pos_, end_);
+    DBGLOG("Empty or no match cur = %zu pos = %zu end = %zu", cur_, pos_, end_);
     pos_ = cur_;
-    if (hit_end())
+    if (at_end())
     {
       set_current(cur_);
       DBGLOG("Reject empty match at EOF");
@@ -385,7 +401,7 @@ done:
     }
     else if (method == Const::FIND)
     {
-      set_current(++cur_); // skip one char to ensure we're advancing later
+      set_current(++cur_); // skip one char to keep searching
       DBGLOG("Reject empty match and continue?");
       if (cap_ == 0 || !opt_.N || (!bol && c1 == '\n')) // allow FIND with "N" to match an empty line, with ^$ etc.
         goto scan;
@@ -402,7 +418,7 @@ done:
   {
     DBGLOG("Hit end: got = %d", got_);
     if (cap_ == Const::EMPTY && !opt_.A)
-      cap_ = 0; // cannot goto scan?
+      cap_ = 0;
   }
   else
   {
@@ -412,6 +428,7 @@ done:
       if (cap_ == Const::EMPTY && !opt_.A)
       {
         DBGLOG("Ignore accept and continue: len = %zu", len_);
+        len_ = 0;
         if (method != Const::MATCH)
           goto scan;
         cap_ = 0;

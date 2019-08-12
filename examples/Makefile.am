@@ -76,8 +76,11 @@ examples:	flexexample1 \
 		braille \
 		unicode \
 		csv \
+		scanstrings \
+		yyscanstrings \
+		mmap \
 		cards \
-                cvt2utf \
+		cvt2utf \
 		ugrep
 
 examplesxx:	flexexample3xx \
@@ -365,6 +368,21 @@ csv:		csv.l
 		$(REFLEX) $(REFLAGS) csv.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
+scanstrings:	scanstrings.l
+		$(REFLEX) $(REFLAGS) scanstrings.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		./scanstrings
+
+yyscanstrings:	yyscanstrings.l
+		$(REFLEX) $(REFLAGS) yyscanstrings.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		./yyscanstrings
+
+mmap:		scanstrings.l
+		$(REFLEX) $(REFLAGS) scanstrings.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		./mmap
+
 cards:		cards.cpp
 		$(CXX) $(CXXFLAGS) -o $@ cards.cpp $(LIBREFLEX)
 
@@ -389,4 +407,4 @@ clean:
 		-rm -f lex.yy.h lex.yy.hpp lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx parser.hpp parser.cpp scanner.hpp scanner.cpp location.hh location.hpp position.hh position.hpp stack.hh stack.hpp reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
 		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent1 indent2 json braille unicode csv cards url cvt2utf ugrep wc_boost
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent1 indent2 json braille unicode csv scanstrings yyscanstrings mmap cards url cvt2utf ugrep wc_boost

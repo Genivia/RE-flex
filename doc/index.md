@@ -21,7 +21,7 @@ many other modern features.  RE/flex also includes a fast regex engine written
 in C++ with options to generate finite state machine tables or direct code to
 match input more efficiently.  RE/flex includes a smart input class to
 normalize input from files, streams, strings, and memory.  RE/flex is
-compatible with Flex and Bison.
+compatible with Bison/Yacc and accepts Flex lexer specifications.
 
 Features:
 
@@ -721,7 +721,7 @@ change its pattern, you can use the following methods:
   `own_pattern()` | true if the matcher has a pattern to manage and delete
   `pattern()`     | a reference to the pattern object, `reflex::Pattern` or `boost::regex`
   `buffer()`      | buffer all input at once, returns true if successful
-  `buffer(n)`     | set the adaptive buffer size to `n` bytes to buffer input
+  `buffer(n)`     | set the initial buffer size to `n` bytes to buffer input
   `interactive()` | sets buffer size to 1 for console-based (TTY) input
   `flush()`       | flush the remaining input from the internal buffer
   `reset()`       | resets the matcher, restarting it from the remaining input
@@ -1795,9 +1795,9 @@ identifiers to the output given some Java source program as input:
 ~~~
 </div>
 
-To declare start condition state names use <i>`%%state`</i> (<i>`%%s`</i> for
-short) to declare inclusive states and use <i>`%%xstate`</i> (<i>`%%x`</i> for
-short) to declare exclusive states:
+To declare start condition state names use <i>`%%state`</i> (or <i>`%%s`</i>
+for short) to declare inclusive states and use <i>`%%xstate`</i> (or
+<i>`%%x`</i> for short) to declare exclusive states:
 
 <div class="alt">
 ~~~{.cpp}
@@ -1849,7 +1849,7 @@ are the classic Flex actions shown in the second column of this table:
   `columno()`          | *n/a*                | column number of match (>=0)
   `echo()`             | `ECHO`               | `out().write(text(), size())`
   `in(i)`              | `yyrestart(i)`       | set input to `reflex::Input i`
-  `in()`, `in() = &i`  | `*yyin`, `yyin = &i` | get/set `reflex::Input` object
+  `in()`, `in() = &i`  | `*yyin`, `yyin = &i` | get/set `reflex::Input i`
   `out(o)`             | `yyout = &o`         | set output to `std::ostream o`
   `out()`              | `*yyout`             | get `std::ostream` object
   `out().write(s, n)`  | `LexerOutput(s, n)`  | output chars `s[0..n-1]`
@@ -2013,7 +2013,7 @@ create a new matcher, push/pop a matcher on/from a stack, and delete a matcher:
   RE/flex action    | Flex action              | Result
   ----------------- | ------------------------ | ------------------------------
   `matcher(m)`      | `yy_switch_to_buffer(m)` | use matcher `m`
-  `new_matcher(i)`  | `yy_create_buffer(i, n)` | new matcher `reflex::Input i`
+  `new_matcher(i)`  | `yy_create_buffer(i, n)` | returns new matcher for `reflex::Input i`
   `del_matcher(m)`  | `yy_delete_buffer(m)`    | delete matcher `m`
   `push_matcher(m)` | `yypush_buffer_state(m)` | push current matcher, use `m`
   `pop_matcher()`   | `yypop_buffer_state()`   | pop matcher and delete current
@@ -2035,31 +2035,34 @@ when the stack is empty.  When `false`, `has_matcher()` returns `false` and
 The following Flex functions are also supported with <b>`reflex`</b> option
 `−−flex`:
 
-  Flex action                   | Result
-  ----------------------------- | ---------------------------------------------
-  `yy_scan_string(string)`      | scan `string` (`std::string` or `char*`)
-  `yy_scan_buffer(string, len)` | scan `char *string` up to length `size_t len`
-  `yy_scan_bytes(bytes, len)`   | scan `char *bytes` up to length `int len`
+  Flex action              | Result
+  ------------------------ | --------------------------------------------------
+  `yy_scan_string(s)`      | scan string `s` (`std::string` or `char*`)
+  `yy_scan_bytes(b, n)`    | scan `n` bytes at address `b` (buffered)
+  `yy_scan_buffer(b, n+2)` | scan `n` bytes at address `b` (zero copy)
 
 In addition, the following wide string version is available in RE/flex:
   
-  RE/flex action                 | Result
-  ------------------------------ | --------------------------------------------
-  `yy_scan_wstring(string)`      | scan `string` (`std::wstring` or `wchar_t*`)
+  RE/flex action          | Result
+  ----------------------- | ---------------------------------------------------
+  `yy_scan_wstring(s)`    | scan wide string `s` (`std::wstring` or `wchar_t*`)
 
-These functions create a new buffer (i.e. a new matcher in RE/flex).  A pointer
-to the new buffer is returned, which becomes the `YY_CURRENT_BUFFER`.  You
-should delete this new buffer with `yy_delete_buffer(YY_CURRENT_BUFFER)` when
-you are done with it.
-
-These functions take an extra last `yyscan_t` argument for reentrant scanners
-generated with option `−−reentrant`.
+These functions create a new buffer (i.e. a new matcher in RE/flex) and
+buffer the input, except for `yy_scan_buffer` that scans a string in place
+(i.e. zero copy) that should end with two zero bytes, which are included in the
+specified length.  A pointer to the new buffer is returned, which becomes the
+`YY_CURRENT_BUFFER`.  You should delete the old buffer with
+`yy_delete_buffer(YY_CURRENT_BUFFER)` before creating a new buffer with one of
+these functions.
 
 The generated scanner reads from the standard input by default or from an input
 source specified as a `reflex::Input` object, such as a string, wide string,
-file, or a stream.
+file, or a stream.  See \ref reflex-input for more details on managing the
+input to a scanner.
 
-See \ref reflex-input for more details on managing the input to a scanner.
+These functions take an extra last `yyscan_t` argument for reentrant scanners
+generated with option `−−reentrant`.  This argument is a pointer to a lexer
+object.  See \ref reflex-reentrant for more details.
 
 🔝 [Back to table of contents](#)
 
@@ -2323,6 +2326,11 @@ the resulting character class.  Instead, this bracket list should be written as
 `[||{lower}||{upper}]`.  Likewise, `[^{lower}||{upper}]` should be written as
 `[^||{lower}||{upper}]`.
 
+Alternatively, unions may be written as alternations.  That is,
+`[||{name1}||{name2}||{name3}||...]` can be written as
+`({name1}|{name2}|{name3}|...)`, where the latter form supports full Unicode
+not restricted to ASCII.
+
 The character class operators `{+}` (or `{|}`), `{&}`, and `{-}` may be used in
 lexer specifications for compatibility with Flex that supports `{+}` and `{-}`:
 
@@ -2335,7 +2343,8 @@ lexer specifications for compatibility with Flex that supports `{+}` and `{-}`:
 
 These operators can be chained together and support defined names, except for
 the first operand.  For example `[0-9]{+}{letter}` is valid but
-`{lower}{+}{upper}` is invalid.
+`{lower}{+}{upper}` is invalid.  A defined name when used in this way should
+expand into a bracket list that defines an ASCII character class.
 
 🔝 [Back to table of contents](#)
 
@@ -3367,81 +3376,216 @@ where `input` is a `reflex::Input` object.  The `reflex::Input` constructor
 takes a `FILE*` descriptor, `std::istream`, a string `std::string` or
 `const char*`, or a wide string `std::wstring` or `const wchar_t*`.
 
-To switch input to another source while using the scanner, use `in(i)` with
-`reflex::Input i`:
+The following methods are available to specify an input source:
+
+  RE/flex action            | Flex action              | Result
+  ------------------------- | ------------------------ | -------------------------
+  `in()`, `in() = &i`       | `*yyin`, `yyin = &i`     | get/set `reflex::Input i`
+  `in(i)`                   | `yyrestart(i)`           | scan `reflex::Input i`
+  `in(s)`                   | `yy_scan_string(s)`      | scan string `s`
+  `in(s)`                   | `yy_scan_wstring(s)`     | scan wide string `s`
+  `in(reflex::Input(b, n))` | `yy_scan_bytes(b, n)`    | scan `n` bytes at `b` (buffered)
+  `buffer(b, n+1)`          | `yy_scan_buffer(b, n+2)` | scan `n` bytes at `b` (zero copy)
+
+For example, to switch input to another source while using the scanner, use
+`in(i)` with `reflex::Input i` as an argument:
 
 ~~~{.cpp}
     // read from a file, this also decodes UTF-8/16/32 encodings automatically
     FILE *fd = fopen("cow.txt", "r");
-    if (fd)
-      lexer.in(fd);
+    if (fd == NULL)
+      ... // error, bail out
+    lexer.in(fd);
+    lexer.lex();
 
     // read from a stream (ASCII or UTF-8)
     std::istream i = std::ifstream("file", std::ifstream::in);
     lexer.in(i);
+    lexer.lex();
 
     // read from a string (0-terminated, ASCII or UTF-8)
     lexer.in("How now brown cow.");
+    lexer.lex();
 
     // read from a memory segment (raw bytes, ASCII, or UTF-8)
-    const char *memptr = ...; // points to segment
-    size_t memlen = ...;      // length of the memory segment
-    lexer.in(reflex::Input(memptr, memlen));
+    const char *ptr = ...; // points to segment
+    size_t len = ...;      // length of the memory segment
+    lexer.in(reflex::Input(ptr, len));
+    lexer.lex();
 
     // read from a wide string, 0-terminated, encoding it to UTF-8 for matching
     lexer.in(L"How now brown cow.");
+    lexer.lex();
 ~~~
 
-With options `−−flex` and `−−bison` you can also use Flex functions:
+You can assign new input with `in() = &i`, which does not reset the lexer's
+matcher.  This means that when the end of the input (EOF) is reached, and you
+want to switch to new input, then you should clear the EOF state first with
+`lexer.matcher().set_end(false)` to reset EOF.  Or use
+`lexer.matcher().reset()` to clear the state.
 
-~~~{.cpp}
-    // read from a file, this also decodes UTF-8/16/32 encodings automatically
-    FILE *fd = fopen("cow.txt", "r");
-    if (fd)
-      yyin = fd;
-
-    // read from a stream (ASCII or UTF-8)
-    std::istream i = std::ifstream("file", std::ifstream::in);
-    yyin = &i;
-
-    // read from a string (0-terminated, ASCII or UTF-8)
-    yy_scan_string("How now brown cow."); // new buffer to scan a string
-    // yyin = "How now brown cow.";       // alternative, does not create a new buffer
-
-    // read from a memory segment (raw bytes, ASCII, or UTF-8)
-    const char *memptr = ...; // points to memory segment
-    size_t memlen = ...;      // length of the memory segment
-    yy_scan_buffer(memptr, memlen); // new buffer to scan memory
-
-    // read from a wide string, 0-terminated, encoding it to UTF-8 for matching
-    yy_scan_wstring(L"How now brown cow."); // new buffer to scan a wide string
-    // yyin = L"How now brown cow.";        // alternative, does not create a new buffer
-~~~
-
-The `yy_scan_string`, `yy_scan_buffer`, and `yy_scan_wstring` functions create
-a new buffer (i.e. a new matcher in RE/flex).  A pointer to the new buffer is
-returned, which becomes the `YY_CURRENT_BUFFER`.  You should delete this new
-buffer with `yy_delete_buffer(YY_CURRENT_BUFFER)` when you are done with it.
-These functions take an extra last `yyscan_t` argument for reentrant scanners
-generated with option `−−reentrant`.
-
-Invoking `in(i)` also resets the lexer's matcher (internally with
+Invoking `in(i)` resets the lexer's matcher (i.e. internally with
 `matcher.reset()`).  This clears the line and column counters, resets the
 internal anchor and boundary flags for anchor and word boundary matching, and
 resets the matcher to consume buffered input.
 
-You can also assign new input with `in() = &i`, which does not reset the
-lexer's matcher.  This means that when the end of the input (EOF) is reached,
-and you want to switch to new input, then you should clear the EOF state first
-with `lexer.matcher().set_end(false)` to reset EOF.  Or use
-`lexer.matcher().reset()` to clear the state.
+These `in(i)` operations specify strings and bytes that are copied to an
+internal buffer.  This is desirable, because the scanner uses a matcher that
+initializes a buffer, block-wise copies more input to this internal buffer on
+demand, and modifies this buffered content, e.g. to allow `text()` to return a
+0-terminated `char` string.  Zero copy overhead is obtained with lexer method
+`buffer(b, n)` to assign an external buffer:
+
+~~~{.cpp}
+    // read a 0-terminated buffer in place, buffer content is changed!!
+    char *base = ...;  // points to 0-terminated buffer
+    size_t size = ...; // length of the buffer including final \0 byte
+    lexer.buffer(base, size);
+    lexer.lex();
+~~~
+
+@warning `buffer(b, n)` scans `n`-1 bytes at address `b`.  The length `n`
+should includes the final zero byte at the end of the string.
+
+With options `−−flex` and `−−bison` you can also use classic Flex functions:
+
+~~~{.cpp}
+    // read from a file, this also decodes UTF-8/16/32 encodings automatically
+    FILE *fd = fopen("cow.txt", "r");
+    if (fd == NULL)
+      ... // error, bail out
+    yyin = fd;
+    yylex();
+
+    // read from a stream (ASCII or UTF-8)
+    std::istream i = std::ifstream("file", std::ifstream::in);
+    yyin = &i;
+    yylex();
+
+    // read from a string (0-terminated, ASCII or UTF-8)
+    yy_delete_buffer(YY_CURRENT_BUFFER);
+    yy_scan_string("How now brown cow."); // new buffer to scan a string
+    // yyin = "How now brown cow.";       // alternative, does not create a new buffer
+    yylex();
+
+    // read from a memory segment (raw bytes, ASCII, or UTF-8)
+    const char *ptr = ...; // points to memory segment
+    size_t len = ...;      // length of the memory segment
+    yy_delete_buffer(YY_CURRENT_BUFFER);
+    yy_scan_bytes(ptr, len); // new buffer to scan memory
+    yylex();
+
+    // read from a wide string, 0-terminated, encoding it to UTF-8 for matching
+    yy_delete_buffer(YY_CURRENT_BUFFER);
+    yy_scan_wstring(L"How now brown cow."); // new buffer to scan a wide string
+    // yyin = L"How now brown cow.";        // alternative, does not create a new buffer
+    yylex();
+~~~
+
+The `yy_scan_string`, `yy_scan_bytes`, and `yy_scan_wstring` functions create
+a new buffer (i.e. a new matcher in RE/flex) and replace the old buffer
+without deleting it.  A pointer to the new buffer is returned, which becomes
+the new `YY_CURRENT_BUFFER`.  You should delete the old buffer with
+`yy_delete_buffer(YY_CURRENT_BUFFER)` before creating a new buffer.
+
+Zero copy overhead is obtained with `yy_scan_buffer(b, n)`:
+
+~~~{.cpp}
+    // read a 0-terminated buffer in place, buffer content is changed!!
+    char *base = ...;  // points to 0-terminated buffer
+    size_t size = ...; // length of the buffer including two final \0 bytes
+    yy_delete_buffer(YY_CURRENT_BUFFER);
+    yy_scan_buffer(base, size);
+    yylex();
+~~~
+
+@warning The Flex-compatible `yy_scan_buffer(b, n)` (when option `−−flex` is
+used) scans `n`-2 bytes at address `b`.  The length `n` should include *two
+final zero bytes at the end!*
+
+@note `yy_scan_buffer(b, n)` only touches the first final zero byte and not
+the second, since this function is the same as calling `buffer(b, n-1)`.  In
+fact, the specified string/bytes may have any final byte value, which is set
+is not requires to be initially zero.  The final byte of the string will be set
+to zero when `text()` (or `yytext`) or `rest()` are used.  But otherwise the
+final byte remains completely untouched by the other lexer functions, including
+`echo()` (and Flex-compatible `ECHO`).  Only `unput(c)`, `text()` (or `yytext`)
+and `rest()` modify the buffer contents, where `text()` and `rest()` require an
+extra byte at the end of the buffer to make the strings returned by these
+functions 0-terminated.  This means that you can scan read-only memory of `n`
+bytes located at address `b` by using `buffer(b, n+1)` safely, for example to
+read read-only mmap(2) `PROT_READ` memory, as long as `unput(c)`, `text()` (or
+`yytext`) and `rest()` are not used.
+
+The Flex `yy_scan_string`, `yy_scan_bytes`, `yy_scan_wstring`, and
+`yy_scan_buffer` functions take an extra last `yyscan_t` argument for reentrant
+scanners generated with option `−−reentrant`, for example:
+
+~~~{.cpp}
+    // read from a file, this also decodes UTF-8/16/32 encodings automatically
+    FILE *fd = fopen("cow.txt", "r");
+    if (fd == NULL)
+      ... // error, bail out
+    yyget_in(yyscanner) = fd;
+    yylex();
+
+    // read from a stream (ASCII or UTF-8)
+    std::istream i = std::ifstream("file", std::ifstream::in);
+    yyget_in(yyscanner) = &i;
+    yylex();
+
+    // read from a string (0-terminated, ASCII or UTF-8)
+    yy_delete_buffer(YY_CURRENT_BUFFER, yyscanner);
+    yy_scan_string("How now brown cow.", yyscanner); // new buffer to scan a string
+    yylex();
+
+    // read from a memory segment (raw bytes, ASCII, or UTF-8)
+    const char *ptr = ...; // points to memory segment
+    size_t len = ...;      // length of the memory segment
+    yy_delete_buffer(YY_CURRENT_BUFFER, yyscanner);
+    yy_scan_bytes(ptr, len, yyscanner); // new buffer to scan memory
+    yylex();
+
+    // read from a wide string, 0-terminated, encoding it to UTF-8 for matching
+    yy_delete_buffer(YY_CURRENT_BUFFER, yyscanner);
+    yy_scan_wstring(L"How now brown cow.", yyscanner); // new buffer to scan a wide string
+    yylex();
+
+    // read a 0-terminated buffer in place, buffer content is changed!!
+    char *base = ...;  // points to 0-terminated buffer
+    size_t size = ...; // length of the buffer including final 0 byte
+    yy_delete_buffer(YY_CURRENT_BUFFER, yyscanner);
+    yy_scan_buffer(base, size, yyscanner);
+    yylex();
+~~~
+
+The `yyscanner` macro is essentially the same is the `this` pointer
+that can only be used in lexer methods and in lexer rules.
+Outside the scope of lexer methods a pointer to your `yyFlexLexer lexer` object
+should be used instead, for example `yyget_in(&lexer)`.  Also
+`YY_CURRENT_BUFFER` should be replaced by `yyget_current_buffer(&lexer)`.
+See also \ref reflex-reentrant.
 
 Switching input before the end of the input source is reached discards all
 remaining input from that source.  To switch input without affecting the
 current input source, switch matchers instead.  The matchers buffer the input
 and manage the input state, in addition to pattern matching the input.
 
-To switch to a matcher that scans from a new input source, use:
+The following methods are available to specify a matcher `Matcher m` (a Flex
+"buffer") for a lexer:
+
+  RE/flex action    | Flex action              | Result
+  ----------------- | ------------------------ | ------------------------------
+  `matcher(m)`      | `yy_switch_to_buffer(m)` | use matcher `m`
+  `new_matcher(i)`  | `yy_create_buffer(i, n)` | returns new matcher for `reflex::Input i`
+  `del_matcher(m)`  | `yy_delete_buffer(m)`    | delete matcher `m`
+  `push_matcher(m)` | `yypush_buffer_state(m)` | push current matcher, use `m`
+  `pop_matcher()`   | `yypop_buffer_state()`   | pop matcher and delete current
+  `ptr_matcher()`   | `YY_CURRENT_BUFFER`      | pointer to current matcher
+  `has_matcher()`   | `YY_CURRENT_BUFFER != 0` | current matcher is usable
+
+For example, to switch to a matcher that scans from a new input source, then
+restores the old input source:
 
 ~~~{.cpp}
     ... // scanning etc.
@@ -3472,8 +3616,8 @@ This switches the scanner's input by switching to another matcher.  Note that
 option `−−flex` is used) if you use input wrapping after EOF to set things up
 for continued scanning.
 
-Switching input sources (via either `matcher(m)` or `in(i)`) does not change
-the current start condition state.
+Switching input sources (via either `matcher(m)`, `in(i)`, or the Flex
+functions) does not change the current start condition state.
 
 When the scanner reaches the end of the input, it will check the `int wrap()`
 method to detetermine if scanning should continue.  If `wrap()` returns one (1)
@@ -4825,22 +4969,16 @@ the scanner in your program:
 🔝 [Back to table of contents](#)
 
 
-### Reentrant Bison                                         {#reflex-reentrant}
+### Reentrant scanners                                      {#reflex-reentrant}
 
-When <b>`reflex`</b> is used as a Flex replacement with option `−−flex` and
-`−−bison`, option `-R` or `−−reentrant` may be used to generate a reentrant
-scanner.  This is only useful if you use both options `−−flex` and `−−bison`,
-for example when migrating an existing project from Flex to <b>`reflex`</b>, because
-<b>`reflex`</b> by defaul generates is thread-safe scanners.  See also
-\ref reflex-bison.
+Option `-R` or `−−reentrant` may be used to generate a reentrant scanner that
+is compatible with reentrant Flex and Bison.  This is mainly useful when you
+combine `−−reentrant` with `−−flex` and `−−bison`.  See also \ref reflex-bison.
 
-When using reentrant scanners, your code should create a `yyscan_t` scanner
-object with `yylex_init(&scanner)` and destroy it with
+When using Bison with reentrant scanners, your code should create a `yyscan_t`
+scanner object with `yylex_init(&scanner)` and destroy it with
 `yylex_destroy(scanner)`.  Reentrant Flex functions take the scanner object as
-an extra last argument.
-
-With the `−−reentrant` option two additional functions are generated that should
-be used to create a new scanner and delete the scanner in your program:
+an extra last argument, for example `yylex(scanner)`:
 
 <div class="alt">
 ~~~{.cpp}
@@ -4854,11 +4992,26 @@ be used to create a new scanner and delete the scanner in your program:
 ~~~
 </div>
 
-Within a rules section you should refer to the scanner with `yyscanner`.
+Within a rules section we refer to the scanner with macro `yyscanner`, for
+example:
 
-The following additional functions are available in a reentrant Flex scanner,
-which are useful outside of the rules section (you can still use the usual
-Flex functions in the rules section):
+<div class="alt">
+~~~{.cpp}
+    %%
+    {integer}    yylval.i = atoi(yyget_text(yyscanner));
+                 return INTEGER;
+    {decimal}    yylval.d = atof(yyget_text(yyscanner));
+                 return DECIMAL;
+    .            printf("unknown char at line %d\n", yyget_lineno(yyscanner));
+    %%
+~~~
+</div>
+
+The following functions are available in a reentrant Flex scanner generated
+with options `−−flex` and `−−reentrant`.  These functions take an extra
+argument `yyscan_t s` that is either `yyscanner` when the function is used in a
+rule or in the scope of a lexer method, or is a pointer to the lexer object
+when the function is used outside the scope of a lexer method:
 
   Reentrant Flex action       | Result
   --------------------------- | -----------------------------------------------
@@ -4871,6 +5024,9 @@ Flex functions in the rules section):
   `yyset_out(o, s)`           | set output to `std::ostream o`
   `yyget_debug(s)`            | reflex option `-d` sets `n=1`
   `yyset_debug(n, s)`         | reflex option `-d` sets `n=1`
+  `yyget_extra(s)`            | get user-defined extra parameter
+  `yyset_extra(x, s)`         | set user-defined extra parameter
+  `yyget_current_buffer(s)`   | the current matcher
   `yyrestart(i, s)`           | set input to `reflex::Input i`
   `yyinput(s)`                | get next 8-bit char from input
   `yyunput(c, s)`             | put back 8-bit char `c`
@@ -4879,13 +5035,17 @@ Flex functions in the rules section):
   `yy_delete_buffer(m, s)`    | delete matcher `m`
   `yypush_buffer_state(m, s)` | push current matcher, use `m`
   `yypop_buffer_state(s)`     | pop matcher and delete current
-  `yy_switch_to_buffer(m, s)` | use matcher `m`
-  `yyget_extra(s)`            | get user-defined extra parameter
-  `yyset_extra(x, s)`         | set user-defined extra parameter
+  `yy_scan_string(s)`         | scan string `s`
+  `yy_scan_wstring(s)`        | scan wide string `s`
+  `yy_scan_bytes(b, n)`       | scan `n` bytes at `b` (buffered)
+  `yy_scan_buffer(b, n)`      | scan `n`-1 bytes at `b` (zero copy)
+  `yy_push_state(n, s)`       | push current state, go to state `n`
+  `yy_pop_state(s)`           | pop state and make it current
+  `yy_top_state(s)`           | get top state start condition
 
-With respect to the last two functions, a scanner object has a `YY_EXTRA_TYPE
-yyextra` value that is user-definable.  You can define the type in a lexer
-specification with the `extra-type` option:
+With respect to the `yyget_extra` functions, a scanner object has a
+`YY_EXTRA_TYPE yyextra` value that is user-definable.  You can define the type
+in a lexer specification with the `extra-type` option:
 
 <div class="alt">
 ~~~{.cpp}
@@ -4899,6 +5059,10 @@ This is a crude mechanism originating in Flex' C legacy to add extra
 user-defined values to a scanner class.  Because <b>`reflex`</b> is C++, you
 should instead define a derived class that extends the `Lexer` or `FlexLexer`
 class, see \ref reflex-inherit.
+
+Because scanners are C++ classes, the `yyscanner` macro is essentially the same
+is the `this` pointer.  Outside the scope of lexer methods a pointer to your
+`yyFlexLexer lexer` object should be used instead.
 
 🔝 [Back to table of contents](#)
 
