@@ -9,11 +9,11 @@ support.  Flex reimagined: fast, flexible, adds Boost 💪
 [RE/flex][reflex-url] is faster than Flex while providing a wealth of new
 features.  RE/flex is also much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
-representative C source code file into 244 tokens takes only 11 microseconds:
+representative C source code file into 244 tokens takes only 10 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
-<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.3.5</b></td><td><b>11</b></td></tr>
+<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.3.5</b></td><td><b>10</b></td></tr>
 <tr><td>flex -+ --full</td><td>Flex 2.5.35</td><td>17</td></tr>
 <tr><td>reflex --full</td><td>RE/flex 1.3.5</td><td>19</td></tr>
 <tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex 1.66.0</td><td>40</td></tr>
