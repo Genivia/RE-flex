@@ -720,9 +720,10 @@ change its pattern, you can use the following methods:
   `has_pattern()` | true if the matcher has a pattern assigned to it
   `own_pattern()` | true if the matcher has a pattern to manage and delete
   `pattern()`     | a reference to the pattern object, `reflex::Pattern` or `boost::regex`
+  `interactive()` | sets buffer size to 1 for console-based (TTY) input
   `buffer()`      | buffer all input at once, returns true if successful
   `buffer(n)`     | set the initial buffer size to `n` bytes to buffer input
-  `interactive()` | sets buffer size to 1 for console-based (TTY) input
+  `buffer(b, n)`  | read `n` bytes at address `b` containing a string of `n`-1 bytes (zero copy)
   `flush()`       | flush the remaining input from the internal buffer
   `reset()`       | resets the matcher, restarting it from the remaining input
   `reset(o)`      | resets the matcher with new options string `o` ("A?N?T?")
@@ -771,6 +772,31 @@ all data is done with the `>>` operator as a shortcut:
     // count number of 'cow' words:
     std::out << std::distance(matcher.find.begin(), matcher.find.end()) << " 'cow' in cows.txt\n";
 ~~~
+
+Zero-copy overhead is achieved by specifying `buffer(b, n)` to read `n`-1 bytes
+at address `b` for in-place matching, where bytes `b[0...n]` are possibly
+modified by the matcher:
+
+~~~{.cpp}
+    // read a 0-terminated buffer in place, buffer content is changed!!
+    char *base = ...;  // points to 0-terminated buffer
+    size_t size = ...; // length of the buffer including final \0 byte
+    matcher.buffer(base, size);
+    while (matcher.find() != 0)
+      std::cout << "Found " << matcher.text() << std::endl;
+~~~
+
+@warning `buffer(b, n)` reads `n`-1 bytes at address `b`.  The length `n`
+should include the final zero byte at the end of the string.
+
+@note In fact, the specified string may have any final byte value.  The final
+byte of the string will be set to zero when `text()` or `rest()` are used.
+Only `unput(c)`, `text()`, and `rest()` modify the buffer contents, because
+`text()` and `rest()` require an extra byte at the end of the buffer to make
+the strings returned by these methods 0-terminated.  This means that you can
+specify read-only memory of `n` bytes located at address `b` by using
+`buffer(b, n+1)` safely as long as you do not use `unput()`, `text()`, and
+`rest()`, for example to search read-only mmap(2) `PROT_READ` memory.
 
 So far we explained how to use `reflex::BoostMatcher` for pattern matching.  We
 can also use the RE/flex `reflex::Matcher` class for pattern matching.  The API
@@ -3445,7 +3471,7 @@ demand, and modifies this buffered content, e.g. to allow `text()` to return a
 ~~~
 
 @warning `buffer(b, n)` scans `n`-1 bytes at address `b`.  The length `n`
-should includes the final zero byte at the end of the string.
+should include the final zero byte at the end of the string.
 
 With options `−−flex` and `−−bison` you can also use classic Flex functions:
 
@@ -3503,19 +3529,19 @@ Zero copy overhead is obtained with `yy_scan_buffer(b, n)`:
 used) scans `n`-2 bytes at address `b`.  The length `n` should include *two
 final zero bytes at the end!*
 
-@note `yy_scan_buffer(b, n)` only touches the first final zero byte and not
-the second, since this function is the same as calling `buffer(b, n-1)`.  In
-fact, the specified string/bytes may have any final byte value, which is set
-is not requires to be initially zero.  The final byte of the string will be set
-to zero when `text()` (or `yytext`) or `rest()` are used.  But otherwise the
-final byte remains completely untouched by the other lexer functions, including
-`echo()` (and Flex-compatible `ECHO`).  Only `unput(c)`, `text()` (or `yytext`)
-and `rest()` modify the buffer contents, where `text()` and `rest()` require an
-extra byte at the end of the buffer to make the strings returned by these
-functions 0-terminated.  This means that you can scan read-only memory of `n`
-bytes located at address `b` by using `buffer(b, n+1)` safely, for example to
-read read-only mmap(2) `PROT_READ` memory, as long as `unput(c)`, `text()` (or
-`yytext`) and `rest()` are not used.
+@note `yy_scan_buffer(b, n)` only touches the first final byte and not the
+second byte, since this function is the same as calling `buffer(b, n-1)`.  In
+fact, the specified string may have any final byte value.
+The final byte of the string will be set to zero when `text()` (or `yytext`) or
+`rest()` are used.  But otherwise the final byte remains completely untouched
+by the other lexer functions, including `echo()` (and Flex-compatible `ECHO`).
+Only `unput(c)`, `text()` (or `yytext`) and `rest()` modify the buffer
+contents, where `text()` and `rest()` require an extra byte at the end of the
+buffer to make the strings returned by these functions 0-terminated.  This
+means that you can scan read-only memory of `n` bytes located at address `b` by
+using `buffer(b, n+1)` safely, for example to read read-only mmap(2)
+`PROT_READ` memory, as long as `unput(c)`, `text()` (or `yytext`) and `rest()`
+are not used.
 
 The Flex `yy_scan_string`, `yy_scan_bytes`, `yy_scan_wstring`, and
 `yy_scan_buffer` functions take an extra last `yyscan_t` argument for reentrant
@@ -6876,7 +6902,22 @@ input to UTF-8.
 
 Keep in mind that adding a `std::istream` with `reflex::Input::streambuf` layer
 on top of the efficient `reflex::Input` class will impact file reading
-performance.
+performance, especially because `reflex::Input::streambuf` is unbuffered
+(despite its name).  When performance is important, use the buffered version
+`reflex::BufferedInput::streambuf`:
+
+~~~{.cpp}
+    reflex::Input input(...);                    // create an Input object for some given input
+    reflex::BufferedInput::streambuf buf(input); // create a buffered streambuf
+    std::istream is(&buf);
+    if (is.good())
+    {
+      // read the stream
+    }
+~~~
+
+Because the buffered vesion reads ahead to fill its buffer, the buffered
+version may not be suitable for interactive input.
 
 See also \ref regex-input-dosstreambuf.
 
@@ -6885,7 +6926,7 @@ See also \ref regex-input-dosstreambuf.
 ### DOS CRLF newlines                               {#regex-input-dosstreambuf}
 
 DOS files and other DOS or Windows input sources typically end lines with CRLF
-byte pairs.  To automatically replace CRLF by LF you can use the
+byte pairs, see \ref crlf.  To automatically replace CRLF by LF you can use the
 `reflex::Input::dos_streambuf` class to construct a `std::istream` object.
 This normalized stream can then be used as input to a RE/flex scanner or to a
 regex matcher:
@@ -6929,6 +6970,22 @@ present in the file or you can specify \ref regex-input-file).
 @warning The `reflex::Input::size` method returns the number of bytes available
 that includes CRLF pairs.  The actual number of bytes read may be smaller after
 replacing CRLF by LF.
+
+When performance is important, use the buffered version
+`reflex::BufferedInput::dos_streambuf`:
+
+~~~{.cpp}
+    reflex::Input input(...);                        // create an Input object for some given input
+    reflex::BufferedInput::dos_streambuf buf(input); // create a buffered dos_streambuf
+    std::istream is(&buf);
+    if (is.good())
+    {
+      // read the stream
+    }
+~~~
+
+Because the buffered vesion reads ahead to fill its buffer, the buffered
+version may not be suitable for interactive input:
 
 See also \ref regex-input-streambuf.
 
@@ -7814,9 +7871,11 @@ Bugs                                                                    {#bugs}
 Please report bugs as RE/flex GitHub
 [issues](https://github.com/Genivia/RE-flex/issues).
 
-Please make sure to rebuild and re-install the RE/flex library when new RE/flex
-versions are downloaded, because stale library versions may be incompatible
-with updated library header files of newer versions.
+Please make sure to install the RE/flex library you download and remove old
+versions of RE/flex or otherwise prevent mixing old with new versions.  Mixing
+old with new versions may cause problems.  For example, when new versions of
+RE/flex header files are imported into your project but an old RE/flex library
+version is still linked with your code, the library may likely misbehave.
 
 🔝 [Back to contents](#)
 

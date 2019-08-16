@@ -637,7 +637,7 @@ class Pattern {
     return (opcode & 0xFFFF0000) == (0xFF000000 | (a - META_MIN) << 16);
   }
   static bool is_opcode_match(
-      Opcode          opcode,
+      Opcode        opcode,
       unsigned char c)
   {
     return c >= (opcode >> 24) && c <= (opcode >> 16 & 0xFF);

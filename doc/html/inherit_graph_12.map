@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node2" href="$classreflex_1_1_input_1_1dos__streambuf.html" title="Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf..." alt="" coords="154,5,274,47"/>
-<area shape="rect" id="node3" href="$classreflex_1_1_input_1_1streambuf.html" title="Stream buffer for reflex::Input, derived from std::streambuf. " alt="" coords="135,71,293,98"/>
+<area shape="rect" id="node1" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="5,5,97,32"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_buffered_input.html" title="Buffered input. " alt="" coords="145,5,288,32"/>
 </map>

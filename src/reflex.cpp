@@ -2423,10 +2423,7 @@ void Reflex::write_lexer()
     }
     *out << std::endl;
   }
-  if (!options["bison_complete"].empty())
-    *out << token_type << " ";
-  else
-    *out << "int ";
+  *out << token_type << " ";
   if (!options["namespace"].empty())
     write_namespace_scope();
   if (!options["yyclass"].empty())
@@ -2476,7 +2473,7 @@ void Reflex::write_lexer()
   if (options["matcher"] == "boost" || options["matcher"] == "boost-perl")
     *out <<
       "    if (!matcher().buffer()) // work around Boost.Regex match_partial bug\n"
-      "      return 0; // could not buffer: terminate\n";
+      "      return " << token_type << "(); // could not buffer: terminate\n";
   else
 #endif
   if (!options["interactive"].empty() || !options["always_interactive"].empty())
@@ -2567,7 +2564,7 @@ void Reflex::write_lexer()
           "              yyterminate();\n";
       else
         *out <<
-          "              return 0;\n";
+          "              return " << token_type << "();\n";
     }
     *out <<
       "            }\n"

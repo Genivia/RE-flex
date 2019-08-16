@@ -29,7 +29,7 @@ INCBOOST  = /opt/local/include
 LIBBOOST  = /opt/local/lib/libboost_regex-mt.dylib
 
 CXXOFLAGS = -O2
-CXXWFLAGS = -Wall -Wunused -Wextra -Wno-unused-label
+CXXWFLAGS = -Wall -Wunused -Wextra
 CXXIFLAGS = -I. -I../include -I $(INCBOOST)
 CXXMFLAGS =
 # CXXMFLAGS =-DDEBUG

@@ -272,7 +272,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
       size_t n = (*itr_).size();
       for (cap_ = 1; cap_ < n && !(*itr_)[cap_].matched; ++cap_)
         continue; // set cap_ to the capture index
-      len_ = (*itr_)[0].first - txt_; // cur_ - (txt_ - buf_); // size() spans txt_ to cur_ in buf_[]
+      len_ = (*itr_)[0].first - txt_;
       set_current(pos_);
       DBGLOGN("Split: act = %zu txt = '%s' len = %zu pos = %zu", cap_, txt_, len_, pos_);
       DBGLOG("END BoostMatcher::match()");

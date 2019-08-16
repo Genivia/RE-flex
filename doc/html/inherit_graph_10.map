@@ -1,3 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$struct_reflex_1_1_code.html" title="Line of code fragment in lex specifications. " alt="" coords="5,5,104,32"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_buffered_input_1_1dos__streambuf.html" title="Buffered stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::st..." alt="" coords="143,5,285,47"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_buffered_input_1_1streambuf.html" title="Buffered stream buffer for reflex::Input, derived from std::streambuf. " alt="" coords="143,71,285,112"/>
+<area shape="rect" id="node4" href="$classreflex_1_1_input_1_1dos__streambuf.html" title="Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf..." alt="" coords="154,136,274,177"/>
+<area shape="rect" id="node5" href="$classreflex_1_1_input_1_1streambuf.html" title="Stream buffer for reflex::Input, derived from std::streambuf. " alt="" coords="135,202,293,229"/>
 </map>

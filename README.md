@@ -13,9 +13,9 @@ representative C source code file into 244 tokens takes only 10 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
-<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.3.5</b></td><td><b>10</b></td></tr>
+<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.3.6</b></td><td><b>10</b></td></tr>
 <tr><td>flex -+ --full</td><td>Flex 2.5.35</td><td>17</td></tr>
-<tr><td>reflex --full</td><td>RE/flex 1.3.5</td><td>19</td></tr>
+<tr><td>reflex --full</td><td>RE/flex 1.3.6</td><td>19</td></tr>
 <tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex 1.66.0</td><td>40</td></tr>
 <tr><td>hs_compile_multi(), hs_scan()</td><td>Hyperscan 5.1.0</td><td>209</td></tr>
 <tr><td>reflex -m=boost-perl</td><td>Boost.Regex 1.66.0</td><td>230</td></tr>
@@ -460,6 +460,7 @@ Changelog
 - Aug  7, 2019: 1.3.4 speed improvements for non-fast options.
 - Aug  8, 2019: 1.3.5 further speed improvements for both fast and non-fast options (15% to 30% faster).
 - Aug 12, 2019: 1.3.6 added lexer and matcher `buffer(base, size)` methods and improved Flex-compatible `yy_scan_buffer(base, size)`, these functions scan memory fast with zero copy overhead, added `mmap.l` example to scan an mmap-ed file fast with mmap(2) and `buffer(base, size)`, other improvements.
+- Aug 16, 2019: 1.3.7 added `reflex::BufferedInput::dos_streambuf` to improve `dos_streambuf` speed by buffering (`reflex::Input::dos_streambuf` is unbuffered), fixed `%option token-type` to apply without restrictions.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

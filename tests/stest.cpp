@@ -384,7 +384,6 @@ int main()
     error("split results");
 #endif
   //
-#if 0 // std::regex fails on empty patterns, why is this different than Boost.Regex??
   matcher.pattern(pattern6);
   matcher.input("ab c  d");
   test = "";
@@ -397,7 +396,6 @@ int main()
   if (test != "/a/b/ /c/ / /d//")
     error("split results");
   //
-#endif
   matcher.pattern(pattern6);
   matcher.input("");
   test = "";

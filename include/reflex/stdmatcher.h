@@ -156,10 +156,13 @@ class StdMatcher : public PatternMatcher<std::regex> {
         if (itr_ != fin_) // set pos_ to last of the match
         {
           pos_ = (*itr_)[0].second - buf_;
-          if (pos_ == cur_ && pos_ < end_) // same pos as previous?
+          if (pos_ == cur_ && pos_ < end_) // danger: std::regex did not advance, same pos as previous!
           {
+            set_current(++cur_);
             ++txt_;
             new_itr(method);
+            --txt_;
+            --cur_;
             if (itr_ != fin_)
             {
               pos_ = (*itr_)[0].second - buf_;
@@ -276,7 +279,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
       size_t n = (*itr_).size();
       for (cap_ = 1; cap_ < n && !(*itr_)[cap_].matched; ++cap_)
         continue; // set cap_ to the capture index
-      len_ = (*itr_)[0].first - txt_; // cur_ - (txt_ - buf_); // size() spans txt_ to cur_ in buf_[]
+      len_ = (*itr_)[0].first - txt_;
       set_current(pos_);
       DBGLOGN("Split: act = %zu txt = '%s' len = %zu pos = %zu", cap_, txt_, len_, pos_);
       DBGLOG("END StdMatcher::match()");

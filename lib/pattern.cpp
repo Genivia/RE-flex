@@ -1969,9 +1969,20 @@ void Pattern::gencode_dfa(const State& start) const
         err = reflex::fopen_s(&fd, filename.c_str(), "w");
       if (!err && fd)
       {
-        ::fprintf(fd, "#include <reflex/matcher.h>\n\n#ifdef OS_WIN\n#pragma warning(push)\n#pragma warning(disable:4102)\n#endif\n\n");
+        ::fprintf(fd,
+            "#include <reflex/matcher.h>\n\n"
+            "#ifdef OS_WIN\n"
+            "#pragma warning(disable:4102)\n"
+            "#else\n"
+            "#pragma clang diagnostic ignored \"-Wunused-label\"\n"
+            "#pragma GCC diagnostic ignored \"-Wunused-label\"\n"
+            "#endif\n\n");
         write_namespace_open(fd);
-        ::fprintf(fd, "void reflex_code_%s(reflex::Matcher& m)\n{\n  int c0 = 0, c1 = c0;\n  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
+        ::fprintf(fd,
+            "void reflex_code_%s(reflex::Matcher& m)\n"
+            "{\n"
+            "  int c0 = 0, c1 = c0;\n"
+            "  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
         for (const State *state = &start; state; state = state->next)
         {
           ::fprintf(fd, "\nS%u:\n", state->index);
@@ -2166,7 +2177,6 @@ void Pattern::gencode_dfa(const State& start) const
         }
         ::fprintf(fd, "}\n\n");
         write_namespace_close(fd);
-        ::fprintf(fd, "#ifdef OS_WIN\n#pragma warning(pop)\n#endif\n");
         if (fd != stdout)
           ::fclose(fd);
       }

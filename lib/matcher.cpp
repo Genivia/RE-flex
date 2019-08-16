@@ -66,8 +66,9 @@ scan:
     return 0;
   }
 #endif
-  bool bol = at_bol();
   int c1 = got_;
+  bool bol = at_bol();
+find:
   if (pat_->fsm_)
     fsm_.c1 = c1;
 redo:
@@ -92,25 +93,25 @@ redo:
       DBGLOG("Fetch: code[%zu] = 0x%08X", pc - pat_->opc_, opcode);
       Pattern::Index index;
       if (Pattern::is_opcode_halt(opcode))
-        goto done;
+        break;
       if (Pattern::is_opcode_meta(opcode))
       {
         switch (opcode >> 16)
         {
-          case 0xff00: // TAKE
+          case 0xFF00: // TAKE
             cap_ = Pattern::index_of(opcode);
             DBGLOG("Take: cap = %zu", cap_);
             cur_ = pos_;
             ++pc;
             continue;
-          case 0xff7e: // TAIL
+          case 0xFF7E: // TAIL
             index = Pattern::index_of(opcode);
             DBGLOG("Tail: %u", index);
             if (lap_.size() > index && lap_[index] >= 0)
               cur_ = txt_ - buf_ + static_cast<size_t>(lap_[index]); // mind the (new) gap
             ++pc;
             continue;
-          case 0xff7f: // HEAD
+          case 0xFF7F: // HEAD
             index = Pattern::index_of(opcode);
             DBGLOG("Head: lookahead[%u] = %zu", index, pos_ - (txt_ - buf_));
             if (lap_.size() <= index)
@@ -119,7 +120,7 @@ redo:
             ++pc;
             continue;
 #if !defined(WITH_MINIMAL)
-          case 0xff00 | Pattern::META_DED:
+          case 0xFF00 | Pattern::META_DED:
             if (ded_ > 0)
             {
               index = Pattern::index_of(opcode);
@@ -145,7 +146,7 @@ redo:
             // we no longer have to pass through all if index and back are set
             switch (opcode >> 16)
             {
-              case 0xff00: // TAKE
+              case 0xFF00: // TAKE
                 cap_ = Pattern::index_of(opcode);
                 DBGLOG("Take: cap = %zu", cap_);
                 cur_ = pos_;
@@ -153,30 +154,30 @@ redo:
                   --cur_; // Must unget one char
                 opcode = *++pc;
                 continue;
-              case 0xff7e: // TAIL
+              case 0xFF7E: // TAIL
                 la = Pattern::index_of(opcode);
                 DBGLOG("Tail: %u", la);
                 if (lap_.size() > la && lap_[la] >= 0)
                   cur_ = txt_ - buf_ + static_cast<size_t>(lap_[la]); // mind the (new) gap
                 opcode = *++pc;
                 continue;
-              case 0xff7f: // HEAD
+              case 0xFF7F: // HEAD
                 opcode = *++pc;
                 continue;
 #if !defined(WITH_MINIMAL)
-              case 0xff00 | Pattern::META_DED:
+              case 0xFF00 | Pattern::META_DED:
                 DBGLOG("DED? %d", c1);
                 if (index == Pattern::IMAX && back == Pattern::IMAX && bol && dedent())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-              case 0xff00 | Pattern::META_IND:
+              case 0xFF00 | Pattern::META_IND:
                 DBGLOG("IND? %d", c1);
                 if (index == Pattern::IMAX && back == Pattern::IMAX && bol && indent())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-              case 0xff00 | Pattern::META_UND:
+              case 0xFF00 | Pattern::META_UND:
                 DBGLOG("UND");
                 if (mrk_)
                   index = Pattern::index_of(opcode);
@@ -185,62 +186,62 @@ redo:
                 opcode = *++pc;
                 continue;
 #endif
-              case 0xff00 | Pattern::META_EOB:
+              case 0xFF00 | Pattern::META_EOB:
                 DBGLOG("EOB? %d", c1);
                 if (index == Pattern::IMAX && c1 == EOF)
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-              case 0xff00 | Pattern::META_BOB:
+              case 0xFF00 | Pattern::META_BOB:
                 DBGLOG("BOB? %d", at_bob());
                 if (index == Pattern::IMAX && at_bob())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-              case 0xff00 | Pattern::META_EOL:
+              case 0xFF00 | Pattern::META_EOL:
                 DBGLOG("EOL? %d", c1);
                 if (index == Pattern::IMAX && (c1 == EOF || c1 == '\n'))
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-              case 0xff00 | Pattern::META_BOL:
+              case 0xFF00 | Pattern::META_BOL:
                 DBGLOG("BOL? %d", bol);
                 if (index == Pattern::IMAX && bol)
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
 #if !defined(WITH_MINIMAL)
-              case 0xff00 | Pattern::META_EWE:
+              case 0xFF00 | Pattern::META_EWE:
                 DBGLOG("EWE? %d %d %d", c0, c1, isword(c0) && !isword(c1));
                 if (index == Pattern::IMAX && isword(c0) && !isword(c1))
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-              case 0xff00 | Pattern::META_BWE:
+              case 0xFF00 | Pattern::META_BWE:
                 DBGLOG("BWE? %d %d %d", c0, c1, !isword(c0) && isword(c1));
                 if (index == Pattern::IMAX && !isword(c0) && isword(c1))
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-              case 0xff00 | Pattern::META_EWB:
+              case 0xFF00 | Pattern::META_EWB:
                 DBGLOG("EWB? %d", at_eow());
                 if (index == Pattern::IMAX && at_eow())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-              case 0xff00 | Pattern::META_BWB:
+              case 0xFF00 | Pattern::META_BWB:
                 DBGLOG("BWB? %d", at_bow());
                 if (index == Pattern::IMAX && at_bow())
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-              case 0xff00 | Pattern::META_NWE:
+              case 0xFF00 | Pattern::META_NWE:
                 DBGLOG("NWE? %d %d %d", c0, c1, isword(c0) == isword(c1));
                 if (index == Pattern::IMAX && isword(c0) == isword(c1))
                   index = Pattern::index_of(opcode);
                 opcode = *++pc;
                 continue;
-              case 0xff00 | Pattern::META_NWB:
+              case 0xFF00 | Pattern::META_NWB:
                 DBGLOG("NWB? %d %d", at_bow(), at_eow());
                 if (index == Pattern::IMAX && !at_bow() && !at_eow())
                   index = Pattern::index_of(opcode);
@@ -278,7 +279,7 @@ redo:
           break;
       }
       Pattern::Opcode lo = c1 << 24;
-      Pattern::Opcode hi = lo | 0x00ffffff;
+      Pattern::Opcode hi = lo | 0x00FFFFFF;
 unrolled:
       if (hi < opcode || lo > (opcode << 8))
       {
@@ -319,7 +320,6 @@ unrolled:
       pc = pat_->opc_ + index;
     }
   }
-done:
 #if !defined(WITH_MINIMAL)
   if (mrk_ && cap_ != Const::EMPTY)
   {
@@ -386,7 +386,17 @@ done:
     return cap_;
   }
   if (cap_ == 0)
+  {
     cur_ = txt_ - buf_; // no match: backup to begin of text
+    if (method == Const::FIND && pos_ == cur_ + 1)
+    {
+      ++txt_;
+      cur_ = pos_;
+      got_ = c1;
+      bol = c1 == '\n';
+      goto find;
+    }
+  }
   len_ = cur_ - (txt_ - buf_);
   if (len_ == 0 && !nul)
   {

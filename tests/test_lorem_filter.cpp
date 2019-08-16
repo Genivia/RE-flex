@@ -1,5 +1,12 @@
 #include <reflex/matcher.h>
 
+#ifdef OS_WIN
+#pragma warning(disable:4102)
+#else
+#pragma clang diagnostic ignored "-Wunused-label"
+#pragma GCC diagnostic ignored "-Wunused-label"
+#endif
+
 void reflex_code_filter(reflex::Matcher& m)
 {
   int c0 = 0, c1 = c0;

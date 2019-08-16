@@ -235,11 +235,29 @@ byte by byte (use a buffer as shown in other examples to improve efficiency):
 Example
 -------
 
+The following examples shows how to use reflex::Input::streambuf to create an
+unbuffered std::istream:
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
     reflex::Input input(fopen("legacy.txt", "r"), reflex::Input::file_encoding::ebcdic);
     if (input.file() == NULL)
       abort();
     reflex::Input::streambuf streambuf(input);
+    std::istream stream(&streambuf);
+    std::string data;
+    int c;
+    while ((c = stream.get()) != EOF)
+      data.append(c);
+    fclose(input.file());
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+With reflex::BufferedInput::streambuf to create a buffered std::istream:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
+    reflex::Input input(fopen("legacy.txt", "r"), reflex::Input::file_encoding::ebcdic);
+    if (input.file() == NULL)
+      abort();
+    reflex::BufferedInput::streambuf streambuf(input);
     std::istream stream(&streambuf);
     std::string data;
     int c;
@@ -280,6 +298,17 @@ class Input {
   class streambuf;
   /// Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf.
   class dos_streambuf;
+  /// Construct empty input character sequence.
+  Input()
+    :
+      cstring_(NULL),
+      wstring_(NULL),
+      file_(NULL),
+      istream_(NULL),
+      size_(0)
+  {
+    init();
+  }
   /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
   Input(const Input& input) ///< an Input object to share state with (undefined behavior results from using both objects)
     :
@@ -293,17 +322,6 @@ class Input {
       page_(input.page_)
   {
     std::memcpy(utf8_, input.utf8_, sizeof(utf8_));
-  }
-  /// Construct empty input character sequence.
-  Input()
-    :
-      cstring_(NULL),
-      wstring_(NULL),
-      file_(NULL),
-      istream_(NULL),
-      size_(0)
-  {
-    init();
   }
   /// Construct input character sequence from a char* string
   Input(
@@ -448,55 +466,55 @@ class Input {
     return *this;
   }
   /// Cast this Input object to a string, returns NULL when this Input is not a string.
-  operator const char *()
+  operator const char *() const
     /// @returns remaining unbuffered part of a NUL-terminated string or NULL.
   {
     return cstring_;
   }
   /// Cast this Input object to a wide character string, returns NULL when this Input is not a wide string.
-  operator const wchar_t *()
+  operator const wchar_t *() const
     /// @returns remaining unbuffered part of the NUL-terminated wide character string or NULL.
   {
     return wstring_;
   }
   /// Cast this Input object to a file descriptor FILE*, returns NULL when this Input is not a FILE*.
-  operator FILE *()
+  operator FILE *() const
     /// @returns pointer to current file descriptor or NULL.
   {
     return file_;
   }
   /// Cast this Input object to a std::istream*, returns NULL when this Input is not a std::istream.
-  operator std::istream *()
+  operator std::istream *() const
     /// @returns pointer to current std::istream or NULL.
   {
     return istream_;
   }
   // Cast this Input object to bool, same as checking good().
-  operator bool()
+  operator bool() const
     /// @returns true if a non-empty sequence of characters is available to get.
   {
     return good();
   }
   /// Get the remaining string of this Input object, returns NULL when this Input is not a string.
-  const char *cstring()
+  const char *cstring() const
     /// @returns remaining unbuffered part of the NUL-terminated string or NULL.
   {
     return cstring_;
   }
   /// Get the remaining wide character string of this Input object, returns NULL when this Input is not a wide string.
-  const wchar_t *wstring()
+  const wchar_t *wstring() const
     /// @returns remaining unbuffered part of the NUL-terminated wide character string or NULL.
   {
     return wstring_;
   }
   /// Get the FILE* of this Input object, returns NULL when this Input is not a FILE*.
-  FILE *file()
+  FILE *file() const
     /// @returns pointer to current file descriptor or NULL.
   {
     return file_;
   }
   /// Get the std::istream of this Input object, returns NULL when this Input is not a std::istream.
-  std::istream *istream()
+  std::istream *istream() const
     /// @returns pointer to current std::istream or NULL.
   {
     return istream_;
@@ -540,7 +558,7 @@ class Input {
     size_ = 0;
   }
   /// Check if input is available.
-  bool good()
+  bool good() const
     /// @returns true if a non-empty sequence of characters is available to get.
   {
     if (cstring_)
@@ -554,7 +572,7 @@ class Input {
     return false;
   }
   /// Check if input reached EOF.
-  bool eof()
+  bool eof() const
     /// @returns true if input is at EOF and no characters are available.
   {
     if (cstring_)
@@ -705,6 +723,7 @@ class Input {
       char  *s, ///< points to the string buffer to fill with input
       size_t n) ///< size of buffer pointed to by s
       ;
+ protected:
   const char           *cstring_; ///< char string input (when non-null) of length reflex::Input::size_
   const wchar_t        *wstring_; ///< NUL-terminated wide string input (when non-null)
   FILE                 *file_;    ///< FILE* input (when non-null)
@@ -744,7 +763,7 @@ class Input::streambuf : public std::streambuf {
     return input_.size();
   }
  protected:
-  reflex::Input input_;
+  Input input_;
   int ch_;
 };
 
@@ -799,7 +818,200 @@ class Input::dos_streambuf : public std::streambuf {
     return input_.size();
   }
  protected:
-  reflex::Input input_;
+  Input input_;
+  int ch1_;
+  int ch2_;
+};
+
+/// Buffered input.
+class BufferedInput : public Input {
+ public:
+  /// Buffer size.
+  static const size_t SIZE = 8192;
+  /// Buffered stream buffer for reflex::Input, derived from std::streambuf.
+  class streambuf;
+  /// Buffered stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf.
+  class dos_streambuf;
+  /// Copy constructor (with intended "move semantics" as internal state is shared, should not rely on using the rhs after copying).
+  /// Construct empty buffered input.
+  BufferedInput()
+    :
+      Input(),
+      len_(0),
+      pos_(0)
+  { }
+  /// Construct buffered input.
+  BufferedInput(const BufferedInput& input)
+    :
+      Input(input),
+      len_(input.len_),
+      pos_(input.pos_)
+  {
+    std::memcpy(buf_, input.buf_, len_);
+  }
+  /// Construct buffered input.
+  BufferedInput(const Input& input)
+    :
+      Input(input)
+  {
+    len_ = Input::get(buf_, SIZE);
+    pos_ = 0;
+  }
+  /// Copy assignment operator
+  BufferedInput& operator=(const Input& input)
+  {
+    Input::operator=(input);
+    len_ = Input::get(buf_, SIZE);
+    pos_ = 0;
+    return *this;
+  }
+  /// Copy assignment operator
+  BufferedInput& operator=(const BufferedInput& input)
+  {
+    Input::operator=(input);
+    len_ = input.len_;
+    pos_ = input.pos_;
+    std::memcpy(buf_, input.buf_, len_);
+    return *this;
+  }
+  // Cast this Input object to bool, same as checking good().
+  operator bool()
+    /// @returns true if a non-empty sequence of characters is available to get.
+  {
+    return pos_ < len_ || Input::good();
+  }
+  /// Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a `FILE*` or `std::istream` source).
+  size_t size()
+    /// @returns the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable e.g. when reading from standard input.
+  {
+    return len_ - pos_ + Input::size();
+  }
+  /// Check if input is available.
+  bool good()
+    /// @returns true if a non-empty sequence of characters is available to get.
+  {
+    return pos_ < len_ || Input::good();
+  }
+  /// Check if input reached EOF.
+  bool eof()
+    /// @returns true if input is at EOF and no characters are available.
+  {
+    return pos_ < len_ || Input::eof();
+  }
+  /// Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached.
+  int get()
+  {
+    while (true)
+    {
+      if (len_ == 0)
+        return EOF;
+      if (pos_ < len_)
+        return static_cast<unsigned char>(buf_[pos_++]);
+      len_ = Input::get(buf_, SIZE);
+      pos_ = 0;
+    }
+  }
+ protected:
+  char   buf_[SIZE];
+  size_t len_;
+  size_t pos_;
+};
+
+/// Buffered stream buffer for reflex::Input, derived from std::streambuf.
+class BufferedInput::streambuf : public std::streambuf {
+ public:
+  streambuf(const reflex::BufferedInput& input)
+    :
+      input_(input),
+      ch_(input_.get())
+  { }
+  streambuf(const reflex::Input& input)
+    :
+      input_(input),
+      ch_(input_.get())
+  { }
+ private:
+  virtual int_type underflow()
+  {
+    if (ch_ == EOF)
+      return traits_type::eof();
+    return traits_type::to_int_type(ch_);
+  }
+  virtual int_type uflow()
+  {
+    if (ch_ == EOF)
+      return traits_type::eof();
+    int c = ch_;
+    ch_ = input_.get();
+    return traits_type::to_int_type(c);
+  }
+  virtual std::streamsize showmanyc()
+  {
+    return input_.size();
+  }
+ protected:
+  BufferedInput input_;
+  int ch_;
+};
+
+/// Buffered stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf.
+class BufferedInput::dos_streambuf : public std::streambuf {
+ public:
+  dos_streambuf(const reflex::BufferedInput& input)
+    :
+      input_(input),
+      ch1_(input_.get()),
+      ch2_(EOF)
+  { }
+  dos_streambuf(const reflex::Input& input)
+    :
+      input_(input),
+      ch1_(input_.get()),
+      ch2_(EOF)
+  { }
+ private:
+  virtual int_type underflow()
+  {
+    if (ch1_ == EOF)
+      return traits_type::eof();
+    if (ch1_ == '\r')
+    {
+      ch2_ = input_.get();
+      if (ch2_ == '\n')
+      {
+        ch1_ = ch2_;
+        ch2_ = EOF;
+      }
+    }
+    return traits_type::to_int_type(ch1_);
+  }
+  virtual int_type uflow()
+  {
+    if (ch1_ == EOF)
+      return traits_type::eof();
+    int c = ch1_;
+    if (ch2_ == EOF)
+    {
+      ch1_ = input_.get();
+    }
+    else
+    {
+      ch1_ = ch2_;
+      ch2_ = EOF;
+    }
+    if (c == '\r' && ch1_ == '\n')
+    {
+      c = ch1_;
+      ch1_ = input_.get();
+    }
+    return traits_type::to_int_type(c);
+  }
+  virtual std::streamsize showmanyc()
+  {
+    return input_.size();
+  }
+ protected:
+  BufferedInput input_;
   int ch1_;
   int ch2_;
 };
