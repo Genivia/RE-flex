@@ -306,10 +306,10 @@ void Input::file_init()
 #if !defined(HAVE_CONFIG_H) || defined(HAVE_FSTAT)
 #if (defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__BORLANDC__)) && !defined(__CYGWIN__) && !defined(__MINGW32__) && !defined(__MINGW64__)
   struct _stat st;
-  if (_fstat(_fileno(file_), &st) == 0 && ((st.st_mode & S_IFMT) == S_IFREG) && static_cast<long long>(st.st_size) <= 4294967295LL)
+  if (_fstat(_fileno(file_), &st) == 0 && ((st.st_mode & S_IFMT) == S_IFREG) && st.st_size <= 4294967295LL)
 #else
   struct stat st;
-  if (::fstat(::fileno(file_), &st) == 0 && S_ISREG(st.st_mode) && static_cast<long long>(st.st_size) <= 4294967295LL)
+  if (::fstat(::fileno(file_), &st) == 0 && S_ISREG(st.st_mode) && st.st_size <= 4294967295LL)
 #endif
     size_ = static_cast<size_t>(st.st_size);
 #endif

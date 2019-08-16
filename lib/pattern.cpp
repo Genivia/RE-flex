@@ -1971,11 +1971,12 @@ void Pattern::gencode_dfa(const State& start) const
       {
         ::fprintf(fd,
             "#include <reflex/matcher.h>\n\n"
-            "#ifdef OS_WIN\n"
+            "#if defined(OS_WIN)\n"
             "#pragma warning(disable:4102)\n"
-            "#else\n"
-            "#pragma clang diagnostic ignored \"-Wunused-label\"\n"
+            "#elif defined(__GNUC__)\n"
             "#pragma GCC diagnostic ignored \"-Wunused-label\"\n"
+            "#elif defined(__clang__)\n"
+            "#pragma clang diagnostic ignored \"-Wunused-label\"\n"
             "#endif\n\n");
         write_namespace_open(fd);
         ::fprintf(fd,
