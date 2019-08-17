@@ -461,6 +461,7 @@ Changelog
 - Aug  8, 2019: 1.3.5 further speed improvements for both fast and non-fast options (15% to 30% faster).
 - Aug 12, 2019: 1.3.6 added lexer and matcher `buffer(base, size)` methods and improved Flex-compatible `yy_scan_buffer(base, size)`, these functions scan memory fast with zero copy overhead, added `mmap.l` example to scan an mmap-ed file fast with mmap(2) and `buffer(base, size)`, other improvements.
 - Aug 16, 2019: 1.3.7 added `reflex::BufferedInput::dos_streambuf` to improve `dos_streambuf` speed by buffering (`reflex::Input::dos_streambuf` is unbuffered), fixed `%option token-type` to apply without restrictions.
+- Aug 17, 2019: 1.3.8 added caching of `lineno()` and `columno()` to increase speed, which is essential for large buffers such as large mmap-ed files scanned with `buffer(base, size)`, other improvements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

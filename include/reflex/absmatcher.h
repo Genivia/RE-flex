@@ -100,7 +100,7 @@ class AbstractMatcher {
     static const int BOB      = 257;    ///< begin of buffer meta-char marker
     static const int EOB      = EOF;    ///< end of buffer meta-char marker
     static const size_t EMPTY = 0xFFFF; ///< accept() returns empty last split at end of input
-    static const size_t BLOCK = 4096;   ///< buffer growth factor, buffer is initially 2*BLOCK size
+    static const size_t BLOCK = 8192;   ///< buffer growth factor, buffer is initially 2*BLOCK size
   };
   /// AbstractMatcher::Options for matcher engines.
   struct Option {
@@ -285,6 +285,7 @@ class AbstractMatcher {
     blk_ = 0;
     got_ = Const::BOB;
     chr_ = '\0';
+    lpb_ = buf_;
     lno_ = 1;
     cno_ = 0;
     num_ = 0;
@@ -371,6 +372,7 @@ class AbstractMatcher {
       blk_ = 0;
       got_ = Const::BOB;
       chr_ = '\0';
+      lpb_ = buf_;
       lno_ = 1;
       cno_ = 0;
       num_ = 0;
@@ -428,14 +430,15 @@ class AbstractMatcher {
   std::wstring wstr() const
     /// @returns wide string with text matched.
   {
-    const char *t = txt_;
+    const char *s = txt_;
+    const char *e = s + len_;
     std::wstring ws;
     if (sizeof(wchar_t) == 2)
     {
       // sizeof(wchar_t) == 2: store wide string in std::wstring encoded in UTF-16
-      while (t < txt_ + len_)
+      while (s < e)
       {
-        int wc = utf8(t, &t);
+        int wc = utf8(s, &s);
         if (wc > 0xFFFF)
         {
           if (wc <= 0x10FFFF)
@@ -456,8 +459,8 @@ class AbstractMatcher {
     }
     else
     {
-      while (t < txt_ + len_)
-        ws.push_back(utf8(t, &t));
+      while (s < e)
+        ws.push_back(utf8(s, &s));
     }
     return ws;
   }
@@ -472,8 +475,9 @@ class AbstractMatcher {
     /// @returns the length of the match in number of wide (multibyte UTF-8) characters.
   {
     size_t n = 0;
-    for (const char *t = txt_; t < txt_ + len_; ++t)
-      n += (*t & 0xC0) != 0x80;
+    const char *e = txt_ + len_;
+    for (const char *s = txt_; s < e; ++s)
+      n += (*s & 0xC0) != 0x80;
     return n;
   }
   /// Returns the first 8-bit character of the text matched.
@@ -488,55 +492,69 @@ class AbstractMatcher {
   {
     return utf8(txt_);
   }
-  /// Returns the starting line number of the match in the input character sequence.
-  size_t lineno() const
+  /// Updates and returns the starting line number of the match in the input character sequence.
+  size_t lineno()
     /// @returns line number.
   {
     size_t n = lno_;
-    for (const char *s = buf_; s < txt_; ++s)
-      n += (*s == '\n');
-    return n;
+    size_t k = cno_;
+    char *s = lpb_;
+    char *e = txt_;
+#if defined(WITH_BYTE_COLUMNO)
+    char *t = s;
+    while (s < e)
+    {
+      if (*s == '\n')
+      {
+        ++n;
+        t = s;
+        k = 0;
+      }
+      ++s;
+    }
+    k += t - lpb_;
+#else
+    while (s < e)
+    {
+      if (*s == '\n')
+      {
+        ++n;
+        k = 0;
+      }
+      else if (*s == '\t')
+      {
+        // count tab spacing
+        k += 1 + (~k & (opt_.T - 1));
+      }
+      else
+      {
+        // count column offset in UTF-8 chars
+        k += ((*s & 0xC0) != 0x80);
+      }
+      ++s;
+    }
+#endif
+    lpb_ = e;
+    lno_ = n;
+    cno_ = k;
+    return lno_;
   }
   /// Returns the number of lines that the match spans.
   size_t lines() const
     /// @returns number of lines.
   {
     size_t n = 1;
-    for (const char *s = txt_; s < txt_ + len_; ++s)
+    const char *e = txt_ + len_;
+    for (const char *s = txt_; s < e; ++s)
       n += (*s == '\n');
     return n;
   }
-  /// Returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).
-  size_t columno() const
+  /// Updates and returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).
+  size_t columno()
     /// @returns column number.
   {
-#if defined(WITH_BYTE_COLUMNO)
-    // count column offset in bytes
-    for (const char *s = txt_ - 1; s >= buf_; --s)
-      if (*s == '\n' || *s == '\r')
-        return txt_ - s - 1;
-    return cno_ + txt_ - buf_;
-#else
-    // count column offset in tabs and UTF-8 chars
-    size_t n = cno_;
-    const char *s;
-    for (s = txt_ - 1; s >= buf_; --s)
-    {
-      if (*s == '\n' || *s == '\r')
-      {
-        n = 0;
-        break;
-      }
-    }
-    for (++s; s < txt_; ++s)
-    {
-      if (*s == '\t')
-        n += 1 + (~n & (opt_.T - 1));
-      else
-        n += (*s & 0xC0) != 0x80;
-    }
-    return n;
-#endif
+    (void)lineno();
+    return cno_;
   }
   /// Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).
   size_t columns() const
@@ -544,26 +562,30 @@ class AbstractMatcher {
   {
 #if defined(WITH_BYTE_COLUMNO)
     // count columns in bytes
-    for (const char *s = txt_ + len_ - 1; s >= txt_; --s)
+    const char *t = txt_;
+    for (const char *s = t + len_ - 1; s >= t; --s)
       if (*s == '\n' || *s == '\r')
-        return txt_ + len_ - s - 1;
+        return t - s + len_ - 1;
     return len_;
 #else
     // count columns in tabs and UTF-8 chars
     size_t n = cno_;
     size_t m = 0;
     const char *s;
-    for (s = txt_ + len_ - 1; s >= buf_; --s)
+    const char *t = buf_;
+    for (s = txt_ + len_ - 1; s >= t; --s)
     {
-      if (*s == '\n' || *s == '\r')
+      if (*s == '\n')
       {
         n = 0;
         break;
       }
     }
-    for (++s; s < txt_ + len_; ++s)
+    t = txt_;
+    const char *e = txt_ + len_;
+    for (++s; s < e; ++s)
     {
-      if (s == txt_)
+      if (s == t)
         m = n;
       if (*s == '\t')
         n += 1 + (~n & (opt_.T - 1));
@@ -991,15 +1013,17 @@ class AbstractMatcher {
         end_ -= gap;
 #if defined(WITH_REALLOC)
         char *newbuf = static_cast<char*>(std::realloc(static_cast<void*>(buf_), max_));
-        if (newbuf != NULL)
-          txt_ = buf_ = newbuf;
+        if (newbuf == NULL)
+          throw std::bad_alloc();
 #else
         char *newbuf = new char[max_];
         if (end_ > 0)
           std::memcpy(newbuf, txt_, end_);
         delete[] buf_;
-        txt_ = buf_ = newbuf;
 #endif
+        buf_ = newbuf;
+        txt_ = buf_;
+        lpb_ = buf_;
       }
     }
     return true;
@@ -1061,8 +1085,9 @@ class AbstractMatcher {
   size_t blk_; ///< block size for block-based input reading, as set by AbstractMatcher::buffer
   int    got_; ///< last unsigned character we looked at (to determine anchors and boundaries)
   int    chr_; ///< the character located at AbstractMatcher::txt_[AbstractMatcher::len_]
-  size_t lno_; ///< line number count (prior to this buffered input)
-  size_t cno_; ///< column number count (prior to this buffered input)
+  char  *lpb_; ///< line pointer in buffer, updated when counting line numbers with lineno()
+  size_t lno_; ///< line number count (cached)
+  size_t cno_; ///< column number count (cached)
   size_t num_; ///< character count (number of characters flushed prior to this buffered input)
   bool   own_; ///< true if AbstractMatcher::buf_ was allocated and should be deleted
   bool   eof_; ///< input has reached EOF
@@ -1115,43 +1140,10 @@ class AbstractMatcher {
   }
 #endif
   /// Update the newline count, column count, and character count when shifting the buffer. 
-  void update()
+  inline void update()
   {
-#if defined(WITH_BYTE_COLUMNO)
-    const char *t = buf_;
-    for (const char *s = buf_; s < txt_; ++s)
-    {
-      if (*s == '\n' || *s == '\r')
-      {
-        ++lno_;
-        t = s;
-        cno_ = 0;
-      }
-    }
-    // count column offset in bytes
-    cno_ += txt_ - t;
+    (void)lineno();
     num_ += txt_ - buf_;
-#else
-    for (const char *s = buf_; s < txt_; ++s)
-    {
-      if (*s == '\n' || *s == '\r')
-      {
-        ++lno_;
-        cno_ = 0;
-      }
-      else if (*s == '\t')
-      {
-        // count tab spacing
-        cno_ += 1 + (~cno_ & (opt_.T - 1));
-      }
-      else
-      {
-        // count column offset in UTF-8 chars
-        cno_ += (*s & 0xC0) != 0x80;
-      }
-    }
-    num_ += txt_ - buf_;
-#endif
   }
 };
 

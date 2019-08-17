@@ -614,14 +614,16 @@ class Input {
       size_t k = n;
       if (uidx_ < sizeof(utf8_))
       {
-        size_t l = std::strlen(utf8_ + uidx_);
+        size_t l = 0;
+        while (uidx_ + l < sizeof(utf8_) && utf8_[uidx_ + l] != '\0')
+          ++l;
         if (l > k)
           l = k;
         std::memcpy(s, utf8_ + uidx_, l);
-        uidx_ += static_cast<unsigned short>(l);
         k -= l;
         if (k == 0)
         {
+          uidx_ += static_cast<unsigned short>(l);
           if (size_ >= n)
             size_ -= n;
           return n;
