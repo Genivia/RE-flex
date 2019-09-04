@@ -1278,7 +1278,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
     {
       case '\\':
         if (pos + 1 >= len)
-          throw regex_error(regex_error::invalid_escape, pattern, pos);
+          throw regex_error(regex_error::invalid_escape, pattern, pos + 1);
         anc = false;
         c = pattern[++pos];
         if (c == 'Q')
@@ -1813,7 +1813,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
         }
         break;
       case '.':
-        if (is_modified(mod, 'u'))
+        if (is_modified(mod, 'u') && pos + 1 < len && pattern[pos + 1] != '*' && pattern[pos + 1] != '+')
         {
           // unicode: translate . to match any UTF-8 so . matches anything (also beyond U+10FFFF)
           if (is_modified(mod, 's'))

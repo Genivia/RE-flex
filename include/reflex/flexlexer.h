@@ -411,31 +411,31 @@ class FlexLexer : public AbstractLexer<M> {
       AbstractBaseLexer(input, os ? *os : std::cout)
   { }
   /// The matched text.
-  const char *YYText() const
+  inline const char *YYText() const
     /// @returns NUL-terminated string.
   {
     return this->matcher().text();
   }
   /// The matched text length.
-  int YYLeng() const
+  inline int YYLeng() const
     /// @returns matched text length.
   {
     return static_cast<int>(this->matcher().size());
   }
   /// Read one character, returns zero when EOF.
-  int input()
+  inline int input()
     /// @returns the character read.
   {
     int c = this->matcher().input();
     return c == EOF ? 0 : c;
   }
   /// Put back one character on the input character sequence for matching, invalidating the current match info and text.
-  void unput(char c) ///< character to put back
+  inline void unput(char c) ///< character to put back
   {
     this->matcher().unput(c);
   }
   /// Output one character.
-  void output(char c) ///< char to output via LexerOutput
+  inline void output(char c) ///< char to output via LexerOutput
   {
     this->LexerOutput(&c, 1);
   }

@@ -48,22 +48,34 @@ typedef int regex_error_type;
 /// Regex syntax error exceptions.
 class regex_error : public std::runtime_error {
  public:
-  static const regex_error_type mismatched_parens    = 0;  ///< mismatched ( )
-  static const regex_error_type mismatched_braces    = 1;  ///< mismatched { }
-  static const regex_error_type mismatched_brackets  = 2;  ///< mismatched [ ]
-  static const regex_error_type mismatched_quotation = 3;  ///< mismatched `\Q...\E` or `"..."` quotation
-  static const regex_error_type empty_expression     = 4;  ///< regex (sub)expression should not be empty
-  static const regex_error_type empty_class          = 5;  ///< class `[...]` is empty, e.g. `[a&&[b]]`
-  static const regex_error_type invalid_class        = 6;  ///< invalid character class name or code point
-  static const regex_error_type invalid_class_range  = 7;  ///< invalid class range, e.g. `[Z-A]`
-  static const regex_error_type invalid_escape       = 8;  ///< invalid escape character
-  static const regex_error_type invalid_anchor       = 9;  ///< invalid anchor
-  static const regex_error_type invalid_repeat       = 10; ///< invalid repeat range, e.g. `{10,1}`
-  static const regex_error_type invalid_quantifier   = 11; ///< invalid lazy/possessive quantifier
-  static const regex_error_type invalid_modifier     = 12; ///< invalid `(?ismx:)` modifier
-  static const regex_error_type invalid_syntax       = 13; ///< invalid regex syntax
-  static const regex_error_type exceeds_limits       = 14; ///< regex exceeds complexity limits (reflex::Pattern class only)
-  static const regex_error_type undefined_name       = 15; ///< undefined macro name (reflex tool only)
+  static const regex_error_type mismatched_parens     = 0;  ///< mismatched ( )
+  static const regex_error_type mismatched_braces     = 1;  ///< mismatched { }
+  static const regex_error_type mismatched_brackets   = 2;  ///< mismatched [ ]
+  static const regex_error_type mismatched_quotation  = 3;  ///< mismatched `\Q...\E` or `"..."` quotation
+  static const regex_error_type empty_expression      = 4;  ///< regex (sub)expression should not be empty
+  static const regex_error_type empty_class           = 5;  ///< class `[...]` is empty, e.g. `[a&&[b]]`
+  static const regex_error_type invalid_class         = 6;  ///< invalid character class name or code point
+  static const regex_error_type invalid_class_range   = 7;  ///< invalid character class range, e.g. `[Z-A]`
+  static const regex_error_type invalid_escape        = 8;  ///< invalid escape character
+  static const regex_error_type invalid_anchor        = 9;  ///< invalid anchor
+  static const regex_error_type invalid_repeat        = 10; ///< invalid repeat range, e.g. `{10,1}`
+  static const regex_error_type invalid_quantifier    = 11; ///< invalid lazy/possessive quantifier
+  static const regex_error_type invalid_modifier      = 12; ///< invalid `(?ismx:)` modifier
+  static const regex_error_type invalid_collating     = 13; ///< invalid collating element [[.name.]]
+  static const regex_error_type invalid_backreference = 14; ///< invalid backreference
+  static const regex_error_type invalid_syntax        = 15; ///< invalid regex syntax
+  static const regex_error_type exceeds_limits        = 16; ///< regex exceeds complexity limits (reflex::Pattern class only)
+  static const regex_error_type undefined_name        = 17; ///< undefined macro name (reflex tool only)
+  /// Construct regex error info.
+  regex_error(
+      regex_error_type   code,
+      const std::string& pattern,
+      size_t             pos = 0)
+    :
+      std::runtime_error(regex_error_message(code, pattern.c_str(), pos)),
+      code_(code),
+      pos_(pos)
+  { }
   /// Construct regex error info.
   regex_error(
       regex_error_type code,

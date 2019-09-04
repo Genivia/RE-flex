@@ -637,13 +637,13 @@ class AbstractMatcher {
   inline bool at_end()
     /// @returns true if at end of input and a read attempt will produce EOF.
   {
-    return pos_ == end_ && (eof_ || peek() == EOF);
+    return pos_ >= end_ && (eof_ || peek() == EOF);
   }
   /// Returns true if this matcher hit the end of the input character sequence.
   inline bool hit_end() const
     /// @returns true if EOF was hit (and possibly more input would have changed the result), false otherwise (but next read attempt may return EOF immediately).
   {
-    return pos_ == end_ && eof_;
+    return pos_ >= end_ && eof_;
   }
   /// Set and force the end of input state.
   inline void set_end(bool eof)
@@ -791,7 +791,7 @@ class AbstractMatcher {
       (void)grow();
       pos_ = end_;
       end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
-      if (pos_ == end_ && !wrap())
+      if (pos_ >= end_ && !wrap())
         eof_ = true;
     }
     len_ = end_ - cur_;
@@ -1072,28 +1072,6 @@ class AbstractMatcher {
     pos_ = cur_ = loc;
     got_ = loc > 0 ? static_cast<unsigned char>(buf_[loc - 1]) : Const::UNK;
   }
-  Option opt_; ///< options for matcher engines
-  char  *buf_; ///< input character sequence buffer
-  char  *txt_; ///< points to the matched text in buffer AbstractMatcher::buf_
-  size_t len_; ///< size of the matched text
-  size_t cap_; ///< nonzero capture index of an accepted match or zero
-  size_t cur_; ///< next position in AbstractMatcher::buf_ to assign to AbstractMatcher::txt_
-  size_t pos_; ///< position in AbstractMatcher::buf_ after AbstractMatcher::txt_
-  size_t end_; ///< ending position of the input buffered in AbstractMatcher::buf_
-  size_t max_; ///< total buffer size and max position + 1 to fill
-  size_t ind_; ///< current indent position
-  size_t blk_; ///< block size for block-based input reading, as set by AbstractMatcher::buffer
-  int    got_; ///< last unsigned character we looked at (to determine anchors and boundaries)
-  int    chr_; ///< the character located at AbstractMatcher::txt_[AbstractMatcher::len_]
-  char  *lpb_; ///< line pointer in buffer, updated when counting line numbers with lineno()
-  size_t lno_; ///< line number count (cached)
-  size_t cno_; ///< column number count (cached)
-  size_t num_; ///< character count (number of characters flushed prior to this buffered input)
-  bool   own_; ///< true if AbstractMatcher::buf_ was allocated and should be deleted
-  bool   eof_; ///< input has reached EOF
-  bool   mat_; ///< true if AbstractMatcher::matches() was successful
- private:
-#if defined(WITH_FAST_GET)
   /// Get the next character if not currently buffered.
   inline int get_more()
     /// @returns the character read (unsigned char 0..255) or EOF (-1).
@@ -1138,13 +1116,32 @@ class AbstractMatcher {
       }
     }
   }
-#endif
   /// Update the newline count, column count, and character count when shifting the buffer. 
   inline void update()
   {
     (void)lineno();
     num_ += txt_ - buf_;
   }
+  Option opt_; ///< options for matcher engines
+  char  *buf_; ///< input character sequence buffer
+  char  *txt_; ///< points to the matched text in buffer AbstractMatcher::buf_
+  size_t len_; ///< size of the matched text
+  size_t cap_; ///< nonzero capture index of an accepted match or zero
+  size_t cur_; ///< next position in AbstractMatcher::buf_ to assign to AbstractMatcher::txt_
+  size_t pos_; ///< position in AbstractMatcher::buf_ after AbstractMatcher::txt_
+  size_t end_; ///< ending position of the input buffered in AbstractMatcher::buf_
+  size_t max_; ///< total buffer size and max position + 1 to fill
+  size_t ind_; ///< current indent position
+  size_t blk_; ///< block size for block-based input reading, as set by AbstractMatcher::buffer
+  int    got_; ///< last unsigned character we looked at (to determine anchors and boundaries)
+  int    chr_; ///< the character located at AbstractMatcher::txt_[AbstractMatcher::len_]
+  char  *lpb_; ///< line pointer in buffer, updated when counting line numbers with lineno()
+  size_t lno_; ///< line number count (cached)
+  size_t cno_; ///< column number count (cached)
+  size_t num_; ///< character count (number of characters flushed prior to this buffered input)
+  bool   own_; ///< true if AbstractMatcher::buf_ was allocated and should be deleted
+  bool   eof_; ///< input has reached EOF
+  bool   mat_; ///< true if AbstractMatcher::matches() was successful
 };
 
 /// The pattern matcher class template extends abstract matcher base class.

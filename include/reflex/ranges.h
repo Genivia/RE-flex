@@ -28,7 +28,7 @@
 
 /**
 @file      ranges.h
-@brief     RE/flex range set container
+@brief     RE/flex range closed and open-ended set containers
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
@@ -511,13 +511,13 @@ class Ranges : public std::set< std::pair<T,T>,range_compare<T> > {
 /// RE/flex ORanges (open-ended, ordinal value range) template class.
 /**
 The ORanges class is an optimization of the ranges class for ordinal types,
-i.e. types with the property that values can be counted and have a `+` (plus)
-operator.
+i.e. types with the property that values can be counted (enumerable, i.e.
+integers and enumerations).
 
 The optimization merges adjacent ranges.  Two ranges `[a,b]` and `[c,d]` are
 adjacent when `b+1=c`.  It is safe to merge adjacent ranges over values of an
 ordinal type, because `[a,b]<+>[b+1,c]=[a,c]` with `<+>` representing range
-merging.
+merging (set union).
 
 By storing open-ended ranges `[lo,hi+1)` in the ranges class container,
 adjacent ranges are merged automatically by the fact that the bounds of
@@ -541,6 +541,17 @@ ranges can be updated by erasing ranges:
 Open-ended ranges are more efficient than `std::set` when values are adjacent,
 since `std::set` stores values individually whereas open-ended ranges merges
 adjacent values thereby reducing storage overhead and saving search time.
+
+We can iterate over open-ended ranges.  The iterator dereferences values are
+`[lo,hi+1)` pairs, i.e. `lo = i->first` and `hi = i->second - 1`.
+
+Note that the largest value that can be stored in an open-ended range is the
+maximum representable value minus 1.  For example, `reflex::ORanges<char>`
+holds values -128 to 126 and excludes 127.  The macro WITH_ORANGES_CLAMPED can
+be defined to use this library such that the maximum value is clamped to
+prevent overflow, e.g. `reflex::ORanges<char> ch = 127` is clamped to 126.
+Though this feature should not be required when the library is used properly
+with sufficiently wide container value types.
 
 Example:
 
@@ -877,14 +888,18 @@ class ORanges : public Ranges<T> {
     return false;
   }
  private:
-  /// Bump value with clamping.
-  static bound_type bump(bound_type val) ///< the value to bump
-    /// @returns val + 1 or val when signed or unsigned max integer.
+  /// Bump value.
+  static inline bound_type bump(bound_type val) ///< the value to bump
+    /// @returns val + 1.
   {
+#ifdef WITH_ORANGES_CLAMPED
     bound_type lav = ~val - 1; // trick to get around -Wstrict-overflow warning for signed types
-    if (std::less<bound_type>()(~lav, val)) // check integer overflow 
+    if (std::less<bound_type>()(~lav, val)) // check integer overflow, if overflow do not bump
       return val;
     return ~lav;
+#else
+    return static_cast<bound_type>(val + static_cast<bound_type>(1));
+#endif
   }
 };
 

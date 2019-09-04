@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Aug 17 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Sep 4 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -216,6 +216,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4ef7b75dfc67ee897a77e70ed7ca46d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a4ef7b75dfc67ee897a77e70ed7ca46d2">states_empty</a> () const </td></tr>
 <tr class="memdesc:a4ef7b75dfc67ee897a77e70ed7ca46d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the condition state stack is empty.  <a href="#a4ef7b75dfc67ee897a77e70ed7ca46d2">More...</a><br /></td></tr>
 <tr class="separator:a4ef7b75dfc67ee897a77e70ed7ca46d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48da3dea969abc450e9f050600fd43d9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a48da3dea969abc450e9f050600fd43d9">lexer_error</a> (const char *message=NULL)</td></tr>
+<tr class="memdesc:a48da3dea969abc450e9f050600fd43d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lexer exceptions.  <a href="#a48da3dea969abc450e9f050600fd43d9">More...</a><br /></td></tr>
+<tr class="separator:a48da3dea969abc450e9f050600fd43d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -633,6 +636,34 @@ template&lt;typename M &gt; </div>
 
 <p>Returns the current input character sequence that is being scanned. </p>
 <dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a48da3dea969abc450e9f050600fd43d9"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt; M &gt;::lexer_error </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>message</em> = <code>NULL</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Lexer exceptions. </p>
 
 </div>
 </div>
@@ -1697,7 +1728,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Aug 17 2019 16:20:06 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Sep 4 2019 11:57:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

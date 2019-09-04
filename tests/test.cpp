@@ -61,6 +61,49 @@ int main(int argc, char **argv)
         std::cerr << e.what();
       }
 
+      printf("\n** Boost.Regex Perl mode test\n");
+      try
+      {
+        regex = reflex::BoostPerlMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
+        printf("\n** using converted regex: %s\n\n", regex.c_str());
+        boost::regex boost_pattern(regex, boost::regex_constants::no_empty_expressions);
+        reflex::BoostPerlMatcher boostmatcher(boost_pattern, argv[2], opts);
+        if (argc > 3)
+          boostmatcher.buffer(strtoul(argv[3], NULL, 10));
+        if (!boostmatcher.matches())
+	{
+          printf("No match\n");
+	}
+        else
+	{
+          printf("Match:");
+	  for (size_t i = 1; boostmatcher[i].first; ++i)
+	    printf(" group[%zu]=(%zu,%zu)", i, boostmatcher[i].first - boostmatcher[0].first, boostmatcher[i].second);
+	  printf("\n");
+	  fflush(stdout);
+	  std::cout << boostmatcher << std::endl;
+	}
+        boostmatcher.input(argv[2]);
+        if (argc > 3)
+          boostmatcher.buffer(strtoul(argv[3], NULL, 10));
+        while (boostmatcher.scan())
+          printf("Scan %zu '%s'\n", boostmatcher.accept(), boostmatcher.text());
+        boostmatcher.input(argv[2]);
+        if (argc > 3)
+          boostmatcher.buffer(strtoul(argv[3], NULL, 10));
+        while (boostmatcher.find())
+          printf("Find %zu '%s' at %zu,%zu spans %zu..%zu %s\n", boostmatcher.accept(), boostmatcher.text(), boostmatcher.lineno(), boostmatcher.columno(), boostmatcher.first(), boostmatcher.last(), boostmatcher.at_end() ? "at end" : "");
+        boostmatcher.input(argv[2]);
+        if (argc > 3)
+          boostmatcher.buffer(strtoul(argv[3], NULL, 10));
+        while (boostmatcher.split())
+          printf("Split %zu '%s' at %zu\n", boostmatcher.accept(), boostmatcher.text(), boostmatcher.columno());
+      }
+      catch (const reflex::regex_error& e)
+      {
+        std::cerr << e.what();
+      }
+
       printf("\n** C++11 std::regex Ecma mode test\n");
       try
       {

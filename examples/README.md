@@ -45,6 +45,7 @@ RE/flex scanner examples using RE/flex lexer syntax
 - `unicode.l` a very simple Unicode word matcher to demonstrate Unicode matching
 - `scanstrings.l` demonstrates string and buffer scanning
 - `mmap.l` demonstrates mmap(2) to scan a C/C++ source code file fast
+- `fastfind.l` demonstrates fast search for patterns in input, rather than scanning the input
 - `tag.l` simple lexer to print out all XML/HTML tags
 - `tag_lazy.l` simple lexer to print XML/HTML tags, uses lazy quants
 - `tag_lazystates.l` lexer to print XML tags, uses lazy quants and states
@@ -70,7 +71,8 @@ Regex pattern matching with the RE/flex pattern matching library
 
 - `cards.cpp` matches credit card numbers
 - `cvt2utf` demonstrates `reflex::Input` UTF-8 normalization to convert files to UTF-8/16/32
-- `ugrep.cpp` [universal grep](https://github.com/Genivia/ugrep) to search files with Unicode patterns, uses the RE/flex regex engine
+- `fastsearch.cpp` demonstrates super fast search with fixed regex patterns, faster than GNU grep
+- `ugrep.cpp` [universal grep](https://github.com/Genivia/ugrep) to search files fast, uses the RE/flex regex engine
 - `url.cpp` capture domain, path, and query keys from URLs (requires Boost.Regex for captures)
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png

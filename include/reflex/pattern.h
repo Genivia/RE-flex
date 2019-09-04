@@ -63,12 +63,15 @@ namespace reflex {
 class Pattern {
   friend class Matcher; ///< permit access by the reflex::Matcher engine
  public:
+  typedef uint8_t  Pred;   ///< predict match bit vector
+  typedef uint16_t Hash;   ///< hash type (uint16_t), may be narrowed to uint8_t when Const::HASH == 0x100
   typedef uint16_t Index;  ///< index into opcodes array Pattern::opc_ and subpattern indexing
   typedef uint32_t Opcode; ///< 32 bit opcode word
   typedef void (*FSM)(class Matcher&); ///< function pointer to FSM code
   /// Common constants.
-  enum Const {
-    IMAX = 0xFFFF, ///< max index, also serves as a marker
+  struct Const {
+    static const Index IMAX = 0xFFFF; ///< max index, also serves as a marker
+    static const Index HASH = 0x0400; ///< size of the predict match array
   };
   /// Construct an unset pattern.
   explicit Pattern()
@@ -122,22 +125,26 @@ class Pattern {
     init(options.c_str());
   }
   /// Construct a pattern object given an opcode table.
-  explicit Pattern(const Opcode *code)
+  explicit Pattern(
+      const Opcode  *code,
+      const uint8_t *hash = NULL)
     :
       opc_(code),
       nop_(0),
       fsm_(NULL)
   {
-    init(NULL);
+    init(NULL, hash);
   }
   /// Construct a pattern object given a function pointer to FSM code.
-  explicit Pattern(FSM fsm)
+  explicit Pattern(
+      FSM            fsm,
+      const uint8_t *hash = NULL)
     :
       opc_(NULL),
       nop_(0),
       fsm_(fsm)
   {
-    init(NULL);
+    init(NULL, hash);
   }
   /// Destructor, deletes internal code array when owned and allocated.
   virtual ~Pattern()
@@ -155,7 +162,7 @@ class Pattern {
     fsm_ = NULL;
   }
   /// Assign a (new) pattern.
-  Pattern&  assign(
+  Pattern& assign(
       const char *regex,
       const char *options = NULL)
   {
@@ -186,19 +193,23 @@ class Pattern {
     return assign(regex.c_str(), options.c_str());
   }
   /// Assign a (new) pattern.
-  Pattern& assign(const Opcode *code)
+  Pattern& assign(
+      const Opcode  *code,
+      const uint8_t *hash = NULL)
   {
     clear();
     opc_ = code;
-    init(NULL);
+    init(NULL, hash);
     return *this;
   }
   /// Assign a (new) pattern.
-  Pattern& assign(FSM fsm)
+  Pattern& assign(
+      FSM            fsm,
+      const uint8_t *hash = NULL)
   {
     clear();
     fsm_ = fsm;
-    init(NULL);
+    init(NULL, hash);
     return *this;
   }
   /// Assign a (new) pattern.
@@ -312,9 +323,9 @@ class Pattern {
  private:
   typedef unsigned int            Char;
 #if defined(WITH_BITS)
-  typedef Bits                    Chars; ///< represent 8-bit char (+ meta char) set as a bitvector
+  typedef Bits                    Chars; ///< represent char (0-255 + meta chars) set as a bitvector
 #else
-  typedef ORanges<Char>           Chars; ///< represent (wide) char set as a set of ranges
+  typedef ORanges<Char>           Chars; ///< represent char (0-255 + meta chars) set as a set of ranges
 #endif
   typedef size_t                  Location;
   typedef ORanges<Location>       Locations;
@@ -360,27 +371,26 @@ class Pattern {
     State(const Positions& p)
       :
         Positions(p),
-        index(0),
-        accept(0),
-        redo(false),
         next(NULL),
         left(NULL),
-        right(NULL)
+        right(NULL),
+        index(0),
+        accept(0),
+        redo(false)
     { }
-    // Positions positions;
-    Edges  edges;
-    Index  index;  ///< index of this state
-    Index  accept; ///< nonzero if final state, the index of an accepted/captured subpattern
-    bool   redo;   ///< true if this is an ignorable final state
-    Set    heads;  ///< lookahead head set
-    Set    tails;  ///< lookahead tail set
     State *next;   ///< points to sibling state allocated depth-first by subset construction
     State *left;   ///< left pointer for O(log N) node insertion in the state graph
     State *right;  ///< right pointer for O(log N) node insertion in the state graph
+    Edges  edges;  ///< state transitions
+    Index  index;  ///< index of this state
+    Index  accept; ///< nonzero if final state, the index of an accepted/captured subpattern
+    Set    heads;  ///< lookahead head set
+    Set    tails;  ///< lookahead tail set
+    bool   redo;   ///< true if this is an ignorable final state
   };
   /// Global modifier modes, syntax flags, and compiler options.
   struct Option {
-    Option() : b(), e(), f(), i(), l(), m(), n(), o(), q(), r(), s(), w(), x(), z() { }
+    Option() : b(), e(), f(), i(), l(), m(), n(), o(), p(), q(), r(), s(), w(), x(), z() { }
     bool                     b; ///< disable escapes in bracket lists
     Char                     e; ///< escape character, or '\0' for none, '\\' default
     std::vector<std::string> f; ///< output to files
@@ -389,6 +399,7 @@ class Pattern {
     bool                     m; ///< multi-line mode, also `(?m:X)`
     std::string              n; ///< pattern name (for use in generated code)
     bool                     o; ///< generate optimized FSM code for option f
+    bool                     p; ///< with option f also output predict match array for fast search with find()
     bool                     q; ///< enable "X" quotation of verbatim content, also `(?q:X)`
     bool                     r; ///< raise syntax errors
     bool                     s; ///< single-line mode (dotall mode), also `(?s:X)`
@@ -415,7 +426,9 @@ class Pattern {
     META_MAX          ///< max meta characters
   };
   /// Initialize the pattern at construction.
-  void init(const char *options);
+  void init(
+      const char    *options,
+      const uint8_t *hash = NULL);
   void init_options(const char *options);
   void parse(
       Positions& startpos,
@@ -513,9 +526,12 @@ class Pattern {
   void delete_dfa(State& start);
   void export_dfa(const State& start) const;
   void export_code() const;
+  void predict_match_dfa(State& start);
+  void gen_predict_match_hash(State *state);
+  void gen_predict_match_hash_transitions(State *state, std::map<State*,ORanges<Char> >& states);
+  void gen_predict_match_hash_transitions(Index level, State *state, ORanges<Char>& labels, std::map<State*,ORanges<Char> >& states);
   void write_namespace_open(FILE* fd) const;
   void write_namespace_close(FILE* fd) const;
-
   Location find_at(
       Location loc,
       char     c) const
@@ -576,27 +592,27 @@ class Pattern {
       modifiers[mode].insert(from, to);
     }
   }
-  static bool is_meta(Char c)
+  static inline bool is_meta(Char c)
   {
     return c > 0x100;
   }
-  static Opcode opcode_take(Index index)
+  static inline Opcode opcode_take(Index index)
   {
     return 0xFF000000 | index;
   }
-  static Opcode opcode_redo()
+  static inline Opcode opcode_redo()
   {
-    return 0xFF000000 | IMAX;
+    return 0xFF000000 | Const::IMAX;
   }
-  static Opcode opcode_tail(Index index)
+  static inline Opcode opcode_tail(Index index)
   {
     return 0xFF7E0000 | index;
   }
-  static Opcode opcode_head(Index index)
+  static inline Opcode opcode_head(Index index)
   {
     return 0xFF7F0000 | index;
   }
-  static Opcode opcode_goto(
+  static inline Opcode opcode_goto(
       Char  lo,
       Char  hi,
       Index index)
@@ -604,71 +620,79 @@ class Pattern {
     if (!is_meta(lo)) return lo << 24 | hi << 16 | index;
     return 0xFF000000 | (lo - META_MIN) << 16 | index;
   }
-  static Opcode opcode_halt()
+  static inline Opcode opcode_halt()
   {
-    return 0x00FF0000 | IMAX;
+    return 0x00FF0000 | Const::IMAX;
   }
-  static bool is_opcode_redo(Opcode opcode)
+  static inline bool is_opcode_redo(Opcode opcode)
   {
-    return opcode == (0xFF000000 | IMAX);
+    return opcode == (0xFF000000 | Const::IMAX);
   }
-  static bool is_opcode_take(Opcode opcode)
+  static inline bool is_opcode_take(Opcode opcode)
   {
     return (opcode & 0xFFFF0000) == 0xFF000000;
   }
-  static bool is_opcode_tail(Opcode opcode)
+  static inline bool is_opcode_tail(Opcode opcode)
   {
     return (opcode & 0xFFFF0000) == 0xFF7E0000;
   }
-  static bool is_opcode_head(Opcode opcode)
+  static inline bool is_opcode_head(Opcode opcode)
   {
     return (opcode & 0xFFFF0000) == 0xFF7F0000;
   }
-  static bool is_opcode_halt(Opcode opcode)
+  static inline bool is_opcode_halt(Opcode opcode)
   {
-    return opcode == (0x00FF0000 | IMAX);
+    return opcode == (0x00FF0000 | Const::IMAX);
   }
-  static bool is_opcode_meta(Opcode opcode)
+  static inline bool is_opcode_meta(Opcode opcode)
   {
     return (opcode & 0xFF800000) == 0xFF000000;
   }
-  static bool is_opcode_meta(Opcode opcode, Char a)
+  static inline bool is_opcode_meta(Opcode opcode, Char a)
   {
     return (opcode & 0xFFFF0000) == (0xFF000000 | (a - META_MIN) << 16);
   }
-  static bool is_opcode_match(
+  static inline bool is_opcode_match(
       Opcode        opcode,
       unsigned char c)
   {
     return c >= (opcode >> 24) && c <= (opcode >> 16 & 0xFF);
   }
-  static Char meta_of(Opcode opcode)
+  static inline Char meta_of(Opcode opcode)
   {
     return META_MIN + (opcode >> 16 & 0xFF);
   }
-  static Char lo_of(Opcode opcode)
+  static inline Char lo_of(Opcode opcode)
   {
     return is_opcode_meta(opcode) ? meta_of(opcode) : opcode >> 24;
   }
-  static Char hi_of(Opcode opcode)
+  static inline Char hi_of(Opcode opcode)
   {
     return is_opcode_meta(opcode) ? meta_of(opcode) : opcode >> 16 & 0xFF;
   }
-  static Index index_of(Opcode opcode)
+  static inline Index index_of(Opcode opcode)
   {
     return opcode & 0xFFFF;
   }
-  static Char lowercase(Char c)
+  static inline Char lowercase(Char c)
   {
     return static_cast<unsigned char>(c | 0x20);
   }
-  static Char uppercase(Char c)
+  static inline Char uppercase(Char c)
   {
     return static_cast<unsigned char>(c & ~0x20);
   }
-  static Char reversecase(Char c)
+  static inline Char reversecase(Char c)
   {
     return static_cast<unsigned char>(c ^ 0x20);
+  }
+  static inline Hash hash(Hash h1, Hash h2)
+  {
+    return ((h1 << 3) ^ h2) & (Const::HASH - 1);
+  }
+  static inline Hash hash(Hash h)
+  {
+    return h & ((Const::HASH - 1) >> 3);
   }
   Option                opt_; ///< pattern compiler options
   std::string           rex_; ///< regular expression string
@@ -679,6 +703,9 @@ class Pattern {
   const Opcode         *opc_; ///< points to the opcode table
   Index                 nop_; ///< number of opcodes generated
   FSM                   fsm_; ///< function pointer to FSM code
+  std::string           pre_; ///< pattern prefix
+  bool                  pme_; ///< predict-match enabled
+  Pred                  pma_[Const::HASH]; ///< predict-match array
   float                 pms_; ///< ms elapsed time to parse regex
   float                 vms_; ///< ms elapsed time to compile DFA vertices
   float                 ems_; ///< ms elapsed time to compile DFA edges

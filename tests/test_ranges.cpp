@@ -135,14 +135,16 @@ Set of 4 ranges:
 
   ORanges<char> bytes;
   bytes.insert(32, 126);
-  bytes.insert(127);
-  std::cout << "Set of " << bytes.size() << " open-ended byte ranges up to max 127:" << std::endl;
+  std::cout << "Set of " << bytes.size() << " open-ended byte ranges up to max 126:" << std::endl;
   for (ORanges<char>::const_iterator i = bytes.begin(); i != bytes.end(); ++i)
     std::cout << "[" << (int)i->first << "," << (int)i->second << ")" << std::endl;
-  assert(bytes.size() == 1 && bytes.find(127) != bytes.end()); // fails if integer wrap fails to check overflow
+  assert(bytes.size() == 1 && bytes.find(126) != bytes.end());
 
-  Ranges<Color> colors;
-  colors.insert(GREEN, BLUE);
+  Ranges<Color> colors1;
+  colors1.insert(GREEN, BLUE);
+
+  ORanges<Color> colors2;
+  colors2.insert(GREEN, BLUE);
 
   Ranges<float> intervals;
   intervals.insert(1.0, 2.0);

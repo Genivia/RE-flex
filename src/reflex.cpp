@@ -67,6 +67,7 @@ static const char *options_table[] = {
   "exception",
   "extra_type",
   "fast",
+  "find",
   "flex",
   "freespace",
   "full",
@@ -437,8 +438,21 @@ void Reflex::init(int argc, char **argv)
           case 's':
             options["nodefault"] = "true";
             break;
+          case 'S':
+            options["find"] = "true";
+            break;
           case 't':
             options["stdout"] = "true";
+            break;
+          case 'T':
+            ++arg;
+            if (*arg)
+              options["tabs"] = &arg[*arg == '='];
+            else if (++i < argc && *argv[i] != '-')
+              options["tabs"] = argv[i];
+            else
+              help("missing N for option -T N");
+            is_grouped = false;
             break;
           case 'u':
             options["unicode"] = "true";
@@ -477,7 +491,10 @@ void Reflex::init(int argc, char **argv)
 /// Display version information and exit
 void Reflex::version()
 {
-  std::cout << "reflex " REFLEX_VERSION " " PLATFORM << std::endl;
+  std::cout << "reflex " REFLEX_VERSION " " PLATFORM << "\n"
+    "Copyright (c) Genivia Inc.\n"
+    "License BSD-3-Clause: <https://opensource.org/licenses/BSD-3-Clause>\n"
+    "Written by Robert van Engelen and others: <https://github.com/Genivia/RE-flex>" << std::endl;
   exit(EXIT_SUCCESS);
 }
 
@@ -507,7 +524,7 @@ void Reflex::help(const char *message, const char *arg)
                 ignore case in patterns\n\
         -I, --interactive, --always-interactive\n\
                 generate interactive scanner\n\
-        -m, --matcher=NAME\n\
+        -m NAME, --matcher=NAME\n\
                 use matcher NAME library [";
   for (LibraryMap::const_iterator i = libraries.begin(); i != libraries.end(); ++i)
     std::cout << i->first << "|";
@@ -516,15 +533,17 @@ void Reflex::help(const char *message, const char *arg)
                 use custom pattern class NAME for custom matcher option -m\n\
         --include=FILE\n\
                 include header FILE.h for custom matcher option -m\n\
-        --tabs=N\n\
-                set tab size to N (1,2,4,8) for indent and dedent matching\n\
+        -S, --find\n\
+                generate search engine to find matches, ignores unmatched input\n\
+        -T N, --tabs=N\n\
+                set default tab size to N (1,2,4,8) for indent/dedent matching\n\
         -u, --unicode\n\
                 match Unicode . (dot), \\p, \\s, \\w, ..., and group UTF-8\n\
         -x, --freespace\n\
                 ignore space in patterns\n\
 \n\
     Generated files:\n\
-        -o, --outfile=FILE\n\
+        -o FILE, --outfile=FILE\n\
                 specify output FILE instead of lex.yy.cpp\n\
         -t, --stdout\n\
                 write scanner on stdout instead of lex.yy.cpp\n\
@@ -553,7 +572,7 @@ void Reflex::help(const char *message, const char *arg)
                 generate main() to invoke lex() or yylex()\n\
         -L, --noline\n\
                 suppress #line directives in scanner\n\
-        -P, --prefix=NAME\n\
+        -P NAME, --prefix=NAME\n\
                 use NAME as prefix to FlexLexer class name and its members\n\
         --nostdinit\n\
                 initialize input to std::cin instead of stdin\n\
@@ -1193,7 +1212,7 @@ bool Reflex::get_starts(size_t& pos, Starts& starts)
 void Reflex::abort(const char *message, const char *arg)
 {
   std::cerr <<
-    SGR("\033[1m") << "reflex: " <<
+    SGR("\033[0m") << "reflex: " <<
     SGR("\033[1;31m") << "error: " << SGR("\033[0m") <<
     message <<
     SGR("\033[1m") << (arg != NULL ? arg : "") << SGR("\033[0m") <<
@@ -1205,7 +1224,7 @@ void Reflex::abort(const char *message, const char *arg)
 void Reflex::error(const char *message, const char *arg, size_t at_lineno)
 {
   std::cerr <<
-    SGR("\033[1m") << (infile.empty() ? "(stdin)" : infile.c_str()) << ":" << (at_lineno ? at_lineno : lineno) << ": " <<
+    SGR("\033[0m") << (infile.empty() ? "(stdin)" : infile.c_str()) << ":" << (at_lineno ? at_lineno : lineno) << ": " <<
     SGR("\033[1;31m") << "error: " << SGR("\033[0m") <<
     message <<
     SGR("\033[1m") << (arg != NULL ? arg : "") << SGR("\033[0m") <<
@@ -1218,7 +1237,7 @@ void Reflex::warning(const char *message, const char *arg, size_t at_lineno)
 {
   if (options["nowarn"].empty())
     std::cerr <<
-      SGR("\033[1m") << (infile.empty() ? "(stdin)" : infile.c_str()) << ":" << (at_lineno ? at_lineno : lineno) << ": " <<
+      SGR("\033[0m") << (infile.empty() ? "(stdin)" : infile.c_str()) << ":" << (at_lineno ? at_lineno : lineno) << ": " <<
       SGR("\033[1;35m") << "warning: " << SGR("\033[0m") <<
       message <<
       SGR("\033[1m") << (arg != NULL ? arg : "") << SGR("\033[0m") <<
@@ -2406,6 +2425,8 @@ void Reflex::write_lexer()
       if (!options["namespace"].empty())
         write_namespace_open();
       *out << "extern void reflex_code_" << conditions[start] << "(reflex::Matcher&);\n";
+      if (!options["find"].empty())
+        *out << "extern const reflex::Pattern::Pred reflex_pred_" << conditions[start] << "[];\n";
       if (!options["namespace"].empty())
         write_namespace_close();
     }
@@ -2418,6 +2439,8 @@ void Reflex::write_lexer()
       if (!options["namespace"].empty())
         write_namespace_open();
       *out << "extern const reflex::Pattern::Opcode reflex_code_" << conditions[start] << "[];\n";
+      if (!options["find"].empty())
+        *out << "extern const reflex::Pattern::Pred reflex_pred_" << conditions[start] << "[];\n";
       if (!options["namespace"].empty())
         write_namespace_close();
     }
@@ -2446,7 +2469,10 @@ void Reflex::write_lexer()
     {
       if (!options["full"].empty() || !options["fast"].empty())
       {
-        *out << "  static const reflex::Pattern PATTERN_" << conditions[start] << "(reflex_code_" << conditions[start] << ");\n";
+        *out << "  static const reflex::Pattern PATTERN_" << conditions[start] << "(reflex_code_" << conditions[start];
+        if (!options["find"].empty())
+          *out << ", reflex_pred_" << conditions[start];
+        *out << ");\n";
       }
       else
       {
@@ -2519,100 +2545,117 @@ void Reflex::write_lexer()
       *out <<
         "      case " << conditions[start] << ":\n"
         "        matcher().pattern(PATTERN_" << conditions[start] << ");\n";
-    if (!options["bison_locations"].empty() && options["bison_complete"].empty())
-      *out <<
-        "        matcher().scan();\n"
-        "        yylloc_update(yylloc);\n"
-        "        switch (matcher().accept())\n"
-        "        {\n"
-        "          case 0:\n"
-        "            if (matcher().at_end())\n"
-        "            {\n";
-    else
-      *out <<
-        "        switch (matcher().scan())\n"
-        "        {\n"
-        "          case 0:\n"
-        "            if (matcher().at_end())\n"
-        "            {\n";
-    bool has_eof = false;
-    for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
+    if (!options["find"].empty())
     {
-      if (rule->regex == "<<EOF>>")
-      {
-        if (!options["debug"].empty())
-          *out <<
-            "              if (debug()) std::cerr << \"--" <<
-            SGR("\\033[1;35m") << "EOF rule at line " << rule->code.lineno << SGR("\\033[0m") <<
-            " (start condition \" << start() << \")\\n\";\n";
-        write_code(rule->code);
-        has_eof = true;
-        break;
-      }
-    }
-    if (!has_eof && !options["debug"].empty())
-      *out <<
-        "              if (debug()) std::cerr << \"--" <<
-        SGR("\\033[1;35m") << "EOF" << SGR("\\033[0m") <<
-        " (start condition \" << start() << \")\\n\";\n";
-    if (!options["perf_report"].empty())
-      *out << "              perf_report();\n";
-    if (!has_eof)
-    {
-      if (!options["flex"].empty())
+      if (!options["bison_locations"].empty() && options["bison_complete"].empty())
         *out <<
-          "              yyterminate();\n";
+          "        matcher().find();\n"
+          "        yylloc_update(yylloc);\n"
+          "        switch (matcher().accept())\n";
       else
         *out <<
-          "              return " << token_type << "();\n";
-    }
-    *out <<
-      "            }\n"
-      "            else\n"
-      "            {\n";
-    if (!options["debug"].empty())
+          "        switch (matcher().find())\n";
       *out <<
-        "              if (debug()) std::cerr << \"--" <<
-        SGR("\\033[1;31m") << "accepting default rule" << SGR("\\033[0m") <<
-        "\\n\";\n";
-    if (!options["nodefault"].empty())
+        "        {\n"
+        "          case 0:\n"
+        "            return " << token_type << "();\n";
+    }
+    else
     {
-      if (!options["flex"].empty())
+      if (!options["bison_locations"].empty() && options["bison_complete"].empty())
         *out <<
-          "              LexerError(\"scanner jammed\");\n"
-          "              yyterminate();\n";
-      else if (!options["debug"].empty())
+          "        matcher().scan();\n"
+          "        yylloc_update(yylloc);\n"
+          "        switch (matcher().accept())\n";
+      else
+        *out <<
+          "        switch (matcher().scan())\n";
+      *out <<
+        "        {\n"
+        "          case 0:\n"
+        "            if (matcher().at_end())\n"
+        "            {\n";
+      bool has_eof = false;
+      for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
+      {
+        if (rule->regex == "<<EOF>>")
+        {
+          if (!options["debug"].empty())
+            *out <<
+              "              if (debug()) std::cerr << \"--" <<
+              SGR("\\033[1;35m") << "EOF rule at line " << rule->code.lineno << SGR("\\033[0m") <<
+              " (start condition \" << start() << \")\\n\";\n";
+          write_code(rule->code);
+          has_eof = true;
+          break;
+        }
+      }
+      if (!has_eof && !options["debug"].empty())
         *out <<
           "              if (debug()) std::cerr << \"--" <<
-          SGR("\\033[1;31m") << "suppressing default rule" << SGR("\\033[0m") <<
-          " (\\\"\" << (char)matcher().input() << \"\\\")\\n\";\n";
-      else
-        *out <<
-          "              matcher().input();\n";
-    }
-    else
-    {
+          SGR("\\033[1;35m") << "EOF" << SGR("\\033[0m") <<
+          " (start condition \" << start() << \")\\n\";\n";
       if (!options["perf_report"].empty())
+        *out << "              perf_report();\n";
+      if (!has_eof)
+      {
+        if (!options["flex"].empty())
+          *out <<
+            "              yyterminate();\n";
+        else
+          *out <<
+            "              return " << token_type << "();\n";
+      }
+      *out <<
+        "            }\n"
+        "            else\n"
+        "            {\n";
+      if (!options["debug"].empty())
         *out <<
-          "              ++perf_report_" << conditions[start] << "_default;\n";
-      if (!options["exception"].empty())
+          "              if (debug()) std::cerr << \"--" <<
+          SGR("\\033[1;31m") << "accepting default rule" << SGR("\\033[0m") <<
+          "\\n\";\n";
+      if (!options["nodefault"].empty())
+      {
+        if (!options["flex"].empty())
+          *out <<
+            "              LexerError(\"scanner jammed\");\n"
+            "              yyterminate();\n";
+        else if (!options["debug"].empty())
+          *out <<
+            "              char ch = matcher().input();\n"
+            "              if (debug()) std::cerr << \"--" <<
+            SGR("\\033[1;31m") << "suppressing default rule for" << SGR("\\033[0m") <<
+            " (\\\"\" << ch << \"\\\")\\n\";\n";
+        else
+          *out <<
+            "              lexer_error(\"scanner jammed\");\n"
+            "              return " << token_type << "();\n";
+      }
+      else
+      {
+        if (!options["perf_report"].empty())
+          *out <<
+            "              ++perf_report_" << conditions[start] << "_default;\n";
+        if (!options["exception"].empty())
+          *out <<
+            "              throw " << options["exception"] << ";\n";
+        else if (!options["flex"].empty())
+          *out <<
+            "              output(matcher().input());\n";
+        else
+          *out <<
+            "              out().put(matcher().input());\n";
+      }
+      *out <<
+        "            }\n";
+      if (!options["flex"].empty())
         *out <<
-          "              throw " << options["exception"] << ";\n";
-      else if (!options["flex"].empty())
-        *out <<
-          "              output(matcher().input());\n";
+          "            YY_BREAK\n";
       else
         *out <<
-          "              out().put(matcher().input());\n";
+          "            break;\n";
     }
-    *out <<
-      "            }\n";
-    if (!options["flex"].empty())
-      *out <<
-        "            YY_BREAK\n";
-    else
-      *out <<
-        "            break;\n";
     size_t accept = 1;
     size_t report = 0;
     bool has_code = true;
@@ -2836,6 +2879,8 @@ void Reflex::stats()
         option.append(";f=").append(start > 0 ? "+" : "").append(file_ext(options["graphs_file"], "gv"));
       if (!options["fast"].empty())
         option.append(";o");
+      if (!options["find"].empty())
+        option.append(";p");
       if (options["tables_file"] == "true")
         option.append(";f=reflex.").append(conditions[start]).append(".cpp");
       else if (!options["tables_file"].empty())

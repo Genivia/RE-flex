@@ -1,19 +1,19 @@
 <map id="reflex::StdEcmaMatcher" name="reflex::StdEcmaMatcher">
-<area shape="rect" id="node2" href="$classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="1759,415,1861,441"/>
-<area shape="rect" id="node3" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; std::regex \&gt;" alt="" coords="1589,407,1709,449"/>
-<area shape="rect" id="node4" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="817,453,943,480"/>
-<area shape="rect" id="node6" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1038,513,1163,554"/>
-<area shape="rect" id="node19" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="1041,367,1161,409"/>
-<area shape="rect" id="node5" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="621,419,747,461"/>
-<area shape="rect" id="node7" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="647,485,721,512"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="459,485,532,512"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="307,478,409,519"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="136,485,257,512"/>
-<area shape="rect" id="node11" title="STL class. " alt="" coords="5,485,87,512"/>
-<area shape="rect" id="node12" href="$classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher..." alt="" coords="1435,252,1519,279"/>
-<area shape="rect" id="node13" href="$structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="1241,95,1359,121"/>
-<area shape="rect" id="node14" title="STL class. " alt="" coords="847,33,913,60"/>
-<area shape="rect" id="node15" title="STL class. " alt="" coords="634,26,734,67"/>
-<area shape="rect" id="node18" href="$classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="1256,252,1344,279"/>
-<area shape="rect" id="node23" href="$structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="1043,309,1158,336"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="2108,436,2239,463"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; std::regex \&gt;" alt="" coords="1905,429,2059,470"/>
+<area shape="rect" id="node4" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="969,475,1128,501"/>
+<area shape="rect" id="node6" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1239,534,1397,575"/>
+<area shape="rect" id="node19" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="1241,389,1395,430"/>
+<area shape="rect" id="node5" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="732,441,891,482"/>
+<area shape="rect" id="node7" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="765,507,857,533"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="537,507,628,533"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="359,499,488,541"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="155,507,309,533"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="5,507,105,533"/>
+<area shape="rect" id="node12" href="$classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher..." alt="" coords="1721,273,1827,300"/>
+<area shape="rect" id="node13" href="$structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="1484,116,1636,143"/>
+<area shape="rect" id="node14" title="STL class. " alt="" coords="1009,55,1089,81"/>
+<area shape="rect" id="node15" title="STL class. " alt="" coords="748,47,875,89"/>
+<area shape="rect" id="node18" href="$classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="1505,273,1615,300"/>
+<area shape="rect" id="node23" href="$structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="1245,331,1391,357"/>
 </map>

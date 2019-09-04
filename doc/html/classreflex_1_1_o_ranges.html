@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::ORanges&lt; T &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Aug 17 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Sep 4 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -251,7 +251,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a214b9c65df80346fe6e0cb801fee8a40"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classreflex_1_1_ranges.html#a5932a3dc82b3b47baa01c205b40eec64">bound_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_o_ranges.html#a214b9c65df80346fe6e0cb801fee8a40">bump</a> (<a class="el" href="classreflex_1_1_ranges.html#a5932a3dc82b3b47baa01c205b40eec64">bound_type</a> val)</td></tr>
-<tr class="memdesc:a214b9c65df80346fe6e0cb801fee8a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bump value with clamping.  <a href="#a214b9c65df80346fe6e0cb801fee8a40">More...</a><br /></td></tr>
+<tr class="memdesc:a214b9c65df80346fe6e0cb801fee8a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bump value.  <a href="#a214b9c65df80346fe6e0cb801fee8a40">More...</a><br /></td></tr>
 <tr class="separator:a214b9c65df80346fe6e0cb801fee8a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -259,8 +259,8 @@ Static Private Member Functions</h2></td></tr>
 class reflex::ORanges&lt; T &gt;</h3>
 
 <p>RE/flex <a class="el" href="classreflex_1_1_o_ranges.html" title="RE/flex ORanges (open-ended, ordinal value range) template class. ">ORanges</a> (open-ended, ordinal value range) template class. </p>
-<p>The <a class="el" href="classreflex_1_1_o_ranges.html" title="RE/flex ORanges (open-ended, ordinal value range) template class. ">ORanges</a> class is an optimization of the ranges class for ordinal types, i.e. types with the property that values can be counted and have a <code>+</code> (plus) operator.</p>
-<p>The optimization merges adjacent ranges. Two ranges <code>[a,b]</code> and <code>[c,d]</code> are adjacent when <code>b+1=c</code>. It is safe to merge adjacent ranges over values of an ordinal type, because <code>[a,b]&lt;+&gt;[b+1,c]=[a,c]</code> with <code>&lt;+&gt;</code> representing range merging.</p>
+<p>The <a class="el" href="classreflex_1_1_o_ranges.html" title="RE/flex ORanges (open-ended, ordinal value range) template class. ">ORanges</a> class is an optimization of the ranges class for ordinal types, i.e. types with the property that values can be counted (enumerable, i.e. integers and enumerations).</p>
+<p>The optimization merges adjacent ranges. Two ranges <code>[a,b]</code> and <code>[c,d]</code> are adjacent when <code>b+1=c</code>. It is safe to merge adjacent ranges over values of an ordinal type, because <code>[a,b]&lt;+&gt;[b+1,c]=[a,c]</code> with <code>&lt;+&gt;</code> representing range merging (set union).</p>
 <p>By storing open-ended ranges <code>[lo,hi+1)</code> in the ranges class container, adjacent ranges are merged automatically by the fact that the bounds of open-ended adjacent ranges overlap.</p>
 <p>In addition to the methods inherited from the Range base class, open-ended ranges can be updated by erasing ranges:</p>
 <ul>
@@ -270,6 +270,8 @@ class reflex::ORanges&lt; T &gt;</h3>
 <li><code><a class="el" href="classreflex_1_1_o_ranges.html" title="RE/flex ORanges (open-ended, ordinal value range) template class. ">ORanges</a> <a class="el" href="classreflex_1_1_o_ranges.html#aa11bc3908554b1604f953d3001820a46" title="Returns the difference of two open-ended range sets. ">operator-(const ORanges&amp; rs) const</a></code> returns difference, i.e. ranges rs erased from this set of open-ended ranges.</li>
 </ul>
 <p>Open-ended ranges are more efficient than <code>std::set</code> when values are adjacent, since <code>std::set</code> stores values individually whereas open-ended ranges merges adjacent values thereby reducing storage overhead and saving search time.</p>
+<p>We can iterate over open-ended ranges. The iterator dereferences values are <code>[lo,hi+1)</code> pairs, i.e. <code>lo = i-&gt;first</code> and <code>hi = i-&gt;second - 1</code>.</p>
+<p>Note that the largest value that can be stored in an open-ended range is the maximum representable value minus 1. For example, <code><a class="el" href="classreflex_1_1_o_ranges.html" title="RE/flex ORanges (open-ended, ordinal value range) template class. ">reflex::ORanges</a>&lt;char&gt;</code> holds values -128 to 126 and excludes 127. The macro WITH_ORANGES_CLAMPED can be defined to use this library such that the maximum value is clamped to prevent overflow, e.g. <code><a class="el" href="classreflex_1_1_o_ranges.html" title="RE/flex ORanges (open-ended, ordinal value range) template class. ">reflex::ORanges</a>&lt;char&gt; ch = 127</code> is clamped to 126. Though this feature should not be required when the library is used properly with sufficiently wide container value types.</p>
 <p>Example:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_o_ranges.html">reflex::ORanges&lt;int&gt;</a> ints;</div><div class="line">ints = 0;              <span class="comment">// insert 0</span></div><div class="line">ints.<a class="code" href="classreflex_1_1_o_ranges.html#acab8cad7c40e07960001634985f2d050">insert</a>(100, 200); <span class="comment">// insert 100..200</span></div><div class="line">ints.<a class="code" href="classreflex_1_1_o_ranges.html#acab8cad7c40e07960001634985f2d050">insert</a>(300, 400); <span class="comment">// insert 300..400</span></div><div class="line">ints.<a class="code" href="classreflex_1_1_o_ranges.html#acab8cad7c40e07960001634985f2d050">insert</a>(200, 300); <span class="comment">// insert 200..300</span></div><div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Set of &quot;</span> &lt;&lt; ints.size() &lt;&lt; <span class="stringliteral">&quot; open-ended ranges:&quot;</span> &lt;&lt; std::endl;</div><div class="line"><span class="keywordflow">for</span> (<a class="code" href="classreflex_1_1_o_ranges.html#add7ea78d89f343eaeb7329d9f73e7f47">reflex::ORanges&lt;int&gt;::const_iterator</a> i = ints.begin(); i != ints.end(); ++i)</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; i-&gt;first &lt;&lt; <span class="stringliteral">&quot;,&quot;</span> &lt;&lt; i-&gt;second &lt;&lt; <span class="stringliteral">&quot;)&quot;</span> &lt;&lt; std::endl;</div><div class="line">if (ints.<a class="code" href="classreflex_1_1_o_ranges.html#a7e66f53d0aed9f1a0aafa7b707205281">find</a>(200) != ints.end())</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;200 is in the set&quot;</span> &lt;&lt; std::endl;</div><div class="line"><span class="keywordflow">if</span> (ints.<a class="code" href="classreflex_1_1_o_ranges.html#a7e66f53d0aed9f1a0aafa7b707205281">find</a>(99) == ints.end())</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;99 is not in the set&quot;</span> &lt;&lt; std::endl;</div><div class="line"><span class="keywordflow">if</span> (ints.<a class="code" href="classreflex_1_1_o_ranges.html#a7e66f53d0aed9f1a0aafa7b707205281">find</a>(401) == ints.end())</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;401 is not in the set&quot;</span> &lt;&lt; std::endl;</div><div class="line">ints.<a class="code" href="classreflex_1_1_o_ranges.html#a0e1bb50ea13bc00cecd426c3c5117249">erase</a>(250, 350);</div><div class="line"><span class="keywordflow">for</span> (<a class="code" href="classreflex_1_1_o_ranges.html#add7ea78d89f343eaeb7329d9f73e7f47">reflex::ORanges&lt;int&gt;::const_iterator</a> i = ints.begin(); i != ints.end(); ++i)</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; i-&gt;first &lt;&lt; <span class="stringliteral">&quot;,&quot;</span> &lt;&lt; i-&gt;second &lt;&lt; <span class="stringliteral">&quot;)&quot;</span> &lt;&lt; std::endl;</div></div><!-- fragment --><p>Output:</p>
 <p>Set of 2 open-ended ranges: [0,1) [100,401) 200 is in the set 99 is not in the set 401 is not in the set [0,1) [100,250) [351,401) </p>
@@ -550,8 +552,8 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Bump value with clamping. </p>
-<dl class="section return"><dt>Returns</dt><dd>val + 1 or val when signed or unsigned max integer. </dd></dl>
+<p>Bump value. </p>
+<dl class="section return"><dt>Returns</dt><dd>val + 1. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">val</td><td>the value to bump </td></tr>
@@ -1049,7 +1051,7 @@ template&lt;typename T&gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Aug 17 2019 16:20:06 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Sep 4 2019 11:57:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -87,6 +87,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     PatternMatcher<reflex::Pattern>::reset(opt);
     ded_ = 0;
     tab_.resize(0);
+    bmd_ = 0;
   }
   virtual std::pair<const char*,size_t> operator[](size_t n) const
   {
@@ -211,7 +212,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// FSM code HEAD.
   inline void FSM_HEAD(Pattern::Index la)
   {
-    if (lap_.size() <= la && la < Pattern::IMAX)
+    if (lap_.size() <= la && la < Pattern::Const::IMAX)
       lap_.resize(la + 1, -1);
     lap_[la] = static_cast<int>(pos_ - (txt_ - buf_));
   }
@@ -321,8 +322,12 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   virtual size_t match(Method method) ///< Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH
     /// @returns nonzero if input matched the pattern.
     ;
+  /// Returns true if able to advance to next possible match
+  bool advance()
+    /// @returns true if possible match found
+    ;
   /// Update indentation column counter for indent() and dedent().
-  void newline()
+  inline void newline()
   {
     mrk_ = true;
     while (ind_ + 1 < pos_)
@@ -330,26 +335,53 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     DBGLOG("Newline with indent/dedent? col = %zu", col_);
   }
   /// Returns true if looking at indent.
-  bool indent()
+  inline bool indent()
     /// @returns true if indent.
   {
     newline();
     return col_ > 0 && (tab_.empty() || tab_.back() < col_);
   }
   /// Returns true if looking at dedent.
-  bool dedent()
+  inline bool dedent()
     /// @returns true if dedent.
   {
     newline();
     return !tab_.empty() && tab_.back() > col_;
   }
-  size_t            ded_; ///< dedent count
-  size_t            col_; ///< column counter for indent matching, updated by newline(), indent(), and dedent()
-  Stops             tab_; ///< tab stops set by detecting indent margins
-  std::vector<int>  lap_; ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
-  std::stack<Stops> stk_; ///< stack to push/pop stops
-  FSM               fsm_; ///< local state for FSM code
-  bool              mrk_; ///< indent \i or dedent \j in pattern found: should check and update indent stops
+  static inline size_t predict_match(const Pattern::Pred a[], const char *b)
+  {
+    uint8_t b0 = b[0];
+    uint8_t b1 = b[1];
+    uint8_t b2 = b[2];
+    uint8_t b3 = b[3];
+    Pattern::Hash h1 = Pattern::hash(b0, b1);
+    Pattern::Hash h2 = Pattern::hash(h1, b2);
+    Pattern::Hash h3 = Pattern::hash(h2, b3);
+    Pattern::Pred a0 = a[b0];
+    Pattern::Pred a1 = a[h1];
+    Pattern::Pred a2 = a[h2];
+    Pattern::Pred a3 = a[h3];
+    Pattern::Pred p = (a0 & 0xc0) | (a1 & 0x30) | (a2 & 0x0c) | (a3 & 0x03);
+    Pattern::Pred m = (p >> 5) | (p >> 3) | (p >> 1) | p;
+    if (m != 0xff)
+      return 0;
+    if ((a[b1] & 0xc0) != 0xc0)
+      return 1;
+    if ((a[b2] & 0xc0) != 0xc0)
+      return 2;
+    if ((a[b3] & 0xc0) != 0xc0)
+      return 3;
+    return 4;
+  }
+  size_t            ded_;      ///< dedent count
+  size_t            col_;      ///< column counter for indent matching, updated by newline(), indent(), and dedent()
+  Stops             tab_;      ///< tab stops set by detecting indent margins
+  std::vector<int>  lap_;      ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
+  std::stack<Stops> stk_;      ///< stack to push/pop stops
+  FSM               fsm_;      ///< local state for FSM code
+  size_t            bmd_;      ///< Boyer-Moore-Horspool jump distance on mismatch, B-M-H is enabled when > 0
+  size_t            bms_[256]; ///< Boyer-Moore-Horspool skip array
+  bool              mrk_;      ///< indent \i or dedent \j in pattern found: should check and update indent stops
 };
 
 } // namespace reflex

@@ -68,6 +68,7 @@ Features
 - Generates scanners for lexical analysis on files, C++ streams, and (wide)
   strings, with automatic fast conversion of UTF-16/32 to UTF-8 for matching
   Unicode on UTF-encoded input files.
+- Generates search engines for optimal searching large files (new option -S).
 - Generates lex.yy.cpp files while Flex++ generates lex.yy.cc files, to
   distinguish the generated files.
 - Generates Graphviz files to visualize FSMs with the Graphviz dot tool.
@@ -408,7 +409,7 @@ Changelog
 - Jan 25, 2017: 0.9.11 added C++11 std::regex matching engine support, moved .h files to include/reflex, requires `#include <reflex/xyz.h>` from now on, fixed `errno_t` portability issue
 - Mar  3, 2017: 0.9.12 refactored and improved, includes new regex converters for regex engines that lack regex features such as Unicode character classes
 - Mar  4, 2017: 0.9.13 improved warning and error messages
-- Mar  6, 2017: 0.9.14 reflex option -v shows stats with execution timings, bug fixes
+- Mar  6, 2017: 0.9.14 reflex option `-v` shows stats with execution timings, bug fixes
 - Mar  8, 2017: 0.9.15 added `wtext()`, `wpair()`, `winput()` methods, other improvements
 - Mar 22, 2017: 0.9.16 bug fixes, speed improvements, improved option `--unicode` regex conversion, also with `(?u:)`, changed `wtext()` to `wstr()` and added a `str()` method
 - Mar 24, 2017: 0.9.17 improvements
@@ -462,6 +463,7 @@ Changelog
 - Aug 12, 2019: 1.3.6 added lexer and matcher `buffer(base, size)` methods and improved Flex-compatible `yy_scan_buffer(base, size)`, these functions scan memory fast with zero copy overhead, added `mmap.l` example to scan an mmap-ed file fast with mmap(2) and `buffer(base, size)`, other improvements.
 - Aug 16, 2019: 1.3.7 added `reflex::BufferedInput::dos_streambuf` to improve `dos_streambuf` speed by buffering (`reflex::Input::dos_streambuf` is unbuffered), fixed `%option token-type` to apply without restrictions.
 - Aug 17, 2019: 1.3.8 added caching of `lineno()` and `columno()` to increase speed, which is essential for large buffers such as large mmap-ed files scanned with `buffer(base, size)`, other improvements.
+- Sep  4, 2019: 1.4.0 added reflex option `-S` (`--find`) for efficient searching instead of scanning input (i.e. efficiently ignoring unmatched input) demonstrated with new `findfast` and `findsearch` examples, changed `--nodefault` to throw an exception when option `--flex` is not used and when the default rule is triggered.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

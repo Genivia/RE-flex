@@ -147,19 +147,32 @@ const std::string Pattern::operator[](Index choice) const
 
 void Pattern::error(regex_error_type code, size_t pos) const
 {
-  regex_error err(code, rex_.c_str(), pos);
+  regex_error err(code, rex_, pos);
   if (opt_.w)
     std::cerr << err.what();
   if (code == regex_error::exceeds_limits || opt_.r)
     throw err;
 }
 
-void Pattern::init(const char *opt)
+void Pattern::init(const char *opt, const uint8_t *hash)
 {
   init_options(opt);
-  if (opc_)
+  if (opc_ || fsm_)
   {
     nop_ = 0;
+    pme_ = false;
+    if (hash != NULL)
+    {
+      for (Index i = 0; i < Const::HASH; ++i)
+      {
+        if (hash[i] != 0)
+          pme_ = true;
+        pma_[i] = ~hash[i];
+      }
+      size_t size = (hash[Const::HASH] << 8) | hash[Const::HASH + 1];
+      pre_.assign(reinterpret_cast<const char*>(hash + Const::HASH + 2), size);
+
+    }
   }
   else
   {
@@ -181,6 +194,7 @@ void Pattern::init_options(const char *opt)
   opt_.l = false;
   opt_.m = false;
   opt_.o = false;
+  opt_.p = false;
   opt_.q = false;
   opt_.r = false;
   opt_.s = false;
@@ -198,6 +212,9 @@ void Pattern::init_options(const char *opt)
           break;
         case 'e':
           opt_.e = (*(s += (s[1] == '=') + 1) == ';' ? '\0' : *s);
+          break;
+        case 'p':
+          opt_.p = true;
           break;
         case 'i':
           opt_.i = true;
@@ -629,7 +646,7 @@ void Pattern::parse3(
     size_t k = 0;
     for (Location i = 0; i < 7 && std::isdigit(c = at(++loc)); ++i)
       k = 10 * k + (c - '0');
-    if (k > IMAX)
+    if (k > Const::IMAX)
       error(regex_error::exceeds_limits, loc);
     Index n = static_cast<Index>(k);
     Index m = n;
@@ -691,7 +708,7 @@ void Pattern::parse3(
       }
       else if (m > 0)
       {
-        if (iter * m >= IMAX)
+        if (iter * m >= Const::IMAX)
           error(regex_error::exceeds_limits, loc);
         // update followpos by virtually repeating sub-regex m-1 times
         Follow followpos1;
@@ -1761,6 +1778,7 @@ void Pattern::assemble(State& start)
   DBGLOG("BEGIN assemble()");
   timer_type t;
   timer_start(t);
+  predict_match_dfa(start);
   export_dfa(start);
   compact_dfa(start);
   encode_dfa(start);
@@ -1879,7 +1897,7 @@ void Pattern::encode_dfa(State& start)
 #endif
     nop_ += static_cast<Index>(state->heads.size() + state->tails.size() + (state->accept > 0 || state->redo));
     if (nop_ < state->index)
-      throw regex_error(regex_error::exceeds_limits, rex_.c_str());
+      throw regex_error(regex_error::exceeds_limits, rex_);
   }
   Opcode *opcode = new Opcode[nop_];
   opc_ = opcode;
@@ -1899,7 +1917,7 @@ void Pattern::encode_dfa(State& start)
     {
       Char lo = i->first;
       Char hi = i->second.first;
-      Index target_index = IMAX;
+      Index target_index = Const::IMAX;
       if (i->second.second)
         target_index = i->second.second->index;
       if (!is_meta(lo))
@@ -1921,7 +1939,7 @@ void Pattern::encode_dfa(State& start)
       Char lo = i->second.first;
       if (is_meta(lo))
       {
-        Index target_index = IMAX;
+        Index target_index = Const::IMAX;
         if (i->second.second)
           target_index = i->second.second->index;
         do
@@ -1936,7 +1954,7 @@ void Pattern::encode_dfa(State& start)
       if (!is_meta(lo))
       {
         Char hi = i->first;
-        Index target_index = IMAX;
+        Index target_index = Const::IMAX;
         if (i->second.second)
           target_index = i->second.second->index;
         opcode[pc++] = opcode_goto(lo, hi, target_index);
@@ -2004,7 +2022,7 @@ void Pattern::gencode_dfa(const State& start) const
           {
             Char lo = i->first;
             Char hi = i->second.first;
-            Index target_index = IMAX;
+            Index target_index = Const::IMAX;
             if (i->second.second)
               target_index = i->second.second->index;
             if (!read)
@@ -2015,7 +2033,7 @@ void Pattern::gencode_dfa(const State& start) const
             if (!is_meta(lo))
             {
               State::Edges::const_reverse_iterator j = i;
-              if (target_index == IMAX && (++j == state->edges.rend() || is_meta(j->second.first)))
+              if (target_index == Const::IMAX && (++j == state->edges.rend() || is_meta(j->second.first)))
                 break;
               if (lo == hi)
               {
@@ -2037,7 +2055,7 @@ void Pattern::gencode_dfa(const State& start) const
                 print_char(fd, hi);
                 ::fprintf(fd, ")");
               }
-              if (target_index == IMAX)
+              if (target_index == Const::IMAX)
                 ::fprintf(fd, " return m.FSM_HALT(c1);\n");
               else
                 ::fprintf(fd, " goto S%u;\n", target_index);
@@ -2134,7 +2152,7 @@ void Pattern::gencode_dfa(const State& start) const
           {
             Char hi = i->first;
             Char lo = i->second.first;
-            Index target_index = IMAX;
+            Index target_index = Const::IMAX;
             if (i->second.second)
               target_index = i->second.second->index;
             if (!read)
@@ -2145,7 +2163,7 @@ void Pattern::gencode_dfa(const State& start) const
             if (!is_meta(lo))
             {
               State::Edges::const_iterator j = i;
-              if (target_index == IMAX && (++j == state->edges.end() || is_meta(j->second.first)))
+              if (target_index == Const::IMAX && (++j == state->edges.end() || is_meta(j->second.first)))
                 break;
               if (lo == hi)
               {
@@ -2167,7 +2185,7 @@ void Pattern::gencode_dfa(const State& start) const
                 print_char(fd, hi);
                 ::fprintf(fd, ")");
               }
-              if (target_index == IMAX)
+              if (target_index == Const::IMAX)
                 ::fprintf(fd, " return m.FSM_HALT(c1);\n");
               else
                 ::fprintf(fd, " goto S%u;\n", target_index);
@@ -2177,6 +2195,16 @@ void Pattern::gencode_dfa(const State& start) const
           ::fprintf(fd, "  return m.FSM_HALT(c1);\n");
         }
         ::fprintf(fd, "}\n\n");
+        if (opt_.p)
+        {
+          ::fprintf(fd, "extern const reflex::Pattern::Pred reflex_pred_%s[%zu] = {", opt_.n.empty() ? "FSM" : opt_.n.c_str(), Const::HASH + 2 + pre_.size());
+          for (Index i = 0; i < Const::HASH; ++i)
+            ::fprintf(fd, "%c%3hhu,", (i & 0xF) ? ' ' : '\n', static_cast<uint8_t>(~pma_[i]));
+          ::fprintf(fd, "\n%3hhu, %3hhu,", static_cast<uint8_t>(pre_.size() >> 8), static_cast<uint8_t>(pre_.size() & 0xFF));
+          for (Index i = 0; i < pre_.size(); ++i)
+            ::fprintf(fd, " %3hhu,", static_cast<uint8_t>(pre_[i]));
+          ::fprintf(fd, "\n};\n\n");
+        }
         write_namespace_close(fd);
         if (fd != stdout)
           ::fclose(fd);
@@ -2281,7 +2309,7 @@ void Pattern::export_dfa(const State& start) const
         {
           if (state == &start)
             ::fprintf(fd, "\n/*START*/\t");
-          if (state->redo) // state->accept == IMAX)
+          if (state->redo) // state->accept == Const::IMAX)
             ::fprintf(fd, "\n/*REDO*/\t");
           else if (state->accept)
             ::fprintf(fd, "\n/*ACCEPT %hu*/\t", state->accept);
@@ -2325,15 +2353,15 @@ void Pattern::export_dfa(const State& start) const
           if ((state->accept && !state->redo) || !state->heads.empty() || !state->tails.empty())
             ::fprintf(fd, "\\n");
 #endif
-          if (state->accept && !state->redo) // state->accept != IMAX)
+          if (state->accept && !state->redo) // state->accept != Const::IMAX)
             ::fprintf(fd, "[%hu]", state->accept);
           for (Set::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
             ::fprintf(fd, "%zu>", *i);
           for (Set::const_iterator i = state->heads.begin(); i != state->heads.end(); ++i)
             ::fprintf(fd, "<%zu", *i);
-          if (state->redo) // state->accept != IMAX)
+          if (state->redo) // state->accept != Const::IMAX)
             ::fprintf(fd, "\",style=dashed,peripheries=1];\n");
-          else if (state->accept) // state->accept != IMAX)
+          else if (state->accept) // state->accept != Const::IMAX)
             ::fprintf(fd, "\",peripheries=2];\n");
           else if (!state->heads.empty())
             ::fprintf(fd, "\",style=dashed,peripheries=2];\n");
@@ -2389,7 +2417,7 @@ void Pattern::export_dfa(const State& start) const
               } while (++lo <= hi);
             }
           }
-          if (state->redo) // state->accept == IMAX)
+          if (state->redo) // state->accept == Const::IMAX)
             ::fprintf(fd, "\t\tN%p -> R%p;\n\t\tR%p [peripheries=0,label=\"redo\"];\n", (void*)state, (void*)state, (void*)state);
         }
         ::fprintf(fd, "}\n");
@@ -2427,7 +2455,7 @@ void Pattern::export_code() const
       {
         ::fprintf(fd, "#ifndef REFLEX_CODE_DECL\n#include <reflex/pattern.h>\n#define REFLEX_CODE_DECL const reflex::Pattern::Opcode\n#endif\n\n");
         write_namespace_open(fd);
-        ::fprintf(fd, "REFLEX_CODE_DECL reflex_code_%s[%hu] =\n{\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), nop_);
+        ::fprintf(fd, "extern REFLEX_CODE_DECL reflex_code_%s[%hu] =\n{\n", opt_.n.empty() ? "FSM" : opt_.n.c_str(), nop_);
         for (Index i = 0; i < nop_; ++i)
         {
           Opcode opcode = opc_[i];
@@ -2455,7 +2483,7 @@ void Pattern::export_code() const
           }
           else
           {
-            if (index == IMAX)
+            if (index == Const::IMAX)
               ::fprintf(fd, "HALT ON ");
             else
               ::fprintf(fd, "GOTO %u ON ", index);
@@ -2478,9 +2506,156 @@ void Pattern::export_code() const
           }
         }
         ::fprintf(fd, "};\n\n");
+        if (opt_.p)
+        {
+          ::fprintf(fd, "extern const reflex::Pattern::Pred reflex_pred_%s[%zu] = {", opt_.n.empty() ? "FSM" : opt_.n.c_str(), Const::HASH + 2 + pre_.size());
+          for (Index i = 0; i < Const::HASH; ++i)
+            ::fprintf(fd, "%c%3hhu,", (i & 0xF) ? ' ' : '\n', static_cast<uint8_t>(~pma_[i]));
+          ::fprintf(fd, "\n%3hhu, %3hhu,", static_cast<uint8_t>(pre_.size() >> 8), static_cast<uint8_t>(pre_.size() & 0xFF));
+          for (Index i = 0; i < pre_.size(); ++i)
+            ::fprintf(fd, " %3hhu,", static_cast<uint8_t>(pre_[i]));
+          ::fprintf(fd, "\n};\n\n");
+        }
         write_namespace_close(fd);
         if (fd != stdout)
           ::fclose(fd);
+      }
+    }
+  }
+}
+
+void Pattern::predict_match_dfa(State& start)
+{
+  DBGLOG("BEGIN Pattern::predict_match_dfa()");
+  State *state = &start;
+  while (state->accept == 0)
+  {
+    if (state->edges.size() != 1)
+        break;
+    Char lo = state->edges.begin()->first;
+    if (!is_meta(lo))
+    {
+      if (lo != state->edges.begin()->second.first)
+        break;
+      pre_.push_back(lo);
+    }
+    State *next = state->edges.begin()->second.second;
+    if (next == NULL || next->index < state->index)
+      break;
+    state = next;
+  }
+  pme_ = (state != NULL && state->accept == 0);
+  std::memset(pma_, 0xFF, sizeof(pma_));
+  if (pme_)
+  {
+    gen_predict_match_hash(state);
+#ifdef DEBUG
+    DBGLOGN("pme = %d", pme_);
+    for (Index i = 0; i < Const::HASH; ++i)
+    {
+      if (pma_[i] != 0xFF)
+      {
+        if (isprint(i))
+          DBGLOGN("pma['%c'] = %2x", i, pma_[i]);
+        else
+          DBGLOGN("pma[%3d] = %2x", i, pma_[i]);
+      }
+    }
+#endif
+  }
+  DBGLOG("END Pattern::predict_match_dfa()");
+}
+
+void Pattern::gen_predict_match_hash(State *state)
+{
+  std::map<State*,ORanges<Char> > states[4];
+  gen_predict_match_hash_transitions(state, states[0]);
+  for (Index level = 1; level < 4; ++level)
+    for (std::map<State*,ORanges<Char> >::iterator from = states[level - 1].begin(); from != states[level - 1].end(); ++from)
+      gen_predict_match_hash_transitions(level, from->first, from->second, states[level]);
+}
+
+void Pattern::gen_predict_match_hash_transitions(State *state, std::map<State*,ORanges<Char> >& states)
+{
+  for (State::Edges::const_iterator edge = state->edges.begin(); edge != state->edges.end(); ++edge)
+  {
+    Char lo = edge->first;
+    if (is_meta(lo))
+      break;
+    State *next = edge->second.second;
+    bool accept = (next == NULL || next->accept != 0);
+    if (!accept)
+    {
+      for (State::Edges::const_iterator e = next->edges.begin(); e != next->edges.end(); ++e)
+      {
+        if (is_meta(e->first))
+        {
+          if (e == next->edges.begin())
+            next = NULL;
+          accept = true;
+          break;
+        }
+      }
+    }
+    else if (next->edges.empty())
+    {
+      next = NULL;
+    }
+    Char hi = edge->second.first;
+    while (lo <= hi)
+    {
+      Hash h = static_cast<Hash>(lo);
+      if (accept)
+        pma_[h] &= ~(1 << 7);
+      pma_[h] &= ~(1 << 6);
+      if (next != NULL)
+        states[next].insert(hash(h));
+      ++lo;
+    }
+  }
+}
+
+void Pattern::gen_predict_match_hash_transitions(Index level, State *state, ORanges<Char>& labels, std::map<State*,ORanges<Char> >& states)
+{
+  for (State::Edges::const_iterator edge = state->edges.begin(); edge != state->edges.end(); ++edge)
+  {
+    Char lo = edge->first;
+    if (is_meta(lo))
+      break;
+    State *next = edge->second.second;
+    bool accept = (level == 3 || next == NULL || next->accept != 0);
+    if (!accept)
+    {
+      for (State::Edges::const_iterator e = next->edges.begin(); e != next->edges.end(); ++e)
+      {
+        if (is_meta(e->first))
+        {
+          if (e == next->edges.begin())
+            next = NULL;
+          accept = true;
+          break;
+        }
+      }
+    }
+    else if (level == 3 || next->edges.empty())
+    {
+      next = NULL;
+    }
+    Char hi = edge->second.first;
+    for (ORanges<Char>::const_iterator label = labels.begin(); label != labels.end(); ++label)
+    {
+      Char label_hi = label->second - 1;
+      for (Char label_lo = label->first; label_lo <= label_hi; ++label_lo)
+      {
+        for (lo = edge->first; lo <= hi; ++lo)
+        {
+          Hash h = hash(label_lo, lo);
+          if (accept)
+            pma_[h] &= ~(1 << (7 - 2 * level));
+          pma_[h] &= ~(1 << (6 - 2 * level));
+          if (next != NULL)
+            states[next].insert(hash(h));
+        }
       }
     }
   }

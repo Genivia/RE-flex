@@ -27,7 +27,7 @@ ther in a spirit of brotherhood.
 
 // define the Braille class
 %{
-class Braille: public Lexer {
+class Braille : public Lexer {
  public:
   Braille() : caps(false) { }
   using Lexer::translate; // to set Braille input/output

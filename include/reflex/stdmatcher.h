@@ -161,10 +161,10 @@ class StdMatcher : public PatternMatcher<std::regex> {
             set_current(++cur_);
             ++txt_;
             new_itr(method);
-            --txt_;
-            --cur_;
             if (itr_ != fin_)
             {
+              --txt_;
+              --cur_;
               pos_ = (*itr_)[0].second - buf_;
               DBGLOGN("Force iterator forward pos = %zu", pos_);
             }

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Aug 17 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Sep 4 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -58,7 +58,6 @@
 <a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="classreflex_1_1_abstract_matcher-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">reflex::AbstractMatcher Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
@@ -351,6 +350,15 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a5f8d28fc8c5326d5f05f84aaa588d564"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a5f8d28fc8c5326d5f05f84aaa588d564">set_current</a> (size_t loc)</td></tr>
 <tr class="memdesc:a5f8d28fc8c5326d5f05f84aaa588d564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current position in the buffer for the next match.  <a href="#a5f8d28fc8c5326d5f05f84aaa588d564">More...</a><br /></td></tr>
 <tr class="separator:a5f8d28fc8c5326d5f05f84aaa588d564"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6889e7a74017302ef588e7371d06e6a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ad6889e7a74017302ef588e7371d06e6a">get_more</a> ()</td></tr>
+<tr class="memdesc:ad6889e7a74017302ef588e7371d06e6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next character if not currently buffered.  <a href="#ad6889e7a74017302ef588e7371d06e6a">More...</a><br /></td></tr>
+<tr class="separator:ad6889e7a74017302ef588e7371d06e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a57145ce5ead569c3758be586d28f41"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7a57145ce5ead569c3758be586d28f41">peek_more</a> ()</td></tr>
+<tr class="memdesc:a7a57145ce5ead569c3758be586d28f41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character if not currently buffered.  <a href="#a7a57145ce5ead569c3758be586d28f41">More...</a><br /></td></tr>
+<tr class="separator:a7a57145ce5ead569c3758be586d28f41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a345dcf64f1671bbb12056408045fa441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a345dcf64f1671bbb12056408045fa441">update</a> ()</td></tr>
+<tr class="memdesc:a345dcf64f1671bbb12056408045fa441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the newline count, column count, and character count when shifting the buffer.  <a href="#a345dcf64f1671bbb12056408045fa441">More...</a><br /></td></tr>
+<tr class="separator:a345dcf64f1671bbb12056408045fa441"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -414,18 +422,6 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a4fdfd4999a13a782643d33da7bd2b5cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a4fdfd4999a13a782643d33da7bd2b5cf">mat_</a></td></tr>
 <tr class="memdesc:a4fdfd4999a13a782643d33da7bd2b5cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if <a class="el" href="classreflex_1_1_abstract_matcher.html#ab880e6c8fe0df7c4ee7bb629aab41d0f" title="Returns nonzero capture index (i.e. true) if the entire input matches this matcher&#39;s pattern (and int...">AbstractMatcher::matches()</a> was successful  <a href="#a4fdfd4999a13a782643d33da7bd2b5cf">More...</a><br /></td></tr>
 <tr class="separator:a4fdfd4999a13a782643d33da7bd2b5cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:ad6889e7a74017302ef588e7371d06e6a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ad6889e7a74017302ef588e7371d06e6a">get_more</a> ()</td></tr>
-<tr class="memdesc:ad6889e7a74017302ef588e7371d06e6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next character if not currently buffered.  <a href="#ad6889e7a74017302ef588e7371d06e6a">More...</a><br /></td></tr>
-<tr class="separator:ad6889e7a74017302ef588e7371d06e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a57145ce5ead569c3758be586d28f41"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7a57145ce5ead569c3758be586d28f41">peek_more</a> ()</td></tr>
-<tr class="memdesc:a7a57145ce5ead569c3758be586d28f41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character if not currently buffered.  <a href="#a7a57145ce5ead569c3758be586d28f41">More...</a><br /></td></tr>
-<tr class="separator:a7a57145ce5ead569c3758be586d28f41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a345dcf64f1671bbb12056408045fa441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a345dcf64f1671bbb12056408045fa441">update</a> ()</td></tr>
-<tr class="memdesc:a345dcf64f1671bbb12056408045fa441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the newline count, column count, and character count when shifting the buffer.  <a href="#a345dcf64f1671bbb12056408045fa441">More...</a><br /></td></tr>
-<tr class="separator:a345dcf64f1671bbb12056408045fa441"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The abstract matcher base class template defines an interface for all pattern matcher engines. </p>
@@ -1098,7 +1094,7 @@ Private Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1939,7 +1935,7 @@ Private Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2333,7 +2329,7 @@ Private Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3001,7 +2997,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Aug 17 2019 16:20:06 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Sep 4 2019 11:57:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

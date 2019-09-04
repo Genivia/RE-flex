@@ -1,4 +1,4 @@
-.TH REFLEX "1" "August 17, 2019" "reflex 1.3.8" "User Commands"
+.TH REFLEX "1" "September 04, 2019" "reflex 1.4.0" "User Commands"
 .SH NAME
 reflex \- the regex\-centric fast and flexible lexical analyzer generator
 .SH SYNOPSIS
@@ -33,7 +33,7 @@ ignore case in patterns
   \fB\-I\fR, \fB\-\-interactive\fR, \fB\-\-always\-interactive\fR
 generate interactive scanner
 .TP
-  \fB\-m\fR, \fB\-\-matcher\fR=\fINAME\fR
+  \fB\-m\fR NAME, \fB\-\-matcher\fR=\fINAME\fR
 use matcher NAME library [boost|boost_perl|reflex|std_ecma|...]
 .TP
   \fB\-\-pattern\fR=\fINAME\fR
@@ -42,8 +42,11 @@ use custom pattern class NAME for custom matcher option \fB\-m\fR
   \fB\-\-include\fR=\fIFILE\fR
 include header FILE.h for custom matcher option \fB\-m\fR
 .TP
-  \fB\-\-tabs\fR=\fIN\fR
-set tab size to N (1,2,4,8) for indent and dedent matching
+  \fB\-S\fR, \fB\-\-find\fR
+generate search engine to find matches, ignores unmatched input
+.TP
+  \fB\-T\fR N, \fB\-\-tabs\fR=\fIN\fR
+set default tab size to N (1,2,4,8) for indent/dedent matching
 .TP
   \fB\-u\fR, \fB\-\-unicode\fR
 match Unicode . (dot), \\p, \\s, \\w, ..., and group UTF\-8
@@ -53,7 +56,7 @@ ignore space in patterns
 .PP
 .B Generated files:
 .TP
-  \fB\-o\fR, \fB\-\-outfile\fR=\fIFILE\fR
+  \fB\-o\fR FILE, \fB\-\-outfile\fR=\fIFILE\fR
 specify output FILE instead of lex.yy.cpp
 .TP
   \fB\-t\fR, \fB\-\-stdout\fR
@@ -95,7 +98,7 @@ generate main() to invoke lex() or yylex()
   \fB\-L\fR, \fB\-\-noline\fR
 suppress #line directives in scanner
 .TP
-  \fB\-P\fR, \fB\-\-prefix\fR=\fINAME\fR
+  \fB\-P\fR NAME, \fB\-\-prefix\fR=\fINAME\fR
 use NAME as prefix to FlexLexer class name and its members
 .TP
   \fB\-\-nostdinit\fR

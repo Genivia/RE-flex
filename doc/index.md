@@ -30,6 +30,7 @@ Features:
 - works with Bison, supports reentrant, C++, bison-bridge and bison-locations;
 - generates source code that is easy to understand;
 - generates scanners that are thread-safe by default;
+- generates search engines for optimal searching large files (new option `-S`);
 - options for intuitive customization of the lexer class source code output;
 - efficient matching in direct code or with finite state machine tables;
 - fully supports Unicode, auto-detects BOM in files (UTF-8/16/32);
@@ -1194,6 +1195,13 @@ scanner is initialized, resulting in a scanner that starts scanning the input
 immediately.  The generated code takes more space compared to the `−−full`
 option.
 
+#### `-S`, `−−find`
+
+This option generates a search engine to find pattern matches to invoke actions
+corresponding to matching patterns.  Unmatched input is ignored.  By contrast,
+option `-s` (or `−−nodefault`) produces an error when non-matching input is
+found.
+
 #### `-i`, `−−case-insensitive`
 
 This option ignores case in patterns.  Patterns match lower and upper case
@@ -1240,15 +1248,15 @@ specified with option `-m`.
 This option defines a custom include <i>`FILE.h`</i> to include for the custom
 matcher specified with option `-m`.
 
-#### `−−tabs=N`
+#### `-T N`, `−−tabs=N`
 
-This option sets the tab size to `N`, where `N` must 1, 2, 4, or 8.  The
+This option sets the default tab size to `N`, where `N` is 1, 2, 4, or 8.  The
 tab size is used internally to determine the column position for
 \ref reflex-pattern-dents matching and to determine the column position
 returned by `columno()` and the number of columns returned by `columns()`.  It
 has no effect otherwise.  This option assigns the `T=N` value of the
-`reflex::Matcher` constructor options at runtime.  The value may be set
-at runtime with `matcher().tabs(N)` with `N` 1, 2, 4, or 8.
+`reflex::Matcher` constructor options at runtime.  The value may be set at
+runtime with `matcher().tabs(N)` with `N` 1, 2, 4, or 8.
 
 #### `-u`, `−−unicode`
 
@@ -1483,8 +1491,9 @@ has no effect for C++ lexer classes, which have a virtual `int wrap()` (or
 This option defines the exception to be thrown by the generated scanner's
 default rule when no rule matches the input.  This option generates a default
 rule with action `throw VALUE` and replaces the standard default rule that
-ECHOs all unmatched text when no rule matches.  This option has no effect when
-option `-s` (`−−nodefault`) is specified.
+echoes all unmatched input text when no rule matches.  This option has no
+effect when option `-s` (or `−−nodefault`) or option `-S` (or `−−find`) are
+specified.
 
 #### `−−token-type=NAME`
 
@@ -1522,10 +1531,16 @@ details.
 
 #### `-s`, `−−nodefault`
 
-This suppresses the default rule that ECHOs all unmatched text when no rule
-matches.  With the `−−flex` option, the scanner reports "scanner jammed" when
-no rule matches.  Without the `−−flex` option, unmatched input is silently
-ignored.  See also option `−−exception=VALUE`.
+This suppresses the default rule that echoes all unmatched input text when no
+rule matches.  With the `−−flex` option, the scanner reports "scanner jammed"
+when no rule matches by calling `yyFlexLexer::LexerError("scanner jammed")`.
+Without the `−−flex` and `−−debug` options, a `std::runtime` exception is
+raised by invoking `AbstractLexer::lexer_error("scanner jammed")`.  The virtual
+methods `LexerError` and `lexer_error` may be redefined by a user-specified
+lexer class, see \ref reflex-inherit.  Without the `−−flex` option, but with
+the `−−debug` option, the default rule is suppressed without invoking
+`lexer_error` to raise an exception.  See also options `−−exception=VALUE` and
+`-S` (or `−−find`).
 
 #### `-v`, `−−verbose`
 
@@ -4608,15 +4623,12 @@ by the parser which calls `yy::parser::error` with the string
 `"Unknown token."` as argument.
 
 We have to be careful with option `−−exception`.  Because no input is consumed,
-we should not invoke the scanner again or risk looping on the unmatched input.
-Alternatively, we can define a "catch all else" rule with pattern `.` that
-consumes the offending input and and use option option `-s` (or `−−nodefault`)
-to suppress the default rule:
+the scanner should not be invoked again or we risk looping on the unmatched
+input.  Alternatively, we can define a "catch all else" rule with pattern `.`
+that consumes the offending input:
 
 <div class="alt">
 ~~~{.cpp}
-    %option nodefault
-
     %%
     \s+      // skip space
     [a-z]+   return yy::parser::make_IDENTIFIER(str());
@@ -4759,15 +4771,12 @@ by a user-defined lexer class that extends `Lexer` (or extends `yyFlexLexer`
 when option `−−flex` is used).
 
 We have to be careful with option `−−exception`.  Because no input is consumed,
-We should not invoke the scanner again or risk looping on the unmatched input.
-Alternatively, we can define a "catch all else" rule with pattern `.` that
-consumes the offending input and use option option `-s` (or `−−nodefault`) to
-suppress the default rule:
+the scanner should not be invoked again or we risk looping on the unmatched
+input.  Alternatively, we can define a "catch all else" rule with pattern `.`
+that consumes the offending input:
 
 <div class="alt">
 ~~~{.cpp}
-    %option nodefault
-
     %%
     \s+      // skip space
     [a-z]+   return yy::parser::make_IDENTIFIER(str(), location());
@@ -5093,6 +5102,59 @@ is the `this` pointer.  Outside the scope of lexer methods a pointer to your
 🔝 [Back to table of contents](#)
 
 
+Searching versus Scanning                                      {#reflex-search}
+-------------------------
+
+RE/flex generates an efficient search engine with option `-S` (or `−−find`).
+The generated search engine finds all matches while ignoring unmatched input
+silently, which is different from scanning that matches all input.
+
+Searching with this option is more efficient than scanning with a "catch all
+else" dot-rule to ignore unmatched input.  For example:
+
+<div class="alt">
+~~~{.cpp}
+    .    // no action, ignore unmatched input
+~~~
+</div>
+
+The problem with this rule is that it is invoked for every single unmatched
+character on the input, which is inefficient and slows down searching for
+matching patterns significantly when more than a few unmatched characters are
+encountered in the input.  Note that we cannot use `.+` to match longer
+patterns because this overlaps with other patterns and is also likely longer
+than the other patterns, i.e. the rule subsumes those patterns.
+
+Unless the input contains relatively few unmatched characters or bytes to
+ignore, option `-S` (or `−−find`) speeds up searching and matching
+significantly.  This option applies the following optimizations to the RE/flex
+FSM matcher:
+
+- Hashing is used to match multiple strings, which is faster than multi-string
+  matching with Aho-Corasick, Commentz-Walter, Wu-Manber, and other.
+
+- Single short strings are searched with `memchr()`.  Single long strings are
+  searched with Boyer-Moore-Horspool.  Also regex patterns with common prefixes
+  are searched efficiently, e.g. the regex `reflex|regex|regular` has common
+  prefix string `"re"` that is searched in the input first, then hashing is
+  used to predict a match for the part after `"re"`, followed by regex matching
+  with the FSM.
+
+With option `-S` (or `−−find`), a "catch all else" dot-rule should not be
+defined, since unmatched input is already ignored with this option and
+defining a "catch all else" dot-rule actually slows down the search.
+
+@note By contrast to option `-S` (or `−−find`), option `-s` (or `−−nodefault`)
+cannot be used to ignore unmatched input.  Option `-s` is used to produce
+runtime errors and exceptions for unmatched input.
+
+This option only applies to the RE/flex matcher and can be combined with
+options `-f` (or `−−full`) and `-F` (or `−−fast`) to further increase
+performance.
+
+🔝 [Back to table of contents](#)
+
+
 POSIX versus Perl matching                                 {#reflex-posix-perl}
 --------------------------
 
@@ -5290,10 +5352,10 @@ performance given some input text to scan:
   performance of your lexer and the lexer rules executed, which allows you to
   find hotspots and performance bottlenecks in your rules.
 
-- Option `-s` (or `−−nodefault`) suppresses the default rule that ECHOs all
-  unmatched text when no rule matches.  With the `−−flex` option, the scanner
-  reports "scanner jammed" when no rule matches.  Without the `−−flex` option,
-  unmatched input is silently ignored.
+- Option `-s` (or `−−nodefault`) suppresses the default rule that echoes all
+  unmatched text when no rule matches.  The scanner reports "scanner jammed"
+  when no rule matches.  Without the `−−flex` option, a `std::runtime`
+  exception is thrown.
 
 - Option `-v` (or `−−verbose`) displays a summary of scanner statistics.
 
@@ -5645,6 +5707,36 @@ support.
 
 🔝 [Back to table of contents](#)
 
+### Example 5
+
+This example defines a search engine to find C/C++ directives, such as
+`#define` and `#include`, in the input fast.
+
+<div class="alt">
+~~~{.cpp}
+    %{
+      #include <stdio.h>
+    %}
+
+    %o fast find main
+
+    directive       ^\h*#(.|\\\r?\n)+
+
+    %%
+
+    {directive}     echo();
+
+    %%
+~~~
+</div>
+
+Option `%%o find` (`-S` or `−−find`) specifies that unmatched input text should
+be ignored silently instead of being echoed to standard output, see
+\ref reflex-search.  Option `%%fast` (`-F` or `−−fast`) generates an efficient
+FSM in direct code.
+
+🔝 [Back to table of contents](#)
+
 
 Limitations                                               {#reflex-limitations}
 -----------
@@ -5663,11 +5755,10 @@ to FSM matching that apply to Flex/Lex and therefore also apply to the
   The begin of buffer/line anchors `\A` and `^`, end of buffer/line anchors
   `\z` and `$` and the word boundary anchors must start or end a pattern.  For
   example, `\<cow\>` is permitted, but `.*\Bboy` is not.
+- The Flex/Lex `REJECT` action is not supported.
+- Flex translations <i>`%%T`</i> are not supported.
 
-Current <b>`reflex`</b> tool limitations that may be removed in future versions:
-
-- The `REJECT` action is not supported.
-- Flex translations <i>`%T`</i> are not supported.
+Some of these limitations may be removed in future versions of RE/flex.
 
 Boost.Regex library limitations:
 
@@ -6018,21 +6109,23 @@ with option `"r"` when the regex string has problems:
     {
       switch (e.code())
       {
-        case reflex::regex_error::mismatched_parens:    std::cerr << "mismatched ( )"; break;
-        case reflex::regex_error::mismatched_braces:    std::cerr << "mismatched { }"; break;
-        case reflex::regex_error::mismatched_brackets:  std::cerr << "mismatched [ ]"; break;
-        case reflex::regex_error::mismatched_quotation: std::cerr << "mismatched \\Q...\\E quotation"; break;
-        case reflex::regex_error::empty_expression:     std::cerr << "regex (sub)expression should not be empty"; break;
-        case reflex::regex_error::empty_class:          std::cerr << "character class [...] is empty, e.g. [a&&[b]]"; break;
-        case reflex::regex_error::invalid_class:        std::cerr << "invalid character class name"; break;
-        case reflex::regex_error::invalid_class_range:  std::cerr << "invalid character class range, e.g. [Z-A]"; break;
-        case reflex::regex_error::invalid_escape:       std::cerr << "invalid escape character"; break;
-        case reflex::regex_error::invalid_anchor:       std::cerr << "invalid anchor or boundary"; break;
-        case reflex::regex_error::invalid_repeat:       std::cerr << "invalid repeat range, e.g. {10,1}"; break;
-        case reflex::regex_error::invalid_quantifier:   std::cerr << "invalid lazy or possessive quantifier"; break;
-        case reflex::regex_error::invalid_modifier:     std::cerr << "invalid (?ismux:) modifier"; break;
-        case reflex::regex_error::invalid_syntax:       std::cerr << "invalid regex syntax"; break;
-        case reflex::regex_error::exceeds_limits:       std::cerr << "exceeds complexity limits: {n,m} range too large"; break;
+        case reflex::regex_error::mismatched_parens:     std::cerr << "mismatched ( )"; break;
+        case reflex::regex_error::mismatched_braces:     std::cerr << "mismatched { }"; break;
+        case reflex::regex_error::mismatched_brackets:   std::cerr << "mismatched [ ]"; break;
+        case reflex::regex_error::mismatched_quotation:  std::cerr << "mismatched \\Q...\\E quotation"; break;
+        case reflex::regex_error::empty_expression:      std::cerr << "regex (sub)expression should not be empty"; break;
+        case reflex::regex_error::empty_class:           std::cerr << "character class [...] is empty, e.g. [a&&[b]]"; break;
+        case reflex::regex_error::invalid_class:         std::cerr << "invalid character class name"; break;
+        case reflex::regex_error::invalid_class_range:   std::cerr << "invalid character class range, e.g. [Z-A]"; break;
+        case reflex::regex_error::invalid_escape:        std::cerr << "invalid escape character"; break;
+        case reflex::regex_error::invalid_anchor:        std::cerr << "invalid anchor or boundary"; break;
+        case reflex::regex_error::invalid_repeat:        std::cerr << "invalid repeat, e.g. {10,1}"; break;
+        case reflex::regex_error::invalid_quantifier:    std::cerr << "invalid lazy or possessive quantifier"; break;
+        case reflex::regex_error::invalid_modifier:      std::cerr << "invalid (?ismux:) modifier"; break;
+        case reflex::regex_error::invalid_collating:     std::cerr << "invalid collating element"; break;
+        case reflex::regex_error::invalid_backreference: std::cerr << "invalid backreference"; break;
+        case reflex::regex_error::invalid_syntax:        std::cerr << "invalid regex syntax"; break;
+        case reflex::regex_error::exceeds_limits:        std::cerr << "exceeds complexity limits: {n,m} range too large"; break;
       }
       std::cerr << std::endl << e.what();
     }
@@ -6189,20 +6282,22 @@ example when the regex syntax is invalid:
       std::cerr << e.what();
       switch (e.code())
       {
-        case reflex::regex_error::mismatched_parens:    std::cerr << "mismatched ( )"; break;
-        case reflex::regex_error::mismatched_braces:    std::cerr << "mismatched { }"; break;
-        case reflex::regex_error::mismatched_brackets:  std::cerr << "mismatched [ ]"; break;
-        case reflex::regex_error::mismatched_quotation: std::cerr << "mismatched \\Q...\\E quotation"; break;
-        case reflex::regex_error::empty_expression:     std::cerr << "regex (sub)expression should not be empty"; break;
-        case reflex::regex_error::empty_class:          std::cerr << "character class [...] is empty, e.g. [a&&[b]]"; break;
-        case reflex::regex_error::invalid_class:        std::cerr << "invalid character class name"; break;
-        case reflex::regex_error::invalid_class_range:  std::cerr << "invalid character class range, e.g. [Z-A]"; break;
-        case reflex::regex_error::invalid_escape:       std::cerr << "invalid escape character"; break;
-        case reflex::regex_error::invalid_anchor:       std::cerr << "invalid anchor or boundary"; break;
-        case reflex::regex_error::invalid_repeat:       std::cerr << "invalid repeat range, e.g. {10,1}"; break;
-        case reflex::regex_error::invalid_quantifier:   std::cerr << "invalid lazy or possessive quantifier"; break;
-        case reflex::regex_error::invalid_modifier:     std::cerr << "invalid (?ismux:) modifier"; break;
-        case reflex::regex_error::invalid_syntax:       std::cerr << "invalid regex syntax"; break;
+        case reflex::regex_error::mismatched_parens:     std::cerr << "mismatched ( )"; break;
+        case reflex::regex_error::mismatched_braces:     std::cerr << "mismatched { }"; break;
+        case reflex::regex_error::mismatched_brackets:   std::cerr << "mismatched [ ]"; break;
+        case reflex::regex_error::mismatched_quotation:  std::cerr << "mismatched \\Q...\\E quotation"; break;
+        case reflex::regex_error::empty_expression:      std::cerr << "regex (sub)expression should not be empty"; break;
+        case reflex::regex_error::empty_class:           std::cerr << "character class [...] is empty, e.g. [a&&[b]]"; break;
+        case reflex::regex_error::invalid_class:         std::cerr << "invalid character class name"; break;
+        case reflex::regex_error::invalid_class_range:   std::cerr << "invalid character class range, e.g. [Z-A]"; break;
+        case reflex::regex_error::invalid_escape:        std::cerr << "invalid escape character"; break;
+        case reflex::regex_error::invalid_anchor:        std::cerr << "invalid anchor or boundary"; break;
+        case reflex::regex_error::invalid_repeat:        std::cerr << "invalid repeat, e.g. {10,1}"; break;
+        case reflex::regex_error::invalid_quantifier:    std::cerr << "invalid lazy or possessive quantifier"; break;
+        case reflex::regex_error::invalid_modifier:      std::cerr << "invalid (?ismux:) modifier"; break;
+        case reflex::regex_error::invalid_collating:     std::cerr << "invalid collating element"; break;
+        case reflex::regex_error::invalid_backreference: std::cerr << "invalid backreference"; break;
+        case reflex::regex_error::invalid_syntax:        std::cerr << "invalid regex syntax"; break;
       }
     }
 ~~~
