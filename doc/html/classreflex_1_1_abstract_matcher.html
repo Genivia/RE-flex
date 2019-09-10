@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Sep 4 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Sep 10 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -350,11 +350,14 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a5f8d28fc8c5326d5f05f84aaa588d564"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a5f8d28fc8c5326d5f05f84aaa588d564">set_current</a> (size_t loc)</td></tr>
 <tr class="memdesc:a5f8d28fc8c5326d5f05f84aaa588d564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current position in the buffer for the next match.  <a href="#a5f8d28fc8c5326d5f05f84aaa588d564">More...</a><br /></td></tr>
 <tr class="separator:a5f8d28fc8c5326d5f05f84aaa588d564"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23d2f21d13e3ae841277126c5eacb5a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a23d2f21d13e3ae841277126c5eacb5a8">set_current_match</a> (size_t loc)</td></tr>
+<tr class="memdesc:a23d2f21d13e3ae841277126c5eacb5a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current match position in the buffer.  <a href="#a23d2f21d13e3ae841277126c5eacb5a8">More...</a><br /></td></tr>
+<tr class="separator:a23d2f21d13e3ae841277126c5eacb5a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6889e7a74017302ef588e7371d06e6a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ad6889e7a74017302ef588e7371d06e6a">get_more</a> ()</td></tr>
-<tr class="memdesc:ad6889e7a74017302ef588e7371d06e6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next character if not currently buffered.  <a href="#ad6889e7a74017302ef588e7371d06e6a">More...</a><br /></td></tr>
+<tr class="memdesc:ad6889e7a74017302ef588e7371d06e6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next character and grow the buffer to make more room if necessary.  <a href="#ad6889e7a74017302ef588e7371d06e6a">More...</a><br /></td></tr>
 <tr class="separator:ad6889e7a74017302ef588e7371d06e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a57145ce5ead569c3758be586d28f41"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7a57145ce5ead569c3758be586d28f41">peek_more</a> ()</td></tr>
-<tr class="memdesc:a7a57145ce5ead569c3758be586d28f41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character if not currently buffered.  <a href="#a7a57145ce5ead569c3758be586d28f41">More...</a><br /></td></tr>
+<tr class="memdesc:a7a57145ce5ead569c3758be586d28f41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character and grow the buffer to make more room if necessary.  <a href="#a7a57145ce5ead569c3758be586d28f41">More...</a><br /></td></tr>
 <tr class="separator:a7a57145ce5ead569c3758be586d28f41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a345dcf64f1671bbb12056408045fa441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a345dcf64f1671bbb12056408045fa441">update</a> ()</td></tr>
 <tr class="memdesc:a345dcf64f1671bbb12056408045fa441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the newline count, column count, and character count when shifting the buffer.  <a href="#a345dcf64f1671bbb12056408045fa441">More...</a><br /></td></tr>
@@ -426,7 +429,7 @@ Protected Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The abstract matcher base class template defines an interface for all pattern matcher engines. </p>
 <p>The buffer expands when matches do not fit. The buffer size is initially 2*BLOCK size.</p>
-<div class="fragment"><div class="line">      _________________</div><div class="line">     |  |    |    |    |</div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a>=|  |<a class="code" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1">text</a>|<a class="code" href="classreflex_1_1_abstract_matcher.html#ab39dc592de42a7e044296f03bee4fdb3">rest</a>|free|</div><div class="line">     |__|____|____|____|</div><div class="line">        ^    ^    ^    ^</div><div class="line">        <a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a></div><div class="line"></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a> <span class="comment">// points to buffered input, buffer may grow to fit long matches</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <span class="comment">// current position in buf_ while matching text, cur_ = pos_ afterwards, can be changed by more()</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <span class="comment">// position in buf_ to start the next match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <span class="comment">// position in buf_ that is free to fill with more input</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a> <span class="comment">// allocated size of buf_, must ensure that max_ &gt; end_ for text() to add a final \0</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a6ce676b26fd73f76186ed5cfb4a9b9dc">txt_</a> <span class="comment">// buf_ + cur_ points to the match, will be 0-terminated when text() or rest() are called</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a63c1bbabe9a7e0dd1a8b43b9bce58dfc">len_</a> <span class="comment">// length of the match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#ae712053969ae8fadeee28c1e08421cf5">chr_</a> <span class="comment">// char located at txt_[len_] when txt_[len_] is set to \0 by text(), is \0 otherwise</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a15e3fb0e851b132fd1e902de9ab56dba">got_</a> <span class="comment">// buf_[cur_-1] character before this match (assigned before each match)</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a2bbc10723ccc884bb90ed85a0dbdaabd">eof_</a> <span class="comment">// true if no more data can/should be fetched to fill the buffer</span></div></div><!-- fragment --><p>More info TODO </p>
+<div class="fragment"><div class="line">      _________________</div><div class="line">     |  |    |    |    |</div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a>=|  |<a class="code" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1">text</a>|<a class="code" href="classreflex_1_1_abstract_matcher.html#ab39dc592de42a7e044296f03bee4fdb3">rest</a>|free|</div><div class="line">     |__|____|____|____|</div><div class="line">        ^    ^    ^    ^</div><div class="line">        <a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a></div><div class="line"></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a> <span class="comment">// points to buffered input, buffer may grow to fit long matches</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <span class="comment">// current position in buf_ while matching text, cur_ = pos_ afterwards, can be changed by more()</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <span class="comment">// position in buf_ to start the next match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <span class="comment">// position in buf_ that is free to fill with more input</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a> <span class="comment">// allocated size of buf_, must ensure that max_ &gt; end_ for text() to add a final \0</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a6ce676b26fd73f76186ed5cfb4a9b9dc">txt_</a> <span class="comment">// points to the match, will be 0-terminated when text() or rest() are called</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a63c1bbabe9a7e0dd1a8b43b9bce58dfc">len_</a> <span class="comment">// length of the match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#ae712053969ae8fadeee28c1e08421cf5">chr_</a> <span class="comment">// char located at txt_[len_] when txt_[len_] is set to \0 by text(), is \0 otherwise</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a15e3fb0e851b132fd1e902de9ab56dba">got_</a> <span class="comment">// buf_[cur_-1] character before this match (assigned before each match)</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a2bbc10723ccc884bb90ed85a0dbdaabd">eof_</a> <span class="comment">// true if no more data can/should be fetched to fill the buffer</span></div></div><!-- fragment --><p>More info TODO </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a24336f3d3f122aa0e904fc18954943f8"></a>
 <div class="memitem">
@@ -797,7 +800,7 @@ Protected Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>true when successful to buffer all input when n=0. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">blk</td><td>new block size between 1 and <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer growth factor, buffer is initially 2*BLOCK size ">Const::BLOCK</a>, or 0 to buffer all input (default) </td></tr>
+    <tr><td class="paramname">blk</td><td>new block size between 1 and <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer growth factor, buffer is initially 2*BLOCK size, at least 256 ">Const::BLOCK</a>, or 0 to buffer all input (default) </td></tr>
   </table>
   </dd>
 </dl>
@@ -1099,7 +1102,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the next character if not currently buffered. </p>
+<p>Get the next character and grow the buffer to make more room if necessary. </p>
 <dl class="section return"><dt>Returns</dt><dd>the character read (unsigned char 0..255) or EOF (-1). </dd></dl>
 
 </div>
@@ -1130,7 +1133,7 @@ Protected Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>true if buffer was shifted or was enlarged. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">need</td><td>optional needed space = <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer growth factor, buffer is initially 2*BLOCK size ">Const::BLOCK</a> size by default </td></tr>
+    <tr><td class="paramname">need</td><td>optional needed space = <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer growth factor, buffer is initially 2*BLOCK size, at least 256 ">Const::BLOCK</a> size by default </td></tr>
   </table>
   </dd>
 </dl>
@@ -1940,7 +1943,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Peek at the next character if not currently buffered. </p>
+<p>Peek at the next character and grow the buffer to make more room if necessary. </p>
 <dl class="section return"><dt>Returns</dt><dd>the character (unsigned char 0..255) or EOF (-1). </dd></dl>
 
 </div>
@@ -2111,6 +2114,38 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the current position in the buffer for the next match. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>new location in buffer </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a23d2f21d13e3ae841277126c5eacb5a8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::AbstractMatcher::set_current_match </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the current match position in the buffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">loc</td><td>new location in buffer </td></tr>
@@ -2997,7 +3032,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Sep 4 2019 11:57:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Sep 10 2019 12:41:04 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

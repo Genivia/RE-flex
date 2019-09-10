@@ -77,7 +77,7 @@ cur_ // current position in buf_ while matching text, cur_ = pos_ afterwards, ca
 pos_ // position in buf_ to start the next match
 end_ // position in buf_ that is free to fill with more input
 max_ // allocated size of buf_, must ensure that max_ > end_ for text() to add a final \0
-txt_ // buf_ + cur_ points to the match, will be 0-terminated when text() or rest() are called
+txt_ // points to the match, will be 0-terminated when text() or rest() are called
 len_ // length of the match
 chr_ // char located at txt_[len_] when txt_[len_] is set to \0 by text(), is \0 otherwise
 got_ // buf_[cur_-1] character before this match (assigned before each match)
@@ -100,7 +100,7 @@ class AbstractMatcher {
     static const int BOB      = 257;    ///< begin of buffer meta-char marker
     static const int EOB      = EOF;    ///< end of buffer meta-char marker
     static const size_t EMPTY = 0xFFFF; ///< accept() returns empty last split at end of input
-    static const size_t BLOCK = 8192;   ///< buffer growth factor, buffer is initially 2*BLOCK size
+    static const size_t BLOCK = 8192;   ///< buffer growth factor, buffer is initially 2*BLOCK size, at least 256
   };
   /// AbstractMatcher::Options for matcher engines.
   struct Option {
@@ -507,12 +507,12 @@ class AbstractMatcher {
       if (*s == '\n')
       {
         ++n;
-        t = s;
+        t = s + 1;
         k = 0;
       }
       ++s;
     }
-    k += t - lpb_;
+    k += s - t;
 #else
     while (s < e)
     {
@@ -996,6 +996,7 @@ class AbstractMatcher {
       if (end_ > 0)
         std::memmove(buf_, txt_, end_);
       txt_ = buf_;
+      lpb_ = buf_;
     }
     else
     {
@@ -1072,7 +1073,13 @@ class AbstractMatcher {
     pos_ = cur_ = loc;
     got_ = loc > 0 ? static_cast<unsigned char>(buf_[loc - 1]) : Const::UNK;
   }
-  /// Get the next character if not currently buffered.
+  /// Set the current match position in the buffer.
+  inline void set_current_match(size_t loc) ///< new location in buffer
+  {
+    set_current(loc);
+    txt_ = buf_ + cur_;
+  }
+  /// Get the next character and grow the buffer to make more room if necessary.
   inline int get_more()
     /// @returns the character read (unsigned char 0..255) or EOF (-1).
   {
@@ -1094,7 +1101,7 @@ class AbstractMatcher {
       }
     }
   }
-  /// Peek at the next character if not currently buffered.
+  /// Peek at the next character and grow the buffer to make more room if necessary.
   inline int peek_more()
     /// @returns the character (unsigned char 0..255) or EOF (-1).
   {

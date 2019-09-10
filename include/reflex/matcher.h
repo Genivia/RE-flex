@@ -348,28 +348,71 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     newline();
     return !tab_.empty() && tab_.back() > col_;
   }
-  static inline size_t predict_match(const Pattern::Pred a[], const char *b)
+  /// Boyer-Moore preprocessing of the given pattern pat of length len, generates bmd_ > 0 and bms_[] shifts.
+  void boyer_moore_init(
+      const char *pat, ///< pattern string
+      size_t      len) ///< nonzero length of the pattern string
   {
-    uint8_t b0 = b[0];
-    uint8_t b1 = b[1];
-    uint8_t b2 = b[2];
-    uint8_t b3 = b[3];
+    size_t i;
+    for (i = 0; i < 256; ++i)
+      bms_[i] = len;
+    for (i = 0; i < len; ++i)
+      bms_[static_cast<uint8_t>(pat[i])] = static_cast<uint8_t>(len - i - 1);
+    size_t j;
+    for (i = len - 1, j = i; j > 0; --j)
+      if (pat[j - 1] == pat[i])
+        break;
+    bmd_ = i - j + 1;
+  }
+  /// Returns true when match is predicted, based on s[0..3..e-1] (e >= s + 4).
+  static inline bool predict_match(const Pattern::Pred pmh[], const char *s, size_t n)
+  {
+    Pattern::Hash h = static_cast<uint8_t>(*s);
+    if (pmh[h] & 1)
+      return false;
+    h = Pattern::hash(h, static_cast<uint8_t>(*++s));
+    if (pmh[h] & 2)
+      return false;
+    h = Pattern::hash(h, static_cast<uint8_t>(*++s));
+    if (pmh[h] & 4)
+      return false;
+    h = Pattern::hash(h, static_cast<uint8_t>(*++s));
+    if (pmh[h] & 8)
+      return false;
+    Pattern::Pred m = 16;
+    const char *e = s + n - 3;
+    while (++s < e)
+    {
+      h = Pattern::hash(h, static_cast<uint8_t>(*s));
+      if (pmh[h] & m)
+        return false;
+      m <<= 1;
+    }
+    return true;
+  }
+  /// Returns zero when match is predicted or nonzero shift value, based on s[0..3].
+  static inline size_t predict_match(const Pattern::Pred pma[], const char *s)
+  {
+    uint8_t b0 = s[0];
+    uint8_t b1 = s[1];
+    uint8_t b2 = s[2];
+    uint8_t b3 = s[3];
     Pattern::Hash h1 = Pattern::hash(b0, b1);
     Pattern::Hash h2 = Pattern::hash(h1, b2);
     Pattern::Hash h3 = Pattern::hash(h2, b3);
-    Pattern::Pred a0 = a[b0];
-    Pattern::Pred a1 = a[h1];
-    Pattern::Pred a2 = a[h2];
-    Pattern::Pred a3 = a[h3];
+    Pattern::Pred a0 = pma[b0];
+    Pattern::Pred a1 = pma[h1];
+    Pattern::Pred a2 = pma[h2];
+    Pattern::Pred a3 = pma[h3];
     Pattern::Pred p = (a0 & 0xc0) | (a1 & 0x30) | (a2 & 0x0c) | (a3 & 0x03);
     Pattern::Pred m = (p >> 5) | (p >> 3) | (p >> 1) | p;
     if (m != 0xff)
       return 0;
-    if ((a[b1] & 0xc0) != 0xc0)
+    if ((pma[b1] & 0xc0) != 0xc0)
       return 1;
-    if ((a[b2] & 0xc0) != 0xc0)
+    if ((pma[b2] & 0xc0) != 0xc0)
       return 2;
-    if ((a[b3] & 0xc0) != 0xc0)
+    if ((pma[b3] & 0xc0) != 0xc0)
       return 3;
     return 4;
   }
@@ -380,7 +423,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   std::stack<Stops> stk_;      ///< stack to push/pop stops
   FSM               fsm_;      ///< local state for FSM code
   size_t            bmd_;      ///< Boyer-Moore-Horspool jump distance on mismatch, B-M-H is enabled when > 0
-  size_t            bms_[256]; ///< Boyer-Moore-Horspool skip array
+  uint8_t           bms_[256]; ///< Boyer-Moore-Horspool skip array
   bool              mrk_;      ///< indent \i or dedent \j in pattern found: should check and update indent stops
 };
 

@@ -63,7 +63,7 @@ namespace reflex {
 class Pattern {
   friend class Matcher; ///< permit access by the reflex::Matcher engine
  public:
-  typedef uint8_t  Pred;   ///< predict match bit vector
+  typedef uint8_t  Pred;   ///< predict match bits
   typedef uint16_t Hash;   ///< hash type (uint16_t), may be narrowed to uint8_t when Const::HASH == 0x100
   typedef uint16_t Index;  ///< index into opcodes array Pattern::opc_ and subpattern indexing
   typedef uint32_t Opcode; ///< 32 bit opcode word
@@ -71,7 +71,7 @@ class Pattern {
   /// Common constants.
   struct Const {
     static const Index IMAX = 0xFFFF; ///< max index, also serves as a marker
-    static const Index HASH = 0x0400; ///< size of the predict match array
+    static const Index HASH = 0x1000; ///< size of the predict match array
   };
   /// Construct an unset pattern.
   explicit Pattern()
@@ -127,24 +127,24 @@ class Pattern {
   /// Construct a pattern object given an opcode table.
   explicit Pattern(
       const Opcode  *code,
-      const uint8_t *hash = NULL)
+      const uint8_t *pred = NULL)
     :
       opc_(code),
       nop_(0),
       fsm_(NULL)
   {
-    init(NULL, hash);
+    init(NULL, pred);
   }
   /// Construct a pattern object given a function pointer to FSM code.
   explicit Pattern(
       FSM            fsm,
-      const uint8_t *hash = NULL)
+      const uint8_t *pred = NULL)
     :
       opc_(NULL),
       nop_(0),
       fsm_(fsm)
   {
-    init(NULL, hash);
+    init(NULL, pred);
   }
   /// Destructor, deletes internal code array when owned and allocated.
   virtual ~Pattern()
@@ -195,21 +195,21 @@ class Pattern {
   /// Assign a (new) pattern.
   Pattern& assign(
       const Opcode  *code,
-      const uint8_t *hash = NULL)
+      const uint8_t *pred = NULL)
   {
     clear();
     opc_ = code;
-    init(NULL, hash);
+    init(NULL, pred);
     return *this;
   }
   /// Assign a (new) pattern.
   Pattern& assign(
       FSM            fsm,
-      const uint8_t *hash = NULL)
+      const uint8_t *pred = NULL)
   {
     clear();
     fsm_ = fsm;
-    init(NULL, hash);
+    init(NULL, pred);
     return *this;
   }
   /// Assign a (new) pattern.
@@ -428,7 +428,7 @@ class Pattern {
   /// Initialize the pattern at construction.
   void init(
       const char    *options,
-      const uint8_t *hash = NULL);
+      const uint8_t *pred = NULL);
   void init_options(const char *options);
   void parse(
       Positions& startpos,
@@ -527,9 +527,10 @@ class Pattern {
   void export_dfa(const State& start) const;
   void export_code() const;
   void predict_match_dfa(State& start);
-  void gen_predict_match_hash(State *state);
-  void gen_predict_match_hash_transitions(State *state, std::map<State*,ORanges<Char> >& states);
-  void gen_predict_match_hash_transitions(Index level, State *state, ORanges<Char>& labels, std::map<State*,ORanges<Char> >& states);
+  void gen_predict_match(State *state);
+  void gen_predict_match_transitions(State *state, std::map<State*,ORanges<Char> >& states);
+  void gen_predict_match_transitions(Index level, State *state, ORanges<Char>& labels, std::map<State*,ORanges<Char> >& states);
+  void write_predictor(FILE *fd) const;
   void write_namespace_open(FILE* fd) const;
   void write_namespace_close(FILE* fd) const;
   Location find_at(
@@ -703,8 +704,10 @@ class Pattern {
   const Opcode         *opc_; ///< points to the opcode table
   Index                 nop_; ///< number of opcodes generated
   FSM                   fsm_; ///< function pointer to FSM code
-  std::string           pre_; ///< pattern prefix
-  bool                  pme_; ///< predict-match enabled
+  std::string           pre_; ///< pattern prefix, no more than 255 bytes
+  size_t                min_; ///< patterns after the prefix are at least this long but no more than 8
+  Pred                  bit_[256];         ///< bitap array
+  Pred                  pmh_[Const::HASH]; ///< predict-match hash array
   Pred                  pma_[Const::HASH]; ///< predict-match array
   float                 pms_; ///< ms elapsed time to parse regex
   float                 vms_; ///< ms elapsed time to compile DFA vertices

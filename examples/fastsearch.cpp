@@ -14,7 +14,7 @@
 // The first build step generates FSM code for PATTERN and hash data to speed
 // up search with the following algorithms and libraries:
 // - memchr()
-// - Boyer-Moore-Horspool
+// - Boyer-Moore
 // - hash-based accellerator to search multiple words (works with any regex)
 // The FSM code is generated with reflex::Pattern option "o" (optimize).
 // The predictor data is generated with reflex::Pattern option "p" (precict).
@@ -92,7 +92,8 @@ int main(int argc, char **argv)
     while (matcher.find())
     {
       // display line and column numbers
-      printf("%zu:%zu: ", matcher.lineno(), matcher.columno());
+      printf("%zu,%zu: ", matcher.lineno(), matcher.columno());
+
       // we use matcher.begin() and matcher.size() to extract the match
       fwrite(matcher.begin(), 1, matcher.size(), stdout);
       putchar('\n');

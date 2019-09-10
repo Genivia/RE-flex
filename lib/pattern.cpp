@@ -154,24 +154,39 @@ void Pattern::error(regex_error_type code, size_t pos) const
     throw err;
 }
 
-void Pattern::init(const char *opt, const uint8_t *hash)
+void Pattern::init(const char *opt, const uint8_t *pred)
 {
   init_options(opt);
   if (opc_ || fsm_)
   {
     nop_ = 0;
-    pme_ = false;
-    if (hash != NULL)
+    pre_.clear();
+    min_ = 0;
+    if (pred != NULL)
     {
-      for (Index i = 0; i < Const::HASH; ++i)
+      size_t n = pred[0];
+      pre_.assign(reinterpret_cast<const char*>(pred + 2), n);
+      min_ = pred[1];
+      if (min_ > 0)
       {
-        if (hash[i] != 0)
-          pme_ = true;
-        pma_[i] = ~hash[i];
+        n += 2;
+        if (min_ > 1 && pre_.empty())
+        {
+          for (size_t i = 0; i < 256; ++i)
+            bit_[i] = ~pred[i + n];
+          n += 256;
+        }
+        if (min_ >= 4)
+        {
+          for (size_t i = 0; i < Const::HASH; ++i)
+            pmh_[i] = ~pred[i + n];
+        }
+        else
+        {
+          for (size_t i = 0; i < Const::HASH; ++i)
+            pma_[i] = ~pred[i + n];
+        }
       }
-      size_t size = (hash[Const::HASH] << 8) | hash[Const::HASH + 1];
-      pre_.assign(reinterpret_cast<const char*>(hash + Const::HASH + 2), size);
-
     }
   }
   else
@@ -2196,15 +2211,7 @@ void Pattern::gencode_dfa(const State& start) const
         }
         ::fprintf(fd, "}\n\n");
         if (opt_.p)
-        {
-          ::fprintf(fd, "extern const reflex::Pattern::Pred reflex_pred_%s[%zu] = {", opt_.n.empty() ? "FSM" : opt_.n.c_str(), Const::HASH + 2 + pre_.size());
-          for (Index i = 0; i < Const::HASH; ++i)
-            ::fprintf(fd, "%c%3hhu,", (i & 0xF) ? ' ' : '\n', static_cast<uint8_t>(~pma_[i]));
-          ::fprintf(fd, "\n%3hhu, %3hhu,", static_cast<uint8_t>(pre_.size() >> 8), static_cast<uint8_t>(pre_.size() & 0xFF));
-          for (Index i = 0; i < pre_.size(); ++i)
-            ::fprintf(fd, " %3hhu,", static_cast<uint8_t>(pre_[i]));
-          ::fprintf(fd, "\n};\n\n");
-        }
+          write_predictor(fd);
         write_namespace_close(fd);
         if (fd != stdout)
           ::fclose(fd);
@@ -2507,15 +2514,7 @@ void Pattern::export_code() const
         }
         ::fprintf(fd, "};\n\n");
         if (opt_.p)
-        {
-          ::fprintf(fd, "extern const reflex::Pattern::Pred reflex_pred_%s[%zu] = {", opt_.n.empty() ? "FSM" : opt_.n.c_str(), Const::HASH + 2 + pre_.size());
-          for (Index i = 0; i < Const::HASH; ++i)
-            ::fprintf(fd, "%c%3hhu,", (i & 0xF) ? ' ' : '\n', static_cast<uint8_t>(~pma_[i]));
-          ::fprintf(fd, "\n%3hhu, %3hhu,", static_cast<uint8_t>(pre_.size() >> 8), static_cast<uint8_t>(pre_.size() & 0xFF));
-          for (Index i = 0; i < pre_.size(); ++i)
-            ::fprintf(fd, " %3hhu,", static_cast<uint8_t>(pre_[i]));
-          ::fprintf(fd, "\n};\n\n");
-        }
+          write_predictor(fd);
         write_namespace_close(fd);
         if (fd != stdout)
           ::fclose(fd);
@@ -2538,50 +2537,78 @@ void Pattern::predict_match_dfa(State& start)
       if (lo != state->edges.begin()->second.first)
         break;
       pre_.push_back(lo);
+      if (pre_.size() >= 255)
+        break;
     }
     State *next = state->edges.begin()->second.second;
     if (next == NULL || next->index < state->index)
       break;
     state = next;
   }
-  pme_ = (state != NULL && state->accept == 0);
+  min_ = 0;
+  std::memset(bit_, 0xFF, sizeof(bit_));
+  std::memset(pmh_, 0xFF, sizeof(pmh_));
   std::memset(pma_, 0xFF, sizeof(pma_));
-  if (pme_)
+  if (state != NULL && state->accept == 0)
   {
-    gen_predict_match_hash(state);
+    gen_predict_match(state);
 #ifdef DEBUG
-    DBGLOGN("pme = %d", pme_);
+    for (Index i = 0; i < 256; ++i)
+    {
+      if (bit_[i] != 0xFF)
+      {
+        if (isprint(i))
+          DBGLOGN("bit['%c'] = %2x\n", i, bit_[i]);
+        else
+          DBGLOGN("bit[%3d] = %2x\n", i, bit_[i]);
+      }
+    }
+    for (Index i = 0; i < Const::HASH; ++i)
+    {
+      if (pmh_[i] != 0xFF)
+      {
+        if (isprint(i))
+          DBGLOGN("pmh['%c'] = %2x\n", i, pmh_[i]);
+        else
+          DBGLOGN("pmh[%3d] = %2x\n", i, pmh_[i]);
+      }
+    }
     for (Index i = 0; i < Const::HASH; ++i)
     {
       if (pma_[i] != 0xFF)
       {
         if (isprint(i))
-          DBGLOGN("pma['%c'] = %2x", i, pma_[i]);
+          DBGLOGN("pma['%c'] = %2x\n", i, pma_[i]);
         else
-          DBGLOGN("pma[%3d] = %2x", i, pma_[i]);
+          DBGLOGN("pma[%3d] = %2x\n", i, pma_[i]);
       }
     }
 #endif
   }
+  DBGLOGN("min = %zu", min_);
   DBGLOG("END Pattern::predict_match_dfa()");
 }
 
-void Pattern::gen_predict_match_hash(State *state)
+void Pattern::gen_predict_match(State *state)
 {
-  std::map<State*,ORanges<Char> > states[4];
-  gen_predict_match_hash_transitions(state, states[0]);
-  for (Index level = 1; level < 4; ++level)
+  min_ = 8;
+  std::map<State*,ORanges<Char> > states[8];
+  gen_predict_match_transitions(state, states[0]);
+  for (Index level = 1; level < 8; ++level)
     for (std::map<State*,ORanges<Char> >::iterator from = states[level - 1].begin(); from != states[level - 1].end(); ++from)
-      gen_predict_match_hash_transitions(level, from->first, from->second, states[level]);
+      gen_predict_match_transitions(level, from->first, from->second, states[level]);
 }
 
-void Pattern::gen_predict_match_hash_transitions(State *state, std::map<State*,ORanges<Char> >& states)
+void Pattern::gen_predict_match_transitions(State *state, std::map<State*,ORanges<Char> >& states)
 {
   for (State::Edges::const_iterator edge = state->edges.begin(); edge != state->edges.end(); ++edge)
   {
     Char lo = edge->first;
     if (is_meta(lo))
+    {
+      min_ = 0;
       break;
+    }
     State *next = edge->second.second;
     bool accept = (next == NULL || next->accept != 0);
     if (!accept)
@@ -2597,33 +2624,36 @@ void Pattern::gen_predict_match_hash_transitions(State *state, std::map<State*,O
         }
       }
     }
-    else if (next->edges.empty())
+    else if (next != NULL && next->edges.empty())
     {
       next = NULL;
     }
+    if (accept)
+      min_ = 1;
     Char hi = edge->second.first;
     while (lo <= hi)
     {
-      Hash h = static_cast<Hash>(lo);
+      bit_[lo] &= ~1;
+      pmh_[lo] &= ~1;
       if (accept)
-        pma_[h] &= ~(1 << 7);
-      pma_[h] &= ~(1 << 6);
+        pma_[lo] &= ~(1 << 7);
+      pma_[lo] &= ~(1 << 6);
       if (next != NULL)
-        states[next].insert(hash(h));
+        states[next].insert(hash(lo));
       ++lo;
     }
   }
 }
 
-void Pattern::gen_predict_match_hash_transitions(Index level, State *state, ORanges<Char>& labels, std::map<State*,ORanges<Char> >& states)
+void Pattern::gen_predict_match_transitions(Index level, State *state, ORanges<Char>& labels, std::map<State*,ORanges<Char> >& states)
 {
   for (State::Edges::const_iterator edge = state->edges.begin(); edge != state->edges.end(); ++edge)
   {
     Char lo = edge->first;
     if (is_meta(lo))
       break;
-    State *next = edge->second.second;
-    bool accept = (level == 3 || next == NULL || next->accept != 0);
+    State *next = level < 7 ? edge->second.second : NULL;
+    bool accept = next == NULL || next->accept != 0;
     if (!accept)
     {
       for (State::Edges::const_iterator e = next->edges.begin(); e != next->edges.end(); ++e)
@@ -2637,28 +2667,67 @@ void Pattern::gen_predict_match_hash_transitions(Index level, State *state, ORan
         }
       }
     }
-    else if (level == 3 || next->edges.empty())
+    else if (next != NULL && next->edges.empty())
     {
       next = NULL;
     }
-    Char hi = edge->second.first;
-    for (ORanges<Char>::const_iterator label = labels.begin(); label != labels.end(); ++label)
+    if (accept && min_ > level)
+      min_ = level + 1;
+    if (level < 4 || level <= min_)
     {
-      Char label_hi = label->second - 1;
-      for (Char label_lo = label->first; label_lo <= label_hi; ++label_lo)
+      Char hi = edge->second.first;
+      if (level <= min_)
+        while (lo <= hi)
+          bit_[lo++] &= ~(1 << level);
+      for (ORanges<Char>::const_iterator label = labels.begin(); label != labels.end(); ++label)
       {
-        for (lo = edge->first; lo <= hi; ++lo)
+        Char label_hi = label->second - 1;
+        for (Char label_lo = label->first; label_lo <= label_hi; ++label_lo)
         {
-          Hash h = hash(label_lo, lo);
-          if (accept)
-            pma_[h] &= ~(1 << (7 - 2 * level));
-          pma_[h] &= ~(1 << (6 - 2 * level));
-          if (next != NULL)
-            states[next].insert(hash(h));
+          for (lo = edge->first; lo <= hi; ++lo)
+          {
+            Hash h = hash(label_lo, lo);
+            pmh_[h] &= ~(1 << level);
+            if (level < 4)
+            {
+              if (level == 3 || accept)
+                pma_[h] &= ~(1 << (7 - 2 * level));
+              pma_[h] &= ~(1 << (6 - 2 * level));
+            }
+            if (next != NULL)
+              states[next].insert(hash(h));
+          }
         }
       }
     }
   }
+}
+
+void Pattern::write_predictor(FILE *fd) const
+{
+  ::fprintf(fd, "extern const reflex::Pattern::Pred reflex_pred_%s[%zu] = {", opt_.n.empty() ? "FSM" : opt_.n.c_str(), 2 + pre_.size() + (min_ > 1 && pre_.empty()) * 256 + (min_ > 0) * Const::HASH);
+  ::fprintf(fd, "\n  %3hhu,%3hhu,", static_cast<uint8_t>(pre_.size()), static_cast<uint8_t>(min_));
+  for (Index i = 0; i < pre_.size(); ++i)
+    ::fprintf(fd, "%s%3hhu,", ((i + 2) & 0xF) ? "" : "\n  ", static_cast<uint8_t>(pre_[i]));
+  if (min_ > 0)
+  {
+    if (min_ > 1 && pre_.empty())
+    {
+      for (Index i = 0; i < 256; ++i)
+        ::fprintf(fd, "%s%3hhu,", (i & 0xF) ? "" : "\n  ", static_cast<uint8_t>(~bit_[i]));
+    }
+    if (min_ >= 4)
+    {
+      for (Index i = 0; i < Const::HASH; ++i)
+        ::fprintf(fd, "%s%3hhu,", (i & 0xF) ? "" : "\n  ", static_cast<uint8_t>(~pmh_[i]));
+    }
+    else
+    {
+      for (Index i = 0; i < Const::HASH; ++i)
+        ::fprintf(fd, "%s%3hhu,", (i & 0xF) ? "" : "\n  ", static_cast<uint8_t>(~pma_[i]));
+    }
+  }
+  ::fprintf(fd, "\n};\n\n");
 }
 
 void Pattern::write_namespace_open(FILE* fd) const

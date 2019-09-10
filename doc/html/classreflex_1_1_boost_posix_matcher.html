@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::BoostPosixMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Sep 4 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Sep 10 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -416,11 +416,14 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a5f8d28fc8c5326d5f05f84aaa588d564 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a5f8d28fc8c5326d5f05f84aaa588d564">set_current</a> (size_t loc)</td></tr>
 <tr class="memdesc:a5f8d28fc8c5326d5f05f84aaa588d564 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current position in the buffer for the next match.  <a href="#a5f8d28fc8c5326d5f05f84aaa588d564">More...</a><br /></td></tr>
 <tr class="separator:a5f8d28fc8c5326d5f05f84aaa588d564 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23d2f21d13e3ae841277126c5eacb5a8 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a23d2f21d13e3ae841277126c5eacb5a8">set_current_match</a> (size_t loc)</td></tr>
+<tr class="memdesc:a23d2f21d13e3ae841277126c5eacb5a8 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current match position in the buffer.  <a href="#a23d2f21d13e3ae841277126c5eacb5a8">More...</a><br /></td></tr>
+<tr class="separator:a23d2f21d13e3ae841277126c5eacb5a8 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6889e7a74017302ef588e7371d06e6a inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ad6889e7a74017302ef588e7371d06e6a">get_more</a> ()</td></tr>
-<tr class="memdesc:ad6889e7a74017302ef588e7371d06e6a inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next character if not currently buffered.  <a href="#ad6889e7a74017302ef588e7371d06e6a">More...</a><br /></td></tr>
+<tr class="memdesc:ad6889e7a74017302ef588e7371d06e6a inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next character and grow the buffer to make more room if necessary.  <a href="#ad6889e7a74017302ef588e7371d06e6a">More...</a><br /></td></tr>
 <tr class="separator:ad6889e7a74017302ef588e7371d06e6a inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7a57145ce5ead569c3758be586d28f41">peek_more</a> ()</td></tr>
-<tr class="memdesc:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character if not currently buffered.  <a href="#a7a57145ce5ead569c3758be586d28f41">More...</a><br /></td></tr>
+<tr class="memdesc:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character and grow the buffer to make more room if necessary.  <a href="#a7a57145ce5ead569c3758be586d28f41">More...</a><br /></td></tr>
 <tr class="separator:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a345dcf64f1671bbb12056408045fa441 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a345dcf64f1671bbb12056408045fa441">update</a> ()</td></tr>
 <tr class="memdesc:a345dcf64f1671bbb12056408045fa441 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the newline count, column count, and character count when shifting the buffer.  <a href="#a345dcf64f1671bbb12056408045fa441">More...</a><br /></td></tr>
@@ -688,7 +691,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Sep 4 2019 11:57:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Sep 10 2019 12:41:04 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

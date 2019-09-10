@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Sep 4 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Sep 10 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -447,6 +447,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a05ff32e0519d3af80d376b51c561d71e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a05ff32e0519d3af80d376b51c561d71e">dedent</a> ()</td></tr>
 <tr class="memdesc:a05ff32e0519d3af80d376b51c561d71e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if looking at dedent.  <a href="#a05ff32e0519d3af80d376b51c561d71e">More...</a><br /></td></tr>
 <tr class="separator:a05ff32e0519d3af80d376b51c561d71e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43df76e4f12a3890d096e9cf476aea03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a43df76e4f12a3890d096e9cf476aea03">boyer_moore_init</a> (const char *pat, size_t len)</td></tr>
+<tr class="memdesc:a43df76e4f12a3890d096e9cf476aea03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boyer-Moore preprocessing of the given pattern pat of length len, generates bmd_ &gt; 0 and bms_[] shifts.  <a href="#a43df76e4f12a3890d096e9cf476aea03">More...</a><br /></td></tr>
+<tr class="separator:a43df76e4f12a3890d096e9cf476aea03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classreflex_1_1_pattern_matcher"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classreflex_1_1_pattern_matcher')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classreflex_1_1_pattern_matcher.html">reflex::PatternMatcher&lt; reflex::Pattern &gt;</a></td></tr>
 <tr class="memitem:ad0e7fa27c5340c1e48416def14f338a4 inherit pro_methods_classreflex_1_1_pattern_matcher"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern_matcher.html#ad0e7fa27c5340c1e48416def14f338a4">PatternMatcher</a> (const <a class="el" href="classreflex_1_1_pattern_matcher.html#a56c667f62f9d60ccfe3caf16bbc2a9fc">Pattern</a> *<a class="el" href="classreflex_1_1_pattern_matcher.html#a05c456bf148afd72ed92f54434cad16f">pattern</a>=NULL, const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;<a class="el" href="classreflex_1_1_abstract_matcher.html#ab49c7878fc1d7c39e0ca264a5c919f08">input</a>=<a class="el" href="classreflex_1_1_input.html">Input</a>(), const char *opt=NULL)</td></tr>
 <tr class="memdesc:ad0e7fa27c5340c1e48416def14f338a4 inherit pro_methods_classreflex_1_1_pattern_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a base abstract matcher from a pointer to a persistent pattern object (that is shared with this class) and an input character sequence.  <a href="#ad0e7fa27c5340c1e48416def14f338a4">More...</a><br /></td></tr>
@@ -490,11 +493,14 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a5f8d28fc8c5326d5f05f84aaa588d564 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a5f8d28fc8c5326d5f05f84aaa588d564">set_current</a> (size_t loc)</td></tr>
 <tr class="memdesc:a5f8d28fc8c5326d5f05f84aaa588d564 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current position in the buffer for the next match.  <a href="#a5f8d28fc8c5326d5f05f84aaa588d564">More...</a><br /></td></tr>
 <tr class="separator:a5f8d28fc8c5326d5f05f84aaa588d564 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23d2f21d13e3ae841277126c5eacb5a8 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a23d2f21d13e3ae841277126c5eacb5a8">set_current_match</a> (size_t loc)</td></tr>
+<tr class="memdesc:a23d2f21d13e3ae841277126c5eacb5a8 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current match position in the buffer.  <a href="#a23d2f21d13e3ae841277126c5eacb5a8">More...</a><br /></td></tr>
+<tr class="separator:a23d2f21d13e3ae841277126c5eacb5a8 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6889e7a74017302ef588e7371d06e6a inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ad6889e7a74017302ef588e7371d06e6a">get_more</a> ()</td></tr>
-<tr class="memdesc:ad6889e7a74017302ef588e7371d06e6a inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next character if not currently buffered.  <a href="#ad6889e7a74017302ef588e7371d06e6a">More...</a><br /></td></tr>
+<tr class="memdesc:ad6889e7a74017302ef588e7371d06e6a inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next character and grow the buffer to make more room if necessary.  <a href="#ad6889e7a74017302ef588e7371d06e6a">More...</a><br /></td></tr>
 <tr class="separator:ad6889e7a74017302ef588e7371d06e6a inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7a57145ce5ead569c3758be586d28f41">peek_more</a> ()</td></tr>
-<tr class="memdesc:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character if not currently buffered.  <a href="#a7a57145ce5ead569c3758be586d28f41">More...</a><br /></td></tr>
+<tr class="memdesc:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character and grow the buffer to make more room if necessary.  <a href="#a7a57145ce5ead569c3758be586d28f41">More...</a><br /></td></tr>
 <tr class="separator:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a345dcf64f1671bbb12056408045fa441 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a345dcf64f1671bbb12056408045fa441">update</a> ()</td></tr>
 <tr class="memdesc:a345dcf64f1671bbb12056408045fa441 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the newline count, column count, and character count when shifting the buffer.  <a href="#a345dcf64f1671bbb12056408045fa441">More...</a><br /></td></tr>
@@ -502,8 +508,12 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:a3ace612ed6bf1269cc4dfd97af47c108"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3ace612ed6bf1269cc4dfd97af47c108">predict_match</a> (const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pattern::Pred</a> a[], const char *b)</td></tr>
-<tr class="separator:a3ace612ed6bf1269cc4dfd97af47c108"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dcae088c372c3fcc3eda9f89daf34d1"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3dcae088c372c3fcc3eda9f89daf34d1">predict_match</a> (const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pattern::Pred</a> pmh[], const char *s, size_t n)</td></tr>
+<tr class="memdesc:a3dcae088c372c3fcc3eda9f89daf34d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true when match is predicted, based on s[0..3..e-1] (e &gt;= s + 4).  <a href="#a3dcae088c372c3fcc3eda9f89daf34d1">More...</a><br /></td></tr>
+<tr class="separator:a3dcae088c372c3fcc3eda9f89daf34d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3db4e385bc60d761212d5795edbec73b"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3db4e385bc60d761212d5795edbec73b">predict_match</a> (const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pattern::Pred</a> pma[], const char *s)</td></tr>
+<tr class="memdesc:a3db4e385bc60d761212d5795edbec73b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns zero when match is predicted or nonzero shift value, based on s[0..3].  <a href="#a3db4e385bc60d761212d5795edbec73b">More...</a><br /></td></tr>
+<tr class="separator:a3db4e385bc60d761212d5795edbec73b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -528,9 +538,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a47e7979b2b89ac05ca4deb937a2f3d97"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a47e7979b2b89ac05ca4deb937a2f3d97">bmd_</a></td></tr>
 <tr class="memdesc:a47e7979b2b89ac05ca4deb937a2f3d97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boyer-Moore-Horspool jump distance on mismatch, B-M-H is enabled when &gt; 0.  <a href="#a47e7979b2b89ac05ca4deb937a2f3d97">More...</a><br /></td></tr>
 <tr class="separator:a47e7979b2b89ac05ca4deb937a2f3d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8476ed37d043a4069b9f93f319b65acc"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a8476ed37d043a4069b9f93f319b65acc">bms_</a> [256]</td></tr>
-<tr class="memdesc:a8476ed37d043a4069b9f93f319b65acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boyer-Moore-Horspool skip array.  <a href="#a8476ed37d043a4069b9f93f319b65acc">More...</a><br /></td></tr>
-<tr class="separator:a8476ed37d043a4069b9f93f319b65acc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7207b196024ffe415ce537d6e551b25"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ae7207b196024ffe415ce537d6e551b25">bms_</a> [256]</td></tr>
+<tr class="memdesc:ae7207b196024ffe415ce537d6e551b25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boyer-Moore-Horspool skip array.  <a href="#ae7207b196024ffe415ce537d6e551b25">More...</a><br /></td></tr>
+<tr class="separator:ae7207b196024ffe415ce537d6e551b25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8fa9c9a4917bdbb24b359d3eaa9185b4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a8fa9c9a4917bdbb24b359d3eaa9185b4">mrk_</a></td></tr>
 <tr class="memdesc:a8fa9c9a4917bdbb24b359d3eaa9185b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">indent  or dedent  in pattern found: should check and update indent stops  <a href="#a8fa9c9a4917bdbb24b359d3eaa9185b4">More...</a><br /></td></tr>
 <tr class="separator:a8fa9c9a4917bdbb24b359d3eaa9185b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -819,6 +829,49 @@ template&lt;typename P &gt; </div>
 
 <p>Returns true if able to advance to next possible match. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if possible match found </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a43df76e4f12a3890d096e9cf476aea03"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::boyer_moore_init </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>pat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Boyer-Moore preprocessing of the given pattern pat of length len, generates bmd_ &gt; 0 and bms_[] shifts. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pat</td><td>pattern string </td></tr>
+    <tr><td class="paramname">len</td><td>nonzero length of the pattern string </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1806,7 +1859,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a3ace612ed6bf1269cc4dfd97af47c108"></a>
+<a class="anchor" id="a3dcae088c372c3fcc3eda9f89daf34d1"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1814,16 +1867,22 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static size_t reflex::Matcher::predict_match </td>
+          <td class="memname">static bool reflex::Matcher::predict_match </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pattern::Pred</a>&#160;</td>
-          <td class="paramname"><em>a</em>[], </td>
+          <td class="paramname"><em>pmh</em>[], </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>b</em>&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1837,6 +1896,44 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true when match is predicted, based on s[0..3..e-1] (e &gt;= s + 4). </p>
+
+</div>
+</div>
+<a class="anchor" id="a3db4e385bc60d761212d5795edbec73b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static size_t reflex::Matcher::predict_match </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pattern::Pred</a>&#160;</td>
+          <td class="paramname"><em>pma</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>s</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns zero when match is predicted or nonzero shift value, based on s[0..3]. </p>
 
 </div>
 </div>
@@ -1942,7 +2039,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a8476ed37d043a4069b9f93f319b65acc"></a>
+<a class="anchor" id="ae7207b196024ffe415ce537d6e551b25"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1950,7 +2047,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t reflex::Matcher::bms_[256]</td>
+          <td class="memname">uint8_t reflex::Matcher::bms_[256]</td>
         </tr>
       </table>
   </td>
@@ -2124,7 +2221,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Sep 4 2019 11:57:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Sep 10 2019 12:41:04 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

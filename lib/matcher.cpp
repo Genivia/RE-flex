@@ -40,7 +40,7 @@
 // #define WITH_MINIMAL
 
 // minimal length of the prefix pattern for Boyer-Moore search, multiple of 4 between 4 and 24 (inclusive)
-#define BOYER_MOORE_MIN_LENGTH 8
+#define BOYER_MOORE_MIN_LENGTH 9
 
 namespace reflex {
 
@@ -391,7 +391,7 @@ unrolled:
   if (cap_ == 0)
   {
     cur_ = txt_ - buf_; // no match: backup to begin of text
-    if (method == Const::FIND)
+    if (method == Const::FIND && !at_end())
     {
       if (pos_ == cur_ + 1) // early fail after one non-matching char
       {
@@ -406,6 +406,7 @@ unrolled:
         if (advance())
           goto scan;
       }
+      txt_ = buf_ + cur_;
     }
   }
   len_ = cur_ - (txt_ - buf_);
@@ -461,58 +462,187 @@ unrolled:
   return cap_;
 }
 
-// Boyer-Moore-Horspool preprocess
-static void boyer_moore_init(const char *pre, size_t len, size_t& bmd, size_t bms[256])
-{
-  size_t i;
-  for (i = 0; i < 256; ++i)
-    bms[i] = len;
-  for (i = 0; i < len; ++i)
-    bms[static_cast<uint8_t>(pre[i])] = len - i - 1;
-  size_t j;
-  for (i = len - 1, j = i; j > 0; --j)
-    if (pre[j - 1] == pre[i])
-      break;
-  bmd = i - j + 1;
-}
-
+// advance input cursor after mismatch to align input for next match
 bool Matcher::advance()
 {
-  size_t len = pat_->pre_.size();
   size_t loc = cur_ + 1;
-  if (len == 0)
+  size_t min = pat_->min_;
+  if (pat_->pre_.empty())
   {
-    if (!pat_->pme_)
+    if (min == 0)
+      return false;
+    if (loc + min > end_)
     {
-      set_current(loc);
-      return true;
+      set_current_match(loc - 1);
+      peek_more();
+      loc = cur_ + 1;
+      if (loc + min > end_)
+      {
+        set_current(loc);
+        return false;
+      }
+    }
+    if (min >= 4)
+    {
+      const Pattern::Pred *bit = pat_->bit_;
+      Pattern::Pred state = ~0;
+      Pattern::Pred mask = (1 << (min - 1));
+      while (true)
+      {
+        const char *s = buf_ + loc;
+        const char *e = buf_ + end_;
+        while (s < e)
+        {
+          state = (state << 1) | bit[static_cast<uint8_t>(*s)];
+          if ((state & mask) == 0)
+            break;
+          ++s;
+        }
+        if (s < e)
+        {
+          s -= min - 1;
+          loc = s - buf_;
+          if (predict_match(pat_->pmh_, s, min))
+          {
+            set_current(loc);
+            return true;
+          }
+          loc += min;
+        }
+        else
+        {
+          loc = s - buf_;
+          set_current_match(loc - min);
+          peek_more();
+          loc = cur_ + min;
+          if (loc >= end_)
+          {
+            set_current(loc);
+            return false;
+          }
+        }
+      }
     }
     const Pattern::Pred *pma = pat_->pma_;
+    if (min == 3)
+    {
+      const Pattern::Pred *bit = pat_->bit_;
+      Pattern::Pred state = ~0;
+      while (true)
+      {
+        const char *s = buf_ + loc;
+        const char *e = buf_ + end_;
+        while (s < e)
+        {
+          state = (state << 1) | bit[static_cast<uint8_t>(*s)];
+          if ((state & 4) == 0)
+            break;
+          ++s;
+        }
+        if (s < e)
+        {
+          s -= 2;
+          loc = s - buf_;
+          if (s + 4 > e || predict_match(pma, s) == 0)
+          {
+            set_current(loc);
+            return true;
+          }
+          loc += 3;
+        }
+        else
+        {
+          loc = s - buf_;
+          set_current_match(loc - 3);
+          peek_more();
+          loc = cur_ + 3;
+          if (loc >= end_)
+          {
+            set_current(loc);
+            return false;
+          }
+        }
+      }
+    }
+    if (min == 2)
+    {
+      const Pattern::Pred *bit = pat_->bit_;
+      Pattern::Pred state = ~0;
+      while (true)
+      {
+        const char *s = buf_ + loc;
+        const char *e = buf_ + end_;
+        while (s < e)
+        {
+          state = (state << 1) | bit[static_cast<uint8_t>(*s)];
+          if ((state & 2) == 0)
+            break;
+          ++s;
+        }
+        if (s < e)
+        {
+          s -= 1;
+          loc = s - buf_;
+          if (s + 4 > e || predict_match(pma, s) == 0)
+          {
+            set_current(loc);
+            return true;
+          }
+          loc += 2;
+        }
+        else
+        {
+          loc = s - buf_;
+          set_current_match(loc - 2);
+          peek_more();
+          loc = cur_ + 2;
+          if (loc >= end_)
+          {
+            set_current(loc);
+            return false;
+          }
+        }
+      }
+    }
     while (true)
     {
-      if (loc >= end_)
+      const char *s = buf_ + loc;
+      const char *e = buf_ + end_;
+      while (s < e && (pma[static_cast<uint8_t>(*s)] & 0xc0) == 0xc0)
+        ++s;
+      if (s < e)
       {
-        set_current(loc - 1);
-        get_more();
+        loc = s - buf_;
+        if (s + 4 > e)
+        {
+          set_current(loc);
+          return true;
+        }
+        size_t k = predict_match(pma, s);
+        if (k == 0)
+        {
+          set_current(loc);
+          return true;
+        }
+        loc += k;
+      }
+      else
+      {
+        loc = s - buf_;
+        set_current_match(loc - 1);
+        peek_more();
         loc = cur_ + 1;
         if (loc >= end_)
+        {
+          set_current(loc);
           return false;
+        }
       }
-      while (loc < end_ && (pma[static_cast<uint8_t>(buf_[loc])] & 0xc0) == 0xc0)
-        ++loc;
-      if (loc >= end_)
-        continue;
-      set_current(loc);
-      if (loc + 4 > end_)
-        return true;
-      size_t k = predict_match(pma, &buf_[loc]);
-      if (k == 0)
-        return true;
-      loc += k;
     }
   }
   const char *pre = pat_->pre_.c_str();
-  if (!pat_->pme_)
+  size_t len = static_cast<uint8_t>(pat_->pre_.size()); // okay to cast: actually never more than 255
+  if (min == 0)
   {
     if (len < BOYER_MOORE_MIN_LENGTH)
     {
@@ -520,13 +650,16 @@ bool Matcher::advance()
       {
         if (loc + len > end_)
         {
-          set_current(loc - 1);
-          get_more();
+          set_current_match(loc - 1);
+          peek_more();
           loc = cur_ + 1;
           if (loc + len > end_)
+          {
+            set_current(loc);
             return false;
+          }
         }
-        const char *hit = static_cast<char*>(memchr(&buf_[loc], *pre, end_ - loc - len));
+        const char *hit = static_cast<char*>(memchr(&buf_[loc], *pre, end_ - loc - len + 1));
         if (hit == NULL)
         {
           loc = end_ - len + 1;
@@ -543,55 +676,81 @@ bool Matcher::advance()
     }
     else
     {
+      if (bmd_ == 0)
+        boyer_moore_init(pre, len);
       while (true)
       {
-        if (loc + len > end_)
-        {
-          set_current(loc - 1);
-          get_more();
-          loc = cur_ + 1;
-          if (loc + len > end_)
-            return false;
-        }
-        if (bmd_ == 0)
-          boyer_moore_init(pre, len, bmd_, bms_);
-        loc += len - 1;
-        while (loc < end_)
+        const char *s = buf_ + loc + len - 1;
+        const char *e = buf_ + end_;
+        const char *t = pre + len - 1;
+        while (s < e)
         {
           size_t k = 0;
           do
           {
-            k = bms_[static_cast<uint8_t>(buf_[loc += k])];
-          } while (k > 0 && loc < end_);
+            k = bms_[static_cast<uint8_t>(*s)];
+            s += k;
+          } while (k > 0 && s < e);
           if (k > 0)
             break;
-          if (memcmp(pre, &buf_[loc - len + 1], len - 1) == 0)
+          const char *p = t - 1;
+          const char *q = s - 1;
+          while (p >= pre && *p == *q)
           {
-            set_current(loc - len + 1);
+            --p;
+            --q;
+          }
+          if (p < pre)
+          {
+            loc = q - buf_ + 1;
+            set_current(loc);
             return true;
           }
-          loc += bmd_;
+          if (pre + bmd_ >= p)
+          {
+            s += bmd_;
+          }
+          else
+          {
+            k = bms_[static_cast<uint8_t>(*q)];
+            if (p + k > t + bmd_)
+              s += k - (t - p);
+            else
+              s += bmd_;
+          }
         }
-        loc -= len - 1;
+        s -= len - 1;
+        loc = s - buf_;
+        set_current_match(loc - 1);
+        peek_more();
+        loc = cur_ + 1;
+        if (loc + len > end_)
+        {
+          set_current(loc);
+          return false;
+        }
       }
     }
   }
   while (true)
   {
-    if (loc + len + 1 > end_)
+    if (loc + len + min > end_)
     {
-      set_current(loc - 1);
-      get_more();
+      set_current_match(loc - 1);
+      peek_more();
       loc = cur_ + 1;
-      if (loc + len + 1 > end_)
+      if (loc + len + min > end_)
+      {
+        set_current(loc);
         return false;
+      }
     }
     if (len < BOYER_MOORE_MIN_LENGTH)
     {
-      const char *hit = static_cast<char*>(memchr(&buf_[loc], *pre, end_ - loc - len));
+      const char *hit = static_cast<char*>(memchr(&buf_[loc], *pre, end_ - loc - len - min + 1));
       if (hit == NULL)
       {
-        loc = end_ - len + 1;
+        loc = end_ - len - min + 1;
         continue;
       }
       loc = hit - buf_;
@@ -604,30 +763,61 @@ bool Matcher::advance()
     else
     {
       if (bmd_ == 0)
-        boyer_moore_init(pre, len, bmd_, bms_);
-      loc += len - 1;
-      while (loc < end_)
+        boyer_moore_init(pre, len);
+      const char *s = buf_ + loc + len - 1;
+      const char *e = buf_ + end_ - min;
+      const char *t = pre + len - 1;
+      while (s < e)
       {
         size_t k = 0;
         do
         {
-          k = bms_[static_cast<uint8_t>(buf_[loc += k])];
-        } while (k > 0 && loc < end_);
+          k = bms_[static_cast<uint8_t>(*s)];
+          s += k;
+        } while (k > 0 && s < e);
         if (k > 0)
           break;
-        if (memcmp(pre, &buf_[loc - len + 1], len - 1) == 0)
+        const char *p = t - 1;
+        const char *q = s - 1;
+        while (p >= pre && *p == *q)
+        {
+          --p;
+          --q;
+        }
+        if (p < pre)
           break;
-        loc += bmd_;
+        if (pre + bmd_ >= p)
+        {
+          s += bmd_;
+        }
+        else
+        {
+          k = bms_[static_cast<uint8_t>(*q)];
+          if (p + k > t + bmd_)
+            s += k - (t - p);
+          else
+            s += bmd_;
+        }
       }
-      loc -= len - 1;
+      s -= len - 1;
+      loc = s - buf_;
     }
     set_current(loc);
     if (loc + 4 > end_)
       return true;
-    size_t k = predict_match(pat_->pma_, &buf_[loc + len]);
-    if (k == 0)
-      return true;
-    loc += k;
+    if (min >= 4)
+    {
+      if (predict_match(pat_->pmh_, &buf_[loc + len], min))
+        return true;
+      ++loc;
+    }
+    else
+    {
+      size_t k = predict_match(pat_->pma_, &buf_[loc + len]);
+      if (k == 0)
+        return true;
+      loc += k;
+    }
   }
 }
 
