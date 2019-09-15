@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Sep 10 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Sep 15 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -118,6 +118,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a16be665aca5108271f92f38e6cb4bd58"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a16be665aca5108271f92f38e6cb4bd58">Matcher</a> (const P &amp;<a class="el" href="classreflex_1_1_pattern_matcher.html#a05c456bf148afd72ed92f54434cad16f">pattern</a>, const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;<a class="el" href="classreflex_1_1_abstract_matcher.html#ab49c7878fc1d7c39e0ca264a5c919f08">input</a>=<a class="el" href="classreflex_1_1_input.html">Input</a>(), const char *opt=NULL)</td></tr>
 <tr class="memdesc:a16be665aca5108271f92f38e6cb4bd58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct matcher engine from a pattern or a string regex, and an input character sequence.  <a href="#a16be665aca5108271f92f38e6cb4bd58">More...</a><br /></td></tr>
 <tr class="separator:a16be665aca5108271f92f38e6cb4bd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed0ce297787f4417b00e8f0b6e325e47"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#aed0ce297787f4417b00e8f0b6e325e47">Matcher</a> (const <a class="el" href="classreflex_1_1_matcher.html">Matcher</a> &amp;matcher)</td></tr>
+<tr class="memdesc:aed0ce297787f4417b00e8f0b6e325e47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor.  <a href="#aed0ce297787f4417b00e8f0b6e325e47">More...</a><br /></td></tr>
+<tr class="separator:aed0ce297787f4417b00e8f0b6e325e47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a641754cf7025a978c7dc672a563ac5c0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a641754cf7025a978c7dc672a563ac5c0">reset</a> (const char *opt=NULL)</td></tr>
 <tr class="memdesc:a641754cf7025a978c7dc672a563ac5c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this matcher's state to the initial state.  <a href="#a641754cf7025a978c7dc672a563ac5c0">More...</a><br /></td></tr>
 <tr class="separator:a641754cf7025a978c7dc672a563ac5c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,6 +151,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a81899695d5bb82e06e49608ed9ebd629"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a81899695d5bb82e06e49608ed9ebd629">FSM_INIT</a> (int &amp;c1)</td></tr>
 <tr class="memdesc:a81899695d5bb82e06e49608ed9ebd629"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code INIT,.  <a href="#a81899695d5bb82e06e49608ed9ebd629">More...</a><br /></td></tr>
 <tr class="separator:a81899695d5bb82e06e49608ed9ebd629"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a8c67260251d2543772fb4f04d99b9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a8a8c67260251d2543772fb4f04d99b9f">FSM_FIND</a> ()</td></tr>
+<tr class="memdesc:a8a8c67260251d2543772fb4f04d99b9f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code FIND,.  <a href="#a8a8c67260251d2543772fb4f04d99b9f">More...</a><br /></td></tr>
+<tr class="separator:a8a8c67260251d2543772fb4f04d99b9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2d2cbadbfa26b8b49509733971d1cc6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ae2d2cbadbfa26b8b49509733971d1cc6">FSM_CHAR</a> ()</td></tr>
 <tr class="memdesc:ae2d2cbadbfa26b8b49509733971d1cc6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code CHAR.  <a href="#ae2d2cbadbfa26b8b49509733971d1cc6">More...</a><br /></td></tr>
 <tr class="separator:ae2d2cbadbfa26b8b49509733971d1cc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -805,6 +811,38 @@ template&lt;typename P &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="aed0ce297787f4417b00e8f0b6e325e47"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">reflex::Matcher::Matcher </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_matcher.html">Matcher</a> &amp;&#160;</td>
+          <td class="paramname"><em>matcher</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matcher</td><td>matcher to copy with pattern (pattern may be shared) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a239f292c95cb04fba2ee063f000b270f"></a>
 <div class="memitem">
@@ -868,7 +906,7 @@ template&lt;typename P &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pat</td><td>pattern string </td></tr>
-    <tr><td class="paramname">len</td><td>nonzero length of the pattern string </td></tr>
+    <tr><td class="paramname">len</td><td>nonzero length of the pattern string, should be less than 256 </td></tr>
   </table>
   </dd>
 </dl>
@@ -1063,6 +1101,31 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code DENT. </p>
+
+</div>
+</div>
+<a class="anchor" id="a8a8c67260251d2543772fb4f04d99b9f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Matcher::FSM_FIND </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code FIND,. </p>
 
 </div>
 </div>
@@ -2221,7 +2284,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Sep 10 2019 12:41:04 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Sep 15 2019 15:09:06 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

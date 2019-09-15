@@ -2015,11 +2015,13 @@ void Pattern::gencode_dfa(const State& start) const
         ::fprintf(fd,
             "void reflex_code_%s(reflex::Matcher& m)\n"
             "{\n"
-            "  int c0 = 0, c1 = c0;\n"
+            "  int c0 = 0, c1 = 0;\n"
             "  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
         for (const State *state = &start; state; state = state->next)
         {
           ::fprintf(fd, "\nS%u:\n", state->index);
+          if (state == &start)
+            ::fprintf(fd, "  m.FSM_FIND();\n");
           if (state->redo)
             ::fprintf(fd, "  m.FSM_REDO();\n");
           else if (state->accept > 0)

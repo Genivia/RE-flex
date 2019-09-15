@@ -1864,7 +1864,7 @@ following defines an action for a pattern:
 </div>
 
 To add action code that spans multiple lines, indent the code or place the code
-within a <i>`{`</i> and </i>`}`</i> block.  When local variables are declared
+within a <i>`{`</i> and <i>`}`</i> block.  When local variables are declared
 in an action then the code should always be placed in a block.
 
 In free space mode you MUST place actions in <i>`{`</i> and <i>`}`</i> blocks

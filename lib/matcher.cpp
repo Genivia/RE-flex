@@ -134,9 +134,9 @@ redo:
             }
 #endif
         }
-        int c0 = c1;
-        if (c0 == EOF)
+        if (c1 == EOF)
           break;
+        int c0 = c1;
         c1 = get();
         DBGLOG("Get: c1 = %d", c1);
         Pattern::Index back = Pattern::Const::IMAX; // where to jump back to (backtrack on meta transitions)
@@ -154,7 +154,7 @@ redo:
                 DBGLOG("Take: cap = %zu", cap_);
                 cur_ = pos_;
                 if (c1 != EOF)
-                  --cur_; // Must unget one char
+                  --cur_; // must unget one char
                 opcode = *++pc;
                 continue;
               case 0xFF7E: // TAIL
@@ -320,6 +320,8 @@ unrolled:
       index = Pattern::index_of(opcode);
       if (index == Pattern::Const::IMAX)
         break;
+      if (index == 0 && cap_ == 0) // failed to match so far, set cur_ to move forward from cur_ + 1 with FIND advance()
+        cur_ = pos_;
       pc = pat_->opc_ + index;
     }
   }
@@ -369,7 +371,7 @@ unrolled:
         ++len_;
         DBGLOG("Split continue: len = %zu", len_);
         set_current(++cur_);
-        goto redo;
+        goto find;
       }
       if (got_ != Const::EOB)
       {
@@ -390,10 +392,9 @@ unrolled:
   }
   if (cap_ == 0)
   {
-    cur_ = txt_ - buf_; // no match: backup to begin of text
     if (method == Const::FIND && !at_end())
     {
-      if (pos_ == cur_ + 1) // early fail after one non-matching char
+      if (pos_ == cur_ + 1) // early fail after one non-matching char, i.e. no META executed
       {
         if (advance())
         {
@@ -407,6 +408,10 @@ unrolled:
           goto scan;
       }
       txt_ = buf_ + cur_;
+    }
+    else
+    {
+      cur_ = txt_ - buf_; // no match: backup to begin of unmatched text
     }
   }
   len_ = cur_ - (txt_ - buf_);
@@ -659,14 +664,14 @@ bool Matcher::advance()
             return false;
           }
         }
-        const char *hit = static_cast<char*>(memchr(&buf_[loc], *pre, end_ - loc - len + 1));
+        const char *hit = static_cast<char*>(std::memchr(&buf_[loc], *pre, end_ - loc - len + 1));
         if (hit == NULL)
         {
           loc = end_ - len + 1;
           continue;
         }
         loc = hit - buf_;
-        if (len <= 1 || memcmp(pre + 1, hit + 1, len - 1) == 0)
+        if (len <= 1 || std::memcmp(pre + 1, hit + 1, len - 1) == 0)
         {
           set_current(loc);
           return true;
@@ -747,14 +752,14 @@ bool Matcher::advance()
     }
     if (len < BOYER_MOORE_MIN_LENGTH)
     {
-      const char *hit = static_cast<char*>(memchr(&buf_[loc], *pre, end_ - loc - len - min + 1));
+      const char *hit = static_cast<char*>(std::memchr(&buf_[loc], *pre, end_ - loc - len - min + 1));
       if (hit == NULL)
       {
         loc = end_ - len - min + 1;
         continue;
       }
       loc = hit - buf_;
-      if (len > 1 && memcmp(pre + 1, hit + 1, len - 1) != 0)
+      if (len > 1 && std::memcmp(pre + 1, hit + 1, len - 1) != 0)
       {
         ++loc;
         continue;

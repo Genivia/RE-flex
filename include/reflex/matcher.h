@@ -80,6 +80,17 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   {
     reset(opt);
   }
+  /// Copy constructor.
+  Matcher(const Matcher& matcher) ///< matcher to copy with pattern (pattern may be shared)
+    :
+      PatternMatcher<reflex::Pattern>(matcher),
+      ded_(matcher.ded_),
+      tab_(matcher.tab_)
+  {
+    bmd_ = matcher.bmd_;
+    if (bmd_ != 0)
+      std::memcpy(bms_, matcher.bms_, sizeof(bms_));
+  }
   /// Reset this matcher's state to the initial state.
   virtual void reset(const char *opt = NULL)
   {
@@ -170,6 +181,12 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   inline void FSM_INIT(int& c1)
   {
     c1 = fsm_.c1;
+  }
+  /// FSM code FIND,
+  inline void FSM_FIND()
+  {
+    if (cap_ == 0)
+      cur_ = pos_;
   }
   /// FSM code CHAR.
   inline int FSM_CHAR()
@@ -314,9 +331,10 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   typedef std::vector<size_t> Stops; ///< indent margin/tab stops
   /// FSM data for FSM code
   struct FSM {
+    FSM() : bol(), nul(), c1() { }
     bool bol;
     bool nul;
-    int c1;
+    int  c1;
   };
   /// Returns true if input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
   virtual size_t match(Method method) ///< Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH
@@ -351,11 +369,11 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   /// Boyer-Moore preprocessing of the given pattern pat of length len, generates bmd_ > 0 and bms_[] shifts.
   void boyer_moore_init(
       const char *pat, ///< pattern string
-      size_t      len) ///< nonzero length of the pattern string
+      size_t      len) ///< nonzero length of the pattern string, should be less than 256
   {
     size_t i;
     for (i = 0; i < 256; ++i)
-      bms_[i] = len;
+      bms_[i] = static_cast<uint8_t>(len);
     for (i = 0; i < len; ++i)
       bms_[static_cast<uint8_t>(pat[i])] = static_cast<uint8_t>(len - i - 1);
     size_t j;

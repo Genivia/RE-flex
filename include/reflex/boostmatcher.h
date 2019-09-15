@@ -84,6 +84,12 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   {
     reset();
   }
+  /// Copy constructor.
+  BoostMatcher(const BoostMatcher& matcher) ///< matcher to copy
+    :
+      PatternMatcher<boost::regex>(matcher),
+      flg_(matcher.flg_)
+  { }
   /// Reset this matcher's state to the initial state and when assigned new input.
   virtual void reset(const char *opt = NULL)
   {

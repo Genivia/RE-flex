@@ -80,7 +80,7 @@ max_ // allocated size of buf_, must ensure that max_ > end_ for text() to add a
 txt_ // points to the match, will be 0-terminated when text() or rest() are called
 len_ // length of the match
 chr_ // char located at txt_[len_] when txt_[len_] is set to \0 by text(), is \0 otherwise
-got_ // buf_[cur_-1] character before this match (assigned before each match)
+got_ // buf_[cur_-1] or txt_[-1] character before this match (assigned before each match), initially Const::BOB
 eof_ // true if no more data can/should be fetched to fill the buffer
 ```
  
@@ -1062,7 +1062,7 @@ class AbstractMatcher {
   {
     if (chr_ != '\0')
     {
-      const_cast<char*>(txt_)[len_] = chr_;
+      txt_[len_] = chr_;
       chr_ = '\0';
     }
   }
@@ -1080,7 +1080,7 @@ class AbstractMatcher {
     txt_ = buf_ + cur_;
   }
   /// Get the next character and grow the buffer to make more room if necessary.
-  inline int get_more()
+  int get_more()
     /// @returns the character read (unsigned char 0..255) or EOF (-1).
   {
     DBGLOG("AbstractMatcher::get_more()");
@@ -1102,7 +1102,7 @@ class AbstractMatcher {
     }
   }
   /// Peek at the next character and grow the buffer to make more room if necessary.
-  inline int peek_more()
+  int peek_more()
     /// @returns the character (unsigned char 0..255) or EOF (-1).
   {
     DBGLOG("AbstractMatcher::peek_more()");
@@ -1158,7 +1158,7 @@ class PatternMatcher : public AbstractMatcher {
  public:
   typedef P Pattern; ///< pattern class of this matcher, a typedef of the PatternMatcher template parameter
   /// Copy constructor, the underlying pattern object is shared (not deep copied).
-  PatternMatcher(const PatternMatcher& matcher) ///< matcher with pattern to use (share)
+  PatternMatcher(const PatternMatcher& matcher) ///< matcher with pattern to use (pattern may be shared)
     :
       AbstractMatcher(matcher.in, matcher.opt_),
       pat_(matcher.pat_),

@@ -81,6 +81,12 @@ class StdMatcher : public PatternMatcher<std::regex> {
   {
     reset();
   }
+  /// Copy constructor.
+  StdMatcher(const StdMatcher& matcher) ///< matcher to copy
+    :
+      PatternMatcher<std::regex>(matcher),
+      flg_(matcher.flg_)
+  { }
   /// Reset this matcher's state to the initial state and when assigned new input.
   virtual void reset(const char *opt = NULL)
   {

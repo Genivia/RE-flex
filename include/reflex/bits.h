@@ -434,7 +434,7 @@ class Bits {
     /// @returns reference to this object.
   {
     if (vec_)
-      memset(vec_, 0, len_ << 3);
+      std::memset(vec_, 0, len_ << 3);
     return *this;
   }
   /// Flip all bits.
