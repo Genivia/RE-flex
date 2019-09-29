@@ -466,6 +466,7 @@ Changelog
 - Sep  4, 2019: 1.4.0 added reflex option `-S` (`--find`) for efficient searching instead of scanning input (i.e. efficiently ignoring unmatched input) demonstrated with new `findfast` and `findsearch` examples, changed `--nodefault` to throw an exception when option `--flex` is not used and when the default rule is triggered.
 - Sep 10, 2019: 1.4.1 fixed `lineno()` caching issue (1.3.8 bug), faster `find`.
 - Sep 15, 2019: 1.4.2 faster `find` for patterns beginning with optional repetitions such as `.*`.
+- Sep 29, 2019: 1.4.3 added `reflex::AbstractMatcher::clone()` to clone a referenced concrete matcher object.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

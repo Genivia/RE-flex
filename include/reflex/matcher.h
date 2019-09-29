@@ -91,6 +91,11 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     if (bmd_ != 0)
       std::memcpy(bms_, matcher.bms_, sizeof(bms_));
   }
+  /// Polymorphic cloning.
+  virtual Matcher *clone()
+  {
+    return new Matcher(*this);
+  }
   /// Reset this matcher's state to the initial state.
   virtual void reset(const char *opt = NULL)
   {

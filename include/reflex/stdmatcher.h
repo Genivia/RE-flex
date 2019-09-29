@@ -87,6 +87,11 @@ class StdMatcher : public PatternMatcher<std::regex> {
       PatternMatcher<std::regex>(matcher),
       flg_(matcher.flg_)
   { }
+  /// Polymorphic cloning.
+  virtual StdMatcher *clone()
+  {
+    return new StdMatcher(*this);
+  }
   /// Reset this matcher's state to the initial state and when assigned new input.
   virtual void reset(const char *opt = NULL)
   {

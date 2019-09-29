@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Sep 15 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Sep 29 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -126,6 +126,18 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a1678067737066140c605e4e2e65ad1bb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a1678067737066140c605e4e2e65ad1bb">AbstractMatcher</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;<a class="el" href="classreflex_1_1_abstract_matcher.html#ab49c7878fc1d7c39e0ca264a5c919f08">input</a>, const char *opt)</td></tr>
+<tr class="memdesc:a1678067737066140c605e4e2e65ad1bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a base abstract matcher.  <a href="#a1678067737066140c605e4e2e65ad1bb">More...</a><br /></td></tr>
+<tr class="separator:a1678067737066140c605e4e2e65ad1bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa845e2492e9dfae56e9192c8330143b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#afa845e2492e9dfae56e9192c8330143b">AbstractMatcher</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;<a class="el" href="classreflex_1_1_abstract_matcher.html#ab49c7878fc1d7c39e0ca264a5c919f08">input</a>, const <a class="el" href="structreflex_1_1_abstract_matcher_1_1_option.html">Option</a> &amp;opt)</td></tr>
+<tr class="memdesc:afa845e2492e9dfae56e9192c8330143b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a base abstract matcher.  <a href="#afa845e2492e9dfae56e9192c8330143b">More...</a><br /></td></tr>
+<tr class="separator:afa845e2492e9dfae56e9192c8330143b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1687bb274cfa3af4de2cc8f0e9fcd10d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a1687bb274cfa3af4de2cc8f0e9fcd10d">~AbstractMatcher</a> ()</td></tr>
+<tr class="memdesc:a1687bb274cfa3af4de2cc8f0e9fcd10d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete abstract matcher, deletes this matcher's internal buffer.  <a href="#a1687bb274cfa3af4de2cc8f0e9fcd10d">More...</a><br /></td></tr>
+<tr class="separator:a1687bb274cfa3af4de2cc8f0e9fcd10d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a990b0f98e3b73ae3a2f4a9aa91626b8d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classreflex_1_1_abstract_matcher.html">AbstractMatcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a990b0f98e3b73ae3a2f4a9aa91626b8d">clone</a> ()=0</td></tr>
+<tr class="memdesc:a990b0f98e3b73ae3a2f4a9aa91626b8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Polymorphic cloning.  <a href="#a990b0f98e3b73ae3a2f4a9aa91626b8d">More...</a><br /></td></tr>
+<tr class="separator:a990b0f98e3b73ae3a2f4a9aa91626b8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66f487ab96e7cef1a66e9780dc45e315"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a66f487ab96e7cef1a66e9780dc45e315">reset</a> (const char *opt=NULL)</td></tr>
 <tr class="memdesc:a66f487ab96e7cef1a66e9780dc45e315"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this matcher's state to the initial state and set options (when provided).  <a href="#a66f487ab96e7cef1a66e9780dc45e315">More...</a><br /></td></tr>
 <tr class="separator:a66f487ab96e7cef1a66e9780dc45e315"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -317,15 +329,6 @@ Protected Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a1678067737066140c605e4e2e65ad1bb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a1678067737066140c605e4e2e65ad1bb">AbstractMatcher</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;<a class="el" href="classreflex_1_1_abstract_matcher.html#ab49c7878fc1d7c39e0ca264a5c919f08">input</a>, const char *opt)</td></tr>
-<tr class="memdesc:a1678067737066140c605e4e2e65ad1bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a base abstract matcher.  <a href="#a1678067737066140c605e4e2e65ad1bb">More...</a><br /></td></tr>
-<tr class="separator:a1678067737066140c605e4e2e65ad1bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa845e2492e9dfae56e9192c8330143b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#afa845e2492e9dfae56e9192c8330143b">AbstractMatcher</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;<a class="el" href="classreflex_1_1_abstract_matcher.html#ab49c7878fc1d7c39e0ca264a5c919f08">input</a>, const <a class="el" href="structreflex_1_1_abstract_matcher_1_1_option.html">Option</a> &amp;opt)</td></tr>
-<tr class="memdesc:afa845e2492e9dfae56e9192c8330143b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a base abstract matcher.  <a href="#afa845e2492e9dfae56e9192c8330143b">More...</a><br /></td></tr>
-<tr class="separator:afa845e2492e9dfae56e9192c8330143b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1687bb274cfa3af4de2cc8f0e9fcd10d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a1687bb274cfa3af4de2cc8f0e9fcd10d">~AbstractMatcher</a> ()</td></tr>
-<tr class="memdesc:a1687bb274cfa3af4de2cc8f0e9fcd10d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete abstract matcher, deletes this matcher's internal buffer.  <a href="#a1687bb274cfa3af4de2cc8f0e9fcd10d">More...</a><br /></td></tr>
-<tr class="separator:a1687bb274cfa3af4de2cc8f0e9fcd10d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb2962482f26a93cd207a6e8de59da83"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#afb2962482f26a93cd207a6e8de59da83">init</a> (const char *opt=NULL)</td></tr>
 <tr class="memdesc:afb2962482f26a93cd207a6e8de59da83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the base abstract matcher at construction.  <a href="#afb2962482f26a93cd207a6e8de59da83">More...</a><br /></td></tr>
 <tr class="separator:afb2962482f26a93cd207a6e8de59da83"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -507,7 +510,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -550,7 +553,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -582,7 +585,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -874,6 +877,33 @@ Protected Attributes</h2></td></tr>
 
 <p>Returns the first 8-bit character of the text matched. </p>
 <dl class="section return"><dt>Returns</dt><dd>8-bit char. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a990b0f98e3b73ae3a2f4a9aa91626b8d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classreflex_1_1_abstract_matcher.html">AbstractMatcher</a>* reflex::AbstractMatcher::clone </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Polymorphic cloning. </p>
+
+<p>Implemented in <a class="el" href="classreflex_1_1_matcher.html#a70d0469bd7c8ad7697dc877d4d30b8b5">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a5b5fad3842e63bfe631249b2d5c49850">reflex::BoostMatcher</a>, and <a class="el" href="classreflex_1_1_std_matcher.html#aa96807bdc0b350aef4a92c595eb8aef5">reflex::StdMatcher</a>.</p>
 
 </div>
 </div>
@@ -3032,7 +3062,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Sep 15 2019 15:09:06 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Sep 29 2019 17:26:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

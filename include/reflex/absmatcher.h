@@ -237,7 +237,46 @@ class AbstractMatcher {
     AbstractMatcher *matcher_; ///< the matcher used by this functor
     Method           method_;  ///< the method for pattern matching by this functor's matcher
   };
- public:
+  /// Construct a base abstract matcher.
+  AbstractMatcher(
+      const Input& input, ///< input character sequence for this matcher
+      const char  *opt)   ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
+    :
+      scan(this, Const::SCAN),
+      find(this, Const::FIND),
+      split(this, Const::SPLIT)
+  {
+    in = input;
+    init(opt);
+  }
+  /// Construct a base abstract matcher.
+  AbstractMatcher(
+      const Input&  input, ///< input character sequence for this matcher
+      const Option& opt)   ///< options
+    :
+      scan(this, Const::SCAN),
+      find(this, Const::FIND),
+      split(this, Const::SPLIT)
+  {
+    in = input;
+    init();
+    opt_ = opt;
+  }
+  /// Delete abstract matcher, deletes this matcher's internal buffer.
+  virtual ~AbstractMatcher()
+  {
+    DBGLOG("AbstractMatcher::~AbstractMatcher()");
+    if (own_)
+    {
+#if defined(WITH_REALLOC)
+      std::free(static_cast<void*>(buf_));
+#else
+      delete[] buf_;
+#endif
+    }
+  }
+  /// Polymorphic cloning.
+  virtual AbstractMatcher *clone() = 0;
   /// Reset this matcher's state to the initial state and set options (when provided).
   virtual void reset(const char *opt = NULL)
   {
@@ -915,44 +954,6 @@ class AbstractMatcher {
   Operation split; ///< functor to split input
   Input in;        ///< input character sequence being matched by this matcher
  protected:
-  /// Construct a base abstract matcher.
-  AbstractMatcher(
-      const Input& input, ///< input character sequence for this matcher
-      const char  *opt)   ///< option string of the form `(A|N|T(=[[:digit:]])?|;)*`
-    :
-      scan(this, Const::SCAN),
-      find(this, Const::FIND),
-      split(this, Const::SPLIT)
-  {
-    in = input;
-    init(opt);
-  }
-  /// Construct a base abstract matcher.
-  AbstractMatcher(
-      const Input&  input, ///< input character sequence for this matcher
-      const Option& opt)   ///< options
-    :
-      scan(this, Const::SCAN),
-      find(this, Const::FIND),
-      split(this, Const::SPLIT)
-  {
-    in = input;
-    init();
-    opt_ = opt;
-  }
-  /// Delete abstract matcher, deletes this matcher's internal buffer.
-  virtual ~AbstractMatcher()
-  {
-    DBGLOG("AbstractMatcher::~AbstractMatcher()");
-    if (own_)
-    {
-#if defined(WITH_REALLOC)
-      std::free(static_cast<void*>(buf_));
-#else
-      delete[] buf_;
-#endif
-    }
-  }
   /// Initialize the base abstract matcher at construction.
   virtual void init(const char *opt = NULL) ///< options
   {
