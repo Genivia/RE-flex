@@ -1,7 +1,7 @@
 
 [![logo][logo-url]][reflex-url]
 
-[![build status][travis-image]][travis-url] [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url]
+[![build status][travis-image]][travis-url] [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url] [![CodeProject][codeproject-image]][codeproject-url]
 
 The regex-centric, fast lexical analyzer generator for C++ with full Unicode
 support.  Flex reimagined: fast, flexible, adds Boost 💪
@@ -138,8 +138,8 @@ First clone the code:
 Then simply do a quick clean build, assuming your environment is pretty much
 standard:
 
-    $ ./clean.sh
-    $ ./build.sh
+    $ sh clean.sh
+    $ sh build.sh
 
 This compiles the **reflex** tool and installs it locally in `reflex/bin`.  For
 local use of RE/flex in your project, you can add this location to your `$PATH`
@@ -163,7 +163,7 @@ project are locally located in `include/reflex`.
 To install the man page, the header files in `/usr/local/include/reflex`, the
 library in `/usr/local/lib` and the `reflex` command in `/usr/local/bin`:
 
-    $ sudo ./allinstall.sh
+    $ sudo sh allinstall.sh
 
 ### Configure and make
 
@@ -483,3 +483,5 @@ Changelog
 [lgtm-url]: https://lgtm.com/projects/g/Genivia/RE-flex/context:cpp
 [bsd-3-image]: https://img.shields.io/badge/license-BSD%203--Clause-blue.svg
 [bsd-3-url]: https://opensource.org/licenses/BSD-3-Clause
+[codeproject-image]: https://img.shields.io/badge/CodeProject-★★★★★-orange.svg
+[codeproject-url]: https://www.codeproject.com/Articles/1180430/Constructing-Fast-Lexical-Analyzers-with-RE-flex-W
