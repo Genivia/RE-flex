@@ -44,7 +44,8 @@ RE/flex scanner examples using RE/flex lexer syntax
 - `indent2.l` indentation detection and reformatting example, advanced with start conditions
 - `unicode.l` a very simple Unicode word matcher to demonstrate Unicode matching
 - `scanstrings.l` demonstrates string and buffer scanning
-- `mmap.l` demonstrates mmap(2) to scan a C/C++ source code file fast
+- `mmap.l` demonstrates mmap(2) to scan C/C++ source code files fast
+- `gz.l` demonstrates scanning zlib-compressed (and uncompressed) C/C++ source code files
 - `fastfind.l` demonstrates fast search for patterns in input, rather than scanning the input
 - `tag.l` simple lexer to print out all XML/HTML tags
 - `tag_lazy.l` simple lexer to print XML/HTML tags, uses lazy quants

@@ -538,7 +538,7 @@ void Reflex::help(const char *message, const char *arg)
         -T N, --tabs=N\n\
                 set default tab size to N (1,2,4,8) for indent/dedent matching\n\
         -u, --unicode\n\
-                match Unicode . (dot), \\p, \\s, \\w, ..., and group UTF-8\n\
+                match Unicode . (dot), \\p, \\s, \\w, etc and group UTF-8 bytes\n\
         -x, --freespace\n\
                 ignore space in patterns\n\
 \n\
@@ -558,8 +558,8 @@ void Reflex::help(const char *message, const char *arg)
 \n\
     Generated code:\n\
         --namespace=NAME\n\
-                use C++ namespace NAME for the generated scanner class, where\n\
-                multiple namespaces can be specified as NAME1.NAME2.NAME3 ...\n\
+                use C++ namespace NAME for the generated scanner class, with\n\
+                multiple namespaces specified as NAME1.NAME2.NAME3 ...\n\
         --lexer=NAME\n\
                 use lexer class NAME instead of Lexer or yyFlexLexer\n\
         --lex=NAME\n\
@@ -569,11 +569,11 @@ void Reflex::help(const char *message, const char *arg)
         --yyclass=NAME\n\
                 generate Flex-compatible scanner with user-defined class NAME\n\
         --main\n\
-                generate main() to invoke lex() or yylex()\n\
+                generate main() to invoke lex() or yylex() once\n\
         -L, --noline\n\
                 suppress #line directives in scanner\n\
         -P NAME, --prefix=NAME\n\
-                use NAME as prefix to FlexLexer class name and its members\n\
+                use NAME as prefix of the FlexLexer class name and its members\n\
         --nostdinit\n\
                 initialize input to std::cin instead of stdin\n\
         --bison\n\
@@ -604,9 +604,9 @@ void Reflex::help(const char *message, const char *arg)
         -d, --debug\n\
                 enable debug mode in scanner\n\
         -p, --perf-report\n\
-                scanner reports performance statistics to stderr\n\
+                scanner reports detailed performance statistics to stderr\n\
         -s, --nodefault\n\
-                suppress default rule in scanner, disabling ECHO unmatched text\n\
+                disable the default rule in scanner that echoes unmatched text\n\
         -v, --verbose\n\
                 report summary of scanner statistics to stdout\n\
         -w, --nowarn\n\
@@ -2167,7 +2167,7 @@ void Reflex::write_perf_report()
         ";\n";
     }
     *out <<
-      "    std::cerr << \"  WARNING: execution times are relative:\\n    1) includes caller's execution time between matches when " << options["lex"] << "() returns\\n    2) perf-report instrumentation adds overhead and increases execution times\\n\" << std::endl;\n"
+      "    std::cerr << \"  WARNING: execution time measurements are relative:\\n  - includes caller's execution time between matches when " << options["lex"] << "() returns\\n  - perf-report instrumentation adds overhead that increases execution times\\n\" << std::endl;\n"
       "    set_perf_report();\n"
       "  }\n";
     *out <<
@@ -2627,6 +2627,9 @@ void Reflex::write_lexer()
             "              if (debug()) std::cerr << \"--" <<
             SGR("\\033[1;31m") << "suppressing default rule for" << SGR("\\033[0m") <<
             " (\\\"\" << ch << \"\\\")\\n\";\n";
+        else if (!options["exception"].empty())
+          *out <<
+            "              throw " << options["exception"] << ";\n";
         else
           *out <<
             "              lexer_error(\"scanner jammed\");\n"

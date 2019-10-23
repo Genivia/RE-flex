@@ -91,6 +91,17 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     if (bmd_ != 0)
       std::memcpy(bms_, matcher.bms_, sizeof(bms_));
   }
+  /// Assign a matcher.
+  Matcher& operator=(const Matcher& matcher) ///< matcher to copy
+  {
+    PatternMatcher<reflex::Pattern>::operator=(matcher);
+    ded_ = matcher.ded_;
+    tab_ = matcher.tab_;
+    bmd_ = matcher.bmd_;
+    if (bmd_ != 0)
+      std::memcpy(bms_, matcher.bms_, sizeof(bms_));
+    return *this;
+  }
   /// Polymorphic cloning.
   virtual Matcher *clone()
   {
@@ -182,12 +193,12 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     stk_.top().swap(tab_);
     stk_.pop();
   }
-  /// FSM code INIT,
+  /// FSM code INIT.
   inline void FSM_INIT(int& c1)
   {
     c1 = fsm_.c1;
   }
-  /// FSM code FIND,
+  /// FSM code FIND.
   inline void FSM_FIND()
   {
     if (cap_ == 0)
@@ -376,16 +387,30 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
       const char *pat, ///< pattern string
       size_t      len) ///< nonzero length of the pattern string, should be less than 256
   {
+    // Relative frquency table of English letters, source code, and UTF-8 bytes
+    static unsigned char freq[256] = "\0\0\0\0\0\0\0\0\0\73\4\0\0\4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\73\70\70\1\1\2\2\70\70\70\2\2\70\70\70\2\3\3\3\3\3\3\3\3\3\3\70\70\70\70\70\70\2\35\14\24\26\37\20\17\30\33\11\12\25\22\32\34\15\7\27\31\36\23\13\21\10\16\6\70\1\70\2\70\1\67\46\56\60\72\52\51\62\65\43\44\57\54\64\66\47\41\61\63\71\55\45\53\42\50\40\70\2\70\2\0\47\47\47\47\47\47\47\47\47\47\47\47\47\47\47\47\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\45\44\44\44\44\44\44\44\44\44\44\44\44\44\44\44\44\0\0\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\5\46\56\56\56\56\56\56\56\56\56\56\56\56\46\56\56\73\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
     size_t i;
     for (i = 0; i < 256; ++i)
       bms_[i] = static_cast<uint8_t>(len);
+    size_t sum = 0;
+    lcp_ = 0;
     for (i = 0; i < len; ++i)
-      bms_[static_cast<uint8_t>(pat[i])] = static_cast<uint8_t>(len - i - 1);
+    {
+      uint8_t pch = static_cast<uint8_t>(pat[i]);
+      bms_[pch] = static_cast<uint8_t>(len - i - 1);
+      sum += bms_[pch];
+      if (freq[static_cast<uint8_t>(pat[lcp_])] > freq[pch])
+        lcp_ = i;
+    }
     size_t j;
     for (i = len - 1, j = i; j > 0; --j)
       if (pat[j - 1] == pat[i])
         break;
     bmd_ = i - j + 1;
+    sum /= len;
+    uint8_t fch = freq[static_cast<uint8_t>(pat[lcp_])];
+    if (sum > 1 && fch > 35 && (sum > 3 || fch > 48) && fch + sum > 48)
+      lcp_ = 0xffff;
   }
   /// Returns true when match is predicted, based on s[0..3..e-1] (e >= s + 4).
   static inline bool predict_match(const Pattern::Pred pmh[], const char *s, size_t n)
@@ -445,8 +470,9 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   std::vector<int>  lap_;      ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
   std::stack<Stops> stk_;      ///< stack to push/pop stops
   FSM               fsm_;      ///< local state for FSM code
-  size_t            bmd_;      ///< Boyer-Moore-Horspool jump distance on mismatch, B-M-H is enabled when > 0
-  uint8_t           bms_[256]; ///< Boyer-Moore-Horspool skip array
+  size_t            lcp_;      ///< least common character in the pattern prefix or 0xffff
+  size_t            bmd_;      ///< Boyer-Moore jump distance on mismatch, B-M is enabled when bmd_ > 0
+  uint8_t           bms_[256]; ///< Boyer-Moore skip array
   bool              mrk_;      ///< indent \i or dedent \j in pattern found: should check and update indent stops
 };
 

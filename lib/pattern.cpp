@@ -88,10 +88,8 @@ static void print_char(FILE *fd, int c, bool h = false)
     ::fprintf(fd, "'\\''");
   else if (std::isprint(c))
     ::fprintf(fd, "'%c'", c);
-  else if (c < 8)
-    ::fprintf(fd, "'\\%u'", c);
   else if (h)
-    ::fprintf(fd, "%2.2X", c);
+    ::fprintf(fd, "%02X", c);
   else
     ::fprintf(fd, "%u", c);
 }
@@ -2599,6 +2597,8 @@ void Pattern::gen_predict_match(State *state)
   for (Index level = 1; level < 8; ++level)
     for (std::map<State*,ORanges<Char> >::iterator from = states[level - 1].begin(); from != states[level - 1].end(); ++from)
       gen_predict_match_transitions(level, from->first, from->second, states[level]);
+  for (Char i = 0; i < 256; ++i)
+    bit_[i] &= (1 << min_) - 1;
 }
 
 void Pattern::gen_predict_match_transitions(State *state, std::map<State*,ORanges<Char> >& states)

@@ -123,14 +123,23 @@ class AbstractLexer {
   {
     return 1;
   }
-  /// Reset the matcher and start scanning from the given input character sequence.
-  inline AbstractLexer& in(const Input& input) ///< reflex::Input character sequence to scan
+  /// Reset the matcher and start scanning from the given input character sequence I.
+  template<typename I>
+  inline AbstractLexer& in(const I& input) ///< a character sequence to scan, e.g. reflex::Input, char*, wchar_t*, std::string, std::wstring, FILE*, std::istream
     /// @returns reference to *this.
   {
     in_ = input;
     if (has_matcher())
       matcher().input(input); // reset and assign new input
     return *this;
+  }
+  /// Reset the matcher and start scanning from the given byte sequence.
+  inline AbstractLexer& in(
+      const char *b, ///< the byte sequence to scan
+      size_t      n) ///< length of the byte sequence to scan
+    /// @returns reference to *this.
+  {
+    return in(Input(b, n));
   }
   /// Returns the current input character sequence that is being scanned.
   inline Input& in()
@@ -230,8 +239,8 @@ class AbstractLexer {
       const char *opt    = NULL)    ///< options, if any
     /// @returns pointer to new reflex::AbstractLexer::Matcher.
   {
-    char tab[4] = "T=n";
-    return new Matcher(matcher().pattern(), input, this, opt ? opt : (tab[2] = matcher().tabs() + '0', tab));
+    char tabs[4] = "T=n";
+    return new Matcher(matcher().pattern(), input, this, opt ? opt : (tabs[2] = matcher().tabs() + '0', tabs));
   }
   /// Delete a matcher.
   void del_matcher(Matcher *matcher)

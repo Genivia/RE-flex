@@ -39,7 +39,7 @@
 // minimal anchor support for greater speed, disables \i, \j, \k
 // #define WITH_MINIMAL
 
-// minimal length of the prefix pattern for Boyer-Moore search, multiple of 4 between 4 and 24 (inclusive)
+// minimal length of the prefix pattern for Boyer-Moore search
 #define BOYER_MOORE_MIN_LENGTH 9
 
 namespace reflex {
@@ -647,131 +647,70 @@ bool Matcher::advance()
   }
   const char *pre = pat_->pre_.c_str();
   size_t len = static_cast<uint8_t>(pat_->pre_.size()); // okay to cast: actually never more than 255
-  if (min == 0)
+  if (bmd_ == 0)
+    boyer_moore_init(pre, len);
+  while (true)
   {
-    if (len < BOYER_MOORE_MIN_LENGTH)
+    const char *s = buf_ + loc + len - 1;
+    const char *e = buf_ + end_;
+    const char *t = pre + len - 1;
+    if (lcp_ < len)
     {
-      while (true)
+      while (s < e)
       {
-        if (loc + len > end_)
-        {
-          set_current_match(loc - 1);
-          peek_more();
-          loc = cur_ + 1;
-          if (loc + len > end_)
-          {
-            set_current(loc);
-            return false;
-          }
-        }
-        const char *hit = static_cast<char*>(std::memchr(&buf_[loc], *pre, end_ - loc - len + 1));
+        const char *hit = static_cast<const char*>(std::memchr(s - len + 1 + lcp_, pre[lcp_], e - s));
         if (hit == NULL)
         {
-          loc = end_ - len + 1;
+          s = e;
+          break;
+        }
+        s = hit + len - 1 - lcp_;
+        size_t k = bms_[static_cast<uint8_t>(*s)];
+        if (k > 0)
+        {
+          s += k;
           continue;
         }
-        loc = hit - buf_;
-        if (len <= 1 || std::memcmp(pre + 1, hit + 1, len - 1) == 0)
+        const char *p = t - 1;
+        const char *q = s - 1;
+        while (p >= pre && *p == *q)
         {
-          set_current(loc);
-          return true;
+          --p;
+          --q;
         }
-        ++loc;
-      }
-    }
-    else
-    {
-      if (bmd_ == 0)
-        boyer_moore_init(pre, len);
-      while (true)
-      {
-        const char *s = buf_ + loc + len - 1;
-        const char *e = buf_ + end_;
-        const char *t = pre + len - 1;
-        while (s < e)
+        if (p < pre)
         {
-          size_t k = 0;
-          do
-          {
-            k = bms_[static_cast<uint8_t>(*s)];
-            s += k;
-          } while (k > 0 && s < e);
-          if (k > 0)
-            break;
-          const char *p = t - 1;
-          const char *q = s - 1;
-          while (p >= pre && *p == *q)
-          {
-            --p;
-            --q;
-          }
-          if (p < pre)
-          {
-            loc = q - buf_ + 1;
-            set_current(loc);
+          loc = q - buf_ + 1;
+          set_current(loc);
+          if (min == 0 || loc + 4 > end_)
             return true;
-          }
-          if (pre + bmd_ >= p)
+          if (min >= 4)
           {
-            s += bmd_;
+            if (predict_match(pat_->pmh_, &buf_[loc + len], min))
+              return true;
           }
           else
           {
-            k = bms_[static_cast<uint8_t>(*q)];
-            if (p + k > t + bmd_)
-              s += k - (t - p);
-            else
-              s += bmd_;
+            if (predict_match(pat_->pma_, &buf_[loc + len]) == 0)
+              return true;
           }
         }
-        s -= len - 1;
-        loc = s - buf_;
-        set_current_match(loc - 1);
-        peek_more();
-        loc = cur_ + 1;
-        if (loc + len > end_)
+        if (pre + bmd_ >= p)
         {
-          set_current(loc);
-          return false;
+          s += bmd_;
         }
-      }
-    }
-  }
-  while (true)
-  {
-    if (loc + len + min > end_)
-    {
-      set_current_match(loc - 1);
-      peek_more();
-      loc = cur_ + 1;
-      if (loc + len + min > end_)
-      {
-        set_current(loc);
-        return false;
-      }
-    }
-    if (len < BOYER_MOORE_MIN_LENGTH)
-    {
-      const char *hit = static_cast<char*>(std::memchr(&buf_[loc], *pre, end_ - loc - len - min + 1));
-      if (hit == NULL)
-      {
-        loc = end_ - len - min + 1;
-        continue;
-      }
-      loc = hit - buf_;
-      if (len > 1 && std::memcmp(pre + 1, hit + 1, len - 1) != 0)
-      {
-        ++loc;
-        continue;
+        else
+        {
+          size_t k = bms_[static_cast<uint8_t>(*q)];
+          if (p + k > t + bmd_)
+            s += k - (t - p);
+          else
+            s += bmd_;
+        }
       }
     }
     else
     {
-      if (bmd_ == 0)
-        boyer_moore_init(pre, len);
-      const char *s = buf_ + loc + len - 1;
-      const char *e = buf_ + end_ - min;
-      const char *t = pre + len - 1;
       while (s < e)
       {
         size_t k = 0;
@@ -790,39 +729,47 @@ bool Matcher::advance()
           --q;
         }
         if (p < pre)
-          break;
+        {
+          loc = q - buf_ + 1;
+          set_current(loc);
+          if (min == 0 || loc + 4 > end_)
+            return true;
+          if (min >= 4)
+          {
+            if (predict_match(pat_->pmh_, &buf_[loc + len], min))
+              return true;
+          }
+          else
+          {
+            if (predict_match(pat_->pma_, &buf_[loc + len]) == 0)
+              return true;
+          }
+        }
         if (pre + bmd_ >= p)
         {
           s += bmd_;
         }
         else
         {
-          k = bms_[static_cast<uint8_t>(*q)];
+          size_t k = bms_[static_cast<uint8_t>(*q)];
           if (p + k > t + bmd_)
             s += k - (t - p);
           else
             s += bmd_;
         }
       }
-      s -= len - 1;
-      loc = s - buf_;
     }
-    set_current(loc);
-    if (loc + 4 > end_)
-      return true;
-    if (min >= 4)
+    s -= len - 1;
+    loc = s - buf_;
+    set_current_match(loc - 1);
+    peek_more();
+    loc = cur_ + 1;
+    if (loc + len > end_)
     {
-      if (predict_match(pat_->pmh_, &buf_[loc + len], min))
-        return true;
-      ++loc;
+      set_current(loc);
+      return false;
     }
-    else
-    {
-      size_t k = predict_match(pat_->pma_, &buf_[loc + len]);
-      if (k == 0)
-        return true;
-      loc += k;
-    }
+
   }
 }
 

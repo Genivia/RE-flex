@@ -1,4 +1,4 @@
-AC_INIT(re-flex,1.3)
+AC_INIT(re-flex,1.4)
 AM_INIT_AUTOMAKE([foreign])
 AM_CONFIG_HEADER(config.h)
 AC_COPYRIGHT([Copyright (C) 2016-2019 Robert van Engelen, Genivia Inc.])
@@ -11,10 +11,16 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 
+# if CXXFLAGS is undefined, set it to our preferred default flags
+: ${CXXFLAGS="-Wall -Wextra -Wunused -O2"}
+
 AC_PROG_CXX
 AM_PROG_AR
 AC_PROG_RANLIB
 AC_PROG_INSTALL
+
+# removed to avoid Max OS X libtool issues, alas...
+# LT_INIT
 
 AC_PROG_YACC
 AC_SUBST(YACC)
@@ -50,13 +56,13 @@ if test "$DOXYGEN" = NO_DOXYGEN; then
         ac_cv_path_DOXYGEN="/Applications/Doxygen.app/Contents/Resources/doxygen"
     fi
     IFS=$as_save_IFS
-    if test "$DOXYGEN" = NO_DOXYGEN; then
+    if test x"$DOXYGEN" = x"NO_DOXYGEN"; then
         AC_MSG_RESULT([not found])
     else
         AC_MSG_RESULT($DOXYGEN)
     fi
 fi
-if test "$DOXYGEN" = NO_DOXYGEN; then
+if test x"$DOXYGEN" = x"NO_DOXYGEN"; then
     AC_MSG_NOTICE([Couldn't find Doxygen -- documentation updates cannot be built without Doxygen])
 else
     AC_CONFIG_FILES([doc/Doxyfile])

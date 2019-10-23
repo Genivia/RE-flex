@@ -50,8 +50,8 @@ You have two options: 1) quick install or 2) configure and make.
 
 For a quick clean build assuming your environment is pretty much standard:
 
-    $ ./clean.sh
-    $ ./build.sh
+    $ sh clean.sh
+    $ sh build.sh
 
 This compiles the **reflex** tool and installs it locally in `reflex/bin`.  You
 can add this location to your `$PATH` variable to enable the new `reflex`
@@ -67,7 +67,7 @@ engine in your code.  The RE/flex header files are locally located in
 To install the man page, the header files in `/usr/local/include/reflex`, the
 library in `/usr/local/lib` and the `reflex` command in `/usr/local/bin`:
 
-    $ sudo ./allinstall.sh
+    $ sudo sh allinstall.sh
 
 ### Configure and make
 

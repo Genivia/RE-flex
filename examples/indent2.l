@@ -1,8 +1,7 @@
 // This example demonstrates indent \i and dedent \j matching
 // with nested multi-line /*-comments
 %{
-  int level;                 // a variable to track the /*-comment nesting level
-  std::vector<size_t> stops; // a variable to save the stop positions after indent
+  int level;   // a variable to track the /*-comment nesting level
 %}
 %o main tabs=8
 %x COMMENT
@@ -21,5 +20,6 @@
 "*/"           if (--level == 0)
                  start(INITIAL); // back to initial state
 .|\n           // ignore all content in comments
+<<EOF>>        out() << "/* not closed";
 }
 %%

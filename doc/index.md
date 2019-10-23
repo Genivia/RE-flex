@@ -310,8 +310,8 @@ and splitting input from strings, files and streams in regular C++ applications
 🔝 [Back to table of contents](#)
 
 
-A flexible regex library                                              {#intro2}
-------------------------
+And a flexible regex library                                          {#intro2}
+----------------------------
 
 The RE/flex regex pattern matching classes include two classes for Boost.Regex,
 two classes for C++11 std::regex, and a RE/flex class:
@@ -746,7 +746,7 @@ object is implicitly constructed from one of these input sources, for example:
       std::cout << "Found " << matcher.text() << std::endl;
 
     // use the same matcher with a new source (an Input object):
-    std::ifstream ifs("cows.txt", std::ifstream::in);
+    std::ifstream ifs("cows.txt", std::ios::in | std::ios::binary);
     source = ifs;           // Input source is reassignable
     matcher.input(source);  // can use ifs as parameter also
 
@@ -766,7 +766,7 @@ all data is done with the `>>` operator as a shortcut:
 
     // read and buffer cows.txt file
     reflex::BoostMatcher matcher("\<cow\>");
-    std::ifstream cows("cows.txt", std::ifstream::in);
+    std::ifstream cows("cows.txt", std::ios::in | std::ios::binary);
     cows >> matcher;     // same as matcher.input(cows).buffer();
     cows.close();        // can already close now because stream content is stored
 
@@ -1115,8 +1115,8 @@ Multiple options can be grouped on a single line:
 </div>
 
 An option parameter name may contain hyphens (-), dots (.), and double colons
-(::), but when other special characters are used then option parameter should
-be quoted:
+(::).  Flex always requires quotes with option parameters, but RE/flex does
+not require quotes except when special characters are used, for example:
 
 <div class="alt">
 ~~~{.cpp}
@@ -1492,8 +1492,8 @@ This option defines the exception to be thrown by the generated scanner's
 default rule when no rule matches the input.  This option generates a default
 rule with action `throw VALUE` and replaces the standard default rule that
 echoes all unmatched input text when no rule matches.  This option has no
-effect when option `-s` (or `−−nodefault`) or option `-S` (or `−−find`) are
-specified.
+effect when option `-S` (or `−−find`) is specified.  See also option `-s` (or
+`−−nodefault`)
 
 #### `−−token-type=NAME`
 
@@ -1535,8 +1535,10 @@ This suppresses the default rule that echoes all unmatched input text when no
 rule matches.  With the `−−flex` option, the scanner reports "scanner jammed"
 when no rule matches by calling `yyFlexLexer::LexerError("scanner jammed")`.
 Without the `−−flex` and `−−debug` options, a `std::runtime` exception is
-raised by invoking `AbstractLexer::lexer_error("scanner jammed")`.  The virtual
-methods `LexerError` and `lexer_error` may be redefined by a user-specified
+raised by invoking `AbstractLexer::lexer_error("scanner jammed")`.  To throw a
+custom exception instead, use option `−−exception` or override the virtual
+method `lexer_error` in a derived lexer class.  The virtual methods
+`LexerError` and `lexer_error` may be redefined by a user-specified derived
 lexer class, see \ref reflex-inherit.  Without the `−−flex` option, but with
 the `−−debug` option, the default rule is suppressed without invoking
 `lexer_error` to raise an exception.  See also options `−−exception=VALUE` and
@@ -2073,28 +2075,23 @@ associated with the matcher on the stack with `push_matcher()`.  The
 when the stack is empty.  When `false`, `has_matcher()` returns `false` and
 `ptr_matcher()` returns `NULL`.  See also \ref reflex-multiple-input.
 
-The following Flex functions are also supported with <b>`reflex`</b> option
+The following Flex actions are also supported with <b>`reflex`</b> option
 `−−flex`:
 
-  Flex action              | Result
-  ------------------------ | --------------------------------------------------
-  `yy_scan_string(s)`      | scan string `s` (`std::string` or `char*`)
-  `yy_scan_bytes(b, n)`    | scan `n` bytes at address `b` (buffered)
-  `yy_scan_buffer(b, n+2)` | scan `n` bytes at address `b` (zero copy)
+  RE/flex action   | Flex action              | Result
+  ---------------- | ------------------------ | -------------------------
+  `in(s)`          | `yy_scan_string(s)`      | reset and scan string `s` (`std::string` or `char*`)
+  `in(s)`          | `yy_scan_wstring(s)`     | reset and scan wide string `s` (`std::wstring` or `wchar_t*`)
+  `in(b, n)`       | `yy_scan_bytes(b, n)`    | reset and scan `n` bytes at address `b` (buffered)
+  `buffer(b, n+1)` | `yy_scan_buffer(b, n+2)` | reset and scan `n` bytes at address `b` (zero copy)
 
-In addition, the following wide string version is available in RE/flex:
-  
-  RE/flex action          | Result
-  ----------------------- | ---------------------------------------------------
-  `yy_scan_wstring(s)`    | scan wide string `s` (`std::wstring` or `wchar_t*`)
-
-These functions create a new buffer (i.e. a new matcher in RE/flex) and
-buffer the input, except for `yy_scan_buffer` that scans a string in place
-(i.e. zero copy) that should end with two zero bytes, which are included in the
-specified length.  A pointer to the new buffer is returned, which becomes the
-`YY_CURRENT_BUFFER`.  You should delete the old buffer with
-`yy_delete_buffer(YY_CURRENT_BUFFER)` before creating a new buffer with one of
-these functions.
+These functions create a new buffer (i.e. a new matcher in RE/flex) to
+incrementally buffer the input on demand, except for `yy_scan_buffer` that
+scans a string in place (i.e. zero copy) that should end with two zero bytes,
+which are included in the specified length.  A pointer to the new buffer is
+returned, which becomes the `YY_CURRENT_BUFFER`.  You should delete the old
+buffer with `yy_delete_buffer(YY_CURRENT_BUFFER)` before creating a new buffer
+with one of these functions.  See \ref reflex-input for more details.
 
 The generated scanner reads from the standard input by default or from an input
 source specified as a `reflex::Input` object, such as a string, wide string,
@@ -2853,6 +2850,7 @@ condition state to scan the content between `/*` and `*/`:
                      start(INITIAL);            // back to initial state
                    }
     .|\n           // ignore all content in comments
+    <<EOF>>        out() << "/* not closed";
     }
     %%
 ~~~
@@ -2917,6 +2915,7 @@ explicitly save and restore indent stops in a variable:
     "*/"           if (--level == 0)
                      start(INITIAL); // back to initial state
     .|\n           // ignore all content in comments
+    <<EOF>>        out() << "/* not closed";
     }
     %%
 ~~~
@@ -3356,7 +3355,7 @@ For example:
 
 <div class="alt">
 ~~~{.cpp}
-    %option yyclass=MyLexer
+    %option yyclass="MyLexer"
     %{
       class MyLexer : public yyFlexLexer {
        public:
@@ -3419,14 +3418,15 @@ takes a `FILE*` descriptor, `std::istream`, a string `std::string` or
 
 The following methods are available to specify an input source:
 
-  RE/flex action            | Flex action              | Result
-  ------------------------- | ------------------------ | -------------------------
-  `in()`, `in() = &i`       | `*yyin`, `yyin = &i`     | get/set `reflex::Input i`
-  `in(i)`                   | `yyrestart(i)`           | scan `reflex::Input i`
-  `in(s)`                   | `yy_scan_string(s)`      | scan string `s`
-  `in(s)`                   | `yy_scan_wstring(s)`     | scan wide string `s`
-  `in(reflex::Input(b, n))` | `yy_scan_bytes(b, n)`    | scan `n` bytes at `b` (buffered)
-  `buffer(b, n+1)`          | `yy_scan_buffer(b, n+2)` | scan `n` bytes at `b` (zero copy)
+  RE/flex action      | Flex action              | Result
+  ------------------- | ------------------------ | ----------------------------
+  `in()`              | `*yyin`                  | get pointer to current `reflex::Input i`
+  `in() = &i`         | `yyin = &i`              | set input `reflex::Input i`
+  `in(i)`             | `yyrestart(i)`           | reset and scan input from `reflex::Input i`
+  `in(s)`             | `yy_scan_string(s)`      | reset and scan string `s` (`std::string` or `char*`)
+  `in(s)`             | `yy_scan_wstring(s)`     | reset and scan wide string `s` (`std::wstring` or `wchar_t*`)
+  `in(b, n)`          | `yy_scan_bytes(b, n)`    | reset and scan `n` bytes at `b` address (buffered)
+  `buffer(b, n+1)`    | `yy_scan_buffer(b, n+2)` | reset and scan `n` bytes at `b` address (zero copy)
 
 For example, to switch input to another source while using the scanner, use
 `in(i)` with `reflex::Input i` as an argument:
@@ -3440,7 +3440,7 @@ For example, to switch input to another source while using the scanner, use
     lexer.lex();
 
     // read from a stream (ASCII or UTF-8)
-    std::istream i = std::ifstream("file", std::ifstream::in);
+    std::istream i = std::ifstream("file", std::ios::in);
     lexer.in(i);
     lexer.lex();
 
@@ -3451,7 +3451,7 @@ For example, to switch input to another source while using the scanner, use
     // read from a memory segment (raw bytes, ASCII, or UTF-8)
     const char *ptr = ...; // points to segment
     size_t len = ...;      // length of the memory segment
-    lexer.in(reflex::Input(ptr, len));
+    lexer.in(ptr, len);
     lexer.lex();
 
     // read from a wide string, 0-terminated, encoding it to UTF-8 for matching
@@ -3499,7 +3499,7 @@ With options `−−flex` and `−−bison` you can also use classic Flex functi
     yylex();
 
     // read from a stream (ASCII or UTF-8)
-    std::istream i = std::ifstream("file", std::ifstream::in);
+    std::istream i = std::ifstream("file", std::ios::in);
     yyin = &i;
     yylex();
 
@@ -3571,7 +3571,7 @@ scanners generated with option `−−reentrant`, for example:
     yylex();
 
     // read from a stream (ASCII or UTF-8)
-    std::istream i = std::ifstream("file", std::ifstream::in);
+    std::istream i = std::ifstream("file", std::ios::in);
     yyget_in(yyscanner) = &i;
     yylex();
 
@@ -4174,6 +4174,33 @@ code blocks may be associated with start condition states as follows:
 
 Initial code blocks should be indented or should be placed within <i>`%{`</i>
 and <i>`%}`</i>.
+
+An initial code block can be used to configure the lexer's matcher, since a
+new matcher with the lexer patterns is created by the lexer just before the
+rules are matched.  For example:
+
+<div class="alt">
+~~~{.cpp}
+    %class{
+      bool init_matcher;
+    %}
+    %init{
+      init_matcher = true;
+    %}
+    %%
+    %{
+      if (init_matcher)            // init the new matcher?
+      {
+        init_matcher = false;      // init only once
+        if (BUFFER_ALL)            // buffer all input at once?
+          matcher().buffer();      // same as %option batch
+        else if (INTERACTIVE)      // console-based (TTY) "interactive" input?
+          matcher().interactive(); // same as %option interactive   
+        matcher().tabs(4);         // same as %option tabs=4
+      }
+    %}
+~~~
+</div>
 
 🔝 [Back to table of contents](#)
 
@@ -5102,7 +5129,7 @@ is the `this` pointer.  Outside the scope of lexer methods a pointer to your
 🔝 [Back to table of contents](#)
 
 
-Searching versus Scanning                                      {#reflex-search}
+Searching versus scanning                                      {#reflex-search}
 -------------------------
 
 RE/flex generates an efficient search engine with option `-S` (or `−−find`).
@@ -7630,13 +7657,13 @@ UTF-8 text files, it is generally recommended to set the UTF-8 locale.  For
 example:
 
 ~~~{.cpp}
-    std::setlocale(LC_ALL, "en_US.UTF-8");            // setlocale UTF-8
-    std::ifstream ifs("file.txt", std::ifstream::in); // open UTF-8/16/32 text file
-    reflex::BoostMatcher matcher("\\w+", ifs);        // not affected by setlocale
+    std::setlocale(LC_ALL, "en_US.UTF-8");        // setlocale UTF-8
+    std::ifstream ifs("file.txt", std::ios::in);  // open UTF-8/16/32 text file
+    reflex::BoostMatcher matcher("\\w+", ifs);    // not affected by setlocale
     while (matcher.find() != 0)
     {
-      std::wstring& match = matcher.wstr();           // not affected by setlocale
-      std::wcout << match << std::endl;               // affected by setlocale
+      std::wstring& match = matcher.wstr();       // not affected by setlocale
+      std::wcout << match << std::endl;           // affected by setlocale
     }
     ifs.close();
 ~~~
@@ -7646,13 +7673,13 @@ not on all systems (I'm looking at you, Mac OS X terminal!)  Instead of
 `std::wcout` we can use `std::cout` instead to display UTF-8 content directly:
 
 ~~~{.cpp}
-    std::setlocale(LC_ALL, "en_US.UTF-8");            // setlocale UTF-8
-    std::ifstream ifs("file.txt", std::ifstream::in); // open UTF-8/16/32 text file
-    reflex::BoostMatcher matcher("\\w+", ifs);        // not affected by setlocale
+    std::setlocale(LC_ALL, "en_US.UTF-8");       // setlocale UTF-8
+    std::ifstream ifs("file.txt", std::ios::in); // open UTF-8/16/32 text file
+    reflex::BoostMatcher matcher("\\w+", ifs);   // not affected by setlocale
     while (matcher.find() != 0)
     {
-      std::string& match = matcher.str();             // not affected by setlocale
-      std::cout << match << std::endl;                // not affected by setlocale
+      std::string& match = matcher.str();        // not affected by setlocale
+      std::cout << match << std::endl;           // not affected by setlocale
     }
     ifs.close();
 ~~~
@@ -7686,8 +7713,8 @@ See \ref regex-input-file to set file encodings.
 🔝 [Back to contents](#)
 
 
-Dealing with DOS CRLF input                                             {#crlf}
----------------------------
+Handling with DOS CRLF input                                            {#crlf}
+----------------------------
 
 DOS files and other DOS or Windows input sources typically end lines with CRLF
 byte pairs.  There are two ways to deal with CRLF pairs:

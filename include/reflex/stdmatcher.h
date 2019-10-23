@@ -87,6 +87,12 @@ class StdMatcher : public PatternMatcher<std::regex> {
       PatternMatcher<std::regex>(matcher),
       flg_(matcher.flg_)
   { }
+  /// Assign a matcher.
+  StdMatcher& operator=(const StdMatcher& matcher) ///< matcher to copy
+  {
+    PatternMatcher<std::regex>::operator=(matcher);
+    return *this;
+  }
   /// Polymorphic cloning.
   virtual StdMatcher *clone()
   {

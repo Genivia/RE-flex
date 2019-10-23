@@ -146,6 +146,11 @@ class Pattern {
   {
     init(NULL, pred);
   }
+  /// Copy constructor.
+  Pattern(const Pattern& pattern) ///< pattern to copy
+  {
+    operator=(pattern);
+  }
   /// Destructor, deletes internal code array when owned and allocated.
   virtual ~Pattern()
   {

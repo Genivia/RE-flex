@@ -326,7 +326,7 @@ class Input {
   /// Construct input character sequence from a char* string
   Input(
       const char *cstring, ///< char string
-      size_t size)         ///< length of the string
+      size_t      size)    ///< length of the string
     :
       cstring_(cstring),
       wstring_(NULL),
@@ -684,7 +684,7 @@ class Input {
     }
     if (istream_)
     {
-      size_t k = static_cast<size_t>(n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, static_cast<std::streamsize>(n)).gcount());
+      size_t k = static_cast<size_t>(n == 1 ? istream_->get(s[0]).gcount() : istream_->read(s, static_cast<std::streamsize>(n)) ? n : istream_->gcount());
       if (size_ >= k)
         size_ -= k;
       return k;
@@ -730,7 +730,7 @@ class Input {
   const wchar_t        *wstring_; ///< NUL-terminated wide string input (when non-null)
   FILE                 *file_;    ///< FILE* input (when non-null)
   std::istream         *istream_; ///< stream input (when non-null)
-  size_t                size_;    ///< size of the remaining input in bytes (size_ == 0 may indicate unset value)
+  size_t                size_;    ///< size of the remaining input in bytes (size_ == 0 may indicate size is not set)
   char                  utf8_[8]; ///< UTF-8 normalization buffer
   unsigned short        uidx_;    ///< index in utf8_[] or >= 8 when unused
   file_encoding_type    utfx_;    ///< file_encoding
@@ -880,7 +880,7 @@ class BufferedInput : public Input {
   operator bool()
     /// @returns true if a non-empty sequence of characters is available to get.
   {
-    return pos_ < len_ || Input::good();
+    return good();
   }
   /// Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a `FILE*` or `std::istream` source).
   size_t size()
@@ -898,7 +898,7 @@ class BufferedInput : public Input {
   bool eof()
     /// @returns true if input is at EOF and no characters are available.
   {
-    return pos_ < len_ || Input::eof();
+    return pos_ >= len_ && Input::eof();
   }
   /// Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached.
   int get()

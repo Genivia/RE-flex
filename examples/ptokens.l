@@ -28,7 +28,7 @@
 // warning: in unicode mode dot is a "catch all" and also matches invalid UTF-8
 // so we use {any} to match anything that is valid Unicode/UTF-8, where {any}
 // is defined in pdefs.l as all Unicode planes without the surrogate halves:
-// any  \p{Unicode}
+// {any} stands for \p{Unicode}
 
 %%
 

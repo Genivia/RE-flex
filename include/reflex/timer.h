@@ -70,6 +70,7 @@ inline float timer_elapsed(timer_type& t) ///< timer to be updated
 
 #else
 
+#include <cstddef>
 #include <sys/time.h>
 
 namespace reflex {

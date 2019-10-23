@@ -27,18 +27,21 @@ int main()
 
 void Lexer::do_lex()
 {
+  // scan std::string
   std::string string("Lorem ipsum dolor sit amet,");
   in(string);
   lex();
 
+  // scan char* string
   in("consectetur adipiscing elit.");
   lex();
 
+  // scan wchar_t* string
   in(L"Quisque at accumsan turpis,");
   lex();
 
-  // scan bytes up to specified length using reflex::Input()
-  in(reflex::Input("non feugiat magna.", 18));
+  // scan bytes up to specified length
+  in("non feugiat magna.", 18);
   lex();
 
   // scan bytes in place using matcher().buffer(), buffer content is changed!!

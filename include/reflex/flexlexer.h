@@ -69,6 +69,9 @@
 /// Flex and Bison-compatible `%%option bison` generates a global `YY_SCANNER` scanner object, otherwise we use *this.
 #if defined(REFLEX_OPTION_reentrant) || defined(REFLEX_OPTION_bison_cc) || defined(REFLEX_OPTION_bison_bridge) || (!defined(REFLEX_OPTION_bison) && !defined(REFLEX_OPTION_bison_locations) && !defined(YY_SCANNER))
 #define YY_SCANNER              (*this)
+#define YY_SCANNER_DOT_
+#else
+#define YY_SCANNER_DOT_         YY_SCANNER.
 #endif
 
 #if (defined(REFLEX_OPTION_yywrap) || defined(REFLEX_OPTION_bison)) && !defined(REFLEX_OPTION_noyywrap)
@@ -95,7 +98,11 @@ int yywrap(void);
 
 /// Flex-compatible macro: the token value returned upon end-of-file.
 #ifndef YY_NULL
+#ifdef REFLEX_OPTION_token_type
+#define YY_NULL                 REFLEX_OPTION_token_type()
+#else
 #define YY_NULL                 (0)
+#endif
 #endif
 
 /// Flex-compatible macro: size of default input buffer.
@@ -121,73 +128,73 @@ int yywrap(void);
 
 /// Flex-compatible macro: ECHO action to output the content of yytext.
 #ifndef ECHO
-#define ECHO                    YY_SCANNER.LexerOutput(YYText(), YYLeng())
+#define ECHO                    YY_SCANNER_DOT_ LexerOutput(YYText(), YYLeng())
 #endif
 
 /// Flex-compatible macro: BEGIN action to set a start condition.
-#define BEGIN                   YY_SCANNER.start_ =
+#define BEGIN                   YY_SCANNER_DOT_ start_ =
 
 /// Flex-compatible macro: the current start condition.
-#define YYSTATE                 YY_SCANNER.start()
+#define YYSTATE                 YY_SCANNER_DOT_ start()
 
 /// Flex-compatible macro: the current start condition.
-#define YY_START                YY_SCANNER.start()
+#define YY_START                YY_SCANNER_DOT_ start()
 
 /// Flex-compatible macro: the current start condition.
-#define yy_current_state        YY_SCANNER.start()
+#define yy_current_state        YY_SCANNER_DOT_ start()
 
 /// Flex-compatible macro: the current matcher buffer, NULL when scanner has not started.
-#define YY_CURRENT_BUFFER       YY_SCANNER.ptr_matcher()
+#define YY_CURRENT_BUFFER       YY_SCANNER_DOT_ ptr_matcher()
 
 /// Flex-compatible macro: the buffer flush action
-#define YY_FLUSH_BUFFER         (YY_SCANNER.has_matcher() ? YY_SCANNER.matcher().flush() : (void)0)
+#define YY_FLUSH_BUFFER         (YY_SCANNER_DOT_ has_matcher() ? YY_SCANNER_DOT_ matcher().flush() : (void)0)
 
 /// Flex-compatible macro: the matched text.
-#define yytext                  const_cast<char*>(YY_SCANNER.YYText())
+#define yytext                  const_cast<char*>(YY_SCANNER_DOT_ YYText())
 
 /// Flex-compatible macro: the matched text length.
-#define yyleng                  static_cast<yy_size_t>(YY_SCANNER.YYLeng())
+#define yyleng                  static_cast<yy_size_t>(YY_SCANNER_DOT_ YYLeng())
 
 /// Flex-compatible macro: the line number of the matched text.
-#define yylineno                static_cast<int>(YY_SCANNER.matcher().lineno())
+#define yylineno                static_cast<int>(YY_SCANNER_DOT_ matcher().lineno())
 
 /// Flex-compatible macro: the matched action index (use only when scanner has started).
-#define yy_act                  YY_SCANNER.matcher().accept()
+#define yy_act                  YY_SCANNER_DOT_ matcher().accept()
 
 /// Flex-compatible macro: the current input, a reference to a reflex::Input object that can be a stream, file, or string.
-#define yyin                    YY_SCANNER.in()
+#define yyin                    YY_SCANNER_DOT_ in()
 
 /// Flex-compatible macro: the current output stream, points to std::ostream or NULL.
-#define yyout                   YY_SCANNER.os()
+#define yyout                   YY_SCANNER_DOT_ os()
 
 /// Flex-compatible macro: at-begin-of-line check (use only when scanner has started).
-#define YY_AT_BOL()             YY_SCANNER.matcher().at_bol()
+#define YY_AT_BOL()             YY_SCANNER_DOT_ matcher().at_bol()
 
 /// Flex-compatible macro: a begin-of-line forced set (use only when scanner has started).
-#define yy_set_bol(b)           YY_SCANNER.matcher().set_bol(b)
+#define yy_set_bol(b)           YY_SCANNER_DOT_ matcher().set_bol(b)
 
 /// Flex-compatible macro: interactive mode on/off (use only when scanner has started).
-#define yy_set_interactive(b)   YY_SCANNER.matcher().buffer((b) ? 1 : 0)
+#define yy_set_interactive(b)   YY_SCANNER_DOT_ matcher().buffer((b) ? 1 : 0)
 
 /// Flex-compatible macro: create and return a new buffer.
 #if defined(REFLEX_OPTION_reentrant)
 #define yy_create_buffer(i,_,s) static_cast<FlexLexer*>(s)->new_matcher(i)
 #else
-#define yy_create_buffer(i,_)   YY_SCANNER.new_matcher(i)
+#define yy_create_buffer(i,_)   YY_SCANNER_DOT_ new_matcher(i)
 #endif
 
 /// Flex-compatible macro: create and return a new buffer.
 #if defined(REFLEX_OPTION_reentrant)
 #define yy_new_buffer(i,_,s)    static_cast<FlexLexer*>(s)->new_matcher(i)
 #else
-#define yy_new_buffer(i,_)      YY_SCANNER.new_matcher(i)
+#define yy_new_buffer(i,_)      YY_SCANNER_DOT_ new_matcher(i)
 #endif
 
 /// Flex-compatible macro: delete a buffer.
 #if defined(REFLEX_OPTION_reentrant)
 #define yy_delete_buffer(b,s)   static_cast<FlexLexer*>(s)->del_matcher(b)
 #else
-#define yy_delete_buffer(b)     YY_SCANNER.del_matcher(b)
+#define yy_delete_buffer(b)     YY_SCANNER_DOT_ del_matcher(b)
 #endif
 
 /// Flex-compatible macro: flush a buffer.
@@ -201,28 +208,28 @@ int yywrap(void);
 #if defined(REFLEX_OPTION_reentrant)
 #define yypush_buffer_state(b,s) static_cast<FlexLexer*>(s)->push_matcher(b)
 #else
-#define yypush_buffer_state(b)  YY_SCANNER.push_matcher(b)
+#define yypush_buffer_state(b)  YY_SCANNER_DOT_ push_matcher(b)
 #endif
 
 /// Flex-compatible macro: pop buffer from the stack and delete the current buffer.
 #if defined(REFLEX_OPTION_reentrant)
 #define yypop_buffer_state(s)   static_cast<FlexLexer*>(s)->pop_matcher()
 #else
-#define yypop_buffer_state()    YY_SCANNER.pop_matcher()
+#define yypop_buffer_state()    YY_SCANNER_DOT_ pop_matcher()
 #endif
 
 /// Flex-compatible macro: switch to another buffer.
 #if defined(REFLEX_OPTION_reentrant)
 #define yy_switch_to_buffer(b,s) static_cast<FlexLexer*>(s)->matcher(b)
 #else
-#define yy_switch_to_buffer(b)  YY_SCANNER.matcher(b)
+#define yy_switch_to_buffer(b)  YY_SCANNER_DOT_ matcher(b)
 #endif
 
 /// Flex-compatible macro: restart from the given input source.
 #if defined(REFLEX_OPTION_reentrant)
 #define yyrestart(i,s)          static_cast<FlexLexer*>(s)->in(i)
 #else
-#define yyrestart(i)            YY_SCANNER.in(i)
+#define yyrestart(i)            YY_SCANNER_DOT_ in(i)
 #endif
 
 /// Flex-compatible macro: scan a string
@@ -232,10 +239,10 @@ int yywrap(void);
 #define yy_scan_bytes(b,n,s)    yy_scan_string(reflex::Input((b), static_cast<size_t>(n)), (s))
 #define yy_scan_buffer(b,n,s)   (static_cast<FlexLexer*>(s)->has_matcher() ? (static_cast<FlexLexer*>(s)->matcher(static_cast<FlexLexer*>(s)->new_matcher()).buffer((b), (n)-1), static_cast<FlexLexer*>(s)->ptr_matcher()) : (static_cast<FlexLexer*>(s)->buffer((b), (n)-1), static_cast<YY_BUFFER_STATE>(NULL)))
 #else
-#define yy_scan_string(i)       (YY_SCANNER.has_matcher() ? (YY_SCANNER.matcher(YY_SCANNER.new_matcher(i)), YY_CURRENT_BUFFER) : (YY_SCANNER.in(i), static_cast<YY_BUFFER_STATE>(NULL)))
+#define yy_scan_string(i)       (YY_SCANNER_DOT_ has_matcher() ? (YY_SCANNER_DOT_ matcher(YY_SCANNER_DOT_ new_matcher(i)), YY_CURRENT_BUFFER) : (YY_SCANNER_DOT_ in(i), static_cast<YY_BUFFER_STATE>(NULL)))
 #define yy_scan_wstring(i)      yy_scan_string(i)
 #define yy_scan_bytes(b,n)      yy_scan_string(reflex::Input((b), static_cast<size_t>(n)))
-#define yy_scan_buffer(b,n)     (YY_SCANNER.has_matcher() ? (YY_SCANNER.matcher(YY_SCANNER.new_matcher()->buffer((b), (n)-1)), YY_CURRENT_BUFFER) : (YY_SCANNER.buffer((b), (n)-1), static_cast<YY_BUFFER_STATE>(NULL)))
+#define yy_scan_buffer(b,n)     (YY_SCANNER_DOT_ has_matcher() ? (YY_SCANNER_DOT_ matcher(YY_SCANNER_DOT_ new_matcher()->buffer((b), (n)-1)), YY_CURRENT_BUFFER) : (YY_SCANNER_DOT_ buffer((b), (n)-1), static_cast<YY_BUFFER_STATE>(NULL)))
 #endif
 
 /// Flex-compatible macro: the terminating action.
@@ -247,52 +254,52 @@ int yywrap(void);
 #if defined(REFLEX_OPTION_reentrant)
 #define yyinput(s)              static_cast<FlexLexer*>(s)->input()
 #else
-#define yyinput()               YY_SCANNER.input()
+#define yyinput()               YY_SCANNER_DOT_ input()
 #endif
 
 /// Flex-compatible macro: put one character back onto the input stream to be read again.
 #if defined(REFLEX_OPTION_reentrant)
 #define yyunput(c,s)            static_cast<FlexLexer*>(s)->unput(c)
 #else
-#define yyunput(c)              YY_SCANNER.unput(c)
+#define yyunput(c)              YY_SCANNER_DOT_ unput(c)
 #endif
 
 /// Flex-compatible macro: output one character.
 #if defined(REFLEX_OPTION_reentrant)
 #define yyoutput(c,s)           static_cast<FlexLexer*>(s)->output(c)
 #else
-#define yyoutput(c)             YY_SCANNER.output(c)
+#define yyoutput(c)             YY_SCANNER_DOT_ output(c)
 #endif
 
 /// Flex-compatible macro: push the current start condition state on the stack and transition to the given state.
 #if defined(REFLEX_OPTION_reentrant)
 #define yy_push_state(n,s)      static_cast<FlexLexer*>(s)->push_state(n)
 #else
-#define yy_push_state(n)        YY_SCANNER.push_state(n)
+#define yy_push_state(n)        YY_SCANNER_DOT_ push_state(n)
 #endif
 
 /// Flex-compatible macro: pop the stack start condition state and transition to that state.
 #if defined(REFLEX_OPTION_reentrant)
 #define yy_pop_state(s)         static_cast<FlexLexer*>(s)->pop_state()
 #else
-#define yy_pop_state()          YY_SCANNER.pop_state()
+#define yy_pop_state()          YY_SCANNER_DOT_ pop_state()
 #endif
 
 /// Flex-compatible macro: returns the stack top start condition state.
 #if defined(REFLEX_OPTION_reentrant)
 #define yy_top_state(s)         static_cast<FlexLexer*>(s)->top_state()
 #else
-#define yy_top_state()          YY_SCANNER.top_state()
+#define yy_top_state()          YY_SCANNER_DOT_ top_state()
 #endif
 
 /// Flex-compatible macro: append the next matched text to the currently matched text (use only when scanner has started).
-#define yymore()                YY_SCANNER.matcher().more()
+#define yymore()                YY_SCANNER_DOT_ matcher().more()
 
 /// Flex-compatible macro: truncate the yytext length of the match to n characters in length and reposition for next match (use only when scanner has started).
-#define yyless(n)               YY_SCANNER.matcher().less(n)
+#define yyless(n)               YY_SCANNER_DOT_ matcher().less(n)
 
 /// Flex-compatible macro: the debug flag.
-#define yy_flex_debug           YY_SCANNER.debug_;
+#define yy_flex_debug           YY_SCANNER_DOT_ debug_;
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -464,7 +471,11 @@ class FlexLexer : public AbstractLexer<M> {
 #endif
   }
   /// Pure virtual lexer (implemented by a reflex-generated yyFlexLexer).
+#ifdef REFLEX_OPTION_token_type
+  virtual REFLEX_OPTION_token_type yylex() = 0;
+#else
   virtual int yylex() = 0;
+#endif
 #if defined(REFLEX_OPTION_reentrant) || defined(REFLEX_OPTION_bison_bridge)
   YY_EXTRA_TYPE yyextra;       ///< Flex-compatible reentrant YY_EXTRA_TYPE yyextra
 #endif

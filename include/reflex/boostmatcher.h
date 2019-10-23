@@ -90,6 +90,12 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
       PatternMatcher<boost::regex>(matcher),
       flg_(matcher.flg_)
   { }
+  /// Assign a matcher.
+  BoostMatcher& operator=(const BoostMatcher& matcher) ///< matcher to copy
+  {
+    PatternMatcher<boost::regex>::operator=(matcher);
+    return *this;
+  }
   /// Polymorphic cloning.
   virtual BoostMatcher *clone()
   {

@@ -193,8 +193,22 @@ class AbstractMatcher {
   typedef AbstractMatcher::Iterator<const AbstractMatcher> const_iterator; ///< std::input_iterator for scanning, searching, and splitting input character sequences
   /// AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatcher::iterator to iterate over matches.
   class Operation {
-    friend class AbstractMatcher;
    public:
+    /// Construct an AbstractMatcher::Operation functor to scan, search, or split an input character sequence.
+    Operation(
+        AbstractMatcher *matcher, ///< use this matcher for this functor
+        Method           method)  ///< match using method Const::SCAN, Const::FIND, or Const::SPLIT
+      :
+        matcher_(matcher),
+        method_(method)
+    { }
+    void init(
+        AbstractMatcher *matcher, ///< use this matcher for this functor
+        Method           method)  ///< match using method Const::SCAN, Const::FIND, or Const::SPLIT
+    {
+      matcher_ = matcher;
+      method_ = method;
+    }
     /// AbstractMatcher::Operation() matches input to a pattern using method Const::SCAN, Const::FIND, or Const::SPLIT.
     size_t operator()() const
       /// @returns value of accept() >= 1 for match or 0 for end of matches.
@@ -226,14 +240,6 @@ class AbstractMatcher {
       return const_iterator();
     }
    private:
-    /// Construct an AbstractMatcher::Operation functor to scan, search, or split an input character sequence.
-    Operation(
-        AbstractMatcher *matcher, ///< use this matcher for this functor
-        Method           method)  ///< match using method Const::SCAN, Const::FIND, or Const::SPLIT
-      :
-        matcher_(matcher),
-        method_(method)
-    { }
     AbstractMatcher *matcher_; ///< the matcher used by this functor
     Method           method_;  ///< the method for pattern matching by this functor's matcher
   };
@@ -792,10 +798,10 @@ class AbstractMatcher {
       return static_cast<unsigned char>(buf_[pos_]);
     if (eof_)
       return EOF;
-    if (end_ + blk_ + 1 >= max_)
-      (void)grow();
     while (true)
     {
+      if (end_ + blk_ + 1 >= max_)
+        (void)grow();
       end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_]);
@@ -986,7 +992,7 @@ class AbstractMatcher {
     if (max_ - end_ >= need + 1)
       return false;
     size_t gap = txt_ - buf_;
-    if (gap >= need)
+    if (max_ - end_ + gap >= need)
     {
       DBGLOG("Shift buffer to close gap of %zu bytes", gap);
       update();
@@ -1014,6 +1020,8 @@ class AbstractMatcher {
         pos_ -= gap;
         end_ -= gap;
 #if defined(WITH_REALLOC)
+        if (end_ > 0)
+          std::memmove(buf_, txt_, end_);
         char *newbuf = static_cast<char*>(std::realloc(static_cast<void*>(buf_), max_));
         if (newbuf == NULL)
           throw std::bad_alloc();
@@ -1042,10 +1050,10 @@ class AbstractMatcher {
       return static_cast<unsigned char>(buf_[pos_++]);
     if (eof_)
       return EOF;
-    if (end_ + blk_ + 1 >= max_)
-      (void)grow();
     while (true)
     {
+      if (end_ + blk_ + 1 >= max_)
+        (void)grow();
       end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_++]);
@@ -1087,10 +1095,10 @@ class AbstractMatcher {
     DBGLOG("AbstractMatcher::get_more()");
     if (eof_)
       return EOF;
-    if (end_ + blk_ + 1 >= max_)
-      (void)grow();
     while (true)
     {
+      if (end_ + blk_ + 1 >= max_)
+        (void)grow();
       end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_++]);
@@ -1109,10 +1117,10 @@ class AbstractMatcher {
     DBGLOG("AbstractMatcher::peek_more()");
     if (eof_)
       return EOF;
-    if (end_ + blk_ + 1 >= max_)
-      (void)grow();
     while (true)
     {
+      if (end_ + blk_ + 1 >= max_)
+        (void)grow();
       end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
       if (pos_ < end_)
         return static_cast<unsigned char>(buf_[pos_]);
@@ -1171,6 +1179,19 @@ class PatternMatcher : public AbstractMatcher {
     DBGLOG("PatternMatcher::~PatternMatcher()");
     if (own_ && pat_ != NULL)
       delete pat_;
+  }
+  /// Assign a matcher, the underlying pattern object is shared (not deep copied).
+  PatternMatcher& operator=(const PatternMatcher& matcher) ///< matcher with pattern to use (pattern may be shared)
+  {
+    scan.init(this, Const::SCAN);
+    find.init(this, Const::FIND);
+    split.init(this, Const::SPLIT);
+    in = matcher.in;
+    reset();
+    opt_ = matcher.opt_;
+    pat_ = matcher.pat_,
+    own_ = false;
+    return *this;
   }
   /// Set the pattern to use with this matcher as a shared pointer to another matcher pattern.
   virtual PatternMatcher& pattern(const PatternMatcher& matcher) ///< the other matcher

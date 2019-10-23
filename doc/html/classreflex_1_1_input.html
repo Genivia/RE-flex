@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Sep 29 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Oct 23 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -222,7 +222,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:ac621d556b409c90464780ea44b8d6570"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#ac621d556b409c90464780ea44b8d6570">cstring_</a></td></tr>
-<tr class="memdesc:ac621d556b409c90464780ea44b8d6570"><td class="mdescLeft">&#160;</td><td class="mdescRight">char string input (when non-null) of length <a class="el" href="classreflex_1_1_input.html#a4ca4ea90ef6f28c106a6811ff21bcc2b" title="size of the remaining input in bytes (size_ == 0 may indicate unset value) ">reflex::Input::size_</a>  <a href="#ac621d556b409c90464780ea44b8d6570">More...</a><br /></td></tr>
+<tr class="memdesc:ac621d556b409c90464780ea44b8d6570"><td class="mdescLeft">&#160;</td><td class="mdescRight">char string input (when non-null) of length <a class="el" href="classreflex_1_1_input.html#a4ca4ea90ef6f28c106a6811ff21bcc2b" title="size of the remaining input in bytes (size_ == 0 may indicate size is not set) ">reflex::Input::size_</a>  <a href="#ac621d556b409c90464780ea44b8d6570">More...</a><br /></td></tr>
 <tr class="separator:ac621d556b409c90464780ea44b8d6570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6107c7aabf9c28a777c3942442c3b22f"><td class="memItemLeft" align="right" valign="top">const wchar_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a6107c7aabf9c28a777c3942442c3b22f">wstring_</a></td></tr>
 <tr class="memdesc:a6107c7aabf9c28a777c3942442c3b22f"><td class="mdescLeft">&#160;</td><td class="mdescRight">NUL-terminated wide string input (when non-null)  <a href="#a6107c7aabf9c28a777c3942442c3b22f">More...</a><br /></td></tr>
@@ -234,7 +234,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memdesc:a5293a8f00869af77ce8036312d78591c"><td class="mdescLeft">&#160;</td><td class="mdescRight">stream input (when non-null)  <a href="#a5293a8f00869af77ce8036312d78591c">More...</a><br /></td></tr>
 <tr class="separator:a5293a8f00869af77ce8036312d78591c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ca4ea90ef6f28c106a6811ff21bcc2b"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a4ca4ea90ef6f28c106a6811ff21bcc2b">size_</a></td></tr>
-<tr class="memdesc:a4ca4ea90ef6f28c106a6811ff21bcc2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">size of the remaining input in bytes (size_ == 0 may indicate unset value)  <a href="#a4ca4ea90ef6f28c106a6811ff21bcc2b">More...</a><br /></td></tr>
+<tr class="memdesc:a4ca4ea90ef6f28c106a6811ff21bcc2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">size of the remaining input in bytes (size_ == 0 may indicate size is not set)  <a href="#a4ca4ea90ef6f28c106a6811ff21bcc2b">More...</a><br /></td></tr>
 <tr class="separator:a4ca4ea90ef6f28c106a6811ff21bcc2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fb61be8907f3204e7b3583aaa5b72da"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a2fb61be8907f3204e7b3583aaa5b72da">utf8_</a> [8]</td></tr>
 <tr class="memdesc:a2fb61be8907f3204e7b3583aaa5b72da"><td class="mdescLeft">&#160;</td><td class="mdescRight">UTF-8 normalization buffer.  <a href="#a2fb61be8907f3204e7b3583aaa5b72da">More...</a><br /></td></tr>
@@ -1404,7 +1404,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>char string input (when non-null) of length <a class="el" href="classreflex_1_1_input.html#a4ca4ea90ef6f28c106a6811ff21bcc2b" title="size of the remaining input in bytes (size_ == 0 may indicate unset value) ">reflex::Input::size_</a> </p>
+<p>char string input (when non-null) of length <a class="el" href="classreflex_1_1_input.html#a4ca4ea90ef6f28c106a6811ff21bcc2b" title="size of the remaining input in bytes (size_ == 0 may indicate size is not set) ">reflex::Input::size_</a> </p>
 
 </div>
 </div>
@@ -1492,7 +1492,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>size of the remaining input in bytes (size_ == 0 may indicate unset value) </p>
+<p>size of the remaining input in bytes (size_ == 0 may indicate size is not set) </p>
 
 </div>
 </div>
@@ -1590,7 +1590,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Sep 29 2019 17:26:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Oct 23 2019 10:59:12 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
