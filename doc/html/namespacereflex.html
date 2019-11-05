@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Oct 23 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Nov 5 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -195,6 +195,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a2fe93907a6b71a3e0b7688bec72638e4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a2fe93907a6b71a3e0b7688bec72638e4">utf8</a> (const char *s, const char **r=NULL)</td></tr>
 <tr class="memdesc:a2fe93907a6b71a3e0b7688bec72638e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS, returns REFLEX_NONCHAR for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove any limits on UTF-8 encodings up to 6 bytes).  <a href="#a2fe93907a6b71a3e0b7688bec72638e4">More...</a><br /></td></tr>
 <tr class="separator:a2fe93907a6b71a3e0b7688bec72638e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b96269b32fa93759f21bf76427aa3fd"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a0b96269b32fa93759f21bf76427aa3fd">wcs</a> (const char *s, size_t n)</td></tr>
+<tr class="memdesc:a0b96269b32fa93759f21bf76427aa3fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 string to wide string.  <a href="#a0b96269b32fa93759f21bf76427aa3fd">More...</a><br /></td></tr>
+<tr class="separator:a0b96269b32fa93759f21bf76427aa3fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a713b79db623aa036afa3aa7f4fda8d5b"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a713b79db623aa036afa3aa7f4fda8d5b">wcs</a> (const std::string &amp;s)</td></tr>
+<tr class="memdesc:a713b79db623aa036afa3aa7f4fda8d5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 string to wide string.  <a href="#a713b79db623aa036afa3aa7f4fda8d5b">More...</a><br /></td></tr>
+<tr class="separator:a713b79db623aa036afa3aa7f4fda8d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="ab659f1b759d66631c2e2e32771af1200"></a>
@@ -511,7 +517,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><div class="memdoc">
 
 <p>Check ASCII word-like character <code>[A-Za-z0-9_]</code>, permitting the character range 0..303 (0x12F) and EOF. </p>
-<dl class="section return"><dt>Returns</dt><dd>nonzero if argument c is in <code>[A-Za-z0-9_]</code>, zero otherwise. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>nonzero if argument c is in <code>[A-Za-z0-9_]</code>, zero otherwise </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">c</td><td>Character to check </td></tr>
@@ -558,7 +564,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><div class="memdoc">
 
 <p>Convert an 8-bit ASCII + Latin-1 Supplement range [a,b] to a regex pattern. </p>
-<dl class="section return"><dt>Returns</dt><dd>regex string to match the UCS range encoded in UTF-8. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>regex string to match the UCS range encoded in UTF-8 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>lower bound of UCS range </td></tr>
@@ -746,7 +752,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><div class="memdoc">
 
 <p>Convert a UCS-4 range [a,b] to a UTF-8 regex pattern. </p>
-<dl class="section return"><dt>Returns</dt><dd>regex string to match the UCS range encoded in UTF-8. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>regex string to match the UCS range encoded in UTF-8 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>lower bound of UCS range </td></tr>
@@ -793,7 +799,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><div class="memdoc">
 
 <p>Convert UCS-4 to UTF-8, fills with REFLEX_NONCHAR_UTF8 when out of range, or unrestricted UTF-8 with WITH_UTF8_UNRESTRICTED. </p>
-<dl class="section return"><dt>Returns</dt><dd>length (in bytes) of UTF-8 character sequence stored in s. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>length (in bytes) of UTF-8 character sequence stored in s </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">c</td><td>UCS-4 character U+0000 to U+10ffff (unless WITH_UTF8_UNRESTRICTED) </td></tr>
@@ -837,7 +843,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><div class="memdoc">
 
 <p>Convert UTF-8 to UCS, returns REFLEX_NONCHAR for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove any limits on UTF-8 encodings up to 6 bytes). </p>
-<dl class="section return"><dt>Returns</dt><dd>UCS character. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>UCS character </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">s</td><td>points to the buffer with UTF-8 (1 to 6 bytes) </td></tr>
@@ -848,10 +854,87 @@ template&lt;typename S1 , typename S2 &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a0b96269b32fa93759f21bf76427aa3fd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::wstring reflex::wcs </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert UTF-8 string to wide string. </p>
+<dl class="section return"><dt>Returns</dt><dd>wide string </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>string with UTF-8 to convert </td></tr>
+    <tr><td class="paramname">n</td><td>length of the string to convert </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a713b79db623aa036afa3aa7f4fda8d5b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::wstring reflex::wcs </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert UTF-8 string to wide string. </p>
+<dl class="section return"><dt>Returns</dt><dd>wide string </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>string with UTF-8 to convert </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Oct 23 2019 10:59:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Nov 5 2019 09:33:50 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

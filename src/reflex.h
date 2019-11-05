@@ -65,7 +65,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "1.4.4"
+#define REFLEX_VERSION "1.5.0"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -186,27 +186,27 @@ class Reflex
   const char *SGR(const char *code) { return color_term ? code : ""; }
 
  protected:
-  StringMap     options;       ///< maps option name (from the options_table) to its option value
-  LibraryMap    libraries;     ///< maps regex library name ("reflex", "boost", etc) to library info
-  Library      *library;       ///< the regex library selected
-  Strings       conditions;    ///< "INITIAL" start condition etc. defined with %x name
-  Strings       patterns;      ///< regex patterns for each start condition
-  Starts        inclusive;     ///< inclusive start conditions
-  StringMap     definitions;   ///< map of {name} to regex
-  RulesMap      rules;         ///< <Start_i>regex_j action for Start i Rule j
-  Codes         section_top;   ///< %top{ user code %} in section 1 container
-  Codes         section_class; ///< %class{ class code %} in section 1 container
-  Codes         section_init;  ///< %init{ init code %} in section 1 container
-  Codes         section_1;     ///< %{ user code %} in section 1 container
-  CodesMap      section_2;     ///< lexer user code in section 2 container
-  Codes         section_3;     ///< main user code in section 3 container
-  std::string   infile;        ///< input file name
-  reflex::Input in;            ///< input lex spec
-  std::ostream *out;           ///< output stream
-  std::string   line;          ///< current line read from input
-  size_t        lineno;        ///< current line number at input
-  size_t        linelen;       ///< current line length
-  bool          color_term;    ///< terminal supports colors
+  StringMap             options;       ///< maps option name (from the options_table) to its option value
+  LibraryMap            libraries;     ///< maps regex library name ("reflex", "boost", etc) to library info
+  Library              *library;       ///< the regex library selected
+  Strings               conditions;    ///< "INITIAL" start condition etc. defined with %x name
+  Strings               patterns;      ///< regex patterns for each start condition
+  Starts                inclusive;     ///< inclusive start conditions
+  StringMap             definitions;   ///< map of {name} to regex
+  RulesMap              rules;         ///< <Start_i>regex_j action for Start i Rule j
+  Codes                 section_top;   ///< %top{ user code %} in section 1 container
+  Codes                 section_class; ///< %class{ class code %} in section 1 container
+  Codes                 section_init;  ///< %init{ init code %} in section 1 container
+  Codes                 section_1;     ///< %{ user code %} in section 1 container
+  CodesMap              section_2;     ///< lexer user code in section 2 container
+  Codes                 section_3;     ///< main user code in section 3 container
+  std::string           infile;        ///< input file name
+  reflex::BufferedInput in;            ///< input lex spec
+  std::ostream         *out;           ///< output stream
+  std::string           line;          ///< current line read from input
+  size_t                lineno;        ///< current line number at input
+  size_t                linelen;       ///< current line length
+  bool                  color_term;    ///< terminal supports colors
 };
 
 #endif

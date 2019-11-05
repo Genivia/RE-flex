@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::BufferedInput Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Oct 23 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Nov 5 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -100,13 +100,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a98937101d21ff72e1662cbde16bafee3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#a98937101d21ff72e1662cbde16bafee3">BufferedInput</a> ()</td></tr>
 <tr class="separator:a98937101d21ff72e1662cbde16bafee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3225216eb7c006f05948727f7c28e821"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#a3225216eb7c006f05948727f7c28e821">BufferedInput</a> (const <a class="el" href="classreflex_1_1_buffered_input.html">BufferedInput</a> &amp;input)</td></tr>
-<tr class="memdesc:a3225216eb7c006f05948727f7c28e821"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct buffered input.  <a href="#a3225216eb7c006f05948727f7c28e821">More...</a><br /></td></tr>
+<tr class="memdesc:a3225216eb7c006f05948727f7c28e821"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor.  <a href="#a3225216eb7c006f05948727f7c28e821">More...</a><br /></td></tr>
 <tr class="separator:a3225216eb7c006f05948727f7c28e821"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a28d05f4edc92b9dbb1c08a0f3170e0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#a2a28d05f4edc92b9dbb1c08a0f3170e0">BufferedInput</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;input)</td></tr>
-<tr class="memdesc:a2a28d05f4edc92b9dbb1c08a0f3170e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct buffered input.  <a href="#a2a28d05f4edc92b9dbb1c08a0f3170e0">More...</a><br /></td></tr>
+<tr class="memdesc:a2a28d05f4edc92b9dbb1c08a0f3170e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct buffered input from unbuffered input.  <a href="#a2a28d05f4edc92b9dbb1c08a0f3170e0">More...</a><br /></td></tr>
 <tr class="separator:a2a28d05f4edc92b9dbb1c08a0f3170e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae45e77c0e90c0089cc788b236433c02e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_buffered_input.html">BufferedInput</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#ae45e77c0e90c0089cc788b236433c02e">operator=</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;input)</td></tr>
-<tr class="memdesc:ae45e77c0e90c0089cc788b236433c02e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment operator.  <a href="#ae45e77c0e90c0089cc788b236433c02e">More...</a><br /></td></tr>
+<tr class="memdesc:ae45e77c0e90c0089cc788b236433c02e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator from unbuffered input.  <a href="#ae45e77c0e90c0089cc788b236433c02e">More...</a><br /></td></tr>
 <tr class="separator:ae45e77c0e90c0089cc788b236433c02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dfbf5d174a0f7ab00af078941a40310"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_buffered_input.html">BufferedInput</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#a0dfbf5d174a0f7ab00af078941a40310">operator=</a> (const <a class="el" href="classreflex_1_1_buffered_input.html">BufferedInput</a> &amp;input)</td></tr>
 <tr class="memdesc:a0dfbf5d174a0f7ab00af078941a40310"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment operator.  <a href="#a0dfbf5d174a0f7ab00af078941a40310">More...</a><br /></td></tr>
@@ -122,9 +122,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5b2ad851e658935278c83ef32490521b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#a5b2ad851e658935278c83ef32490521b">eof</a> ()</td></tr>
 <tr class="memdesc:a5b2ad851e658935278c83ef32490521b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if input reached EOF.  <a href="#a5b2ad851e658935278c83ef32490521b">More...</a><br /></td></tr>
 <tr class="separator:a5b2ad851e658935278c83ef32490521b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5d1a637f524c1f68dbd5d21bf892642"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#ab5d1a637f524c1f68dbd5d21bf892642">peek</a> ()</td></tr>
+<tr class="memdesc:ab5d1a637f524c1f68dbd5d21bf892642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached.  <a href="#ab5d1a637f524c1f68dbd5d21bf892642">More...</a><br /></td></tr>
+<tr class="separator:ab5d1a637f524c1f68dbd5d21bf892642"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45889cf82c631c42079969798dd37893"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#a45889cf82c631c42079969798dd37893">get</a> ()</td></tr>
 <tr class="memdesc:a45889cf82c631c42079969798dd37893"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached.  <a href="#a45889cf82c631c42079969798dd37893">More...</a><br /></td></tr>
 <tr class="separator:a45889cf82c631c42079969798dd37893"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad09e26415f8ac625ecd7e62932bd4dc1"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#ad09e26415f8ac625ecd7e62932bd4dc1">get</a> (char *s, size_t n)</td></tr>
+<tr class="memdesc:ad09e26415f8ac625ecd7e62932bd4dc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy character sequence data into buffer.  <a href="#ad09e26415f8ac625ecd7e62932bd4dc1">More...</a><br /></td></tr>
+<tr class="separator:ad09e26415f8ac625ecd7e62932bd4dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreflex_1_1_input"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreflex_1_1_input')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreflex_1_1_input.html">reflex::Input</a></td></tr>
 <tr class="memitem:a8b27ba4af25d4add45d0e09bc2420e22 inherit pub_methods_classreflex_1_1_input"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a8b27ba4af25d4add45d0e09bc2420e22">Input</a> ()</td></tr>
 <tr class="memdesc:a8b27ba4af25d4add45d0e09bc2420e22 inherit pub_methods_classreflex_1_1_input"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct empty input character sequence.  <a href="#a8b27ba4af25d4add45d0e09bc2420e22">More...</a><br /></td></tr>
@@ -154,16 +160,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a02c30dabe3972582d662517d42cf75a4 inherit pub_methods_classreflex_1_1_input"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a pointer to a std::wstring (may contain UTF-16 surrogate pairs).  <a href="#a02c30dabe3972582d662517d42cf75a4">More...</a><br /></td></tr>
 <tr class="separator:a02c30dabe3972582d662517d42cf75a4 inherit pub_methods_classreflex_1_1_input"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13135ec6cf70ed5d16396ad2db5b0c7b inherit pub_methods_classreflex_1_1_input"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a13135ec6cf70ed5d16396ad2db5b0c7b">Input</a> (FILE *<a class="el" href="classreflex_1_1_input.html#a9f64e5c813a08fd7a65819074ffcd20a">file</a>)</td></tr>
-<tr class="memdesc:a13135ec6cf70ed5d16396ad2db5b0c7b inherit pub_methods_classreflex_1_1_input"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.  <a href="#a13135ec6cf70ed5d16396ad2db5b0c7b">More...</a><br /></td></tr>
+<tr class="memdesc:a13135ec6cf70ed5d16396ad2db5b0c7b inherit pub_methods_classreflex_1_1_input"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32.  <a href="#a13135ec6cf70ed5d16396ad2db5b0c7b">More...</a><br /></td></tr>
 <tr class="separator:a13135ec6cf70ed5d16396ad2db5b0c7b inherit pub_methods_classreflex_1_1_input"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a609f0e4676584113831ea9bff651dada inherit pub_methods_classreflex_1_1_input"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a609f0e4676584113831ea9bff651dada">Input</a> (FILE *<a class="el" href="classreflex_1_1_input.html#a9f64e5c813a08fd7a65819074ffcd20a">file</a>, <a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a> enc, const unsigned short *page=NULL)</td></tr>
-<tr class="memdesc:a609f0e4676584113831ea9bff651dada inherit pub_methods_classreflex_1_1_input"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32, use stdin if file == NULL.  <a href="#a609f0e4676584113831ea9bff651dada">More...</a><br /></td></tr>
+<tr class="memdesc:a609f0e4676584113831ea9bff651dada inherit pub_methods_classreflex_1_1_input"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from an open FILE* file descriptor, supports UTF-8 conversion from UTF-16 and UTF-32.  <a href="#a609f0e4676584113831ea9bff651dada">More...</a><br /></td></tr>
 <tr class="separator:a609f0e4676584113831ea9bff651dada inherit pub_methods_classreflex_1_1_input"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a25a1b7ebdda31f175e0139713212f1 inherit pub_methods_classreflex_1_1_input"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a2a25a1b7ebdda31f175e0139713212f1">Input</a> (std::istream &amp;<a class="el" href="classreflex_1_1_input.html#a42f00a3d62dd4627413a9f8180f2860b">istream</a>)</td></tr>
 <tr class="memdesc:a2a25a1b7ebdda31f175e0139713212f1 inherit pub_methods_classreflex_1_1_input"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a std::istream.  <a href="#a2a25a1b7ebdda31f175e0139713212f1">More...</a><br /></td></tr>
 <tr class="separator:a2a25a1b7ebdda31f175e0139713212f1 inherit pub_methods_classreflex_1_1_input"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5a96b263a02333550b1d7d6cd21d776 inherit pub_methods_classreflex_1_1_input"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#af5a96b263a02333550b1d7d6cd21d776">Input</a> (std::istream *<a class="el" href="classreflex_1_1_input.html#a42f00a3d62dd4627413a9f8180f2860b">istream</a>)</td></tr>
-<tr class="memdesc:af5a96b263a02333550b1d7d6cd21d776 inherit pub_methods_classreflex_1_1_input"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a pointer to a std::istream, use stdin if istream == NULL.  <a href="#af5a96b263a02333550b1d7d6cd21d776">More...</a><br /></td></tr>
+<tr class="memdesc:af5a96b263a02333550b1d7d6cd21d776 inherit pub_methods_classreflex_1_1_input"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct input character sequence from a pointer to a std::istream.  <a href="#af5a96b263a02333550b1d7d6cd21d776">More...</a><br /></td></tr>
 <tr class="separator:af5a96b263a02333550b1d7d6cd21d776 inherit pub_methods_classreflex_1_1_input"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a822489aba32803c08ed6db9f50f2caf5 inherit pub_methods_classreflex_1_1_input"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_input.html">Input</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a822489aba32803c08ed6db9f50f2caf5">operator=</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;input)</td></tr>
 <tr class="memdesc:a822489aba32803c08ed6db9f50f2caf5 inherit pub_methods_classreflex_1_1_input"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment operator.  <a href="#a822489aba32803c08ed6db9f50f2caf5">More...</a><br /></td></tr>
@@ -242,7 +248,7 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:ad47636582d36c83d3e852281fcadf4b9"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#ad47636582d36c83d3e852281fcadf4b9">SIZE</a> = 8192</td></tr>
+<tr class="memitem:ad47636582d36c83d3e852281fcadf4b9"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_buffered_input.html#ad47636582d36c83d3e852281fcadf4b9">SIZE</a> = 16384</td></tr>
 <tr class="memdesc:ad47636582d36c83d3e852281fcadf4b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffer size.  <a href="#ad47636582d36c83d3e852281fcadf4b9">More...</a><br /></td></tr>
 <tr class="separator:ad47636582d36c83d3e852281fcadf4b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -339,7 +345,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct buffered input. </p>
+<p>Copy constructor. </p>
 
 </div>
 </div>
@@ -365,7 +371,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct buffered input. </p>
+<p>Construct buffered input from unbuffered input. </p>
 
 </div>
 </div>
@@ -392,7 +398,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Check if input reached EOF. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if input is at EOF and no characters are available. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if input is at EOF and no characters are available </dd></dl>
 
 </div>
 </div>
@@ -421,6 +427,49 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ad09e26415f8ac625ecd7e62932bd4dc1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::BufferedInput::get </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy character sequence data into buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>points to the string buffer to fill with input </td></tr>
+    <tr><td class="paramname">n</td><td>size of buffer pointed to by s </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a37ecf91f3d350f08bbaf970376a86a81"></a>
 <div class="memitem">
 <div class="memproto">
@@ -443,7 +492,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Check if input is available. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if a non-empty sequence of characters is available to get. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if a non-empty sequence of characters is available to get </dd></dl>
 
 </div>
 </div>
@@ -467,7 +516,7 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>true if a non-empty sequence of characters is available to get. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if a non-empty sequence of characters is available to get </dd></dl>
 
 </div>
 </div>
@@ -493,7 +542,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Copy assignment operator. </p>
+<p>Assignment operator from unbuffered input. </p>
 
 </div>
 </div>
@@ -523,6 +572,31 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ab5d1a637f524c1f68dbd5d21bf892642"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int reflex::BufferedInput::peek </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Peek a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. </p>
+
+</div>
+</div>
 <a class="anchor" id="a3711c48f04f6431bf79ce3c20c9a4e2a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -545,7 +619,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not determinable from a <code>FILE*</code> or <code>std::istream</code> source). </p>
-<dl class="section return"><dt>Returns</dt><dd>the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable e.g. when reading from standard input. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the nonzero number of ASCII/UTF-8 bytes available to read, or zero when source is empty or if size is not determinable e.g. when reading from standard input </dd></dl>
 
 </div>
 </div>
@@ -618,7 +692,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const size_t reflex::BufferedInput::SIZE = 8192</td>
+          <td class="memname">const size_t reflex::BufferedInput::SIZE = 16384</td>
         </tr>
       </table>
   </td>
@@ -638,7 +712,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Oct 23 2019 10:59:12 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Nov 5 2019 09:33:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

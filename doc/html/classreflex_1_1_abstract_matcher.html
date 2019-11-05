@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Oct 23 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Nov 5 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -169,13 +169,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aaf1c25cf25951b7eeda7aa50d4736fd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns pointer to the end of the matched text, a constant-time operation.  <a href="#aaf1c25cf25951b7eeda7aa50d4736fd4">More...</a><br /></td></tr>
 <tr class="separator:aaf1c25cf25951b7eeda7aa50d4736fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a009bad2d87f9bc2f18a9ae52cc08b9e1"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1">text</a> ()</td></tr>
-<tr class="memdesc:a009bad2d87f9bc2f18a9ae52cc08b9e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operation.  <a href="#a009bad2d87f9bc2f18a9ae52cc08b9e1">More...</a><br /></td></tr>
+<tr class="memdesc:a009bad2d87f9bc2f18a9ae52cc08b9e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-time operation.  <a href="#a009bad2d87f9bc2f18a9ae52cc08b9e1">More...</a><br /></td></tr>
 <tr class="separator:a009bad2d87f9bc2f18a9ae52cc08b9e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c1d2913a158699703eee6d5f603701b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a9c1d2913a158699703eee6d5f603701b">str</a> () const </td></tr>
-<tr class="memdesc:a9c1d2913a158699703eee6d5f603701b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the text matched as a string, a copy of <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a>, may include matched \0s.  <a href="#a9c1d2913a158699703eee6d5f603701b">More...</a><br /></td></tr>
+<tr class="memdesc:a9c1d2913a158699703eee6d5f603701b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the text matched as a string, a copy of <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>, may include matched \0s.  <a href="#a9c1d2913a158699703eee6d5f603701b">More...</a><br /></td></tr>
 <tr class="separator:a9c1d2913a158699703eee6d5f603701b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28cef361d991985fc4b28166d91ee15d"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a28cef361d991985fc4b28166d91ee15d">wstr</a> () const </td></tr>
-<tr class="memdesc:a28cef361d991985fc4b28166d91ee15d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the match as a wide string, converted from UTF-8 <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a>, may include matched \0s.  <a href="#a28cef361d991985fc4b28166d91ee15d">More...</a><br /></td></tr>
+<tr class="memdesc:a28cef361d991985fc4b28166d91ee15d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the match as a wide string, converted from UTF-8 <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>, may include matched \0s.  <a href="#a28cef361d991985fc4b28166d91ee15d">More...</a><br /></td></tr>
 <tr class="separator:a28cef361d991985fc4b28166d91ee15d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb5fec59e6c6a86b8cf405c40f93d1de"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#adb5fec59e6c6a86b8cf405c40f93d1de">size</a> () const </td></tr>
 <tr class="memdesc:adb5fec59e6c6a86b8cf405c40f93d1de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the matched text in number of bytes, including matched \0s, a constant-time operation.  <a href="#adb5fec59e6c6a86b8cf405c40f93d1de">More...</a><br /></td></tr>
@@ -192,15 +192,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3bbfcc6386048d9c3613f7de919ba242"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a3bbfcc6386048d9c3613f7de919ba242">lineno</a> ()</td></tr>
 <tr class="memdesc:a3bbfcc6386048d9c3613f7de919ba242"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates and returns the starting line number of the match in the input character sequence.  <a href="#a3bbfcc6386048d9c3613f7de919ba242">More...</a><br /></td></tr>
 <tr class="separator:a3bbfcc6386048d9c3613f7de919ba242"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0effb0f81dc4913f09efef0836690fa9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a0effb0f81dc4913f09efef0836690fa9">lines</a> () const </td></tr>
-<tr class="memdesc:a0effb0f81dc4913f09efef0836690fa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of lines that the match spans.  <a href="#a0effb0f81dc4913f09efef0836690fa9">More...</a><br /></td></tr>
-<tr class="separator:a0effb0f81dc4913f09efef0836690fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1258c856660344404af7e2019450c727"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a1258c856660344404af7e2019450c727">lines</a> ()</td></tr>
+<tr class="memdesc:a1258c856660344404af7e2019450c727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of lines that the match spans.  <a href="#a1258c856660344404af7e2019450c727">More...</a><br /></td></tr>
+<tr class="separator:a1258c856660344404af7e2019450c727"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51527a637b1964627dd34c722d905b65"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a51527a637b1964627dd34c722d905b65">columno</a> ()</td></tr>
-<tr class="memdesc:a51527a637b1964627dd34c722d905b65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates and returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).  <a href="#a51527a637b1964627dd34c722d905b65">More...</a><br /></td></tr>
+<tr class="memdesc:a51527a637b1964627dd34c722d905b65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates and returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each.  <a href="#a51527a637b1964627dd34c722d905b65">More...</a><br /></td></tr>
 <tr class="separator:a51527a637b1964627dd34c722d905b65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afebecc394164677b4ad49f68478e61d5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#afebecc394164677b4ad49f68478e61d5">columns</a> () const </td></tr>
-<tr class="memdesc:afebecc394164677b4ad49f68478e61d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).  <a href="#afebecc394164677b4ad49f68478e61d5">More...</a><br /></td></tr>
-<tr class="separator:afebecc394164677b4ad49f68478e61d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84fe081ea4237a44ea659c5400fffccd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a84fe081ea4237a44ea659c5400fffccd">columns</a> ()</td></tr>
+<tr class="memdesc:a84fe081ea4237a44ea659c5400fffccd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each.  <a href="#a84fe081ea4237a44ea659c5400fffccd">More...</a><br /></td></tr>
+<tr class="separator:a84fe081ea4237a44ea659c5400fffccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc573eafc849b275d21b114abe1ea570"><td class="memItemLeft" align="right" valign="top">std::pair&lt; size_t, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#abc573eafc849b275d21b114abe1ea570">pair</a> () const </td></tr>
 <tr class="memdesc:abc573eafc849b275d21b114abe1ea570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns std::pair&lt;size_t,std::string&gt;(<a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a9c1d2913a158699703eee6d5f603701b" title="Returns the text matched as a string, a copy of text(), may include matched \0s. ">str()</a>), useful for tokenizing input into containers of pairs.  <a href="#abc573eafc849b275d21b114abe1ea570">More...</a><br /></td></tr>
 <tr class="separator:abc573eafc849b275d21b114abe1ea570"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -241,10 +241,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac17b43ef74d35dc503f8057ec410a3fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this matcher matched text that ends a word.  <a href="#ac17b43ef74d35dc503f8057ec410a3fa">More...</a><br /></td></tr>
 <tr class="separator:ac17b43ef74d35dc503f8057ec410a3fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a827817fd1ed8edbe8eec84eeefa8a88e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a827817fd1ed8edbe8eec84eeefa8a88e">input</a> ()</td></tr>
-<tr class="memdesc:a827817fd1ed8edbe8eec84eeefa8a88e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next 8-bit character (unsigned char 0..255 or EOF) from the input character sequence, while preserving the current <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a> match (but pointer returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a> may change; warning: does not preserve the yytext string pointer when options &ndash;flex and &ndash;bison are used).  <a href="#a827817fd1ed8edbe8eec84eeefa8a88e">More...</a><br /></td></tr>
+<tr class="memdesc:a827817fd1ed8edbe8eec84eeefa8a88e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next 8-bit character (unsigned char 0..255 or EOF) from the input character sequence, while preserving the current <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> match (but pointer returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> may change; warning: does not preserve the yytext string pointer when options &ndash;flex and &ndash;bison are used).  <a href="#a827817fd1ed8edbe8eec84eeefa8a88e">More...</a><br /></td></tr>
 <tr class="separator:a827817fd1ed8edbe8eec84eeefa8a88e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ee94acd13edc05acfa087499d650a8f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a6ee94acd13edc05acfa087499d650a8f">winput</a> ()</td></tr>
-<tr class="memdesc:a6ee94acd13edc05acfa087499d650a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next wide character (unsigned 0..U+10FFFF or EOF) from the input character sequence, while preserving the current <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a> match (but pointer returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a> may change; warning: does not preserve the yytext string pointer when options &ndash;flex and &ndash;bison are used).  <a href="#a6ee94acd13edc05acfa087499d650a8f">More...</a><br /></td></tr>
+<tr class="memdesc:a6ee94acd13edc05acfa087499d650a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next wide character (unsigned 0..U+10FFFF or EOF) from the input character sequence, while preserving the current <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> match (but pointer returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> may change; warning: does not preserve the yytext string pointer when options &ndash;flex and &ndash;bison are used).  <a href="#a6ee94acd13edc05acfa087499d650a8f">More...</a><br /></td></tr>
 <tr class="separator:a6ee94acd13edc05acfa087499d650a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fb536d7812fcf52017e9d452e96381a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a5fb536d7812fcf52017e9d452e96381a">unput</a> (char c)</td></tr>
 <tr class="memdesc:a5fb536d7812fcf52017e9d452e96381a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put back one character (8-bit) on the input character sequence for matching, invalidates the current match info and text, unput is not honored when matching in-place using buffer(base, size) and nothing has been read yet.  <a href="#a5fb536d7812fcf52017e9d452e96381a">More...</a><br /></td></tr>
@@ -252,14 +252,32 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acb8a8eff9fc980c7028c9399a1310849"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#acb8a8eff9fc980c7028c9399a1310849">peek</a> ()</td></tr>
 <tr class="memdesc:acb8a8eff9fc980c7028c9399a1310849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character available for reading from the current input source.  <a href="#acb8a8eff9fc980c7028c9399a1310849">More...</a><br /></td></tr>
 <tr class="separator:acb8a8eff9fc980c7028c9399a1310849"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cc9812e0bdaadc404a962754ce11226"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a1cc9812e0bdaadc404a962754ce11226">border</a> ()</td></tr>
+<tr class="memdesc:a1cc9812e0bdaadc404a962754ce11226"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the byte offset of the match from the start of the line.  <a href="#a1cc9812e0bdaadc404a962754ce11226">More...</a><br /></td></tr>
+<tr class="separator:a1cc9812e0bdaadc404a962754ce11226"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a771e92db1fbe8cc7dfdd5d4972e7679a"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a771e92db1fbe8cc7dfdd5d4972e7679a">span</a> ()</td></tr>
+<tr class="memdesc:a771e92db1fbe8cc7dfdd5d4972e7679a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enlarge the match to span the entire line of input (excluding <br />
+), return <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>.  <a href="#a771e92db1fbe8cc7dfdd5d4972e7679a">More...</a><br /></td></tr>
+<tr class="separator:a771e92db1fbe8cc7dfdd5d4972e7679a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a017eccee23af26c81f8f91be878c4711"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a017eccee23af26c81f8f91be878c4711">line</a> ()</td></tr>
+<tr class="memdesc:a017eccee23af26c81f8f91be878c4711"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the line of input (excluding <br />
+) as a string containing the matched text as a substring.  <a href="#a017eccee23af26c81f8f91be878c4711">More...</a><br /></td></tr>
+<tr class="separator:a017eccee23af26c81f8f91be878c4711"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95e5d61efacabcb1807922e2d9404a1b"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a95e5d61efacabcb1807922e2d9404a1b">wline</a> ()</td></tr>
+<tr class="memdesc:a95e5d61efacabcb1807922e2d9404a1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the line of input (excluding <br />
+) as a wide string containing the matched text as a substring.  <a href="#a95e5d61efacabcb1807922e2d9404a1b">More...</a><br /></td></tr>
+<tr class="separator:a95e5d61efacabcb1807922e2d9404a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0d31ca9a84d24cb27fac6308426e459"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#af0d31ca9a84d24cb27fac6308426e459">skip</a> (int c)</td></tr>
+<tr class="memdesc:af0d31ca9a84d24cb27fac6308426e459"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip input until the specified character is consumed or EOF is reached.  <a href="#af0d31ca9a84d24cb27fac6308426e459">More...</a><br /></td></tr>
+<tr class="separator:af0d31ca9a84d24cb27fac6308426e459"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab39dc592de42a7e044296f03bee4fdb3"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ab39dc592de42a7e044296f03bee4fdb3">rest</a> ()</td></tr>
 <tr class="memdesc:ab39dc592de42a7e044296f03bee4fdb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch the rest of the input as text, useful for searching/splitting up to n times after which the rest is needed.  <a href="#ab39dc592de42a7e044296f03bee4fdb3">More...</a><br /></td></tr>
 <tr class="separator:ab39dc592de42a7e044296f03bee4fdb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9577e765c5c1be82cb3f9b0ccdaf633f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a9577e765c5c1be82cb3f9b0ccdaf633f">more</a> ()</td></tr>
-<tr class="memdesc:a9577e765c5c1be82cb3f9b0ccdaf633f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append the next match to the currently matched text returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">AbstractMatcher::text</a>, when the next match found is adjacent to the current match.  <a href="#a9577e765c5c1be82cb3f9b0ccdaf633f">More...</a><br /></td></tr>
+<tr class="memdesc:a9577e765c5c1be82cb3f9b0ccdaf633f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append the next match to the currently matched text returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">AbstractMatcher::text</a>, when the next match found is adjacent to the current match.  <a href="#a9577e765c5c1be82cb3f9b0ccdaf633f">More...</a><br /></td></tr>
 <tr class="separator:a9577e765c5c1be82cb3f9b0ccdaf633f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12ca0aa2d6ff88ac26f565ec5660787a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a12ca0aa2d6ff88ac26f565ec5660787a">less</a> (size_t n)</td></tr>
-<tr class="memdesc:a12ca0aa2d6ff88ac26f565ec5660787a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Truncate the <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">AbstractMatcher::text</a> length of the match to n characters in length and reposition for next match.  <a href="#a12ca0aa2d6ff88ac26f565ec5660787a">More...</a><br /></td></tr>
+<tr class="memdesc:a12ca0aa2d6ff88ac26f565ec5660787a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Truncate the <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">AbstractMatcher::text</a> length of the match to n characters in length and reposition for next match.  <a href="#a12ca0aa2d6ff88ac26f565ec5660787a">More...</a><br /></td></tr>
 <tr class="separator:a12ca0aa2d6ff88ac26f565ec5660787a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e8cd6c7fde713a5ac68ec168291e03e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a2e8cd6c7fde713a5ac68ec168291e03e">operator size_t</a> () const </td></tr>
 <tr class="memdesc:a2e8cd6c7fde713a5ac68ec168291e03e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast this matcher to positive integer indicating the nonzero capture index of the matched text in the pattern, same as <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">AbstractMatcher::accept</a>.  <a href="#a2e8cd6c7fde713a5ac68ec168291e03e">More...</a><br /></td></tr>
@@ -407,15 +425,15 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ae712053969ae8fadeee28c1e08421cf5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae712053969ae8fadeee28c1e08421cf5">chr_</a></td></tr>
 <tr class="memdesc:ae712053969ae8fadeee28c1e08421cf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">the character located at <a class="el" href="classreflex_1_1_abstract_matcher.html#a6ce676b26fd73f76186ed5cfb4a9b9dc" title="points to the matched text in buffer AbstractMatcher::buf_ ">AbstractMatcher::txt_</a>[<a class="el" href="classreflex_1_1_abstract_matcher.html#a63c1bbabe9a7e0dd1a8b43b9bce58dfc" title="size of the matched text ">AbstractMatcher::len_</a>]  <a href="#ae712053969ae8fadeee28c1e08421cf5">More...</a><br /></td></tr>
 <tr class="separator:ae712053969ae8fadeee28c1e08421cf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa31133e43feb9f31e14fb8bf76812c33"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#aa31133e43feb9f31e14fb8bf76812c33">bol_</a></td></tr>
+<tr class="memdesc:aa31133e43feb9f31e14fb8bf76812c33"><td class="mdescLeft">&#160;</td><td class="mdescRight">begin of line pointer in buffer  <a href="#aa31133e43feb9f31e14fb8bf76812c33">More...</a><br /></td></tr>
+<tr class="separator:aa31133e43feb9f31e14fb8bf76812c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53795b9e0e5dd91b6016ebb4fa2cc4dd"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a53795b9e0e5dd91b6016ebb4fa2cc4dd">lpb_</a></td></tr>
 <tr class="memdesc:a53795b9e0e5dd91b6016ebb4fa2cc4dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">line pointer in buffer, updated when counting line numbers with <a class="el" href="classreflex_1_1_abstract_matcher.html#a3bbfcc6386048d9c3613f7de919ba242" title="Updates and returns the starting line number of the match in the input character sequence. ">lineno()</a>  <a href="#a53795b9e0e5dd91b6016ebb4fa2cc4dd">More...</a><br /></td></tr>
 <tr class="separator:a53795b9e0e5dd91b6016ebb4fa2cc4dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad237874fc8405e2f701765de41d6cd37"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ad237874fc8405e2f701765de41d6cd37">lno_</a></td></tr>
 <tr class="memdesc:ad237874fc8405e2f701765de41d6cd37"><td class="mdescLeft">&#160;</td><td class="mdescRight">line number count (cached)  <a href="#ad237874fc8405e2f701765de41d6cd37">More...</a><br /></td></tr>
 <tr class="separator:ad237874fc8405e2f701765de41d6cd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92d20b0cfaa79571f201b52289c3fe2c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a92d20b0cfaa79571f201b52289c3fe2c">cno_</a></td></tr>
-<tr class="memdesc:a92d20b0cfaa79571f201b52289c3fe2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">column number count (cached)  <a href="#a92d20b0cfaa79571f201b52289c3fe2c">More...</a><br /></td></tr>
-<tr class="separator:a92d20b0cfaa79571f201b52289c3fe2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf059b818f76cda98cfd8ef059d8586e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#acf059b818f76cda98cfd8ef059d8586e">num_</a></td></tr>
 <tr class="memdesc:acf059b818f76cda98cfd8ef059d8586e"><td class="mdescLeft">&#160;</td><td class="mdescRight">character count (number of characters flushed prior to this buffered input)  <a href="#acf059b818f76cda98cfd8ef059d8586e">More...</a><br /></td></tr>
 <tr class="separator:acf059b818f76cda98cfd8ef059d8586e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -617,7 +635,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns a positive integer (true) indicating the capture index of the matched text in the pattern or zero (false) for a mismatch. </p>
-<dl class="section return"><dt>Returns</dt><dd>nonzero capture index of the match in the pattern, which may be matcher dependent, or zero for a mismatch, or <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a7c42ab60928bcc59f420876e741aae0b" title="accept() returns empty last split at end of input ">Const::EMPTY</a> for the empty last split. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>nonzero capture index of the match in the pattern, which may be matcher dependent, or zero for a mismatch, or <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a7c42ab60928bcc59f420876e741aae0b" title="accept() returns empty last split at end of input ">Const::EMPTY</a> for the empty last split </dd></dl>
 
 </div>
 </div>
@@ -643,7 +661,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if this matcher is at the start of a buffer to read an input character sequence. Use <a class="el" href="classreflex_1_1_abstract_matcher.html#a66f487ab96e7cef1a66e9780dc45e315" title="Reset this matcher&#39;s state to the initial state and set options (when provided). ">reset()</a> to restart reading new input. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if at the begin of an input sequence. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if at the begin of an input sequence </dd></dl>
 
 </div>
 </div>
@@ -669,7 +687,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if this matcher reached the begin of a new line. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if at begin of a new line. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if at begin of a new line </dd></dl>
 
 </div>
 </div>
@@ -695,7 +713,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if this matcher matched text that begins a word. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if this matcher matched text that begins a word. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if this matcher matched text that begins a word </dd></dl>
 
 </div>
 </div>
@@ -721,7 +739,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if this matcher has no more input to read from the input character sequence. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if at end of input and a read attempt will produce EOF. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if at end of input and a read attempt will produce EOF </dd></dl>
 
 </div>
 </div>
@@ -747,7 +765,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if this matcher matched text that ends a word. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if this matcher matched text that ends a word. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if this matcher matched text that ends a word </dd></dl>
 
 </div>
 </div>
@@ -773,7 +791,33 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation, use with <a class="el" href="classreflex_1_1_abstract_matcher.html#aaf1c25cf25951b7eeda7aa50d4736fd4" title="Returns pointer to the end of the matched text, a constant-time operation. ">end()</a> or use <a class="el" href="classreflex_1_1_abstract_matcher.html#adb5fec59e6c6a86b8cf405c40f93d1de" title="Returns the length of the matched text in number of bytes, including matched \0s, a constant-time ope...">size()</a> for text end/length. </p>
-<dl class="section return"><dt>Returns</dt><dd>const char* pointer to the matched text in the buffer. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>const char* pointer to the matched text in the buffer </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a1cc9812e0bdaadc404a962754ce11226"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::AbstractMatcher::border </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the byte offset of the match from the start of the line. </p>
+<dl class="section return"><dt>Returns</dt><dd>border offset </dd></dl>
 
 </div>
 </div>
@@ -800,7 +844,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set buffer block size for reading: use 1 for interactive input, 0 (or omit argument) to buffer all input in which case returns true if all the data could be read and false if a read error occurred. </p>
-<dl class="section return"><dt>Returns</dt><dd>true when successful to buffer all input when n=0. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true when successful to buffer all input when n=0 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">blk</td><td>new block size between 1 and <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer growth factor, buffer is initially 2*BLOCK size, at least 256 ">Const::BLOCK</a>, or 0 to buffer all input (default) </td></tr>
@@ -843,7 +887,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the buffer base containing 0-terminated character data to scan in place (data may be modified), reset/restart the matcher. </p>
-<dl class="section return"><dt>Returns</dt><dd>this matcher. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>this matcher </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">base</td><td>base of the buffer containing 0-terminated character data </td></tr>
@@ -876,7 +920,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the first 8-bit character of the text matched. </p>
-<dl class="section return"><dt>Returns</dt><dd>8-bit char. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>8-bit char </dd></dl>
 
 </div>
 </div>
@@ -928,12 +972,12 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Updates and returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO). </p>
-<dl class="section return"><dt>Returns</dt><dd>column number. </dd></dl>
+<p>Updates and returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each. </p>
+<dl class="section return"><dt>Returns</dt><dd>column number </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="afebecc394164677b4ad49f68478e61d5"></a>
+<a class="anchor" id="a84fe081ea4237a44ea659c5400fffccd"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -944,7 +988,7 @@ Protected Attributes</h2></td></tr>
           <td class="memname">size_t reflex::AbstractMatcher::columns </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -954,8 +998,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO). </p>
-<dl class="section return"><dt>Returns</dt><dd>number of columns. </dd></dl>
+<p>Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each. </p>
+<dl class="section return"><dt>Returns</dt><dd>number of columns </dd></dl>
 
 </div>
 </div>
@@ -981,7 +1025,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns pointer to the end of the matched text, a constant-time operation. </p>
-<dl class="section return"><dt>Returns</dt><dd>const char* pointer to the end of the matched text in the buffer. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>const char* pointer to the end of the matched text in the buffer </dd></dl>
 
 </div>
 </div>
@@ -1007,7 +1051,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the position of the first character of the match in the input character sequence, a constant-time operation. </p>
-<dl class="section return"><dt>Returns</dt><dd>position in the input character sequence. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>position in the input character sequence </dd></dl>
 
 </div>
 </div>
@@ -1075,7 +1119,7 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF. points to the string buffer to fill with input </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF points to the string buffer to fill with input </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">n</td><td>size of buffer pointed to by s </td></tr>
@@ -1107,7 +1151,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the next character read from the current input source. </p>
-<dl class="section return"><dt>Returns</dt><dd>the character read (unsigned char 0..255) or EOF (-1). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the character read (unsigned char 0..255) or EOF (-1) </dd></dl>
 
 </div>
 </div>
@@ -1133,7 +1177,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the next character and grow the buffer to make more room if necessary. </p>
-<dl class="section return"><dt>Returns</dt><dd>the character read (unsigned char 0..255) or EOF (-1). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the character read (unsigned char 0..255) or EOF (-1) </dd></dl>
 
 </div>
 </div>
@@ -1160,7 +1204,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Shift or expand the internal buffer when it is too small to accommodate more input, where the buffer size is doubled when needed. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if buffer was shifted or was enlarged. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if buffer was shifted or was enlarged </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">need</td><td>optional needed space = <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer growth factor, buffer is initially 2*BLOCK size, at least 256 ">Const::BLOCK</a> size by default </td></tr>
@@ -1192,7 +1236,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if this matcher hit the end of the input character sequence. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if EOF was hit (and possibly more input would have changed the result), false otherwise (but next read attempt may return EOF immediately). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if EOF was hit (and possibly more input would have changed the result), false otherwise (but next read attempt may return EOF immediately) </dd></dl>
 
 </div>
 </div>
@@ -1251,7 +1295,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the input character sequence for this matcher and reset/restart the matcher. </p>
-<dl class="section return"><dt>Returns</dt><dd>this matcher. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>this matcher </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">input</td><td>input character sequence for this matcher </td></tr>
@@ -1282,8 +1326,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the next 8-bit character (unsigned char 0..255 or EOF) from the input character sequence, while preserving the current <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a> match (but pointer returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a> may change; warning: does not preserve the yytext string pointer when options &ndash;flex and &ndash;bison are used). </p>
-<dl class="section return"><dt>Returns</dt><dd>the next character (unsigned char 0..255) from input or EOF (-1). </dd></dl>
+<p>Returns the next 8-bit character (unsigned char 0..255 or EOF) from the input character sequence, while preserving the current <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> match (but pointer returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> may change; warning: does not preserve the yytext string pointer when options &ndash;flex and &ndash;bison are used). </p>
+<dl class="section return"><dt>Returns</dt><dd>the next character (unsigned char 0..255) from input or EOF (-1) </dd></dl>
 
 </div>
 </div>
@@ -1335,7 +1379,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the position of the last character + 1 of the match in the input character sequence, a constant-time operation. </p>
-<dl class="section return"><dt>Returns</dt><dd>position in the input character sequence. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>position in the input character sequence </dd></dl>
 
 </div>
 </div>
@@ -1361,13 +1405,40 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Truncate the <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">AbstractMatcher::text</a> length of the match to n characters in length and reposition for next match. </p>
+<p>Truncate the <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">AbstractMatcher::text</a> length of the match to n characters in length and reposition for next match. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">n</td><td>truncated string length </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a017eccee23af26c81f8f91be878c4711"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string reflex::AbstractMatcher::line </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the line of input (excluding <br />
+) as a string containing the matched text as a substring. </p>
+<dl class="section return"><dt>Returns</dt><dd>matching line as a string </dd></dl>
 
 </div>
 </div>
@@ -1393,11 +1464,11 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Updates and returns the starting line number of the match in the input character sequence. </p>
-<dl class="section return"><dt>Returns</dt><dd>line number. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>line number </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a0effb0f81dc4913f09efef0836690fa9"></a>
+<a class="anchor" id="a1258c856660344404af7e2019450c727"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1408,7 +1479,7 @@ Protected Attributes</h2></td></tr>
           <td class="memname">size_t reflex::AbstractMatcher::lines </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -1419,7 +1490,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the number of lines that the match spans. </p>
-<dl class="section return"><dt>Returns</dt><dd>number of lines. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>number of lines </dd></dl>
 
 </div>
 </div>
@@ -1446,7 +1517,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The abstract match operation implemented by pattern matching engines derived from <a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">AbstractMatcher</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>nonzero when input matched the pattern using method <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a57efdf6e79f50205036bc4d55e9908e7" title="AbstractMatcher::match method is to scan input (tokenizer) ">Const::SCAN</a>, <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#af03daba13cf299ee0e6be2e37ebe59b7" title="AbstractMatcher::match method is to find pattern in input. ">Const::FIND</a>, <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a48f6d3e22c2f018fef95b2367a2a9aa4" title="AbstractMatcher::match method is to split input at pattern matches. ">Const::SPLIT</a>, or <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#aa1fe9eb434ef5ff539b01a601977f9ee" title="AbstractMatcher::match method is to match the entire input. ">Const::MATCH</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>nonzero when input matched the pattern using method <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a57efdf6e79f50205036bc4d55e9908e7" title="AbstractMatcher::match method is to scan input (tokenizer) ">Const::SCAN</a>, <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#af03daba13cf299ee0e6be2e37ebe59b7" title="AbstractMatcher::match method is to find pattern in input. ">Const::FIND</a>, <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a48f6d3e22c2f018fef95b2367a2a9aa4" title="AbstractMatcher::match method is to split input at pattern matches. ">Const::SPLIT</a>, or <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#aa1fe9eb434ef5ff539b01a601977f9ee" title="AbstractMatcher::match method is to match the entire input. ">Const::MATCH</a> </dd></dl>
 
 <p>Implemented in <a class="el" href="classreflex_1_1_matcher.html#ab8a1264b3ede06dbba853b1ca0baead5">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a90178f2e17c8dea08fcc8efc2b85339e">reflex::BoostMatcher</a>, and <a class="el" href="classreflex_1_1_std_matcher.html#abf3a32ee06cd50c2ec10c1825ea2aee7">reflex::StdMatcher</a>.</p>
 
@@ -1474,7 +1545,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns nonzero capture index (i.e. true) if the entire input matches this matcher's pattern (and internally caches the true/false result for repeat invocations). </p>
-<dl class="section return"><dt>Returns</dt><dd>nonzero capture index (i.e. true) if the entire input matched this matcher's pattern, zero (i.e. false) otherwise. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>nonzero capture index (i.e. true) if the entire input matched this matcher's pattern, zero (i.e. false) otherwise </dd></dl>
 
 </div>
 </div>
@@ -1499,7 +1570,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Append the next match to the currently matched text returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">AbstractMatcher::text</a>, when the next match found is adjacent to the current match. </p>
+<p>Append the next match to the currently matched text returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">AbstractMatcher::text</a>, when the next match found is adjacent to the current match. </p>
 
 </div>
 </div>
@@ -1525,7 +1596,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Cast this matcher to positive integer indicating the nonzero capture index of the matched text in the pattern, same as <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">AbstractMatcher::accept</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>nonzero capture index of a match, which may be matcher dependent, or zero for a mismatch. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>nonzero capture index of a match, which may be matcher dependent, or zero for a mismatch </dd></dl>
 
 </div>
 </div>
@@ -1551,7 +1622,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Cast the match to std::pair&lt;size_t,std::wstring&gt;(<a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a28cef361d991985fc4b28166d91ee15d" title="Returns the match as a wide string, converted from UTF-8 text(), may include matched \0s...">wstr()</a>), useful for tokenization into containers. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::pair&lt;size_t,std::wstring&gt;(<a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a28cef361d991985fc4b28166d91ee15d" title="Returns the match as a wide string, converted from UTF-8 text(), may include matched \0s...">wstr()</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::pair&lt;size_t,std::wstring&gt;(<a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a28cef361d991985fc4b28166d91ee15d" title="Returns the match as a wide string, converted from UTF-8 text(), may include matched \0s...">wstr()</a>) </dd></dl>
 
 </div>
 </div>
@@ -1577,7 +1648,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Cast this matcher to a std::string of the text matched by this matcher. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::string with matched text. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::string with matched text </dd></dl>
 
 </div>
 </div>
@@ -1603,7 +1674,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Cast this matcher to a std::wstring of the text matched by this matcher. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::wstring converted to UCS from the 0-terminated matched UTF-8 text. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::wstring converted to UCS from the 0-terminated matched UTF-8 text </dd></dl>
 
 </div>
 </div>
@@ -1630,7 +1701,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if matched text is not equal to a string, useful for std::algorithm. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if matched text is not equal to rhs string. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if matched text is not equal to rhs string </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rhs</td><td>rhs string to compare to </td></tr>
@@ -1663,7 +1734,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if matched text is not equal to a string, useful for std::algorithm. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if matched text is not equal to rhs string. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if matched text is not equal to rhs string </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rhs</td><td>rhs string to compare to </td></tr>
@@ -1696,7 +1767,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if capture index is not equal to a given size_t value, useful for std::algorithm. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if capture index is not equal to rhs. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if capture index is not equal to rhs </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rhs</td><td>capture index to compare <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> to </td></tr>
@@ -1729,7 +1800,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if capture index is not equal to a given int value, useful for std::algorithm. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if capture index is not equal to rhs. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if capture index is not equal to rhs </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rhs</td><td>capture index to compare <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> to </td></tr>
@@ -1762,7 +1833,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if matched text is equal to a string, useful for std::algorithm. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if matched text is equal to rhs string. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if matched text is equal to rhs string </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rhs</td><td>rhs string to compare to </td></tr>
@@ -1795,7 +1866,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if matched text is equalt to a string, useful for std::algorithm. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if matched text is equal to rhs string. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if matched text is equal to rhs string </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rhs</td><td>rhs string to compare to </td></tr>
@@ -1828,7 +1899,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if capture index is equal to a given size_t value, useful for std::algorithm. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if capture index is equal to rhs. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if capture index is equal to rhs </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rhs</td><td>capture index to compare <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> to </td></tr>
@@ -1861,7 +1932,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if capture index is equal to a given int value, useful for std::algorithm. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if capture index is equal to rhs. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if capture index is equal to rhs </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rhs</td><td>capture index to compare <a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a> to </td></tr>
@@ -1894,7 +1965,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns captured text as a std::pair&lt;const char*,size_t&gt; with string pointer (non-0-terminated) and length. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::pair of string pointer and length in the captured text, where [0] returns std::pair(<a class="el" href="classreflex_1_1_abstract_matcher.html#a329001b2880a756dd4d6f6fd0192d004" title="Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation...">begin()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#adb5fec59e6c6a86b8cf405c40f93d1de" title="Returns the length of the matched text in number of bytes, including matched \0s, a constant-time ope...">size()</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::pair of string pointer and length in the captured text, where [0] returns std::pair(<a class="el" href="classreflex_1_1_abstract_matcher.html#a329001b2880a756dd4d6f6fd0192d004" title="Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation...">begin()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#adb5fec59e6c6a86b8cf405c40f93d1de" title="Returns the length of the matched text in number of bytes, including matched \0s, a constant-time ope...">size()</a>) </dd></dl>
 
 <p>Implemented in <a class="el" href="classreflex_1_1_std_matcher.html#aa48c631145c803cbda9f3891eccc1b3e">reflex::StdMatcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#aafdb43bb11cab6eac43ba846e17ca33e">reflex::BoostMatcher</a>, and <a class="el" href="classreflex_1_1_matcher.html#acf0031339b3f8426b730a6860e5feba2">reflex::Matcher</a>.</p>
 
@@ -1922,7 +1993,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns std::pair&lt;size_t,std::string&gt;(<a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a9c1d2913a158699703eee6d5f603701b" title="Returns the text matched as a string, a copy of text(), may include matched \0s. ">str()</a>), useful for tokenizing input into containers of pairs. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::pair&lt;size_t,std::string&gt;(<a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a9c1d2913a158699703eee6d5f603701b" title="Returns the text matched as a string, a copy of text(), may include matched \0s. ">str()</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::pair&lt;size_t,std::string&gt;(<a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a9c1d2913a158699703eee6d5f603701b" title="Returns the text matched as a string, a copy of text(), may include matched \0s. ">str()</a>) </dd></dl>
 
 </div>
 </div>
@@ -1948,7 +2019,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Peek at the next character available for reading from the current input source. </p>
-<dl class="section return"><dt>Returns</dt><dd>the character (unsigned char 0..255) or EOF (-1). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the character (unsigned char 0..255) or EOF (-1) </dd></dl>
 
 </div>
 </div>
@@ -1974,7 +2045,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Peek at the next character and grow the buffer to make more room if necessary. </p>
-<dl class="section return"><dt>Returns</dt><dd>the character (unsigned char 0..255) or EOF (-1). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the character (unsigned char 0..255) or EOF (-1) </dd></dl>
 
 </div>
 </div>
@@ -2053,7 +2124,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Fetch the rest of the input as text, useful for searching/splitting up to n times after which the rest is needed. </p>
-<dl class="section return"><dt>Returns</dt><dd>const char* string of the remaining input (wrapped with more input when <a class="el" href="classreflex_1_1_abstract_matcher.html#a046e0696b048d229ea2d77f5010c41e1" title="Returns true if wrapping of input after EOF is supported. ">AbstractMatcher::wrap</a> is defined). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>const char* string of the remaining input (wrapped with more input when <a class="el" href="classreflex_1_1_abstract_matcher.html#a046e0696b048d229ea2d77f5010c41e1" title="Returns true if wrapping of input after EOF is supported. ">AbstractMatcher::wrap</a> is defined) </dd></dl>
 
 </div>
 </div>
@@ -2233,7 +2304,60 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the length of the matched text in number of bytes, including matched \0s, a constant-time operation. </p>
-<dl class="section return"><dt>Returns</dt><dd>match size in bytes. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>match size in bytes </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="af0d31ca9a84d24cb27fac6308426e459"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::AbstractMatcher::skip </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Skip input until the specified character is consumed or EOF is reached. </p>
+
+</div>
+</div>
+<a class="anchor" id="a771e92db1fbe8cc7dfdd5d4972e7679a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* reflex::AbstractMatcher::span </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enlarge the match to span the entire line of input (excluding <br />
+), return <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>const char* span of text for the entire line </dd></dl>
 
 </div>
 </div>
@@ -2258,8 +2382,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the text matched as a string, a copy of <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a>, may include matched \0s. </p>
-<dl class="section return"><dt>Returns</dt><dd>string with text matched. </dd></dl>
+<p>Returns the text matched as a string, a copy of <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>, may include matched \0s. </p>
+<dl class="section return"><dt>Returns</dt><dd>string with text matched </dd></dl>
 
 </div>
 </div>
@@ -2341,8 +2465,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operation. </p>
-<dl class="section return"><dt>Returns</dt><dd>0-terminated const char* string with text matched. </dd></dl>
+<p>Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-time operation. </p>
+<dl class="section return"><dt>Returns</dt><dd>0-terminated const char* string with text matched </dd></dl>
 
 </div>
 </div>
@@ -2425,7 +2549,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the first wide character of the text matched. </p>
-<dl class="section return"><dt>Returns</dt><dd>wide char (UTF-8 converted to <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>wide char (UTF-8 converted to <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a>) </dd></dl>
 
 </div>
 </div>
@@ -2450,8 +2574,35 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the next wide character (unsigned 0..U+10FFFF or EOF) from the input character sequence, while preserving the current <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a> match (but pointer returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a> may change; warning: does not preserve the yytext string pointer when options &ndash;flex and &ndash;bison are used). </p>
-<dl class="section return"><dt>Returns</dt><dd>the next wide character (unsigned 0..U+10FFFF) or EOF (-1). </dd></dl>
+<p>Returns the next wide character (unsigned 0..U+10FFFF or EOF) from the input character sequence, while preserving the current <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> match (but pointer returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> may change; warning: does not preserve the yytext string pointer when options &ndash;flex and &ndash;bison are used). </p>
+<dl class="section return"><dt>Returns</dt><dd>the next wide character (unsigned 0..U+10FFFF) or EOF (-1) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a95e5d61efacabcb1807922e2d9404a1b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::wstring reflex::AbstractMatcher::wline </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the line of input (excluding <br />
+) as a wide string containing the matched text as a substring. </p>
+<dl class="section return"><dt>Returns</dt><dd>matching line as a wide string </dd></dl>
 
 </div>
 </div>
@@ -2477,7 +2628,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns std::pair&lt;size_t,std::wstring&gt;(<a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a28cef361d991985fc4b28166d91ee15d" title="Returns the match as a wide string, converted from UTF-8 text(), may include matched \0s...">wstr()</a>), useful for tokenizing input into containers of pairs. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::pair&lt;size_t,std::wstring&gt;(<a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a28cef361d991985fc4b28166d91ee15d" title="Returns the match as a wide string, converted from UTF-8 text(), may include matched \0s...">wstr()</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::pair&lt;size_t,std::wstring&gt;(<a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">accept()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a28cef361d991985fc4b28166d91ee15d" title="Returns the match as a wide string, converted from UTF-8 text(), may include matched \0s...">wstr()</a>) </dd></dl>
 
 </div>
 </div>
@@ -2503,7 +2654,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if wrapping of input after EOF is supported. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if input was succesfully wrapped. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if input was succesfully wrapped </dd></dl>
 
 </div>
 </div>
@@ -2529,7 +2680,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the length of the matched text in number of wide characters. </p>
-<dl class="section return"><dt>Returns</dt><dd>the length of the match in number of wide (multibyte UTF-8) characters. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the length of the match in number of wide (multibyte UTF-8) characters </dd></dl>
 
 </div>
 </div>
@@ -2554,8 +2705,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the match as a wide string, converted from UTF-8 <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, a constant-time operat...">text()</a>, may include matched \0s. </p>
-<dl class="section return"><dt>Returns</dt><dd>wide string with text matched. </dd></dl>
+<p>Returns the match as a wide string, converted from UTF-8 <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>, may include matched \0s. </p>
+<dl class="section return"><dt>Returns</dt><dd>wide string with text matched </dd></dl>
 
 </div>
 </div>
@@ -2579,6 +2730,28 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>block size for block-based input reading, as set by <a class="el" href="classreflex_1_1_abstract_matcher.html#a0fb96965d228951194f0a2b9ee574dcf" title="Set buffer block size for reading: use 1 for interactive input, 0 (or omit argument) to buffer all in...">AbstractMatcher::buffer</a> </p>
+
+</div>
+</div>
+<a class="anchor" id="aa31133e43feb9f31e14fb8bf76812c33"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* reflex::AbstractMatcher::bol_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>begin of line pointer in buffer </p>
 
 </div>
 </div>
@@ -2645,28 +2818,6 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>the character located at <a class="el" href="classreflex_1_1_abstract_matcher.html#a6ce676b26fd73f76186ed5cfb4a9b9dc" title="points to the matched text in buffer AbstractMatcher::buf_ ">AbstractMatcher::txt_</a>[<a class="el" href="classreflex_1_1_abstract_matcher.html#a63c1bbabe9a7e0dd1a8b43b9bce58dfc" title="size of the matched text ">AbstractMatcher::len_</a>] </p>
-
-</div>
-</div>
-<a class="anchor" id="a92d20b0cfaa79571f201b52289c3fe2c"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t reflex::AbstractMatcher::cno_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>column number count (cached) </p>
 
 </div>
 </div>
@@ -3062,7 +3213,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Oct 23 2019 10:59:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Nov 5 2019 09:33:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

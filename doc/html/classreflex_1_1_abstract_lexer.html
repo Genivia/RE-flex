@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Oct 23 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Nov 5 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -197,10 +197,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0f4cf455c03298f1ca49f118b412d111"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of lines that the match spans.  <a href="#a0f4cf455c03298f1ca49f118b412d111">More...</a><br /></td></tr>
 <tr class="separator:a0f4cf455c03298f1ca49f118b412d111"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7991f7785e86d29c9f64d9991ce47f9e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a7991f7785e86d29c9f64d9991ce47f9e">columno</a> () const </td></tr>
-<tr class="memdesc:a7991f7785e86d29c9f64d9991ce47f9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).  <a href="#a7991f7785e86d29c9f64d9991ce47f9e">More...</a><br /></td></tr>
+<tr class="memdesc:a7991f7785e86d29c9f64d9991ce47f9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each.  <a href="#a7991f7785e86d29c9f64d9991ce47f9e">More...</a><br /></td></tr>
 <tr class="separator:a7991f7785e86d29c9f64d9991ce47f9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cdf0a400fd515dc2141b993a887cfbe"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a8cdf0a400fd515dc2141b993a887cfbe">columns</a> () const </td></tr>
-<tr class="memdesc:a8cdf0a400fd515dc2141b993a887cfbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO).  <a href="#a8cdf0a400fd515dc2141b993a887cfbe">More...</a><br /></td></tr>
+<tr class="memdesc:a8cdf0a400fd515dc2141b993a887cfbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each.  <a href="#a8cdf0a400fd515dc2141b993a887cfbe">More...</a><br /></td></tr>
 <tr class="separator:a8cdf0a400fd515dc2141b993a887cfbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a905c83f6978b3599c43167ae3c7f5b30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a905c83f6978b3599c43167ae3c7f5b30">start</a> (int state)</td></tr>
 <tr class="memdesc:a905c83f6978b3599c43167ae3c7f5b30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transition to the given start condition state.  <a href="#a905c83f6978b3599c43167ae3c7f5b30">More...</a><br /></td></tr>
@@ -374,7 +374,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Reset the matcher and start scanning the given buffer containing 0-terminated character data (data may be modified). </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to *this </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">base</td><td>base of the buffer containing 0-terminated character data </td></tr>
@@ -409,7 +409,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the first 8-bit character of the text matched. </p>
-<dl class="section return"><dt>Returns</dt><dd>8-bit char. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>8-bit char </dd></dl>
 
 </div>
 </div>
@@ -436,8 +436,8 @@ template&lt;typename M &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO). </p>
-<dl class="section return"><dt>Returns</dt><dd>column number. </dd></dl>
+<p>Returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each. </p>
+<dl class="section return"><dt>Returns</dt><dd>column number </dd></dl>
 
 </div>
 </div>
@@ -464,8 +464,8 @@ template&lt;typename M &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each (unless compiled with WITH_BYTE_COLUMNO). </p>
-<dl class="section return"><dt>Returns</dt><dd>number of columns. </dd></dl>
+<p>Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each. </p>
+<dl class="section return"><dt>Returns</dt><dd>number of columns </dd></dl>
 
 </div>
 </div>
@@ -493,7 +493,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Get debug flag value. </p>
-<dl class="section return"><dt>Returns</dt><dd>debug flag value. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>debug flag value </dd></dl>
 
 </div>
 </div>
@@ -576,7 +576,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns true if a matcher was assigned to this lexer for scanning. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if a matcher was assigned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if a matcher was assigned </dd></dl>
 
 </div>
 </div>
@@ -607,7 +607,7 @@ template&lt;typename I &gt; </div>
 </div><div class="memdoc">
 
 <p>Reset the matcher and start scanning from the given input character sequence I. </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to *this </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">input</td><td>a character sequence to scan, e.g. <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a>, char*, wchar_t*, std::string, std::wstring, FILE*, std::istream </td></tr>
@@ -652,7 +652,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Reset the matcher and start scanning from the given byte sequence. </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to *this </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">b</td><td>the byte sequence to scan </td></tr>
@@ -687,7 +687,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the current input character sequence that is being scanned. </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object </dd></dl>
 
 </div>
 </div>
@@ -743,7 +743,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the line number of matched text. </p>
-<dl class="section return"><dt>Returns</dt><dd>line number. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>line number </dd></dl>
 
 </div>
 </div>
@@ -771,7 +771,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the number of lines that the match spans. </p>
-<dl class="section return"><dt>Returns</dt><dd>number of lines. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>number of lines </dd></dl>
 
 </div>
 </div>
@@ -800,7 +800,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Set the matcher (and its current state) for scanning. </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to *this </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">matcher</td><td>points to a matcher object </td></tr>
@@ -834,7 +834,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns a reference to the current matcher. </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to the current matcher. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to the current matcher </dd></dl>
 
 </div>
 </div>
@@ -873,7 +873,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns a new matcher for the given input. </p>
-<dl class="section return"><dt>Returns</dt><dd>pointer to new <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. ">reflex::AbstractLexer::Matcher</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to new <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. ">reflex::AbstractLexer::Matcher</a> </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">input</td><td><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> character sequence to match </td></tr>
@@ -908,7 +908,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the current input character sequence that is being scanned, if none assign std::cin. </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object with input assigned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object with input assigned </dd></dl>
 
 </div>
 </div>
@@ -936,7 +936,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns pointer to the current output stream used to echo text matches to. </p>
-<dl class="section return"><dt>Returns</dt><dd>pointer to the current std::ostream object. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to the current std::ostream object </dd></dl>
 
 </div>
 </div>
@@ -965,7 +965,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Set the current output to the given output stream to echo text matches to. </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to *this </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">os</td><td>output stream to echo text matches to </td></tr>
@@ -999,7 +999,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the current output stream used to echo text matches to. </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to the current std::ostream object. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to the current std::ostream object </dd></dl>
 
 </div>
 </div>
@@ -1108,7 +1108,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns a pointer to the current matcher, NULL if none was set. </p>
-<dl class="section return"><dt>Returns</dt><dd>pointer to the current matcher or NULL if no matcher was set. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to the current matcher or NULL if no matcher was set </dd></dl>
 
 </div>
 </div>
@@ -1238,7 +1238,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the matched text size in number of bytes. </p>
-<dl class="section return"><dt>Returns</dt><dd>size of the matched text. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>size of the matched text </dd></dl>
 
 </div>
 </div>
@@ -1267,7 +1267,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Transition to the given start condition state. </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to *this. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to *this </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>start condition state to transition to </td></tr>
@@ -1301,7 +1301,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the current start condition state. </p>
-<dl class="section return"><dt>Returns</dt><dd>start condition (integer). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>start condition (integer) </dd></dl>
 
 </div>
 </div>
@@ -1329,7 +1329,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns true if the condition state stack is empty. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if the stack is empty, false otherwise. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the stack is empty, false otherwise </dd></dl>
 
 </div>
 </div>
@@ -1357,7 +1357,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the current input character sequence that is being scanned, if none assign stdin. </p>
-<dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object with input assigned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>reference to the current <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object with input assigned </dd></dl>
 
 </div>
 </div>
@@ -1385,7 +1385,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns string with a copy of the text matched. </p>
-<dl class="section return"><dt>Returns</dt><dd>matched text. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>matched text </dd></dl>
 
 </div>
 </div>
@@ -1413,7 +1413,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns string with the text matched. </p>
-<dl class="section return"><dt>Returns</dt><dd>matched text. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>matched text </dd></dl>
 
 </div>
 </div>
@@ -1441,7 +1441,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the stack top start condition state or 0 (INITIAL) if the stack is empty. </p>
-<dl class="section return"><dt>Returns</dt><dd>start condition (integer). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>start condition (integer) </dd></dl>
 
 </div>
 </div>
@@ -1469,7 +1469,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the first wide character of the text matched. </p>
-<dl class="section return"><dt>Returns</dt><dd>wide char (UTF-8 converted to <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>wide char (UTF-8 converted to <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a>) </dd></dl>
 
 </div>
 </div>
@@ -1497,7 +1497,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>The default wrap operation at EOF: do not wrap input. </p>
-<dl class="section return"><dt>Returns</dt><dd>1 (override to return 0 to indicate that new input is available after this invocation so that wrap after EOF is OK). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>1 (override to return 0 to indicate that new input is available after this invocation so that wrap after EOF is OK) </dd></dl>
 
 </div>
 </div>
@@ -1525,7 +1525,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the matched text size in number of (wide) characters. </p>
-<dl class="section return"><dt>Returns</dt><dd>number of (wide) characters matched. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>number of (wide) characters matched </dd></dl>
 
 </div>
 </div>
@@ -1553,7 +1553,7 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns wide string with a copy of the text matched. </p>
-<dl class="section return"><dt>Returns</dt><dd>matched text. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>matched text </dd></dl>
 
 </div>
 </div>
@@ -1780,7 +1780,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Oct 23 2019 10:59:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Nov 5 2019 09:33:50 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

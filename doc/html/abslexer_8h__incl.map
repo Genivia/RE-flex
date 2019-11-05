@@ -1,4 +1,9 @@
 <map id="abslexer.h" name="abslexer.h">
-<area shape="rect" id="node2" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="112,80,211,107"/>
-<area shape="rect" id="node3" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="31,155,123,181"/>
+<area shape="rect" id="node2" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="180,155,279,181"/>
+<area shape="rect" id="node8" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="567,80,705,107"/>
+<area shape="rect" id="node3" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="31,229,123,256"/>
+<area shape="rect" id="node9" href="$convert_8h.html" title="RE/flex regex converter. " alt="" coords="382,155,495,181"/>
+<area shape="rect" id="node13" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="520,155,627,181"/>
+<area shape="rect" id="node15" href="$traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="651,155,749,181"/>
+<area shape="rect" id="node10" href="$error_8h.html" title="RE/flex regex errors. " alt="" coords="434,229,531,256"/>
 </map>

@@ -640,10 +640,14 @@ You can use this method and other methods to obtain the details of a match:
   `begin()`   | returns `const char*` to non-0-terminated text match begin
   `end()`     | returns `const char*` to non-0-terminated text match end
   `rest()`    | returns `const char*` to 0-terminated rest of input
+  `span()`    | returns `const char*` to 0-terminated match enlarged to span the line
+  `line()`    | returns `std::string` line with the matched text as a substring
+  `wline()`   | returns `std::wstring` line with the matched text as a substring
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
   `lineno()`  | returns line number of the match, starting at line 1
-  `columno()` | returns column number of the match, starting at 0
+  `columno()` | returns column number of the match in characters, starting at 0
+  `border()`  | returns the byte offset from the start of the line of the match
   `first()`   | returns input position of the first character of the match
   `last()`    | returns input position of the last + 1 character of the match
   `at_bol()`  | true if matcher reached the begin of a new line `\n`
@@ -706,7 +710,8 @@ The following methods may be used to manipulate the input stream directly:
   `winput()` | returns next wide character from the input, matcher skips it
   `unput(c)` | put char `c` back unto the stream, matcher then takes it
   `peek()`   | returns next 8-bit char from the input without consuming it
-  `rest()`   | returns the remaining input as a non-NULL `char*` string
+  `skip(c)`  | skip input until 8-bit character `c` is consumed
+  `rest()`   | returns the remaining input as a 0-terminated `char*` string
 
 The `input()`, `winput()`, and `peek()` methods return a non-negative character
 code and EOF (-1) when the end of input is reached.
@@ -792,12 +797,13 @@ should include the final zero byte at the end of the string.
 
 @note In fact, the specified string may have any final byte value.  The final
 byte of the string will be set to zero when `text()` or `rest()` are used.
-Only `unput(c)`, `text()`, and `rest()` modify the buffer contents, because
-`text()` and `rest()` require an extra byte at the end of the buffer to make
+Only `unput(c)`, `text()`, `rest()`, and `span()` modify the buffer contents,
+because these functions require an extra byte at the end of the buffer to make
 the strings returned by these methods 0-terminated.  This means that you can
 specify read-only memory of `n` bytes located at address `b` by using
-`buffer(b, n+1)` safely as long as you do not use `unput()`, `text()`, and
-`rest()`, for example to search read-only mmap(2) `PROT_READ` memory.
+`buffer(b, n+1)` safely as long as you do not use `unput()`, `text()`,
+`rest()`, and `span()`, for example to search read-only mmap(2) `PROT_READ`
+memory.
 
 So far we explained how to use `reflex::BoostMatcher` for pattern matching.  We
 can also use the RE/flex `reflex::Matcher` class for pattern matching.  The API
@@ -1815,8 +1821,8 @@ the generated Lexer class and can access the Lexer class members, in this
 example the member variable `herd`.
 
 To modularize specifications of lexers, use <i>`%%include`</i> (or <i>`%%i`</i>
-for short) to include files into \ref reflex-spec-defs of a specification.  For
-example:
+for short) to include one or more files into \ref reflex-spec-defs of a
+specification.  For example:
 
 <div class="alt">
 ~~~{.cpp}
@@ -1837,6 +1843,10 @@ identifiers to the output given some Java source program as input:
     %%
 ~~~
 </div>
+
+Multiple files may be specified with one <i>`%%include`</i>.  Quotes may be
+omitted from the <i>`%%include`</i> argument if the argument has no punctuation
+characters except `.` and `-`, for example <i>`%%include jdefs.l`</i>.
 
 To declare start condition state names use <i>`%%state`</i> (or <i>`%%s`</i>
 for short) to declare inclusive states and use <i>`%%xstate`</i> (or
@@ -1890,6 +1900,7 @@ are the classic Flex actions shown in the second column of this table:
   `columns()`          | *n/a*                | number of columns matched (>=1)
   `lineno()`           | `yylineno`           | line number of match (>=1)
   `columno()`          | *n/a*                | column number of match (>=0)
+  `border()`           | *n/a*                | border of the match (>=0)
   `echo()`             | `ECHO`               | `out().write(text(), size())`
   `in(i)`              | `yyrestart(i)`       | set input to `reflex::Input i`
   `in()`, `in() = &i`  | `*yyin`, `yyin = &i` | get/set `reflex::Input i`
@@ -1915,17 +1926,22 @@ are the classic Flex actions shown in the second column of this table:
   `matcher().columns()`| *n/a*                | same as `columns()`
   `matcher().lineno()` | `yylineno`           | same as `lineno()`
   `matcher().columno()`| *n/a*                | same as `columno()`
+  `matcher().border()` | *n/a*                | same as `border()`
   `matcher().begin()`  | *n/a*                | non-0-terminated text match
   `matcher().end()`    | *n/a*                | non-0-terminated text match end
   `matcher().input()`  | `yyinput()`          | get next 8-bit char from input
   `matcher().winput()` | *n/a*                | get wide character from input
   `matcher().unput(c)` | `unput(c)`           | put back 8-bit char `c`
   `matcher().peek()`   | *n/a*                | peek at next 8-bit char on input
+  `matcher().skip(c)`  | *n/a*                | skip input until 8-bit char `c`
   `matcher().more()`   | `yymore()`           | append next match to this match
   `matcher().less(n)`  | `yyless(n)`          | shrink match length to `n`
   `matcher().first()`  | *n/a*                | first pos of match in input
   `matcher().last()`   | *n/a*                | last pos+1 of match in input
   `matcher().rest()`   | *n/a*                | get rest of input until end
+  `matcher().span()`   | *n/a*                | enlarge match to span line
+  `matcher().line()`   | *n/a*                | get line with the match
+  `matcher().wline()`  | *n/a*                | get line with the match
   `matcher().at_bob()` | *n/a*                | true if at the begin of input
   `matcher().at_end()` | *n/a*                | true if at the end of input
   `matcher().at_bol()` | `YY_AT_BOL()`        | true if at begin of a newline
@@ -1970,6 +1986,10 @@ reached.
 `−−flex`) is invoked!  A matcher is not initially assigned to a lexer when the
 lexer is constructed, leaving `matcher()` undefined.
 
+The `matcher().skip(c)` method skips input until character `c` is consumed.
+This method changes `text()` (and `yytext` with option `−−flex`).  This method
+is more efficient than repeately calling `matcher().input()`.
+
 Use <b>`reflex`</b> options `−−flex` and `−−bison` to enable global Flex
 actions and variables.  This makes Flex actions and variables globally
 accessible outside of \ref reflex-spec-rules, with the exception of
@@ -1990,21 +2010,21 @@ Flex functions take a `yyscan_t` scanner as an extra last argument.  See
 From the first couple of entries in the table shown above you may have guessed
 correctly that `text()` is just a shorthand for `matcher().text()`, since
 `matcher()` is the matcher object associated with the generated Lexer class.
-The same shorthands apply to `str()`, `wstr()`, `size()`, `wsize()`, `lineno()`
-and `columno()`.  Use `text()` for fast access to the matched text.  The
-`str()` method returns a string copy of the match and is less efficient.
-Likewise, `wstr()` returns a wide string copy of the match, converted from
-UTF-8.
+The same shorthands apply to `str()`, `wstr()`, `size()`, `wsize()`,
+`lineno()`, `columno()`, and `border()`.  Use `text()` for fast access to the
+matched text.  The `str()` method returns a string copy of the match and is
+less efficient.  Likewise, `wstr()` returns a wide string copy of the match,
+converted from UTF-8.
 
 The `lineno()` method returns the line number of the match, starting at line 1.
-The `columno()` method returns the column offset of a match, starting at
-column 0.  This method takes tab spacing and wide characters into account,
-unless all of the RE/flex source code is compiled with `WITH_BYTE_COLUMNO` to
-count bytes instead of wide characters and tabs.  A wide character is counted
-as one, thus it does not take the character width of full-width and combining
-Unicode characters into account.  It is recommended to use the `wcwidth`
-function or [wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to
-determine Unicode character widths.
+The `columno()` method returns the column offset of a match from the start of
+the line, beginning at column 0.  This method takes tab spacing and wide
+characters into account.  To obtain the number of bytes from the start of the
+line use `border()`.  A wide character is counted as one, thus it does not take
+the character width of full-width and combining Unicode characters into
+account.  It is recommended to use the `wcwidth` function or
+[wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to determine Unicode
+character widths.
 
 The `lines()` and `columns()` methods return the number of lines and columns
 matched, where `lines()` and `columns()` return nonzero and `columns()` takes
@@ -2013,10 +2033,13 @@ match is `lineno()` and the ending line number is given by
 `lineno() + lines() - 1`.  The starting column of a match is `columno()` and
 the ending column number is given by `columno() + columns() - 1`.
 
-The `matcher().more()` method is used to create longer matches from individual
-matches.  When this method is invoked, the next match has the current matched
-text prepended to it.  The `matcher().more()` operation is often used in lexers
-and was introduced in Lex.
+The starting byte offset of the match on a line is `border()` and the ending
+byte offset of the match is `border() + size() - 1`.
+
+The `matcher().more()` method is used to create longer matches by stringing
+together consecutive matches in the input.  When this method is invoked, the
+next match has the current matched text prepended to it.  The
+`matcher().more()` operation is often used in lexers and was introduced in Lex.
 
 The `matcher().less(n)` method reduces the size of the matched text to `n`
 bytes.  This method has no effect if `n` is larger than `size()`.  The value of
@@ -2032,8 +2055,17 @@ position 0.  If the input stream is a wide character sequence, the UTF-8
 positions are returned as a result of the internally-converted UTF-8 wide
 character input.
 
-The `matcher().rest()` method terminates the matcher and returns the rest of
-the input character sequence as a string.
+The `matcher().rest()` method returns the rest of the input character sequence
+as a 0-terminated `char*` string.  This method buffers all remaining input to
+return the string.
+
+The `matcher().span()` method enlarges the text matched to span the entire line
+and returns the matching line as a 0-terminated `char*` string without the `\n`.
+
+The `matcher().line()` and `matcher().wline()` methods return the line as a
+(wide) string with the matched text as a substring.  These methods can be used
+to obtain the context of a match, for example to display the line where a
+lexical error or syntax error occurred.
 
 Because `matcher()` returns the current matcher object, the following Flex-like
 actions are also supported:
@@ -3546,17 +3578,17 @@ final zero bytes at the end!*
 
 @note `yy_scan_buffer(b, n)` only touches the first final byte and not the
 second byte, since this function is the same as calling `buffer(b, n-1)`.  In
-fact, the specified string may have any final byte value.
-The final byte of the string will be set to zero when `text()` (or `yytext`) or
-`rest()` are used.  But otherwise the final byte remains completely untouched
-by the other lexer functions, including `echo()` (and Flex-compatible `ECHO`).
-Only `unput(c)`, `text()` (or `yytext`) and `rest()` modify the buffer
+fact, the specified string may have any final byte value.  The final byte of
+the string will be set to zero when `text()` (or `yytext`) or `rest()` are
+used.  But otherwise the final byte remains completely untouched by the other
+lexer functions, including `echo()` (and Flex-compatible `ECHO`).  Only
+`unput(c)`, `text()` (or `yytext`), `rest()`, and `span()` modify the buffer
 contents, where `text()` and `rest()` require an extra byte at the end of the
 buffer to make the strings returned by these functions 0-terminated.  This
 means that you can scan read-only memory of `n` bytes located at address `b` by
 using `buffer(b, n+1)` safely, for example to read read-only mmap(2)
-`PROT_READ` memory, as long as `unput(c)`, `text()` (or `yytext`) and `rest()`
-are not used.
+`PROT_READ` memory, as long as `unput(c)`, `text()` (or `yytext`), `rest()`,
+and `span()` are not used.
 
 The Flex `yy_scan_string`, `yy_scan_bytes`, `yy_scan_wstring`, and
 `yy_scan_buffer` functions take an extra last `yyscan_t` argument for reentrant
@@ -3749,8 +3781,8 @@ Instead of the ugly solution above, a better alternative is to use a regex
 `/\*.*?\*/` or perhaps use start condition states, see \ref reflex-states.
 
 To grab the rest of the input as a string, use `matcher().rest()` which returns
-a `const char*` string that points to an internal buffer.  Copy the string
-before using the matcher again.
+a `const char*` string that points to the internal buffer that is enlarged to
+contain all remaining input.  Copy the string before using the matcher again.
 
 To read a number of bytes `n` into a string buffer `s[0..n-1]`, use
 `matcher().in.get(s, n)`, which is the same as invoking the virtual method
@@ -4460,8 +4492,8 @@ create a scanner and pass it to the `parser` constructor as follows:
 ~~~
 </div>
 
-Use options `−−bison-cc-namespace=NAME` and `−−bison-cc-parser=NAME` to specify
-the namespace and parser class name of the Bison 3.0
+We use options `−−bison-cc-namespace=NAME` and `−−bison-cc-parser=NAME` to
+specify the namespace and parser class name of the Bison 3.0
 <i>`%%skeleton "lalr1.cc"`</i> C++ parser you are generating with Bison.  These
 are `yy` and `parser` by default, respectively. For option
 `−−bison-cc-namespace=NAME` the `NAME` can be a list of nested namespaces of
@@ -5725,12 +5757,12 @@ In free space mode you MUST place actions in <i>`{`</i> and <i>`}`</i> blocks
 and other code in <i>`%{`</i> and <i>`%}`</i>.
 
 When used with option `unicode`, the scanner automatically recognizes and scans
-Unicode identifier names.  Note that we can use `matcher().columno()` in the
-error message to indicate the location on a line of the match.  This method
-takes tab spacing and wide characters into account (unless all of the RE/flex
-source code is compiled with `WITH_BYTE_COLUMNO`).  The `matcher()` object
-associated with the Lexer offers several other methods that Flex does not
-support.
+Unicode identifier names.  Note that we can use `matcher().columno()` or
+`matcher().border()` in the error message to indicate the location on a line of
+the match.  The `matcher().columno()` method takes tab spacing and wide
+characters into account.  To obtain the byte offset from the start of the line
+use `matcher().border()`.  The `matcher()` object associated with the Lexer
+offers several other methods that Flex does not support.
 
 🔝 [Back to table of contents](#)
 
@@ -5904,7 +5936,7 @@ or string regex, and some given input for POSIX mode matching:
 
 For input you can specify a string, a wide string, a file, or a stream object.
 
-Use option `"N"` to permit empty matches (nullable results).
+We use option `"N"` to permit empty matches (nullable results).
 
 You can convert an expressive regex of the form defined in \ref reflex-patterns
 to a regex that the boost::regex engine can handle:
@@ -6046,7 +6078,7 @@ string regex, and some given input:
 The regex is specified as a string or a `reflex::Pattern` object, see
 \ref regex-pattern below.
 
-Use option `"N"` to permit empty matches (nullable results).  Option `"T=8"`
+We use option `"N"` to permit empty matches (nullable results).  Option `"T=8"`
 sets the tab size to 8 for \ref reflex-pattern-dents matching.
 
 For input you can specify a string, a wide string, a file, or a stream object.
@@ -6227,8 +6259,8 @@ class set operations such as `[a-z−−[aeiou]]`, convert escapes such as `\X`,
 and enable/disable `(?imsux-imsux:φ)` mode modifiers to a regex string that the
 underlying regex library understands and can use.
 
-Each converter is specific to the regex engine.  Use a converter for the
-matcher of your choice:
+Each converter is specific to the regex engine.  You can use a converter for
+the matcher of your choice:
 
 - `std::string reflex::BoostMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
   converts `regex` for use with Boost.Regex;
@@ -6599,10 +6631,14 @@ To obtain properties of a match, use the following methods:
   `begin()`   | returns `const char*` to non-0-terminated text match begin
   `end()`     | returns `const char*` to non-0-terminated text match end
   `rest()`    | returns `const char*` to 0-terminated rest of input
+  `span()`    | returns `const char*` to 0-terminated match enlarged to span the line
+  `line()`    | returns `std::string` line with the matched text as a substring
+  `wline()`   | returns `std::wstring` line with the matched text as a substring
   `more()`    | tells the matcher to append the next match (adjacent matches)
   `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
   `lineno()`  | returns line number of the match, starting at line 1
   `columno()` | returns column number of the match, starting at 0
+  `border()`  | returns byte offset from the start of the line of the match
   `first()`   | returns input position of the first character of the match
   `last()`    | returns input position of the last + 1 character of the match
   `at_bol()`  | true if matcher reached the begin of a new line
@@ -6633,8 +6669,7 @@ capture returned by `operator[n]` to determine the end of the captured match.
 The `lineno()` method returns the line number of the match, starting at line 1.
 The `columno()` method returns the column offset of a match, starting at
 column 0.  The `columno()` method takes tab spacing and wide characters into
-account, unless all of the RE/flex source code is compiled with
-`WITH_BYTE_COLUMNO` to count bytes.
+account.  To obtain the byte offset from the start of the line use `border()`.
 
 The `lines()` and `columns()` methods return the number of lines and columns
 matched, where `lines()` and `columns()` return nonzero and `columns()` takes
@@ -6643,13 +6678,24 @@ match is `lineno()` and the ending line number is given by
 `lineno() + lines() - 1`.  The starting column of a match is `columno()` and
 the ending column number is given by `columno() + columns() - 1`.
 
-The `rest()` method terminates the matcher and returns the rest of the input
-character sequence as a string.
+The starting byte offset of the match on a line is `border()` and the ending
+byte offset of the match is `border() + size() - 1`.
 
-The `more()` method is used to create longer matches from individual matches.
-When this method is invoked, the next match has the current matched text
-prepended to it.  The `more()` operation is often used in lexers and was
-introduced in Lex.
+The `rest()` method returns the rest of the input character sequence as a
+0-terminated `char*` string.  This method buffers all remaining input to return
+the string.
+
+The `span()` method enlarges the text matched to span the entire line and
+returns the matching line as a 0-terminated `char*` string without the `\n`.
+
+The `line()` and `wline()` methods return the line as a (wide) string with the
+matched text as a substring.  These methods can be used to obtain the context
+of a match.
+
+The `more()` method is used to create longer matches by stringing together
+consecutive matches in the input.  When this method is invoked, the next match
+has the current matched text prepended to it.  The `more()` operation is often
+used in lexers and was introduced in Lex.
 
 The `less(n)` method reduces the size of the matched text to `n` bytes.
 This method has no effect if `n` is larger than `size()`.  The value of `n`
@@ -6662,8 +6708,8 @@ If the input stream is a wide character sequence, the UTF-8 positions are
 returned as a result of the internally-converted UTF-8 wide character input.
 
 All methods take constant time to execute except for `str()`, `wstr()`,
-`pair()`, `wpair()`, `wsize()`, `lines()`, `columns()`, `lineno()`, and
-`columno()` that require an extra pass over the matched text.
+`pair()`, `wpair()`, `wsize()`, `lines()`, `columns()`, and `columno()` that
+require an extra pass over the matched text.
 
 In addition, the following type casts of matcher objects and iterators may be
 used for convenience:
@@ -6755,8 +6801,8 @@ interactive, you can use the following methods:
 The first method returns a reference to the matcher, so multiple method
 invocations may be chained together.
 
-Four special methods may be used to read the input stream provided to a matcher
-directly, even when you use the matcher's search and match methods:
+The following methods may be used to read the input stream provided to a
+matcher directly, even when you use the matcher's search and match methods:
 
   Method     | Result
   ---------- | ----------------------------------------------------------------
@@ -6764,6 +6810,7 @@ directly, even when you use the matcher's search and match methods:
   `winput()` | returns next wide character from the input, matcher skips it
   `unput(c)` | put char `c` back unto the stream, matcher then takes it
   `peek()`   | returns next 8-bit char from the input without consuming it
+  `skip(c)`  | skip input until 8-bit character `c` is consumed
   `rest()`   | returns the remaining input as a non-NULL `char*` string
 
 The `input()`, `winput()`, and `peek()` methods return a non-negative character
@@ -7598,7 +7645,8 @@ the input:
 
 <div class="alt">
 ~~~{.cpp}
-    .    std::cerr << "lexical error, full stop!" << std::endl; exit(EXIT_FAILURE);
+    .    std::cerr << "lexical error, full stop!" << std::endl;
+         return 0;
 ~~~
 </div>
 
@@ -7612,8 +7660,8 @@ next ASCII or Unicode character.
 
 To accept valid Unicode input in regex patterns, make sure to avoid `.` (dot)
 and use `\p{Unicode}` or `\X` instead, and reserve dot to catch anything,
-such as invalid UTF encodings.  Use `.|\n` or <i>`%%option dotall`</i> to catch
-anything including `\n` and invalid UTF-8/16/32 encodings.
+such as invalid UTF encodings.  We use `.|\n` or <i>`%%option dotall`</i> to
+catch anything including `\n` and invalid UTF-8/16/32 encodings.
 
 Furthermore, before matching any input, invalid UTF-16 input is detected
 automatically by the `reflex::Input` class and replaced with the
@@ -7631,6 +7679,134 @@ character class by intersecting the class with `[\p{Unicode}]`, that is
 `[...&&[\p{Unicode}]]`.  Furthermore, character class negation with `^` results
 in classes that are within range U+0000 to U+10FFFF and excludes surrogate
 halves.
+
+🔝 [Back to contents](#)
+
+
+Error reporting and recovery                                          {#errors}
+----------------------------
+
+When your scanner or parser encounters an error in the input, the scanner or
+parser should report it and attempt to continue processing the input by
+recovering from the error condition.  Most compilers recover from an error to
+continue processing the input until a threshold on the maximum number of errors
+is exceeded.
+
+In our lexer specification of a scanner, we may define a "catch all else" rule
+with pattern `.` to report an unmatched "mystery character" that is not
+recognized, for example:
+
+<div class="alt">
+~~~{.cpp}
+    %class{
+      static const size_t max_errors = 10;
+      size_t errors;
+    %}
+    %init{
+      errors = 0;
+    %}
+
+    %%
+    ...  // lexer rules
+
+    .    std::cerr << "Error: mystery character at line " << lineno() << ":\n" << matcher().line() << std::endl;
+         for (size_t i = columno(); i > 0; --i)
+           std::cerr << " ";
+         std::cerr << "\\__ here\n" << std::endl;
+         if (++errors >= max_errors)
+           return 0;
+    %%
+~~~
+</div>
+
+The error message indicates the offending line number with `lineno()` and
+prints the problematic line of input using `matcher().line()`.  The position on
+the line is indicated with an arrow placed below the line at offset `columno()`
+from the start of the line, where `columno()` takes tabs and wide characters
+into account.
+
+This error message does not take the window width into account, which may
+result in misplacing the arrow when the line is too long and overflows, unless
+we print only a part of the line.
+
+There are other ways to indicate the location of an error, for example as
+`-->` `<--` and highlighting the error using the ANSI SGI escape sequence for
+bold typeface:
+
+<div class="alt">
+~~~{.cpp}
+    .    std::cerr << "Error: mystery character at line " << lineno() << ":" << std::endl;
+         std::cerr << matcher().line().substr(0, border()) << "\033[1m --> " << str() << " <-- \033[0m" << std::endl;
+         if (++errors >= max_errors)
+           return 0;
+~~~
+</div>
+
+This prints the start of the line up to the mismatching position on the line
+returned by `border()`, followed by the highlighted "mystery character".
+Beware that this can be a control code or invalid Unicode code point so we
+should check before displaying it.
+
+Our scanner terminates when 10 lexical errors are encountered in the input, as
+defined by `max_errors`.
+
+By default, Bison invokes `yyerror()` (or `yy::parser::error()` with
+\ref reflex-bison-cc parsers) to report syntax errors.  However, it is
+recommended to use Bison error productions to handle and resolve syntax errors
+intelligently by synchronizing on tokens that allow the parser to continue, for
+example on a semicolon in a \ref reflex-bison-bridge parser:
+
+<div class="alt">
+~~~{.cpp}
+    %{
+      #include "lex.yy.h"
+      #define YYLEX_PARAM lexer
+      void yyerror(Lexer *lexer, const char *msg);
+    %}
+
+    %pure-parser
+    %lex-param { Lexer *lexer }
+    %parse-param { Lexer *lexer }
+
+    %%
+    ...          // grammar rules
+
+    | error ';'  { yyerrok; if (++lexer->errors >= lexer->max_errors) YYABORT; }
+    ;
+    %%
+~~~
+</div>
+
+Note that the lexer keeps track of the number of errors.  When the maximum number
+of lexical and syntax errors is reached, we bail out.
+
+The line of input where the syntax error occurs is reported with `yyerror()` for
+the \ref reflex-bison-bridge parser:
+
+<div class="alt">
+~~~{.cpp}
+    void yyerror(Lexer *lexer, const char *msg)
+    {
+      std::cerr << "Error: " << msg << " at line " << lexer->lineno() << ":" << std::endl;
+      std::cerr << lexer->matcher().line().substr(0, lexer->border()) << "\033[1m --> " << lexer->str() << " <-- \033[0m" << std::endl;
+    }
+~~~
+</div>
+
+This assumes that the syntax error was detected immediately at the last token
+scanned and displayed with `lexer->str()`, which may not always be the case.
+
+Error reporting can be combined with Bison Lookahead Correction (LAC), which is
+enabled with:
+
+<div class="alt">
+~~~{.cpp}
+    %define parse.lac full
+~~~
+</div>
+
+For more details on Bison error messaging, resolution, and LAC, please see the
+Bison documentation.
 
 🔝 [Back to contents](#)
 
@@ -7958,11 +8134,12 @@ RE/flex applications:
 
 - When generating scanners with the <b>`reflex`</b> tool, the generated
   <i>`lex.yy.cpp`</i> lexer logic should be compiled and linked with your
-  application.  Use <b>`reflex`</b> option `−−header-file` to generate
+  application.  We use <b>`reflex`</b> option `−−header-file` to generate
   <i>`lex.yy.h`</i> with the lexer class to include in the source code of your
   lexer application.
 
 🔝 [Back to contents](#)
+
 
 MSVC++ compiler bug                                                     {#msvc}
 -------------------

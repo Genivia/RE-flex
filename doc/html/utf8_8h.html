@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">utf8.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Oct 23 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Nov 5 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -72,16 +72,16 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="utf8_8h__dep__incl.png" border="0" usemap="#utf8_8hdep" alt=""/></div>
 <map name="utf8_8hdep" id="utf8_8hdep">
-<area shape="rect" id="node2" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="382,80,445,107"/>
-<area shape="rect" id="node10" href="reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="479,229,545,256"/>
-<area shape="rect" id="node3" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="73,155,157,181"/>
-<area shape="rect" id="node5" href="absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="249,155,351,181"/>
-<area shape="rect" id="node9" href="pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="376,155,451,181"/>
-<area shape="rect" id="node4" href="flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Lex/Flex&#45;compatible macros. " alt="" coords="5,229,88,256"/>
-<area shape="rect" id="node6" href="boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="113,229,226,256"/>
-<area shape="rect" id="node7" href="matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="374,229,455,256"/>
-<area shape="rect" id="node8" href="stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="251,229,349,256"/>
-<area shape="rect" id="node11" href="reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="472,304,552,331"/>
+<area shape="rect" id="node2" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="383,80,445,107"/>
+<area shape="rect" id="node10" href="reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="480,229,545,256"/>
+<area shape="rect" id="node3" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="5,229,89,256"/>
+<area shape="rect" id="node5" href="absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="249,155,352,181"/>
+<area shape="rect" id="node9" href="pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="377,155,451,181"/>
+<area shape="rect" id="node4" href="flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Lex/Flex&#45;compatible macros. " alt="" coords="6,304,89,331"/>
+<area shape="rect" id="node6" href="boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="113,229,227,256"/>
+<area shape="rect" id="node7" href="matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="375,229,456,256"/>
+<area shape="rect" id="node8" href="stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="251,229,350,256"/>
+<area shape="rect" id="node11" href="reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="473,304,553,331"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -112,6 +112,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a2fe93907a6b71a3e0b7688bec72638e4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a2fe93907a6b71a3e0b7688bec72638e4">reflex::utf8</a> (const char *s, const char **r=NULL)</td></tr>
 <tr class="memdesc:a2fe93907a6b71a3e0b7688bec72638e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 to UCS, returns REFLEX_NONCHAR for invalid UTF-8 except for MUTF-8 U+0000 and 0xD800-0xDFFF surrogate halves (use WITH_UTF8_UNRESTRICTED to remove any limits on UTF-8 encodings up to 6 bytes).  <a href="namespacereflex.html#a2fe93907a6b71a3e0b7688bec72638e4">More...</a><br /></td></tr>
 <tr class="separator:a2fe93907a6b71a3e0b7688bec72638e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b96269b32fa93759f21bf76427aa3fd"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a0b96269b32fa93759f21bf76427aa3fd">reflex::wcs</a> (const char *s, size_t n)</td></tr>
+<tr class="memdesc:a0b96269b32fa93759f21bf76427aa3fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 string to wide string.  <a href="namespacereflex.html#a0b96269b32fa93759f21bf76427aa3fd">More...</a><br /></td></tr>
+<tr class="separator:a0b96269b32fa93759f21bf76427aa3fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a713b79db623aa036afa3aa7f4fda8d5b"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a713b79db623aa036afa3aa7f4fda8d5b">reflex::wcs</a> (const std::string &amp;s)</td></tr>
+<tr class="memdesc:a713b79db623aa036afa3aa7f4fda8d5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 string to wide string.  <a href="namespacereflex.html#a713b79db623aa036afa3aa7f4fda8d5b">More...</a><br /></td></tr>
+<tr class="separator:a713b79db623aa036afa3aa7f4fda8d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex UCS to UTF-8 converters. </p>
@@ -149,7 +155,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Oct 23 2019 10:59:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Nov 5 2019 09:33:50 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

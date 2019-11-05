@@ -36,7 +36,7 @@ RE/flex scanner examples using RE/flex lexer syntax
 
 - `braille.l` a braille translator, inspired by the re2c example but expanded and fixed to make it useable
 - `ptokens.l` and `pdefs.l` a Python tokenizer
-- `calc.l` and `calc.y` calculator, supports Unicode identifier variables
+- `calc.l` and `calc.y` calculator, supports Unicode identifier variables, resolves input errors
 - `cow.l` scanner to convert cows
 - `cows.l` scanner to convert cows, uses word boundary anchors
 - `csv.l` scanner to parse CSV rows from a file into a C++ vector

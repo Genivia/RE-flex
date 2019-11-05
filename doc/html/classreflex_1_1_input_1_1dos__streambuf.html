@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input::dos_streambuf Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Oct 23 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Nov 5 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -52,8 +52,8 @@
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="classreflex_1_1_input_1_1dos__streambuf-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">reflex::Input::dos_streambuf Class Reference</div>  </div>
@@ -87,6 +87,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a07b6c9614e2af5435d96d3b32b3ce522"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a07b6c9614e2af5435d96d3b32b3ce522">dos_streambuf</a> (const <a class="el" href="classreflex_1_1_input.html">reflex::Input</a> &amp;input)</td></tr>
 <tr class="separator:a07b6c9614e2af5435d96d3b32b3ce522"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a21f5269c6d25ea9b6b8b1f21abb8d371"><td class="memItemLeft" align="right" valign="top">virtual int_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a21f5269c6d25ea9b6b8b1f21abb8d371">underflow</a> ()</td></tr>
+<tr class="separator:a21f5269c6d25ea9b6b8b1f21abb8d371"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ded263349d3a3a19f2086a47c42e72c"><td class="memItemLeft" align="right" valign="top">virtual int_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a1ded263349d3a3a19f2086a47c42e72c">uflow</a> ()</td></tr>
+<tr class="separator:a1ded263349d3a3a19f2086a47c42e72c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cf6a3d77553c295bab79dc13c4d325b"><td class="memItemLeft" align="right" valign="top">virtual std::streamsize&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a8cf6a3d77553c295bab79dc13c4d325b">xsgetn</a> (char *s, std::streamsize n)</td></tr>
+<tr class="separator:a8cf6a3d77553c295bab79dc13c4d325b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6dc969b4e9e01673e0d10c28cb6264a5"><td class="memItemLeft" align="right" valign="top">virtual std::streamsize&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a6dc969b4e9e01673e0d10c28cb6264a5">showmanyc</a> ()</td></tr>
+<tr class="separator:a6dc969b4e9e01673e0d10c28cb6264a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a523c875513a74cdf578f507e7a03cc6a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a523c875513a74cdf578f507e7a03cc6a">get</a> ()</td></tr>
+<tr class="separator:a523c875513a74cdf578f507e7a03cc6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a0d85f9098d122fa86ae89323c6f5f2b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_input.html">Input</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a0d85f9098d122fa86ae89323c6f5f2b8">input_</a></td></tr>
@@ -95,15 +108,6 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:af2d56c17b2d5e7bdddcc0930fb807e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e33241a957bc21adb4f4762bdc0d434"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a6e33241a957bc21adb4f4762bdc0d434">ch2_</a></td></tr>
 <tr class="separator:a6e33241a957bc21adb4f4762bdc0d434"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:a21f5269c6d25ea9b6b8b1f21abb8d371"><td class="memItemLeft" align="right" valign="top">virtual int_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a21f5269c6d25ea9b6b8b1f21abb8d371">underflow</a> ()</td></tr>
-<tr class="separator:a21f5269c6d25ea9b6b8b1f21abb8d371"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ded263349d3a3a19f2086a47c42e72c"><td class="memItemLeft" align="right" valign="top">virtual int_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a1ded263349d3a3a19f2086a47c42e72c">uflow</a> ()</td></tr>
-<tr class="separator:a1ded263349d3a3a19f2086a47c42e72c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6dc969b4e9e01673e0d10c28cb6264a5"><td class="memItemLeft" align="right" valign="top">virtual std::streamsize&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html#a6dc969b4e9e01673e0d10c28cb6264a5">showmanyc</a> ()</td></tr>
-<tr class="separator:a6dc969b4e9e01673e0d10c28cb6264a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Stream buffer for <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> to read DOS files, replaces CRLF by LF, derived from std::streambuf. </p>
@@ -133,6 +137,29 @@ Private Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a523c875513a74cdf578f507e7a03cc6a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int reflex::Input::dos_streambuf::get </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a6dc969b4e9e01673e0d10c28cb6264a5"></a>
 <div class="memitem">
 <div class="memproto">
@@ -149,7 +176,7 @@ Private Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -172,7 +199,7 @@ Private Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -195,7 +222,41 @@ Private Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a8cf6a3d77553c295bab79dc13c4d325b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::streamsize reflex::Input::dos_streambuf::xsgetn </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::streamsize&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -269,7 +330,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Oct 23 2019 10:59:12 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Nov 5 2019 09:33:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

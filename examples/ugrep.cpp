@@ -98,8 +98,8 @@ Examples:
   # display word-anchored 'lorem' in UTF-16 formatted file utf16lorem.txt that does not contain a UTF-16 BOM
   ugrep --file-format=UTF-16 -w -i 'lorem' utf16lorem.txt
 
-  # list the lines to fix in a C/C++ source file by looking for the word FIXME while skipping any FIXME in quoted strings by using a negative pattern `(?^X)' to ignore quoted strings:
-  ugrep -n -o -e 'FIXME' -e '(?^"(\\.|\\\r?\n|[^\\\n"])*")' file.cpp
+  # list the lines to fix in a C/C++ source file by looking for the word TODO while skipping any TODO in quoted strings by using a negative pattern `(?^X)' to ignore quoted strings:
+  ugrep -n -o -e 'TODO' -e '(?^"(\\.|\\\r?\n|[^\\\n"])*")' file.cpp
 
   # check if 'main' is defined in a C/C++ source file, skipping the word 'main' in comments and strings:
   ugrep -q -e '\<main\>' -e '(?^"(\\.|\\\r?\n|[^\\\n"])*"|//.*|/[*](.|\n)*?[*]/)' file.cpp
@@ -378,11 +378,15 @@ int main(int argc, char **argv)
     {
       // parse a ugrep command-line argument
       if (regex.empty())
+      {
         // no regex pattern specified yet, so assign it to the regex string
         regex.assign(arg).push_back('|');
+      }
       else
+      {
         // otherwise add the file argument to the list of files
         infiles.push_back(arg);
+      }
     }
   }
 
@@ -547,7 +551,7 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
 
   if (flag_quiet)
   {
-    // -q quite mode: report if a single pattern match was found in the input
+    // -q quiet mode: report if a single pattern match was found in the input
 
     found = reflex::Matcher(pattern, input).find();
 
@@ -618,66 +622,70 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
   }
   else if (flag_line_buffered)
   {
-    // line-buffered input: read input line-by-line and display lines that matched the pattern
+    // line-buffered: display lines that matched the pattern
 
-    size_t byte_offset = 0;
-    size_t lineno = 1;
-    std::string line;
-
-    while (input)
+#if defined(WITH_SPAN)
+    if (!flag_no_group && !flag_invert_match)
     {
-      int ch;
+      size_t lineno = 0;
 
-      // read the next line
-      line.clear();
-      while ((ch = input.get()) != EOF && ch != '\n')
-        line.push_back(ch);
-      if (ch == EOF && line.empty())
-        break;
-
-      if (flag_invert_match)
+      reflex::Matcher matcher(pattern, input);
+      for (auto& match : matcher.find)
       {
-        // -v invert match: display non-matching line
-
-        if (!reflex::Matcher(pattern, line).find())
+        if (lineno != match.lineno())
         {
+          lineno = match.lineno();
           std::cout << label;
           if (flag_line_number)
-            std::cout << lineno << ":";
-          if (flag_byte_offset)
-            std::cout << byte_offset << ":";
-          std::cout << line << std::endl;
-          found = true;
-        }
-      }
-      else if (flag_no_group)
-      {
-        // search the line for pattern matches and display the line again (with exact offset) for each pattern match
-
-        reflex::Matcher matcher(pattern, line);
-        for (auto& match : matcher.find)
-        {
-          std::cout << label;
-          if (flag_line_number)
-            std::cout << lineno << ":";
+            std::cout << match.lineno() << ":";
           if (flag_column_number)
             std::cout << match.columno() + 1 << ":";
           if (flag_byte_offset)
-            std::cout << byte_offset << ":";
-          std::cout << line.substr(0, match.first()) << mark << match.text() << unmark << line.substr(match.last()) << std::endl;
+            std::cout << match.first() << ":";
+          std::cout << mark << match.span() << unmark << std::endl;
           found = true;
         }
       }
-      else
+    }
+    else
+#endif
+    {
+      size_t byte_offset = 0;
+      size_t lineno = 1;
+      std::string line;
+
+      while (input)
       {
-        // search the line for pattern matches and display the line just once with all matches
+        int ch;
 
-        size_t last = 0;
+        // read the next line
+        line.clear();
+        while ((ch = input.get()) != EOF && ch != '\n')
+          line.push_back(ch);
+        if (ch == EOF && line.empty())
+          break;
 
-        reflex::Matcher matcher(pattern, line);
-        for (auto& match : matcher.find)
+        if (flag_invert_match)
         {
-          if (last == 0)
+          // -v invert match: display non-matching line
+
+          if (!reflex::Matcher(pattern, line).find())
+          {
+            std::cout << label;
+            if (flag_line_number)
+              std::cout << lineno << ":";
+            if (flag_byte_offset)
+              std::cout << byte_offset << ":";
+            std::cout << line << std::endl;
+            found = true;
+          }
+        }
+        else if (flag_no_group)
+        {
+          // search the line for pattern matches and display the line again (with exact offset) for each pattern match
+
+          reflex::Matcher matcher(pattern, line);
+          for (auto& match : matcher.find)
           {
             std::cout << label;
             if (flag_line_number)
@@ -685,30 +693,53 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
             if (flag_column_number)
               std::cout << match.columno() + 1 << ":";
             if (flag_byte_offset)
-              std::cout << byte_offset + match.first() << ":";
-            std::cout << line.substr(0, match.first()) << mark << match.text() << unmark;
-            last = match.last();
+              std::cout << byte_offset << ":";
+            std::cout << line.substr(0, match.first()) << mark << match.text() << unmark << line.substr(match.last()) << std::endl;
             found = true;
           }
-          else
+        }
+        else
+        {
+          // search the line for pattern matches and display the line just once with all matches
+
+          size_t last = 0;
+
+          reflex::Matcher matcher(pattern, line);
+          for (auto& match : matcher.find)
           {
-            std::cout << line.substr(last, match.first() - last) << mark << match.text() << unmark;
-            last = match.last();
+            if (last == 0)
+            {
+              std::cout << label;
+              if (flag_line_number)
+                std::cout << lineno << ":";
+              if (flag_column_number)
+                std::cout << match.columno() + 1 << ":";
+              if (flag_byte_offset)
+                std::cout << byte_offset + match.first() << ":";
+              std::cout << line.substr(0, match.first()) << mark << match.text() << unmark;
+              last = match.last();
+              found = true;
+            }
+            else
+            {
+              std::cout << line.substr(last, match.first() - last) << mark << match.text() << unmark;
+              last = match.last();
+            }
           }
+
+          if (last > 0)
+            std::cout << line.substr(last) << std::endl;
         }
 
-        if (last > 0)
-          std::cout << line.substr(last) << std::endl;
+        // update byte offset and line number
+        byte_offset += line.size() + 1;
+        ++lineno;
       }
-
-      // update byte offset and line number
-      byte_offset += line.size() + 1;
-      ++lineno;
     }
   }
   else
   {
-    // block-buffered input: echo all pattern matches
+    // block-buffered: display pattern matches
 
     size_t lineno = 0;
 

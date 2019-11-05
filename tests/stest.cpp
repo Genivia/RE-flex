@@ -547,6 +547,71 @@ int main()
   if (test != "Hello/World/How/now/brown/cow/An/apple/a/day/")
     error("wrap");
   //
+  banner("TEST REST");
+  //
+  matcher.pattern(pattern8);
+  matcher.input("abc def xyz");
+  test = "";
+  if (matcher.find())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "abc/" || strcmp(matcher.rest(), " def xyz") != 0)
+    error("rest");
+  //
+  banner("TEST SKIP");
+  //
+  matcher.pattern(pattern8);
+  matcher.input("abc  \ndef xyz");
+  test = "";
+  if (matcher.scan())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+    matcher.skip('\n');
+  }
+  if (matcher.scan())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+    matcher.skip('\n');
+  }
+  std::cout << std::endl;
+  if (test != "abc/def/")
+    error("skip");
+  //
+#ifdef WITH_SPAN
+  banner("TEST SPAN");
+  //
+  matcher.pattern(pattern8);
+  matcher.input("##a#b#c##\ndef##\n##ghi\n##xyz");
+  test = "";
+  while (matcher.find())
+  {
+    std::cout << matcher.span() << "/";
+    test.append(matcher.span()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "##a#b#c##/def##/##ghi/##xyz/")
+    error("span");
+  //
+  banner("TEST LINE");
+  //
+  matcher.pattern(pattern8);
+  matcher.input("##a#b#c##\ndef##\n##ghi\n##xyz");
+  test = "";
+  while (matcher.find())
+  {
+    std::cout << matcher.line() << "/";
+    test.append(matcher.line()).append("/");
+  }
+  std::cout << std::endl;
+  if (test != "##a#b#c##/##a#b#c##/##a#b#c##/def##/##ghi/##xyz/")
+    error("line");
+#endif
+  //
   banner("TEST MORE");
   //
   matcher.pattern(pattern7);

@@ -1,8 +1,11 @@
 // An interactive calculator with Unicode identifier variables
 // Builds with bison-bridge to pass Lexer object 'lexer' to bison parser
+// Uses an error production to call yyerror to report and resolve syntax errors
+//
 // $ reflex calc.l
 // $ bison -y -d calc.y
 // $ c++ -o calc y.tab.c lex.yy.cpp -lreflex
+//
 // Example:
 // $ ./calc
 // π = 3.14
@@ -38,6 +41,7 @@
 
 line : line calc '\n'
      | line '\n'          { lexer->out() << "? "; }
+     | error '\n'         { yyerrok; }
      |
      ;
 calc : expr               { lexer->out() << "=> " << $1 << std::endl; }
@@ -63,5 +67,9 @@ int main()
 
 void yyerror(Lexer *lexer, const char *msg)
 {
-  fprintf(stderr, "%s at %zu,%zu\n", msg, lexer->lineno(), lexer->columno());
+  std::cerr << "Error: " << msg << " at " << lexer->lineno() << "," << lexer->columno() << "\n" <<
+    lexer->matcher().line() << ":\n";
+  for (size_t i = lexer->columno(); i > 0; --i)
+    std::cerr << " ";
+  std::cerr << "\\__ here" << std::endl;
 }

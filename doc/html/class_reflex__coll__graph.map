@@ -1,14 +1,15 @@
 <map id="Reflex" name="Reflex">
-<area shape="rect" id="node2" href="$struct_reflex_1_1_library.html" title="A library entry to describe regex library properties. " alt="" coords="782,52,890,79"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="779,515,893,541"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="219,241,299,268"/>
-<area shape="rect" id="node10" href="$struct_reflex_1_1_code.html" title="Line of code fragment in lex specifications. " alt="" coords="456,295,555,321"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="5,234,132,275"/>
-<area shape="rect" id="node12" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="1157,628,1249,655"/>
-<area shape="rect" id="node13" title="STL class. " alt="" coords="791,629,881,656"/>
-<area shape="rect" id="node14" title="STL class. " alt="" coords="441,625,570,666"/>
-<area shape="rect" id="node15" title="STL class. " alt="" coords="181,603,336,629"/>
-<area shape="rect" id="node20" title="STL class. " alt="" coords="439,559,572,601"/>
-<area shape="rect" id="node16" title="STL class. " alt="" coords="19,603,119,629"/>
-<area shape="rect" id="node19" title="STL class. " alt="" coords="963,567,1059,593"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_buffered_input.html" title="Buffered input. " alt="" coords="1257,124,1399,151"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="933,128,1025,155"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="603,136,693,163"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="361,131,490,173"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="155,115,309,141"/>
+<area shape="rect" id="node21" title="STL class. " alt="" coords="359,66,492,107"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="5,115,105,141"/>
+<area shape="rect" id="node8" href="$struct_reflex_1_1_library.html" title="A library entry to describe regex library properties. " alt="" coords="925,189,1033,216"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="921,656,1036,683"/>
+<area shape="rect" id="node12" title="STL class. " alt="" coords="385,372,465,399"/>
+<area shape="rect" id="node16" href="$struct_reflex_1_1_code.html" title="Line of code fragment in lex specifications. " alt="" coords="599,428,697,455"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="169,365,295,406"/>
+<area shape="rect" id="node20" title="STL class. " alt="" coords="755,73,851,100"/>
 </map>

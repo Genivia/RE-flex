@@ -9,7 +9,7 @@ all-local:	cp2bin
 .PHONY:		cp2bin
 
 # to copy the reflex binary to reflex/bin (joins reflex.exe that's already there)
-cp2bin:		$(abs_top_builddir)/src/reflex
+cp2bin:		$(top_builddir)/src/reflex
 		-mkdir -p $(top_builddir)/bin
 		-cp -f $< $(top_builddir)/bin
 		@echo

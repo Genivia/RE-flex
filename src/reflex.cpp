@@ -39,6 +39,11 @@
 /// Work around the Boost.Regex partial_match bug by forcing the generated scanner to buffer all input
 #define WITH_BOOST_PARTIAL_MATCH_BUG
 
+/// Safer fopen_s()
+#if (!defined(__WIN32__) && !defined(_WIN32) && !defined(WIN32) && !defined(_WIN64) && !defined(__BORLANDC__)) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__)
+inline int fopen_s(FILE **file, const char *name, const char *mode) { return (*file = ::fopen(name, mode)) ? 0 : errno; }
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
 //  Static data                                                               //
@@ -309,7 +314,6 @@ void Reflex::init(int argc, char **argv)
   library = &libraries["reflex"];
   conditions.push_back("INITIAL");
   inclusive.insert(0);
-  in = &std::cin;
   out = &std::cout;
   lineno = 0;
 
@@ -679,40 +683,43 @@ void Reflex::set_library()
 /// Parse lex specification input
 void Reflex::parse()
 {
-  std::ifstream ifs;
+  FILE *file = stdin;
   if (!infile.empty())
   {
-    ifs.open(infile.c_str(), std::ifstream::in);
-    if (!ifs.is_open())
+    fopen_s(&file, infile.c_str(), "r");
+    if (file == NULL)
       abort("cannot open file ", infile.c_str());
-    in = ifs;
   }
+  in = file;
   parse_section_1();
   parse_section_2();
   parse_section_3();
-  if (ifs.is_open())
-    ifs.close();
+  if (file != stdin)
+    fclose(file);
 }
 
 /// Parse the specified %%include file
 void Reflex::include(const std::string& filename)
 {
-  std::ifstream ifs;
-  ifs.open(filename.c_str(), std::ifstream::in);
-  if (!ifs.is_open())
+  FILE *file = NULL;
+  fopen_s(&file, filename.c_str(), "r");
+  if (file == NULL)
     abort("cannot open file ", infile.c_str());
-  std::string save_infile = infile;
+  std::string save_infile(infile);
   infile = filename;
-  reflex::Input save_in = in;
-  in = ifs;
+  reflex::BufferedInput save_in(in);
+  in = file;
+  std::string save_line(line);
   size_t save_lineno = lineno;
+  size_t save_linelen = linelen;
   lineno = 0;
   parse_section_1();
-  if (ifs.is_open())
-    ifs.close();
+  fclose(file);
   infile = save_infile;
   in = save_in;
+  line = save_line;
   lineno = save_lineno;
+  linelen = save_linelen;
 }
 
 /// Fetch next line from the input, return true if ok
@@ -1295,7 +1302,11 @@ void Reflex::parse_section_1()
           {
             do
             {
-              std::string filename = get_string(pos);
+              std::string filename;
+              if (line.at(pos) == '"')
+                filename = get_string(pos); // %include "NAME"
+              else
+                filename = get_name(pos); // %include NAME
               if (filename.empty())
                 error("bad file name");
               include(filename);
@@ -1548,8 +1559,6 @@ void Reflex::parse_section_2()
 /// Parse section 3 of a lex specification
 void Reflex::parse_section_3()
 {
-  if (in.eof())
-    error("missing %% section 3");
   while (get_line())
     section_3.push_back(Code(line, infile, lineno));
 }
