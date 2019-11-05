@@ -44,6 +44,7 @@
 #include <reflex/utf8.h>
 #include <cctype>
 #include <cstdlib>
+#include <cerrno>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
