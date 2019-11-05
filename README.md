@@ -468,7 +468,7 @@ Changelog
 - Sep 15, 2019: 1.4.2 faster `find` for patterns beginning with optional repetitions such as `.*`.
 - Sep 29, 2019: 1.4.3 added `reflex::AbstractMatcher::clone()` to clone a referenced concrete matcher object.
 - Oct 23, 2019: 1.4.4 improved option `--flex` for Flex compatibility; fixed option `--token-type` with option `--flex`, now properly defines `YY_NULL` and `yyterminate`; fixed `AbstractMatcher::buffer(n)` for large `n`; faster `find`.
-- Nov  5, 2019: 1.5.0 added `border()`, `span()`, `line()`, `wline()`, and `skip(c)` methods; added new section on error reporting and recovery to the documentation; fixed `yy_scan_string()` and `yy_scan_buffer()` when called before calling `yylex()` for the first time; improved performance.
+- Nov  5, 2019: 1.5.0 added `border()`, `span()`, `line()`, `wline()`, and `skip(c)` methods; added new section on error reporting and recovery to the documentation; fixed `yy_scan_string()` and `yy_scan_buffer()` when called before calling `yylex()` for the first time; improved performance
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
