@@ -19,7 +19,7 @@ cp2bin:		$(top_builddir)/src/reflex
 # to generate the documentation: make doc/html
 libdocdir = @DOXYGEN_OUTPUT_DIRECTORY@
 DOXYGEN = @DOXYGEN@
-$(libdocdir):	$(abs_top_builddir)/doc/Doxyfile $(abs_top_builddir)/doc/index.md
+$(libdocdir):	$(top_builddir)/doc/Doxyfile $(top_builddir)/doc/index.md
 		if test -d $(libdocdir); then \
 		  rm -Rf $(libdocdir); \
 		fi
@@ -47,5 +47,5 @@ install-data-hook:
 
 .PHONY:		test
 
-test:		$(abs_top_builddir)/src/reflex
+test:		$(top_builddir)/src/reflex
 		-cd tests; $(MAKE) && ./rtest

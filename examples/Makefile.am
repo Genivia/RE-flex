@@ -79,12 +79,13 @@ examples:	flexexample1 \
 		scanstrings \
 		yyscanstrings \
 		mmap \
-                fastfind \
-                fastsearch \
+		fastfind \
+		fastsearch \
 		cards \
 		cvt2utf \
 		ugrep \
-                gz
+		gz \
+		dos
 
 examplesxx:	flexexample3xx \
 		flexexample4xx \
@@ -408,6 +409,10 @@ gz:		gz.l
 		$(REFLEX) $(REFLAGS) gz.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX) -lz
 
+dos:		dos.l
+		$(REFLEX) $(REFLAGS) dos.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+
 wc_boost:	wc.l
 		$(REFLEX) $(REFLAGS) --matcher=boost --flex wc.l
 		$(CXX) $(CXXFLAGS) -I $(INCBOOST) -o $@ lex.yy.cpp $(LIBREFLEX) $(LIBBOOST)
@@ -420,4 +425,4 @@ clean:
 		-rm -f lex.yy.h lex.yy.hpp lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx parser.hpp parser.cpp scanner.hpp scanner.cpp location.hh location.hpp position.hh position.hpp stack.hh stack.hpp reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
 		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent1 indent2 json braille unicode csv scanstrings yyscanstrings mmap fastfind fastsearch cards url cvt2utf ugrep gz wc_boost
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent1 indent2 json braille unicode csv scanstrings yyscanstrings mmap fastfind fastsearch cards url cvt2utf ugrep gz dos wc_boost

@@ -46,6 +46,7 @@ RE/flex scanner examples using RE/flex lexer syntax
 - `scanstrings.l` demonstrates string and buffer scanning
 - `mmap.l` demonstrates mmap(2) to scan C/C++ source code files fast
 - `gz.l` demonstrates scanning zlib-compressed (and uncompressed) C/C++ source code files
+- `dos.l` demonstrates scanning DOS-formatted files with `reflex::BufferedInput::dos_streambuf`
 - `fastfind.l` demonstrates fast search for patterns in input, rather than scanning the input
 - `tag.l` simple lexer to print out all XML/HTML tags
 - `tag_lazy.l` simple lexer to print XML/HTML tags, uses lazy quants

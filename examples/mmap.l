@@ -3,11 +3,12 @@
 //
 // Lexer method buffer(b, n) scans n-1 bytes at address b.
 //
-// WARNING: Do not use text() and rest(), which modify the mmap-ed data!!!
+// WARNING: Do not use text(), span(), rest(), that modify the mmap-ed data!!!
 //          Use str() or begin() and size() to extract tokens as strings!
+//          Also echo() is safe to use.
 //
-// When text() or rest() are used, memory b[0..n] will be modified and b[n]
-// will be set to zero.  Also unput() should be avoided.  But echo() is safe.
+// When text(), span(), rest() are used, memory b[0..n] will be modified and
+// b[n] will be set to zero.  Also unput() should be avoided.
 //
 // WARNING: Do not use original Flex to do the same with yy_scan_buffer,
 //          because Flex requires two zero bytes and the mmap-ed buffer will be

@@ -112,7 +112,7 @@ static bool is_keyword(const char *text)
 // 1. override the reflex::Matcher::input(s, n) method, which passes text to
 //    the matcher engine and replace the \uxxxx there.
 // 2. create a streambuf class that converts \uxxxx on the fly, similar to the
-//    way reflex::Input::dos_streambuf converts CFLF to LF on the fly.
+//    way reflex::BufferedInput::dos_streambuf converts CFLF to LF on the fly.
 // The second option is easier to implement than the first.
 static size_t convert_unicode_escapes(char *buf, size_t len)
 {

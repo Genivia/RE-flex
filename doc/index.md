@@ -1986,9 +1986,10 @@ reached.
 `−−flex`) is invoked!  A matcher is not initially assigned to a lexer when the
 lexer is constructed, leaving `matcher()` undefined.
 
-The `matcher().skip(c)` method skips input until character `c` is consumed.
-This method changes `text()` (and `yytext` with option `−−flex`).  This method
-is more efficient than repeately calling `matcher().input()`.
+The `matcher().skip(c)` method skips input until character `c` is consumed
+and returns `true` when found.  This method changes `text()` (and `yytext` with
+option `−−flex`).  This method is more efficient than repeately calling
+`matcher().input()`.
 
 Use <b>`reflex`</b> options `−−flex` and `−−bison` to enable global Flex
 actions and variables.  This makes Flex actions and variables globally
@@ -3777,8 +3778,30 @@ For example, to crudily scan a C/C++ multiline comment we can use the rule:
 ~~~
 </div>
 
-Instead of the ugly solution above, a better alternative is to use a regex
-`/\*.*?\*/` or perhaps use start condition states, see \ref reflex-states.
+We actually do not need to keep track of line numbers explicitly, because
+`yyinput()` with RE/flex implicitly updates line numbers, unlike Flex from
+which this example originates.
+
+Instead of the crude approach shown above, a better alternative is to use a
+regex `/\*.*?\*/` or perhaps use start condition states, see
+\ref reflex-states.
+
+Another fast approach is to use `skip('*')` to skip input and check for a `/`:
+
+<div class="alt">
+~~~{.cpp}
+    "/*"    {  /* skip multiline comments */
+      int c;
+      while (skip('*') && (c = yyinput()) != 0)
+        if (c == '/')
+          break;
+    }
+~~~
+</div>
+
+Using `skip()` is fast and flushes the internal buffer when searching, unlike
+`yyinput()` that maintains the buffer contents to keep `text()` (and `yytext`)
+unchanged.
 
 To grab the rest of the input as a string, use `matcher().rest()` which returns
 a `const char*` string that points to the internal buffer that is enlarged to

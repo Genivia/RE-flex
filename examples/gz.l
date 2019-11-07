@@ -1,5 +1,6 @@
 // example to scan (un)compressed C/C++ files using zlib and std:istream
-// streams do not support UTF-16/32 normalization to UTF-8 though
+// streams do not support UTF-16/32 normalization to UTF-8 though!!
+//
 // usage:
 // $ gzip somefile.c
 // $ ./gz somefile.c.gz
@@ -88,8 +89,12 @@
 class zstreambuf : public std::streambuf {
  public:
   zstreambuf(FILE *file)
+    :
+      cur_(),
+      len_()
   {
-    gzfile_ = gzdopen(fileno(file), "rb");
+    int fd = dup(fileno(file));
+    gzfile_ = gzdopen(fd, "r");
     if (gzfile_ != Z_NULL)
       gzbuffer(gzfile_, Z_BUF_LEN);
   }
@@ -119,11 +124,8 @@ class zstreambuf : public std::streambuf {
     while (k > 0)
     {
       if (cur_ >= len_)
-      {
-        peek();
-        if (len_ == 0)
+        if (peek() == traits_type::eof())
           return n - k;
-      }
       if (k <= len_ - cur_)
       {
         memcpy(s, buf_ + cur_, k);
@@ -145,8 +147,7 @@ class zstreambuf : public std::streambuf {
     len_ = gzread(gzfile_, buf_, Z_BUF_LEN);
     if (len_ <= 0)
     {
-      gzclose(gzfile_);
-      gzfile_ = Z_NULL;
+      close();
       return traits_type::eof();
     }
     return traits_type::to_int_type(buf_[cur_]);
@@ -159,11 +160,25 @@ class zstreambuf : public std::streambuf {
     len_ = gzread(gzfile_, buf_, Z_BUF_LEN);
     if (len_ <= 0)
     {
-      gzclose(gzfile_);
-      gzfile_ = Z_NULL;
+      close();
       return traits_type::eof();
     }
     return traits_type::to_int_type(buf_[cur_++]);
+  }
+  void close()
+  {
+    if (!gzeof(gzfile_))
+    {
+      int err;
+      gzerror(gzfile_, &err);
+      if (err == Z_ERRNO)
+        perror("zlib error");
+      else
+        fprintf(stderr, "zlib decompression error\n");
+    }
+    gzclose_r(gzfile_);
+    gzfile_ = Z_NULL;
+    len_ = 0;
   }
   gzFile gzfile_;
   unsigned char buf_[Z_BUF_LEN];
