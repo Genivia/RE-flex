@@ -756,7 +756,7 @@ class AbstractMatcher {
     }
     return utf8(tmp);
   }
-  /// Put back one character (8-bit) on the input character sequence for matching, invalidates the current match info and text, unput is not honored when matching in-place using buffer(base, size) and nothing has been read yet.
+  /// Put back one character (8-bit) on the input character sequence for matching, DANGER: invalidates the previous text() pointer and match info, unput is not honored when matching in-place using buffer(base, size) and nothing has been read yet.
   void unput(char c) ///< 8-bit character to put back
   {
     DBGLOG("AbstractMatcher::unput()");
@@ -806,12 +806,36 @@ class AbstractMatcher {
 #endif
   }
 #if defined(WITH_SPAN)
+  /// Returns pointer to the begin of line in the buffer before the matched text.
+  inline const char *bol()
+    /// @returns pointer to the begin of line
+  {
+    (void)lineno();
+    return bol_;
+  }
+  /// Returns pointer to the end of line in the buffer after the matched text, DANGER: invalidates previous bol() and text() pointers, only use eol() before bol() and text().
+  inline const char *eol()
+    /// @returns pointer to the end of line
+  {
+    if (chr_ == '\n' || txt_[len_] == '\n')
+      return txt_ + len_;
+    while (pos_ < end_ || wrap())
+    {
+      char *s = static_cast<char*>(std::memchr(buf_ + pos_, '\n', end_ - pos_));
+      if (s != NULL)
+        return s;
+      (void)grow();
+      pos_ = end_;
+      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
+    }
+    eof_ = true;
+    return buf_ + end_;
+  }
   /// Returns the byte offset of the match from the start of the line.
   size_t border()
     /// @returns border offset
   {
-    (void)lineno();
-    return txt_ - bol_;
+    return txt_ - bol();
   }
   /// Enlarge the match to span the entire line of input (excluding \n), return text().
   const char *span()
@@ -824,26 +848,9 @@ class AbstractMatcher {
     if (chr_ == '\n')
       return txt_;
     reset_text();
-    while (true)
-    {
-      char *s = static_cast<char*>(std::memchr(buf_ + pos_, '\n', end_ - pos_));
-      if (s != NULL)
-      {
-        set_current(s - buf_);
-        len_ = s - txt_;
-        return text();
-      }
-      (void)grow();
-      pos_ = end_;
-      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
-      if (pos_ >= end_ && !wrap())
-      {
-        eof_ = true;
-        break;
-      }
-    }
-    set_current(end_);
-    len_ = end_ - (txt_ - buf_);
+    const char *e = eol();
+    set_current(e - buf_);
+    len_ = e - bol_;
     return text();
   }
   /// Returns the line of input (excluding \n) as a string containing the matched text as a substring.
@@ -851,42 +858,22 @@ class AbstractMatcher {
     /// @returns matching line as a string
   {
     DBGLOG("AbstractMatcher::line()");
-    (void)lineno();
-    if (chr_ == '\n' || txt_[len_] == '\n' || at_end())
-      return std::string(bol_, txt_ - bol_ + len_);
-    std::string ln(bol_, txt_ - bol_ + len_);
-    ln.push_back(chr_ == '\0' ? txt_[len_] : chr_);
-    size_t loc = pos_ + 1;
-    while (true)
-    {
-      if (loc < end_)
-      {
-        char *s = static_cast<char*>(std::memchr(buf_ + loc, '\n', end_ - loc));
-        if (s != NULL)
-          return ln.append(buf_ + pos_ + 1, s - buf_ - pos_ - 1);
-      }
-      (void)grow();
-      loc = end_;
-      end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
-      if (loc >= end_ && !wrap())
-      {
-        eof_ = true;
-        break;
-      }
-    }
-    if (pos_ < end_)
-      ln.append(buf_ + pos_ + 1, end_ - pos_ - 1);
-    return ln;
+    const char *e = eol(); // warning: must call eol() before bol()
+    const char *b = bol();
+    return std::string(b, e - b);
   }
   /// Returns the line of input (excluding \n) as a wide string containing the matched text as a substring.
   std::wstring wline()
     /// @returns matching line as a wide string
   {
-    return wcs(line());
+    DBGLOG("AbstractMatcher::wline()");
+    const char *e = eol(); // warning: must call eol() before bol()
+    const char *b = bol();
+    return wcs(b, e - b);
   }
 #endif
   /// Skip input until the specified character is consumed or EOF is reached.
-  void skip(int c)
+  bool skip(int c)
   {
     DBGLOG("AbstractMatcher::skip()");
     reset_text();
@@ -897,7 +884,7 @@ class AbstractMatcher {
       {
         len_ = 1;
         set_current(txt_ - buf_ + 1);
-        return;
+        return true;
       }
       pos_ = cur_ = end_;
       txt_ = buf_ + end_;
@@ -911,6 +898,7 @@ class AbstractMatcher {
     }
     len_ = 0;
     set_current(end_);
+    return false;
   }
   /// Fetch the rest of the input as text, useful for searching/splitting up to n times after which the rest is needed.
   const char *rest()
@@ -1083,6 +1071,12 @@ class AbstractMatcher {
       return false;
 #if defined(WITH_SPAN)
     update();
+    if (bol_ + Const::BLOCK < txt_)
+    {
+      // this line is very long, likely a binary file, so shift to the match instead of bol
+      DBGLOG("Line in buffer to long to shift, moving bol position to text match position minus %zu", Const::BLOCK);
+      bol_ = txt_ - Const::BLOCK;
+    }
     size_t gap = bol_ - buf_;
     cur_ -= gap;
     ind_ -= gap;
@@ -1111,6 +1105,7 @@ class AbstractMatcher {
       std::memcpy(newbuf, bol_, end_);
       delete[] buf_;
 #endif
+      txt_ = newbuf + (txt_ - buf_);
       lpb_ = newbuf + (lpb_ - buf_);
       buf_ = newbuf;
     }

@@ -1988,7 +1988,7 @@ lexer is constructed, leaving `matcher()` undefined.
 
 The `matcher().skip(c)` method skips input until character `c` is consumed
 and returns `true` when found.  This method changes `text()` (and `yytext` with
-option `−−flex`).  This method is more efficient than repeately calling
+option `−−flex`).  This method is more efficient than repeatedly calling
 `matcher().input()`.
 
 Use <b>`reflex`</b> options `−−flex` and `−−bison` to enable global Flex
@@ -2011,7 +2011,7 @@ Flex functions take a `yyscan_t` scanner as an extra last argument.  See
 From the first couple of entries in the table shown above you may have guessed
 correctly that `text()` is just a shorthand for `matcher().text()`, since
 `matcher()` is the matcher object associated with the generated Lexer class.
-The same shorthands apply to `str()`, `wstr()`, `size()`, `wsize()`,
+The same shorthand apply to `str()`, `wstr()`, `size()`, `wsize()`,
 `lineno()`, `columno()`, and `border()`.  Use `text()` for fast access to the
 matched text.  The `str()` method returns a string copy of the match and is
 less efficient.  Likewise, `wstr()` returns a wide string copy of the match,
@@ -2067,6 +2067,25 @@ The `matcher().line()` and `matcher().wline()` methods return the line as a
 (wide) string with the matched text as a substring.  These methods can be used
 to obtain the context of a match, for example to display the line where a
 lexical error or syntax error occurred.
+
+@warning The methods `matcher().span()`, `matcher().line()`, and
+`matcher().wline()` invalidate the previous `text()`, `yytext`, `begin()`, and
+`end()` string pointers.  Call these methods again to retrieve the updated
+pointer or call `str()` or `wstr()` to obtain a string copy of the match:
+~~~{.cpp}
+    // INCORRECT, because t is invalid after line():
+    const char *t = matcher().text();
+    std::string s = matcher().line();
+    std::cout << t << " in " << s << std::endl;
+    // OK with line():
+    std::string s = matcher().line();
+    const char *t = matcher().text();
+    std::cout << t << " in " << s << std::endl;
+    // OK with span():
+    std::string t = matcher().str();
+    const char *s = matcher().span();
+    std::cout << t << " in " << s << std::endl;
+~~~
 
 Because `matcher()` returns the current matcher object, the following Flex-like
 actions are also supported:
@@ -2388,7 +2407,7 @@ Unicode cannot be used).  For example:
 ~~~
 </div>
 
-@warning defined names may only occur immediately after a `||`, `&&`, and a
+@warning Defined names may only occur immediately after a `||`, `&&`, and a
 `--` operator in a bracket list.  Do not place a defined name as the first
 operand to a union, intersection, and subtraction operation, because the
 definition is not expanded.  For example, `[{lower}||{upper}]` contains
@@ -2911,7 +2930,7 @@ after scanning the `/*`-comment.
 We added the negative pattern `(?^^\h*\n)` to ignore empty lines.  This allows
 empty lines in the input without affecting indent stops.
 
-@warning when using the `matcher().stops()` method to access the vector of
+@warning When using the `matcher().stops()` method to access the vector of
 stops to modify, we must make sure to keep the stop positions in the vector
 sorted.
 
@@ -3518,8 +3537,8 @@ demand, and modifies this buffered content, e.g. to allow `text()` to return a
     lexer.lex();
 ~~~
 
-@warning `buffer(b, n)` scans `n`-1 bytes at address `b`.  The length `n`
-should include the final zero byte at the end of the string.
+@warning Function `buffer(b, n)` scans `n`-1 bytes at address `b`.  The length
+`n` should include the final zero byte at the end of the string.
 
 With options `−−flex` and `−−bison` you can also use classic Flex functions:
 
@@ -3577,9 +3596,9 @@ Zero copy overhead is obtained with `yy_scan_buffer(b, n)`:
 used) scans `n`-2 bytes at address `b`.  The length `n` should include *two
 final zero bytes at the end!*
 
-@note `yy_scan_buffer(b, n)` only touches the first final byte and not the
-second byte, since this function is the same as calling `buffer(b, n-1)`.  In
-fact, the specified string may have any final byte value.  The final byte of
+@note Function `yy_scan_buffer(b, n)` only touches the first final byte and not
+the second byte, since this function is the same as calling `buffer(b, n-1)`.
+In fact, the specified string may have any final byte value.  The final byte of
 the string will be set to zero when `text()` (or `yytext`) or `rest()` are
 used.  But otherwise the final byte remains completely untouched by the other
 lexer functions, including `echo()` (and Flex-compatible `ECHO`).  Only
@@ -3755,7 +3774,11 @@ read one character at a time (8-bit, ASCII or UTF-8).  This function returns
 EOF if the end of the input was reached.  But be careful, the Flex `yyinput()`
 and `input()` functions return 0 instead of an `EOF` (-1)!
 
-To put back one character unto the input stream, use `matcher().unput(c)`
+To put back one character unto the input stream, use `matcher().unput(c)` or
+`unput(c)` with option `−−flex`.
+
+@warning Function `unput()` invalidates the previous `text()` and `yytext`
+pointers.  Basically, `text()` and `yytext` cannot be used after `unput()`.
 
 For example, to crudily scan a C/C++ multiline comment we can use the rule:
 
@@ -5053,8 +5076,8 @@ used, `yyerror` has the signature `void yyerror(YYLTYPE *locp, char const
 *msg)`.  This function signature is required to obtain the location information
 with Bison pure-parsers.
 
-@note `yylval` is not a pointer argument but is always passed by reference and
-should be used as such in the scanner's rules.
+@note Argument `yylval` is not a pointer but is passed by reference and should
+be used as such in the scanner's rules.
 
 @note Because `YYSTYPE` is declared by the parser, do not forget to add a
 `#include "y.tab.h"` to the top of the specification of your lexer:
@@ -6715,6 +6738,25 @@ The `line()` and `wline()` methods return the line as a (wide) string with the
 matched text as a substring.  These methods can be used to obtain the context
 of a match.
 
+@warning The methods `span()`, `line()`, and `wline()` invalidate the previous
+`text()`, `begin()`, and `end()` string pointers.  Call these methods again to
+retrieve the updated pointer or call `str()` or `wstr()` to obtain a string
+copy of the match:
+~~~{.cpp}
+    // INCORRECT, because t is invalid after line():
+    const char *t = text();
+    std::string s = line();
+    std::cout << t << " in " << s << std::endl;
+    // OK with line():
+    std::string s = line();
+    const char *t = text();
+    std::cout << t << " in " << s << std::endl;
+    // OK with span():
+    std::string t = str();
+    const char *s = span();
+    std::cout << t << " in " << s << std::endl;
+~~~
+
 The `more()` method is used to create longer matches by stringing together
 consecutive matches in the input.  When this method is invoked, the next match
 has the current matched text prepended to it.  The `more()` operation is often
@@ -7735,7 +7777,7 @@ recognized, for example:
     .    std::cerr << "Error: mystery character at line " << lineno() << ":\n" << matcher().line() << std::endl;
          for (size_t i = columno(); i > 0; --i)
            std::cerr << " ";
-         std::cerr << "\\__ here\n" << std::endl;
+         std::cerr << "\\__ here" << std::endl;
          if (++errors >= max_errors)
            return 0;
     %%
