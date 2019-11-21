@@ -368,6 +368,7 @@ int main(int argc, char **argv)
 
           case '?':
             help();
+            break;
 
           default:
             help("unknown option -", arg);

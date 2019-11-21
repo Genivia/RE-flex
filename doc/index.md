@@ -623,38 +623,40 @@ Casting the matcher object to `size_t` is the same as invoking `accept()`.
 
 You can use this method and other methods to obtain the details of a match:
 
-  Method      | Result
-  ----------- | ---------------------------------------------------------------
-  `accept()`  | returns group capture index (or zero if not captured/matched)
-  `text()`    | returns `const char*` to 0-terminated match (ends in `\0`)
-  `str()`     | returns `std::string` text match (preserves `\0`s)
-  `wstr()`    | returns `std::wstring` wide text match (converted from UTF-8)
-  `chr()`     | returns first 8-bit character of the text match (`str()[0]`)
-  `wchr()`    | returns first wide character of the text match (`wstr()[0]`)
-  `pair()`    | returns `std::pair<size_t,std::string>(accept(),str())`
-  `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
-  `size()`    | returns the length of the text match in bytes
-  `wsize()`   | returns the length of the match in number of wide characters
-  `lines()`   | returns the number of lines in the text match (>=1)
-  `columns()` | returns the number of columns of the text match (>=1)
-  `begin()`   | returns `const char*` to non-0-terminated text match begin
-  `end()`     | returns `const char*` to non-0-terminated text match end
-  `rest()`    | returns `const char*` to 0-terminated rest of input
-  `span()`    | returns `const char*` to 0-terminated match enlarged to span the line
-  `line()`    | returns `std::string` line with the matched text as a substring
-  `wline()`   | returns `std::wstring` line with the matched text as a substring
-  `more()`    | tells the matcher to append the next match (adjacent matches)
-  `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
-  `lineno()`  | returns line number of the match, starting at line 1
-  `columno()` | returns column number of the match in characters, starting at 0
-  `border()`  | returns the byte offset from the start of the line of the match
-  `first()`   | returns input position of the first character of the match
-  `last()`    | returns input position of the last + 1 character of the match
-  `at_bol()`  | true if matcher reached the begin of a new line `\n`
-  `at_bob()`  | true if matcher is at the begin of input and no input consumed
-  `at_end()`  | true if matcher is at the end of input
-  `[0]`       | operator returns `std::pair<const char*,size_t>(begin(),size())`
-  `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
+  Method          | Result
+  --------------- | ---------------------------------------------------------------
+  `accept()`      | returns group capture index (or zero if not captured/matched)
+  `text()`        | returns `const char*` to 0-terminated match (ends in `\0`)
+  `str()`         | returns `std::string` text match (preserves `\0`s)
+  `wstr()`        | returns `std::wstring` wide text match (converted from UTF-8)
+  `chr()`         | returns first 8-bit character of the text match (`str()[0]`)
+  `wchr()`        | returns first wide character of the text match (`wstr()[0]`)
+  `pair()`        | returns `std::pair<size_t,std::string>(accept(),str())`
+  `wpair()`       | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
+  `size()`        | returns the length of the text match in bytes
+  `wsize()`       | returns the length of the match in number of wide characters
+  `lines()`       | returns the number of lines in the text match (>=1)
+  `columns()`     | returns the number of columns of the text match (>=0)
+  `begin()`       | returns `const char*` to non-0-terminated text match begin
+  `end()`         | returns `const char*` to non-0-terminated text match end
+  `rest()`        | returns `const char*` to 0-terminated rest of input
+  `span()`        | returns `const char*` to 0-terminated match enlarged to span the line
+  `line()`        | returns `std::string` line with the matched text as a substring
+  `wline()`       | returns `std::wstring` line with the matched text as a substring
+  `more()`        | tells the matcher to append the next match (adjacent matches)
+  `less(n)`       | cuts `text()` to `n` bytes and repositions the matcher
+  `lineno()`      | returns line number of the match, starting at line 1
+  `columno()`     | returns column number of the match in characters, starting at 0
+  `lineno_end()`  | returns ending line number of the match, starting at line 1
+  `columno_end()` | returns ending column number of the match, starting at 0
+  `border()`      | returns the byte offset from the start of the line of the match
+  `first()`       | returns input position of the first character of the match
+  `last()`        | returns input position + 1 of the last character of the match
+  `at_bol()`      | true if matcher reached the begin of a new line `\n`
+  `at_bob()`      | true if matcher is at the begin of input and no input consumed
+  `at_end()`      | true if matcher is at the end of input
+  `[0]`           | operator returns `std::pair<const char*,size_t>(begin(),size())`
+  `[n]`           | operator returns n'th capture `std::pair<const char*,size_t>`
 
 For a detailed explanation of these methods, see \ref regex-methods-props.
 
@@ -1259,10 +1261,10 @@ matcher specified with option `-m`.
 This option sets the default tab size to `N`, where `N` is 1, 2, 4, or 8.  The
 tab size is used internally to determine the column position for
 \ref reflex-pattern-dents matching and to determine the column position
-returned by `columno()` and the number of columns returned by `columns()`.  It
-has no effect otherwise.  This option assigns the `T=N` value of the
-`reflex::Matcher` constructor options at runtime.  The value may be set at
-runtime with `matcher().tabs(N)` with `N` 1, 2, 4, or 8.
+returned by `columno()`, `columno_end()`, and the number of columns returned by
+`columns()`.  It has no effect otherwise.  This option assigns the `T=N` value
+of the `reflex::Matcher` constructor options at runtime.  The value may be set
+at runtime with `matcher().tabs(N)` with `N` 1, 2, 4, or 8.
 
 #### `-u`, `−−unicode`
 
@@ -1499,7 +1501,9 @@ default rule when no rule matches the input.  This option generates a default
 rule with action `throw VALUE` and replaces the standard default rule that
 echoes all unmatched input text when no rule matches.  This option has no
 effect when option `-S` (or `−−find`) is specified.  See also option `-s` (or
-`−−nodefault`)
+`−−nodefault`).  Care should be taken to advance the input explicitly in the
+exception handler, for example by calling `lexer.matcher().winput()` when
+`lexer.size()` is zero.
 
 #### `−−token-type=NAME`
 
@@ -1887,66 +1891,70 @@ Actions in the rules section can use predefined RE/flex variables and
 functions.  With <b>`reflex`</b> option `−−flex`, the variables and functions
 are the classic Flex actions shown in the second column of this table:
 
-  RE/flex action       | Flex action          | Result
-  -------------------- | -------------------- | -------------------------------
-  `text()`             | `YYText()`, `yytext` | 0-terminated text match
-  `str()`              | *n/a*                | `std::string` text match
-  `wstr()`             | *n/a*                | `std::wstring` wide text match
-  `chr()`              | `yytext[0]`          | first 8-bit char of text match
-  `wchr()`             | *n/a*                | first wide char of text match
-  `size()`             | `YYLeng()`, `yyleng` | size of the match in bytes
-  `wsize()`            | *n/a*                | number of wide chars matched
-  `lines()`            | *n/a*                | number of lines matched (>=1)
-  `columns()`          | *n/a*                | number of columns matched (>=1)
-  `lineno()`           | `yylineno`           | line number of match (>=1)
-  `columno()`          | *n/a*                | column number of match (>=0)
-  `border()`           | *n/a*                | border of the match (>=0)
-  `echo()`             | `ECHO`               | `out().write(text(), size())`
-  `in(i)`              | `yyrestart(i)`       | set input to `reflex::Input i`
-  `in()`, `in() = &i`  | `*yyin`, `yyin = &i` | get/set `reflex::Input i`
-  `out(o)`             | `yyout = &o`         | set output to `std::ostream o`
-  `out()`              | `*yyout`             | get `std::ostream` object
-  `out().write(s, n)`  | `LexerOutput(s, n)`  | output chars `s[0..n-1]`
-  `out().put(c)`       | `output(c)`          | output char `c`
-  `start(n)`           | `BEGIN n`            | set start condition to `n`
-  `start()`            | `YY_START`           | get current start condition
-  `push_state(n)`      | `yy_push_state(n)`   | push current state, start `n`
-  `pop_state()`        | `yy_pop_state()`     | pop state and make it current
-  `top_state()`        | `yy_top_state()`     | get top state start condition
-  `states_empty()`     | *n/a*                | true if state stack is empty
-  `matcher().accept()` | `yy_act`             | number of the matched rule
-  `matcher().text()`   | `YYText()`, `yytext` | same as `text()`
-  `matcher().str()`    | *n/a*                | same as `str()`
-  `matcher().wstr()`   | *n/a*                | same as `wstr()`
-  `matcher().chr()`    | `yytext[0]`          | same as `chr()`
-  `matcher().wchr()`   | *n/a*                | same as `wchr()`
-  `matcher().size()`   | `YYLeng()`, `yyleng` | same as `size()`
-  `matcher().wsize()`  | *n/a*                | same as `wsize()`
-  `matcher().lines()`  | *n/a*                | same as `lines()`
-  `matcher().columns()`| *n/a*                | same as `columns()`
-  `matcher().lineno()` | `yylineno`           | same as `lineno()`
-  `matcher().columno()`| *n/a*                | same as `columno()`
-  `matcher().border()` | *n/a*                | same as `border()`
-  `matcher().begin()`  | *n/a*                | non-0-terminated text match
-  `matcher().end()`    | *n/a*                | non-0-terminated text match end
-  `matcher().input()`  | `yyinput()`          | get next 8-bit char from input
-  `matcher().winput()` | *n/a*                | get wide character from input
-  `matcher().unput(c)` | `unput(c)`           | put back 8-bit char `c`
-  `matcher().peek()`   | *n/a*                | peek at next 8-bit char on input
-  `matcher().skip(c)`  | *n/a*                | skip input until 8-bit char `c`
-  `matcher().more()`   | `yymore()`           | append next match to this match
-  `matcher().less(n)`  | `yyless(n)`          | shrink match length to `n`
-  `matcher().first()`  | *n/a*                | first pos of match in input
-  `matcher().last()`   | *n/a*                | last pos+1 of match in input
-  `matcher().rest()`   | *n/a*                | get rest of input until end
-  `matcher().span()`   | *n/a*                | enlarge match to span line
-  `matcher().line()`   | *n/a*                | get line with the match
-  `matcher().wline()`  | *n/a*                | get line with the match
-  `matcher().at_bob()` | *n/a*                | true if at the begin of input
-  `matcher().at_end()` | *n/a*                | true if at the end of input
-  `matcher().at_bol()` | `YY_AT_BOL()`        | true if at begin of a newline
-  `set_debug(n)`       | `set_debug(n)`       | reflex option `-d` sets `n=1`
-  `debug()`            | `debug()`            | nonzero when debugging
+  RE/flex action           | Flex action          | Result
+  ------------------------ | -------------------- | -------------------------------
+  `text()`                 | `YYText()`, `yytext` | 0-terminated text match
+  `str()`                  | *n/a*                | `std::string` text match
+  `wstr()`                 | *n/a*                | `std::wstring` wide text match
+  `chr()`                  | `yytext[0]`          | first 8-bit char of text match
+  `wchr()`                 | *n/a*                | first wide char of text match
+  `size()`                 | `YYLeng()`, `yyleng` | size of the match in bytes
+  `wsize()`                | *n/a*                | number of wide chars matched
+  `lines()`                | *n/a*                | number of lines matched (>=1)
+  `columns()`              | *n/a*                | number of columns matched (>=0)
+  `lineno()`               | `yylineno`           | line number of match (>=1)
+  `columno()`              | *n/a*                | column number of match (>=0)
+  `lineno_end()`           | *n/a*                | ending line number of match (>=1)
+  `columno_end()`          | *n/a*                | ending column number of match (>=0)
+  `border()`               | *n/a*                | border of the match (>=0)
+  `echo()`                 | `ECHO`               | `out().write(text(), size())`
+  `in(i)`                  | `yyrestart(i)`       | set input to `reflex::Input i`
+  `in()`, `in() = i`       | `*yyin`, `yyin = &i` | get/set `reflex::Input i`
+  `out(o)`                 | `yyout = &o`         | set output to `std::ostream o`
+  `out()`                  | `*yyout`             | get `std::ostream` object
+  `out().write(s, n)`      | `LexerOutput(s, n)`  | output chars `s[0..n-1]`
+  `out().put(c)`           | `output(c)`          | output char `c`
+  `start(n)`               | `BEGIN n`            | set start condition to `n`
+  `start()`                | `YY_START`           | get current start condition
+  `push_state(n)`          | `yy_push_state(n)`   | push current state, start `n`
+  `pop_state()`            | `yy_pop_state()`     | pop state and make it current
+  `top_state()`            | `yy_top_state()`     | get top state start condition
+  `states_empty()`         | *n/a*                | true if state stack is empty
+  `matcher().accept()`     | `yy_act`             | number of the matched rule
+  `matcher().text()`       | `YYText()`, `yytext` | same as `text()`
+  `matcher().str()`        | *n/a*                | same as `str()`
+  `matcher().wstr()`       | *n/a*                | same as `wstr()`
+  `matcher().chr()`        | `yytext[0]`          | same as `chr()`
+  `matcher().wchr()`       | *n/a*                | same as `wchr()`
+  `matcher().size()`       | `YYLeng()`, `yyleng` | same as `size()`
+  `matcher().wsize()`      | *n/a*                | same as `wsize()`
+  `matcher().lines()`      | *n/a*                | same as `lines()`
+  `matcher().columns()`    | *n/a*                | same as `columns()`
+  `matcher().lineno()`     | `yylineno`           | same as `lineno()`
+  `matcher().columno()`    | *n/a*                | same as `columno()`
+  `matcher().lineno_end()` | `yylineno`           | same as `lineno_end()`
+  `matcher().columno_end()`| *n/a*                | same as `columno_end()`
+  `matcher().border()`     | *n/a*                | same as `border()`
+  `matcher().begin()`      | *n/a*                | non-0-terminated text match
+  `matcher().end()`        | *n/a*                | non-0-terminated text match end
+  `matcher().input()`      | `yyinput()`          | get next 8-bit char from input
+  `matcher().winput()`     | *n/a*                | get wide character from input
+  `matcher().unput(c)`     | `unput(c)`           | put back 8-bit char `c`
+  `matcher().peek()`       | *n/a*                | peek at next 8-bit char on input
+  `matcher().skip(c)`      | *n/a*                | skip input until 8-bit char `c`
+  `matcher().more()`       | `yymore()`           | append next match to this match
+  `matcher().less(n)`      | `yyless(n)`          | shrink match length to `n`
+  `matcher().first()`      | *n/a*                | first pos of match in input
+  `matcher().last()`       | *n/a*                | last pos+1 of match in input
+  `matcher().rest()`       | *n/a*                | get rest of input until end
+  `matcher().span()`       | *n/a*                | enlarge match to span line
+  `matcher().line()`       | *n/a*                | get line with the match
+  `matcher().wline()`      | *n/a*                | get line with the match
+  `matcher().at_bob()`     | *n/a*                | true if at the begin of input
+  `matcher().at_end()`     | *n/a*                | true if at the end of input
+  `matcher().at_bol()`     | `YY_AT_BOL()`        | true if at begin of a newline
+  `set_debug(n)`           | `set_debug(n)`       | reflex option `-d` sets `n=1`
+  `debug()`                | `debug()`            | nonzero when debugging
 
 A `reflex::Input` input source is denoted `i` in the table, which can be
 `FILE*` descriptor, `std::istream`, a string `std::string` or `const char*`, or
@@ -1961,7 +1969,7 @@ This clears the line and column counters, resets the internal anchor and
 boundary flags for anchor and word boundary matching, and resets the matcher to
 consume buffered input.
 
-You can also set the input with `in() = &i` (or `yyin = &i)` with option
+You can also set the input with `in() = i` (or `yyin = &i)` with option
 `−−flex`).  This however does not reset the matcher.  This means that when an
 end of input (EOF) was reached, you should clear the EOF state first with
 `matcher().set_end(false)` or reset the matcher state with `matcher().reset()`.
@@ -2018,24 +2026,30 @@ less efficient.  Likewise, `wstr()` returns a wide string copy of the match,
 converted from UTF-8.
 
 The `lineno()` method returns the line number of the match, starting at line 1.
+The ending line number is `lineno_end()`, which is identical to the value of
+`lineno()` + `lines()` - 1.  
+
 The `columno()` method returns the column offset of a match from the start of
 the line, beginning at column 0.  This method takes tab spacing and wide
-characters into account.  To obtain the number of bytes from the start of the
-line use `border()`.  A wide character is counted as one, thus it does not take
-the character width of full-width and combining Unicode characters into
-account.  It is recommended to use the `wcwidth` function or
-[wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to determine Unicode
-character widths.
+characters into account.  The inclusive ending column number is given by
+`columno_end()`, which is equal or larger than `columno()` if the match does
+not span multiple lines.  Otherwise, if the match spans multiple lines,
+`columno_end()` is the ending column of the match on the last matching line.
 
 The `lines()` and `columns()` methods return the number of lines and columns
-matched, where `lines()` and `columns()` return nonzero and `columns()` takes
-tab spacing and wide characters into account.  That is, the starting line of a
-match is `lineno()` and the ending line number is given by
-`lineno() + lines() - 1`.  The starting column of a match is `columno()` and
-the ending column number is given by `columno() + columns() - 1`.
+matched, where `columns()` takes tab spacing and wide characters into account.
+If the match spans multiple lines, `columns()` counts columns over all lines,
+without counting the newline characters.
 
-The starting byte offset of the match on a line is `border()` and the ending
-byte offset of the match is `border() + size() - 1`.
+The starting byte offset of the match on a line is `border()` and the inclusive
+ending byte offset of the match is `border() + size() - 1`.
+
+@note A wide character is counted as one, thus `columno()`, `columno_end()`,
+and `columns()` do not take the character width of full-width and combining
+Unicode characters into account.  It is recommended to use the `wcwidth`
+function or
+[wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to determine Unicode
+character widths.
 
 The `matcher().more()` method is used to create longer matches by stringing
 together consecutive matches in the input.  When this method is invoked, the
@@ -2086,6 +2100,12 @@ pointer or call `str()` or `wstr()` to obtain a string copy of the match:
     const char *s = matcher().span();
     std::cout << t << " in " << s << std::endl;
 ~~~
+The start of a line is truncated when the line is too long.  The length of the
+line's contents before the pattern match on the line is restricted to 8KB,
+which is the size specified by `reflex::AbstractMatcher::Const::BLOCK`.  When
+this length is exceeded, the line's length before the match is truncated to
+8KB.  This ensures that pattern matching binary files or files with very long
+lines cannot cause memory allocation exceptions.
 
 Because `matcher()` returns the current matcher object, the following Flex-like
 actions are also supported:
@@ -3473,7 +3493,7 @@ The following methods are available to specify an input source:
   RE/flex action      | Flex action              | Result
   ------------------- | ------------------------ | ----------------------------
   `in()`              | `*yyin`                  | get pointer to current `reflex::Input i`
-  `in() = &i`         | `yyin = &i`              | set input `reflex::Input i`
+  `in() = i`          | `yyin = &i`              | set input `reflex::Input i`
   `in(i)`             | `yyrestart(i)`           | reset and scan input from `reflex::Input i`
   `in(s)`             | `yy_scan_string(s)`      | reset and scan string `s` (`std::string` or `char*`)
   `in(s)`             | `yy_scan_wstring(s)`     | reset and scan wide string `s` (`std::wstring` or `wchar_t*`)
@@ -3511,7 +3531,7 @@ For example, to switch input to another source while using the scanner, use
     lexer.lex();
 ~~~
 
-You can assign new input with `in() = &i`, which does not reset the lexer's
+You can assign new input with `in() = i`, which does not reset the lexer's
 matcher.  This means that when the end of the input (EOF) is reached, and you
 want to switch to new input, then you should clear the EOF state first with
 `lexer.matcher().set_end(false)` to reset EOF.  Or use
@@ -4678,6 +4698,8 @@ symbols grammar file:
     void yy::parser::error(const std::string& msg)
     {
       std::cerr << msg << std::endl;
+      if (lexer.size() == 0)      // if token is unknown (no match)
+        lexer.matcher().winput(); // skip character
     }
 ~~~
 </div>
@@ -4820,6 +4842,8 @@ symbols grammar file with Bison <i>`%%locations`</i> enabled:
     void yy::parser::error(const location& loc, const std::string& msg)
     {
       std::cerr << loc << ": " << msg << std::endl;
+      if (lexer.size() == 0)      // if token is unknown (no match)
+        lexer.matcher().winput(); // skip character
     }
 ~~~
 </div>
@@ -6660,38 +6684,40 @@ See also \ref regex-methods-props.
 
 To obtain properties of a match, use the following methods:
 
-  Method      | Result
-  ----------- | ---------------------------------------------------------------
-  `accept()`  | returns group capture index (or zero if not captured/matched)
-  `text()`    | returns `const char*` to 0-terminated text match (ends in `\0`)
-  `str()`     | returns `std::string` text match (preserves `\0`s)
-  `wstr()`    | returns `std::wstring` wide text match (converted from UTF-8)
-  `chr()`     | returns first 8-bit character of the text match (`str()[0]`)
-  `wchr()`    | returns first wide character of the text match (`wstr()[0]`)
-  `pair()`    | returns `std::pair<size_t,std::string>(accept(),str())`
-  `wpair()`   | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
-  `size()`    | returns the length of the text match in bytes
-  `wsize()`   | returns the length of the match in number of wide characters
-  `lines()`   | returns the number of lines in the text match (>=1)
-  `columns()` | returns the number of columns of the text match (>=1)
-  `begin()`   | returns `const char*` to non-0-terminated text match begin
-  `end()`     | returns `const char*` to non-0-terminated text match end
-  `rest()`    | returns `const char*` to 0-terminated rest of input
-  `span()`    | returns `const char*` to 0-terminated match enlarged to span the line
-  `line()`    | returns `std::string` line with the matched text as a substring
-  `wline()`   | returns `std::wstring` line with the matched text as a substring
-  `more()`    | tells the matcher to append the next match (adjacent matches)
-  `less(n)`   | cuts `text()` to `n` bytes and repositions the matcher
-  `lineno()`  | returns line number of the match, starting at line 1
-  `columno()` | returns column number of the match, starting at 0
-  `border()`  | returns byte offset from the start of the line of the match
-  `first()`   | returns input position of the first character of the match
-  `last()`    | returns input position of the last + 1 character of the match
-  `at_bol()`  | true if matcher reached the begin of a new line
-  `at_bob()`  | true if matcher is at the begin of input and no input consumed
-  `at_end()`  | true if matcher is at the end of input
-  `[0]`       | operator returns `std::pair<const char*,size_t>(begin(),size())`
-  `[n]`       | operator returns n'th capture `std::pair<const char*,size_t>`
+  Method          | Result
+  --------------- | ---------------------------------------------------------------
+  `accept()`      | returns group capture index (or zero if not captured/matched)
+  `text()`        | returns `const char*` to 0-terminated text match (ends in `\0`)
+  `str()`         | returns `std::string` text match (preserves `\0`s)
+  `wstr()`        | returns `std::wstring` wide text match (converted from UTF-8)
+  `chr()`         | returns first 8-bit character of the text match (`str()[0]`)
+  `wchr()`        | returns first wide character of the text match (`wstr()[0]`)
+  `pair()`        | returns `std::pair<size_t,std::string>(accept(),str())`
+  `wpair()`       | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
+  `size()`        | returns the length of the text match in bytes
+  `wsize()`       | returns the length of the match in number of wide characters
+  `lines()`       | returns the number of lines in the text match (>=1)
+  `columns()`     | returns the number of columns of the text match (>=0)
+  `begin()`       | returns `const char*` to non-0-terminated text match begin
+  `end()`         | returns `const char*` to non-0-terminated text match end
+  `rest()`        | returns `const char*` to 0-terminated rest of input
+  `span()`        | returns `const char*` to 0-terminated match enlarged to span the line
+  `line()`        | returns `std::string` line with the matched text as a substring
+  `wline()`       | returns `std::wstring` line with the matched text as a substring
+  `more()`        | tells the matcher to append the next match (adjacent matches)
+  `less(n)`       | cuts `text()` to `n` bytes and repositions the matcher
+  `lineno()`      | returns line number of the match, starting at line 1
+  `columno()`     | returns column number of the match, starting at 0
+  `lineno_end()`  | returns ending line number of the match, starting at line 1
+  `columno_end()` | returns ending column number of the match, starting at 0
+  `border()`      | returns byte offset from the start of the line of the match
+  `first()`       | returns input position of the first character of the match
+  `last()`        | returns input position + 1 of the last character of the match
+  `at_bol()`      | true if matcher reached the begin of a new line
+  `at_bob()`      | true if matcher is at the begin of input and no input consumed
+  `at_end()`      | true if matcher is at the end of input
+  `[0]`           | operator returns `std::pair<const char*,size_t>(begin(),size())`
+  `[n]`           | operator returns n'th capture `std::pair<const char*,size_t>`
 
 The `accept()` method returns nonzero for a succesful match, returning the
 group capture index.  The RE/flex matcher engine `reflex::Matcher` only
@@ -6713,19 +6739,30 @@ match, which means that `end()` = `begin()` + `size()`.  Use the size of the
 capture returned by `operator[n]` to determine the end of the captured match.
 
 The `lineno()` method returns the line number of the match, starting at line 1.
-The `columno()` method returns the column offset of a match, starting at
-column 0.  The `columno()` method takes tab spacing and wide characters into
-account.  To obtain the byte offset from the start of the line use `border()`.
+The ending line number is `lineno_end()`, which is identical to the value of
+`lineno()` + `lines()` - 1.  
 
-The `lines()` and `columns()` methods return the number of lines and columns
-matched, where `lines()` and `columns()` return nonzero and `columns()` takes
-tab spacing and wide characters into account.  That is, the starting line of a
-match is `lineno()` and the ending line number is given by
-`lineno() + lines() - 1`.  The starting column of a match is `columno()` and
-the ending column number is given by `columno() + columns() - 1`.
+The `columno()` method returns the column offset of a match from the start of
+the line, beginning at column 0.  This method takes tab spacing and wide
+characters into account.  The inclusive ending column number is given by
+`columno_end()`, which is equal or larger than `columno()` if the match does
+not span multiple lines.  Otherwise, if the match spans multiple lines,
+`columno_end()` is the ending column of the match on the last matching line.
 
 The starting byte offset of the match on a line is `border()` and the ending
 byte offset of the match is `border() + size() - 1`.
+
+The `lines()` and `columns()` methods return the number of lines and columns
+matched, where `columns()` takes tab spacing and wide characters into account.
+If the match spans multiple lines, `columns()` counts columns over all lines,
+without counting the newline characters.
+
+@note A wide character is counted as one, thus `columno()`, `columno_end()`,
+and `columns()` do not take the character width of full-width and combining
+Unicode characters into account.  It is recommended to use the `wcwidth`
+function or
+[wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to determine Unicode
+character widths.
 
 The `rest()` method returns the rest of the input character sequence as a
 0-terminated `char*` string.  This method buffers all remaining input to return
@@ -6756,6 +6793,12 @@ copy of the match:
     const char *s = span();
     std::cout << t << " in " << s << std::endl;
 ~~~
+The start of a line is truncated when the line is too long.  The length of the
+line's contents before the pattern match on the line is restricted to 8KB,
+which is the size specified by `reflex::AbstractMatcher::Const::BLOCK`.  When
+this length is exceeded, the line's length before the match is truncated to
+8KB.  This ensures that pattern matching binary files or files with very long
+lines cannot cause memory allocation exceptions.
 
 The `more()` method is used to create longer matches by stringing together
 consecutive matches in the input.  When this method is invoked, the next match
@@ -7774,7 +7817,8 @@ recognized, for example:
     %%
     ...  // lexer rules
 
-    .    std::cerr << "Error: mystery character at line " << lineno() << ":\n" << matcher().line() << std::endl;
+    .    std::string line = matcher().line();
+         std::cerr << "Error: mystery character at line " << lineno() << ":\n" << line << std::endl;
          for (size_t i = columno(); i > 0; --i)
            std::cerr << " ";
          std::cerr << "\\__ here" << std::endl;
@@ -7800,8 +7844,9 @@ bold typeface:
 
 <div class="alt">
 ~~~{.cpp}
-    .    std::cerr << "Error: mystery character at line " << lineno() << ":" << std::endl;
-         std::cerr << matcher().line().substr(0, border()) << "\033[1m --> " << str() << " <-- \033[0m" << std::endl;
+    .    std::string initial = matcher().line().substr(0, border());
+         std::cerr << "Error: mystery character at line " << lineno() << ":" << std::endl;
+         std::cerr << initial << "\033[1m --> " << str() << " <-- \033[0m" << std::endl;
          if (++errors >= max_errors)
            return 0;
 ~~~
@@ -7825,7 +7870,8 @@ example on a semicolon in a \ref reflex-bison-bridge parser:
 ~~~{.cpp}
     %{
       #include "lex.yy.h"
-      #define YYLEX_PARAM lexer
+      #define YYPARSE_PARAM lexer
+      #define YYLEX_PARAM   lexer
       void yyerror(Lexer *lexer, const char *msg);
     %}
 
@@ -7852,14 +7898,164 @@ the \ref reflex-bison-bridge parser:
 ~~~{.cpp}
     void yyerror(Lexer *lexer, const char *msg)
     {
+      std::string initial = lexer->matcher().line().substr(0, border());
       std::cerr << "Error: " << msg << " at line " << lexer->lineno() << ":" << std::endl;
-      std::cerr << lexer->matcher().line().substr(0, lexer->border()) << "\033[1m --> " << lexer->str() << " <-- \033[0m" << std::endl;
+      std::cerr << initial << "\033[1m --> " << lexer->str() << " <-- \033[0m" << std::endl;
     }
 ~~~
 </div>
 
-This assumes that the syntax error was detected immediately at the last token
-scanned and displayed with `lexer->str()`, which may not always be the case.
+With option `−−flex`, the definitions part of the lexer specification is
+updated as follows:
+
+<div class="alt">
+~~~{.cpp}
+    %{
+      #include "lex.yy.h"
+      void yyerror(yyscan_t, const char*);
+      #define YYPARSE_PARAM scanner
+      #define YYLEX_PARAM   scanner
+    %}
+
+    %option flex
+
+    %pure-parser
+    %lex-param { void *scanner }
+    %parse-param { void *scanner }
+~~~
+</div>
+
+And the `yyerror()` function is updated as follows:
+
+<div class="alt">
+~~~{.cpp}
+    void yyerror(yyscan_t scanner, const char *msg)
+    {
+      yyFlexLexer *lexer = static_cast<yyscanner_t*>(scanner);
+      std::string initial = lexer->matcher().line().substr(0, border());
+      std::cerr << "Error: " << msg << " at line " << lexer->lineno() << ":" << std::endl;
+      std::cerr << initial << "\033[1m --> " << lexer->str() << " <-- \033[0m" << std::endl;
+    }
+~~~
+</div>
+
+These examples assume that the syntax error was detected immediately at the
+last token scanned and displayed with `lexer->str()`, which may not always be
+the case.
+
+With \ref reflex-bison-bridge-locations parsers (and optionally `−−flex`),
+we obtain the first and the last line of an error and we can use this
+information to report the error.  For example as follows:
+
+<div class="alt">
+~~~{.cpp}
+    void yyerror(YYLTYPE *yylloc, yyscan_t scanner, const char *msg)
+    {
+      yyFlexLexer *lexer = static_cast<yyscanner_t*>(scanner);
+      std::cerr << "Error: " << msg << " at line " << yylloc->first_line << ":" << std::endl;
+      if (yylloc->first_line == yylloc->last_line && yylloc->first_line == lexer->lineno())
+      {
+        std::cerr << lexer->matcher().line() << std::endl;
+        for (int i = 0; i < yylloc->first_column; ++i)
+           std::cerr << " ";
+        for (int i = yylloc->first_column; i <= yylloc->last_column; ++i)
+           std::cerr << "~";
+        std::cerr << std::endl;
+      }
+      else
+      {
+        FILE *file = lexer->in().file(); // the current FILE* being scanned
+        if (file != NULL)
+        {
+          YY_BUFFER_STATE buf = yy_create_buffer(file, YY_BUF_SIZE, scanner);
+          yypush_buffer_state(buf, scanner); // push current buffer (matcher), use buf
+          off_t pos = ftell(file); // save current position in the file
+          fseek(file, 0, SEEK_SET); // go to the start of the file
+          for (int i = 1; i < yylloc->first_line; ++i)
+            buf->skip('\n'); // skip to the next line
+          for (int i = yylloc->first_line; i <= yylloc->last_line; ++i)
+          {
+            std::cerr << buf->line() << std::endl; // display offending line
+            buf->skip('\n'); // next line
+          }
+          fseek(file, pos, SEEK_SET); // restore position in the file to continue scanning
+          yypop_buffer_state(scanner); // restore buffer (matcher)
+        }
+      }
+    }
+~~~
+</div>
+
+Because we use Flex-compatible reentrant functions `yy_create_buffer()`,
+`yypush_buffer_state()`, and `yypop_buffer_state()` that take an extra scanner
+argument, we also use options `−−flex` and `−−reentrant` in addition to
+`−−bison-bridge` and `−−bison-locations` to generate the scanner for the
+example shown above.
+
+Similarly, with \ref reflex-bison-complete-locations parsers, syntax errors can
+be reported as follows (without option `−−flex`):
+
+<div class="alt">
+~~~{.cpp}
+    void yy::parser::error(const location& loc, const std::string& msg)
+    {
+      std::cerr << loc << ": " << msg << std::endl;
+      if (loc.begin.line == loc.end.line && loc.begin.line == lexer.lineno())
+      {
+        std::cerr << lexer.matcher().line() << std::endl;
+        for (size_t i = 0; i < loc.begin.column; ++i)
+          std::cerr << " ";
+        for (size_t i = loc.begin.column; i <= loc.end.column; ++i)
+          std::cerr << "~";
+        std::cerr << std::endl;
+      }
+      else
+      {
+        FILE *file = lexer.in().file(); // the current file being scanned
+        if (file != NULL)
+        {
+          yy::scanner::Matcher *m = lexer.new_matcher(file); // new matcher
+          lexer.push_matcher(m); // save the current matcher
+          off_t pos = ftell(file); // save current position in the file
+          fseek(file, 0, SEEK_SET); // go to the start of the file
+          for (size_t i = 1; i < loc.begin.line; ++i)
+            m->skip('\n'); // skip to the next line
+          for (size_t i = loc.begin.line; i <= loc.end.line; ++i)
+          {
+            std::cerr << m->line() << std::endl; // display offending line
+            m->skip('\n'); // next line
+          }
+          fseek(file, pos, SEEK_SET); // restore position in the file to continue scanning
+          lexer.pop_matcher(); // restore matcher
+        }
+      }
+    }
+~~~
+</div>
+
+If option `−−exception` is used with a lexer specification, for example as
+follows:
+
+<div class="alt">
+~~~{.cpp}
+    %option exception="yy::parser::error(location(), \"Unknown token.\")"
+~~~
+</div>
+
+then we should make sure to consume some input in the exception handler to
+advance the scanner forward to skip the offending input and to allow the
+scanner to recover:
+
+<div class="alt">
+~~~{.cpp}
+    void yy::parser::error(const location& loc, const std::string& msg)
+    {
+      if (lexer.size() == 0) // if token is unknown (no match)
+          lexer.matcher().winput(); // skip character
+      ...
+    }
+~~~
+</div>
 
 Error reporting can be combined with Bison Lookahead Correction (LAC), which is
 enabled with:
@@ -8204,6 +8400,20 @@ RE/flex applications:
   lexer application.
 
 🔝 [Back to contents](#)
+
+
+Minimized library                                                    {#linking}
+-----------------
+
+RE/flex scanners generated by <b>`reflex`</b> can be linked against a minimized
+version of the RE/flex library `libreflexmin`:
+
+      c++ ... -lreflexmin
+
+The regex converters and the Unicode tables that take up space are excluded
+from this minimized library.
+
+🔝 [Back to table of contents](#)
 
 
 MSVC++ compiler bug                                                     {#msvc}

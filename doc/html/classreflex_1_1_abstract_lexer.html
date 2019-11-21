@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Nov 12 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Nov 21 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -196,12 +196,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0f4cf455c03298f1ca49f118b412d111"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a0f4cf455c03298f1ca49f118b412d111">lines</a> () const </td></tr>
 <tr class="memdesc:a0f4cf455c03298f1ca49f118b412d111"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of lines that the match spans.  <a href="#a0f4cf455c03298f1ca49f118b412d111">More...</a><br /></td></tr>
 <tr class="separator:a0f4cf455c03298f1ca49f118b412d111"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a338a21634404913bd5f38efedf2a109a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a338a21634404913bd5f38efedf2a109a">lineno_end</a> () const </td></tr>
+<tr class="memdesc:a338a21634404913bd5f38efedf2a109a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ending line number of matched text.  <a href="#a338a21634404913bd5f38efedf2a109a">More...</a><br /></td></tr>
+<tr class="separator:a338a21634404913bd5f38efedf2a109a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7991f7785e86d29c9f64d9991ce47f9e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a7991f7785e86d29c9f64d9991ce47f9e">columno</a> () const </td></tr>
 <tr class="memdesc:a7991f7785e86d29c9f64d9991ce47f9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each.  <a href="#a7991f7785e86d29c9f64d9991ce47f9e">More...</a><br /></td></tr>
 <tr class="separator:a7991f7785e86d29c9f64d9991ce47f9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cdf0a400fd515dc2141b993a887cfbe"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a8cdf0a400fd515dc2141b993a887cfbe">columns</a> () const </td></tr>
 <tr class="memdesc:a8cdf0a400fd515dc2141b993a887cfbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of columns of the last line (or the single line of matched text) in the matched text, taking tab spacing into account and counting wide characters as one character each.  <a href="#a8cdf0a400fd515dc2141b993a887cfbe">More...</a><br /></td></tr>
 <tr class="separator:a8cdf0a400fd515dc2141b993a887cfbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a834e21c4d177c26956dfe0d90beb677a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a834e21c4d177c26956dfe0d90beb677a">columno_end</a> () const </td></tr>
+<tr class="memdesc:a834e21c4d177c26956dfe0d90beb677a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ending column number of matched text, taking tab spacing into account and counting wide characters as one character each.  <a href="#a834e21c4d177c26956dfe0d90beb677a">More...</a><br /></td></tr>
+<tr class="separator:a834e21c4d177c26956dfe0d90beb677a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a905c83f6978b3599c43167ae3c7f5b30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_lexer.html">AbstractLexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a905c83f6978b3599c43167ae3c7f5b30">start</a> (int state)</td></tr>
 <tr class="memdesc:a905c83f6978b3599c43167ae3c7f5b30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transition to the given start condition state.  <a href="#a905c83f6978b3599c43167ae3c7f5b30">More...</a><br /></td></tr>
 <tr class="separator:a905c83f6978b3599c43167ae3c7f5b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -437,6 +443,34 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the starting column number of matched text, taking tab spacing into account and counting wide characters as one character each. </p>
+<dl class="section return"><dt>Returns</dt><dd>column number </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a834e21c4d177c26956dfe0d90beb677a"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt; M &gt;::columno_end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the ending column number of matched text, taking tab spacing into account and counting wide characters as one character each. </p>
 <dl class="section return"><dt>Returns</dt><dd>column number </dd></dl>
 
 </div>
@@ -743,6 +777,34 @@ template&lt;typename M &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the line number of matched text. </p>
+<dl class="section return"><dt>Returns</dt><dd>line number </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a338a21634404913bd5f38efedf2a109a"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t <a class="el" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt; M &gt;::lineno_end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the ending line number of matched text. </p>
 <dl class="section return"><dt>Returns</dt><dd>line number </dd></dl>
 
 </div>
@@ -1780,7 +1842,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Nov 12 2019 11:27:43 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Nov 21 2019 16:44:57 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

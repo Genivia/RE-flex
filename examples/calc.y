@@ -15,12 +15,13 @@
 
 %{
   #include "lex.yy.h"
-  #define YYLEX_PARAM lexer
+  #define YYPARSE_PARAM lexer
+  #define YYLEX_PARAM   lexer
   void yyerror(Lexer *lexer, const char *msg);
 %}
 
 %pure-parser
-%lex-param { Lexer *lexer }
+%lex-param   { Lexer *lexer }
 %parse-param { Lexer *lexer }
 
 %union {
@@ -67,8 +68,8 @@ int main()
 
 void yyerror(Lexer *lexer, const char *msg)
 {
-  std::cerr << "Error: " << msg << " at " << lexer->lineno() << "," << lexer->columno() << "\n" <<
-    lexer->matcher().line() << ":\n";
+  std::string line = lexer->matcher().line();
+  std::cerr << "Error: " << msg << " at " << lexer->lineno() << "," << lexer->columno() << "\n" << line << ":" << std::endl;
   for (size_t i = lexer->columno(); i > 0; --i)
     std::cerr << " ";
   std::cerr << "\\__ here" << std::endl;

@@ -2,7 +2,7 @@
 %{
 #include <stdio.h>
 %}
-%option flex noyywrap interactive
+%option fast flex noyywrap interactive
 /*
    This example uses the implicit "default rule" to echo newlines, which are
    not matched by . (dot).

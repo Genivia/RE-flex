@@ -1,4 +1,3 @@
-/* Parser to emit a name returned by the scanner as a string token */
 /* Demonstrates Bison C++ complete interface see Bison 10.1.6.2 Complete Symbols */
 /* Compile: bison -d reflexexample11.yxx */
 
@@ -21,8 +20,25 @@
 %parse-param { yy::scanner& lexer }
 
 %define api.token.prefix {TOK_}
-%token <std::string> TOKEN "Token"
-%token EOF 0 "End of file"
+%token <std::wstring> STR "String";
+%token <std::wstring> VAR "Variable";
+%token <double>       NUM "Number";
+%token EOF            0   "End of file";
+%token '+';
+%token '-';
+%token '*';
+%token '/';
+%token '=';
+%token '(';
+%token ')';
+%token ';';
+
+%right '='
+%left  '+' '-'
+%left  '*' '/'
+%right NEG
+
+%type <double> expr
 
 %code requires {
   namespace yy {
@@ -40,22 +56,76 @@
 
 %%
 
-rule: TOKEN { std::cout << $1 << std::endl; };
+stmt : stmt calc ';'
+     | stmt ';'           { lexer.out() << "? "; }
+     | error ';'          { yyerrok; }
+     |
+     ;
+calc : expr               { lexer.out() << "=> " << $1 << std::endl; }
+     ;
+expr : VAR '=' expr       { $$ = lexer.map[$1] = $3; }
+     | expr '+' expr      { $$ = $1 + $3; }
+     | expr '-' expr      { $$ = $1 - $3; }
+     | expr '*' expr      { $$ = $1 * $3; }
+     | expr '/' expr      { $$ = $1 / $3; }
+     | '-' %prec NEG expr { $$ = -$2; }
+     | '(' expr ')'       { $$ = $2; }
+     | VAR                { $$ = lexer.map[$1]; }
+     | NUM                { $$ = $1; }
+     ;
 
 %%
 
 void yy::parser::error(const location& loc, const std::string& msg)
 {
   std::cerr << loc << ": " << msg << std::endl;
+  if (loc.begin.line == loc.end.line && loc.begin.line == lexer.lineno())
+  {
+    std::cerr << lexer.matcher().line() << std::endl;
+    for (size_t i = 0; i < loc.begin.column; ++i)
+      std::cerr << " ";
+    for (size_t i = loc.begin.column; i <= loc.end.column; ++i)
+      std::cerr << "~";
+    std::cerr << std::endl;
+  }
+  else
+  {
+    FILE *file = lexer.in().file(); // the current file being scanned
+    if (file != NULL)
+    {
+      yy::scanner::Matcher *m = lexer.new_matcher(file); // new matcher
+      lexer.push_matcher(m); // save the current matcher
+      off_t pos = ftell(file); // save current position in the file
+      fseek(file, 0, SEEK_SET); // go to the start of the file
+      for (size_t i = 1; i < loc.begin.line; ++i)
+        m->skip('\n'); // skip to the next line
+      for (size_t i = loc.begin.line; i <= loc.end.line; ++i)
+      {
+        std::cerr << m->line() << std::endl; // display the offending line
+        m->skip('\n'); // next line
+      }
+      fseek(file, pos, SEEK_SET); // restore position in the file to continue scanning
+      lexer.pop_matcher(); // restore matcher
+    }
+  }
+  if (lexer.size() == 0) // if token is unknown (no match)
+    lexer.matcher().winput(); // skip character
 }
 
 int main(int argc, char **argv)
 {
   if (argc < 2)
-    return 1;
+    return EXIT_FAILURE;
 
-  std::ifstream ifs(argv[1], std::ios::in);
-  yy::scanner scanner(ifs, std::cout);
+  FILE *file = fopen(argv[1], "r");
+
+  if (file == NULL)
+  {
+    perror("Cannot open file");
+    return EXIT_FAILURE;
+  }
+
+  yy::scanner scanner(file, std::cout);
   yy::parser parser(scanner);
   return parser.parse();
 }

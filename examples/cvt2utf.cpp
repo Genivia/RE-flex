@@ -127,6 +127,7 @@ int main(int argc, char **argv)
           case '?':
           case 'h':
             help();
+            break;
 
           default:
             help("unknown option -", arg);

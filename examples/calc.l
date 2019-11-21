@@ -32,7 +32,7 @@
   std::wstring                  var;
 %}
 
-%option bison-bridge header-file interactive unicode freespace
+%option fast bison-bridge header-file interactive unicode freespace
 
 var    \p{UnicodeIdentifierStart} \p{UnicodeIdentifierPart}*
 exp    [Ee] [-+]? \d+

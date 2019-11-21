@@ -19,12 +19,12 @@ CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
 
 .PHONY:			release install clean distclean
 
-release:		libreflex.a libreflex.so
+release:		libreflex.a libreflex.so libreflexmin.a libreflexmin.so
 
 install:		release
 			@echo
 			@echo "Installing libreflex in $(INSTALL_LIB)"
-			-cp -f -p libreflex.a $(INSTALL_LIB)
+			-cp -f -p libreflex.a libreflexmin.a $(INSTALL_LIB)
 			-mkdir -p $(INSTALL_INC)
 			@echo
 			@echo "Installing reflex header files in $(INSTALL_INC)"
@@ -34,7 +34,14 @@ libreflex.a:		convert.o debug.o error.o input.o block_scripts.o language_scripts
 			$(AR) -rsc $@ $^
 			$(RANLIB) $@
 
+libreflexmin.a:		debug.o error.o input.o matcher.o pattern.o utf8.o
+			$(AR) -rsc $@ $^
+			$(RANLIB) $@
+
 libreflex.so:		convert.cpp debug.cpp error.cpp input.cpp ../unicode/block_scripts.cpp ../unicode/language_scripts.cpp ../unicode/letter_scripts.cpp matcher.cpp pattern.cpp posix.cpp unicode.cpp utf8.cpp
+			$(CPP) $(CFLAGS) -shared -o $@ -fPIC $^
+
+libreflexmin.so:	debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp utf8.cpp
 			$(CPP) $(CFLAGS) -shared -o $@ -fPIC $^
 
 block_scripts.o:	../unicode/block_scripts.cpp

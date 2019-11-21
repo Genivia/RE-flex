@@ -1,6 +1,6 @@
 /* Parser to emit names returned by the scanner as string tokens */
 /* Demonstrates Bison C++ complete interface */
-/* Compile: reflex --flex --bison-complete --bison-locations reflexexample11.lxx */
+/* Compile: reflex --flex --bison-complete --bison-locations flexexample11.lxx */
 /* Compile: bison -d reflexexample11.yxx */
 
 %top{

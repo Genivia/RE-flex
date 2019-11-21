@@ -300,6 +300,7 @@ calc:		calc.l calc.y
 		$(REFLEX) $(REFLAGS) calc.l
 		$(YACC) -d calc.y
 		$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+		./calc < calc.test
 
 wc:		wc.l
 		$(REFLEX) $(REFLAGS) --flex wc.l

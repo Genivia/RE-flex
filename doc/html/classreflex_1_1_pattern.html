@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Nov 12 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Nov 21 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -322,8 +322,10 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a87ad6f65bf821d26564a23c4abba137c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a187faf20988e050da392b193d9103dd6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a187faf20988e050da392b193d9103dd6">gencode_dfa</a> (const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> &amp;start) const </td></tr>
 <tr class="separator:a187faf20988e050da392b193d9103dd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d6270d42db10b99a3e96e7ab0dbb5a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a2d6270d42db10b99a3e96e7ab0dbb5a5">gencode_dfa_closure</a> (FILE *fd, const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> *start, int nest) const </td></tr>
-<tr class="separator:a2d6270d42db10b99a3e96e7ab0dbb5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2456a0755ae0642d444ea26fe1c52d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aa2456a0755ae0642d444ea26fe1c52d0">check_dfa_closure</a> (const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> *state, int nest, bool &amp;peek, bool &amp;prev) const </td></tr>
+<tr class="separator:aa2456a0755ae0642d444ea26fe1c52d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1398639a38ac4793f89d72d1e432583c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a1398639a38ac4793f89d72d1e432583c">gencode_dfa_closure</a> (FILE *fd, const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> *start, int nest, bool peek) const </td></tr>
+<tr class="separator:a1398639a38ac4793f89d72d1e432583c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad17af88082dbd8e8fbfa01912cef09ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ad17af88082dbd8e8fbfa01912cef09ab">delete_dfa</a> (<a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> &amp;start)</td></tr>
 <tr class="separator:ad17af88082dbd8e8fbfa01912cef09ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa834ea7a2d631d973aaaf1cc7c320e7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aa834ea7a2d631d973aaaf1cc7c320e7f">export_dfa</a> (const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> &amp;start) const </td></tr>
@@ -1381,6 +1383,52 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa2456a0755ae0642d444ea26fe1c52d0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::Pattern::check_dfa_closure </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structreflex_1_1_pattern_1_1_state.html">State</a> *&#160;</td>
+          <td class="paramname"><em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"><em>peek</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"><em>prev</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a7e09054af04bea1f99c87fc4b71f952a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2069,7 +2117,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2d6270d42db10b99a3e96e7ab0dbb5a5"></a>
+<a class="anchor" id="a1398639a38ac4793f89d72d1e432583c"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -2092,7 +2140,13 @@ Friends</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>nest</em>&#160;</td>
+          <td class="paramname"><em>nest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>peek</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4320,7 +4374,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Nov 12 2019 11:27:43 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Nov 21 2019 16:44:58 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -94,14 +94,15 @@ class zstreambuf : public std::streambuf {
       len_()
   {
     int fd = dup(fileno(file));
-    gzfile_ = gzdopen(fd, "r");
-    if (gzfile_ != Z_NULL)
+    if (fd >= 0 && (gzfile_ = gzdopen(fd, "r")) != Z_NULL)
       gzbuffer(gzfile_, Z_BUF_LEN);
+    else if (fd >= 0)
+      close(fd);
   }
   virtual ~zstreambuf()
   {
     if (gzfile_ != Z_NULL)
-      gzclose(gzfile_);
+      gzclose_r(gzfile_);
   }
  protected:
   int_type underflow()
@@ -147,7 +148,7 @@ class zstreambuf : public std::streambuf {
     len_ = gzread(gzfile_, buf_, Z_BUF_LEN);
     if (len_ <= 0)
     {
-      close();
+      finish();
       return traits_type::eof();
     }
     return traits_type::to_int_type(buf_[cur_]);
@@ -160,12 +161,12 @@ class zstreambuf : public std::streambuf {
     len_ = gzread(gzfile_, buf_, Z_BUF_LEN);
     if (len_ <= 0)
     {
-      close();
+      finish();
       return traits_type::eof();
     }
     return traits_type::to_int_type(buf_[cur_++]);
   }
-  void close()
+  void finish()
   {
     if (!gzeof(gzfile_))
     {
