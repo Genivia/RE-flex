@@ -857,18 +857,22 @@ class AbstractMatcher {
     return bol_;
   }
   /// Returns pointer to the end of line in the buffer after the matched text, DANGER: invalidates previous bol() and text() pointers, only use eol() before bol() and text().
-  inline const char *eol()
+  inline const char *eol(bool inclusive = false) ///< true if eol should be inclusive, i.e. after \n
     /// @returns pointer to the end of line
   {
     if (chr_ == '\n' || txt_[len_] == '\n')
       return txt_ + len_;
+    size_t tmp = pos_;
     while (true)
     {
       if (pos_ < end_)
       {
         char *s = static_cast<char*>(std::memchr(buf_ + pos_, '\n', end_ - pos_));
         if (s != NULL)
-          return s;
+        {
+          pos_ = tmp;
+          return s + inclusive;
+        }
       }
       if (eof_)
         break;
@@ -881,6 +885,7 @@ class AbstractMatcher {
         break;
       }
     }
+    pos_ = tmp;
     return buf_ + end_;
   }
   /// Returns the byte offset of the match from the start of the line.
@@ -927,7 +932,8 @@ class AbstractMatcher {
   }
 #endif
   /// Skip input until the specified character is consumed and return true, or EOF is reached and return false.
-  bool skip(int c)
+  bool skip(int c) ///< character to skip to
+    /// @returns true if skipped to c, false if EOf is reached
   {
     DBGLOG("AbstractMatcher::skip()");
     reset_text();

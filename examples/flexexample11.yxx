@@ -1,5 +1,5 @@
 /* Demonstrates Bison C++ complete interface see Bison 10.1.6.2 Complete Symbols */
-/* Compile: reflex --bison-complete --bison-locations reflexexample11.lxx */
+/* Compile: reflex --flex --bison-complete --bison-locations flexexample11.lxx */
 /* Compile: bison -d reflexexample11.yxx */
 
 %require "3.2"
@@ -21,10 +21,10 @@
 %parse-param { yy::scanner& lexer }
 
 %define api.token.prefix {TOK_}
-%token <std::wstring> STR "String";
-%token <std::wstring> VAR "Variable";
-%token <double>       NUM "Number";
-%token EOF            0   "End of file";
+%token <std::string> STR "String";
+%token <std::string> VAR "Variable";
+%token <double>      NUM "Number";
+%token EOF           0   "End of file";
 %token '+';
 %token '-';
 %token '*';
@@ -52,7 +52,7 @@
   #include <iostream>
   #include <fstream>
   #undef yylex
-  #define yylex lexer.lex  /* Within bison's parse() we should invoke lexer.lex(), not the global yylex() */
+  #define yylex lexer.yylex  /* Within bison's parse() we should invoke lexer.yylex(), not the global yylex() */
 }
 
 %%
@@ -94,19 +94,19 @@ void yy::parser::error(const location& loc, const std::string& msg)
     FILE *file = lexer.in().file(); // the current file being scanned
     if (file != NULL)
     {
-      yy::scanner::Matcher *m = lexer.new_matcher(file); // new matcher
-      lexer.push_matcher(m); // save the current matcher
+      YY_BUFFER_STATE buf = yy_create_buffer(file, YY_BUF_SIZE, &lexer);
+      yypush_buffer_state(buf, &lexer); // push current buffer (matcher), use buf
       off_t pos = ftell(file); // save current position in the file
       fseek(file, 0, SEEK_SET); // go to the start of the file
       for (size_t i = 1; i < loc.begin.line; ++i)
-        m->skip('\n'); // skip to the next line
+        buf->skip('\n'); // skip to the next line
       for (size_t i = loc.begin.line; i <= loc.end.line; ++i)
       {
-        std::cerr << m->line() << std::endl; // display the offending line
-        m->skip('\n'); // next line
+        std::cerr << buf->line() << std::endl; // display offending line
+        buf->skip('\n'); // next line
       }
       fseek(file, pos, SEEK_SET); // restore position in the file to continue scanning
-      lexer.pop_matcher(); // restore matcher
+      yypop_buffer_state(&lexer); // restore buffer (matcher)
     }
   }
   if (lexer.size() == 0) // if token is unknown (no match)
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  yy::scanner scanner(file, std::cout);
+  yy::scanner scanner(file, &std::cout);
   yy::parser parser(scanner);
   return parser.parse();
 }
