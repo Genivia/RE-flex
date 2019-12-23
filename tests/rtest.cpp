@@ -597,6 +597,39 @@ int main()
   if (test != "abc/def/")
     error("skip");
   //
+  matcher.input("abc  ¶def¶");
+  test = "";
+  if (matcher.scan())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+    matcher.skip(L'¶');
+  }
+  if (matcher.scan())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+    matcher.skip(L'¶');
+  }
+  //
+  matcher.input("abc  xxydef xx");
+  test = "";
+  if (matcher.scan())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+    matcher.skip("xy");
+  }
+  if (matcher.scan())
+  {
+    std::cout << matcher.text() << "/";
+    test.append(matcher.text()).append("/");
+    matcher.skip("xy");
+  }
+  std::cout << std::endl;
+  if (test != "abc/def/")
+    error("skip");
+  //
 #ifdef WITH_SPAN
   banner("TEST SPAN");
   //

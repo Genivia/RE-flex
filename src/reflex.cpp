@@ -120,6 +120,7 @@ static const char *options_table[] = {
   "stdout",
   "tables_file",
   "tabs",
+  "token_eof",
   "token_type",
   "unicode",
   "unput",
@@ -704,7 +705,7 @@ void Reflex::include(const std::string& filename)
   FILE *file = NULL;
   fopen_s(&file, filename.c_str(), "r");
   if (file == NULL)
-    abort("cannot open file ", infile.c_str());
+    abort("cannot include file ", filename.c_str());
   std::string save_infile(infile);
   infile = filename;
   reflex::BufferedInput save_in(in);
@@ -855,7 +856,7 @@ bool Reflex::is_initcode()
 /// Advance pos over name (letters, digits, ., -, _ or any non-ASCII character > U+007F), return name
 std::string Reflex::get_name(size_t& pos)
 {
-  if (pos >= linelen || (!std::isalnum(line.at(pos)) && (line.at(pos) & 0x80) != 0x80))
+  if (pos >= linelen || (!std::isalnum(line.at(pos)) && line.at(pos) != '_' && (line.at(pos) & 0x80) != 0x80))
     return "";
   size_t loc = pos++;
   while (pos < linelen)
@@ -870,8 +871,6 @@ std::string Reflex::get_name(size_t& pos)
 /// Advance pos over option name or namespace (letters, digits, ::, ., -, _ or any non-ASCII character > U+007F), return name
 std::string Reflex::get_namespace(size_t& pos)
 {
-  if (pos >= linelen || (!std::isalnum(line.at(pos)) && (line.at(pos) & 0x80) != 0x80))
-    return "";
   size_t loc = pos++;
   while (pos < linelen)
   {
@@ -1018,26 +1017,25 @@ std::string Reflex::get_regex(size_t& pos)
       nsp = pos;
   }
   regex.append(line.substr(loc, pos - loc));
-
-  if (regex == "<<EOF>>")
-    return regex;
-
-  reflex::convert_flag_type flags = reflex::convert_flag::lex;
-  if (!options["case_insensitive"].empty())
-    flags |= reflex::convert_flag::anycase;
-  if (!options["dotall"].empty())
-    flags |= reflex::convert_flag::dotall;
-  if (!options["freespace"].empty())
-    flags |= reflex::convert_flag::freespace;
-  if (!options["unicode"].empty())
-    flags |= reflex::convert_flag::unicode;
-  try
+  if (regex != "<<EOF>>")
   {
-    regex = reflex::convert(regex, library->signature, flags, &definitions); 
-  }
-  catch (reflex::regex_error& e)
-  {
-    error("malformed regular expression or unsupported syntax\n", e.what(), at_lineno);
+    reflex::convert_flag_type flags = reflex::convert_flag::lex;
+    if (!options["case_insensitive"].empty())
+      flags |= reflex::convert_flag::anycase;
+    if (!options["dotall"].empty())
+      flags |= reflex::convert_flag::dotall;
+    if (!options["freespace"].empty())
+      flags |= reflex::convert_flag::freespace;
+    if (!options["unicode"].empty())
+      flags |= reflex::convert_flag::unicode;
+    try
+    {
+      regex = reflex::convert(regex, library->signature, flags, &definitions); 
+    }
+    catch (reflex::regex_error& e)
+    {
+      error("malformed regular expression or unsupported syntax\n", e.what(), at_lineno);
+    }
   }
   return regex;
 }
@@ -1355,7 +1353,7 @@ void Reflex::parse_section_1()
                 {
                   std::string name = get_option(pos);
                   if (name.empty())
-                    error("bad %option name");
+                    error("bad %option name or value");
                   if (name != "c__") // %option c++ has no effect
                   {
                     StringMap::iterator i = options.find(name);
@@ -1601,6 +1599,8 @@ void Reflex::write()
     options["YYSTYPE"] = options["bison_cc_namespace"] + "::" + options["bison_cc_parser"] + "::semantic_type";
   if (!options["bison_complete"].empty() && options["token_type"].empty())
     options["token_type"] = options["bison_cc_namespace"] + "::" + options["bison_cc_parser"] + "::symbol_type";
+  if (!options["bison_complete"].empty() && options["token_eof"].empty())
+    options["token_eof"] = options["token_type"] + (options["bison_locations"].empty() ? "(0)" : "(0, location())");
   std::string token_type = options["token_type"].empty() ? "int" : options["token_type"];
   std::string yyltype = options["YYLTYPE"].empty() ? "YYLTYPE" : options["YYLTYPE"];
   std::string yystype = options["YYSTYPE"].empty() ? "YYSTYPE" : options["YYSTYPE"];
@@ -2290,6 +2290,7 @@ void Reflex::write_lexer()
     return;
   std::string lex = options["lex"];
   std::string token_type = options["token_type"].empty() ? "int" : options["token_type"];
+  std::string token_eof = options["token_eof"].empty() ? token_type + "()" : options["token_eof"];
   std::string yyltype = options["YYLTYPE"].empty() ? "YYLTYPE" : options["YYLTYPE"];
   std::string yystype = options["YYSTYPE"].empty() ? "YYSTYPE" : options["YYSTYPE"];
   if (!options["bison_cc"].empty() || !options["bison_complete"].empty())
@@ -2571,7 +2572,7 @@ void Reflex::write_lexer()
       *out <<
         "        {\n"
         "          case 0:\n"
-        "            return " << token_type << "();\n";
+        "            return " << token_eof << ";\n";
     }
     else
     {
@@ -2617,7 +2618,7 @@ void Reflex::write_lexer()
             "              yyterminate();\n";
         else
           *out <<
-            "              return " << token_type << "();\n";
+            "              return " << token_eof << ";\n";
       }
       *out <<
         "            }\n"

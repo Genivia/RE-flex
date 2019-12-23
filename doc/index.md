@@ -712,7 +712,8 @@ The following methods may be used to manipulate the input stream directly:
   `winput()` | returns next wide character from the input, matcher skips it
   `unput(c)` | put char `c` back unto the stream, matcher then takes it
   `peek()`   | returns next 8-bit char from the input without consuming it
-  `skip(c)`  | skip input until 8-bit character `c` is consumed
+  `skip(c)`  | skip input until character `c` (`char` or `wchar_t`) is consumed
+  `skip(s)`  | skip input until UTF-8 string `s` is consumed
   `rest()`   | returns the remaining input as a 0-terminated `char*` string
 
 The `input()`, `winput()`, and `peek()` methods return a non-negative character
@@ -1466,9 +1467,11 @@ This option specifies the class `NAME` of the Bison 3.0
 This option generates a ascnner that works with Bison 3.2 C++ complete symbols,
 specified by <i>`%%define api.value.type variant`</i> and
 <i>`%%define api.token.constructor`</i> in a Bison grammar file.  This option
-also sets options `−−bison-cc` and `−−token-type`.  Combine this option with
-`−−bison-locations` to support the Bison <i>`%%locations`</i> feature.  See
-\ref reflex-bison-complete for more details.
+also sets option `−−bison-cc` and sets `−−token-type` to the parser's
+`symbol_type`, and sets `−−token-eof` to `0`, assuming these options are not
+specified already.  Combine this option with `−−bison-locations` to support the
+Bison <i>`%%locations`</i> feature.  See \ref reflex-bison-complete for more
+details.
 
 #### `−−bison-locations`
 
@@ -1513,6 +1516,14 @@ by default.  This option may be used to specify an alternate token type.
 Option `−−bison-complete` automatically defines the appropriate token type
 `symbol_type` depending the the parameters specified with options
 `−−bison-cc-namespace` and `−−bison-cc-parser`.
+
+#### `−−token-eof=VALUE`
+
+This option specifies the value returned by `lex()` and `yylex()` when the end
+of the input is reached and when no `<<EOF>>` rule is present.  By default, a
+default-constructed token type value is returned when the end of input is
+reached.  For `int` this is `int()`, which is zero.  By setting
+`−−token-type=EOF` the value `EOF` is returned, for example.
 
 🔝 [Back to table of contents](#)
 
@@ -1941,7 +1952,8 @@ are the classic Flex actions shown in the second column of this table:
   `matcher().winput()`     | *n/a*                | get wide character from input
   `matcher().unput(c)`     | `unput(c)`           | put back 8-bit char `c`
   `matcher().peek()`       | *n/a*                | peek at next 8-bit char on input
-  `matcher().skip(c)`      | *n/a*                | skip input until 8-bit char `c`
+  `matcher().skip(c)`      | *n/a*                | skip input to char `c`
+  `matcher().skip(s)`      | *n/a*                | skip input to UTF-8 string `s`
   `matcher().more()`       | `yymore()`           | append next match to this match
   `matcher().less(n)`      | `yyless(n)`          | shrink match length to `n`
   `matcher().first()`      | *n/a*                | first pos of match in input
@@ -1994,10 +2006,11 @@ reached.
 `−−flex`) is invoked!  A matcher is not initially assigned to a lexer when the
 lexer is constructed, leaving `matcher()` undefined.
 
-The `matcher().skip(c)` method skips input until character `c` is consumed
-and returns `true` when found.  This method changes `text()` (and `yytext` with
-option `−−flex`).  This method is more efficient than repeatedly calling
-`matcher().input()`.
+The `matcher().skip(c)` method skips input until `char` or wide `wchar_t`
+character `c` is consumed and returns `true` when found.  This method changes
+`text()` (and `yytext` with option `−−flex`).  This method is more efficient
+than repeatedly calling `matcher().input()`.  Likewise, `matcher().skip(s)`
+skips input until UTF-8 string `s` is consumed and returns `true` when found.
 
 Use <b>`reflex`</b> options `−−flex` and `−−bison` to enable global Flex
 actions and variables.  This makes Flex actions and variables globally
@@ -3829,16 +3842,11 @@ Instead of the crude approach shown above, a better alternative is to use a
 regex `/\*.*?\*/` or perhaps use start condition states, see
 \ref reflex-states.
 
-Another fast approach is to use `skip('*')` to skip input and check for a `/`:
+A simpler and faster approach is to use `skip("*/")` to skip comments:
 
 <div class="alt">
 ~~~{.cpp}
-    "/*"    {  /* skip multiline comments */
-      int c;
-      while (skip('*') && (c = yyinput()) != 0)
-        if (c == '/')
-          break;
-    }
+    "/*"    skip("*/");
 ~~~
 </div>
 
@@ -4468,10 +4476,10 @@ Bison:
   `−−flex` `−−bison-cc`                           | `int yyFlexLexer::yylex(YYSTYPE *yylval)`                  | no global variables
   `−−bison-cc` `−−bison-locations`                | `int Lexer::yylex(YYSTYPE *yylval, YYLTYPE *yylloc)`       | no global variables
   `−−flex` `−−bison-cc` `−−bison-locations`       | `int yyFlexLexer::yylex(YYSTYPE *yylval, YYLTYPE *yylloc)` | no global variables
-  `−−bison-complete`                              | `int Lexer::yylex()`                                       | no global variables
-  `−−flex` `−−bison-complete`                     | `int yyFlexLexer::yylex()`                                 | no global variables
-  `−−bison-complete` `−−bison-locations`          | `int Lexer::yylex()`                                       | no global variables
-  `−−flex` `−−bison-complete` `−−bison-locations` | `int yyFlexLexer::yylex()`                                 | no global variables
+  `−−bison-complete`                              | `PARSER::symbol_type Lexer::yylex()`                       | no global variables
+  `−−flex` `−−bison-complete`                     | `PARSER::symbol_type yyFlexLexer::yylex()`                 | no global variables
+  `−−bison-complete` `−−bison-locations`          | `PARSER::symbol_type Lexer::yylex()`                       | no global variables
+  `−−flex` `−−bison-complete` `−−bison-locations` | `PARSER::symbol_type yyFlexLexer::yylex()`                 | no global variables
 
 Option `−−prefix` may be used with option `−−flex` to change the prefix of the
 generated `yyFlexLexer` and `yylex`.  This option may be combined with option
@@ -4483,8 +4491,15 @@ Furthermore, <b>`reflex`</b> options `−−namespace=NAME`, `−−lexer=LEXER`
 (`Lexer` or `yyFlexLexer` by default) and to rename the lexer function (`lex`
 or `yylex` by default), respectively.
 
-The following sections explain the `−−bison-cc`, `−−bison-bridge`,
-`−−bison-locations` and `−−reentrant` options for <b>`reflex`</b>.
+For option `−−bison-complete` the lexer function return type is the parser's
+`symbol_type` as defined in the Bison grammar specification.  The parser class
+is specified with option `−−bison-cc-parser=PARSER` and an optional namespace
+may be specified with `−−bison-cc-namespace=NAME`.  The lexer function return
+type may also be explicitly specified with option `−−token-type=TYPE`.
+
+The following sections explain the `−−bison-cc`, `−−bison-complete`, `−−bison-bridge`,
+`−−bison-locations`, and `−−reentrant` options for
+<b>`reflex`</b>.
 
 🔝 [Back to table of contents](#)
 
@@ -4784,6 +4799,10 @@ follows:
 ~~~
 </div>
 
+Note that when the end of input is reached, the lexer returns
+`yy::parser::make_EOF()` upon matching `<<EOF>>`.  This rule is optional.
+When omitted, the return value is `yy::parser::symbol_type(0)`.
+
 🔝 [Back to table of contents](#)
 
 
@@ -4933,6 +4952,10 @@ follows:
       ... // error
 ~~~
 </div>
+
+Note that when the end of input is reached, the lexer returns
+`yy::parser::make_EOF()` upon matching `<<EOF>>`.  This rule is optional.
+When omitted, the return value is `yy::parser::symbol_type(0, location())`.
 
 🔝 [Back to table of contents](#)
 
@@ -5219,10 +5242,10 @@ in a lexer specification with the `extra-type` option:
 ~~~
 </div>
 
-This is a crude mechanism originating in Flex' C legacy to add extra
-user-defined values to a scanner class.  Because <b>`reflex`</b> is C++, you
-should instead define a derived class that extends the `Lexer` or `FlexLexer`
-class, see \ref reflex-inherit.
+This mechanism is somewhat crude as it originates with Flex' C legacy to add
+extra user-defined values to a scanner class.  Because <b>`reflex`</b> is C++,
+it is recommended to define a derived class that extends the `Lexer` or
+`FlexLexer` class, see \ref reflex-inherit.
 
 Because scanners are C++ classes, the `yyscanner` macro is essentially the same
 is the `this` pointer.  Outside the scope of lexer methods a pointer to your
@@ -6918,7 +6941,8 @@ matcher directly, even when you use the matcher's search and match methods:
   `winput()` | returns next wide character from the input, matcher skips it
   `unput(c)` | put char `c` back unto the stream, matcher then takes it
   `peek()`   | returns next 8-bit char from the input without consuming it
-  `skip(c)`  | skip input until 8-bit character `c` is consumed
+  `skip(c)`  | skip input until character `c` (`char` or `wchar_t`) is consumed
+  `skip(s)`  | skip input until UTF-8 string `s` is consumed
   `rest()`   | returns the remaining input as a non-NULL `char*` string
 
 The `input()`, `winput()`, and `peek()` methods return a non-negative character

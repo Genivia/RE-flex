@@ -30,6 +30,7 @@ RE/flex scanner examples using Flex lexer syntax
 - `flexexample8.lxx` example from the Flex documentation with C++ bison-bridge and bison-locations
 - `flexexample9.lxx` example Bison 3.0 %skeleton "lalr1.cc" C++ parser with bison-cc and bison-locations
 - `flexexample10.l` example from the Flex documentation to use multiple buffers
+- `reflexexample11.lxx` example reentrant scanner with Bison 3.2 C++ bison-complete and bison-locations
 
 RE/flex scanner examples using RE/flex lexer syntax
 ---------------------------------------------------
@@ -66,7 +67,7 @@ RE/flex scanner examples using RE/flex lexer syntax
 - `reflexexample8.lxx` example RE/flex scanner adapted from the Flex documentation with C++ bison-bridge and bison-locations
 - `reflexexample9.lxx` example RE/flex scanner with Bison 3.0 %skeleton "lalr1.cc" C++ parser with bison-cc and bison-locations
 - `reflexexample10.l` example RE/flex scanner adapted from the Flex documentation to use multiple buffers
-- `reflexexample11.lxx` example RE/flex scanner with Bison 3.2 C++ parser with bison-complete and bison-locations
+- `reflexexample11.lxx` example RE/flex scanner with Bison 3.2 C++ bison-complete and bison-locations
 
 Regex pattern matching with the RE/flex pattern matching library
 ----------------------------------------------------------------

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Nov 22 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Dec 23 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -279,9 +279,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a95e5d61efacabcb1807922e2d9404a1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the line of input (excluding <br />
 ) as a wide string containing the matched text as a substring.  <a href="#a95e5d61efacabcb1807922e2d9404a1b">More...</a><br /></td></tr>
 <tr class="separator:a95e5d61efacabcb1807922e2d9404a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9593436c3da247a06677afcf6032e368"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a9593436c3da247a06677afcf6032e368">skip</a> (int c)</td></tr>
-<tr class="memdesc:a9593436c3da247a06677afcf6032e368"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip input until the specified character is consumed and return true, or EOF is reached and return false.  <a href="#a9593436c3da247a06677afcf6032e368">More...</a><br /></td></tr>
-<tr class="separator:a9593436c3da247a06677afcf6032e368"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2a0eec56234f6a9bf41ccac081eefcc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae2a0eec56234f6a9bf41ccac081eefcc">skip</a> (char c)</td></tr>
+<tr class="memdesc:ae2a0eec56234f6a9bf41ccac081eefcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip input until the specified ASCII character is consumed and return true, or EOF is reached and return false.  <a href="#ae2a0eec56234f6a9bf41ccac081eefcc">More...</a><br /></td></tr>
+<tr class="separator:ae2a0eec56234f6a9bf41ccac081eefcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af70edc517e887a9e5ce6c84b0f9cd2bb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#af70edc517e887a9e5ce6c84b0f9cd2bb">skip</a> (wchar_t c)</td></tr>
+<tr class="memdesc:af70edc517e887a9e5ce6c84b0f9cd2bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip input until the specified <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> character is consumed and return true, or EOF is reached and return false.  <a href="#af70edc517e887a9e5ce6c84b0f9cd2bb">More...</a><br /></td></tr>
+<tr class="separator:af70edc517e887a9e5ce6c84b0f9cd2bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd635f7dd7cedc5178f0c200ae154b6b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#acd635f7dd7cedc5178f0c200ae154b6b">skip</a> (const char *s)</td></tr>
+<tr class="memdesc:acd635f7dd7cedc5178f0c200ae154b6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip input until the specified literal UTF-8 string is consumed and return true, or EOF is reached and return false.  <a href="#acd635f7dd7cedc5178f0c200ae154b6b">More...</a><br /></td></tr>
+<tr class="separator:acd635f7dd7cedc5178f0c200ae154b6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab39dc592de42a7e044296f03bee4fdb3"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ab39dc592de42a7e044296f03bee4fdb3">rest</a> ()</td></tr>
 <tr class="memdesc:ab39dc592de42a7e044296f03bee4fdb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch the rest of the input as text, useful for searching/splitting up to n times after which the rest is needed.  <a href="#ab39dc592de42a7e044296f03bee4fdb3">More...</a><br /></td></tr>
 <tr class="separator:ab39dc592de42a7e044296f03bee4fdb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2432,7 +2438,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9593436c3da247a06677afcf6032e368"></a>
+<a class="anchor" id="ae2a0eec56234f6a9bf41ccac081eefcc"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -2442,7 +2448,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool reflex::AbstractMatcher::skip </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">char&#160;</td>
           <td class="paramname"><em>c</em></td><td>)</td>
           <td></td>
         </tr>
@@ -2454,11 +2460,77 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Skip input until the specified character is consumed and return true, or EOF is reached and return false. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if skipped to c, false if EOf is reached </dd></dl>
+<p>Skip input until the specified ASCII character is consumed and return true, or EOF is reached and return false. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if skipped to c, false if EOF is reached </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">c</td><td>character to skip to </td></tr>
+    <tr><td class="paramname">c</td><td>ASCII character to skip to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="af70edc517e887a9e5ce6c84b0f9cd2bb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::AbstractMatcher::skip </td>
+          <td>(</td>
+          <td class="paramtype">wchar_t&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Skip input until the specified <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> character is consumed and return true, or EOF is reached and return false. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if skipped to c, false if EOF is reached </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">c</td><td><a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> character to skip to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="acd635f7dd7cedc5178f0c200ae154b6b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::AbstractMatcher::skip </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Skip input until the specified literal UTF-8 string is consumed and return true, or EOF is reached and return false. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if skipped to c, false if EOF is reached </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>literal UTF-8 string to skip to </td></tr>
   </table>
   </dd>
 </dl>
@@ -3344,7 +3416,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Nov 22 2019 14:30:50 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Dec 23 2019 12:27:25 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

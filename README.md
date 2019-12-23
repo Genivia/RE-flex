@@ -471,8 +471,9 @@ Changelog
 - Nov  5, 2019: 1.5.0 added `border()`, `span()`, `line()`, `wline()`, and `skip(c)` methods; added new section on error reporting and recovery to the documentation; fixed `yy_scan_string()` and `yy_scan_buffer()` when called before calling `yylex()` for the first time; improved performance.
 - Nov  7, 2019: 1.5.1 improvements; added `dos.l` demo example of `reflex::InputBuffer::dos_streambuf`.
 - Nov 12, 2019: 1.5.2 fixed an internal buffer allocation issue that may cause a crash when input lines are longer than 16KB (regression bug that crept into in 1.5.0).
-- Nov 21, 2019: 1.5.3 added `lineno_end()` and `columno_end()` methods, updated `columns()` with clarifications in the updated documentation; expanded the documentation with additional error reporting and handling techniques with RE/flex and Bison bridge and complete configurations; generated FSM code improvements.
+- Nov 21, 2019: 1.5.3 added `lineno_end()` and `columno_end()` methods, updated `columns()` with clarifications in the updated documentation; expanded the documentation with additional error reporting and handling techniques with RE/flex and Bison bridge and complete configurations; FSM code generation improvements.
 - Nov 22, 2019: 1.5.4 added `flexexample11xx` example with Flex specification and Bison complete parser; minor improvements.
+- Dec 23, 2019: 1.5.5 expanded the `skip(c)` methods with a `wchar_t` wide character parameter and a UTF-8 string parameter to to skip input; added new option `--token-eof`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
