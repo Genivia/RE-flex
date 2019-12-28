@@ -79,6 +79,7 @@ static const char *options_table[] = {
   "graphs_file",
   "header_file",
   "include",
+  "indent",
   "input",
   "interactive",
   "lex",
@@ -94,6 +95,7 @@ static const char *options_table[] = {
   "nodefault",
   "nodotall",
   "nofreespace",
+  "noindent",
   "noinput",
   "noline",
   "nomain",
@@ -1860,6 +1862,8 @@ void Reflex::write_class()
   if (!out->good())
     return;
   write_banner("REGEX MATCHER");
+  if (!options["noindent"].empty())
+    *out << "#define WITH_NO_INDENT\n";
   *out << "#include <" << library->file << ">" << std::endl;
   const char *matcher = library->matcher;
   std::string lex = options["lex"];

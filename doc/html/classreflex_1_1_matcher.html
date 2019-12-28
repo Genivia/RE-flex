@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Dec 23 2019 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Dec 28 2019 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -56,7 +56,6 @@
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classreflex_1_1_matcher-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -557,15 +556,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a345dcf64f1671bbb12056408045fa441 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the newline count, column count, and character count when shifting the buffer.  <a href="#a345dcf64f1671bbb12056408045fa441">More...</a><br /></td></tr>
 <tr class="separator:a345dcf64f1671bbb12056408045fa441 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
-Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:a3dcae088c372c3fcc3eda9f89daf34d1"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3dcae088c372c3fcc3eda9f89daf34d1">predict_match</a> (const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pattern::Pred</a> pmh[], const char *s, size_t n)</td></tr>
-<tr class="memdesc:a3dcae088c372c3fcc3eda9f89daf34d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true when match is predicted, based on s[0..3..e-1] (e &gt;= s + 4).  <a href="#a3dcae088c372c3fcc3eda9f89daf34d1">More...</a><br /></td></tr>
-<tr class="separator:a3dcae088c372c3fcc3eda9f89daf34d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3db4e385bc60d761212d5795edbec73b"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3db4e385bc60d761212d5795edbec73b">predict_match</a> (const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pattern::Pred</a> pma[], const char *s)</td></tr>
-<tr class="memdesc:a3db4e385bc60d761212d5795edbec73b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns zero when match is predicted or nonzero shift value, based on s[0..3].  <a href="#a3db4e385bc60d761212d5795edbec73b">More...</a><br /></td></tr>
-<tr class="separator:a3db4e385bc60d761212d5795edbec73b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a3b760391b7b16eed637ada38430d97e1"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3b760391b7b16eed637ada38430d97e1">ded_</a></td></tr>
@@ -945,7 +935,7 @@ template&lt;typename P &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1900,7 +1890,7 @@ template&lt;typename T &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2026,84 +2016,6 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Pop indent stops. </p>
-
-</div>
-</div>
-<a class="anchor" id="a3dcae088c372c3fcc3eda9f89daf34d1"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool reflex::Matcher::predict_match </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pattern::Pred</a>&#160;</td>
-          <td class="paramname"><em>pmh</em>[], </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>s</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>n</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns true when match is predicted, based on s[0..3..e-1] (e &gt;= s + 4). </p>
-
-</div>
-</div>
-<a class="anchor" id="a3db4e385bc60d761212d5795edbec73b"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static size_t reflex::Matcher::predict_match </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pattern::Pred</a>&#160;</td>
-          <td class="paramname"><em>pma</em>[], </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>s</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns zero when match is predicted or nonzero shift value, based on s[0..3]. </p>
 
 </div>
 </div>
@@ -2413,7 +2325,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Dec 23 2019 12:27:25 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Dec 28 2019 16:37:50 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

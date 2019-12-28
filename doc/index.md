@@ -16,18 +16,18 @@ What is RE/flex?                                                       {#intro}
 ================
 
 RE/flex is the regex-centric, fast lexical analyzer generator with full Unicode
-support, indent/nodent/dedent anchors, lazy quantifiers, word boundaries, and
-many other modern features.  RE/flex also includes a fast regex engine written
-in C++ with options to generate finite state machine tables or direct code to
-match input more efficiently.  RE/flex includes a smart input class to
-normalize input from files, streams, strings, and memory.  RE/flex is
-compatible with Bison/Yacc and accepts Flex lexer specifications.
+support, indentation anchors, lazy quantifiers, word boundaries, and many other
+modern features.  RE/flex also includes a fast regex engine written in C++ with
+options to generate finite state machine tables or direct code to match input
+more efficiently.  RE/flex includes a smart input class to normalize input from
+files, streams, strings, and memory.  RE/flex is compatible with Bison/Yacc and
+accepts Flex lexer specifications.
 
 Features:
 
 - includes a flexible library of regex classes that is extensible;
-- the scanner generator is compatible with Flex/Lex lexer specifications;
-- works with Bison, supports reentrant, C++, bison-bridge and bison-locations;
+- the scanner generator accepts Flex/Lex lexer specifications;
+- works with Bison, supports reentrant, C++, bridge and locations;
 - generates source code that is easy to understand;
 - generates scanners that are thread-safe by default;
 - generates search engines for optimal searching large files (new option `-S`);
@@ -153,7 +153,8 @@ Lex and Flex have remained relatively stable (inert) tools while the demand has
 increased for tokenizing Unicode texts encoded in common wide character formats
 such as UTF-8, UCS/UTF-16, and UTF-32.  Flex/Lex still use 8-bit character sets
 for regex patterns.  Regex pattern syntax in Flex/Lex is also limited.  No lazy
-repetitions.  No word boundary anchors.  No indent and dedent matching.
+repetitions.  No word boundary anchors.  No indentation matching with indent or
+dedent anchors in patterns.
 
 It is possible, but not trivial to implement scanners with Flex/Lex to tokenize
 the source code of more modern programming languages with Unicode-based lexical
@@ -225,7 +226,7 @@ scan over C/C++ source code input to match multiline comments that start with a
 
 Another argument to use this code with Flex is that the internal Flex buffer is
 limited to 16KB.  By contrast, RE/flex buffers are dynamically resized and will
-never run out to accept long matches.
+never run out of buffer space to accept long matches.
 
 Workarounds such as these are not necessary with RE/flex.  The RE/flex scanners
 use regex libraries with expressive pattern syntax.  We can use lazy repetition
@@ -1222,6 +1223,13 @@ This option generates an interactive scanner and permits console input by
 sacrificing speed.  By contrast, the default buffered input strategy is more
 efficient.
 
+#### `−−indent` and `−−noindent`
+
+This option enables or disables support for indentation matching with anchors
+`\i`, `\j`, and `\k`.  Indentation matching is enabled by default.  Matching
+speed may be improved by disabling indentation matching, but should only be
+disabled when none of the indentation anchors is used in any of the patterns.
+
 #### `-m reflex`, `−−matcher=reflex`
 
 This option generates a scanner that uses the RE/flex `reflex::Matcher` class
@@ -1428,7 +1436,7 @@ generates <i>`lex.NAME.h`</i> with option `−−header-file`.
 
 This option initializes input to `std::cin` instead of using `stdin`.
 Automatic UTF decoding is not supported.  Use `stdin` for automatic UTF BOM
-detection and UTF decoding.
+detection and UTF decoding of standard input streams, not `std::cin`.
 
 #### `−−bison`
 
@@ -1491,11 +1499,12 @@ and also \ref reflex-bison.
 #### `−−yywrap` and `−−noyywrap`
 
 Option `−−yywrap` generates a scanner that calls the global `int yywrap()`
-function when EOF is reached.  Only applicable when `−−flex` is used for
-compatibility and when `−−flex`  and `−−bison` are used together.  Use
-`−−noyywrap` to disable the dependence on this global function.  This option
-has no effect for C++ lexer classes, which have a virtual `int wrap()` (or
-`yywrap()` with option `−−flex`) method that may be overridden.
+function when EOF is reached.  This option is only applicable when `−−flex` is
+used for compatibility and when `−−flex`  and `−−bison` are used together.
+Wrapping is enabled by default.  Use `−−noyywrap` to disable the dependence on
+this global function.  This option has no effect for C++ lexer classes, which
+have a virtual `int wrap()` (or `yywrap()` with option `−−flex`) method that
+may be overridden.
 
 #### `−−exception=VALUE`
 

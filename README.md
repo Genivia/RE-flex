@@ -6,16 +6,17 @@
 The regex-centric, fast lexical analyzer generator for C++ with full Unicode
 support.  Flex reimagined: fast, flexible, adds Boost 💪
 
-[RE/flex][reflex-url] is faster than Flex while providing a wealth of new
-features.  RE/flex is also much faster than regex libraries such as
+[RE/flex][reflex-url] is as fast or faster than Flex while providing a wealth
+of new features.  RE/flex is also much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
-representative C source code file into 244 tokens takes only 10 microseconds:
+representative C source code file into 244 tokens takes only 8 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
-<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.3.6</b></td><td><b>10</b></td></tr>
+<tr><td><b>reflex --fast --noindent</b></td><td><b>RE/flex 1.5.6</b></td><td><b>8</b></td></tr>
+<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.5.6</b></td><td><b>9</b></td></tr>
 <tr><td>flex -+ --full</td><td>Flex 2.5.35</td><td>17</td></tr>
-<tr><td>reflex --full</td><td>RE/flex 1.3.6</td><td>19</td></tr>
+<tr><td>reflex --full</td><td>RE/flex 1.5.6</td><td>18</td></tr>
 <tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex 1.66.0</td><td>40</td></tr>
 <tr><td>hs_compile_multi(), hs_scan()</td><td>Hyperscan 5.1.0</td><td>209</td></tr>
 <tr><td>reflex -m=boost-perl</td><td>Boost.Regex 1.66.0</td><td>230</td></tr>
@@ -28,11 +29,17 @@ representative C source code file into 244 tokens takes only 10 microseconds:
 <tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>5979</td></tr>
 </table>
 
-Note: *Best times of 10 tests with average time in microseconds over 100 runs
-(using clang 9.0.0 with -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz LPDDR3).
-Hyperscan disqualifies as a potential scanner due to its "All matches reported"
+Note: *Best times of 30 tests with average time in microseconds over 100 runs
+using Mac OS X 10.12.6 clang 9.0.0 -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz
+LPDDR3.  Hyperscan disqualifies as a scanner due to its "All matches reported"
 semantics resulting in 1915 matches for this test, and due to its event handler
 requirements.* [Download the tests](https://www.genivia.com/files/perfcomp.zip)
+*Timings on other platforms may differ, though in the worst cases tested,
+reflex ran equally fast than the best times of Flex.*
+
+The RE/flex matcher tracks line numbers, column numbers, and indentations,
+whereas Flex does not (option noyylineno) and neither do the other regex
+matchers compared.  Tracking this information incurs some overhead.
 
 
 Features
@@ -100,7 +107,7 @@ Step** in MSVC++ as follows:
    `$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\YourUserName\Documents\reflex\include`
    (this assumes the `reflex` source package is in your **Documents** folder).
 
-3. enter `"C:\Users\YourUserName\Documents\reflex\bin\reflex.exe" --header-file
+3. enter `"C:\Users\YourUserName\Documents\reflex\bin\win32\reflex.exe" --header-file
    "C:\Users\YourUserName\Documents\mylexer.l"` in the **Command Line** property
    under **Custom Build Step** (this assumes `mylexer.l` is in your
    **Documents** folder);
@@ -330,7 +337,7 @@ Use C++11 range-based loops with RE/flex iterators:
 
 ```{.cpp}
 #include <reflex/stdmatcher.h> // reflex::StdMatcher, reflex::Input, std::regex
-// use a StdMatcher with std::regex to to search for words in a sentence
+// use a StdMatcher with std::regex to search for words in a sentence
 reflex::StdMatcher matcher("\\w+", "How now brown cow.");
 for (auto& match : matcher.find)
   std::cout << "Found " << match.text() << std::endl;
@@ -473,7 +480,8 @@ Changelog
 - Nov 12, 2019: 1.5.2 fixed an internal buffer allocation issue that may cause a crash when input lines are longer than 16KB (regression bug that crept into in 1.5.0).
 - Nov 21, 2019: 1.5.3 added `lineno_end()` and `columno_end()` methods, updated `columns()` with clarifications in the updated documentation; expanded the documentation with additional error reporting and handling techniques with RE/flex and Bison bridge and complete configurations; FSM code generation improvements.
 - Nov 22, 2019: 1.5.4 added `flexexample11xx` example with Flex specification and Bison complete parser; minor improvements.
-- Dec 23, 2019: 1.5.5 expanded the `skip(c)` methods with a `wchar_t` wide character parameter and a UTF-8 string parameter to to skip input; added new option `--token-eof`.
+- Dec 23, 2019: 1.5.5 expanded the `skip(c)` methods with a `wchar_t` wide character parameter and a UTF-8 string parameter to skip input; added new option `--token-eof`.
+- Dec 28, 2019: 1.5.6 added new option `--noindent` to speed up pattern matching and lexical analysis by disabling indentation tracking in the input (also disables anchors `\i`, `\j`, and `\k`); speed improvements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
