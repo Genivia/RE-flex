@@ -7,7 +7,7 @@
 CPP=c++
 REFLEX=../bin/reflex
 LIBS=../lib/libreflex.a
-COFLAGS=-g -O2
+COFLAGS=-O2
 CWFLAGS=-Wall -Wunused -Wextra
 CIFLAGS=-I. -I../include
 CMFLAGS=

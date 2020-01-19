@@ -7031,8 +7031,8 @@ file encodings.  If a UTF Byte Order Mark (BOM) is detected then the UTF input
 will be normalized to UTF-8.  When no UTF BOM is detected then the input is
 considered plain ASCII, binary, or UTF-8 and passed through unconverted.  To
 override the file encoding when no UTF BOM was present, and normalize Latin-1,
-ISO-8859-1, CP 1252, CP 434, CP 850, EBCDIC, and other encodings to UTF-8, see
-\ref regex-input-file.
+ISO-8859-1 through ISO-8859-15, CP 1250 through 1258, CP 437, CP 850, CP 858,
+EBCDIC, and other encodings to UTF-8, see \ref regex-input-file.
 
 🔝 [Back to table of contents](#)
 
@@ -7082,7 +7082,8 @@ and may contain UTF-8.
 ### FILE encodings                                          {#regex-input-file}
 
 File content specified with a `FILE*` file descriptor can be encoded in ASCII,
-binary, UTF-8/16/32, ISO-8859-1, CP 1250 to CP 1258, CP 434, CP 850, or EBCDIC.
+binary, UTF-8/16/32, ISO-8859-1 through ISO-8859-15, CP 1250 through 1258, CP
+437, CP 850, CP 858, or EBCDIC.
 
 A [UTF Byte Order Mark (BOM)](www.unicode.org/faq/utf_bom.html) is detected in
 the content of a file scanned by the matcher, which enables UTF-8 normalization
@@ -7097,28 +7098,47 @@ The current file encoding used by a matcher is obtained with the
 `reflex::Input::file_encoding` constant of type
 `reflex::Input::file_encoding_type`:
 
-  Constant                                | File encoding
-  --------------------------------------- | -----------------------------------
-  `reflex::Input::file_encoding::plain`   | plain octets, ASCII/binary/UTF-8
-  `reflex::Input::file_encoding::utf8`    | UTF-8 (BOM detected)
-  `reflex::Input::file_encoding::utf16be` | UTF-16 big endian (BOM detected)
-  `reflex::Input::file_encoding::utf16le` | UTF-16 little endian (BOM detected)
-  `reflex::Input::file_encoding::utf32be` | UTF-32 big endian (BOM detected)
-  `reflex::Input::file_encoding::utf32le` | UTF-32 little endian (BOM detected)
-  `reflex::Input::file_encoding::latin`   | ASCII and Latin-1, ISO-8859-1
-  `reflex::Input::file_encoding::cp437`   | CP 437
-  `reflex::Input::file_encoding::cp850`   | CP 850 (updated to CP 858)
-  `reflex::Input::file_encoding::ebcdic`  | EBCDIC
-  `reflex::Input::file_encoding::cp1250`  | CP 1250
-  `reflex::Input::file_encoding::cp1251`  | CP 1251
-  `reflex::Input::file_encoding::cp1252`  | CP 1252
-  `reflex::Input::file_encoding::cp1253`  | CP 1253
-  `reflex::Input::file_encoding::cp1254`  | CP 1254
-  `reflex::Input::file_encoding::cp1255`  | CP 1255
-  `reflex::Input::file_encoding::cp1256`  | CP 1256
-  `reflex::Input::file_encoding::cp1257`  | CP 1257
-  `reflex::Input::file_encoding::cp1258`  | CP 1258
-  `reflex::Input::file_encoding::custom`  | User-defined custom code page
+  Constant                                   | File encoding
+  ------------------------------------------ | --------------------------------
+  `reflex::Input::file_encoding::plain`      | plain octets, ASCII/binary/UTF-8
+  `reflex::Input::file_encoding::utf8`       | UTF-8 (UTF BOM detected)
+  `reflex::Input::file_encoding::utf16be`    | UTF-16 big endian (UTF BOM detected)
+  `reflex::Input::file_encoding::utf16le`    | UTF-16 little endian (UTF BOM detected)
+  `reflex::Input::file_encoding::utf32be`    | UTF-32 big endian (UTF BOM detected)
+  `reflex::Input::file_encoding::utf32le`    | UTF-32 little endian (UTF BOM detected)
+  `reflex::Input::file_encoding::latin`      | ASCII with Latin-1, ISO-8859-1
+  `reflex::Input::file_encoding::cp437`      | DOS CP 437
+  `reflex::Input::file_encoding::cp850`      | DOS CP 850
+  `reflex::Input::file_encoding::cp858`      | DOS CP 858
+  `reflex::Input::file_encoding::ebcdic`     | EBCDIC
+  `reflex::Input::file_encoding::cp1250`     | Windows CP 1250
+  `reflex::Input::file_encoding::cp1251`     | Windows CP 1251
+  `reflex::Input::file_encoding::cp1252`     | Windows CP 1252
+  `reflex::Input::file_encoding::cp1253`     | Windows CP 1253
+  `reflex::Input::file_encoding::cp1254`     | Windows CP 1254
+  `reflex::Input::file_encoding::cp1255`     | Windows CP 1255
+  `reflex::Input::file_encoding::cp1256`     | Windows CP 1256
+  `reflex::Input::file_encoding::cp1257`     | Windows CP 1257
+  `reflex::Input::file_encoding::cp1258`     | Windows CP 1258
+  `reflex::Input::file_encoding::iso8859_2`  | ISO-8859-2
+  `reflex::Input::file_encoding::iso8859_3`  | ISO-8859-3
+  `reflex::Input::file_encoding::iso8859_4`  | ISO-8859-4
+  `reflex::Input::file_encoding::iso8859_5`  | ISO-8859-5
+  `reflex::Input::file_encoding::iso8859_6`  | ISO-8859-6
+  `reflex::Input::file_encoding::iso8859_7`  | ISO-8859-7
+  `reflex::Input::file_encoding::iso8859_8`  | ISO-8859-8
+  `reflex::Input::file_encoding::iso8859_9`  | ISO-8859-9
+  `reflex::Input::file_encoding::iso8859_10` | ISO-8859-10
+  `reflex::Input::file_encoding::iso8859_11` | ISO-8859-11
+  `reflex::Input::file_encoding::iso8859_13` | ISO-8859-13
+  `reflex::Input::file_encoding::iso8859_14` | ISO-8859-14
+  `reflex::Input::file_encoding::iso8859_15` | ISO-8859-15
+  `reflex::Input::file_encoding::iso8859_16` | ISO-8859-16
+  `reflex::Input::file_encoding::macroman`   | Macintosh Roman + CR to LF translation
+  `reflex::Input::file_encoding::koi8_r`     | KOI8-R
+  `reflex::Input::file_encoding::koi8_u`     | KOI8-U
+  `reflex::Input::file_encoding::koi8_ru`    | KOI8-RU
+  `reflex::Input::file_encoding::custom`     | user-defined custom code page
 
 To set the file encoding when assigning a file to read with `reflex::Input`,
 use `reflex::Input(file, enc)` with one of the encoding constants shown in
@@ -7143,7 +7163,7 @@ To define a custom code page to translate files, define a code page table with
 your code page to construct an input object.  For example:
 
 ~~~{.cpp}
-    const unsigned short CP[256] = {
+    static const unsigned short CP[256] = {
        32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
        32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
        32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
@@ -7706,25 +7726,44 @@ file's state is accessed through the matcher's member variable `in`:
     {
       switch (matcher.in.file_encoding())
       {
-        case Input::file_encoding::plain:   std::cout << "plain ASCII/binary/UTF-8"; break;
-        case Input::file_encoding::utf8:    std::cout << "UTF-8 with BOM";           break;
-        case Input::file_encoding::utf16be: std::cout << "UTF-16 big endian";        break;
-        case Input::file_encoding::utf16le: std::cout << "UTF-16 little endian";     break;
-        case Input::file_encoding::utf32be: std::cout << "UTF-32 big endian";        break;
-        case Input::file_encoding::utf32le: std::cout << "UTF-32 little endian";     break;
-        case Input::file_encoding::latin:   std::cout << "ASCII+Latin-1/ISO-8859-1"; break;
-        case Input::file_encoding::cp437:   std::cout << "CP 437";                   break;
-        case Input::file_encoding::cp850:   std::cout << "CP 850";                   break;
-        case Input::file_encoding::ebcdic:  std::cout << "EBCDIC";                   break;
-        case Input::file_encoding::cp1250:  std::cout << "CP 1250";                  break;
-        case Input::file_encoding::cp1251:  std::cout << "CP 1251";                  break;
-        case Input::file_encoding::cp1252:  std::cout << "CP 1252";                  break;
-        case Input::file_encoding::cp1253:  std::cout << "CP 1253";                  break;
-        case Input::file_encoding::cp1254:  std::cout << "CP 1254";                  break;
-        case Input::file_encoding::cp1255:  std::cout << "CP 1255";                  break;
-        case Input::file_encoding::cp1256:  std::cout << "CP 1256";                  break;
-        case Input::file_encoding::cp1257:  std::cout << "CP 1257";                  break;
-        case Input::file_encoding::cp1258:  std::cout << "CP 1258";                  break;
+        case Input::file_encoding::plain:      std::cout << "plain ASCII/binary/UTF-8"; break;
+        case Input::file_encoding::utf8:       std::cout << "UTF-8 with BOM";           break;
+        case Input::file_encoding::utf16be:    std::cout << "UTF-16 big endian";        break;
+        case Input::file_encoding::utf16le:    std::cout << "UTF-16 little endian";     break;
+        case Input::file_encoding::utf32be:    std::cout << "UTF-32 big endian";        break;
+        case Input::file_encoding::utf32le:    std::cout << "UTF-32 little endian";     break;
+        case Input::file_encoding::latin:      std::cout << "ASCII+Latin-1/ISO-8859-1"; break;
+        case Input::file_encoding::cp437:      std::cout << "DOS CP 437";               break;
+        case Input::file_encoding::cp850:      std::cout << "DOS CP 850";               break;
+        case Input::file_encoding::cp858:      std::cout << "DOS CP 858";               break;
+        case Input::file_encoding::ebcdic:     std::cout << "EBCDIC";                   break;
+        case Input::file_encoding::cp1250:     std::cout << "Windows CP 1250";          break;
+        case Input::file_encoding::cp1251:     std::cout << "Windows CP 1251";          break;
+        case Input::file_encoding::cp1252:     std::cout << "Windows CP 1252";          break;
+        case Input::file_encoding::cp1253:     std::cout << "Windows CP 1253";          break;
+        case Input::file_encoding::cp1254:     std::cout << "Windows CP 1254";          break;
+        case Input::file_encoding::cp1255:     std::cout << "Windows CP 1255";          break;
+        case Input::file_encoding::cp1256:     std::cout << "Windows CP 1256";          break;
+        case Input::file_encoding::cp1257:     std::cout << "Windows CP 1257";          break;
+        case Input::file_encoding::cp1258:     std::cout << "Windows CP 1258";          break;
+        case Input::file_encoding::iso8859_2:  std::cout << "ISO-8859-2";               break;
+        case Input::file_encoding::iso8859_3:  std::cout << "ISO-8859-3";               break;
+        case Input::file_encoding::iso8859_4:  std::cout << "ISO-8859-4";               break;
+        case Input::file_encoding::iso8859_5:  std::cout << "ISO-8859-5";               break;
+        case Input::file_encoding::iso8859_6:  std::cout << "ISO-8859-6";               break;
+        case Input::file_encoding::iso8859_7:  std::cout << "ISO-8859-7";               break;
+        case Input::file_encoding::iso8859_8:  std::cout << "ISO-8859-8";               break;
+        case Input::file_encoding::iso8859_9:  std::cout << "ISO-8859-9";               break;
+        case Input::file_encoding::iso8859_10: std::cout << "ISO-8859-10";              break;
+        case Input::file_encoding::iso8859_11: std::cout << "ISO-8859-11";              break;
+        case Input::file_encoding::iso8859_13: std::cout << "ISO-8859-13";              break;
+        case Input::file_encoding::iso8859_14: std::cout << "ISO-8859-14";              break;
+        case Input::file_encoding::iso8859_15: std::cout << "ISO-8859-15";              break;
+        case Input::file_encoding::iso8859_16: std::cout << "ISO-8859-16";              break;
+        case Input::file_encoding::mac_roman:  std::cout << "Macintosh Roman";          break;
+        case Input::file_encoding::koi8_r:     std::cout << "KOI8-R";                   break;
+        case Input::file_encoding::koi8_u:     std::cout << "KOI8-U";                   break;
+        case Input::file_encoding::koi8_ru:    std::cout << "KOI8-RU";                  break;
       }
       std::cout << " of " << matcher.in.size() << " converted bytes to read\n";
       matcher.buffer(); // because Boost.Regex partial_match is broken!
@@ -8183,8 +8222,8 @@ See \ref regex-input-file to set file encodings.
 🔝 [Back to contents](#)
 
 
-Handling with DOS CRLF input                                            {#crlf}
-----------------------------
+Handling DOS CRLF newlines                                              {#crlf}
+--------------------------
 
 DOS files and other DOS or Windows input sources typically end lines with CRLF
 byte pairs.  There are two ways to deal with CRLF pairs:
@@ -8197,8 +8236,8 @@ byte pairs.  There are two ways to deal with CRLF pairs:
 
 2. Rewrite the patterns to match both `\n` and `\r\n` to allow DOS CRLF input.
    This is option is fast to process input, but requires specialized patterns
-   and the matched text will include `\r` (CR) characters that may need to be
-   dealt with by the application code.
+   and the matched multi-line text will include `\r` (CR) characters that may
+   need to be dealt with by the application code.
 
 To rewrite your patterns to support DOS CRLF matching:
 
@@ -8208,6 +8247,47 @@ To rewrite your patterns to support DOS CRLF matching:
   characters.  Likewise replace `.+` by its longer version.  Note that a single
   `.` can still be used in patterns but may match a `\r` just before a `\n`
   when a DOS CRLF is encountered.
+
+🔝 [Back to contents](#)
+
+
+Handling old Macintosh files containing CR newlines                       {#cr}
+---------------------------------------------------
+
+Old Macintosh OS file formats prior to Mac OS X use CR to end lines instead of
+LF.  To automatically read and normalize files encoded in MacRoman containing
+CR as newlines, you can use the `reflex::Input::file_encoding::macroman` file
+encoding format.  This normalizes the input to UTF-8 and translates CR newlines
+to LF newlines.  See \ref regex-input-file for details.
+
+Alternatively, you can define a custom code page to translate CR to LF without
+normalizing to UTF-8:
+
+~~~{.cpp}
+    #define LF 10
+    static const unsigned short CR2LF[256] = {
+        0,   1,   2,    3,    4,    5,    6,    7,    8,    9,   10,   11,   12,   LF,   14,   15,
+       16,  17,  18,   19,   20,   21,   22,   23,   24,   25,   26,   27,   28,   29,   30,   31,
+       32,  33,  34,   35,   36,   37,   38,   39,   40,   41,   42,   43,   44,   45,   46,   47,
+       48,  49,  50,   51,   52,   53,   54,   55,   56,   57,   58,   59,   60,   61,   62,   63,
+       64,  65,  66,   67,   68,   69,   70,   71,   72,   73,   74,   75,   76,   77,   78,   79,
+       80,  81,  82,   83,   84,   85,   86,   87,   88,   89,   90,   91,   92,   93,   94,   95,
+       96,  97,  98,   99,  100,  101,  102,  103,  104,  105,  106,  107,  108,  109,  110,  111,
+      112, 113, 114,  115,  116,  117,  118,  119,  120,  121,  122,  123,  124,  125,  126,  127,
+      128, 129, 130,  131,  132,  133,  134,  135,  136,  137,  138,  139,  140,  141,  142,  143,
+      144, 145, 146,  147,  148,  149,  150,  151,  152,  153,  154,  155,  156,  157,  158,  159,
+      160, 161, 162,  163,  164,  165,  166,  167,  168,  169,  170,  171,  172,  173,  174,  175,
+      176, 177, 178,  179,  180,  181,  182,  183,  184,  185,  186,  187,  188,  189,  190,  191,
+      192, 193, 194,  195,  196,  197,  198,  199,  200,  201,  202,  203,  204,  205,  206,  207,
+      208, 209, 210,  211,  212,  213,  214,  215,  216,  217,  218,  219,  220,  221,  222,  223,
+      224, 225, 226,  227,  228,  229,  230,  231,  232,  233,  234,  235,  236,  237,  238,  239,
+      240, 241, 242,  243,  244,  245,  246,  247,  248,  249,  250,  251,  252,  253,  254,  255
+    };
+    reflex::Input input(stdin, reflex::Input::file_encoding::custom, CR2LF);
+~~~
+
+Then use the `input` object to read `stdin` or any other `FILE*`.  See also
+\ref regex-input-file.
 
 🔝 [Back to contents](#)
 

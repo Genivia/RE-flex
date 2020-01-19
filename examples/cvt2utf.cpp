@@ -28,29 +28,48 @@ const char *flag_to_code   = NULL;
 
 // table of file formats for cvt2utf option -f
 const struct { const char *format; reflex::Input::file_encoding_type encoding; } format_table[] = {
-  { "binary",     reflex::Input::file_encoding::plain   },
-  { "ISO-8859-1", reflex::Input::file_encoding::latin   },
-  { "ASCII",      reflex::Input::file_encoding::utf8    },
-  { "EBCDIC",     reflex::Input::file_encoding::ebcdic  },
-  { "UTF-8",      reflex::Input::file_encoding::utf8    },
-  { "UTF-16",     reflex::Input::file_encoding::utf16be },
-  { "UTF-16BE",   reflex::Input::file_encoding::utf16be },
-  { "UTF-16LE",   reflex::Input::file_encoding::utf16le },
-  { "UTF-32",     reflex::Input::file_encoding::utf32be },
-  { "UTF-32BE",   reflex::Input::file_encoding::utf32be },
-  { "UTF-32LE",   reflex::Input::file_encoding::utf32le },
-  { "CP437",      reflex::Input::file_encoding::cp437   },
-  { "CP850",      reflex::Input::file_encoding::cp850   },
-  { "CP858",      reflex::Input::file_encoding::cp858   },
-  { "CP1250",     reflex::Input::file_encoding::cp1250  },
-  { "CP1251",     reflex::Input::file_encoding::cp1251  },
-  { "CP1252",     reflex::Input::file_encoding::cp1252  },
-  { "CP1253",     reflex::Input::file_encoding::cp1253  },
-  { "CP1254",     reflex::Input::file_encoding::cp1254  },
-  { "CP1255",     reflex::Input::file_encoding::cp1255  },
-  { "CP1256",     reflex::Input::file_encoding::cp1256  },
-  { "CP1257",     reflex::Input::file_encoding::cp1257  },
-  { "CP1258",     reflex::Input::file_encoding::cp1258  },
+  { "binary",      reflex::Input::file_encoding::plain      },
+  { "ASCII",       reflex::Input::file_encoding::utf8       },
+  { "UTF-8",       reflex::Input::file_encoding::utf8       },
+  { "UTF-16",      reflex::Input::file_encoding::utf16be    },
+  { "UTF-16BE",    reflex::Input::file_encoding::utf16be    },
+  { "UTF-16LE",    reflex::Input::file_encoding::utf16le    },
+  { "UTF-32",      reflex::Input::file_encoding::utf32be    },
+  { "UTF-32BE",    reflex::Input::file_encoding::utf32be    },
+  { "UTF-32LE",    reflex::Input::file_encoding::utf32le    },
+  { "ISO-8859-1",  reflex::Input::file_encoding::latin      },
+  { "ISO-8869-2",  reflex::Input::file_encoding::iso8859_2  },
+  { "ISO-8869-3",  reflex::Input::file_encoding::iso8859_3  },
+  { "ISO-8869-4",  reflex::Input::file_encoding::iso8859_4  },
+  { "ISO-8869-5",  reflex::Input::file_encoding::iso8859_5  },
+  { "ISO-8869-6",  reflex::Input::file_encoding::iso8859_6  },
+  { "ISO-8869-7",  reflex::Input::file_encoding::iso8859_7  },
+  { "ISO-8869-8",  reflex::Input::file_encoding::iso8859_8  },
+  { "ISO-8869-9",  reflex::Input::file_encoding::iso8859_9  },
+  { "ISO-8869-10", reflex::Input::file_encoding::iso8859_10 },
+  { "ISO-8869-11", reflex::Input::file_encoding::iso8859_11 },
+  { "ISO-8869-13", reflex::Input::file_encoding::iso8859_13 },
+  { "ISO-8869-14", reflex::Input::file_encoding::iso8859_14 },
+  { "ISO-8869-15", reflex::Input::file_encoding::iso8859_15 },
+  { "ISO-8869-16", reflex::Input::file_encoding::iso8859_16 },
+  { "MAC",         reflex::Input::file_encoding::macroman   },
+  { "MACROMAN",    reflex::Input::file_encoding::macroman   },
+  { "EBCDIC",      reflex::Input::file_encoding::ebcdic     },
+  { "CP437",       reflex::Input::file_encoding::cp437      },
+  { "CP850",       reflex::Input::file_encoding::cp850      },
+  { "CP858",       reflex::Input::file_encoding::cp858      },
+  { "CP1250",      reflex::Input::file_encoding::cp1250     },
+  { "CP1251",      reflex::Input::file_encoding::cp1251     },
+  { "CP1252",      reflex::Input::file_encoding::cp1252     },
+  { "CP1253",      reflex::Input::file_encoding::cp1253     },
+  { "CP1254",      reflex::Input::file_encoding::cp1254     },
+  { "CP1255",      reflex::Input::file_encoding::cp1255     },
+  { "CP1256",      reflex::Input::file_encoding::cp1256     },
+  { "CP1257",      reflex::Input::file_encoding::cp1257     },
+  { "CP1258",      reflex::Input::file_encoding::cp1258     },
+  { "KOI8-R",      reflex::Input::file_encoding::koi8_r     },
+  { "KOI8-U",      reflex::Input::file_encoding::koi8_u     },
+  { "KOI8-RU",     reflex::Input::file_encoding::koi8_ru    },
   { NULL, 0 }
 };
 
@@ -85,16 +104,16 @@ int main(int argc, char **argv)
         {
           case '-':
             ++arg;
-            if (strncmp(arg, "from-code=", 10) == 0)
-              flag_from_code = arg + 10;
-            else if (strncmp(arg, "to-code=", 8) == 0)
-              flag_to_code = arg + 8;
+            if (strncmp(arg, "from=", 5) == 0)
+              flag_from_code = arg + 5;
+            else if (strncmp(arg, "to=", 3) == 0)
+              flag_to_code = arg + 3;
             else if (strcmp(arg, "with-bom") == 0)
               flag_with_bom = true;
             else if (strcmp(arg, "help") == 0)
               help();
             else
-              help("unknown option --", arg);
+              help("invalid option --", arg);
             is_grouped = false;
             break;
 
@@ -130,7 +149,7 @@ int main(int argc, char **argv)
             break;
 
           default:
-            help("unknown option -", arg);
+            help("invalid option -", arg);
         }
       }
     }
@@ -158,7 +177,7 @@ int main(int argc, char **argv)
         break;
 
     if (format_table[i].format == NULL)
-      help("unknown --from-code value");
+      help("invalid --from value");
 
     // encoding is the file format used by all input files, if no BOM is present
     from_encoding = format_table[i].encoding;
@@ -186,7 +205,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      help("unknown --to-code value");
+      help("invalid --to value");
     }
   }
 
@@ -237,7 +256,7 @@ int main(int argc, char **argv)
     // convert input to UTF-8 using reflex::Input::get(buf, size) by 8K blocks
     while (input)
     {
-      char buf[8192];
+      char buf[16384];
 
       size_t size = input.get(buf, sizeof(buf));
 
@@ -342,19 +361,19 @@ void help(const char *message, const char *arg)
   if (message)
     std::cout << "cvt2utf: " << message << (arg != NULL ? arg : "") << std::endl;
   std::cout <<
-"Usage: cvt2utf [-b] [-f encoding] [-t encoding] [file]\n\
+"Usage: cvt2utf [-b] [-f ENCODING] [-t ENCODING] [FILE]\n\
 \n\
     -b, --with-bom\n\
             Include the UTF BOM in the output.  This is the default for options\n\
             -t UTF-16 and -t UTF-32.\n\
-    -f encoding, --from-code=encoding\n\
-            The input file encoding.  The possible values of encoding can be:";
+    -f ENCODING, --from=ENCODING\n\
+            The input file encoding.  The possible values of ENCODING can be:";
   for (int i = 0; format_table[i].format != NULL; ++i)
-    std::cout << (i % 8 ? " " : "\n            ") << format_table[i].format;
-  std::cout << "\n\
-    -t encoding, --to-code=encoding\n\
-            The output file encoding.  The possible values of encoding can be:\n\
-            UTF-8 UTF-16 UTF-32\n\
+    std::cout << (i == 0 ? "" : ",") << (i % 4 ? " " : "\n            ") << "`" << format_table[i].format << "'";
+  std::cout << ".\n\
+    -t ENCODING, --to=ENCODING\n\
+            The output file encoding.  The possible values of ENCODING can be:\n\
+            `UTF-8', `UTF-16', `UTF-32'.\n\
     -?, -h, --help\n\
             Print a help message.\n\
 " << std::endl;

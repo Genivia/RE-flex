@@ -35,11 +35,12 @@ LPDDR3.  Hyperscan disqualifies as a scanner due to its "All matches reported"
 semantics resulting in 1915 matches for this test, and due to its event handler
 requirements.* [Download the tests](https://www.genivia.com/files/perfcomp.zip)
 *Timings on other platforms may differ, though in the worst cases tested,
-reflex ran equally fast than the best times of Flex.*
+reflex ran equally fast or slightly faster than the best times of Flex.*
 
 The RE/flex matcher tracks line numbers, column numbers, and indentations,
 whereas Flex does not (option noyylineno) and neither do the other regex
-matchers compared.  Tracking this information incurs some overhead.
+matchers in the table, except Boost.Regex with reflex.  Tracking this
+information incurs some overhead.
 
 
 Features
@@ -482,6 +483,7 @@ Changelog
 - Nov 22, 2019: 1.5.4 added `flexexample11xx` example with Flex specification and Bison complete parser; minor improvements.
 - Dec 23, 2019: 1.5.5 expanded the `skip(c)` methods with a `wchar_t` wide character parameter and a UTF-8 string parameter to skip input; added new option `--token-eof`.
 - Dec 28, 2019: 1.5.6 added new option `--noindent` to speed up pattern matching and lexical analysis by disabling indentation tracking in the input (also disables anchors `\i`, `\j`, and `\k`); speed improvements.
+- Jan 19, 2020: 1.5.7 expanded file encoding formats to include ISO-8859-2 to 16, MacRoman, KOI8; fixed a bug in `line()` and `span()`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

@@ -1,8 +1,8 @@
 #!/bin/sh
 echo
 echo "Installing reflex"
-cd lib; make -f Make install; cd -
-cd src; make -f Make install; cd -
+cd lib; make -j -f Make install; cd -
+cd src; make -j -f Make install; cd -
 echo
 echo "Installing reflex man page"
 mkdir -p /usr/local/share/man/man1
