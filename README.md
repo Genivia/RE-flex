@@ -489,7 +489,7 @@ Changelog
 - Dec 23, 2019: 1.5.5 expanded the `skip(c)` methods with a `wchar_t` wide character parameter and a UTF-8 string parameter to skip input; added new option `--token-eof`.
 - Dec 28, 2019: 1.5.6 added new option `--noindent` to speed up pattern matching and lexical analysis by disabling indentation tracking in the input (also disables anchors `\i`, `\j`, and `\k`); speed improvements.
 - Jan 19, 2020: 1.5.7 expanded file encoding formats to include ISO-8859-2 to 16, MacRoman, KOI8; fixed a bug in `line()` and `span()`.
-- Feb  3, 2020: 1.5.8 added `wunput()` method; added `yaml.l` example; fixed `--freespace` with `--unicode` when bracket lists contain a `#`; character class operators `{+}`, `{-}`, `{&}` now accept defined names as first operands and inverted character classes; indent anchor `\k` now matches only when indent level is changed as documented.
+- Feb  3, 2020: 1.5.8 added `wunput()` method; added `lex.vim` improved Flex and RE/flex Vim syntax highlighting; added `yaml.l` example; fixed `--freespace` with `--unicode` when bracket lists contain a `#`; character class operators `{+}`, `{-}`, `{&}` now accept defined names as first operands and inverted character classes; indent anchor `\k` now matches only when indent level is changed as documented.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

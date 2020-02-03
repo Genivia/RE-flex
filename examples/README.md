@@ -5,12 +5,12 @@ The examples with Bison require the installation of [Bison][bison-url].
 RE/flex scanner examples using Flex lexer syntax
 ------------------------------------------------
 
-- `json.l` JSON parser (validated against <http://seriot.ch/parsing_json.php>)
+- `json.l` JSON parser and writer
 - `ctokens.l` and `cdefs.l` a C/C++ tokenizer
 - `jtokens.l` and `jdefs.l` a Java tokenizer, meets Java Lexical Structure requirements
-- `echo.l` classic interactive scanner to echo input
 - `readline.l` interactive scanner to echo input using readline(3)
 - `yyscanstrings.l` demonstrates string and buffer scanning
+- `echo.l` classic interactive scanner to echo input
 - `wc.l` word count example
 - `wcu.l` word count example with Unicode matching (RE/flex only)
 - `wcpp.l` word count example with lexer class variables
@@ -54,6 +54,7 @@ RE/flex scanner examples using RE/flex lexer syntax
 - `tag_lazystates.l` lexer to print XML tags, uses lazy quants and states
 - `tag_unicode.l` lexer to print XML tags, uses lazy quants and states, checks UTF-8 validity
 - `tag_tidy.l` lexer to tidy and normalize HTML
+- `yaml.l` YAML 1.2 parser and writer
 - `reflexexample3.l` example RE/flex scanner adapted from the Flex documentation with C bison
 - `reflexexample3.lxx` example RE/flex scanner adapted from the Flex documentation with C++ bison
 - `reflexexample4.l` example RE/flex scanner adapted from the Flex documentation with C bison-bridge
