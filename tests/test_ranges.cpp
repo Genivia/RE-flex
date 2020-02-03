@@ -121,6 +121,8 @@ int main()
   for (Ranges<char>::const_iterator i = chars.find('0', 'Z'); i != chars.end() && !Ranges<char>::key_compare()(std::pair<char,char>('0', 'Z'), *i) /* i->first <= 'Z' */; ++i)
     std::cout << "[" << i->first << "," << i->second << "] overlaps [0,Z]" << std::endl;
   assert(chars.size() == 4);
+  assert(chars.lo() == '-');
+  assert(chars.hi() == 'z');
 
 /* displays:
 Set of 4 ranges:
@@ -180,6 +182,14 @@ Set of 4 ranges:
   if (ivals.find(401) == ivals.end())
     std::cout << "401 is not in the set" << std::endl;
 
+/*displays:
+Set of 1 open-ended ranges:
+[100,401)
+200 is in the set
+99 is not in the set
+401 is not in the set
+*/
+
   ivals.erase(250, 350);
   for (Ranges<int>::const_iterator i = ivals.begin(); i != ivals.end(); ++i)
     std::cout << "[" << i->first << "," << i->second << ")" << std::endl;
@@ -209,14 +219,8 @@ Set of 4 ranges:
   for (Ranges<int>::const_iterator i = ivals.begin(); i != ivals.end(); ++i)
     std::cout << "[" << (char)i->first << "," << (char)i->second << ")" << std::endl;
   assert(ichar1.contains(ichar2) == true);
-
-/*displays:
-Set of 1 open-ended ranges:
-[100,401)
-200 is in the set
-99 is not in the set
-401 is not in the set
-*/
+  assert(ichar1.lo() == '0');
+  assert(ichar1.hi() == 'z');
 
   unsigned int seed = 1; // time(0);
   int len1, len2;

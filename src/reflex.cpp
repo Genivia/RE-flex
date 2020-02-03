@@ -499,7 +499,6 @@ void Reflex::init(int argc, char **argv)
 void Reflex::version()
 {
   std::cout << "reflex " REFLEX_VERSION " " PLATFORM << "\n"
-    "Copyright (c) Genivia Inc.\n"
     "License BSD-3-Clause: <https://opensource.org/licenses/BSD-3-Clause>\n"
     "Written by Robert van Engelen and others: <https://github.com/Genivia/RE-flex>" << std::endl;
   exit(EXIT_SUCCESS);
@@ -788,14 +787,21 @@ bool Reflex::skip_comment(size_t& pos)
   }
 }
 
-/// Advance pos to match case-insensitive string s followed by whitespace, return true if OK
+/// Match case-insensitive string s while ignoring the rest of the line, return true if OK
+bool Reflex::is(const char *s)
+{
+  for (size_t pos = 0; pos < linelen && *s != '\0' && lower(line.at(pos)) == *s; ++pos, ++s)
+    continue;
+  return *s == '\0';
+}
+
+/// Advance pos to match case-insensitive initial part of the string s followed by white space, return true if OK
 bool Reflex::as(size_t& pos, const char *s)
 {
-  if (pos >= linelen || lower(line.at(pos)) != *s++)
+  if (pos >= linelen || *s == '\0' || lower(line.at(pos)) != *s++)
     return false;
-  do
-    ++pos;
-  while (pos < linelen && lower(line.at(pos)) == *s++);
+  while (++pos < linelen && *s != '\0' && lower(line.at(pos)) == *s++)
+    continue;
   return ws(pos);
 }
 
@@ -809,7 +815,7 @@ bool Reflex::ws(size_t& pos)
   return true;
 }
 
-/// Advance pos over '=' and whitespace, return true if OK
+/// Advance pos over '=' and whitespace when present, return true if OK
 bool Reflex::eq(size_t& pos)
 {
   (void)ws(pos);
@@ -831,28 +837,28 @@ bool Reflex::nl(size_t& pos)
 /// Check if current line starts a block of code or a comment
 bool Reflex::is_code()
 {
-  return linelen > 0 && ((std::isspace(line.at(0)) && options["freespace"].empty()) || line == "%{" || !line.compare(0, 2, "//") || !line.compare(0, 2, "/*"));
+  return linelen > 0 && ((std::isspace(line.at(0)) && options["freespace"].empty()) || is("%{") || is("//") || is("/*"));
 }
 
 /// Check if current line starts a block of %top code
 bool Reflex::is_topcode()
 {
   size_t pos = 0;
-  return line == "%top{" || (as(pos, "%top") && pos < linelen && line.at(pos) == '{');
+  return is("%top{") || (as(pos, "%top") && pos < linelen && line.at(pos) == '{');
 }
 
 /// Check if current line starts a block of %class code
 bool Reflex::is_classcode()
 {
   size_t pos = 0;
-  return line == "%class{" || (as(pos, "%class") && pos < linelen && line.at(pos) == '{');
+  return is("%class{") || (as(pos, "%class") && pos < linelen && line.at(pos) == '{');
 }
 
 /// Check if current line starts a block of %init code
 bool Reflex::is_initcode()
 {
   size_t pos = 0;
-  return line == "%init{" || (as(pos, "%init") && pos < linelen && line.at(pos) == '{');
+  return is("%init{") || (as(pos, "%init") && pos < linelen && line.at(pos) == '{');
 }
 
 /// Advance pos over name (letters, digits, ., -, _ or any non-ASCII character > U+007F), return name
@@ -997,7 +1003,7 @@ std::string Reflex::get_regex(size_t& pos)
         regex.append(line.substr(loc, pos - loc));
         if (!get_line())
           error("EOF encountered inside a pattern", NULL, at_lineno);
-        if (line == "%%")
+        if (is("%%"))
           error("%% section ending encountered inside a pattern", NULL, at_lineno);
         pos = 0;
         (void)ws(pos); // skip indent, if any
@@ -1049,7 +1055,7 @@ std::string Reflex::get_code(size_t& pos)
   size_t at_lineno = lineno;
   size_t blk = 0, lev = 0;
   enum { CODE, STRING, CHAR, COMMENT } tok = CODE;
-  if (pos == 0 && (line == "%{" || is_topcode() || is_classcode() || is_initcode()))
+  if (pos == 0 && (is("%{") || is_topcode() || is_classcode() || is_initcode()))
   {
     ++blk;
     pos = linelen;
@@ -1069,14 +1075,14 @@ std::string Reflex::get_code(size_t& pos)
       pos = 0;
       if (tok == CODE)
       {
-        if ((blk > 0 || lev > 0) && line == "%%")
+        if ((blk > 0 || lev > 0) && is("%%"))
           error("%% section ending encountered inside an action", NULL, at_lineno);
-        if (line == "%{")
+        if (is("%{"))
         {
           code.append(newline);
           ++blk;
         }
-        else if (line == "%}")
+        else if (is("%}"))
         {
           code.append(newline);
           if (blk > 0)
@@ -1161,7 +1167,7 @@ std::string Reflex::escape_bs(const std::string& s)
 bool Reflex::get_starts(size_t& pos, Starts& starts)
 {
   pos = 0;
-  if (linelen > 1 && line.at(0) == '<' && (std::isalpha(line.at(1)) || line.at(1) == '_' || line.at(1) == '*' || (line.at(1) & 0x80) == 0x80 || line.at(1) == '^'))
+  if (linelen > 1 && line.at(0) == '<' && (std::isalpha(line.at(1)) || line.at(1) == '_' || line.at(1) == '*' || (line.at(1) & 0x80) == 0x80 || line.at(1) == '^') && line.find('>') != std::string::npos)
   {
     do
     {
@@ -1260,7 +1266,7 @@ void Reflex::parse_section_1()
 {
   if (!get_line())
     return;
-  while (line != "%%")
+  while (!is("%%"))
   {
     if (linelen == 0)
     {
@@ -1434,7 +1440,7 @@ void Reflex::parse_section_2()
   std::stack<Starts> scopes;
   if (!get_line())
     return;
-  while (line != "%%")
+  while (!is("%%"))
   {
     if (linelen == 0)
     {
@@ -1461,7 +1467,7 @@ void Reflex::parse_section_2()
             section_2[*start].push_back(Code(code, infile, lineno));
         }
       }
-      else if (line == "}" && !scopes.empty())
+      else if (is("}") && !scopes.empty())
       {
         scopes.pop();
         if (!get_line())
@@ -1469,7 +1475,7 @@ void Reflex::parse_section_2()
       }
       else
       {
-        if (!skip_comment(pos) || line == "%%")
+        if (!skip_comment(pos) || is("%%"))
           break;
         Starts starts;
         if (!scopes.empty())

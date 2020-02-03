@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">flexlexer.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 19 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Feb 3 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -155,9 +155,15 @@ Macros</h2></td></tr>
 <tr class="memitem:ad71cf0fddcfe4f61de0929105b33226c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#ad71cf0fddcfe4f61de0929105b33226c">yylineno</a>&#160;&#160;&#160;static_cast&lt;int&gt;(<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> matcher().lineno())</td></tr>
 <tr class="memdesc:ad71cf0fddcfe4f61de0929105b33226c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the line number of the matched text.  <a href="#ad71cf0fddcfe4f61de0929105b33226c">More...</a><br /></td></tr>
 <tr class="separator:ad71cf0fddcfe4f61de0929105b33226c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a634d609c520344c21ec3ef1249c09e91"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a634d609c520344c21ec3ef1249c09e91">yycolumno</a>&#160;&#160;&#160;static_cast&lt;int&gt;(<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> matcher().columno())</td></tr>
+<tr class="memdesc:a634d609c520344c21ec3ef1249c09e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the column number of the matched text.  <a href="#a634d609c520344c21ec3ef1249c09e91">More...</a><br /></td></tr>
+<tr class="separator:a634d609c520344c21ec3ef1249c09e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97f4214383553e1b43928bd0f3b96f6c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a97f4214383553e1b43928bd0f3b96f6c">yy_act</a>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> matcher().accept()</td></tr>
 <tr class="memdesc:a97f4214383553e1b43928bd0f3b96f6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the matched action index (use only when scanner has started).  <a href="#a97f4214383553e1b43928bd0f3b96f6c">More...</a><br /></td></tr>
 <tr class="separator:a97f4214383553e1b43928bd0f3b96f6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9cbd87452595d70d9fa390f59f71fbb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aa9cbd87452595d70d9fa390f59f71fbb">yylook</a>()                            &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> matcher().scan()</td></tr>
+<tr class="memdesc:aa9cbd87452595d70d9fa390f59f71fbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the next action index (use only when scanner has started).  <a href="#aa9cbd87452595d70d9fa390f59f71fbb">More...</a><br /></td></tr>
+<tr class="separator:aa9cbd87452595d70d9fa390f59f71fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa789f4617e33fb99594cb04a3688a0c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aa789f4617e33fb99594cb04a3688a0c1">yyin</a>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> in()</td></tr>
 <tr class="memdesc:aa789f4617e33fb99594cb04a3688a0c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the current input, a reference to a <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a> object that can be a stream, file, or string.  <a href="#aa789f4617e33fb99594cb04a3688a0c1">More...</a><br /></td></tr>
 <tr class="separator:aa789f4617e33fb99594cb04a3688a0c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -210,14 +216,23 @@ Macros</h2></td></tr>
 <tr class="memdesc:add62fdebca5f1fac074d8c918dc45eec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the terminating action.  <a href="#add62fdebca5f1fac074d8c918dc45eec">More...</a><br /></td></tr>
 <tr class="separator:add62fdebca5f1fac074d8c918dc45eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89cb0e26f2aed856887fdbbc8d10c73a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a89cb0e26f2aed856887fdbbc8d10c73a">yyinput</a>()                          &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> input()</td></tr>
-<tr class="memdesc:a89cb0e26f2aed856887fdbbc8d10c73a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: read one character, returns zero when EOF.  <a href="#a89cb0e26f2aed856887fdbbc8d10c73a">More...</a><br /></td></tr>
+<tr class="memdesc:a89cb0e26f2aed856887fdbbc8d10c73a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: read one 8-bit character, returns zero when EOF.  <a href="#a89cb0e26f2aed856887fdbbc8d10c73a">More...</a><br /></td></tr>
 <tr class="separator:a89cb0e26f2aed856887fdbbc8d10c73a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75bdfddccf013e672ef763c8da0d1475"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a75bdfddccf013e672ef763c8da0d1475">yywinput</a>()                        &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> winput()</td></tr>
+<tr class="memdesc:a75bdfddccf013e672ef763c8da0d1475"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: read one wide character, returns zero when EOF.  <a href="#a75bdfddccf013e672ef763c8da0d1475">More...</a><br /></td></tr>
+<tr class="separator:a75bdfddccf013e672ef763c8da0d1475"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a978e5155bc5a5e66b2cadcb7b2124c72"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a978e5155bc5a5e66b2cadcb7b2124c72">yyunput</a>(c)                        &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> unput(c)</td></tr>
-<tr class="memdesc:a978e5155bc5a5e66b2cadcb7b2124c72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: put one character back onto the input stream to be read again.  <a href="#a978e5155bc5a5e66b2cadcb7b2124c72">More...</a><br /></td></tr>
+<tr class="memdesc:a978e5155bc5a5e66b2cadcb7b2124c72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: put one 8-bit character back onto the input stream to be read again.  <a href="#a978e5155bc5a5e66b2cadcb7b2124c72">More...</a><br /></td></tr>
 <tr class="separator:a978e5155bc5a5e66b2cadcb7b2124c72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a536ce2fe287294250de64d7981d5099c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a536ce2fe287294250de64d7981d5099c">yywunput</a>(c)                      &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> wunput(c)</td></tr>
+<tr class="memdesc:a536ce2fe287294250de64d7981d5099c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: put one wide character back onto the input stream to be read again.  <a href="#a536ce2fe287294250de64d7981d5099c">More...</a><br /></td></tr>
+<tr class="separator:a536ce2fe287294250de64d7981d5099c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01e073defdea723b59e8e4415648ac47"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a01e073defdea723b59e8e4415648ac47">yyoutput</a>(c)                      &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> output(c)</td></tr>
-<tr class="memdesc:a01e073defdea723b59e8e4415648ac47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: output one character.  <a href="#a01e073defdea723b59e8e4415648ac47">More...</a><br /></td></tr>
+<tr class="memdesc:a01e073defdea723b59e8e4415648ac47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: output one 8-bit character.  <a href="#a01e073defdea723b59e8e4415648ac47">More...</a><br /></td></tr>
 <tr class="separator:a01e073defdea723b59e8e4415648ac47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab665ffc9c0765d0726d425d9a8d0727"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aab665ffc9c0765d0726d425d9a8d0727">yywoutput</a>(c)                    &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> woutput(c)</td></tr>
+<tr class="memdesc:aab665ffc9c0765d0726d425d9a8d0727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: woutput one wide character.  <a href="#aab665ffc9c0765d0726d425d9a8d0727">More...</a><br /></td></tr>
+<tr class="separator:aab665ffc9c0765d0726d425d9a8d0727"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a568a847aae0d31ca8358c9c52d22f15d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a568a847aae0d31ca8358c9c52d22f15d">yy_push_state</a>(n)            &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> push_state(n)</td></tr>
 <tr class="memdesc:a568a847aae0d31ca8358c9c52d22f15d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: push the current start condition state on the stack and transition to the given state.  <a href="#a568a847aae0d31ca8358c9c52d22f15d">More...</a><br /></td></tr>
 <tr class="separator:a568a847aae0d31ca8358c9c52d22f15d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -809,6 +824,20 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a634d609c520344c21ec3ef1249c09e91"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yycolumno&#160;&#160;&#160;static_cast&lt;int&gt;(<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> matcher().columno())</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flex-compatible macro: the column number of the matched text. </p>
+
+</div>
+</div>
 <a class="anchor" id="aa789f4617e33fb99594cb04a3688a0c1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -836,7 +865,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flex-compatible macro: read one character, returns zero when EOF. </p>
+<p>Flex-compatible macro: read one 8-bit character, returns zero when EOF. </p>
 
 </div>
 </div>
@@ -886,6 +915,23 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa9cbd87452595d70d9fa390f59f71fbb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yylook</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> matcher().scan()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flex-compatible macro: the next action index (use only when scanner has started). </p>
+
+</div>
+</div>
 <a class="anchor" id="a8f5ae76ff361bbf03790c326d86ea600"></a>
 <div class="memitem">
 <div class="memproto">
@@ -931,7 +977,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flex-compatible macro: output one character. </p>
+<p>Flex-compatible macro: output one 8-bit character. </p>
 
 </div>
 </div>
@@ -1047,14 +1093,67 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flex-compatible macro: put one character back onto the input stream to be read again. </p>
+<p>Flex-compatible macro: put one 8-bit character back onto the input stream to be read again. </p>
+
+</div>
+</div>
+<a class="anchor" id="a75bdfddccf013e672ef763c8da0d1475"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yywinput</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> winput()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flex-compatible macro: read one wide character, returns zero when EOF. </p>
+
+</div>
+</div>
+<a class="anchor" id="aab665ffc9c0765d0726d425d9a8d0727"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yywoutput</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">c</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> woutput(c)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flex-compatible macro: woutput one wide character. </p>
+
+</div>
+</div>
+<a class="anchor" id="a536ce2fe287294250de64d7981d5099c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yywunput</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">c</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> wunput(c)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flex-compatible macro: put one wide character back onto the input stream to be read again. </p>
 
 </div>
 </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 19 2020 09:12:10 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Feb 3 2020 12:00:32 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

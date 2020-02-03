@@ -1,16 +1,18 @@
 // simple unix-like wc (word count) with lexer class data members
 
 %{
-#include <cstdio>
-#include <iostream>
-#include <iomanip>
-using namespace std;
+  #include <cstdio>
+  #include <iostream>
+  #include <iomanip>
+  using namespace std;
 %}
 
+// Lexer class members
 %class{
   int ch, wd, nl;
 %}
 
+// Lexer class initialization at construction
 %init{
   ch = wd = nl = 0;
 %}

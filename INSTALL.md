@@ -105,6 +105,11 @@ work around this problem, run:
 - To visualize the FSM graphs generated with **reflex** option `--graphs-file`,
   install [Graphviz dot][dot-url].
 
+### Improved Vim syntax highlighting for Flex and RE/flex
+
+Copy the `lex.vim` file to `~/.vim/syntax/lex.vim` to enjoy improved syntax
+highlighting for Flex and RE/flex.
+
 
 Examples
 --------
@@ -147,27 +152,27 @@ following files:
     reflex/
     |
     |__ bin/
-    |   |__ reflex.exe				Windows executable reflex
+    |   |__ reflex.exe            Windows executable reflex
     |
     |__ doc/
     |   |__ Doxyfile
-    |   |__ README.md				URLs to online documentation
+    |   |__ README.md             URLs to online documentation
     |   |__ footer.html
     |   |__ header.html
     |   |__ reflex-logo.png
     |   |__ html/
-    |   |   |__ index.html			HTML documentation (also online)
+    |   |   |__ index.html        HTML documentation (also online)
     |   |__ man/
-    |       |__ reflex.1			man page
+    |       |__ reflex.1          man page
     |
     |__ examples/
-    |   |__ Make				quick-build Make(file)
-    |   |__ Makefile.am				automake file
-    |   |__ Makefile.in				automake file
-    |   |__ build.sh				quick build examples
+    |   |__ Make                  quick-build Make(file)
+    |   |__ Makefile.am           automake file
+    |   |__ Makefile.in           automake file
+    |   |__ build.sh              quick build examples
     |   |__ ...
     |
-    |__ include/				reflex header files to install
+    |__ include/                  reflex header files to install
     |   |__ reflex/
     |       |__ abslexer.h
     |       |__ absmatcher.h
@@ -189,10 +194,10 @@ following files:
     |       |__ unicode.h
     |       |__ utf8.h
     |
-    |__ lib/					reflex library files to install
-    |   |__ Make				quick-build Make(file)
-    |   |__ Makefile.am				automake file
-    |   |__ Makefile.in				automake file
+    |__ lib/                      reflex library files to install
+    |   |__ Make                  quick-build Make(file)
+    |   |__ Makefile.am           automake file
+    |   |__ Makefile.in           automake file
     |   |__ convert.cpp
     |   |__ debug.cpp
     |   |__ error.cpp
@@ -203,46 +208,47 @@ following files:
     |   |__ unicode.cpp
     |   |__ utf8.cpp
     |
-    |__ src/					reflex command-line tool
-    |   |__ Make				quick-build Make(file)
-    |   |__ Makefile.am				automake file
-    |   |__ Makefile.in				automake file
+    |__ src/                      reflex command-line tool
+    |   |__ Make                  quick-build Make(file)
+    |   |__ Makefile.am           automake file
+    |   |__ Makefile.in           automake file
     |   |__ reflex.cpp
     |   |__ reflex.h
     |
     |__ tests/
-    |   |__ Make				quick-build Make(file)
-    |   |__ Makefile.am				automake file
-    |   |__ Makefile.in				automake file
+    |   |__ Make                  quick-build Make(file)
+    |   |__ Makefile.am           automake file
+    |   |__ Makefile.in           automake file
     |   |__ rtest.cpp
     |   |__ ...
     |
     |__ unicode/
-    |   |__ Make				quick-build Make(file)
-    |   |__ Blocks.txt                          Unicode source file
-    |   |__ Scripts.txt                         Unicode source file
-    |   |__ UnicodeData.txt                     Unicode source file
-    |   |__ block_scripts.l                     convert Blocks.txt to block_scripts.cpp
+    |   |__ Make                  quick-build Make(file)
+    |   |__ Blocks.txt            Unicode source file
+    |   |__ Scripts.txt           Unicode source file
+    |   |__ UnicodeData.txt       Unicode source file
+    |   |__ block_scripts.l       convert Blocks.txt to block_scripts.cpp
     |   |__ block_scripts.cpp
-    |   |__ language_scripts.l                  convert Scripts.txt to language_scripts.cpp
+    |   |__ language_scripts.l    convert Scripts.txt to language_scripts.cpp
     |   |__ language_scripts.cpp
-    |   |__ letter_scripts.l                    convert UnicodeData.txt to letter_scripts.cpp
+    |   |__ letter_scripts.l      convert UnicodeData.txt to letter_scripts.cpp
     |   |__ letter_scripts.cpp
     |
-    |__ vs/                                     Visual Studio batch scripts
+    |__ vs/                       Visual Studio batch scripts
     |   |__ ...
     |
-    |__ INSTALL.md				this file
-    |__ LICENSE.txt				BSD-3 license
-    |__ README.md				README to get started, changelog
-    |__ CONTRIBUTING.md                         about contributing
-    |__ CODE_OF_CONDUCT.md			when contributing
-    |__ Makefile.am				automake file
-    |__ Makefile.in				automake file
-    |__ allinstall.sh				quick build and install
-    |__ build.sh				quick build (local build)
-    |__ clean.sh				quick cleanup
-    |__ configure				./configure && make
+    |__ INSTALL.md                this file
+    |__ LICENSE.txt               BSD-3 license
+    |__ README.md                 README to get started, changelog
+    |__ CONTRIBUTING.md           about contributing
+    |__ CODE_OF_CONDUCT.md        when contributing
+    |__ Makefile.am               automake file
+    |__ Makefile.in               automake file
+    |__ allinstall.sh             quick build and install
+    |__ build.sh                  quick build (local build)
+    |__ clean.sh                  quick cleanup
+    |__ configure                 ./configure && make
+    |__ lex.vim                   improved Flex and RE/flex Vim syntax file
 
 License and copyright
 ---------------------

@@ -711,7 +711,8 @@ The following methods may be used to manipulate the input stream directly:
   ---------- | ----------------------------------------------------------------
   `input()`  | returns next 8-bit char from the input, matcher then skips it
   `winput()` | returns next wide character from the input, matcher skips it
-  `unput(c)` | put char `c` back unto the stream, matcher then takes it
+  `unput(c)` | put 8-bit char `c` back unto the stream, matcher then takes it
+  `wunput(c)`| put (wide) char `c` back unto the stream, matcher then takes it
   `peek()`   | returns next 8-bit char from the input without consuming it
   `skip(c)`  | skip input until character `c` (`char` or `wchar_t`) is consumed
   `skip(s)`  | skip input until UTF-8 string `s` is consumed
@@ -801,13 +802,13 @@ should include the final zero byte at the end of the string.
 
 @note In fact, the specified string may have any final byte value.  The final
 byte of the string will be set to zero when `text()` or `rest()` are used.
-Only `unput(c)`, `text()`, `rest()`, and `span()` modify the buffer contents,
-because these functions require an extra byte at the end of the buffer to make
-the strings returned by these methods 0-terminated.  This means that you can
-specify read-only memory of `n` bytes located at address `b` by using
-`buffer(b, n+1)` safely as long as you do not use `unput()`, `text()`,
-`rest()`, and `span()`, for example to search read-only mmap(2) `PROT_READ`
-memory.
+Only `unput(c)`, `wunput()`, `text()`, `rest()`, and `span()` modify the buffer
+contents, because these functions require an extra byte at the end of the
+buffer to make the strings returned by these methods 0-terminated.  This means
+that you can specify read-only memory of `n` bytes located at address `b` by
+using `buffer(b, n+1)` safely as long as you do not use `unput()`, `unput()`,
+`text()`, `rest()`, and `span()`, for example to search read-only mmap(2)
+`PROT_READ` memory.
 
 So far we explained how to use `reflex::BoostMatcher` for pattern matching.  We
 can also use the RE/flex `reflex::Matcher` class for pattern matching.  The API
@@ -901,11 +902,11 @@ for the finite state machine:
 ~~~{.cpp}
     void reflex_code_FSM(reflex::Matcher& m)
     {
-      int c0 = 0, c1 = c0;
+      int c0 = 0, c1 = 0;
       m.FSM_INIT(c1);
 
     S0:
-      c0 = c1, c1 = m.FSM_CHAR();
+      c1 = m.FSM_CHAR();
       if (97 <= c1 && c1 <= 122) goto S5;
       if (c1 == 95) goto S5;
       if (65 <= c1 && c1 <= 90) goto S5;
@@ -914,7 +915,7 @@ for the finite state machine:
 
     S5:
       m.FSM_TAKE(1);
-      c0 = c1, c1 = m.FSM_CHAR();
+      c1 = m.FSM_CHAR();
       if (97 <= c1 && c1 <= 122) goto S5;
       if (c1 == 95) goto S5;
       if (65 <= c1 && c1 <= 90) goto S5;
@@ -1955,11 +1956,12 @@ are the classic Flex actions shown in the second column of this table:
   `matcher().lineno_end()` | `yylineno`           | same as `lineno_end()`
   `matcher().columno_end()`| *n/a*                | same as `columno_end()`
   `matcher().border()`     | *n/a*                | same as `border()`
-  `matcher().begin()`      | *n/a*                | non-0-terminated text match
+  `matcher().begin()`      | *n/a*                | non-0-terminated text match begin
   `matcher().end()`        | *n/a*                | non-0-terminated text match end
   `matcher().input()`      | `yyinput()`          | get next 8-bit char from input
   `matcher().winput()`     | *n/a*                | get wide character from input
   `matcher().unput(c)`     | `unput(c)`           | put back 8-bit char `c`
+  `matcher().wunput(c)`    | `unput(c)`           | put back (wide) char `c`
   `matcher().peek()`       | *n/a*                | peek at next 8-bit char on input
   `matcher().skip(c)`      | *n/a*                | skip input to char `c`
   `matcher().skip(s)`      | *n/a*                | skip input to UTF-8 string `s`
@@ -2328,7 +2330,7 @@ patterns `φ` and `ψ`:
   `φ\>`     | matches `φ` that ends a word (top-level `φ`, not nested in a sub-pattern)
   `\i`      | matches an indent for \ref reflex-pattern-dents matching
   `\j`      | matches a dedent for \ref reflex-pattern-dents matching
-  `\k`      | matches if indent depth changed and restores indent stops for \ref reflex-pattern-dents matching
+  `\k`      | matches if indent depth changed, undoing this change to keep the current indent stops for \ref reflex-pattern-dents matching
   `(?i:φ)`  | \ref reflex-pattern-anycase matches `φ` ignoring case
   `(?m:φ)`  | \ref reflex-pattern-multiline `^` and `$` in `φ` match begin and end of a line (default in lexer specifications)
   `(?s:φ)`  | \ref reflex-pattern-dotall `.` (dot) in `φ` matches newline
@@ -2417,23 +2419,33 @@ list that matches a `]` and a `[`, `[^][]` is a list that matches anything but
 It is an error to construct an empty character class by subtraction or by
 intersection, for example `[a&&[b]]` is invalid.
 
-Bracket lists may contain ASCII and Unicode \ref reflex-pattern-cat.  To add
-Unicode character categories and wide characters (encoded in UTF-8)
-to bracket lists \ref reflex-pattern-unicode should be enabled.
+Bracket lists may contain ASCII and Unicode \ref reflex-pattern-cat, for
+example `[a-z\d]` and `[a-z[:digit:]]` contain the letters `a` to `z` and
+digits `0` to `9`.  To add Unicode character categories and wide characters
+(encoded in UTF-8) to bracket lists \ref reflex-pattern-unicode should be
+enabled.
 
 An inverted Unicode character class is constructed by subtracting the character
 class from the Unicode range U+0000 to U+D7FF and U+E000 to U+10FFFF.
 
-The character class union, intersection, and subtraction operations are left
-associative and have the same operator precedence.  Operations can be chained
-together in a bracket list.  For example `[a-z||[A-Z]--[aeiou]--[AEIOU]]`,
-`[a-z--[aeiou]||[A-Z]--[AEIUO]]`, `[a-z&&[^aeiou]||[A-Z]&&[^AEIOU]]`, and
-`[B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]` are the same character classes.
+Character class operations can be chained together in a bracket list.  The
+union `||`, intersection `&&`, and subtraction `--` operations are left
+associative and have the same operator precedence.  For example,
+`[a-z||[A-Z]--[aeiou]--[AEIOU]]`, `[a-z--[aeiou]||[A-Z]--[AEIUO]]`,
+`[a-z&&[^aeiou]||[A-Z]&&[^AEIOU]]`, and `[B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]` are
+the same character classes.
+
+Character class operations may be nested.  For example, `[a-z||[A-Z||[0-9]]]`
+is the same as `[a-zA-Z0-9]`.
+
+Character class inversion, when specified, applies to the final character
+class.  For example, `[^a-z||[A-Z]]` is the same as `[^||[a-z]||[A-Z]]`, which
+is the class `[a-zA-Z]`.
 
 A lexer specification may use a defined name in place of the second operand of
-an union, intersection, and subtraction operation.  The defined name should
-expand into a bracket list that defines an ASCII character class (i.e. full
-Unicode cannot be used).  For example:
+a character class operation.  A defined name when used as an operand should
+expand into a POSIX character class containing ASCII characters only.  For
+example:
 
 <div class="alt">
 ~~~{.cpp}
@@ -2464,7 +2476,8 @@ Alternatively, unions may be written as alternations.  That is,
 not restricted to ASCII.
 
 The character class operators `{+}` (or `{|}`), `{&}`, and `{-}` may be used in
-lexer specifications for compatibility with Flex that supports `{+}` and `{-}`:
+lexer specifications.  Note that Flex only supports the two operators `{+}` and
+`{-}`:
 
   Pattern            | Matches
   ------------------ | --------------------------------------------------------
@@ -2473,10 +2486,11 @@ lexer specifications for compatibility with Flex that supports `{+}` and `{-}`:
   `[a-z]{&}[^aeiou]` | matches a consonant, same as `[a-z&&[^aeiou]]`
   `[a-z]{-}[aeiou]`  | matches a consonant, same as `[a-z−−[aeiou]]`
 
-These operators can be chained together and support defined names, except for
-the first operand.  For example `[0-9]{+}{letter}` is valid but
-`{lower}{+}{upper}` is invalid.  A defined name when used in this way should
-expand into a bracket list that defines an ASCII character class.
+Multiple operators can be chained together.  Unlike Flex, defined names may be
+used as operands.  For example `{lower}{+}{upper}` is the same as
+`[a-z]{+}[A-Z]`, i.e. the character class `[A-Za-z]`.  A defined name when used
+as an operand should expand into a POSIX character class containing ASCII
+characters only.
 
 🔝 [Back to table of contents](#)
 
@@ -2503,17 +2517,17 @@ The 7-bit ASCII POSIX character categories are:
   `[:^blank:]` | `\P{Blank}`, `\H` | matches a non-blank character `[^ \t]`
   `[:^digit:]` | `\P{Digit}`, `\D` | matches a non-digit `[^0-9]`
 
-The POSIX form can only be used in bracket lists, for example
-`[[:lower:][:digit:]]` matches an ASCII lower case letter or a digit.  
+The POSIX forms are used in bracket lists.  For example `[[:lower:][:digit:]]`
+matches an ASCII lower case letter or a digit.  
 
 You can also use the capitalized `\P{C}` form that has the same meaning as
 `\p{^C}`, which matches any character except characters in the class `C`.
 For example, `\P{ASCII}` is the same as `\p{^ASCII}` which is the same as
 `[^[:ascii:]]`.  A word of caution: because POSIX character categories only
-cover ASCII, `[[:^ascii]]` is empty and invalid to use.  By contrast,
-`[^[:ascii]]` is a Unicode character class that excludes the ASCII character
-category.  Unicode character classes and categories require the <b>`reflex`</b>
-`−−unicode` option.
+cover ASCII, `[[:^ascii]]` is empty and invalid to use.  When Unicode matching
+mode is enabled, `[^[:ascii]]` is a Unicode character class that excludes the
+ASCII character category.  Unicode character classes and categories require the
+<b>`reflex`</b> `−−unicode` option.
 
 The following Unicode character categories are enabled with the <b>`reflex`</b>
 `−−unicode` option or \ref reflex-pattern-unicode `(?u:φ)` and with the regex
@@ -2533,13 +2547,13 @@ library:
   `\p{Unicode}`                          | matches any Unicode character (U+0000 to U+10FFFF minus U+D800 to U+DFFF)
   `\p{ASCII}`                            | matches an ASCII character U+0000 to U+007F)
   `\p{Non_ASCII_Unicode}`                | matches a non-ASCII character U+0080 to U+10FFFF minus U+D800 to U+DFFF)
-  `\p{Letter}`                           | matches a character with Unicode property Letter
-  `\p{Mark}`                             | matches a character with Unicode property Mark
-  `\p{Separator}`                        | matches a character with Unicode property Separator
-  `\p{Symbol}`                           | matches a character with Unicode property Symbol
-  `\p{Number}`                           | matches a character with Unicode property Number
-  `\p{Punctuation}`                      | matches a character with Unicode property Punctuation
-  `\p{Other}`                            | matches a character with Unicode property Other
+  `\p{Letter}`,`\p{L}`                   | matches a character with Unicode property Letter
+  `\p{Mark}`,`\p{M}`                     | matches a character with Unicode property Mark
+  `\p{Separator}`,`\p{Z}`                | matches a character with Unicode property Separator
+  `\p{Symbol}`,`\p{S}`                   | matches a character with Unicode property Symbol
+  `\p{Number}`,`\p{N}`                   | matches a character with Unicode property Number
+  `\p{Punctuation}`,`\p{P}`              | matches a character with Unicode property Punctuation
+  `\p{Other}`,`\p{C}`                    | matches a character with Unicode property Other
   `\p{Lowercase_Letter}`, `\p{Ll}`       | matches a character with Unicode sub-property Ll
   `\p{Uppercase_Letter}`, `\p{Lu}`       | matches a character with Unicode sub-property Lu
   `\p{Titlecase_Letter}`, `\p{Lt}`       | matches a character with Unicode sub-property Lt
@@ -2930,8 +2944,8 @@ condition state to scan the content between `/*` and `*/`:
                    start(COMMENT);              // skip comment
     ^\h*\j         out() << "< ";               // dedent
     \j             out() << "< ";               // dedent, triggered for each extra level dedented
-    (?^^\h*\n)     // eat empty lines without affecting indent stops
-    (?^^\h+/"/*")  // eat white space before /*-comments without affecting indent stops
+    (?^^\h*\n)     // a negative pattern to eat empty lines without affecting indent stops
+    (?^^\h+/"/*")  // a negative pattern to eat white space before /*-comments without affecting indent stops
     "/*"           level = 1;
                    start(COMMENT);              // continue w/o indent matching
     (?^\\\n\h*)    // lines ending in \ continue on the next line
@@ -2977,12 +2991,12 @@ stops to modify, we must make sure to keep the stop positions in the vector
 sorted.
 
 In addition to the `\i` and `\j` indent and dedent anchors, the `\k` undent
-anchor matches when the indent depth changed before the position of `\k` in the
-input, and restores the indent stops by undoing these changes ("undenting"):
+anchor matches when the indent depth changed (before the position of `\k`),
+undoing this change to keep the current indent stops ("undenting"):
 
   Pattern | Matches
   ------- | -------------------------------------------------------------------
-  `\k`    | undent: matches when indent depth changed and restores indent stops
+  `\k`    | undent: matches when indent depth changed, keep current indent stops
 
 The example shown above can be simplified with `\k`.  We no longer need to
 explicitly save and restore indent stops in a variable:
@@ -2999,8 +3013,8 @@ explicitly save and restore indent stops in a variable:
     ^\h+\i         out() << "> ";    // indent
     ^\h*\j         out() << "< ";    // dedent
     \j             out() << "< ";    // dedent, triggered for each extra level dedented
-    (?^^\h*\n)     // eat empty lines without affecting indent stops
-    \h*"/*"\k?     level = 1;        // /*-comment after spacing, \k matches indent stop changes and then restores them
+    (?^^\h*\n)     // a negative pattern to eat empty lines without affecting indent stops
+    \h*"/*"\k?     level = 1;        // /*-comment after spacing, \k matches indent stop changes
                    start(COMMENT);   // continue w/o indent matching
     (?^\\\n\h*)    // lines ending in \ continue on the next line
     .|\n           echo();           // ECHO character
@@ -3019,14 +3033,56 @@ The pattern `\h*"/*"\k?` matches a `/*`-comment with leading white space.  The
 `\k` anchor matches if the indent depth changed in the leading white space,
 which is also matched by the first three patterns in the lexer specification
 before their `\i` and `\j` indent and dedent anchors, respectively.  If the
-indent depth changed, the `\k` anchor matches and restores the indent stops.
-Because we also want to match `\*` when the indent depth does not change, we
-made `\k` optional in pattern `\h*"/*"\k?`.  Alternatively, two patterns
-`^\h*"/*"\k` and `\h*"/*"` can be used, where the first matches if and only if
-the indent stops changed on a new line and were undone.
+indent depth changed, the `\k` anchor matches, while keeping the current indent
+stops unchanged by undoing these changes.  Because we also want to match `\*`
+when the indent depth does not change, we made `\k` optional in pattern
+`\h*"/*"\k?`.  The anchor `^` is not used here either, since comments after any
+spacing should be matched.  Alternatively, two patterns `^\h*"/*"\k` and
+`\h*"/*"` may be used, where the first matches if and only if the indent stops
+changed on a new line and were undone.
+
+Note that the `COMMENT` rules do not use `\i` or `\j`.  This means that the
+current indent stops are never matched or changed and remain the same as in the
+`INITIAL` state, when returning to the `INITIAL` state.
+
+Another use of `\k` is to ignore indents to only detect a closing dedent with
+`\j`.  For example, when comments are allowed to span multiple lines when
+indented below the start of the `#` comment:
+
+<div class="alt">
+~~~{.cpp}
+    %x COMMENT MORECOM
+    %%
+    ^\h+\i         // indent
+    ^\h*\j         // dedent
+    \j             // dedent
+    ^\h+           // nodent
+    #.*\n          start(COMMENT);
+    <COMMENT>{
+    ^\h+\i         start(MORECOM);
+    .|\n           matcher().less(0); start(INITIAL);
+    }
+    <MORECOM>{
+    ^\h*\j         |
+    \j             start(INITIAL);
+    ^\h+\k         // undent, i.e. ignore all indents in comments
+    .|\n           // ignore all content in comments
+    }
+    .|\n           echo();
+    %%
+~~~
+</div>
+
+The `COMMENT` state checks for an indent to switch to state `MORECOM`, which
+eats the indented comment block.  When there is no indent `.|\n` is matched,
+i.e. something must be matched.  This match is put back into the input with
+`matcher().less(0)` (or `yyless(0)` with `−−flex`).
+
+Alternatively, the indent level in the `COMMENT` rules could be tracked by
+incrementing a variable when matching `\i` and decrementing the variable when
+matching `\j` until the variable is zero at the final dedent.
 
 @note Anchors `\i`, `\j`, and `\k` should appear at the end of a regex pattern.
-Otherwise the accuracy of indent/dedent matching cannot be guaranteed.
 
 See \ref reflex-states for more information about start condition states.  See
 \ref reflex-pattern-negative for more information on negative patterns.
@@ -3644,13 +3700,13 @@ In fact, the specified string may have any final byte value.  The final byte of
 the string will be set to zero when `text()` (or `yytext`) or `rest()` are
 used.  But otherwise the final byte remains completely untouched by the other
 lexer functions, including `echo()` (and Flex-compatible `ECHO`).  Only
-`unput(c)`, `text()` (or `yytext`), `rest()`, and `span()` modify the buffer
-contents, where `text()` and `rest()` require an extra byte at the end of the
-buffer to make the strings returned by these functions 0-terminated.  This
-means that you can scan read-only memory of `n` bytes located at address `b` by
-using `buffer(b, n+1)` safely, for example to read read-only mmap(2)
-`PROT_READ` memory, as long as `unput(c)`, `text()` (or `yytext`), `rest()`,
-and `span()` are not used.
+`unput(c)`, `wunput()`, `text()` (or `yytext`), `rest()`, and `span()` modify
+the buffer contents, where `text()` and `rest()` require an extra byte at the
+end of the buffer to make the strings returned by these functions 0-terminated.
+This means that you can scan read-only memory of `n` bytes located at address
+`b` by using `buffer(b, n+1)` safely, for example to read read-only mmap(2)
+`PROT_READ` memory, as long as `unput(c)`,`wunput()`, `text()` (or `yytext`),
+`rest()`, and `span()` are not used.
 
 The Flex `yy_scan_string`, `yy_scan_bytes`, `yy_scan_wstring`, and
 `yy_scan_buffer` functions take an extra last `yyscan_t` argument for reentrant
@@ -3816,11 +3872,13 @@ read one character at a time (8-bit, ASCII or UTF-8).  This function returns
 EOF if the end of the input was reached.  But be careful, the Flex `yyinput()`
 and `input()` functions return 0 instead of an `EOF` (-1)!
 
-To put back one character unto the input stream, use `matcher().unput(c)` or
-`unput(c)` with option `−−flex`.
+To put back one character unto the input stream, use `matcher().unput(c)` (or
+`unput(c)` with option `−−flex`) to put byte `c` back in the input or
+`matcher().wunput(c)` to put a (wide) character `c` back in the input.
 
-@warning Function `unput()` invalidates the previous `text()` and `yytext`
-pointers.  Basically, `text()` and `yytext` cannot be used after `unput()`.
+@warning Functions `unput()` and `wunput()` invalidate the previous `text()`
+and `yytext` pointers.  Basically, `text()` and `yytext` cannot be used after
+`unput()`.
 
 For example, to crudily scan a C/C++ multiline comment we can use the rule:
 
@@ -6948,7 +7006,8 @@ matcher directly, even when you use the matcher's search and match methods:
   ---------- | ----------------------------------------------------------------
   `input()`  | returns next 8-bit char from the input, matcher then skips it
   `winput()` | returns next wide character from the input, matcher skips it
-  `unput(c)` | put char `c` back unto the stream, matcher then takes it
+  `unput(c)` | put 8-bit char `c` back unto the stream, matcher then takes it
+  `wunput(c)`| put (wide) char `c` back unto the stream, matcher then takes it
   `peek()`   | returns next 8-bit char from the input without consuming it
   `skip(c)`  | skip input until character `c` (`char` or `wchar_t`) is consumed
   `skip(s)`  | skip input until UTF-8 string `s` is consumed

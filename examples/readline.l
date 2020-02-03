@@ -7,6 +7,7 @@
   #include <readline/history.h>
 %}
 
+// yyFlexLexer class members
 %class{
   const char *prompt;
 #if REFLEX_OPTION_flex == true
@@ -52,6 +53,7 @@
   std::string linen;
 %}
 
+// yyFlexLexer class initialization at construction
 %init{
   prompt = NULL;
   line = readline(prompt);

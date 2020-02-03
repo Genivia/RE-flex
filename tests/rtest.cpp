@@ -303,6 +303,7 @@ int main()
   Pattern pattern6("");
   Pattern pattern7("[[:alpha:]]");
   Pattern pattern8("\\w+");
+  Pattern pattern9(Matcher::convert("(?u:\\p{L})"));
 
   Matcher matcher(pattern1);
   std::string test;
@@ -547,6 +548,32 @@ int main()
   std::cout << std::endl;
   if (test != "a/a/b/c/c/d/")
     error("unput");
+  //
+  matcher.pattern(pattern9);
+  matcher.input("ab c  d");
+  matcher.wunput(L'ä');
+  test = "";
+  while (true)
+  {
+    if (matcher.scan())
+    {
+      std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
+      if (*matcher.text() == 'b')
+        matcher.wunput(L'ç');
+    }
+    else if (!matcher.at_end())
+    {
+      std::cout << (char)matcher.winput() << "?/";
+    }
+    else
+    {
+      break;
+    }
+  }
+  std::cout << std::endl;
+  if (test != "ä/a/b/ç/c/d/")
+    error("wunput");
   //
   banner("TEST WRAP");
   //

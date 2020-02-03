@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Reflex Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 19 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Feb 3 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -298,14 +298,17 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a26985f4836c5235fc418b18bf7969f5e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a26985f4836c5235fc418b18bf7969f5e">skip_comment</a> (size_t &amp;pos)</td></tr>
 <tr class="memdesc:a26985f4836c5235fc418b18bf7969f5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over white space and comments, return true if ok.  <a href="#a26985f4836c5235fc418b18bf7969f5e">More...</a><br /></td></tr>
 <tr class="separator:a26985f4836c5235fc418b18bf7969f5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8924b6e4c378a6c02e84e55bb73025d1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a8924b6e4c378a6c02e84e55bb73025d1">is</a> (const char *s)</td></tr>
+<tr class="memdesc:a8924b6e4c378a6c02e84e55bb73025d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match case-insensitive string s while ignoring the rest of the line, return true if OK.  <a href="#a8924b6e4c378a6c02e84e55bb73025d1">More...</a><br /></td></tr>
+<tr class="separator:a8924b6e4c378a6c02e84e55bb73025d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa74ce1f1d7fd97842a4ad42e0b7b02c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#afa74ce1f1d7fd97842a4ad42e0b7b02c">as</a> (size_t &amp;pos, const char *s)</td></tr>
-<tr class="memdesc:afa74ce1f1d7fd97842a4ad42e0b7b02c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos to match case-insensitive string s followed by whitespace, return true if OK.  <a href="#afa74ce1f1d7fd97842a4ad42e0b7b02c">More...</a><br /></td></tr>
+<tr class="memdesc:afa74ce1f1d7fd97842a4ad42e0b7b02c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos to match case-insensitive initial part of the string s followed by white space, return true if OK.  <a href="#afa74ce1f1d7fd97842a4ad42e0b7b02c">More...</a><br /></td></tr>
 <tr class="separator:afa74ce1f1d7fd97842a4ad42e0b7b02c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a498a7294dac021281ee812a961f79b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a7a498a7294dac021281ee812a961f79b">ws</a> (size_t &amp;pos)</td></tr>
 <tr class="memdesc:a7a498a7294dac021281ee812a961f79b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over whitespace, returns true if OK.  <a href="#a7a498a7294dac021281ee812a961f79b">More...</a><br /></td></tr>
 <tr class="separator:a7a498a7294dac021281ee812a961f79b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38d29628a9820d02a99e0465e28e3f66"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a38d29628a9820d02a99e0465e28e3f66">eq</a> (size_t &amp;pos)</td></tr>
-<tr class="memdesc:a38d29628a9820d02a99e0465e28e3f66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over '=' and whitespace, return true if OK.  <a href="#a38d29628a9820d02a99e0465e28e3f66">More...</a><br /></td></tr>
+<tr class="memdesc:a38d29628a9820d02a99e0465e28e3f66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance pos over '=' and whitespace when present, return true if OK.  <a href="#a38d29628a9820d02a99e0465e28e3f66">More...</a><br /></td></tr>
 <tr class="separator:a38d29628a9820d02a99e0465e28e3f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b174416076cfc1a999c9e42f87ef238"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a1b174416076cfc1a999c9e42f87ef238">dt</a> (size_t &amp;pos)</td></tr>
 <tr class="separator:a1b174416076cfc1a999c9e42f87ef238"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -577,7 +580,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Advance pos to match case-insensitive string s followed by whitespace, return true if OK. </p>
+<p>Advance pos to match case-insensitive initial part of the string s followed by white space, return true if OK. </p>
 
 </div>
 </div>
@@ -627,7 +630,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Advance pos over '=' and whitespace, return true if OK. </p>
+<p>Advance pos over '=' and whitespace when present, return true if OK. </p>
 
 </div>
 </div>
@@ -1037,6 +1040,32 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="class_reflex.html" title="RE/flex scanner generator class, a variation of the classic &quot;lex&quot; tool to generate scanners...">Reflex</a> initialization. </p>
+
+</div>
+</div>
+<a class="anchor" id="a8924b6e4c378a6c02e84e55bb73025d1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Reflex::is </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Match case-insensitive string s while ignoring the rest of the line, return true if OK. </p>
 
 </div>
 </div>
@@ -2472,7 +2501,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 19 2020 09:12:10 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Feb 3 2020 12:00:32 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

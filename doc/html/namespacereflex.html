@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 19 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Feb 3 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -139,7 +139,7 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ab659f1b759d66631c2e2e32771af1200"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a></td></tr>
-<tr class="memdesc:ab659f1b759d66631c2e2e32771af1200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conversion flags for <a class="el" href="namespacereflex.html#a4f388dfde137fe178705346b44c56223" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.  <a href="#ab659f1b759d66631c2e2e32771af1200">More...</a><br /></td></tr>
+<tr class="memdesc:ab659f1b759d66631c2e2e32771af1200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conversion flags for <a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.  <a href="#ab659f1b759d66631c2e2e32771af1200">More...</a><br /></td></tr>
 <tr class="separator:ab659f1b759d66631c2e2e32771af1200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a776c689092282b15974a151328083b2d"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a776c689092282b15974a151328083b2d">regex_error_type</a></td></tr>
 <tr class="memdesc:a776c689092282b15974a151328083b2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Regex syntax error exception error code.  <a href="#a776c689092282b15974a151328083b2d">More...</a><br /></td></tr>
@@ -152,11 +152,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">isword</a> (int c)</td></tr>
 <tr class="memdesc:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check ASCII word-like character <code>[A-Za-z0-9_]</code>, permitting the character range 0..303 (0x12F) and EOF.  <a href="#a10f9faa3bb7ef4d3cee8339b8e647875">More...</a><br /></td></tr>
 <tr class="separator:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f388dfde137fe178705346b44c56223"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a4f388dfde137fe178705346b44c56223">convert</a> (const char *pattern, const char *signature=NULL, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
-<tr class="memdesc:a4f388dfde137fe178705346b44c56223"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the converted regex string given a regex library signature and conversion flags, throws <a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">regex_error</a>.  <a href="#a4f388dfde137fe178705346b44c56223">More...</a><br /></td></tr>
-<tr class="separator:a4f388dfde137fe178705346b44c56223"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae7cb74d72d8413de9743b1a6e057539"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#aae7cb74d72d8413de9743b1a6e057539">convert</a> (const std::string &amp;pattern, const char *signature=NULL, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
-<tr class="separator:aae7cb74d72d8413de9743b1a6e057539"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a794c59aedcee591fca830db0f2e62212"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212">convert</a> (const char *pattern, const char *signature, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
+<tr class="memdesc:a794c59aedcee591fca830db0f2e62212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the converted regex string given a regex library signature and conversion flags, throws <a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">regex_error</a>.  <a href="#a794c59aedcee591fca830db0f2e62212">More...</a><br /></td></tr>
+<tr class="separator:a794c59aedcee591fca830db0f2e62212"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa303caed5382f8e85ae90061a2bc7163"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#aa303caed5382f8e85ae90061a2bc7163">convert</a> (const std::string &amp;pattern, const char *signature, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
+<tr class="separator:aa303caed5382f8e85ae90061a2bc7163"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3deed9d6b147d91074913f47c330d232"><td class="memTemplParams" colspan="2">template&lt;typename S1 , typename S2 &gt; </td></tr>
 <tr class="memitem:a3deed9d6b147d91074913f47c330d232"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a3deed9d6b147d91074913f47c330d232">is_disjoint</a> (const S1 &amp;s1, const S2 &amp;s2)</td></tr>
 <tr class="memdesc:a3deed9d6b147d91074913f47c330d232"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if sets <code>s1</code> and <code>s2</code> are disjoint.  <a href="#a3deed9d6b147d91074913f47c330d232">More...</a><br /></td></tr>
@@ -213,7 +213,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Conversion flags for <a class="el" href="namespacereflex.html#a4f388dfde137fe178705346b44c56223" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>. </p>
+<p>Conversion flags for <a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>. </p>
 
 </div>
 </div>
@@ -244,7 +244,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a4f388dfde137fe178705346b44c56223"></a>
+<a class="anchor" id="a794c59aedcee591fca830db0f2e62212"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -258,7 +258,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>signature</em> = <code>NULL</code>, </td>
+          <td class="paramname"><em>signature</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -347,7 +347,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aae7cb74d72d8413de9743b1a6e057539"></a>
+<a class="anchor" id="aa303caed5382f8e85ae90061a2bc7163"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -364,7 +364,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>signature</em> = <code>NULL</code>, </td>
+          <td class="paramname"><em>signature</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -934,7 +934,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 19 2020 09:12:10 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Feb 3 2020 12:00:32 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

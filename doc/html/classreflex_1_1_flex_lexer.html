@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::FlexLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 19 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Feb 3 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -114,14 +114,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae65c6c66b47e833e6cea91ca394d39e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The matched text length.  <a href="#ae65c6c66b47e833e6cea91ca394d39e3">More...</a><br /></td></tr>
 <tr class="separator:ae65c6c66b47e833e6cea91ca394d39e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67838a57266bc8d0e9d0b0b1e5b8d618"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a67838a57266bc8d0e9d0b0b1e5b8d618">input</a> ()</td></tr>
-<tr class="memdesc:a67838a57266bc8d0e9d0b0b1e5b8d618"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one character, returns zero when EOF.  <a href="#a67838a57266bc8d0e9d0b0b1e5b8d618">More...</a><br /></td></tr>
+<tr class="memdesc:a67838a57266bc8d0e9d0b0b1e5b8d618"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one 8-bit character, returns zero when EOF.  <a href="#a67838a57266bc8d0e9d0b0b1e5b8d618">More...</a><br /></td></tr>
 <tr class="separator:a67838a57266bc8d0e9d0b0b1e5b8d618"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af074486866aa94fac34d67024ae1cc78"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#af074486866aa94fac34d67024ae1cc78">winput</a> ()</td></tr>
+<tr class="memdesc:af074486866aa94fac34d67024ae1cc78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one wide character, returns zero when EOF.  <a href="#af074486866aa94fac34d67024ae1cc78">More...</a><br /></td></tr>
+<tr class="separator:af074486866aa94fac34d67024ae1cc78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad57000b46a829b37ba94caf87ac252c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#ad57000b46a829b37ba94caf87ac252c9">unput</a> (char c)</td></tr>
 <tr class="memdesc:ad57000b46a829b37ba94caf87ac252c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put back one character on the input character sequence for matching, invalidating the current match info and text.  <a href="#ad57000b46a829b37ba94caf87ac252c9">More...</a><br /></td></tr>
 <tr class="separator:ad57000b46a829b37ba94caf87ac252c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf2b4aafe590f8a62201904403e392f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#abf2b4aafe590f8a62201904403e392f5">unput</a> (int c)</td></tr>
+<tr class="memdesc:abf2b4aafe590f8a62201904403e392f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put back one wide character on the input character sequence for matching, invalidating the current match info and text.  <a href="#abf2b4aafe590f8a62201904403e392f5">More...</a><br /></td></tr>
+<tr class="separator:abf2b4aafe590f8a62201904403e392f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70353b2ef20bec00e1e3ca724fef4652"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a70353b2ef20bec00e1e3ca724fef4652">output</a> (char c)</td></tr>
 <tr class="memdesc:a70353b2ef20bec00e1e3ca724fef4652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output one character.  <a href="#a70353b2ef20bec00e1e3ca724fef4652">More...</a><br /></td></tr>
 <tr class="separator:a70353b2ef20bec00e1e3ca724fef4652"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20722dcc93ce2da529b0cf8f630dd05e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#a20722dcc93ce2da529b0cf8f630dd05e">woutput</a> (int c)</td></tr>
+<tr class="memdesc:a20722dcc93ce2da529b0cf8f630dd05e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output one wide character.  <a href="#a20722dcc93ce2da529b0cf8f630dd05e">More...</a><br /></td></tr>
+<tr class="separator:a20722dcc93ce2da529b0cf8f630dd05e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa778a6d468296c19fa6ab571dea3c54c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_flex_lexer.html#aa778a6d468296c19fa6ab571dea3c54c">switch_streams</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;<a class="el" href="classreflex_1_1_flex_lexer.html#a67838a57266bc8d0e9d0b0b1e5b8d618">input</a>=<a class="el" href="classreflex_1_1_input.html">Input</a>(), std::ostream *<a class="el" href="classreflex_1_1_abstract_lexer.html#a520efbcc7a4007bcbdb702b118e1b5ea">os</a>=NULL)</td></tr>
 <tr class="memdesc:aa778a6d468296c19fa6ab571dea3c54c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switch input and output streams.  <a href="#aa778a6d468296c19fa6ab571dea3c54c">More...</a><br /></td></tr>
 <tr class="separator:aa778a6d468296c19fa6ab571dea3c54c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -407,7 +416,7 @@ template&lt;typename M &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Read one character, returns zero when EOF. </p>
+<p>Read one 8-bit character, returns zero when EOF. </p>
 <dl class="section return"><dt>Returns</dt><dd>the character read. </dd></dl>
 
 </div>
@@ -564,7 +573,7 @@ template&lt;typename M &gt; </div>
 <p>Output one character. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">c</td><td>char to output via LexerOutput </td></tr>
+    <tr><td class="paramname">c</td><td>8-bit char to output via LexerOutput </td></tr>
   </table>
   </dd>
 </dl>
@@ -643,7 +652,103 @@ template&lt;typename M &gt; </div>
 <p>Put back one character on the input character sequence for matching, invalidating the current match info and text. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">c</td><td>character to put back </td></tr>
+    <tr><td class="paramname">c</td><td>8-bit character to put back </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="abf2b4aafe590f8a62201904403e392f5"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer</a>&lt; M &gt;::unput </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Put back one wide character on the input character sequence for matching, invalidating the current match info and text. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">c</td><td>wide character to put back </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="af074486866aa94fac34d67024ae1cc78"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer</a>&lt; M &gt;::winput </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Read one wide character, returns zero when EOF. </p>
+<dl class="section return"><dt>Returns</dt><dd>the character read. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a20722dcc93ce2da529b0cf8f630dd05e"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer</a>&lt; M &gt;::woutput </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Output one wide character. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">c</td><td>wide char to output via LexerOutput </td></tr>
   </table>
   </dd>
 </dl>
@@ -767,7 +872,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 19 2020 09:12:10 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Feb 3 2020 12:00:32 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

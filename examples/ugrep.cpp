@@ -37,7 +37,7 @@ Universal grep - high-performance universal search utility finds Unicode
 patterns in UTF-8/16/32, ASCII, ISO-8859-1, EBCDIC, code pages 437, 850, 1250
 to 1258, and other file formats.
 
-For download and installation of the latest version, see:
+For download and installation of the latest version, please see:
 
   https://github.com/Genivia/ugrep
 
@@ -173,28 +173,48 @@ void version();
 
 // table of file formats for ugrep option --file-format
 const struct { const char *format; reflex::Input::file_encoding_type encoding; } format_table[] = {
-  { "binary",     reflex::Input::file_encoding::plain   },
-  { "ISO-8859-1", reflex::Input::file_encoding::latin   },
-  { "ASCII",      reflex::Input::file_encoding::utf8    },
-  { "EBCDIC",     reflex::Input::file_encoding::ebcdic  },
-  { "UTF-8",      reflex::Input::file_encoding::utf8    },
-  { "UTF-16",     reflex::Input::file_encoding::utf16be },
-  { "UTF-16BE",   reflex::Input::file_encoding::utf16be },
-  { "UTF-16LE",   reflex::Input::file_encoding::utf16le },
-  { "UTF-32",     reflex::Input::file_encoding::utf32be },
-  { "UTF-32BE",   reflex::Input::file_encoding::utf32be },
-  { "UTF-32LE",   reflex::Input::file_encoding::utf32le },
-  { "CP437",      reflex::Input::file_encoding::cp437   },
-  { "CP850",      reflex::Input::file_encoding::cp850   },
-  { "CP1250",     reflex::Input::file_encoding::cp1250  },
-  { "CP1251",     reflex::Input::file_encoding::cp1251  },
-  { "CP1252",     reflex::Input::file_encoding::cp1252  },
-  { "CP1253",     reflex::Input::file_encoding::cp1253  },
-  { "CP1254",     reflex::Input::file_encoding::cp1254  },
-  { "CP1255",     reflex::Input::file_encoding::cp1255  },
-  { "CP1256",     reflex::Input::file_encoding::cp1256  },
-  { "CP1257",     reflex::Input::file_encoding::cp1257  },
-  { "CP1258",     reflex::Input::file_encoding::cp1258  },
+  { "binary",      reflex::Input::file_encoding::plain      },
+  { "ASCII",       reflex::Input::file_encoding::utf8       },
+  { "UTF-8",       reflex::Input::file_encoding::utf8       },
+  { "UTF-16",      reflex::Input::file_encoding::utf16be    },
+  { "UTF-16BE",    reflex::Input::file_encoding::utf16be    },
+  { "UTF-16LE",    reflex::Input::file_encoding::utf16le    },
+  { "UTF-32",      reflex::Input::file_encoding::utf32be    },
+  { "UTF-32BE",    reflex::Input::file_encoding::utf32be    },
+  { "UTF-32LE",    reflex::Input::file_encoding::utf32le    },
+  { "ISO-8859-1",  reflex::Input::file_encoding::latin      },
+  { "ISO-8869-2",  reflex::Input::file_encoding::iso8859_2  },
+  { "ISO-8869-3",  reflex::Input::file_encoding::iso8859_3  },
+  { "ISO-8869-4",  reflex::Input::file_encoding::iso8859_4  },
+  { "ISO-8869-5",  reflex::Input::file_encoding::iso8859_5  },
+  { "ISO-8869-6",  reflex::Input::file_encoding::iso8859_6  },
+  { "ISO-8869-7",  reflex::Input::file_encoding::iso8859_7  },
+  { "ISO-8869-8",  reflex::Input::file_encoding::iso8859_8  },
+  { "ISO-8869-9",  reflex::Input::file_encoding::iso8859_9  },
+  { "ISO-8869-10", reflex::Input::file_encoding::iso8859_10 },
+  { "ISO-8869-11", reflex::Input::file_encoding::iso8859_11 },
+  { "ISO-8869-13", reflex::Input::file_encoding::iso8859_13 },
+  { "ISO-8869-14", reflex::Input::file_encoding::iso8859_14 },
+  { "ISO-8869-15", reflex::Input::file_encoding::iso8859_15 },
+  { "ISO-8869-16", reflex::Input::file_encoding::iso8859_16 },
+  { "MAC",         reflex::Input::file_encoding::macroman   },
+  { "MACROMAN",    reflex::Input::file_encoding::macroman   },
+  { "EBCDIC",      reflex::Input::file_encoding::ebcdic     },
+  { "CP437",       reflex::Input::file_encoding::cp437      },
+  { "CP850",       reflex::Input::file_encoding::cp850      },
+  { "CP858",       reflex::Input::file_encoding::cp858      },
+  { "CP1250",      reflex::Input::file_encoding::cp1250     },
+  { "CP1251",      reflex::Input::file_encoding::cp1251     },
+  { "CP1252",      reflex::Input::file_encoding::cp1252     },
+  { "CP1253",      reflex::Input::file_encoding::cp1253     },
+  { "CP1254",      reflex::Input::file_encoding::cp1254     },
+  { "CP1255",      reflex::Input::file_encoding::cp1255     },
+  { "CP1256",      reflex::Input::file_encoding::cp1256     },
+  { "CP1257",      reflex::Input::file_encoding::cp1257     },
+  { "CP1258",      reflex::Input::file_encoding::cp1258     },
+  { "KOI8-R",      reflex::Input::file_encoding::koi8_r     },
+  { "KOI8-U",      reflex::Input::file_encoding::koi8_u     },
+  { "KOI8-RU",     reflex::Input::file_encoding::koi8_ru    },
   { NULL, 0 }
 };
 
@@ -794,7 +814,7 @@ void help(const char *message, const char *arg)
     --file-format=format\n\
             The input file format.  The possible values of format can be:";
   for (int i = 0; format_table[i].format != NULL; ++i)
-    std::cout << (i % 8 ? " " : "\n            ") << format_table[i].format;
+    std::cout << (i % 5 ? " " : "\n            ") << format_table[i].format;
   std::cout << "\n\
     -F, --fixed-strings\n\
             Interpret pattern as a set of fixed strings (i.e. force ugrep to\n\

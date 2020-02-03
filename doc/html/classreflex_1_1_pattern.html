@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Jan 19 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Feb 3 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -191,13 +191,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:add516e864534d6704b43592232b81366"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a (new) pattern.  <a href="#add516e864534d6704b43592232b81366">More...</a><br /></td></tr>
 <tr class="separator:add516e864534d6704b43592232b81366"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8041717ba77c753a8a8b61df40c7b050"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a8041717ba77c753a8a8b61df40c7b050">size</a> () const </td></tr>
-<tr class="memdesc:a8041717ba77c753a8a8b61df40c7b050"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of subpatterns of this pattern object.  <a href="#a8041717ba77c753a8a8b61df40c7b050">More...</a><br /></td></tr>
+<tr class="memdesc:a8041717ba77c753a8a8b61df40c7b050"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of subpatterns of this pattern object.  <a href="#a8041717ba77c753a8a8b61df40c7b050">More...</a><br /></td></tr>
 <tr class="separator:a8041717ba77c753a8a8b61df40c7b050"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac469cc3a45d1d561c75e658b0c8b04b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aac469cc3a45d1d561c75e658b0c8b04b">empty</a> () const </td></tr>
+<tr class="memdesc:aac469cc3a45d1d561c75e658b0c8b04b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if this pattern is not assigned.  <a href="#aac469cc3a45d1d561c75e658b0c8b04b">More...</a><br /></td></tr>
+<tr class="separator:aac469cc3a45d1d561c75e658b0c8b04b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dd78d5f44f64407561e6cf7945d34ea"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a5dd78d5f44f64407561e6cf7945d34ea">operator[]</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Index</a> choice) const </td></tr>
 <tr class="memdesc:a5dd78d5f44f64407561e6cf7945d34ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get subpattern regex of this pattern object or the whole regex with index 0.  <a href="#a5dd78d5f44f64407561e6cf7945d34ea">More...</a><br /></td></tr>
 <tr class="separator:a5dd78d5f44f64407561e6cf7945d34ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3c1d4a0277c81673d05324dfe8d3a6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ae3c1d4a0277c81673d05324dfe8d3a6e">reachable</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">Index</a> choice) const </td></tr>
-<tr class="memdesc:ae3c1d4a0277c81673d05324dfe8d3a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check is subpattern is reachable by a match.  <a href="#ae3c1d4a0277c81673d05324dfe8d3a6e">More...</a><br /></td></tr>
+<tr class="memdesc:ae3c1d4a0277c81673d05324dfe8d3a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if subpattern is reachable by a match.  <a href="#ae3c1d4a0277c81673d05324dfe8d3a6e">More...</a><br /></td></tr>
 <tr class="separator:ae3c1d4a0277c81673d05324dfe8d3a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc9cc5f49fea95ccec3df7b85d751cff"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#acc9cc5f49fea95ccec3df7b85d751cff">nodes</a> () const </td></tr>
 <tr class="memdesc:acc9cc5f49fea95ccec3df7b85d751cff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of finite state machine nodes (vertices).  <a href="#acc9cc5f49fea95ccec3df7b85d751cff">More...</a><br /></td></tr>
@@ -1732,6 +1735,32 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get elapsed DFA edges construction time. </p>
+
+</div>
+</div>
+<a class="anchor" id="aac469cc3a45d1d561c75e658b0c8b04b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Pattern::empty </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return true if this pattern is not assigned. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if this pattern is not assigned </dd></dl>
 
 </div>
 </div>
@@ -3724,7 +3753,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Check is subpattern is reachable by a match. </p>
+<p>Check if subpattern is reachable by a match. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if subpattern is reachable </dd></dl>
 
 </div>
@@ -3774,7 +3803,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Number of subpatterns of this pattern object. </p>
+<p>Get the number of subpatterns of this pattern object. </p>
 <dl class="section return"><dt>Returns</dt><dd>number of subpatterns </dd></dl>
 
 </div>
@@ -4462,7 +4491,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Jan 19 2020 09:12:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Feb 3 2020 12:00:32 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

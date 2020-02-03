@@ -1,0 +1,18 @@
+%YAML 1.2
+--- # quiz
+quiz question: Arthur is ...?
+choose:
+  a: an aardvark
+  b: a bison
+correct: a
+rules:
+- may choose only one
+- "two choices, a or b"
+- 'may not
+  choose
+  two or
+  more'
+- >-
+  or
+  none
+...

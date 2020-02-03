@@ -1,5 +1,6 @@
 // C++ CSV reader that supports ASCII, ISO-8859-1, and UTF (with BOM) files
 // scans one CSV row at a time to populate a vector of string fields, each field contains UTF-8
+// Written by Robert van Engelen
 
 %top{
   #include <vector>
@@ -8,6 +9,7 @@
 %option fast freespace unicode
 %option lexer=CSV
 
+// CSV lexer class members
 %class{
  public:
   void set_delim(int c) { delim = c; } // tab, space, comma, semicolon, or pipe
@@ -26,6 +28,7 @@
   void process_row();
 %}
 
+// CSV lexer class initialization at construction 
 %init{
   delim = ',';
 %}

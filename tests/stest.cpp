@@ -282,6 +282,7 @@ int main()
   std::string pattern6(""); // std::regex fails
   std::string pattern7("[[:alpha:]]");
   std::string pattern8("[[:w:]]+");
+  std::string pattern9(StdMatcher::convert("(?u:\\p{L})"));
 
   // Use ECMAScript syntax, std::regex POSIX is too restrictive!
 
@@ -532,6 +533,32 @@ int main()
   std::cout << std::endl;
   if (test != "a/a/b/c/c/d/")
     error("unput");
+  //
+  matcher.pattern(pattern9);
+  matcher.input("ab c  d");
+  matcher.wunput(L'ä');
+  test = "";
+  while (true)
+  {
+    if (matcher.scan())
+    {
+      std::cout << matcher.text() << "/";
+      test.append(matcher.text()).append("/");
+      if (*matcher.text() == 'b')
+        matcher.wunput(L'ç');
+    }
+    else if (!matcher.at_end())
+    {
+      std::cout << (char)matcher.winput() << "?/";
+    }
+    else
+    {
+      break;
+    }
+  }
+  std::cout << std::endl;
+  if (test != "ä/a/b/ç/c/d/")
+    error("wunput");
   //
   banner("TEST WRAP");
   //
