@@ -2,8 +2,13 @@
 " Language:	Lex
 " Maintainer:	Charles E. Campbell <NcampObell@SdrPchip.AorgM-NOSPAM>
 " Contributor:	Robert A. van Engelen <engelen@acm.org>
-" Last Change:	Feb 3, 2020
+" Last Change:	Feb 5, 2020
 " Version:	19
+
+" quit when a syntax file was already loaded
+if exists("b:current_syntax")
+  finish
+endif
 
 " Read the C++ syntax to start with
 let s:Cpath= fnameescape(expand("<sfile>:p:h")."/cpp.vim")
