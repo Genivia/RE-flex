@@ -55,20 +55,13 @@ Test tests[] = {
   { "ab", "", "", "abab", { 1, 1 } },
   { "(ab)|(xy)", "", "", "abxy", { 1, 2 } },
   { "a(p|q)z", "", "", "apzaqz", { 1, 1 } },
-  // () empty pattern
-#if 0 // std::regex POSIX ERE does not permit ()
-  { "a(b|())|c", "", "", "abc", { 1, 2 } },
-  // special cases of empty patterns, sometimes not permitted
-  { "a(b|)|c", "", "", "abc", { 1, 2 } },
-  { "a(b|(|))|c", "", "", "abc", { 1, 2 } },
-#endif
   // DFA edge compaction test (only applicable to RE/flex)
 #if 1 // std::regex AWK is OK but POSIX ERE does not permit \n or \t
   { "([a-cg-ik]z)|(d)|([e-g])|(j)|(y)|([x-z])|(.)|(\\n)", "", "", "azz", { 1, 6 } },
 #endif
   // POSIX character classes
   {
-#if 1 // std::regex POSIX AWK and ERE do not support \xXX MUST use \0177 but \0177 does not work (too long!)
+#if 1 // std::regex POSIX AWK and ERE do not support \xXX MUST use \0177 but \0177 does not work (error: too long)
     "\\011-"
 #endif
     "[[:space:]]-"
@@ -85,13 +78,13 @@ Test tests[] = {
     "[[:upper:]]-"
 #if 0 // std::regex does not support [:word:] but [:w:]
     "[[:word:]]", "", "", "\x7E-\r-F-\x01-&-0-A-\t-0-#-l-.-U-_", { 1 } },
-#endif
+#else
     "[[:w:]]", "", "", "\t-\r-F-\x01-&-0-A-\t-0-#-l-.-U-_", { 1 } },
-#if 0 // std::regex does not support \p{}
+#endif
   {
     "\\x7E-"
     "\\p{Space}-"
-    "\\p{Xdigit}-"
+    "\\p{XDigit}-"
     "\\p{Cntrl}-"
     "\\p{Print}-"
     "\\p{Alnum}-"
@@ -103,7 +96,6 @@ Test tests[] = {
     "\\p{Punct}-"
     "\\p{Upper}-"
     "\\p{Word}", "", "", "\x7E-\r-F-\x01-&-0-A-\t-0-#-l-.-U-_", { 1 } },
-#endif
 #if 0 // std::regex does not support modifiers (?isxm)
   // Pattern option i
   { "(?i:abc)", "", "", "abcABC", { 1, 1 } },
@@ -121,15 +113,15 @@ Test tests[] = {
   { "(?s:.)", "", "", "a\n", { 1, 1 } },
   { "(?s).", "", "", "a\n", { 1, 1 } },
 #endif
-  // Anchors \A, \Z, ^, and $ with pattern option m (multiline, which is the default)
+  // Anchors \A, \Z, ^, and $
 #if 0 // std::regex does not support \A and \Z
   { "\\Aa\\Z", "", "", "a", { 1 } },
 #endif
   { "^a$", "", "", "a", { 1 } },
 #if 0 // std::regex does not support multiline mode
-  { "(^a$)|(\\n)", "m", "", "a\na", { 1, 2, 1 } },
-  { "(^a)|(a$)|(a)|(\\n)", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
-  { "\\Aa\\Z|\\Aa|a\\Z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },
+  { "(?m)(^a$)|(\\n)", "m", "", "a\na", { 1, 2, 1 } },
+  { "(?m)(^a)|(a$)|(a)|(\\n)", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
+  { "(?m)\\Aa\\Z|\\Aa|a\\Z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },
 #endif
   // Optional X?
   { "a?z", "", "", "azz", { 1, 1 } },
@@ -143,14 +135,14 @@ Test tests[] = {
   { "ab{2,}", "", "", "abbabbbabbbb", { 1, 1, 1 } },
   { "ab{0,}", "", "", "a", { 1 } },
   { "(ab{0,2}c){2}", "", "", "abbcacabcabc", { 1, 1 } },
-#if 0 // std::regex POSIX mode does not support lazy quantifiers
+#if 0 // std::regex does not support lazy quantifiers
   // Lazy optional X?
   { "(a|b)?\?a", "", "", "aaba", { 1, 1, 1 } },
   { "a(a|b)?\?(?=a|ab)|ac", "", "", "aababac", { 1, 1, 1, 2 } },
   { "(a|b)?\?(a|b)?\?aa", "", "", "baaaabbaa", { 1, 1, 1 } },
   { "(a|b)?\?(a|b)?\?(a|b)?\?aaa", "", "", "baaaaaa", { 1, 1 } },
   { "a?\?b?a", "", "", "aba", { 1, 1 } }, // 'a' 'ba'
-  { "a?\?b?b", "", "", "abb", { 1, 1 } }, // 'ab' 'b'
+  { "a?\?b?b", "", "", "abb", { 1 } }, // 'abb'
   // Lazy closure X*
   { "a*?a", "", "", "aaaa", { 1, 1, 1, 1 } },
   { "a*?|a|b", "", "", "aab", { 2, 2, 3 } },
@@ -172,9 +164,9 @@ Test tests[] = {
   { "(ab|cd)(ab|cd)*?ab|ab", "", "", "abababcdabab", { 1, 1, 2 } },
   { "(ab)(ab)*?a|b", "", "", "abababa", { 1, 2, 1 } },
   { "a?(a|b)*?a", "", "", "aaababa", { 1, 1, 1 } },
-  { "^(a|b)*?a", "", "", "bba", { 1 } },
-  { "(a|b)*?a$", "", "", "bba", { 1 } },
-  { "^(a|b)*?|b", "", "", "ab", { 1, 2 } },
+  { "(?m)^(a|b)*?a", "", "", "bba", { 1 } },
+  { "(?m)(a|b)*?a$", "", "", "bba", { 1 } },
+  { "(?m)^(a|b)*?|b", "", "", "ab", { 1, 2 } },
   // Lazy positive closure X+
   { "a+?a", "", "", "aaaa", { 1, 1 } },
   { "(a|b)+?", "", "", "ab", { 1, 1 } },
@@ -185,7 +177,7 @@ Test tests[] = {
   { "(ab)+?ac", "", "", "ababac", { 1 } },
   { "ABB*?|ab+?|A|a", "", "", "ABab", { 1, 2 } },
   { "(a|b)+?a|a", "", "", "bbaaa", { 1, 1 } },
-  { "^(a|b)+?a", "", "", "abba", { 1 } },
+  { "(?m)^(a|b)+?a", "", "", "abba", { 1 } },
   { "(a|b)+?a$", "", "", "abba", { 1 } },
   // Lazy iterations {n,m}
   { "(a|b){0,3}?aaa", "", "", "baaaaaa", { 1, 1 } },
@@ -204,18 +196,17 @@ Test tests[] = {
   { "[ --]", "", "", " +-", { 1, 1, 1 } },
   { "[^a-z]", "", "", "A", { 1 } },
   { "[[:alpha:]]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } },
-  // { "[\\p{Alpha}]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } }, // TODO no \p class support
+  { "[\\p{Alpha}]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } },
   { "[][]", "", "", "[]", { 1, 1 } },
   // Lookahead
 #if 0 // std::regex does not support lookaheads in POSIX mode
   { "a(?=bc)|ab(?=d)|bc|d", "", "", "abcdabd", { 1, 3, 4, 2, 4 } },
   // { "[ab]+(?=ab)|-|ab", "", "", "aaab-bbab", { 1, 3, 2, 1, 3 } }, // has trailing context (undefined as per POSIX)
   { "a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
-  { "a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } },
-  { "^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
-  { "a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
-  { "^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
-  // { "abc(?=\\w+|(?^def))|xyzabcdef", "", "", "abcxyzabcdef", { 1, 2 } }, // TODO check
+  { "(?m)a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } },
+  { "(?m)^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
+  { "(?m)a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
+  { "(?m)^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
 #endif
   // Word boundaries \<, \>, \b, and \B
 #if 0 // std::regex does not correctly support boundaries \b etc in POSIX mode, but Ecma/Perl mode is fine
@@ -239,7 +230,7 @@ Test tests[] = {
   { "a?\\b(-|a)(-|a)\\b| ", "", "", "a-a", { 1 } },
   { "-(?=\\<a\\>)|-|a|b", "", "", "-a-ab", { 1, 3, 2, 3, 4 } },
 #endif
-  // Unicode (TODO: requires a flag and changes to the parser so that UTF-8 multibyte chars are parsed as ONE char)
+  // Unicode
   { "(©)+", "", "", "©", { 1 } },
   { NULL, NULL, NULL, NULL, { } }
 };
@@ -249,8 +240,17 @@ int main()
   banner("PATTERN TESTS");
   for (const Test *test = tests; test->pattern != NULL; ++test)
   {
-    std::cout << test->pattern << std::endl;
-    StdPosixMatcher matcher(test->pattern, test->cstring, test->mopts);
+    std::string regex;
+    try
+    {
+      regex = StdPosixMatcher::convert(test->pattern);
+    }
+    catch (const regex_error& e)
+    {
+      std::cerr << e.what();
+    }
+    std::cout << regex << std::endl;
+    StdPosixMatcher matcher(regex, test->cstring, test->mopts);
     printf("Test \"%s\" against \"%s\"\n", test->pattern, test->cstring);
     if (*test->popts)
       printf("With pattern options \"%s\"\n", test->popts);

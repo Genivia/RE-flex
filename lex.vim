@@ -2,8 +2,8 @@
 " Language:	Lex
 " Maintainer:	Charles E. Campbell <NcampObell@SdrPchip.AorgM-NOSPAM>
 " Contributor:	Robert A. van Engelen <engelen@acm.org>
-" Last Change:	Feb 5, 2020
-" Version:	19
+" Last Change:	Feb 20, 2020
+" Version:	20
 
 " quit when a syntax file was already loaded
 if exists("b:current_syntax")
@@ -26,11 +26,11 @@ exe "syn include @lexCcode ".s:Cpath
 " --- Lex stuff ---
 " --- ========= ---
 
-" lexAbbrevBlock
+" Definitions
 " %%
-" lexPatBlock
+" Rules
 " %%
-" lexFinalCodeBlock
+" User Code
 "
 " --- ======= ---
 " --- Example ---
@@ -75,44 +75,39 @@ exe "syn include @lexCcode ".s:Cpath
 "   scan();
 " }   
 
-" Initial code block prior to the Abbreviations Section
+" Definitions Section with initial code blocks, abbreviations, options, states
 if has("folding")
- syn region lexInitialCodeBlock	fold	start="^\s\+"	end="^\S"me=e-1	nextgroup=lexAbbrvBlock	contains=@lexCcode
+ syn region lexAbbrvBlock	fold	start="^\S"	end="^\ze%%"	skipnl	nextgroup=lexPatBlock	contains=lexOptions,lexAbbrv,lexInitialCodeBlock,lexInclude,lexAbbrvComment,lexStartState
 else
- syn region lexInitialCodeBlock		start="^\s\+"	end="^\S"me=e-1	nextgroup=lexAbbrvBlock	contains=@lexCcode
-endif
-
-" Abbreviations Section
-if has("folding")
- syn region lexAbbrvBlock	fold	start="^\S"	end="^\ze%%"	skipnl	nextgroup=lexPatBlock	contains=lexOptions,lexAbbrv,lexInclude,lexAbbrvComment,lexStartState
-else
- syn region lexAbbrvBlock		start="^\S"	end="^\ze%%"	skipnl	nextgroup=lexPatBlock	contains=lexOptions,lexAbbrv,lexInclude,lexAbbrvComment,lexStartState
+ syn region lexAbbrvBlock		start="^\S"	end="^\ze%%"	skipnl	nextgroup=lexPatBlock	contains=lexOptions,lexAbbrv,lexInitialCodeBlock,lexInclude,lexAbbrvComment,lexStartState
 endif
 syn match  lexOptions		"^%\a\+\(\s.*\|[^{]*\)$"				contains=lexOptionsEq,lexPatString,lexSlashQuote,lexBrace,lexSlashBrace
 syn match  lexOptionsEq		"="					skipwhite	contained
 syn match  lexAbbrv		"^\I\i*\s"me=e-1			skipwhite	contained	nextgroup=lexAbbrvPat
 syn match  lexAbbrvPat		"\s\S.*$"lc=1						contained	contains=lexPatAbbrv,lexPatString,lexSlashQuote,lexBrace,lexSlashBrace	nextgroup=lexAbbrv,lexInclude
-syn match  lexStartState		"^%\(xs\?\|s\)\(t\(a\(t\(e\?\)\?\)\?\)\?\)\?\(\s\+\I\i*\)\+\s*$"	contained
+syn match  lexStartState	"^%\(xs\?\|s\)\(t\(a\(t\(e\?\)\?\)\?\)\?\)\?\(\s\+\I\i*\)\+\s*$"	contained
 if has("folding")
+ syn region lexInitialCodeBlock	fold				start="^\s\+"	end="^\S"me=e-1			contains=@lexCcode
  syn region lexInclude		fold	matchgroup=lexSep	start="^%\a*{"	end="^%}"	contained	contains=@lexCcode,lexCFunctions
  syn region lexAbbrvComment	fold				start="^\s*//"	end="$"		contains=@Spell
  syn region lexAbbrvComment	fold				start="^\s*/\*"	end="\*/"	contains=@Spell
 else
+ syn region lexInitialCodeBlock					start="^\s\+"	end="^\S"me=e-1			contains=@lexCcode
  syn region lexInclude			matchgroup=lexSep	start="^%\a*{"	end="^%}"	contained	contains=@lexCcode,lexCFunctions
  syn region lexAbbrvComment					start="^\s*//"	end="$"		contains=@Spell
  syn region lexAbbrvComment					start="^\s*/\*"	end="\*/"	contains=@Spell
 endif
 
-"%% : Patterns {Actions}
+" Rules Section with patterns and actions
 if has("folding")
- syn region lexPatBlock		fold	matchgroup=Todo	start="^%%"	matchgroup=Todo	end="^\ze%%"	skipnl	skipwhite	nextgroup=lexFinalCodeBlock	contains=lexPatTag,lexPatTagZone,lexPatComment,lexPat,lexPatSep,lexPatInclude
- syn region lexPat		fold			start="\S"	skip="\\\\\|\\\s"	end="\ze\(\s*$\|\s\+\(\h\|{\W\|{$\|[-+*]\|//\|/\*\)\)"	skipwhite	contained nextgroup=lexMorePat,lexPatSep,lexPatEnd      contains=lexPatTag,lexPatString,lexSlashQuote,lexPatAbbrv,lexBrace,lexSlashBrace
+ syn region lexPatBlock		fold	matchgroup=Todo	        start="^%%"	matchgroup=Todo	        end="^\ze%%"	skipnl	skipwhite	nextgroup=lexFinalCodeBlock	contains=lexPatTag,lexPatTagZone,lexPatComment,lexPat,lexPatSep,lexPatInclude
+ syn region lexPat		fold			        start="\S"	skip="\\\\\|\\\s"	end="\ze\(\s*$\|\s\+\(\h\|{\W\|{$\|[-+*]\|//\|/\*\)\)"	skipwhite	contained nextgroup=lexMorePat,lexPatSep,lexPatEnd      contains=lexPatTag,lexPatString,lexSlashQuote,lexPatAbbrv,lexBrace,lexSlashBrace
  syn region lexPatInclude	fold	matchgroup=lexSep	start="^%{"	end="^%}"	contained	contains=@lexCcode
  syn region lexBrace		fold	matchgroup=Character    start="\["	skip="\\.\|\[:\a\+:\]\|\[\.\a\+\.\]\|\[=.=\]"	end="\]"	contained
  syn region lexPatString	fold	matchgroup=String	start=+"+	skip=+\\\\\|\\"+	matchgroup=String	end=+"+	contained
 else
- syn region lexPatBlock			matchgroup=Todo	start="^%%"	matchgroup=Todo	end="^\ze%%"	skipnl	skipwhite	nextgroup=lexFinalCodeBlock	contains=lexPatTag,lexPatTagZone,lexPatComment,lexPat,lexPatSep,lexPatInclude
- syn region lexPat					start="\S"	skip="\\\\\|\\\s"	end="\ze\(\s*$\|\s\+\(\h\|{\W\|{$\|[-+*]\|//\|/\*\)\)"	skipwhite	contained nextgroup=lexMorePat,lexPatSep,lexPatEnd      contains=lexPatTag,lexPatString,lexSlashQuote,lexPatAbbrv,lexBrace,lexSlashBrace
+ syn region lexPatBlock			matchgroup=Todo	        start="^%%"	matchgroup=Todo	        end="^\ze%%"	skipnl	skipwhite	nextgroup=lexFinalCodeBlock	contains=lexPatTag,lexPatTagZone,lexPatComment,lexPat,lexPatSep,lexPatInclude
+ syn region lexPat					        start="\S"	skip="\\\\\|\\\s"	end="\ze\(\s*$\|\s\+\(\h\|{\W\|{$\|[-+*]\|//\|/\*\)\)"	skipwhite	contained nextgroup=lexMorePat,lexPatSep,lexPatEnd      contains=lexPatTag,lexPatString,lexSlashQuote,lexPatAbbrv,lexBrace,lexSlashBrace
  syn region lexPatInclude		matchgroup=lexSep	start="^%{"	end="^%}"	contained	contains=@lexCcode
  syn region lexBrace			matchgroup=Character    start="\["	skip="\\.\|\[:\a\+:\]\|\[\.\a\+\.\]\|\[=.=\]"	end="\]"	contained
  syn region lexPatString		matchgroup=String	start=+"+	skip=+\\\\\|\\"+	matchgroup=String	end=+"+	contained
@@ -142,10 +137,10 @@ else
  syn region lexPatCode			matchgroup=Delimiter	start="{"	end="}"	skipnl	contained	contains=@lexCcode,lexCFunctions
 endif
 
-" Final code block
+" User Code Section with final code block
 syn region lexFinalCodeBlock	matchgroup=Todo	start="^%%"	end="\%$"	contained	contains=@lexCcode
 
-" Lex "functions" which may appear in C/C++ code blocks
+" Lex macros which may appear in C/C++ code blocks
 syn keyword lexCFunctions	BEGIN	ECHO	REJECT	yytext	YYText	yyleng	YYLeng	yymore	yyless	yywrap	yylook
 syn keyword lexCFunctions	yyrestart	yyterminate	yylineno	yycolumno	yyin	yyout
 syn keyword lexCFunctions	input	unput	output	        winput	        wunput	        woutput

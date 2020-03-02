@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Feb 3 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Mar 2 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -111,8 +111,17 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern_matcher.html">PatternMatcher</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The pattern matcher class template extends abstract matcher base class.  <a href="classreflex_1_1_pattern_matcher.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern_matcher_3_01std_1_1string_01_4.html">PatternMatcher&lt; std::string &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A specialization of the pattern matcher class template for std::string, extends abstract matcher base class.  <a href="classreflex_1_1_pattern_matcher_3_01std_1_1string_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html">PCRE2Matcher</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">PCRE2 JIT-optimized matcher engine class implements <a class="el" href="classreflex_1_1_pattern_matcher.html" title="The pattern matcher class template extends abstract matcher base class. ">reflex::PatternMatcher</a> pattern matching interface with scan, find, split functors and iterators, using the PCRE2 library.  <a href="classreflex_1_1_p_c_r_e2_matcher.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_u_t_f_matcher.html">PCRE2UTFMatcher</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">PCRE2 JIT-optimized native PCRE2_UTF+PCRE2_UCP matcher engine class, extends <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html" title="PCRE2 JIT-optimized matcher engine class implements reflex::PatternMatcher pattern matching interface...">PCRE2Matcher</a>.  <a href="classreflex_1_1_p_c_r_e2_u_t_f_matcher.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1range__compare.html">range_compare</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor to order ranges in the <a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">reflex::Ranges</a> set container.  <a href="structreflex_1_1range__compare.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor to define a total order on ranges (intervals) represented by pairs.  <a href="structreflex_1_1range__compare.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_ranges.html">Ranges</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">RE/flex <a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">Ranges</a> template class.  <a href="classreflex_1_1_ranges.html#details">More...</a><br /></td></tr>
@@ -284,7 +293,11 @@ Functions</h2></td></tr>
 <p>A regex library signature is a string of the form <code>"decls:escapes?+."</code>.</p>
 <p>The optional <code>"decls:"</code> part specifies which modifiers and other special <code>(?...)</code> constructs are supported:</p><ul>
 <li>non-capturing group <code>(?:...)</code> is supported</li>
-<li>one or all of "imsx" specify which (?ismx:...) modifiers are supported</li>
+<li>one or all of "imsx" specify which (?ismx) modifiers are supported:</li>
+<li>'i' specifies that <code>(?i...)</code> case-insensitive matching is supported</li>
+<li>'m' specifies that <code>(?m...)</code> multiline mode is supported for the ^ and $ anchors</li>
+<li>'s' specifies that <code>(?s...)</code> dotall mode is supported</li>
+<li>'x' specifies that <code>(?x...)</code> freespace mode is supported</li>
 <li><code>#</code> specifies that <code>(?#...)</code> comments are supported</li>
 <li><code>=</code> specifies that <code>(?=...)</code> lookahead is supported</li>
 <li><code>&lt;</code> specifies that <code>(?&lt;...)</code> lookbehind is supported</li>
@@ -299,11 +312,12 @@ Functions</h2></td></tr>
 <li><code>e</code> for <code>\e</code> ESC U+001B</li>
 <li><code>f</code> for <code>\f</code> FF U+000C</li>
 <li><code>h</code> for <code>\h</code> ASCII blank <code>[ \t]</code> (SP U+0020 or TAB U+0009)</li>
-<li><code>i</code> for <code>\i</code> reflex indent boundary</li>
-<li><code>j</code> for <code>\j</code> reflex dedent boundary</li>
+<li><code>i</code> for <code>\i</code> reflex indent anchor</li>
+<li><code>j</code> for <code>\j</code> reflex dedent anchor</li>
+<li><code>j</code> for <code>\k</code> reflex undent anchor</li>
 <li><code>l</code> for <code>\l</code> ASCII lower case letter <code>[a-z]</code></li>
 <li><code>n</code> for <code>\n</code> LF U+000A</li>
-<li><code>p</code> for <code>\p{C}</code> ASCII POSIX character class specified by <code>C</code></li>
+<li><code>p</code> for <code>\p{C}</code> <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> character classes, also implies <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> {X}, , , , , </li>
 <li><code>r</code> for <code>\r</code> CR U+000D</li>
 <li><code>s</code> for <code>\s</code> space (SP, TAB, LF, VT, FF, or CR)</li>
 <li><code>t</code> for <code>\t</code> TAB U+0009</li>
@@ -313,7 +327,6 @@ Functions</h2></td></tr>
 <li><code>x</code> for <code>\xXX</code> 8-bit character encoding in hexadecimal</li>
 <li><code>y</code> for <code>\y</code> word boundary</li>
 <li><code>z</code> for <code>\z</code> end of input anchor</li>
-<li><code>0</code> for <code>\0nnn</code> 8-bit character encoding in octal requires a leading <code>0</code></li>
 <li>`<code>for `\</code> begin of input anchor</li>
 <li><code>'</code> for <code>\'</code> end of input anchor</li>
 <li><code>&lt;</code> for <code>\&lt;</code> left word boundary</li>
@@ -323,18 +336,24 @@ Functions</h2></td></tr>
 <li><code>D</code> for <code>\D</code> ASCII non-digit <code>[^0-9]</code></li>
 <li><code>H</code> for <code>\H</code> ASCII non-blank <code>[^ \t]</code></li>
 <li><code>L</code> for <code>\L</code> ASCII non-lower case letter <code>[^a-z]</code></li>
-<li><code>P</code> for <code>\P{C}</code> ASCII POSIX inverse character class specified by <code>C</code></li>
+<li><code>N</code> for <code>\N</code> not a newline</li>
+<li><code>P</code> for <code>\P{C}</code> <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> inverse character classes, see 'p'</li>
 <li><code>Q</code> for <code>\Q...\E</code> quotations</li>
+<li><code>R</code> for <code>\R</code> <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> line break</li>
 <li><code>S</code> for <code>\S</code> ASCII non-space (no SP, TAB, LF, VT, FF, or CR)</li>
 <li><code>U</code> for <code>\U</code> ASCII non-upper case letter <code>[^A-Z]</code></li>
 <li><code>W</code> for <code>\W</code> ASCII non-word-like character <code>[^0-9A-Z_a-z]</code></li>
+<li><code>X</code> for <code>\X</code> any <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> character</li>
 <li><code>Z</code> for <code>\Z</code> end of input anchor, before the final line break</li>
+<li><code>0</code> for <code>\0nnn</code> 8-bit character encoding in octal requires a leading <code>0</code></li>
+<li>'1' to '9' for backreferences (not applicable to lexer specifications)</li>
 </ul>
+<p>Note that 'p' is a special case to support Unicode-based matchers that natively support UTF8 patterns and <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> classes <code></code>{C}, {C}, , , , , , , , , , and {X}. Basically, 'p' prevents conversion of <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> patterns to UTF8. This special case does not support {NAME} expansions in bracket lists such as [a-z||{upper}] and {lower}{+}{upper} used in lexer specifications.</p>
 <p>The optional <code>"?+"</code> specify lazy and possessive support:</p><ul>
 <li><code>?</code> lazy quantifiers for repeats are supported</li>
 <li><code>+</code> possessive quantifiers for repeats are supported</li>
 </ul>
-<p>The optional <code>"."</code> (dot) specifies that dot matches any character except newline. </p>
+<p>The optional <code>"."</code> (dot) specifies that dot matches any character except newline. A dot is implied by the presence of the 's' modifier, and can be omitted in that case. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pattern</td><td>regex string pattern to convert </td></tr>
@@ -934,7 +953,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Feb 3 2020 12:00:32 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Mar 2 2020 11:24:40 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

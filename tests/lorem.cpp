@@ -1,4 +1,5 @@
 #include <reflex/matcher.h>
+#include <reflex/pcre2matcher.h>
 #include <reflex/boostmatcher.h>
 #include <reflex/stdmatcher.h>
 #include <reflex/timer.h>
@@ -350,7 +351,7 @@ int main()
   Matcher tokenizer("(\\w+)|(\\W)");
   Matcher filter("\\w+");
   Matcher splitter("\\s+");
-  test_lorem("RE/flex with FSM opcode table (default)", tokenizer, filter, splitter);
+  test_lorem("RE/flex DFA/POSIX matching with FSM opcode table (default)", tokenizer, filter, splitter);
 
 #if 0
   // 1. generate code with options n;o;f below:
@@ -367,17 +368,27 @@ int main()
   Matcher fast_tokenizer(tokenizer_pattern);
   Matcher fast_filter(filter_pattern);
   Matcher fast_splitter(splitter_pattern);
-  test_lorem("RE/flex with FSM code (--fast and pattern option \"o\")", fast_tokenizer, fast_filter, fast_splitter);
+  test_lorem("RE/flex DFA/POSIX matching with FSM code (--fast and pattern option \"o\")", fast_tokenizer, fast_filter, fast_splitter);
+
+  PCRE2Matcher pcre2_tokenizer("(\\w+)|(\\W)");
+  PCRE2Matcher pcre2_filter("\\w+");
+  PCRE2Matcher pcre2_splitter("\\s+");
+  test_lorem("PCRE2 JIT-optimized Perl matching", pcre2_tokenizer, pcre2_filter, pcre2_splitter);
 
   BoostMatcher boost_tokenizer("(\\w+)|(\\W)");
   BoostMatcher boost_filter("\\w+");
   BoostMatcher boost_splitter("\\s+");
-  test_lorem("Boost.Regex", boost_tokenizer, boost_filter, boost_splitter);
+  test_lorem("Boost.Regex Perl matching", boost_tokenizer, boost_filter, boost_splitter);
+
+  BoostPosixMatcher boost_posix_tokenizer("(\\w+)|(\\W)");
+  BoostPosixMatcher boost_posix_filter("\\w+");
+  BoostPosixMatcher boost_posix_splitter("\\s+");
+  test_lorem("Boost.Regex POSIX matching", boost_posix_tokenizer, boost_posix_filter, boost_posix_splitter);
 
   StdMatcher std_tokenizer("(\\w+)|(\\W)");
   StdMatcher std_filter("\\w+");
   StdMatcher std_splitter("\\s+");
-  test_lorem("std::regex", std_tokenizer, std_filter, std_splitter);
+  test_lorem("std::regex Perl matching", std_tokenizer, std_filter, std_splitter);
 
   return 0;
 }

@@ -25,8 +25,11 @@ LIBREFLEX = ../lib/libreflex.a
 YACC      = bison -y
 BISON     = bison
 
+INCPCRE2  = /opt/local/include
+LIBPCRE2  = -L/opt/local/lib -lpcre2-8
+
 INCBOOST  = /opt/local/include
-LIBBOOST  = /opt/local/lib/libboost_regex-mt.dylib
+LIBBOOST  = -L/opt/local/lib -lboost_regex-mt
 
 CXXOFLAGS = -O2
 CXXWFLAGS = -Wall -Wunused -Wextra

@@ -30,7 +30,7 @@
 @file      matcher.h
 @brief     RE/flex matcher engine
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2016-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -51,7 +51,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   template<typename T>
   static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
   {
-    return reflex::convert(regex, "imsx#=^:abcdefhijklnprstuvwxzABDHLPQSUW<>?+", flags);
+    return reflex::convert(regex, "imsx#=^:abcdefhijklnrstuvwxzABDHLNQSUW<>?+", flags);
   }
   /// Default constructor.
   Matcher() : PatternMatcher<reflex::Pattern>()
@@ -345,6 +345,21 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   {
     return !at_bow() && !at_eow();
   }
+  /// Check CPU hardware for AVX512BW capability.
+  static bool have_HW_AVX512BW()
+  {
+    return HW & (1ULL << 62);
+  }
+  /// Check CPU hardware for AVX capability.
+  static bool have_HW_AVX()
+  {
+    return HW & (1ULL << 28);
+  }
+  /// Check CPU hardware for SSE2 capability.
+  static bool have_HW_SSE2()
+  {
+    return HW & (1ULL << 26);
+  }
  protected:
   typedef std::vector<size_t> Stops; ///< indent margin/tab stops
   /// FSM data for FSM code
@@ -354,6 +369,10 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     bool nul;
     int  c1;
   };
+  /// Get CPU hardware info.
+  static uint64_t get_HW();
+  /// CPU hardware info[2]
+  static uint64_t HW;
   /// Returns true if input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
   virtual size_t match(Method method) ///< Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH
     /// @returns nonzero if input matched the pattern
@@ -367,19 +386,6 @@ scan:
     mrk_ = false;
     ind_ = pos_; // ind scans input in buf[] in newline() up to pos - 1
     col_ = 0; // count columns for indent matching
-    if (ded_ == 0 && hit_end() && tab_.empty())
-    {
-      if (method == Const::SPLIT && !at_bob() && cap_ != 0 && cap_ != Const::EMPTY)
-      {
-        cap_ = Const::EMPTY;
-        DBGLOG("Split empty at end, cap = %zu", cap_);
-        DBGLOG("END Matcher::match()");
-        return cap_;
-      }
-      cap_ = 0;
-      DBGLOG("END Matcher::match()");
-      return 0;
-    }
 #endif
 find:
     int c1 = got_;
@@ -686,18 +692,24 @@ unrolled:
           goto find;
         }
         if (got_ != Const::EOB)
-        {
           cap_ = Const::EMPTY;
-          set_current(pos_);
-          got_ = Const::EOB;
-        }
+        else
+          cap_ = 0;
+        set_current(end_);
+        got_ = Const::EOB;
         DBGLOG("Split at eof: cap = %zu txt = '%s' len = %zu", cap_, std::string(txt_, len_).c_str(), len_);
         DBGLOG("END Matcher::match()");
         return cap_;
       }
       if (cur_ == 0 && at_bob() && at_end())
+      {
         cap_ = Const::EMPTY;
-      set_current(cur_);
+        got_ = Const::EOB;
+      }
+      else
+      {
+        set_current(cur_);
+      }
       DBGLOG("Split: txt = '%s' len = %zu", std::string(txt_, len_).c_str(), len_);
       DBGLOG("END Matcher::match()");
       return cap_;
@@ -711,13 +723,25 @@ unrolled:
           if (advance())
           {
             txt_ = buf_ + cur_;
-            goto find;
+            if (!pat_->one_)
+              goto find;
+            len_ = pat_->len_;
+            txt_ = buf_ + cur_;
+            set_current(cur_ + len_);
+            return cap_ = 1;
           }
         }
         else if (pos_ > cur_) // we didn't fail on META alone
         {
           if (advance())
-            goto scan;
+          {
+            if (!pat_->one_)
+              goto scan;
+            len_ = pat_->len_;
+            txt_ = buf_ + cur_;
+            set_current(cur_ + len_);
+            return cap_ = 1;
+          }
         }
         txt_ = buf_ + cur_;
       }
@@ -823,7 +847,8 @@ unrolled:
   std::vector<int>  lap_;      ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
   std::stack<Stops> stk_;      ///< stack to push/pop stops
   FSM               fsm_;      ///< local state for FSM code
-  size_t            lcp_;      ///< least common character in the pattern prefix or 0xffff
+  uint16_t          lcp_;      ///< primary least common character position in the pattern prefix or 0xffff for pure Boyer-Moore
+  uint16_t          lcs_;      ///< secondary least common character position in the pattern prefix or 0xffff for pure Boyer-Moore
   size_t            bmd_;      ///< Boyer-Moore jump distance on mismatch, B-M is enabled when bmd_ > 0
   uint8_t           bms_[256]; ///< Boyer-Moore skip array
   bool              mrk_;      ///< indent \i or dedent \j in pattern found: should check and update indent stops

@@ -8,6 +8,6 @@
 <area shape="rect" id="node4" href="$error_8h.html" title="RE/flex regex errors. " alt="" coords="1207,229,1304,256"/>
 <area shape="rect" id="node11" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="689,229,781,256"/>
 <area shape="rect" id="node20" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="133,155,223,181"/>
-<area shape="rect" id="node22" href="$ranges_8h.html" title="RE/flex range closed and open&#45;ended set containers. " alt="" coords="311,155,421,181"/>
+<area shape="rect" id="node22" href="$ranges_8h.html" title="RE/flex range sets as closed and open&#45;ended set containers. " alt="" coords="311,155,421,181"/>
 <area shape="rect" id="node25" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="5,155,108,181"/>
 </map>

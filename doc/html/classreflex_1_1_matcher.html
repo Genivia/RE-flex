@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Feb 3 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Mar 2 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -56,7 +56,9 @@
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="classreflex_1_1_matcher-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">reflex::Matcher Class Reference</div>  </div>
@@ -81,20 +83,20 @@ Collaboration diagram for reflex::Matcher:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreflex_1_1_matcher__coll__graph.png" border="0" usemap="#reflex_1_1_matcher_coll__map" alt="Collaboration graph"/></div>
 <map name="reflex_1_1_matcher_coll__map" id="reflex_1_1_matcher_coll__map">
-<area shape="rect" id="node11" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher..." alt="" coords="1143,242,1248,269"/>
-<area shape="rect" id="node2" href="classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="1385,235,1539,276"/>
+<area shape="rect" id="node11" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher..." alt="" coords="1143,238,1248,265"/>
+<area shape="rect" id="node2" href="classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="1385,231,1539,272"/>
 <area shape="rect" id="node3" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="1116,71,1275,98"/>
-<area shape="rect" id="node5" href="classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1383,51,1541,92"/>
+<area shape="rect" id="node5" href="classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1383,49,1541,91"/>
 <area shape="rect" id="node4" href="structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="875,5,1033,47"/>
 <area shape="rect" id="node6" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="908,71,1000,98"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="643,66,734,93"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="365,59,494,100"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="155,66,309,93"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="5,66,105,93"/>
-<area shape="rect" id="node12" href="structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="878,191,1030,218"/>
-<area shape="rect" id="node13" title="STL class. " alt="" coords="389,193,469,219"/>
-<area shape="rect" id="node14" title="STL class. " alt="" coords="169,185,295,227"/>
-<area shape="rect" id="node21" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="616,474,761,501"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="643,71,734,98"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="365,64,494,105"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="155,71,309,98"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="5,71,105,98"/>
+<area shape="rect" id="node12" href="structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="878,187,1030,214"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="389,189,469,215"/>
+<area shape="rect" id="node14" title="STL class. " alt="" coords="169,181,295,223"/>
+<area shape="rect" id="node21" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="616,470,761,497"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -291,7 +293,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3939efa95649d0b8543109669818a097 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the buffer base containing 0-terminated character data to scan in place (data may be modified), reset/restart the matcher.  <a href="#a3939efa95649d0b8543109669818a097">More...</a><br /></td></tr>
 <tr class="separator:a3939efa95649d0b8543109669818a097 inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab880e6c8fe0df7c4ee7bb629aab41d0f inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ab880e6c8fe0df7c4ee7bb629aab41d0f">matches</a> ()</td></tr>
-<tr class="memdesc:ab880e6c8fe0df7c4ee7bb629aab41d0f inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns nonzero capture index (i.e. true) if the entire input matches this matcher's pattern (and internally caches the true/false result for repeat invocations).  <a href="#ab880e6c8fe0df7c4ee7bb629aab41d0f">More...</a><br /></td></tr>
+<tr class="memdesc:ab880e6c8fe0df7c4ee7bb629aab41d0f inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns nonzero capture index (i.e. true) if the entire input matches this matcher's pattern (and internally caches the true/false result to permit repeat invocations).  <a href="#ab880e6c8fe0df7c4ee7bb629aab41d0f">More...</a><br /></td></tr>
 <tr class="separator:ab880e6c8fe0df7c4ee7bb629aab41d0f inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af51252ce359e6106b58c81f70776ccfb inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb">accept</a> () const </td></tr>
 <tr class="memdesc:af51252ce359e6106b58c81f70776ccfb inherit pub_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a positive integer (true) indicating the capture index of the matched text in the pattern or zero (false) for a mismatch.  <a href="#af51252ce359e6106b58c81f70776ccfb">More...</a><br /></td></tr>
@@ -483,6 +485,15 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a8862686f6d5680d4d0e5af146c4aed69"><td class="memTemplItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a8862686f6d5680d4d0e5af146c4aed69">convert</a> (T regex, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>)</td></tr>
 <tr class="memdesc:a8862686f6d5680d4d0e5af146c4aed69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a regex to an acceptable form, given the specified regex library signature <code>"[decls:]escapes[?+]"</code>, see <a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.  <a href="#a8862686f6d5680d4d0e5af146c4aed69">More...</a><br /></td></tr>
 <tr class="separator:a8862686f6d5680d4d0e5af146c4aed69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5958736d66654ba1f465237fe32f87f0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a5958736d66654ba1f465237fe32f87f0">have_HW_AVX512BW</a> ()</td></tr>
+<tr class="memdesc:a5958736d66654ba1f465237fe32f87f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check CPU hardware for AVX512BW capability.  <a href="#a5958736d66654ba1f465237fe32f87f0">More...</a><br /></td></tr>
+<tr class="separator:a5958736d66654ba1f465237fe32f87f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6b8ccb64cd6f017a94af4451cf0664e"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ac6b8ccb64cd6f017a94af4451cf0664e">have_HW_AVX</a> ()</td></tr>
+<tr class="memdesc:ac6b8ccb64cd6f017a94af4451cf0664e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check CPU hardware for AVX capability.  <a href="#ac6b8ccb64cd6f017a94af4451cf0664e">More...</a><br /></td></tr>
+<tr class="separator:ac6b8ccb64cd6f017a94af4451cf0664e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6bfa49b2416332f3f908f96688035e2"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ac6bfa49b2416332f3f908f96688035e2">have_HW_SSE2</a> ()</td></tr>
+<tr class="memdesc:ac6bfa49b2416332f3f908f96688035e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check CPU hardware for SSE2 capability.  <a href="#ac6bfa49b2416332f3f908f96688035e2">More...</a><br /></td></tr>
+<tr class="separator:ac6bfa49b2416332f3f908f96688035e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
 Protected Types</h2></td></tr>
@@ -562,6 +573,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a345dcf64f1671bbb12056408045fa441 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the newline count, column count, and character count when shifting the buffer.  <a href="#a345dcf64f1671bbb12056408045fa441">More...</a><br /></td></tr>
 <tr class="separator:a345dcf64f1671bbb12056408045fa441 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:a2126409515d02718ca4afb95389b060b"><td class="memItemLeft" align="right" valign="top">static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a2126409515d02718ca4afb95389b060b">get_HW</a> ()</td></tr>
+<tr class="memdesc:a2126409515d02718ca4afb95389b060b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get CPU hardware info.  <a href="#a2126409515d02718ca4afb95389b060b">More...</a><br /></td></tr>
+<tr class="separator:a2126409515d02718ca4afb95389b060b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a3b760391b7b16eed637ada38430d97e1"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a3b760391b7b16eed637ada38430d97e1">ded_</a></td></tr>
@@ -582,9 +599,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a619a527eb79b444fba089a33fb1fdd33"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html">FSM</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a619a527eb79b444fba089a33fb1fdd33">fsm_</a></td></tr>
 <tr class="memdesc:a619a527eb79b444fba089a33fb1fdd33"><td class="mdescLeft">&#160;</td><td class="mdescRight">local state for <a class="el" href="structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. ">FSM</a> code  <a href="#a619a527eb79b444fba089a33fb1fdd33">More...</a><br /></td></tr>
 <tr class="separator:a619a527eb79b444fba089a33fb1fdd33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae48d55456a99772acac26c96f8e5a895"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ae48d55456a99772acac26c96f8e5a895">lcp_</a></td></tr>
-<tr class="memdesc:ae48d55456a99772acac26c96f8e5a895"><td class="mdescLeft">&#160;</td><td class="mdescRight">least common character in the pattern prefix or 0xffff  <a href="#ae48d55456a99772acac26c96f8e5a895">More...</a><br /></td></tr>
-<tr class="separator:ae48d55456a99772acac26c96f8e5a895"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a080b1cf1f8116afa51bb2ade8b95c170"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a080b1cf1f8116afa51bb2ade8b95c170">lcp_</a></td></tr>
+<tr class="memdesc:a080b1cf1f8116afa51bb2ade8b95c170"><td class="mdescLeft">&#160;</td><td class="mdescRight">primary least common character position in the pattern prefix or 0xffff for pure Boyer-Moore  <a href="#a080b1cf1f8116afa51bb2ade8b95c170">More...</a><br /></td></tr>
+<tr class="separator:a080b1cf1f8116afa51bb2ade8b95c170"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3dcb3fa278e14f79caaa97e049a6be6"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ab3dcb3fa278e14f79caaa97e049a6be6">lcs_</a></td></tr>
+<tr class="memdesc:ab3dcb3fa278e14f79caaa97e049a6be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">secondary least common character position in the pattern prefix or 0xffff for pure Boyer-Moore  <a href="#ab3dcb3fa278e14f79caaa97e049a6be6">More...</a><br /></td></tr>
+<tr class="separator:ab3dcb3fa278e14f79caaa97e049a6be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47e7979b2b89ac05ca4deb937a2f3d97"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a47e7979b2b89ac05ca4deb937a2f3d97">bmd_</a></td></tr>
 <tr class="memdesc:a47e7979b2b89ac05ca4deb937a2f3d97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boyer-Moore jump distance on mismatch, B-M is enabled when bmd_ &gt; 0.  <a href="#a47e7979b2b89ac05ca4deb937a2f3d97">More...</a><br /></td></tr>
 <tr class="separator:a47e7979b2b89ac05ca4deb937a2f3d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -662,6 +682,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a4fdfd4999a13a782643d33da7bd2b5cf inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a4fdfd4999a13a782643d33da7bd2b5cf">mat_</a></td></tr>
 <tr class="memdesc:a4fdfd4999a13a782643d33da7bd2b5cf inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if <a class="el" href="classreflex_1_1_abstract_matcher.html#ab880e6c8fe0df7c4ee7bb629aab41d0f" title="Returns nonzero capture index (i.e. true) if the entire input matches this matcher&#39;s pattern (and int...">AbstractMatcher::matches()</a> was successful  <a href="#a4fdfd4999a13a782643d33da7bd2b5cf">More...</a><br /></td></tr>
 <tr class="separator:a4fdfd4999a13a782643d33da7bd2b5cf inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
+Static Protected Attributes</h2></td></tr>
+<tr class="memitem:a9bf1c01c10d40158a2991e70a8a8cefb"><td class="memItemLeft" align="right" valign="top">static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a9bf1c01c10d40158a2991e70a8a8cefb">HW</a></td></tr>
+<tr class="memdesc:a9bf1c01c10d40158a2991e70a8a8cefb"><td class="mdescLeft">&#160;</td><td class="mdescRight">CPU hardware info[2].  <a href="#a9bf1c01c10d40158a2991e70a8a8cefb">More...</a><br /></td></tr>
+<tr class="separator:a9bf1c01c10d40158a2991e70a8a8cefb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -1802,6 +1828,106 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a2126409515d02718ca4afb95389b060b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint64_t reflex::Matcher::get_HW </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get CPU hardware info. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac6b8ccb64cd6f017a94af4451cf0664e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool reflex::Matcher::have_HW_AVX </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check CPU hardware for AVX capability. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5958736d66654ba1f465237fe32f87f0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool reflex::Matcher::have_HW_AVX512BW </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check CPU hardware for AVX512BW capability. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac6bfa49b2416332f3f908f96688035e2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool reflex::Matcher::have_HW_SSE2 </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check CPU hardware for SSE2 capability. </p>
+
+</div>
+</div>
 <a class="anchor" id="a505a765341793c9d4b0cbbe833920e93"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2241,6 +2367,28 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a9bf1c01c10d40158a2991e70a8a8cefb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t reflex::Matcher::HW</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>CPU hardware info[2]. </p>
+
+</div>
+</div>
 <a class="anchor" id="a31187ae9febac87f463145c18d248476"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2263,7 +2411,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ae48d55456a99772acac26c96f8e5a895"></a>
+<a class="anchor" id="a080b1cf1f8116afa51bb2ade8b95c170"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -2271,7 +2419,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t reflex::Matcher::lcp_</td>
+          <td class="memname">uint16_t reflex::Matcher::lcp_</td>
         </tr>
       </table>
   </td>
@@ -2281,7 +2429,29 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>least common character in the pattern prefix or 0xffff </p>
+<p>primary least common character position in the pattern prefix or 0xffff for pure Boyer-Moore </p>
+
+</div>
+</div>
+<a class="anchor" id="ab3dcb3fa278e14f79caaa97e049a6be6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t reflex::Matcher::lcs_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>secondary least common character position in the pattern prefix or 0xffff for pure Boyer-Moore </p>
 
 </div>
 </div>
@@ -2357,7 +2527,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Feb 3 2020 12:00:32 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Mar 2 2020 11:24:41 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

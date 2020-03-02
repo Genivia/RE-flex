@@ -513,7 +513,7 @@ int main(int argc, char **argv)
         help("invalid value for option --tabs");
     }
 
-    reflex::Pattern pattern(modifiers + reflex::Matcher::convert(regex, reflex::convert_flag::unicode), pattern_options);
+    reflex::Pattern pattern(modifiers + reflex::Matcher::convert(regex, reflex::convert_flag::notnewline | reflex::convert_flag::unicode), pattern_options);
 
     if (infiles.empty())
     {

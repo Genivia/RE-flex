@@ -3,6 +3,7 @@
 
 #include <reflex/matcher.h>
 #include <reflex/boostmatcher.h>
+#include <reflex/pcre2matcher.h>
 #include <reflex/stdmatcher.h>
 #include <sstream>
 
@@ -17,12 +18,12 @@ int main(int argc, char **argv)
       opts = "";
     if (argc > 2)
     {
-      printf("\n** Boost.Regex POSIX mode test\n");
+      printf("\n** Boost.Regex POSIX mode test");
       std::string regex;
       try
       {
         regex = reflex::BoostPosixMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
-        printf("\n** using converted regex: %s\n\n", regex.c_str());
+        printf(" with converted regex: %s\n\n", regex.c_str());
         boost::regex boost_pattern(regex, boost::regex_constants::no_empty_expressions);
         reflex::BoostPosixMatcher boostmatcher(boost_pattern, argv[2], opts);
         if (argc > 3)
@@ -61,11 +62,11 @@ int main(int argc, char **argv)
         std::cerr << e.what();
       }
 
-      printf("\n** Boost.Regex Perl mode test\n");
+      printf("\n** Boost.Regex Perl mode test");
       try
       {
         regex = reflex::BoostPerlMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
-        printf("\n** using converted regex: %s\n\n", regex.c_str());
+        printf(" with converted regex: %s\n\n", regex.c_str());
         boost::regex boost_pattern(regex, boost::regex_constants::no_empty_expressions);
         reflex::BoostPerlMatcher boostmatcher(boost_pattern, argv[2], opts);
         if (argc > 3)
@@ -104,11 +105,54 @@ int main(int argc, char **argv)
         std::cerr << e.what();
       }
 
-      printf("\n** C++11 std::regex Ecma mode test\n");
+      printf("\n** PCRE2 Perl mode test");
+      try
+      {
+        regex = reflex::PCRE2Matcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
+        printf(" with converted regex: %s\n\n", regex.c_str());
+        std::string pcre2_pattern(regex);
+        reflex::PCRE2Matcher pcre2matcher(pcre2_pattern, argv[2], opts);
+        if (argc > 3)
+          pcre2matcher.buffer(strtoul(argv[3], NULL, 10));
+        if (!pcre2matcher.matches())
+	{
+          printf("No match\n");
+	}
+        else
+	{
+          printf("Match:");
+	  for (size_t i = 1; pcre2matcher[i].first; ++i)
+	    printf(" group[%zu]=(%zu,%zu)", i, pcre2matcher[i].first - pcre2matcher[0].first, pcre2matcher[i].second);
+	  printf("\n");
+	  fflush(stdout);
+	  std::cout << pcre2matcher << std::endl;
+	}
+        pcre2matcher.input(argv[2]);
+        if (argc > 3)
+          pcre2matcher.buffer(strtoul(argv[3], NULL, 10));
+        while (pcre2matcher.scan())
+          printf("Scan %zu '%s'\n", pcre2matcher.accept(), pcre2matcher.text());
+        pcre2matcher.input(argv[2]);
+        if (argc > 3)
+          pcre2matcher.buffer(strtoul(argv[3], NULL, 10));
+        while (pcre2matcher.find())
+          printf("Find %zu '%s' at %zu,%zu spans %zu..%zu %s\n", pcre2matcher.accept(), pcre2matcher.text(), pcre2matcher.lineno(), pcre2matcher.columno(), pcre2matcher.first(), pcre2matcher.last(), pcre2matcher.at_end() ? "at end" : "");
+        pcre2matcher.input(argv[2]);
+        if (argc > 3)
+          pcre2matcher.buffer(strtoul(argv[3], NULL, 10));
+        while (pcre2matcher.split())
+          printf("Split %zu '%s' at %zu\n", pcre2matcher.accept(), pcre2matcher.text(), pcre2matcher.columno());
+      }
+      catch (const reflex::regex_error& e)
+      {
+        std::cerr << e.what();
+      }
+
+      printf("\n** C++11 std::regex Ecma mode test");
       try
       {
         regex = reflex::StdMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
-        printf("\n** using converted regex: %s\n\n", regex.c_str());
+        printf(" with converted regex: %s\n\n", regex.c_str());
         reflex::StdMatcher stdmatcher(regex, argv[2], opts);
         if (argc > 3)
           stdmatcher.buffer(strtoul(argv[3], NULL, 10));

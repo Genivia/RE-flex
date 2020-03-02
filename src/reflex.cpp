@@ -153,7 +153,11 @@ static const char *options_table[] = {
 ///
 /// The optional `"decls:"` part specifies which modifiers and other special `(?...)` constructs are supported:
 /// - non-capturing group `(?:...)` is supported
-/// - one or all of "imsx" specify which (?ismx:...) modifiers are supported
+/// - one or all of "imsx" specify which (?ismx) modifiers are supported:
+/// - 'i' specifies that `(?i...)` case-insensitive matching is supported
+/// - 'm' specifies that `(?m...)` multiline mode is supported for the ^ and $ anchors
+/// - 's' specifies that `(?s...)` dotall mode is supported
+/// - 'x' specifies that `(?x...)` freespace mode is supported
 /// - `#` specifies that `(?#...)` comments are supported
 /// - `=` specifies that `(?=...)` lookahead is supported
 /// - `<` specifies that `(?<...)` lookbehind is supported
@@ -168,11 +172,12 @@ static const char *options_table[] = {
 /// - `e` for `\e` ESC U+001B
 /// - `f` for `\f` FF U+000C
 /// - `h` for `\h` ASCII blank `[ \t]` (SP U+0020 or TAB U+0009)
-/// - `i` for `\i` reflex indent boundary
-/// - `j` for `\j` reflex dedent boundary
+/// - `i` for `\i` reflex indent anchor
+/// - `j` for `\j` reflex dedent anchor
+/// - `j` for `\k` reflex undent anchor
 /// - `l` for `\l` ASCII lower case letter `[a-z]`
 /// - `n` for `\n` LF U+000A
-/// - `p` for `\p{C}` ASCII POSIX character class specified by `C`
+/// - `p` for `\p{C}` Unicode character classes, also implies Unicode \x{X}, \l, \u, \d, \s, \w
 /// - `r` for `\r` CR U+000D
 /// - `s` for `\s` space (SP, TAB, LF, VT, FF, or CR)
 /// - `t` for `\t` TAB U+0009
@@ -191,14 +196,24 @@ static const char *options_table[] = {
 /// - `D` for `\D` ASCII non-digit `[^0-9]`
 /// - `H` for `\H` ASCII non-blank `[^ \t]`
 /// - `L` for `\L` ASCII non-lower case letter `[^a-z]`
-/// - `P` for `\P{C}` ASCII POSIX inverse character class specified by `C`
+/// - `N` for `\N` not a newline
+/// - `P` for `\P{C}` Unicode inverse character classes, see 'p'
 /// - `Q` for `\Q...\E` quotations
+/// - `R` for `\R` Unicode line break
 /// - `S` for `\S` ASCII non-space (no SP, TAB, LF, VT, FF, or CR)
 /// - `U` for `\U` ASCII non-upper case letter `[^A-Z]`
 /// - `W` for `\W` ASCII non-word-like character `[^0-9A-Z_a-z]`
+/// - `X` for `\X` any Unicode character
 /// - `Z` for `\Z` end of input anchor, before the final line break
 /// - `0` for `\0nnn` 8-bit character encoding in octal requires a leading `0`
 /// - '1' to '9' for backreferences (not applicable to lexer specifications)
+///
+/// Note that 'p' is a special case to support Unicode-based matchers that
+/// natively support UTF8 patterns and Unicode classes \p{C}, \P{C}, \w, \W,
+/// \d, \D, \l, \L, \u, \U, \N, and \x{X}.  Basically, 'p' prevents conversion
+/// of Unicode patterns to UTF8.  This special case does not support {NAME}
+/// expansions in bracket lists such as [a-z||{upper}] and {lower}{+}{upper}
+/// used in lexer specifications.
 ///
 /// The optional `"?+"` specify lazy and possessive support:
 /// - `?` lazy quantifiers for repeats are supported
@@ -212,21 +227,28 @@ static const Reflex::Library library_table[] = {
     "reflex/matcher.h",
     "reflex::Pattern",
     "reflex::Matcher",
-    "imsx#=^:abcdefhijklnprstuvwxzABDHLPQSUW<>?+.",
+    "imsx#=^:abcdefhijklnrstuvwxzABDHLNQSUW<>?+.",
   },
   {
     "boost",
     "reflex/boostmatcher.h",
     "boost::regex",
     "reflex::BoostPosixMatcher",
-    "imsx#<=!:abcdefghlnprstuvwxzABDHLPQSUWZ0<>.",
+    "imsx#<=!:abcdefghlnrstuvwxzABDHLQSUWZ0<>.",
   },
   {
     "boost_perl",
     "reflex/boostmatcher.h",
     "boost::regex",
-    "reflex::BoostPerlMatcher",
-    "imsx#<=!:abcdefghlnprstuvwxzABDHLPQSUWZ0<>?+.",
+    "reflex::BoostMatcher",
+    "imsx#<=!:abcdefghlnrstuvwxzABDHLQSUWZ0<>?+.",
+  },
+  {
+    "pcre2_perl",
+    "reflex/pcre2matcher.h",
+    "boost::regex",
+    "reflex::PCRE2Matcher",
+    "imsx!#<=:abcdefghlnrstuvwxzABDGHKLNQRSUWXZ0?+.",
   },
   {
     "std_ecma", // this is an experimental option, not recommended!!
@@ -531,10 +553,10 @@ void Reflex::help(const char *message, const char *arg)
         -I, --interactive, --always-interactive\n\
                 generate interactive scanner\n\
         -m NAME, --matcher=NAME\n\
-                use matcher NAME library [";
+                match with ";
   for (LibraryMap::const_iterator i = libraries.begin(); i != libraries.end(); ++i)
-    std::cout << i->first << "|";
-  std::cout << "...]\n\
+    std::cout << i->first << ", ";
+  std::cout << "...\n\
         --pattern=NAME\n\
                 use custom pattern class NAME for custom matcher option -m\n\
         --include=FILE\n\

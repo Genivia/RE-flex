@@ -1,13 +1,16 @@
 <map id="reflex::AbstractMatcher" name="reflex::AbstractMatcher">
-<area shape="rect" id="node2" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; boost::regex \&gt;" alt="" coords="228,29,381,70"/>
-<area shape="rect" id="node6" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="228,94,381,135"/>
-<area shape="rect" id="node8" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; std::regex \&gt;" alt="" coords="228,159,381,201"/>
-<area shape="rect" id="node12" href="$classreflex_1_1_pattern_matcher.html" title="The pattern matcher class template extends abstract matcher base class. " alt="" coords="212,225,397,252"/>
-<area shape="rect" id="node3" href="$classreflex_1_1_boost_matcher.html" title="Boost matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="445,36,589,63"/>
-<area shape="rect" id="node4" href="$classreflex_1_1_boost_perl_matcher.html" title="Boost matcher engine class, extends reflex::BoostMatcher for Boost Perl regex matching. " alt="" coords="642,5,810,32"/>
-<area shape="rect" id="node5" href="$classreflex_1_1_boost_posix_matcher.html" title="Boost matcher engine class, extends reflex::BoostMatcher for Boost POSIX regex matching. " alt="" coords="637,56,815,83"/>
-<area shape="rect" id="node7" href="$classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="462,101,573,128"/>
-<area shape="rect" id="node9" href="$classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="452,167,583,193"/>
-<area shape="rect" id="node10" href="$classreflex_1_1_std_ecma_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for ECMA std::regex::ECMAScript syntax and regex..." alt="" coords="644,127,808,153"/>
-<area shape="rect" id="node11" href="$classreflex_1_1_std_posix_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for POSIX ERE std::regex::awk syntax and regex m..." alt="" coords="645,177,807,204"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; boost::regex \&gt;" alt="" coords="228,23,381,65"/>
+<area shape="rect" id="node6" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="228,89,381,130"/>
+<area shape="rect" id="node8" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; std::regex \&gt;" alt="" coords="228,154,381,195"/>
+<area shape="rect" id="node12" href="$classreflex_1_1_pattern_matcher.html" title="The pattern matcher class template extends abstract matcher base class. " alt="" coords="212,220,397,247"/>
+<area shape="rect" id="node13" href="$classreflex_1_1_pattern_matcher_3_01std_1_1string_01_4.html" title="A specialization of the pattern matcher class template for std::string, extends abstract matcher base..." alt="" coords="228,271,381,313"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_boost_matcher.html" title="Boost matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="451,31,595,57"/>
+<area shape="rect" id="node4" href="$classreflex_1_1_boost_perl_matcher.html" title="Boost matcher engine class, extends reflex::BoostMatcher for Boost Perl regex matching. " alt="" coords="654,5,822,32"/>
+<area shape="rect" id="node5" href="$classreflex_1_1_boost_posix_matcher.html" title="Boost matcher engine class, extends reflex::BoostMatcher for Boost POSIX regex matching. " alt="" coords="649,56,827,83"/>
+<area shape="rect" id="node7" href="$classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="467,96,578,123"/>
+<area shape="rect" id="node9" href="$classreflex_1_1_std_matcher.html" title="std matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="457,161,588,188"/>
+<area shape="rect" id="node10" href="$classreflex_1_1_std_ecma_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for ECMA std::regex::ECMAScript syntax and regex..." alt="" coords="656,136,820,163"/>
+<area shape="rect" id="node11" href="$classreflex_1_1_std_posix_matcher.html" title="std matcher engine class, extends reflex::StdMatcher for POSIX ERE std::regex::awk syntax and regex m..." alt="" coords="657,187,819,213"/>
+<area shape="rect" id="node14" href="$classreflex_1_1_p_c_r_e2_matcher.html" title="PCRE2 JIT&#45;optimized matcher engine class implements reflex::PatternMatcher pattern matching interface..." alt="" coords="445,279,600,305"/>
+<area shape="rect" id="node15" href="$classreflex_1_1_p_c_r_e2_u_t_f_matcher.html" title="PCRE2 JIT&#45;optimized native PCRE2_UTF+PCRE2_UCP matcher engine class, extends PCRE2Matcher. " alt="" coords="648,279,828,305"/>
 </map>

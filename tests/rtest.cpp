@@ -125,12 +125,12 @@ Test tests[] = {
   { "(?s).", "", "", "a\n", { 1, 1 } },
   { "(?s:.)", "", "", "a\n", { 1, 1 } },
   { "(?s).", "", "", "a\n", { 1, 1 } },
-  // Anchors \A, \z, ^, and $ with pattern option m (multiline)
+  // Anchors \A, \z, ^, and $
   { "\\Aa\\z", "", "", "a", { 1 } },
   { "^a$", "", "", "a", { 1 } },
-  { "^a$|\\n", "m", "", "a\na", { 1, 2, 1 } },
-  { "^a|a$|a|\\n", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
-  { "\\Aa\\z|\\Aa|a\\z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },
+  { "(?m)^a$|\\n", "m", "", "a\na", { 1, 2, 1 } },
+  { "(?m)^a|a$|a|\\n", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
+  { "(?m)\\Aa\\z|\\Aa|a\\z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },
   // Optional X?
   { "a?z", "", "", "azz", { 1, 1 } },
   // Closure X*
@@ -172,10 +172,10 @@ Test tests[] = {
   { "(ab|cd)(ab|cd)*?ab|ab", "", "", "abababcdabab", { 1, 1, 2 } },
   { "(ab)(ab)*?a|b", "", "", "abababa", { 1, 2, 1 } },
   { "a?(a|b)*?a", "", "", "aaababba", { 1, 1, 1, 1 } },
-  { "^(a|b)*?a", "", "", "bba", { 1 } },
-  { "(a|b)*?a$", "", "", "bba", { 1 } }, // OK: ending anchors & lazy quantifiers
+  { "(?m)^(a|b)*?a", "m", "", "bba", { 1 } },
+  { "(?m)(a|b)*?a$", "m", "", "bba", { 1 } }, // OK: ending anchors & lazy quantifiers
   { "(a|b)*?a\\b", "", "", "bba", { 1 } }, // OK but limited: ending anchors & lazy quantifiers
-  { "^(a|b)*?|b", "", "", "ab", { 1, 2 } },
+  { "(?m)^(a|b)*?|b", "m", "", "ab", { 1, 2 } },
   // Lazy positive closure X+
   { "a+?a", "", "", "aaaa", { 1, 1 } },
   { "(a|b)+?", "", "", "ab", { 1, 1 } },
@@ -186,8 +186,8 @@ Test tests[] = {
   { "(ab)+?ac", "", "", "ababac", { 1 } },
   { "ABB*?|ab+?|A|a", "", "", "ABab", { 1, 2 } },
   { "(a|b)+?a|a", "", "", "bbaaa", { 1, 1 } },
-  { "^(a|b)+?a", "", "", "abba", { 1 } }, // TODO can starting anchors invalidate lazy quantifiers?
-  { "(a|b)+?a$", "", "", "abba", { 1 } }, // OK ending anchors at & lazy quantifiers
+  { "(?m)^(a|b)+?a", "m", "", "abba", { 1 } }, // TODO can starting anchors invalidate lazy quantifiers?
+  { "(?m)(a|b)+?a$", "m", "", "abba", { 1 } }, // OK ending anchors at & lazy quantifiers
   // Lazy iterations {n,m}
   { "(a|b){0,3}?aaa", "", "", "baaaaaa", { 1, 1 } },
   { "(a|b){1,3}?aaa", "", "", "baaaaaaa", { 1, 1 } },
@@ -213,12 +213,12 @@ Test tests[] = {
   // { "(a|ab)/ba|ba", "l", "", "aba", { 1, 2 } }, // Ambiguous, undefined in POSIX
   { "zx*/xy*|x?y*", "l", "", "zxxy", { 1, 2 } }, // Ambiguous, undefined in POSIX
   // { "[ab]+(?=ab)|-|ab", "", "", "aaab-bbab", { 1, 3, 2, 1, 3 } }, // Ambiguous, undefined in POSIX
-  { "a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
-  { "a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } },
-  { "^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
-  { "^a/b$|b|\\n", "ml", "", "ab\n", { 1, 2, 3 } },
-  { "a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
-  { "^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
+  { "(?m)a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
+  { "(?m)a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } },
+  { "(?m)^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
+  { "(?m)^a/b$|b|\\n", "ml", "", "ab\n", { 1, 2, 3 } },
+  { "(?m)a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
+  { "(?m)^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
   { "^( +/a|b)|a|\\n", "ml", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
   { "abc(?=\\w+|(?^def))|xyzabcdef", "", "", "abcxyzabcdef", { 1, 2 } },
   // Negative patterns and option A (all)
@@ -239,18 +239,18 @@ Test tests[] = {
   { "\\b(-|a)(-|a)\\b| ", "", "", "aa aa", { 1, 2, 1 } },
   { "\\B(-|a)(-|a)\\B|b|#", "", "", "baab#--#", { 2, 1, 2, 3, 1, 3 } },
   // Indent and matcher option T (Tab)
-  { "^[ \\t]+|[ \\t]+\\i|[ \\t]*\\j|a|[ \\n]", "m", "", "a\n  a\n  a\n    a\n", { 4, 5, 2, 4, 5, 1, 4, 5, 2, 4, 5, 3, 3 } },
-  { "^[ \\t]+|^[ \\t]*\\i|^[ \\t]*\\j|\\j|a|[ \\n]", "m", "", "a\n  a\n  a\n    a\n", { 5, 6, 2, 5, 6, 1, 5, 6, 2, 5, 6, 4, 4 } },
-  { "^[ \\t]+|[ \\t]*\\i|[ \\t]*\\j|a|[ \\n]", "m", "", "a\n  a\n  a\n    a\na\n", { 4, 5, 2, 4, 5, 1, 4, 5, 2, 4, 5, 3, 3, 4, 5 } },
-  { "^[ \\t]+|[ \\t]*\\i|[ \\t]*\\j|a|[ \\n]", "m", "", "a\n  a\n  a\n    a\n  a\na\n", { 4, 5, 2, 4, 5, 1, 4, 5, 2, 4, 5, 3, 4, 5, 3, 4, 5 } },
-  { "^[ \\t]+|[ \\t]*\\i|[ \\t]*\\j|a|[ \\n]", "m", "T=2", "a\n  a\n\ta\n    a\n\ta\na\n", { 4, 5, 2, 4, 5, 1, 4, 5, 2, 4, 5, 3, 4, 5, 3, 4, 5 } },
-  { "^[ \\t]+|[ \\t]*\\i|[ \\t]*\\j|a|(?^[ \\n])", "m", "", "a\n\n  a\n\n  a\n\n    a\n\n  a\na\n", { 4, 2, 4, 1, 4, 2, 4, 3, 4, 3, 4 } },
-  { "[ \\t]*\\i|^[ \\t]+|[ \\t]*\\j|a|(?^[ \\n])", "m", "", "a\n  a\n  a\n    a\n  a\na\n", { 4, 1, 4, 2, 4, 1, 4, 3, 4, 3, 4 } },
-  // { "[ \\t]*\\ia|^[ \\t]+|[ \\t]*\\ja|[ \\t]*\\j|a|[ \\n]", "m", "", "a\n  a\na\n", { 5, 6, 1, 6, 3, 6 } }, \\ \i and \j must be at pattern ends (like $)
-  { "_*\\i|^_+|_*\\j|\\w|(?^[ \\n])", "m", "", "a\n__a\n__a\n____a\n__a\na\n", { 4, 1, 4, 2, 4, 1, 4, 3, 4, 3, 4 } },
-  { "[ \\t]*\\i|^[ \\t]+|[ \\t]*\\j|a|[ \\n]|(?^^[ \\t]*#\n)", "m", "", "a\n  a\n    #\n  a\n    a\n#\n  a\na\n", { 4, 5, 1, 4, 5, 2, 4, 5, 1, 4, 5, 3, 4, 5, 3, 4, 5 } },
+  { "(?m)^[ \\t]+|[ \\t]+\\i|[ \\t]*\\j|a|[ \\n]", "m", "", "a\n  a\n  a\n    a\n", { 4, 5, 2, 4, 5, 1, 4, 5, 2, 4, 5, 3, 3 } },
+  { "(?m)^[ \\t]+|^[ \\t]*\\i|^[ \\t]*\\j|\\j|a|[ \\n]", "m", "", "a\n  a\n  a\n    a\n", { 5, 6, 2, 5, 6, 1, 5, 6, 2, 5, 6, 4, 4 } },
+  { "(?m)^[ \\t]+|[ \\t]*\\i|[ \\t]*\\j|a|[ \\n]", "m", "", "a\n  a\n  a\n    a\na\n", { 4, 5, 2, 4, 5, 1, 4, 5, 2, 4, 5, 3, 3, 4, 5 } },
+  { "(?m)^[ \\t]+|[ \\t]*\\i|[ \\t]*\\j|a|[ \\n]", "m", "", "a\n  a\n  a\n    a\n  a\na\n", { 4, 5, 2, 4, 5, 1, 4, 5, 2, 4, 5, 3, 4, 5, 3, 4, 5 } },
+  { "(?m)^[ \\t]+|[ \\t]*\\i|[ \\t]*\\j|a|[ \\n]", "m", "T=2", "a\n  a\n\ta\n    a\n\ta\na\n", { 4, 5, 2, 4, 5, 1, 4, 5, 2, 4, 5, 3, 4, 5, 3, 4, 5 } },
+  { "(?m)^[ \\t]+|[ \\t]*\\i|[ \\t]*\\j|a|(?^[ \\n])", "m", "", "a\n\n  a\n\n  a\n\n    a\n\n  a\na\n", { 4, 2, 4, 1, 4, 2, 4, 3, 4, 3, 4 } },
+  { "(?m)[ \\t]*\\i|^[ \\t]+|[ \\t]*\\j|a|(?^[ \\n])", "m", "", "a\n  a\n  a\n    a\n  a\na\n", { 4, 1, 4, 2, 4, 1, 4, 3, 4, 3, 4 } },
+  // { "(?m)[ \\t]*\\ia|^[ \\t]+|[ \\t]*\\ja|[ \\t]*\\j|a|[ \\n]", "m", "", "a\n  a\na\n", { 5, 6, 1, 6, 3, 6 } }, \\ \i and \j must be at pattern ends (like $)
+  { "(?m)_*\\i|^_+|_*\\j|\\w|(?^[ \\n])", "m", "", "a\n__a\n__a\n____a\n__a\na\n", { 4, 1, 4, 2, 4, 1, 4, 3, 4, 3, 4 } },
+  { "(?m)[ \\t]*\\i|^[ \\t]+|[ \\t]*\\j|a|[ \\n]|(?^^[ \\t]*#\n)", "m", "", "a\n  a\n    #\n  a\n    a\n#\n  a\na\n", { 4, 5, 1, 4, 5, 2, 4, 5, 1, 4, 5, 3, 4, 5, 3, 4, 5 } },
   { "[ \\t]*\\i|^[ \\t]+|[ \\t]*\\j|a|[ \\n]|(?^\\\\\n[ \\t]+)", "m", "", "a\n  a\n  a\\\n      a a\n    a\n  a\na\n", { 4, 5, 1, 4, 5, 2, 4, 4, 5, 4, 5, 1, 4, 5, 3, 4, 5, 3, 4, 5 } },
-  // { "[ \\t]*\\i|^[ \\t]+|[ \\t]*\\j|a|[ \\n]|(?^\\\\\n[ \\t]*)", "m", "", "a\n  a\n  a\\\na\n    a\n  a\na\n", { 4, 5, 1, 4, 5, 2, 4, 4, 5, 1, 4, 5, 2, 3, 4, 5, 3, 4, 5 } }, // TODO line continuation stopping at left margin triggers dedent
+  // { "(?m)[ \\t]*\\i|^[ \\t]+|[ \\t]*\\j|a|[ \\n]|(?^\\\\\n[ \\t]*)", "m", "", "a\n  a\n  a\\\na\n    a\n  a\na\n", { 4, 5, 1, 4, 5, 2, 4, 4, 5, 1, 4, 5, 2, 3, 4, 5, 3, 4, 5 } }, // TODO line continuation stopping at left margin triggers dedent
   // Unicode or UTF-8 (TODO: requires a flag and changes to the parser so that UTF-8 multibyte chars are parsed as ONE char)
   { "(©)+", "", "", "©", { 1 } },
   { NULL, NULL, NULL, NULL, { } }

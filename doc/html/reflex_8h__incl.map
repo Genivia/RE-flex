@@ -6,6 +6,6 @@
 <area shape="rect" id="node12" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="738,80,848,107"/>
 <area shape="rect" id="node13" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="686,155,777,181"/>
 <area shape="rect" id="node15" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="801,155,908,181"/>
-<area shape="rect" id="node17" href="$ranges_8h.html" title="RE/flex range closed and open&#45;ended set containers. " alt="" coords="932,155,1043,181"/>
+<area shape="rect" id="node17" href="$ranges_8h.html" title="RE/flex range sets as closed and open&#45;ended set containers. " alt="" coords="932,155,1043,181"/>
 <area shape="rect" id="node20" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="1119,155,1222,181"/>
 </map>

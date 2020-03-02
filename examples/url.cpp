@@ -1,12 +1,23 @@
 // Split a URL into parts: host, path, list of query key-value pairs, and #-anchor
 // This example requires Boost.Regex
-// For example:
-//   url https://www.genivia.com/doc/reflex/html/index.html#regex
+// To use PCRE2, uncomment this line and link with -lpcre2-8 instead of -lboost_regex:
+// #define USE_PCRE2
+//
+// Example:
+//   url https://www.genivia.com:443/doc/reflex/html/index.html#regex
 //   host: www.genivia.com
+//   port: 443
 //   path: doc/reflex/html/index.html
 //   anchor: regex
 
+#ifdef USE_PCRE2
+#include <reflex/pcre2matcher.h>
+#define MATCHER PCRE2Matcher
+#else
 #include <reflex/boostmatcher.h>
+#define MATCHER BoostMatcher
+#endif
+
 #include <iostream>
 
 using namespace reflex;
@@ -19,8 +30,8 @@ int main(int argc, char **argv)
     exit(EXIT_FAILURE);
   }
 
-  // create a Boost.Regex matcher with a regex and string input argv[1]
-  BoostMatcher re("https?://([^:/]*):?(\\d*)/?([^?#]*)", argv[1]);
+  // create a matcher with a regex and string input argv[1]
+  MATCHER re("https?://([^:/]*):?(\\d*)/?([^?#]*)", argv[1]);
 
   // scan the input from the beginning
   if (re.scan())

@@ -2,8 +2,8 @@
 
 The examples with Bison require the installation of [Bison][bison-url].
 
-RE/flex scanner examples using Flex lexer syntax
-------------------------------------------------
+RE/flex scanner examples using Flex lexer functions
+---------------------------------------------------
 
 - `json.l` JSON parser and writer
 - `ctokens.l` and `cdefs.l` a C/C++ tokenizer
@@ -32,8 +32,8 @@ RE/flex scanner examples using Flex lexer syntax
 - `flexexample10.l` example from the Flex documentation to use multiple buffers
 - `reflexexample11.lxx` example reentrant scanner with Bison 3.2 C++ bison-complete and bison-locations
 
-RE/flex scanner examples using RE/flex lexer syntax
----------------------------------------------------
+RE/flex scanner examples using RE/flex lexer methods
+----------------------------------------------------
 
 - `braille.l` a braille translator, inspired by the re2c example but expanded and fixed to make it useable
 - `ptokens.l` and `pdefs.l` a Python tokenizer
@@ -77,7 +77,7 @@ Regex pattern matching with the RE/flex pattern matching library
 - `cvt2utf` demonstrates `reflex::Input` UTF-8 normalization to convert files to UTF-8/16/32
 - `fastsearch.cpp` demonstrates super fast search with fixed regex patterns, faster than GNU grep
 - `ugrep.cpp` [universal grep](https://github.com/Genivia/ugrep) to search files fast, uses the RE/flex regex engine
-- `url.cpp` capture domain, path, and query keys from URLs (requires Boost.Regex for captures)
+- `url.cpp` capture domain, path, and query keys from URLs (requires Boost.Regex or PCRE2 libraries)
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

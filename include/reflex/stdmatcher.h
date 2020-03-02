@@ -1,5 +1,5 @@
 /******************************************************************************\
-* Copyright (c) 2017, Robert van Engelen, Genivia Inc. All rights reserved.    *
+* Copyright (c) 2016, Robert van Engelen, Genivia Inc. All rights reserved.    *
 *                                                                              *
 * Redistribution and use in source and binary forms, with or without           *
 * modification, are permitted provided that the following conditions are met:  *
@@ -30,7 +30,7 @@
 @file      stdmatcher.h
 @brief     C++11 std::regex-based matcher engines for pattern matching
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2016-2020, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -91,6 +91,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
   StdMatcher& operator=(const StdMatcher& matcher) ///< matcher to copy
   {
     PatternMatcher<std::regex>::operator=(matcher);
+    flg_ = matcher.flg_;
     return *this;
   }
   /// Polymorphic cloning.
@@ -157,7 +158,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
   }
  protected:
   /// The match method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH, implemented with std::regex.
-  virtual size_t match(Method method)
+  virtual size_t match(Method method) ///< match method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH
     /// @returns nonzero when input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
   {
     DBGLOG("BEGIN StdMatcher::match(%d)", method);
@@ -391,6 +392,22 @@ class StdEcmaMatcher : public StdMatcher {
     ASSERT(!(pattern.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
     own_ = false;
   }
+  /// Copy constructor.
+  StdEcmaMatcher(const StdEcmaMatcher& matcher) ///< matcher to copy
+    :
+      StdMatcher(matcher)
+  { }
+  /// Assign a matcher.
+  StdEcmaMatcher& operator=(const StdEcmaMatcher& matcher) ///< matcher to copy
+  {
+    StdMatcher::operator=(matcher);
+    return *this;
+  }
+  /// Polymorphic cloning.
+  virtual StdEcmaMatcher *clone()
+  {
+    return new StdEcmaMatcher(*this);
+  }
   using StdMatcher::pattern;
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a POSIX std::regex is given.
   virtual PatternMatcher& pattern(const Pattern& pattern) ///< std::regex for this matcher
@@ -471,6 +488,22 @@ class StdPosixMatcher : public StdMatcher {
   {
     ASSERT(pattern.flags() & std::regex::awk);
     own_ = false;
+  }
+  /// Copy constructor.
+  StdPosixMatcher(const StdPosixMatcher& matcher) ///< matcher to copy
+    :
+      StdMatcher(matcher)
+  { }
+  /// Assign a matcher.
+  StdPosixMatcher& operator=(const StdPosixMatcher& matcher) ///< matcher to copy
+  {
+    StdMatcher::operator=(matcher);
+    return *this;
+  }
+  /// Polymorphic cloning.
+  virtual StdPosixMatcher *clone()
+  {
+    return new StdPosixMatcher(*this);
   }
   using StdMatcher::pattern;
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a non-POSIX ERE std::regex is given.

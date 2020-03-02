@@ -107,13 +107,13 @@ Test tests[] = {
   { "(?s).", "", "", "a\n", { 1, 1 } },
   { "(?s:.)", "", "", "a\n", { 1, 1 } },
   { "(?s).", "", "", "a\n", { 1, 1 } },
-  // Anchors \A, \Z, ^, and $ with pattern option m (multiline, which is the default)
+  // Anchors \A, \Z, ^, and $
   { "\\Aa\\Z", "", "", "a", { 1 } },
   { "^a$", "", "", "a", { 1 } },
-  { "^a$|\\n", "m", "", "a\na", { 1, 2, 1 } },
-  { "^a|a$|a|\\n", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
+  { "(?m)^a$|\\n", "m", "", "a\na", { 1, 2, 1 } },
+  { "(?m)^a|a$|a|\\n", "m", "", "aa\naaa", { 1, 2, 4, 1, 3, 2 } },
 #ifndef INTERACTIVE
-  { "\\Aa\\Z|\\Aa|a\\Z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },  // boost has a bug when interactive() blk=1
+  { "(?m)\\Aa\\Z|\\Aa|a\\Z|^a$|^a|a$|a|^ab$|^ab|ab$|ab|\\n", "m", "", "a\na\naa\naaa\nab\nabab\nababab\na", { 2, 12, 4, 12, 5, 6, 12, 5, 7, 6, 12, 8, 12, 9, 10, 12, 9, 11, 10, 12, 3 } },  // boost has a partial match bug when interactive() blk=1
 #endif
   // Optional X?
   { "a?z", "", "", "azz", { 1, 1 } },
@@ -134,7 +134,7 @@ Test tests[] = {
   { "(a|b)?\?(a|b)?\?aa", "", "", "baaaabbaa", { 1, 1, 1 } },
   { "(a|b)?\?(a|b)?\?(a|b)?\?aaa", "", "", "baaaaaa", { 1, 1 } },
   { "a?\?b?a", "", "", "aba", { 1, 1 } }, // 'a' 'ba'
-  { "a?\?b?b", "", "", "abb", { 1, 1 } }, // 'ab' 'b'
+  { "a?\?b?b", "", "", "abb", { 1 } }, // 'abb'
   // Lazy closure X*
   { "a*?a", "", "", "aaaa", { 1, 1, 1, 1 } },
   { "a*?|a|b", "", "", "aab", { 2, 2, 3 } },
@@ -156,9 +156,9 @@ Test tests[] = {
   { "(ab|cd)(ab|cd)*?ab|ab", "", "", "abababcdabab", { 1, 1, 2 } },
   { "(ab)(ab)*?a|b", "", "", "abababa", { 1, 2, 1 } },
   { "a?(a|b)*?a", "", "", "aaababa", { 1, 1, 1 } },
-  { "^(a|b)*?a", "", "", "bba", { 1 } },
-  { "(a|b)*?a$", "", "", "bba", { 1 } },
-  { "^(a|b)*?|b", "", "", "ab", { 1, 2 } },
+  { "(?m)^(a|b)*?a", "m", "", "bba", { 1 } },
+  { "(?m)(a|b)*?a$", "m", "", "bba", { 1 } },
+  { "(?m)^(a|b)*?|b", "m", "", "ab", { 1, 2 } },
   // Lazy positive closure X+
   { "a+?a", "", "", "aaaa", { 1, 1 } },
   { "(a|b)+?", "", "", "ab", { 1, 1 } },
@@ -169,8 +169,8 @@ Test tests[] = {
   { "(ab)+?ac", "", "", "ababac", { 1 } },
   { "ABB*?|ab+?|A|a", "", "", "ABab", { 1, 2 } },
   { "(a|b)+?a|a", "", "", "bbaaa", { 1, 1 } },
-  { "^(a|b)+?a", "", "", "abba", { 1 } },
-  { "(a|b)+?a$", "", "", "abba", { 1 } },
+  { "(?m)^(a|b)+?a", "m", "", "abba", { 1 } },
+  { "(?m)(a|b)+?a$", "m", "", "abba", { 1 } },
   // Lazy iterations {n,m}
   { "(a|b){0,3}?aaa", "", "", "baaaaaa", { 1, 1 } },
   { "(a|b){1,3}?aaa", "", "", "baaaaaaa", { 1, 1 } },
@@ -188,23 +188,22 @@ Test tests[] = {
   { "[ --]", "", "", " +-", { 1, 1, 1 } },
   { "[^a-z]", "", "", "A", { 1 } },
   { "[[:alpha:]]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } },
-  // { "[\\p{Alpha}]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } }, // no \p class support
+  { "[\\p{Alpha}]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } },
   { "[][]", "", "", "[]", { 1, 1 } },
   // Lookahead
   { "a(?=bc)|ab(?=d)|bc|d", "", "", "abcdabd", { 1, 3, 4, 2, 4 } },
   // { "[ab]+(?=ab)|-|ab", "", "", "aaab-bbab", { 1, 3, 2, 1, 3 } }, // has trailing context (undefined as per POSIX)
-  { "a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
+  { "(?m)a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
 #ifndef INTERACTIVE
-  { "a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } }, // boost has a bug when interactive() blk=1
+  { "(?m)a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } }, // boost has a partial match bug when interactive() blk=1
 #endif
-  { "^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
-  { "a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
-  { "^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
-  // { "abc(?=\\w+|(?^def))|xyzabcdef", "", "", "abcxyzabcdef", { 1, 2 } }, // TODO check
+  { "(?m)^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
+  { "(?m)a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
+  { "(?m)^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
   // Word boundaries \<, \>, \b, and \B
   { "\\<a\\>|\\<a|a\\>|a|-", "", "", "a-aaa", { 1, 5, 2, 4, 3 } },
 #ifndef INTERACTIVE
-  { "\\<.*\\>", "", "", "abc def", { 1 } }, // boost has a bug when interactive() blk=1
+  { "\\<.*\\>", "", "", "abc def", { 1 } }, // boost has a partial match bug when interactive() blk=1
 #endif
   { "\\<.*\\>|-", "", "", "abc-", { 1, 2 } },
   { "\\b.*\\b|-", "", "", "abc-", { 1, 2 } },
@@ -216,18 +215,18 @@ Test tests[] = {
   { "\\<(-|a)(-|a)\\>| ", "", "", "aa aa", { 1, 2, 1 } },
   { "\\b(-|a)(-|a)\\b| ", "", "", "aa aa", { 1, 2, 1 } },
 #ifndef INTERACTIVE
-  { "\\B(-|a)(-|a)\\B|b|#", "", "", "baab#--#", { 2, 1, 2, 3, 1, 3 } }, // boost has a bug when interactive() blk=1
+  { "\\B(-|a)(-|a)\\B|b|#", "", "", "baab#--#", { 2, 1, 2, 3, 1, 3 } }, // boost has a partial match bug when interactive() blk=1
 #endif
   { "-\\b(-|a)(-|a)\\b", "", "", "-aa", { 1 } },
   { "a\\b(-|a)(-|a)\\b", "", "", "a-a", { 1 } },
 #ifndef INTERACTIVE
-  { "a?\\>(-|a)(-|a)\\b| ", "", "", "a-a-a", { 1, 1 } }, // boost has a bug when interactive() blk=1 & does not check \> at start, so accepts more liberally
+  { "a?\\>(-|a)(-|a)\\b| ", "", "", "a-a-a", { 1, 1 } }, // boost has a partial match bug when interactive() blk=1 & does not check \> at start, so accepts more liberally
 #endif
   { "\\b(-|a)(-|a)\\bz?| ", "", "", "aa a-z", { 1, 2, 1 } },
   { "(-|a)(-|a)\\bz?| ", "", "", "aa a-z", { 1, 2, 1 } },
   { "a?\\b(-|a)(-|a)\\b| ", "", "", "a-a", { 1 } },
 #ifndef INTERACTIVE
-  { "-(?=\\<a\\>)|-|a|b", "", "", "-a-ab", { 1, 3, 2, 3, 4 } }, // boost has a bug when interactive() blk=1
+  { "-(?=\\<a\\>)|-|a|b", "", "", "-a-ab", { 1, 3, 2, 3, 4 } }, // boost has a partial match bug when interactive() blk=1
 #endif
   // Unicode
   { "(©)+", "", "", "©", { 1 } },
@@ -242,7 +241,7 @@ int main()
     std::string regex;
     try
     {
-      regex = reflex::BoostPosixMatcher::convert(test->pattern, reflex::convert_flag::recap);
+      regex = BoostPosixMatcher::convert(test->pattern, convert_flag::recap);
     }
     catch (const regex_error& e)
     {

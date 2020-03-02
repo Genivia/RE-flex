@@ -4,7 +4,7 @@
 [![build status][travis-image]][travis-url] [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url] [![CodeProject][codeproject-image]][codeproject-url]
 
 The regex-centric, fast lexical analyzer generator for C++ with full Unicode
-support.  Flex reimagined: fast, flexible, adds Boost 💪
+support.  Flex reimagined: fast, flexible, adds PCRE2 and Boost 💪
 
 [RE/flex][reflex-url] is as fast or faster than Flex while providing a wealth
 of new features.  RE/flex is also much faster than regex libraries such as
@@ -18,13 +18,15 @@ representative C source code file into 244 tokens takes only 8 microseconds:
 <tr><td>flex -+ --full</td><td>Flex 2.5.35</td><td>17</td></tr>
 <tr><td>reflex --full</td><td>RE/flex 1.5.6</td><td>18</td></tr>
 <tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex 1.66.0</td><td>40</td></tr>
+<tr><td>pcre2_jit_match()</td><td>PCRE2 (jit) 10.32</td><td>60</td></tr>
 <tr><td>hs_compile_multi(), hs_scan()</td><td>Hyperscan 5.1.0</td><td>209</td></tr>
 <tr><td>reflex -m=boost-perl</td><td>Boost.Regex 1.66.0</td><td>230</td></tr>
-<tr><td>pcre2_match()</td><td>PCRE2 (pre-compiled) 10.30</td><td>318</td></tr>
+<tr><td>pcre2_match()</td><td>PCRE2 10.32</td><td>318</td></tr>
 <tr><td>RE2::Consume()</td><td>RE2 (pre-compiled) 2018-04-01</td><td>417</td></tr>
 <tr><td>reflex -m=boost</td><td>Boost.Regex POSIX 1.66.0</td><td>450</td></tr>
 <tr><td>RE2::Consume()</td><td>RE2 POSIX (pre-compiled) 2018-04-01</td><td>1226</td></tr>
 <tr><td>flex -+</td><td>Flex 2.5.35</td><td>3968</td></tr>
+<tr><td>pcre2_dfa_match()</td><td>PCRE2 (dfa) 10.32</td><td>4094</td></tr>
 <tr><td>regcomp(), regexec()</td><td>GNU C POSIX.2 regex</td><td>5800</td></tr>
 <tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>5979</td></tr>
 </table>
@@ -57,7 +59,7 @@ Features
 - Full Unicode support with Unicode property matching `\p{C}` and C++11, Java,
   C#, and Python Unicode properties for identifier name matching.
 - Indent/nodent/dedent anchors to match text with indentation, including
-  `\t` (tab) adjustments.
+  custom `\t` (tab) widths.
 - Lazy quantifiers, so hacks are no longer needed to work around greedy
   repetitions in Flex.
 - Word boundary anchors.
@@ -65,7 +67,7 @@ Features
 - `%class` and `%init` to customize the generated Lexer classes.
 - `%include` to modularize lexer specifications.
 - Includes an extensible hierarchy of pattern matcher engines, with a choice of
-  regex engines, including the RE/flex regex engine and Boost.Regex.
+  regex engines, including the RE/flex regex engine, PCRE2, and Boost.Regex.
 - Generates clean source code that defines an thread-safe (reentrant) C++ Lexer
   class derived from an abstract lexer class template, parameterized by matcher
   class type.
@@ -81,14 +83,13 @@ Features
   distinguish the generated files.
 - Generates Graphviz files to visualize FSMs with the Graphviz dot tool.
 - Conversion of regex expressions, for regex engines that lack regex features.
-- The RE/flex regex library makes C++11 std::regex and Boost.Regex much easier
-  to use in plain C++ code for pattern matching on (wide) strings, files, and
-  streams.
+- The RE/flex regex library makes C++11 std::regex, PCRE2, and Boost.Regex much
+  easier to use for pattern matching on (wide) strings, files, and streams.
 
 The RE/flex software is fully self-contained.  No other libraries are required.
-Boost.Regex is optional to use as a regex engine.
+PCRE2 and Boost.Regex are optional to use as regex engines.
 
-The RE/flex repo includes tokenizers for Java, Python, and C/C++.
+The RE/flex repo includes tokenizers for Java, Python, C/C++, JSON, XML, YAML.
 
 
 Installation
@@ -202,17 +203,20 @@ work around this problem, run:
 
 ### Optional libraries to install
 
+- To use PCRE2 as a regex engine with the RE/flex library and scanner
+  generator, install [PCRE2][pcre-url] and link your code with `-lpcre2-8`.
+
 - To use Boost.Regex as a regex engine with the RE/flex library and scanner
-  generator, install [Boost][boost-url] and link your code against
-  `libboost_regex.a`
+  generator, install [Boost][boost-url] and link your code with
+  `-lboost_regex` or `-lboost_regex-mt`.
 
 - To visualize the FSM graphs generated with **reflex** option `--graphs-file`,
   install [Graphviz dot][dot-url].
 
-### Improved Vim syntax highlighting for Flex and RE/flex
+### Improved Vim syntax highlighting
 
-Copy the `lex.vim` file to `~/.vim/syntax/lex.vim` to enjoy improved syntax
-highlighting for Flex and RE/flex.
+Copy the `lex.vim` file to `~/.vim/syntax/` to enjoy improved syntax
+highlighting for both Flex and RE/flex.
 
 
 Usage
@@ -221,7 +225,7 @@ Usage
 There are two ways you can use this project:
 
 1. as a scanner generator for C++, similar to Flex;
-2. as an extensible regex matching library for C++.
+2. as a flexible regex matching API for C++.
 
 For the first option, simply build the **reflex** tool and run it on the
 command line on a lexer specification:
@@ -240,19 +244,21 @@ visualized with the [Graphviz dot][dot-url] tool:
 Several examples are included to get you started.  See the [manual][manual-url]
 for more details.
 
-For the second option, simply use the new RE/flex matcher classes to start
+For the second option, simply use the RE/flex matcher API classes to start
 pattern matching on strings, wide strings, files, and streams.
 
 You can select matchers that are based on different regex engines:
 
 - RE/flex regex: `#include <reflex/matcher.h>` and use `reflex::Matcher`;
+- PCRE2: `#include <reflex/pcre2matcher.h>` and use `reflex::PCRE2Matcher` or
+  `reflex::PCRE2UTFMatcher`.
 - Boost.Regex: `#include <reflex/boostmatcher.h>` and use
   `reflex::BoostMatcher` or `reflex::BoostPosixMatcher`;
 - C++11 std::regex: `#include <reflex/stdmatcher.h>` and use
   `reflex::StdMatcher` or `reflex::StdPosixMatcher`.
 
 Each matcher may differ in regex syntax features (see the full documentation),
-but they have the same methods and iterators:
+but they all share the same methods and iterators, such as:
 
 - `matches()` returns nonzero if the input matches the specified pattern;
 - `find()` search input and returns nonzero if a match was found;
@@ -262,7 +268,7 @@ but they have the same methods and iterators:
 - `scan.begin()`...`scan.end()` tokenizer iterator;
 - `split.begin()`...`split.end()` splitter iterator.
 
-For example:
+For example, using Boost.Regex (alternatively use PCRE2 `reflex::PCRE2Matcher`):
 
 ```{.cpp}
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
@@ -355,6 +361,7 @@ escapes such as `\X`, and `(?x)` mode modifiers, to a regex string that the
 underlying regex library understands and will be able to use:
 
 - `std::string reflex::Matcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+- `std::string reflex::PCRE2Matcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
 - `std::string reflex::BoostMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
 - `std::string reflex::StdMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
 
@@ -490,6 +497,7 @@ Changelog
 - Dec 28, 2019: 1.5.6 added new option `--noindent` to speed up pattern matching and lexical analysis by disabling indentation tracking in the input (also disables anchors `\i`, `\j`, and `\k`); speed improvements.
 - Jan 19, 2020: 1.5.7 expanded file encoding formats to include ISO-8859-2 to 16, MacRoman, KOI8; fixed a bug in `line()` and `span()`.
 - Feb  3, 2020: 1.5.8 added `wunput()` method; added `lex.vim` improved Flex and RE/flex Vim syntax highlighting; added `yaml.l` example; fixed `--freespace` with `--unicode` when bracket lists contain a `#`; character class operators `{+}`, `{-}`, `{&}` now accept defined names as first operands and inverted character classes; indent anchor `\k` now matches only when indent level is changed as documented.
+- Mar  2, 2020: 1.6.0 added PCRE2 regex matcher classes and updated reflex option `--matcher=pcre2-perl`; optimized RE/flex matcher `find()` with AVX/SSE2/NEON/AArch64; updated and improved regex converters.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
@@ -500,6 +508,7 @@ Changelog
 [dot-url]: http://www.graphviz.org
 [FSM-url]: https://www.genivia.com/images/reflex-FSM.png
 [boost-url]: http://www.boost.org
+[pcre-url]: http://www.pcre.org
 [travis-image]: https://travis-ci.org/Genivia/RE-flex.svg?branch=master
 [travis-url]: https://travis-ci.org/Genivia/RE-flex
 [lgtm-image]: https://img.shields.io/lgtm/grade/cpp/g/Genivia/RE-flex.svg?logo=lgtm&logoWidth=18

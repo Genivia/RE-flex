@@ -1,0 +1,5 @@
+<map id="reflex::PatternMatcher&lt; std::string &gt;" name="reflex::PatternMatcher&lt; std::string &gt;">
+<area shape="rect" id="node3" href="$classreflex_1_1_p_c_r_e2_matcher.html" title="PCRE2 JIT&#45;optimized matcher engine class implements reflex::PatternMatcher pattern matching interface..." alt="" coords="18,169,173,196"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="16,5,175,32"/>
+<area shape="rect" id="node4" href="$classreflex_1_1_p_c_r_e2_u_t_f_matcher.html" title="PCRE2 JIT&#45;optimized native PCRE2_UTF+PCRE2_UCP matcher engine class, extends PCRE2Matcher. " alt="" coords="5,244,185,271"/>
+</map>

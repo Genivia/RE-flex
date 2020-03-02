@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo
 echo "Cleaning reflex"
 cd lib;      make -f Make distclean; cd -

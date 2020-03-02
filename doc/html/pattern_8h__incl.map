@@ -3,7 +3,7 @@
 <area shape="rect" id="node5" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="705,80,812,107"/>
 <area shape="rect" id="node7" href="$error_8h.html" title="RE/flex regex errors. " alt="" coords="583,80,680,107"/>
 <area shape="rect" id="node10" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="306,80,405,107"/>
-<area shape="rect" id="node14" href="$ranges_8h.html" title="RE/flex range closed and open&#45;ended set containers. " alt="" coords="836,80,947,107"/>
+<area shape="rect" id="node14" href="$ranges_8h.html" title="RE/flex range sets as closed and open&#45;ended set containers. " alt="" coords="836,80,947,107"/>
 <area shape="rect" id="node17" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="1023,80,1126,107"/>
 <area shape="rect" id="node11" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="180,155,272,181"/>
 </map>

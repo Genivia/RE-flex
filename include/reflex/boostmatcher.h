@@ -30,7 +30,7 @@
 @file      boostmatcher.h
 @brief     Boost::regex-based matcher engines for pattern matching
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2017, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2016-2020, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -50,7 +50,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   template<typename T>
   static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
   {
-    return reflex::convert(regex, "imsx!#<=:abcdefghlnprstuvwxzABDHLPQSUWZ0123456789<>?+", flags);
+    return reflex::convert(regex, "imsx!#<=:abcdefghlnrstuvwxzABDHLNQSUWZ0123456789<>?+", flags);
   }
   /// Default constructor.
   BoostMatcher()
@@ -94,6 +94,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   BoostMatcher& operator=(const BoostMatcher& matcher) ///< matcher to copy
   {
     PatternMatcher<boost::regex>::operator=(matcher);
+    flg_ = matcher.flg_;
     return *this;
   }
   /// Polymorphic cloning.
@@ -158,7 +159,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
   }
  protected:
   /// The match method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH, implemented with boost::regex.
-  virtual size_t match(Method method)
+  virtual size_t match(Method method) ///< match method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH
     /// @returns nonzero when input matched the pattern using method Const::SCAN, Const::FIND, Const::SPLIT, or Const::MATCH.
   {
     DBGLOG("BEGIN BoostMatcher::match(%d)", method);
@@ -346,8 +347,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
 
 /// Boost matcher engine class, extends reflex::BoostMatcher for Boost POSIX regex matching.
 /**
-Boost POSIX regex matching enables Boost match flags `match_posix` and
-`match_not_dot_newline`. Lazy quantifiers are not supported by this matcher
+Boost POSIX regex matching enables Boost match flags `match_posix` and `match_not_dot_newline`. Lazy quantifiers are not supported by this matcher
 engine.
 */
 class BoostPosixMatcher : public BoostMatcher {
@@ -356,7 +356,7 @@ class BoostPosixMatcher : public BoostMatcher {
   template<typename T>
   static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
   {
-    return reflex::convert(regex, "imsx!#<=:abcdefghlnprstuvwxzABDHLPQSUWZ0<>", flags);
+    return reflex::convert(regex, "imsx!#<=:abcdefghlnrstuvwxzABDHLNQSUWZ0<>", flags);
   }
   /// Default constructor.
   BoostPosixMatcher() : BoostMatcher()
@@ -383,12 +383,27 @@ class BoostPosixMatcher : public BoostMatcher {
   {
     flg_ |= boost::regex_constants::match_posix;
   }
+  /// Copy constructor.
+  BoostPosixMatcher(const BoostPosixMatcher& matcher) ///< matcher to copy
+    :
+      BoostMatcher(matcher)
+  { }
+  /// Assign a matcher.
+  BoostPosixMatcher& operator=(const BoostPosixMatcher& matcher) ///< matcher to copy
+  {
+    BoostMatcher::operator=(matcher);
+    return *this;
+  }
+  /// Polymorphic cloning.
+  virtual BoostPosixMatcher *clone()
+  {
+    return new BoostPosixMatcher(*this);
+  }
 };
 
 /// Boost matcher engine class, extends reflex::BoostMatcher for Boost Perl regex matching.
 /**
-Boost Perl regex matching enables Boost match flag `match_perl` and
-`match_not_dot_newline`.
+Boost Perl regex matching enables Boost match flag `match_perl` and `match_not_dot_newline`.
 */
 class BoostPerlMatcher : public BoostMatcher {
  public:
@@ -416,6 +431,22 @@ class BoostPerlMatcher : public BoostMatcher {
       BoostMatcher(pattern, input, opt)
   {
     flg_ |= boost::regex_constants::match_perl;
+  }
+  /// Copy constructor.
+  BoostPerlMatcher(const BoostPerlMatcher& matcher) ///< matcher to copy
+    :
+      BoostMatcher(matcher)
+  { }
+  /// Assign a matcher.
+  BoostPerlMatcher& operator=(const BoostPerlMatcher& matcher) ///< matcher to copy
+  {
+    BoostMatcher::operator=(matcher);
+    return *this;
+  }
+  /// Polymorphic cloning.
+  virtual BoostPerlMatcher *clone()
+  {
+    return new BoostPerlMatcher(*this);
   }
 };
 
