@@ -200,19 +200,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
       {
         if (end_ + blk_ + 1 >= max_ && grow()) // make sure we have enough storage to read input
           itr_ = fin_; // buffer shifting/growing invalidates iterator
-        while (true)
-        {
-          end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
-          if (pos_ < end_)
-            break;
-          if (itr_ != fin_ && (*itr_)[0].matched && cur_ != pos_)
-            break; // OK if iterator is still valid and we have a non-empty match
-          if (!wrap())
-          {
-            eof_ = true;
-            break;
-          }
-        }
+        (void)peek_more();
         DBGLOGN("Got more input pos = %zu end = %zu max = %zu", pos_, end_, max_);
       }
       if (pos_ == end_) // if pos_ is hitting the end_ then
@@ -251,7 +239,7 @@ class StdMatcher : public PatternMatcher<std::regex> {
           DBGLOG("END StdMatcher::match()");
           return cap_;
         }
-        if (method == Const::FIND && opt_.N)
+        if (method == Const::FIND && opt_.N && eof_ && (itr_ == fin_ || (*itr_)[0].first == buf_ + end_))
         {
           DBGLOGN("No match, pos = %zu", pos_);
           DBGLOG("END StdMatcher::match()");
@@ -392,22 +380,6 @@ class StdEcmaMatcher : public StdMatcher {
     ASSERT(!(pattern.flags() & (std::regex::basic | std::regex::extended | std::regex::awk)));
     own_ = false;
   }
-  /// Copy constructor.
-  StdEcmaMatcher(const StdEcmaMatcher& matcher) ///< matcher to copy
-    :
-      StdMatcher(matcher)
-  { }
-  /// Assign a matcher.
-  StdEcmaMatcher& operator=(const StdEcmaMatcher& matcher) ///< matcher to copy
-  {
-    StdMatcher::operator=(matcher);
-    return *this;
-  }
-  /// Polymorphic cloning.
-  virtual StdEcmaMatcher *clone()
-  {
-    return new StdEcmaMatcher(*this);
-  }
   using StdMatcher::pattern;
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a POSIX std::regex is given.
   virtual PatternMatcher& pattern(const Pattern& pattern) ///< std::regex for this matcher
@@ -488,22 +460,6 @@ class StdPosixMatcher : public StdMatcher {
   {
     ASSERT(pattern.flags() & std::regex::awk);
     own_ = false;
-  }
-  /// Copy constructor.
-  StdPosixMatcher(const StdPosixMatcher& matcher) ///< matcher to copy
-    :
-      StdMatcher(matcher)
-  { }
-  /// Assign a matcher.
-  StdPosixMatcher& operator=(const StdPosixMatcher& matcher) ///< matcher to copy
-  {
-    StdMatcher::operator=(matcher);
-    return *this;
-  }
-  /// Polymorphic cloning.
-  virtual StdPosixMatcher *clone()
-  {
-    return new StdPosixMatcher(*this);
   }
   using StdMatcher::pattern;
   /// Set the pattern to use with this matcher (the given pattern is shared and must be persistent), fails when a non-POSIX ERE std::regex is given.

@@ -246,7 +246,7 @@ static const Reflex::Library library_table[] = {
   {
     "pcre2_perl",
     "reflex/pcre2matcher.h",
-    "boost::regex",
+    "std::string",
     "reflex::PCRE2Matcher",
     "imsx!#<=:abcdefghlnrstuvwxzABDGHKLNQRSUWXZ0?+.",
   },

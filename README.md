@@ -26,7 +26,7 @@ representative C source code file into 244 tokens takes only 8 microseconds:
 <tr><td>reflex -m=boost</td><td>Boost.Regex POSIX 1.66.0</td><td>450</td></tr>
 <tr><td>RE2::Consume()</td><td>RE2 POSIX (pre-compiled) 2018-04-01</td><td>1226</td></tr>
 <tr><td>flex -+</td><td>Flex 2.5.35</td><td>3968</td></tr>
-<tr><td>pcre2_dfa_match()</td><td>PCRE2 (dfa) 10.32</td><td>4094</td></tr>
+<tr><td>pcre2_dfa_match()</td><td>PCRE2 POSIX (dfa) 10.32</td><td>4094</td></tr>
 <tr><td>regcomp(), regexec()</td><td>GNU C POSIX.2 regex</td><td>5800</td></tr>
 <tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>5979</td></tr>
 </table>
@@ -400,7 +400,7 @@ License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2015-2019, All rights reserved.
+Copyright (c) 2016-2020, All rights reserved.
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.
@@ -498,6 +498,7 @@ Changelog
 - Jan 19, 2020: 1.5.7 expanded file encoding formats to include ISO-8859-2 to 16, MacRoman, KOI8; fixed a bug in `line()` and `span()`.
 - Feb  3, 2020: 1.5.8 added `wunput()` method; added `lex.vim` improved Flex and RE/flex Vim syntax highlighting; added `yaml.l` example; fixed `--freespace` with `--unicode` when bracket lists contain a `#`; character class operators `{+}`, `{-}`, `{&}` now accept defined names as first operands and inverted character classes; indent anchor `\k` now matches only when indent level is changed as documented.
 - Mar  2, 2020: 1.6.0 added PCRE2 regex matcher classes and updated reflex option `--matcher=pcre2-perl`; optimized RE/flex matcher `find()` with AVX/SSE2/NEON/AArch64; updated and improved regex converters.
+- Mar  3, 2020: 1.6.1 fixed missing PCRE2 regex type `std::string` in generated scanners.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

@@ -8784,8 +8784,9 @@ RE/flex applications:
   <i>`reflex/unicode`</i> directories of the RE/flex download package.  The
   header files are located in the <i>`reflex/include/reflex`</i> directory.
 
-- When Boost.Regex is used as a matcher engine, also link `libboost_regex` or
-`libboost_regex-mt` depending on your Boost installation:
+- When Boost.Regex is used as a matcher engine, also link `libboost_regex`
+  (or a variant, e.g. `libboost_regex-mt`, depending on your Boost
+  installation configuration):
 
       c++ ... -lreflex -lboost_regex
 

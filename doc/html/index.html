@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Mar 2 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Mar 3 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -3245,7 +3245,7 @@ Undefined symbols and link errors                                </h2>
 </pre><p class="startli">where <code>&lt;path&gt;</code> is the directory path to the top directory of the downloaded RE/flex package.</p>
 </li>
 <li>When using an IDE such as Visual Studio C++, compile all of the <em>.cpp</em> source code files located in the <em><code>reflex/lib</code></em> and the <em><code>reflex/unicode</code></em> directories of the RE/flex download package. The header files are located in the <em><code>reflex/include/reflex</code></em> directory.</li>
-<li>When Boost.Regex is used as a matcher engine, also link <code>libboost_regex</code> or <code>libboost_regex-mt</code> depending on your Boost installation: <pre class="fragment">  c++ ... -lreflex -lboost_regex
+<li>When Boost.Regex is used as a matcher engine, also link <code>libboost_regex</code> (or a variant, e.g. <code>libboost_regex-mt</code>, depending on your Boost installation configuration): <pre class="fragment">c++ ... -lreflex -lboost_regex
 </pre></li>
 <li>When PCRE2 is used as a matcher engine, also link <code>libpcre2-8</code>: <pre class="fragment">c++ ... -lreflex -lpcre2-8
 </pre></li>
@@ -3290,7 +3290,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Mar 2 2020 11:24:47 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Mar 3 2020 09:38:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

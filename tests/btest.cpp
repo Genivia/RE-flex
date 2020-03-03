@@ -107,7 +107,7 @@ Test tests[] = {
   { "(?s).", "", "", "a\n", { 1, 1 } },
   { "(?s:.)", "", "", "a\n", { 1, 1 } },
   { "(?s).", "", "", "a\n", { 1, 1 } },
-  // Anchors \A, \Z, ^, and $
+  // Anchors \A, \Z, ^, and $ (Boost.Regex matches \n, \r and \f as newlines)
   { "\\Aa\\Z", "", "", "a", { 1 } },
   { "^a$", "", "", "a", { 1 } },
   { "(?m)^a$|\\n", "m", "", "a\na", { 1, 2, 1 } },

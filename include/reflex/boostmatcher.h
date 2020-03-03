@@ -186,19 +186,7 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
       {
         if (end_ + blk_ + 1 >= max_ && grow()) // make sure we have enough storage to read input
           itr_ = fin_; // buffer shifting/growing invalidates iterator
-        while (true)
-        {
-          end_ += get(buf_ + end_, blk_ ? blk_ : max_ - end_ - 1);
-          if (pos_ < end_)
-            break;
-          if (itr_ != fin_ && (*itr_)[0].matched && cur_ != pos_)
-            break; // OK if iterator is still valid and we have a non-empty match
-          if (!wrap())
-          {
-            eof_ = true;
-            break;
-          }
-        }
+        (void)peek_more();
         DBGLOGN("Got more input pos = %zu end = %zu max = %zu", pos_, end_, max_);
       }
       if (pos_ == end_) // if pos_ is hitting the end_ then
@@ -237,14 +225,14 @@ class BoostMatcher : public PatternMatcher<boost::regex> {
           DBGLOG("END BoostMatcher::match()");
           return cap_;
         }
-        if (itr_ != fin_)
-          break; // OK if iterator is still valid
-        if (method == Const::FIND && opt_.N)
+        if (method == Const::FIND && opt_.N && eof_ && (itr_ == fin_ || (*itr_)[0].first == buf_ + end_))
         {
           DBGLOGN("No match, pos = %zu", pos_);
           DBGLOG("END BoostMatcher::match()");
           return 0;
         }
+        if (itr_ != fin_)
+          break; // OK if iterator is still valid
       }
       new_itr(method); // need new iterator
       if (itr_ != fin_)
@@ -383,22 +371,6 @@ class BoostPosixMatcher : public BoostMatcher {
   {
     flg_ |= boost::regex_constants::match_posix;
   }
-  /// Copy constructor.
-  BoostPosixMatcher(const BoostPosixMatcher& matcher) ///< matcher to copy
-    :
-      BoostMatcher(matcher)
-  { }
-  /// Assign a matcher.
-  BoostPosixMatcher& operator=(const BoostPosixMatcher& matcher) ///< matcher to copy
-  {
-    BoostMatcher::operator=(matcher);
-    return *this;
-  }
-  /// Polymorphic cloning.
-  virtual BoostPosixMatcher *clone()
-  {
-    return new BoostPosixMatcher(*this);
-  }
 };
 
 /// Boost matcher engine class, extends reflex::BoostMatcher for Boost Perl regex matching.
@@ -431,22 +403,6 @@ class BoostPerlMatcher : public BoostMatcher {
       BoostMatcher(pattern, input, opt)
   {
     flg_ |= boost::regex_constants::match_perl;
-  }
-  /// Copy constructor.
-  BoostPerlMatcher(const BoostPerlMatcher& matcher) ///< matcher to copy
-    :
-      BoostMatcher(matcher)
-  { }
-  /// Assign a matcher.
-  BoostPerlMatcher& operator=(const BoostPerlMatcher& matcher) ///< matcher to copy
-  {
-    BoostMatcher::operator=(matcher);
-    return *this;
-  }
-  /// Polymorphic cloning.
-  virtual BoostPerlMatcher *clone()
-  {
-    return new BoostPerlMatcher(*this);
   }
 };
 

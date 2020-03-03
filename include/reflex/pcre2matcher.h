@@ -394,22 +394,6 @@ class PCRE2UTFMatcher : public PCRE2Matcher {
     :
       PCRE2Matcher(pattern, input, opt, PCRE2_UTF | PCRE2_UCP)
   { }
-  /// Copy constructor.
-  PCRE2UTFMatcher(const PCRE2UTFMatcher& matcher) ///< matcher to copy
-    :
-      PCRE2Matcher(matcher)
-  { }
-  /// Assign a matcher.
-  PCRE2UTFMatcher& operator=(const PCRE2UTFMatcher& matcher) ///< matcher to copy
-  {
-    PCRE2Matcher::operator=(matcher);
-    return *this;
-  }
-  /// Polymorphic cloning.
-  virtual PCRE2UTFMatcher *clone()
-  {
-    return new PCRE2UTFMatcher(*this);
-  }
 };
 
 } // namespace reflex
