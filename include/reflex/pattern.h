@@ -64,7 +64,7 @@ class Pattern {
   friend class Matcher; ///< permit access by the reflex::Matcher engine
  public:
   typedef uint8_t  Pred;   ///< predict match bits
-  typedef uint16_t Hash;   ///< hash type (uint16_t), may be narrowed to uint8_t when Const::HASH == 0x100
+  typedef uint16_t Hash;   ///< hash type (uint16_t), max value is Const::HASH
   typedef uint16_t Index;  ///< index into opcodes array Pattern::opc_ and subpattern indexing
   typedef uint32_t Opcode; ///< 32 bit opcode word
   typedef void (*FSM)(class Matcher&); ///< function pointer to FSM code

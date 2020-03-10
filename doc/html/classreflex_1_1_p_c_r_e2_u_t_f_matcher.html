@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::PCRE2UTFMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Mar 3 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Mar 10 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -422,9 +422,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a82ed7b2c125bd897dea73443d2650ac6 inherit pro_types_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a82ed7b2c125bd897dea73443d2650ac6">Method</a></td></tr>
 <tr class="separator:a82ed7b2c125bd897dea73443d2650ac6 inherit pro_types_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classreflex_1_1_p_c_r_e2_matcher"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classreflex_1_1_p_c_r_e2_matcher')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html">reflex::PCRE2Matcher</a></td></tr>
-<tr class="memitem:a69ae5fc8326754eb14f0decf3f319ae4 inherit pro_methods_classreflex_1_1_p_c_r_e2_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a69ae5fc8326754eb14f0decf3f319ae4">compile</a> (uint32_t options=0)</td></tr>
-<tr class="memdesc:a69ae5fc8326754eb14f0decf3f319ae4 inherit pro_methods_classreflex_1_1_p_c_r_e2_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile pattern for jit partial matching and allocate match data.  <a href="#a69ae5fc8326754eb14f0decf3f319ae4">More...</a><br /></td></tr>
-<tr class="separator:a69ae5fc8326754eb14f0decf3f319ae4 inherit pro_methods_classreflex_1_1_p_c_r_e2_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d0bb66f8cabd893e24f24762e2b48df inherit pro_methods_classreflex_1_1_p_c_r_e2_matcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a5d0bb66f8cabd893e24f24762e2b48df">compile</a> ()</td></tr>
+<tr class="memdesc:a5d0bb66f8cabd893e24f24762e2b48df inherit pro_methods_classreflex_1_1_p_c_r_e2_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile pattern for jit partial matching and allocate match data.  <a href="#a5d0bb66f8cabd893e24f24762e2b48df">More...</a><br /></td></tr>
+<tr class="separator:a5d0bb66f8cabd893e24f24762e2b48df inherit pro_methods_classreflex_1_1_p_c_r_e2_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8eb8ecc2d77e92660b078a28294ffa45 inherit pro_methods_classreflex_1_1_p_c_r_e2_matcher"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a8eb8ecc2d77e92660b078a28294ffa45">match</a> (<a class="el" href="classreflex_1_1_abstract_matcher.html#a82ed7b2c125bd897dea73443d2650ac6">Method</a> method)</td></tr>
 <tr class="memdesc:a8eb8ecc2d77e92660b078a28294ffa45 inherit pro_methods_classreflex_1_1_p_c_r_e2_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">The match method <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a57efdf6e79f50205036bc4d55e9908e7" title="AbstractMatcher::match method is to scan input (tokenizer) ">Const::SCAN</a>, <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#af03daba13cf299ee0e6be2e37ebe59b7" title="AbstractMatcher::match method is to find pattern in input. ">Const::FIND</a>, <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a48f6d3e22c2f018fef95b2367a2a9aa4" title="AbstractMatcher::match method is to split input at pattern matches. ">Const::SPLIT</a>, or <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#aa1fe9eb434ef5ff539b01a601977f9ee" title="AbstractMatcher::match method is to match the entire input. ">Const::MATCH</a>, implemented with PCRE2.  <a href="#a8eb8ecc2d77e92660b078a28294ffa45">More...</a><br /></td></tr>
 <tr class="separator:a8eb8ecc2d77e92660b078a28294ffa45 inherit pro_methods_classreflex_1_1_p_c_r_e2_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -476,15 +476,18 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:a345dcf64f1671bbb12056408045fa441 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the newline count, column count, and character count when shifting the buffer.  <a href="#a345dcf64f1671bbb12056408045fa441">More...</a><br /></td></tr>
 <tr class="separator:a345dcf64f1671bbb12056408045fa441 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classreflex_1_1_p_c_r_e2_matcher')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html">reflex::PCRE2Matcher</a></td></tr>
+<tr class="memitem:a48b89b13aa331ae45e169269dc942684 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a48b89b13aa331ae45e169269dc942684">cop_</a></td></tr>
+<tr class="memdesc:a48b89b13aa331ae45e169269dc942684 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">PCRE2 compiled options.  <a href="#a48b89b13aa331ae45e169269dc942684">More...</a><br /></td></tr>
+<tr class="separator:a48b89b13aa331ae45e169269dc942684 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d3b9964cbbc799cb3bc24e27386c0c2 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a5d3b9964cbbc799cb3bc24e27386c0c2">flg_</a></td></tr>
+<tr class="memdesc:a5d3b9964cbbc799cb3bc24e27386c0c2 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">PCRE2 match flags.  <a href="#a5d3b9964cbbc799cb3bc24e27386c0c2">More...</a><br /></td></tr>
+<tr class="separator:a5d3b9964cbbc799cb3bc24e27386c0c2 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a591206520e520adcd8ead008e82fa555 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memItemLeft" align="right" valign="top">pcre2_code *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a591206520e520adcd8ead008e82fa555">opc_</a></td></tr>
 <tr class="memdesc:a591206520e520adcd8ead008e82fa555 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">compiled PCRE2 code  <a href="#a591206520e520adcd8ead008e82fa555">More...</a><br /></td></tr>
 <tr class="separator:a591206520e520adcd8ead008e82fa555 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc54fe273528cb941a85a6d16e152f78 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memItemLeft" align="right" valign="top">pcre2_match_data *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#acc54fe273528cb941a85a6d16e152f78">dat_</a></td></tr>
 <tr class="memdesc:acc54fe273528cb941a85a6d16e152f78 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">PCRE2 match data.  <a href="#acc54fe273528cb941a85a6d16e152f78">More...</a><br /></td></tr>
 <tr class="separator:acc54fe273528cb941a85a6d16e152f78 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d3b9964cbbc799cb3bc24e27386c0c2 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a5d3b9964cbbc799cb3bc24e27386c0c2">flg_</a></td></tr>
-<tr class="memdesc:a5d3b9964cbbc799cb3bc24e27386c0c2 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">PCRE2 match flags.  <a href="#a5d3b9964cbbc799cb3bc24e27386c0c2">More...</a><br /></td></tr>
-<tr class="separator:a5d3b9964cbbc799cb3bc24e27386c0c2 inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4fc5abca69362a380808db0873c689a inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#aa4fc5abca69362a380808db0873c689a">jit_</a></td></tr>
 <tr class="memdesc:aa4fc5abca69362a380808db0873c689a inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if jit-compiled PCRE2 code  <a href="#aa4fc5abca69362a380808db0873c689a">More...</a><br /></td></tr>
 <tr class="separator:aa4fc5abca69362a380808db0873c689a inherit pro_attribs_classreflex_1_1_p_c_r_e2_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -747,7 +750,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Mar 3 2020 09:38:20 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Mar 10 2020 13:49:41 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

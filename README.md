@@ -499,6 +499,7 @@ Changelog
 - Feb  3, 2020: 1.5.8 added `wunput()` method; added `lex.vim` improved Flex and RE/flex Vim syntax highlighting; added `yaml.l` example; fixed `--freespace` with `--unicode` when bracket lists contain a `#`; character class operators `{+}`, `{-}`, `{&}` now accept defined names as first operands and inverted character classes; indent anchor `\k` now matches only when indent level is changed as documented.
 - Mar  2, 2020: 1.6.0 added PCRE2 regex matcher classes and updated reflex option `--matcher=pcre2-perl`; optimized RE/flex matcher `find()` with AVX/SSE2/NEON/AArch64; updated and improved regex converters.
 - Mar  3, 2020: 1.6.1 fixed missing PCRE2 regex type `std::string` in generated scanners.
+- Mar 10, 2020: 1.6.2 fixed MSVC++ x86 32-bit build error when `HAVE_AVX512BW` is enabled (requires AVX512BW).
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

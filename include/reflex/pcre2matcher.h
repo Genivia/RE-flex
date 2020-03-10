@@ -71,11 +71,12 @@ class PCRE2Matcher : public PatternMatcher<std::string> {
       uint32_t     options = 0)     ///< pcre2_compile() options
     :
       PatternMatcher<std::string>(pattern, input, opt),
+      cop_(options),
       opc_(NULL),
       dat_(NULL)
   {
     reset();
-    compile(options);
+    compile();
   }
   /// Construct matcher engine from a string regex, and an input character sequence.
   template<typename P> /// @tparam <P> pattern is a string regex
@@ -86,21 +87,38 @@ class PCRE2Matcher : public PatternMatcher<std::string> {
       uint32_t     options = 0)     ///< pcre2_compile() options
     :
       PatternMatcher<std::string>(pattern, input, opt),
+      cop_(options),
       opc_(NULL),
       dat_(NULL)
   {
     reset();
-    compile(options);
+    compile();
   }
   /// Copy constructor.
   PCRE2Matcher(const PCRE2Matcher& matcher) ///< matcher to copy
     :
       PatternMatcher<std::string>(matcher),
-      opc_(pcre2_code_copy_with_tables(matcher.opc_)),
-      dat_(pcre2_match_data_create_from_pattern(opc_, NULL)),
-      flg_(matcher.flg_),
-      jit_(matcher.jit_ && pcre2_jit_compile(opc_, PCRE2_JIT_PARTIAL_HARD) == 0 && pcre2_pattern_info(opc_, PCRE2_INFO_JITSIZE, NULL) != 0)
-  { }
+      cop_(matcher.cop_),
+      flg_(matcher.flg_)
+  {
+#ifdef pcre2_code_copy_with_tables
+    if (dat_ != NULL)
+    {
+      pcre2_match_data_free(dat_);
+      dat_ = NULL;
+    }
+    if (opc_ != NULL)
+    {
+      pcre2_code_free(opc_);
+      opc_ = NULL;
+    }
+    opc_ = pcre2_code_copy_with_tables(matcher.opc_);
+    dat_ = pcre2_match_data_create_from_pattern(opc_, NULL);
+    jit_ = matcher.jit_ && pcre2_jit_compile(opc_, PCRE2_JIT_PARTIAL_HARD) == 0 && pcre2_pattern_info(opc_, PCRE2_INFO_JITSIZE, NULL) != 0;
+#else
+    compile();
+#endif
+  }
   /// Delete matcher.
   virtual ~PCRE2Matcher()
   {
@@ -113,10 +131,7 @@ class PCRE2Matcher : public PatternMatcher<std::string> {
   PCRE2Matcher& operator=(const PCRE2Matcher& matcher) ///< matcher to copy
   {
     PatternMatcher<std::string>::operator=(matcher);
-    opc_ = pcre2_code_copy_with_tables(matcher.opc_);
-    dat_ = pcre2_match_data_create_from_pattern(opc_, NULL);
-    flg_ = matcher.flg_;
-    jit_ = matcher.jit_ && pcre2_jit_compile(opc_, PCRE2_JIT_PARTIAL_HARD) == 0 && pcre2_pattern_info(opc_, PCRE2_INFO_JITSIZE, NULL) != 0;
+    pattern(matcher);
     return *this;
   }
   /// Polymorphic cloning.
@@ -136,11 +151,26 @@ class PCRE2Matcher : public PatternMatcher<std::string> {
   virtual PatternMatcher& pattern(const PCRE2Matcher& matcher) ///< the other matcher
     /// @returns this matcher.
   {
-    opt_ = matcher.opt_;
+    PatternMatcher<std::string>::pattern(matcher);
+    cop_ = matcher.cop_;
+    flg_ = matcher.flg_;
+#ifdef pcre2_code_copy_with_tables
+    if (dat_ != NULL)
+    {
+      pcre2_match_data_free(dat_);
+      dat_ = NULL;
+    }
+    if (opc_ != NULL)
+    {
+      pcre2_code_free(opc_);
+      opc_ = NULL;
+    }
     opc_ = pcre2_code_copy_with_tables(matcher.opc_);
     dat_ = pcre2_match_data_create_from_pattern(opc_, NULL);
-    flg_ = matcher.flg_;
     jit_ = matcher.jit_ && pcre2_jit_compile(opc_, PCRE2_JIT_PARTIAL_HARD) == 0 && pcre2_pattern_info(opc_, PCRE2_INFO_JITSIZE, NULL) != 0;
+#else
+    compile();
+#endif
     return *this;
   }
   /// Set the pattern regex string to use with this matcher (the given pattern is shared and must be persistent).
@@ -184,7 +214,7 @@ class PCRE2Matcher : public PatternMatcher<std::string> {
   }
  protected:
   /// Compile pattern for jit partial matching and allocate match data.
-  void compile(uint32_t options = 0) ///< pcre2_compile() options
+  void compile()
   {
     DBGLOG("BEGIN PCRE2Matcher::compile()");
     if (dat_ != NULL)
@@ -200,7 +230,7 @@ class PCRE2Matcher : public PatternMatcher<std::string> {
     int err;
     PCRE2_SIZE pos;
     ASSERT(pat_ != NULL);
-    opc_ = pcre2_compile(reinterpret_cast<PCRE2_SPTR>(pat_->c_str()), static_cast<PCRE2_SIZE>(pat_->size()), options, &err, &pos, NULL);
+    opc_ = pcre2_compile(reinterpret_cast<PCRE2_SPTR>(pat_->c_str()), static_cast<PCRE2_SIZE>(pat_->size()), cop_, &err, &pos, NULL);
     if (opc_ == NULL)
     {
       PCRE2_UCHAR message[120];
@@ -357,9 +387,10 @@ class PCRE2Matcher : public PatternMatcher<std::string> {
       }
     }
   }
+  uint32_t          cop_; ///< PCRE2 compiled options
+  uint32_t          flg_; ///< PCRE2 match flags
   pcre2_code       *opc_; ///< compiled PCRE2 code
   pcre2_match_data *dat_; ///< PCRE2 match data
-  uint32_t          flg_; ///< PCRE2 match flags
   bool              jit_; ///< true if jit-compiled PCRE2 code
 };
 

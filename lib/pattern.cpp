@@ -2817,7 +2817,7 @@ void Pattern::gen_predict_match_transitions(Index level, State *state, ORanges<H
           bit_[lo++] &= ~(1 << level);
       for (ORanges<Hash>::const_iterator label = labels.begin(); label != labels.end(); ++label)
       {
-        Char label_hi = label->second - 1;
+        Hash label_hi = label->second - 1;
         for (Hash label_lo = label->first; label_lo <= label_hi; ++label_lo)
         {
           for (lo = edge->first; lo <= hi; ++lo)

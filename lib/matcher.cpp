@@ -61,12 +61,16 @@ namespace reflex {
 #if defined(HAVE_AVX512BW) || defined(HAVE_AVX) || defined(HAVE_SSE2)
 
 #ifdef _MSC_VER
+#ifdef _WIN64
+#pragma intrinsic(_BitScanForward64)
 inline uint32_t ctzl(uint64_t x)
 {
   unsigned long r;
   _BitScanForward64(&r, x);
   return r;
 }
+#endif
+#pragma intrinsic(_BitScanForward)
 inline uint32_t ctz(uint32_t x)
 {
   unsigned long r;
@@ -376,7 +380,7 @@ bool Matcher::advance()
     {
       const char *s = buf_ + loc + lcp_;
       const char *e = buf_ + end_ + lcp_ - len + 1;
-#if defined(HAVE_AVX512BW)
+#if defined(HAVE_AVX512BW) && (!defined(_MSC_VER) || defined(_WIN64))
       if (have_HW_AVX512BW())
       {
         // implements SIMD string search scheme based on in http://0x80.pl/articles/simd-friendly-karp-rabin.html
