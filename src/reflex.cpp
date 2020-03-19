@@ -1003,10 +1003,32 @@ std::string Reflex::get_regex(size_t& pos)
       // eat [...]
       if (pos < linelen && line.at(pos) == '^')
         ++pos;
-      if (line.at(pos) != '\\')
+      if (line.at(pos) == ']')
         ++pos;
-      while (pos < linelen && line.at(pos) != ']')
-        pos += 1 + (line.at(pos) == '\\');
+      size_t nest = 1;
+      while (pos < linelen)
+      {
+        if (line.at(pos) == ']')
+        {
+          if (--nest == 0)
+            break;
+          ++pos;
+        }
+        else if (line.compare(pos, 2, "[:") == 0 || line.compare(pos, 2, "[.") == 0 || line.compare(pos, 2, "[=") == 0)
+        {
+          ++nest;
+          pos += 2;
+        }
+        else if (line.compare(pos, 3, "||[") == 0 || line.compare(pos, 3, "&&[") == 0 || line.compare(pos, 3, "--[") == 0)
+        {
+          ++nest;
+          pos += 3;
+        }
+        else
+        {
+          pos += 1 + (line.at(pos) == '\\');
+        }
+      }
       ++pos;
     }
     else if (c == '(' && pos + 2 < linelen && line.at(pos + 1) == '?' && line.at(pos + 2) == '#')

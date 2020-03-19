@@ -8091,6 +8091,76 @@ Tips, tricks, and gotchas                                             {#tricks}
 🔝 [Back to table of contents](#)
 
 
+Errors when declaring extern yyin, yytext, yylineno              {#extern-yyin}
+---------------------------------------------------
+
+For backward compatibility with Flex, RE/flex uses macros to declare `yyin`,
+`yylineno`, `yytext`, and `yyleng` such that the `−−flex` option expands them
+depending on the `−−bison` option or `−−bison-locations`, `−−bison-cc` and so
+on.  The `−−bison` option generates global variables and functions, see
+\ref reflex-bison-mt-safe for details.  This means that `yytext`, `yyleng`, and
+`yylineno` are global variables.
+
+The following declarations are permitted when you use option `−−bison` to
+generate global variables and functions:
+
+<div class="alt">
+~~~{.cpp}
+    extern char *yytext;
+    extern yy_size_t yyleng;
+    extern int yylineno;
+    extern int yylex();
+~~~
+</div>
+
+However, `yyin` is not a global variable because the macro refers to the
+`reflex::Input` of the matcher, which offers advanced input handling
+capabilities.
+
+Therefore, the following declaration causes a compilation error and should be
+removed from the lexer specification:
+
+<div class="alt">
+~~~{.cpp}
+    extern FILE *yyin; // ERROR: fails to compile
+~~~
+</div>
+
+The use of `yyin` is otherwise not restricted.  For example:
+
+<div class="alt">
+~~~{.cpp}
+    yyin = fopen(filename, "r");
+    while (yylex() != 0)
+      continue;
+    fclose(yyin);
+~~~
+</div>
+
+It is also possible to use `yyin` to read `std::istream` and assign (wide)
+strings to `yyin`, which is not permitted in Flex.  For example:
+
+<div class="alt">
+~~~{.cpp}
+    std::ifstream ifs(filename, std::ios::in);
+    yyin = ifs;
+    while (yylex() != 0)
+      continue;
+    ifs.close();
+~~~
+</div>
+
+<div class="alt">
+~~~{.cpp}
+    yyin = "...";
+    while (yylex() != 0)
+      continue;
+~~~
+</div>
+
+🔝 [Back to table of contents](#)
+
+
 Invalid UTF encodings                                            {#invalid-utf}
 ---------------------
 

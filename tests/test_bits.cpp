@@ -22,12 +22,14 @@ int main()
   alnum['_'] = true;
   if (alnum['_'] == true)
     std::cout << "_ is in updated alnum\n";
+  alnum.lshift().rshift();
   std::cout << alnum.count() << " bits in alnum\n";
   for (size_t i = alnum.find_first(); i != reflex::Bits::npos; i = alnum.find_next(i))
     std::cout << (char)i;
   std::cout << std::endl;
 
   assert(digit.count() == 10);
+  assert(alnum.count() == 63);
 
   Bits alpha(lower);
   alpha |= upper;

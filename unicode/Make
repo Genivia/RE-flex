@@ -1,8 +1,11 @@
-# Makefile to quickly build the projects and install reflex:
+# Unicode Character Database files
+# https://www.unicode.org/Public/UCD/latest/ucd/
+# Blocks.txt
+# Scripts.txt
+# UnicodeData.txt
+#
+# Makefile to build the Unicode source code scripts with ./bootstrap.sh
 # > make -f Make
-# Normally you should use configure and make to build and install:
-# > ./configure && make
-# > sudo make install
 
 CPP=c++
 REFLEX=../bin/reflex

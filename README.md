@@ -132,7 +132,10 @@ with MS Visual Studio C++.
 
 ### Unix/Linux and Mac OS X
 
-You have two options: 1) quick install or 2) configure and make.
+On Linux and macOS systems you can use [homebrew](https://brew.sh) to install
+RE/flex with `brew install re-flex`.
+
+Otherwise, you have two options: 1) quick install or 2) configure and make.
 
 **Note:** GCC 8 and greater may produce warnings of the sort *"note: parameter
 passing for argument ... changed in GCC 7.1"*.  These warnings can be ignored
@@ -499,7 +502,8 @@ Changelog
 - Feb  3, 2020: 1.5.8 added `wunput()` method; added `lex.vim` improved Flex and RE/flex Vim syntax highlighting; added `yaml.l` example; fixed `--freespace` with `--unicode` when bracket lists contain a `#`; character class operators `{+}`, `{-}`, `{&}` now accept defined names as first operands and inverted character classes; indent anchor `\k` now matches only when indent level is changed as documented.
 - Mar  2, 2020: 1.6.0 added PCRE2 regex matcher classes and updated reflex option `--matcher=pcre2-perl`; optimized RE/flex matcher `find()` with AVX/SSE2/NEON/AArch64; updated and improved regex converters.
 - Mar  3, 2020: 1.6.1 fixed missing PCRE2 regex type `std::string` in generated scanners.
-- Mar 10, 2020: 1.6.2 fixed MSVC++ x86 32-bit build error when `HAVE_AVX512BW` is enabled (requires AVX512BW).
+- Mar 10, 2020: 1.6.2 improved `reflex::PCRE2Matcher`; fixed MSVC++ x86 32-bit build error when `HAVE_AVX512BW` is enabled (requires AVX512BW).
+- Mar 19, 2020: 1.6.3 updated to Unicode 13; fixed start condition scope specifications for patterns that start with a `{`; updated lex.vim.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

@@ -2,7 +2,7 @@
 " Language:	Lex
 " Maintainer:	Charles E. Campbell <NcampObell@SdrPchip.AorgM-NOSPAM>
 " Contributor:	Robert A. van Engelen <engelen@acm.org>
-" Last Change:	Feb 20, 2020
+" Last Change:	Mar 19, 2020
 " Version:	20
 
 " quit when a syntax file was already loaded
@@ -117,7 +117,7 @@ syn match  lexPatTag		"^<\^\?\(\I\i*\|\*\)\(,\^\?\(\I\i*\|\*\)\)*>"		contained	n
 syn match  lexPatTagZone	"^<\^\?\(\I\i*\|\*\)\(,\^\?\(\I\i*\|\*\)\)*>{"me=e-1	contained	nextgroup=lexPatTagZoneStart
 
 if has("folding")
- syn region lexPatTagZoneStart	fold	matchgroup=lexPatTag	start='{'	end='^}'	skipnl	skipwhite	contained	contains=lexPatTag,lexPatTagZone,lexPatComment,lexPat,lexPatSep,lexPatInclude
+ syn region lexPatTagZoneStart	fold	matchgroup=lexPatTag	start='{\s*$'	end='^}'	skipnl	skipwhite	contained	contains=lexPatTag,lexPatTagZone,lexPatComment,lexPat,lexPatSep,lexPatInclude
  syn region lexPatComment	fold	start="//"	end="$"		skipnl	contained	contains=cTodo	skipwhite	nextgroup=lexPatComment,lexPat,@Spell
  syn region lexPatComment	fold	start="/\*"	end="\*/"	skipnl	contained	contains=cTodo	skipwhite	nextgroup=lexPatComment,lexPat,@Spell
 else

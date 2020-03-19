@@ -39,12 +39,12 @@ the **Source Files**.  Now you are all set!
 In addition, the `reflex/vs` directory contains batch scripts to build projects
 with MS Visual Studio C++.
 
-### Unix/Linux and Mac OS
+### Unix/Linux and macOS
 
-On Mac OS X you can use [homebrew](https://brew.sh) to install RE/flex with
-`brew install re-flex`.  Otherwise:
+On Linux and macOS systems you can use [homebrew](https://brew.sh) to install
+RE/flex with `brew install re-flex`.
 
-You have two options: 1) quick install or 2) configure and make.
+Otherwise, you have two options: 1) quick install or 2) configure and make.
 
 ### Quick install
 
@@ -100,7 +100,11 @@ work around this problem, run:
 
 - To use Boost.Regex as a regex engine with the RE/flex library and scanner
   generator, install [Boost][boost-url] and link your code against
-  `libboost_regex.a`
+  `-lboost_regex`.
+
+- To use PCRE2 as a regex engine with the RE/flex library and scanner
+  generator, install [PCRE2][pcre2-url] and link your code against
+  `-lpcre2-8`.
 
 - To visualize the FSM graphs generated with **reflex** option `--graphs-file`,
   install [Graphviz dot][dot-url].
@@ -122,13 +126,12 @@ To build the examples, first build the reflex tool and then execute:
     $ cd examples
     $ make
 
-If `libboost_regex.a` could not be found, then edit lib/Makefile to change the
-installation location of Boost so that `boost/regex.hpp` and `libboost_regex.a`
-can be properly located:
+If `libboost_regex` could not be found, then edit lib/Make to change the
+installation location of Boost so that `boost/regex.hpp` and `libboost_regex`
+can be properly located, for example:
 
-    BOOST=$(HOME)/boost
-    LIBS=../lib/reflex.a $(BOOST)/stage/lib/libboost_regex.a
-    CIFLAGS=-I. -I../include -I $(HOME)/boost
+    INCBOOST = /opt/local/include
+    LIBBOOST = /opt/local/lib/libboost_regex-mt.dylib
 
 
 Documentation
@@ -185,6 +188,7 @@ following files:
     |       |__ input.h
     |       |__ matcher.h
     |       |__ pattern.h
+    |       |__ pcre2matcher.h
     |       |__ posix.h
     |       |__ ranges.h
     |       |__ setop.h
@@ -254,7 +258,7 @@ License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2015-2019, All rights reserved.   
+Copyright (c) 2016-2020, All rights reserved.   
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.
@@ -268,3 +272,4 @@ Use, modification, and distribution are subject to the BSD-3 license.
 [dot-url]: http://www.graphviz.org
 [FSM-url]: https://www.genivia.com/images/reflex-FSM.png
 [boost-url]: http://www.boost.org
+[pcre2-url]: http://pcre.org

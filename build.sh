@@ -28,7 +28,7 @@ if cc -march=native -c conftest.c >& /dev/null ; then
   echo
 else
 
-# check if this piece of metal has AVX
+# if not AVX512BW, check if this piece of metal has AVX
 cat > conftest.c << END
 #include <immintrin.h>
 main() { __m256i n = _mm256_set1_epi8(42); n = _mm256_and_si256(n, n); }

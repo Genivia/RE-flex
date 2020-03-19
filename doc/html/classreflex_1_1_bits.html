@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Bits Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Mar 10 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Mar 19 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -115,7 +115,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a35cf04543c4d87dbf406f061fdd9cb92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erase a range of bits in the bit vector.  <a href="#a35cf04543c4d87dbf406f061fdd9cb92">More...</a><br /></td></tr>
 <tr class="separator:a35cf04543c4d87dbf406f061fdd9cb92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b01ae9954310d6ca2f03ad014f8f614"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_bits.html">Bits</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_bits.html#a6b01ae9954310d6ca2f03ad014f8f614">flip</a> (size_t n1, size_t n2)</td></tr>
+<tr class="memdesc:a6b01ae9954310d6ca2f03ad014f8f614"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flip a range of bits in the bit vector.  <a href="#a6b01ae9954310d6ca2f03ad014f8f614">More...</a><br /></td></tr>
 <tr class="separator:a6b01ae9954310d6ca2f03ad014f8f614"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeda1f31b0c1ec7fe84bfac17995995e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_bits.html">Bits</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_bits.html#aeda1f31b0c1ec7fe84bfac17995995e3">lshift</a> ()</td></tr>
+<tr class="memdesc:aeda1f31b0c1ec7fe84bfac17995995e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bit-shift left by one.  <a href="#aeda1f31b0c1ec7fe84bfac17995995e3">More...</a><br /></td></tr>
+<tr class="separator:aeda1f31b0c1ec7fe84bfac17995995e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af310869c725d595b38f47e5c5b6a71ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_bits.html">Bits</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_bits.html#af310869c725d595b38f47e5c5b6a71ab">rshift</a> ()</td></tr>
+<tr class="memdesc:af310869c725d595b38f47e5c5b6a71ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bit-shift right by one.  <a href="#af310869c725d595b38f47e5c5b6a71ab">More...</a><br /></td></tr>
+<tr class="separator:af310869c725d595b38f47e5c5b6a71ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f5eb0c2b46d731895e64933d2c6b3df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_bits.html">Bits</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_bits.html#a4f5eb0c2b46d731895e64933d2c6b3df">operator|=</a> (const <a class="el" href="classreflex_1_1_bits.html">Bits</a> &amp;bits)</td></tr>
 <tr class="memdesc:a4f5eb0c2b46d731895e64933d2c6b3df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bit-or (set union) the bit vector with the given bits.  <a href="#a4f5eb0c2b46d731895e64933d2c6b3df">More...</a><br /></td></tr>
 <tr class="separator:a4f5eb0c2b46d731895e64933d2c6b3df"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -762,7 +769,9 @@ _ is in updated alnum
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Flip a range of bits in the bit vector. </p><dl class="section return"><dt>Returns</dt><dd>reference to this object. </dd></dl>
+
+<p>Flip a range of bits in the bit vector. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to this object. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">n1</td><td>first bit to flip </td></tr>
@@ -906,6 +915,31 @@ _ is in updated alnum
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="aeda1f31b0c1ec7fe84bfac17995995e3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_bits.html">Bits</a>&amp; reflex::Bits::lshift </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Bit-shift left by one. </p>
 
 </div>
 </div>
@@ -1529,6 +1563,31 @@ _ is in updated alnum
 
 </div>
 </div>
+<a class="anchor" id="af310869c725d595b38f47e5c5b6a71ab"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_bits.html">Bits</a>&amp; reflex::Bits::rshift </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Bit-shift right by one. </p>
+
+</div>
+</div>
 <a class="anchor" id="aab08f8cdebd0678507d8f62d25336713"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1659,7 +1718,7 @@ _ is in updated alnum
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Mar 10 2020 13:49:41 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Mar 19 2020 14:41:25 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

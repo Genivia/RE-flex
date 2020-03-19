@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Mar 10 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Mar 19 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -131,7 +131,8 @@
 <li class="level2"><a href="#regex-examples">Examples                                                      </a></li>
 </ul>
 </li>
-<li class="level1"><a href="#tricks">Tips, tricks, and gotchas                                             </a><ul><li class="level2"><a href="#invalid-utf">Invalid UTF encodings                                            </a></li>
+<li class="level1"><a href="#tricks">Tips, tricks, and gotchas                                             </a><ul><li class="level2"><a href="#extern-yyin">Errors when declaring extern yyin, yytext, yylineno              </a></li>
+<li class="level2"><a href="#invalid-utf">Invalid UTF encodings                                            </a></li>
 <li class="level2"><a href="#errors">Error reporting and recovery                                          </a></li>
 <li class="level2"><a href="#setlocale">On using setlocale                                                 </a></li>
 <li class="level2"><a href="#iso-8859-1">Scanning ISO-8859-1 (latin-1) files with a Unicode scanner        </a></li>
@@ -3141,6 +3142,15 @@ query key: license, value: BSD-3
 <h1><a class="anchor" id="tricks"></a>
 Tips, tricks, and gotchas                                             </h1>
 <p>🔝 <a href="#">Back to table of contents</a></p>
+<h2><a class="anchor" id="extern-yyin"></a>
+Errors when declaring extern yyin, yytext, yylineno              </h2>
+<p>For backward compatibility with Flex, RE/flex uses macros to declare <code>yyin</code>, <code>yylineno</code>, <code>yytext</code>, and <code>yyleng</code> such that the <code>−−flex</code> option expands them depending on the <code>−−bison</code> option or <code>−−bison-locations</code>, <code>−−bison-cc</code> and so on. The <code>−−bison</code> option generates global variables and functions, see <a class="el" href="index.html#reflex-bison-mt-safe">Bison and thread-safety</a> for details. This means that <code>yytext</code>, <code>yyleng</code>, and <code>yylineno</code> are global variables.</p>
+<p>The following declarations are permitted when you use option <code>−−bison</code> to generate global variables and functions:</p>
+<div class="alt"> <div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="keywordtype">char</span> *<a class="code" href="flexlexer_8h.html#a0d71f919dbec1ffd74b2460fa7e5ac28">yytext</a>;</div><div class="line"><span class="keyword">extern</span> <a class="code" href="flexlexer_8h.html#aa9522b9e313cd74e4e688e358cbca836">yy_size_t</a> <a class="code" href="flexlexer_8h.html#afa07a629486cb790560bb95713ec7794">yyleng</a>;</div><div class="line"><span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="flexlexer_8h.html#ad71cf0fddcfe4f61de0929105b33226c">yylineno</a>;</div><div class="line"><span class="keyword">extern</span> <span class="keywordtype">int</span> yylex();</div></div><!-- fragment --> </div><p>However, <code>yyin</code> is not a global variable because the macro refers to the <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> of the matcher, which offers advanced input handling capabilities.</p>
+<p>Therefore, the following declaration causes a compilation error and should be removed from the lexer specification:</p>
+<div class="alt"> <div class="fragment"><div class="line"><span class="keyword">extern</span> FILE *<a class="code" href="flexlexer_8h.html#aa789f4617e33fb99594cb04a3688a0c1">yyin</a>; <span class="comment">// ERROR: fails to compile</span></div></div><!-- fragment --> </div><p>The use of <code>yyin</code> is otherwise not restricted. For example:</p>
+<div class="alt"> <div class="fragment"><div class="line">yyin = fopen(filename, <span class="stringliteral">&quot;r&quot;</span>);</div><div class="line"><span class="keywordflow">while</span> (yylex() != 0)</div><div class="line">  <span class="keywordflow">continue</span>;</div><div class="line">fclose(yyin);</div></div><!-- fragment --> </div><p>It is also possible to use <code>yyin</code> to read <code>std::istream</code> and assign (wide) strings to <code>yyin</code>, which is not permitted in Flex. For example:</p>
+<div class="alt"> <div class="fragment"><div class="line">std::ifstream ifs(filename, std::ios::in);</div><div class="line">yyin = ifs;</div><div class="line"><span class="keywordflow">while</span> (yylex() != 0)</div><div class="line">  <span class="keywordflow">continue</span>;</div><div class="line">ifs.close();</div></div><!-- fragment --> </div><div class="alt"> <div class="fragment"><div class="line">yyin = <span class="stringliteral">&quot;...&quot;</span>;</div><div class="line"><span class="keywordflow">while</span> (yylex() != 0)</div><div class="line">  <span class="keywordflow">continue</span>;</div></div><!-- fragment --> </div><p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="invalid-utf"></a>
 Invalid UTF encodings                                            </h2>
 <p>It may be tempting to write a pattern with <code>.</code> (dot) as a wildcard in a lexer specification, but beware that in Unicode mode enabled with <em><code>%option unicode</code></em> or with modifier <code>(?u:φ)</code>, the dot matches any code point, including code points outside of the valid Unicode character range and invalid overlong UTF-8 (except that it won't match newline unless <em><code>%option dotall</code></em> is used.) The reason for this design choice is that a lexer should be able to implement a "catch all else" rule to report errors in the input:</p>
@@ -3290,7 +3300,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Mar 10 2020 13:49:47 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Mar 19 2020 14:41:32 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
