@@ -28,9 +28,10 @@
   void process_row();
 %}
 
-// CSV lexer class initialization at construction 
+// CSV lexer class initialization at construction with constructor argument
+%ctorarg="int ch"
 %init{
-  delim = ',';
+  delim = ch;
 %}
 
 // choice of possible delimiters: tab, space, comma, semicolon, and pipe
@@ -169,9 +170,8 @@ int main(int argc, char **argv)
       exit(EXIT_FAILURE);
     }
   }
-  // create a CSV lexer, assume that CVSs are encoded in ASCII/ISO-8859-1 unless a UTF BOM is present
-  CSV csv(reflex::Input(fd, reflex::Input::file_encoding::latin));
-  csv.set_delim(delim);
+  // create a CSV lexer, assume that CSVs are encoded in ASCII/ISO-8859-1 unless a UTF BOM is present
+  CSV csv(delim, reflex::Input(fd, reflex::Input::file_encoding::latin));
   if (csv.lex() != 0)
   {
     std::cerr << "Error in CSV file at line " << csv.lineno() << std::endl;

@@ -76,7 +76,7 @@ Regex pattern matching with the RE/flex pattern matching library
 - `cards.cpp` matches credit card numbers
 - `cvt2utf` demonstrates `reflex::Input` UTF-8 normalization to convert files to UTF-8/16/32
 - `fastsearch.cpp` demonstrates super fast search with fixed regex patterns, faster than GNU grep
-- `ugrep.cpp` [universal grep](https://github.com/Genivia/ugrep) to search files fast, uses the RE/flex regex engine
+- `ugrep.cpp` [universal grep](https://github.com/Genivia/ugrep) ultra fast file searcher, uses the RE/flex regex engine
 - `url.cpp` capture domain, path, and query keys from URLs (requires Boost.Regex or PCRE2 libraries)
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png

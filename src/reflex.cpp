@@ -66,6 +66,7 @@ static const char *options_table[] = {
   "bison_locations",
   "case_insensitive",
   "class",
+  "ctorarg",
   "debug",
   "default",
   "dotall",
@@ -83,7 +84,7 @@ static const char *options_table[] = {
   "input",
   "interactive",
   "lex",
-  "lex-compat",
+  "lex_compat",
   "lexer",
   "main",
   "matcher",
@@ -113,7 +114,7 @@ static const char *options_table[] = {
   "pattern",
   "pointer",
   "perf_report",
-  "posix",
+  "posix_compat",
   "prefix",
   "reentrant",
   "regexp_file",
@@ -128,6 +129,7 @@ static const char *options_table[] = {
   "unput",
   "verbose",
   "warn",
+  "yy",
   "yyclass",
   "yylineno",
   "yymore",
@@ -421,7 +423,7 @@ void Reflex::init(int argc, char **argv)
             options["interactive"] = "true";
             break;
           case 'l':
-            options["lex-compat"] = "true";
+            options["lex_compat"] = "true";
             break;
           case 'L':
             options["noline"] = "true";
@@ -499,7 +501,10 @@ void Reflex::init(int argc, char **argv)
             options["freespace"] = "true";
             break;
           case 'X':
-            options["posix"] = "true";
+            options["posix_compat"] = "true";
+            break;
+          case 'y':
+            options["yy"] = "true";
             break;
           default:
             help("unknown option -", arg);
@@ -605,7 +610,7 @@ void Reflex::help(const char *message, const char *arg)
         --nostdinit\n\
                 initialize input to std::cin instead of stdin\n\
         --bison\n\
-                generate global yylex() scanner for bison\n\
+                generate global yylex() scanner, yytext, yyleng, yylineno\n\
         --bison-bridge\n\
                 generate reentrant yylex() scanner for bison pure parser\n\
         --bison-cc\n\
@@ -621,6 +626,8 @@ void Reflex::help(const char *message, const char *arg)
         -R, --reentrant\n\
                 generate Flex-compatible yylex() reentrant scanner functions\n\
                 NOTE: adds functions only, reflex scanners are always reentrant\n\
+        -y, --yy\n\
+                same as --flex and --bison, also generate global yyin, yyout\n\
         --noyywrap\n\
                 do not call global yywrap() on EOF, requires option --flex\n\
         --exception=VALUE\n\
@@ -653,7 +660,7 @@ void Reflex::help(const char *message, const char *arg)
         --lex-compat           n/a\n\
         --never-interactive    default\n\
         --nounistd             n/a\n\
-        --posix                n/a\n\
+        --posix-compat         n/a\n\
         --stack                n/a\n\
         --warn                 default\n\
         --yylineno             default\n\
@@ -817,6 +824,28 @@ bool Reflex::is(const char *s)
   return *s == '\0';
 }
 
+/// Match s then look for a '{' at the end of the line (skipping whitespace) and return true, false otherwise (pos is unchanged)
+bool Reflex::br(size_t pos, const char *s)
+{
+  if (s != NULL)
+  {
+    if (pos >= linelen || *s == '\0' || lower(line.at(pos)) != *s++)
+      return false;
+    while (++pos < linelen && *s != '\0' && lower(line.at(pos)) == *s++)
+      continue;
+  }
+  while (pos < linelen && std::isspace(line.at(pos)))
+    ++pos;
+  if (pos >= linelen || line.at(pos) != '{')
+    return false;
+  ++pos;
+  while (pos < linelen && std::isspace(line.at(pos)))
+    ++pos;
+  if (pos >= linelen)
+    return true;
+  return false;
+}
+
 /// Advance pos to match case-insensitive initial part of the string s followed by white space, return true if OK
 bool Reflex::as(size_t& pos, const char *s)
 {
@@ -827,7 +856,7 @@ bool Reflex::as(size_t& pos, const char *s)
   return ws(pos);
 }
 
-/// Advance pos over whitespace, returns true if OK
+/// Advance pos over whitespace, returns true if whitespace was found
 bool Reflex::ws(size_t& pos)
 {
   if (pos >= linelen || (pos > 0 && !std::isspace(line.at(pos))))
@@ -865,22 +894,19 @@ bool Reflex::is_code()
 /// Check if current line starts a block of %top code
 bool Reflex::is_topcode()
 {
-  size_t pos = 0;
-  return is("%top{") || (as(pos, "%top") && pos < linelen && line.at(pos) == '{');
+  return br(0, "%top");
 }
 
 /// Check if current line starts a block of %class code
 bool Reflex::is_classcode()
 {
-  size_t pos = 0;
-  return is("%class{") || (as(pos, "%class") && pos < linelen && line.at(pos) == '{');
+  return br(0, "%class");
 }
 
 /// Check if current line starts a block of %init code
 bool Reflex::is_initcode()
 {
-  size_t pos = 0;
-  return is("%init{") || (as(pos, "%init") && pos < linelen && line.at(pos) == '{');
+  return br(0, "%init");
 }
 
 /// Advance pos over name (letters, digits, ., -, _ or any non-ASCII character > U+007F), return name
@@ -978,7 +1004,7 @@ std::string Reflex::get_regex(size_t& pos)
     if (fsp)
     {
       if (nsp < pos && (
-            (c == '{' && (pos + 1 == linelen || std::isspace(line.at(pos + 1)))) ||
+            (c == '{' && (pos + 1 == linelen || line.at(pos + 1) == '}' || std::isspace(line.at(pos + 1)))) ||
             (c == '|' && pos + 1 == linelen) ||
             (c == '/' && pos + 1 < linelen && (line.at(pos + 1) == '/' || line.at(pos + 1) == '*'))))
       {
@@ -1525,11 +1551,11 @@ void Reflex::parse_section_2()
         if (!scopes.empty())
           starts = scopes.top();
         bool has_starts = get_starts(pos, starts);
-        if (has_starts && pos < linelen && line.at(pos) == '{' && (pos + 1 == linelen || std::isspace(line.at(pos + 1))))
+        if (has_starts && pos < linelen && br(pos))
         {
           scopes.push(starts);
           if (!get_line())
-            error("EOF encountered inside an action, %} or %% expected");
+            error("EOF encountered inside scope ", conditions.at(*starts.begin()).c_str());
           init = true;
         }
         else
@@ -1620,6 +1646,8 @@ void Reflex::parse_section_3()
 /// Write lex.yy.cpp
 void Reflex::write()
 {
+  if (!options["yy"].empty() || !options["array"].empty() || !options["pointer"].empty())
+    options["flex"] = options["bison"] = "true";
   if (!options["yyclass"].empty())
     options["flex"] = "true";
   if (options["prefix"].empty() && !options["flex"].empty())
@@ -1808,10 +1836,16 @@ void Reflex::write()
     {
       write_banner("BISON");
       if (!options["flex"].empty())
+      {
+        if (!options["yy"].empty())
+          *out <<
+            "extern FILE *" << options["prefix"] << "in;\n"
+            "extern FILE *" << options["prefix"] << "out;\n";
         *out <<
           "extern char *" << options["prefix"] << "text;\n"
           "extern yy_size_t " << options["prefix"] << "leng;\n"
           "extern int " << options["prefix"] << "lineno;\n";
+      }
       *out <<
         "extern ";
       if (!options["namespace"].empty())
@@ -1926,10 +1960,16 @@ void Reflex::write_class()
     write_banner("FLEX-COMPATIBLE ABSTRACT LEXER CLASS");
     *out << "#include <reflex/flexlexer.h>" << std::endl;
     if (!options["bison"].empty() && options["reentrant"].empty() && options["bison_bridge"].empty() && options["bison_locations"].empty())
+    {
+      if (!options["yy"].empty())
+        *out <<
+          "#undef yyin\n"
+          "#undef yyout\n";
       *out <<
         "#undef yytext\n"
         "#undef yyleng\n"
         "#undef yylineno\n";
+    }
     if (!options["namespace"].empty())
     {
       *out << std::endl;
@@ -1948,7 +1988,7 @@ void Reflex::write_class()
   {
     write_banner("ABSTRACT LEXER CLASS");
     *out << "#include <reflex/abslexer.h>" << std::endl;
-    base.append("reflex::AbstractLexer<").append(matcher).append(">");
+    base.assign("reflex::AbstractLexer<").append(matcher).append(">");
   }
   write_banner("LEXER CLASS");
   std::string lexer = options["lexer"];
@@ -1964,7 +2004,10 @@ void Reflex::write_class()
   {
     *out <<
       " public:\n"
-      "  " << lexer << "(\n"
+      "  " << lexer << "(\n";
+    if (!options["ctorarg"].empty())
+      *out << "      " << options["ctorarg"] << ",\n";
+    *out <<
       "      const reflex::Input& input = reflex::Input(),\n"
       "      std::ostream        *os    = NULL)\n"
       "    :\n"
@@ -2075,8 +2118,11 @@ void Reflex::write_class()
     *out <<
       " public:\n"
       "  typedef " << base << " AbstractBaseLexer;\n"
-      "  " << lexer << "(\n"
-      "      const reflex::Input& input = reflex::Input(),\n" <<
+      "  " << lexer << "(\n";
+    if (!options["ctorarg"].empty())
+      *out << "      " << options["ctorarg"] << ",\n";
+    *out <<
+      "      const reflex::Input& input = reflex::Input(),\n"
       "      std::ostream&        os    = std::cout)\n"
       "    :\n"
       "      AbstractBaseLexer(input, os)\n";
@@ -2461,29 +2507,74 @@ void Reflex::write_lexer()
       "#endif\n"
       "\n";
     if (!options["flex"].empty())
+    {
+      if (!options["yy"].empty())
+        *out <<
+          "FILE *" << options["prefix"] << "in = stdin;\n"
+          "FILE *yyout = stdout;\n"
+          "\n";
+      if (!options["array"].empty() && options["pointer"].empty())
+      {
+        *out <<
+          "#ifndef YYLMAX\n"
+          "#define YYLMAX 8192\n"
+          "#endif\n"
+          "\n"
+          "char " << options["prefix"] << "text[YYLMAX];\n"
+          "yy_size_t " << options["prefix"] << "leng;\n"
+          "int " << options["prefix"] << "lineno;\n"
+          "\n"
+          "YY_EXTERN_C " << token_type << " " << options["prefix"] << "lex(void)\n"
+          "{\n";
+        if (!options["yy"].empty())
+          *out <<
+            "  if (" << options["prefix"] << "in != YY_SCANNER.in()->file())\n"
+            "    YY_SCANNER.in(" << options["prefix"] << "in);\n";
+        *out <<
+          "  " << token_type << " ret = YY_SCANNER." << lex << "();\n"
+          "  " << options["prefix"] << "leng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
+          "  if (" << options["prefix"] << "leng >= YYLMAX)\n"
+          "    YY_SCANNER.LexerError(\"token too large, exceeds YYLMAX\");\n"
+          "  memcpy(" << options["prefix"] << "text, YY_SCANNER.YYText(), " << options["prefix"] << "leng + 1);\n"
+          "  " << options["prefix"] << "lineno = static_cast<int>(YY_SCANNER.lineno());\n"
+          "  return ret;\n"
+          "}\n";
+      }
+      else
+      {
+        *out <<
+          "char *" << options["prefix"] << "text;\n"
+          "yy_size_t " << options["prefix"] << "leng;\n"
+          "int " << options["prefix"] << "lineno;\n"
+          "\n"
+          "YY_EXTERN_C " << token_type << " " << options["prefix"] << "lex(void)\n"
+          "{\n";
+        if (!options["yy"].empty())
+          *out <<
+            "  if (" << options["prefix"] << "in != YY_SCANNER.in())\n"
+            "    YY_SCANNER.in(" << options["prefix"] << "in);";
+        *out <<
+          "  " << token_type << " ret = YY_SCANNER." << lex << "();\n"
+          "  " << options["prefix"] << "text = const_cast<char*>(YY_SCANNER.YYText());\n"
+          "  " << options["prefix"] << "leng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
+          "  " << options["prefix"] << "lineno = static_cast<int>(YY_SCANNER.lineno());\n"
+          "  return ret;\n"
+          "}\n";
+      }
       *out <<
-        "char *" << options["prefix"] << "text;\n"
-        "yy_size_t " << options["prefix"] << "leng;\n"
-        "int " << options["prefix"] << "lineno;\n"
-        "\n"
-        "YY_EXTERN_C " << token_type << " " << options["prefix"] << "lex(void)\n"
-        "{\n"
-        "  " << token_type << " ret = YY_SCANNER." << lex << "();\n"
-        "  " << options["prefix"] << "text = const_cast<char*>(YY_SCANNER.YYText());\n"
-        "  " << options["prefix"] << "leng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
-        "  " << options["prefix"] << "lineno = static_cast<int>(YY_SCANNER.lineno());\n"
-        "  return ret;\n"
-        "}\n"
         "\n"
         "#define " << options["prefix"] << "text const_cast<char*>(YY_SCANNER.YYText())\n"
         "#define " << options["prefix"] << "leng static_cast<yy_size_t>(YY_SCANNER.YYLeng())\n"
         "#define " << options["prefix"] << "lineno static_cast<int>(YY_SCANNER.lineno())\n";
+    }
     else
+    {
       *out <<
         "YY_EXTERN_C " << token_type << " yylex(void)\n"
         "{\n"
         "  return YY_SCANNER." << lex << "();\n"
         "}\n";
+    }
   }
   write_banner("SECTION 2: rules");
   if (options["matcher"].empty() && !options["fast"].empty())

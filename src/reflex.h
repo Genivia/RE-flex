@@ -66,7 +66,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "1.6.3"
+#define REFLEX_VERSION "1.6.4"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -164,10 +164,10 @@ class Reflex
   bool        get_line();
   bool        skip_comment(size_t& pos);
   bool        is(const char *s);
+  bool        br(size_t pos, const char *s = NULL);
   bool        as(size_t& pos, const char *s);
   bool        ws(size_t& pos);
   bool        eq(size_t& pos);
-  bool        dt(size_t& pos);
   bool        nl(size_t& pos);
   bool        is_code();
   bool        is_topcode();

@@ -1,9 +1,9 @@
 " Vim syntax file
-" Language:	Lex
+" Language:	Lex and Flex
 " Maintainer:	Charles E. Campbell <NcampObell@SdrPchip.AorgM-NOSPAM>
 " Contributor:	Robert A. van Engelen <engelen@acm.org>
-" Last Change:	Mar 19, 2020
-" Version:	20
+" Last Change:	Mar 21, 2020
+" Version:	21
 
 " quit when a syntax file was already loaded
 if exists("b:current_syntax")
@@ -114,10 +114,10 @@ else
 endif
 syn match  lexPatAbbrv		"{\I\i*}"hs=s+1,he=e-1					contained
 syn match  lexPatTag		"^<\^\?\(\I\i*\|\*\)\(,\^\?\(\I\i*\|\*\)\)*>"		contained	nextgroup=lexPat,lexMorePat,lexPatSep,lexPatEnd
-syn match  lexPatTagZone	"^<\^\?\(\I\i*\|\*\)\(,\^\?\(\I\i*\|\*\)\)*>{"me=e-1	contained	nextgroup=lexPatTagZoneStart
+syn match  lexPatTagZone	"^<\^\?\(\I\i*\|\*\)\(,\^\?\(\I\i*\|\*\)\)*>\s*{$"me=e-1	contained	nextgroup=lexPatTagZoneStart
 
 if has("folding")
- syn region lexPatTagZoneStart	fold	matchgroup=lexPatTag	start='{\s*$'	end='^}'	skipnl	skipwhite	contained	contains=lexPatTag,lexPatTagZone,lexPatComment,lexPat,lexPatSep,lexPatInclude
+ syn region lexPatTagZoneStart	fold	matchgroup=lexPatTag	start='{$'	end='^}'	skipnl	skipwhite	contained	contains=lexPatTag,lexPatTagZone,lexPatComment,lexPat,lexPatSep,lexPatInclude
  syn region lexPatComment	fold	start="//"	end="$"		skipnl	contained	contains=cTodo	skipwhite	nextgroup=lexPatComment,lexPat,@Spell
  syn region lexPatComment	fold	start="/\*"	end="\*/"	skipnl	contained	contains=cTodo	skipwhite	nextgroup=lexPatComment,lexPat,@Spell
 else

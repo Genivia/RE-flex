@@ -1,4 +1,4 @@
-.TH REFLEX "1" "March 19, 2020" "reflex 1.6.3" "User Commands"
+.TH REFLEX "1" "March 22, 2020" "reflex 1.6.4" "User Commands"
 .SH NAME
 reflex \- the regex\-centric fast and flexible lexical analyzer generator
 .SH SYNOPSIS
@@ -105,7 +105,7 @@ use NAME as prefix of the FlexLexer class name and its members
 initialize input to std::cin instead of stdin
 .TP
   \fB\-\-bison\fR
-generate global yylex() scanner for bison
+generate global yylex() scanner, yytext, yyleng, yylineno
 .TP
   \fB\-\-bison\-bridge\fR
 generate reentrant yylex() scanner for bison pure parser
@@ -128,6 +128,9 @@ include bison yylloc support
   \fB\-R\fR, \fB\-\-reentrant\fR
 generate Flex\-compatible yylex() reentrant scanner functions
 NOTE: adds functions only, reflex scanners are always reentrant
+.TP
+  \fB\-y\fR, \fB\-\-yy\fR
+same as \fB\-\-flex\fR and \fB\-\-bison\fR, also generate global yyin, yyout
 .TP
   \fB\-\-noyywrap\fR
 do not call global yywrap() on EOF, requires option \fB\-\-flex\fR
@@ -176,7 +179,7 @@ report reflex version and exit
 .TP
   \fB\-\-nounistd\fR             n/a
 .TP
-  \fB\-\-posix\fR                n/a
+  \fB\-\-posix\-compat\fR         n/a
 .TP
   \fB\-\-stack\fR                n/a
 .TP

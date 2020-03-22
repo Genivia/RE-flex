@@ -504,6 +504,7 @@ Changelog
 - Mar  3, 2020: 1.6.1 fixed missing PCRE2 regex type `std::string` in generated scanners.
 - Mar 10, 2020: 1.6.2 improved `reflex::PCRE2Matcher`; fixed MSVC++ x86 32-bit build error when `HAVE_AVX512BW` is enabled (requires AVX512BW).
 - Mar 19, 2020: 1.6.3 updated to Unicode 13; fixed start condition scope specifications for patterns that start with a `{`; updated lex.vim.
+- Mar 22, 2020: 1.6.4 added option `--yy` to enable `--flex` and `--bison`, but also defines the global `FILE*` variables `yyin` and `yyout` for enhanced Lex/Flex compatibility (`yyin` is otherwise a pointer to the `reflex::Input` object to read files, streams, and strings).
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
