@@ -20,7 +20,7 @@ ther in a spirit of brotherhood.
   #include <cstdio>   // fopen/fclose
   #include <cctype>   // upper
   #include <iostream>
-%}
+}
 
 // we declare a Braille class with translate() lexer (this is purely cosmetic):
 %o class=Braille lex=translate

@@ -41,7 +41,7 @@
   #include <iostream> // std::cout etc.
   #include <iomanip>  // std::setw
   #include <vector>   // to store YAML containers
-%}
+}
 
 %{
   // #define SHOW_TOKENS // to output tokens for debugging
@@ -156,7 +156,7 @@
   size_t sp;                       // insert spaces in folded block scalar
   bool nl;                         // insert newline in folded block scalar
   enum { CLIP, STRIP, KEEP } mode; // chomp mode
-%}
+}
 
 // Lexer class initialization at construction
 %init{
@@ -164,7 +164,7 @@
   nl = false;
   sp = 0;
   mode = CLIP;
-%}
+}
 
 %o fast freespace dotall unicode
 

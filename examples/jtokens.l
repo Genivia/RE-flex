@@ -6,7 +6,7 @@
 // use condition states to collect the identifier in a wstring:
 // %class{
 // std::wstring id;
-// %}
+// }
 // %x ID
 // {JavaIdentifierStart}     id.assign(wstr()); start(ID);
 // <ID>{JavaIdentifierPart}  id.append(wstr());

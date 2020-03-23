@@ -2,13 +2,13 @@
 
 %top{
 #include <algorithm>
-%}
+}
 
 %class{
   public:
     void do_lex();
     std::vector<std::string> words;
-%}
+}
 
 %%
 \w+     words.push_back(str());

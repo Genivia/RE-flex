@@ -12,7 +12,7 @@
   }
   // keep track of (, [, { nesting for implicit line joins
   int join;
-%}
+}
 
 // import Python 3.x token definitions
 %include "pdefs.l"

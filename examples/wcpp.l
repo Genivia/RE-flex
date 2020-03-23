@@ -10,12 +10,12 @@
 // Lexer class members
 %class{
   int ch, wd, nl;
-%}
+}
 
 // Lexer class initialization at construction
 %init{
   ch = wd = nl = 0;
-%}
+}
 
 nl  \r?\n
 wd  [^ \t\r\n]

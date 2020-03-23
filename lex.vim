@@ -2,8 +2,8 @@
 " Language:	Lex and Flex
 " Maintainer:	Charles E. Campbell <NcampObell@SdrPchip.AorgM-NOSPAM>
 " Contributor:	Robert A. van Engelen <engelen@acm.org>
-" Last Change:	Mar 21, 2020
-" Version:	21
+" Last Change:	Mar 23, 2020
+" Version:	22
 
 " quit when a syntax file was already loaded
 if exists("b:current_syntax")
@@ -88,12 +88,12 @@ syn match  lexAbbrvPat		"\s\S.*$"lc=1						contained	contains=lexPatAbbrv,lexPat
 syn match  lexStartState	"^%\(xs\?\|s\)\(t\(a\(t\(e\?\)\?\)\?\)\?\)\?\(\s\+\I\i*\)\+\s*$"	contained
 if has("folding")
  syn region lexInitialCodeBlock	fold				start="^\s\+"	end="^\S"me=e-1			contains=@lexCcode
- syn region lexInclude		fold	matchgroup=lexSep	start="^%\a*{"	end="^%}"	contained	contains=@lexCcode,lexCFunctions
+ syn region lexInclude		fold	matchgroup=lexSep	start="^%\a*{"	end="^%\?}"	contained	contains=@lexCcode,lexCFunctions
  syn region lexAbbrvComment	fold				start="^\s*//"	end="$"		contains=@Spell
  syn region lexAbbrvComment	fold				start="^\s*/\*"	end="\*/"	contains=@Spell
 else
  syn region lexInitialCodeBlock					start="^\s\+"	end="^\S"me=e-1			contains=@lexCcode
- syn region lexInclude			matchgroup=lexSep	start="^%\a*{"	end="^%}"	contained	contains=@lexCcode,lexCFunctions
+ syn region lexInclude			matchgroup=lexSep	start="^%\a*{"	end="^%\?}"	contained	contains=@lexCcode,lexCFunctions
  syn region lexAbbrvComment					start="^\s*//"	end="$"		contains=@Spell
  syn region lexAbbrvComment					start="^\s*/\*"	end="\*/"	contains=@Spell
 endif

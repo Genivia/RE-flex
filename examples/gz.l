@@ -14,7 +14,7 @@
 #ifndef Z_BUF_LEN
 #define Z_BUF_LEN (65536)
 #endif
-%}
+}
 
 %include "cdefs.l"
 %option nodefault

@@ -27,14 +27,14 @@
   #include <iomanip>  // std::setw
   #include <vector>   // to store JSON arrays
   #include <map>      // to store JSON objects
-%}
+}
 
 // define yyFlexLexer class variables to collect values in the lexer rules
 %class{
  protected:
   double       number; // token value for token '#' (number)
   std::wstring string; // token value for token '$' (string)
-%}
+}
 
 %o fast flex freespace dotall unicode
 

@@ -4,7 +4,7 @@
 
 %top{
   #include <vector>
-%}
+}
 
 %option fast freespace unicode
 %option lexer=CSV
@@ -26,13 +26,13 @@
   void next_row()               { next_column(); process_row(); row.clear(); }
   void process_field();
   void process_row();
-%}
+}
 
 // CSV lexer class initialization at construction with constructor argument
 %ctorarg="int ch"
 %init{
   delim = ch;
-%}
+}
 
 // choice of possible delimiters: tab, space, comma, semicolon, and pipe
 delim   [\t ,;|]

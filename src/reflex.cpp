@@ -1118,14 +1118,15 @@ std::string Reflex::get_regex(size_t& pos)
   return regex;
 }
 
-/// Get line(s) of code, %{ %}, %%top{ %}, %%class{ %}, and %%init{ %}
+/// Get line(s) of code, %{ %}, %%top, %%class, and %%init
 std::string Reflex::get_code(size_t& pos)
 {
   std::string code;
   size_t at_lineno = lineno;
   size_t blk = 0, lev = 0;
   enum { CODE, STRING, CHAR, COMMENT } tok = CODE;
-  if (pos == 0 && (is("%{") || is_topcode() || is_classcode() || is_initcode()))
+  bool is_usercode = pos == 0 && is("%{");
+  if (pos == 0 && (is_usercode || is_topcode() || is_classcode() || is_initcode()))
   {
     ++blk;
     pos = linelen;
@@ -1141,28 +1142,42 @@ std::string Reflex::get_code(size_t& pos)
     while (pos >= linelen)
     {
       if (!get_line())
-        error("EOF encountered inside an action, %} or %% expected", NULL, at_lineno);
+        error("EOF encountered inside an action", NULL, at_lineno);
       pos = 0;
       if (tok == CODE)
       {
-        if ((blk > 0 || lev > 0) && is("%%"))
-          error("%% section ending encountered inside an action", NULL, at_lineno);
+        if (is("%%"))
+        {
+          if (lev > 0 || (!is_usercode && blk > 0))
+            error("%% section ending encountered inside an action where } is expected", NULL, at_lineno);
+          else if (blk > 0)
+            error("%% section ending encountered inside an action where %} is expected", NULL, at_lineno);
+        }
         if (is("%{"))
         {
+          if (blk == 0)
+          {
+            at_lineno = lineno;
+            is_usercode = true;
+          }
           code.append(newline);
           ++blk;
+          pos = linelen;
         }
-        else if (is("%}"))
+        else if (is("%}") || (!is_usercode && is("}") && blk == 1 && lev == 0))
         {
           code.append(newline);
           if (blk > 0)
             --blk;
-          if (blk == 0 && lev == 0)
+          if (blk == 0)
           {
+            if (lev > 0)
+              error("%} encountered where } is expected");
             if (!get_line())
-              error("EOF encountered inside an action, %} or %% expected", NULL, at_lineno);
+              error("EOF encountered where %% is expected");
             return code;
           }
+          pos = linelen;
         }
         else
         {
@@ -2218,24 +2233,24 @@ void Reflex::write_class()
   }
 }
 
-/// Write %%top{ %} code to lex.yy.cpp
+/// Write %%top code to lex.yy.cpp
 void Reflex::write_section_top()
 {
   if (!section_top.empty())
   {
-    write_banner("SECTION 1: %top{ user code %}");
+    write_banner("SECTION 1: %top user code");
     write_code(section_top);
   }
 }
 
-/// Write %%class{ %} code to lex.yy.cpp
+/// Write %%class code to lex.yy.cpp
 void Reflex::write_section_class()
 {
   if (!section_class.empty())
     write_code(section_class);
 }
 
-/// Write %%init{ %} code to lex.yy.cpp
+/// Write %%init code to lex.yy.cpp
 void Reflex::write_section_init()
 {
   *out << "  {\n";

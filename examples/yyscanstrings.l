@@ -12,13 +12,13 @@
 
 %top{
 #include <algorithm>
-%}
+}
 
 %class{
   public:
     void do_lex();
     std::vector<std::string> words;
-%}
+}
 
 %option flex reentrant
 

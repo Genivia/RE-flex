@@ -19,7 +19,7 @@
   class REFLEX_OPTION_lexer;  // = %option lexer (which is 'Lexer' by default)
 
   #include "y.tab.h"
-%}
+}
 
 %{
   extern void yyerror(Lexer *lexer, const char *msg);
@@ -30,7 +30,7 @@
   std::map<std::wstring,double> map;
  private:
   std::wstring                  var;
-%}
+}
 
 %option fast bison-bridge header-file interactive unicode freespace
 

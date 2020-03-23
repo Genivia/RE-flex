@@ -9,7 +9,7 @@
 #include <cstdio>
 #include <streambuf>
 #include <cstring>
-%}
+}
 
 %option nodefault
 %option fast

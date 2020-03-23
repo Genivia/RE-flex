@@ -1369,9 +1369,9 @@ This option switches the <b>`reflex`</b> scanner to *free space mode*.  Regular
 expressions in free space mode may contain spacing to improve readability.
 Spacing within regular expressions is ignored, so use `" "` or `[ ]` to match a
 space and `\h` to match a space or a tab character.  Actions in free space mode
-MUST be placed in <i>`{`</i> and <i>`}`</i> blocks and all other code must be
-placed in <i>`%{`</i> and <i>`%}`</i> blocks.  Patterns ending in an escape `\`
-continue on the next line.
+MUST be placed in <i>`{ }`</i> blocks and user code must be placed in
+<i>`%{ %}`</i> blocks.  Patterns ending in an escape `\` continue on the next
+line.
 
 🔝 [Back to table of contents](#)
 
@@ -1480,10 +1480,9 @@ used).  `NAME` can be a list of nested namespaces of the form
 This option defines the `NAME` of the generated scanner class and replaces the
 default name `Lexer` (and replaces `yyFlexLexer` when option `−−flex` is
 specified).  The scanner class members may be declared within a
-<i>`%%class{`</i> and <i>`%%}`</i> block.  The scanner class constructor code
-may be defined within a <i>`%%init{`</i> and <i>`%%}`</i> block.  Additional
-constructor arguments may be declared with <i>`%%option ctorarg="argument,
-argument, ...`</i>.
+<i>`%%class{ }`</i> block.  The scanner class constructor code may be defined
+within a <i>`%%init{ }`</i> block.  Additional constructor arguments may be
+declared with <i>`%%option ctorarg="argument, argument, ...`</i>.
 
 #### `−−lex=NAME`
 
@@ -1816,15 +1815,15 @@ group `(?:φ)` to preserve its structure.  For example, `{number}` expands to
 `(?:{digit}+)` which in turn expands to `(?:(?:[0-9])+)`.
 
 To inject code into the generated scanner, indent the code or place the code
-within a <i>`%{`</i> and <i>`%}`</i>.  The <i>`%{`</i> and <i>`%}`</i> should
-be placed at the start of a new line.  To inject code at the very top of the
-generated scanner, place this code within <i>`%%top{`</i> and <i>`%}`</i>:
+within a <i>`%{ %}`</i> block.  The <i>`%{`</i> and the matching <i>`%}`</i>
+should each be placed at the start of a new line.  To inject code at the very
+top of the generated scanner, place this code within a <i>`%%top{ }`</i> block:
 
 <div class="alt">
 ~~~{.cpp}
     %top{
       #include <iostream>    // std::cout etc.
-    %}
+    }
 ~~~
 </div>
 
@@ -1858,7 +1857,7 @@ the end of the input marked by the `<<EOF>>` rule:
 
     %top{
       #include <iostream>    // std::cout etc.
-    %}
+    }
 
     %{
       static int herd = 0;   // a global static variable to count cows
@@ -1889,17 +1888,17 @@ parallel in threads without requiring synchronization when their state is part
 of the instance and not managed by global variables.
 
 To inject Lexer class member declarations such as variables and methods, place
-the declarations within <i>`%%class{`</i> and <i>`%}`</i>.  The
-<i>`%%class{`</i> and <i>`%}`</i> should be placed at the start of a new line.
+the declarations within <i>`%%class{ }`</i> block.  The <i>`%%class{`</i> and
+the matching <i>`}`</i> should each be placed at the start of a new line.
 
 Likewise, to inject Lexer class constructor code, for example to initialize
-members, place the code within <i>`%%init{`</i> and <i>`%}`</i>.  The
-<i>`%%init{`</i> and <i>`%}`</i> should be placed at the start of a new line.
+members, place the code within <i>`%%init{ }`</i> block.  The <i>`%%init{`</i>
+and the matching <i>`}`</i> should each be placed at the start of a new line.
 Option <i>`%%option ctorarg="argument, argument, ..."`</i> may be used to
 declare the constructor arguments of the Lexer class constructor.
 
-Additional constructors and/or a destructor may be placed in <i>`%%class{`</i>
-and <i>`%}`</i>, using the class name `Lexer` (or `yyFlexLexer` with option
+Additional constructors and/or a destructor may be placed in a 
+<i>`%%class{ }`</i> block, for class `Lexer` (or `yyFlexLexer` with option
 `−−flex`), unless the class is renamed with option `−−lexer=NAME`
 (<i>`%%option lexer=NAME`</i>).
 
@@ -1916,15 +1915,15 @@ the Lexer class state:
 
     %top{
       #include <iostream>    // std::cout etc.
-    %}
+    }
 
     %class{
       int herd;  // lexer class member variable (private by default)
-    %}
+    }
 
     %init{
       herd = 0;  // initialize member variable in Lexer class constructor
-    %}
+    }
 
     cow        \<[Cc]ow\>
 
@@ -1998,11 +1997,11 @@ following defines an action for a pattern:
 </div>
 
 To add action code that spans multiple lines, indent the code or place the code
-within a <i>`{`</i> and <i>`}`</i> block.  When local variables are declared
-in an action then the code should always be placed in a block.
+in a <i>`{ }`</i> block.  When local variables are declared in an action then
+the code should always be placed in a block.
 
-In free space mode you MUST place actions in <i>`{`</i> and <i>`}`</i> blocks
-and other code in <i>`%{`</i> and <i>`%}`</i> instead of indented, see
+In free space mode you MUST place actions in <i>`{ }`</i> blocks and user code
+in <i>`%{ %}`</i> blocks instead of indented, see
 \ref reflex-pattern-freespace.
 
 Actions in the rules section can use predefined RE/flex variables and
@@ -2311,7 +2310,7 @@ from standard input (the default input) and display all numbers found:
 ~~~{.cpp}
     %top{
       #include <iostream>
-    %}
+    }
 
     digit       [0-9]
     number      {digit}+
@@ -2699,7 +2698,7 @@ library:
 
 To specify a Unicode block as a category when using the `−−unicode` option, use
 `\p{IsBlockName}`.  The table below lists the block categories up to U+FFFF,
-but you can use any of the Unicode blocks up to U+10FFFF not listed below:
+However, all Unicode blocks up to U+10FFFF are available (not listed):
 
   IsBlockName                                        | Unicode character range
   -------------------------------------------------- | -----------------------
@@ -2766,6 +2765,7 @@ but you can use any of the Unicode blocks up to U+10FFFF not listed below:
   `\p{IsLepcha}`                                     | U+1C00 to U+1C4F 
   `\p{IsOlChiki}`                                    | U+1C50 to U+1C7F 
   `\p{IsCyrillicExtended-C}`                         | U+1C80 to U+1C8F 
+  `\p{IsGeorgianExtended}`                           | U+1C90 to U+1CBF 
   `\p{IsSundaneseSupplement}`                        | U+1CC0 to U+1CCF 
   `\p{IsVedicExtensions}`                            | U+1CD0 to U+1CFF 
   `\p{IsPhoneticExtensions}`                         | U+1D00 to U+1D7F 
@@ -2873,33 +2873,38 @@ In addition, the `−−unicode` option enables standard Unicode language script
   `\p{Batak}`, `\p{Bengali}`, `\p{Bhaiksuki}`, `\p{Bopomofo}`, `\p{Brahmi}`,
   `\p{Braille}`, `\p{Buginese}`, `\p{Buhid}`, `\p{Canadian_Aboriginal}`,
   `\p{Carian}`, `\p{Caucasian_Albanian}`, `\p{Chakma}`, `\p{Cham}`,
-  `\p{Cherokee}`, `\p{Coptic}`, `\p{Cuneiform}`, `\p{Cypriot}`, `\p{Cyrillic}`,
-  `\p{Deseret}`, `\p{Devanagari}`, `\p{Duployan}`, `\p{Egyptian_Hieroglyphs}`,
-  `\p{Elbasan}`, `\p{Ethiopic}`, `\p{Georgian}`, `\p{Glagolitic}`,
-  `\p{Gothic}`, `\p{Grantha}`, `\p{Greek}`, `\p{Gujarati}`, `\p{Gurmukhi}`,
-  `\p{Han}`, `\p{Hangul}`, `\p{Hanunoo}`, `\p{Hatran}`, `\p{Hebrew}`,
+  `\p{Cherokee}`, `\p{Chorasmian}`, `\p{Common}`, `\p{Coptic}`,
+  `\p{Cuneiform}`, `\p{Cypriot}`, `\p{Cyrillic}`, `\p{Deseret}`,
+  `\p{Devanagari}`, `\p{Dives_Akuru}`, `\p{Dogra}`, `\p{Duployan}`,
+  `\p{Egyptian_Hieroglyphs}`, `\p{Elbasan}`, `\p{Elymaic}`, `\p{Ethiopic}`,
+  `\p{Georgian}`, `\p{Glagolitic}`, `\p{Gothic}`, `\p{Grantha}`, `\p{Greek}`,
+  `\p{Gujarati}`, `\p{Gunjala_Gondi}`, `\p{Gurmukhi}`, `\p{Han}`, `\p{Hangul}`,
+  `\p{Hanifi_Rohingya}`, `\p{Hanunoo}`, `\p{Hatran}`, `\p{Hebrew}`,
   `\p{Hiragana}`, `\p{Imperial_Aramaic}`, `\p{Inscriptional_Pahlavi}`,
   `\p{Inscriptional_Parthian}`, `\p{Javanese}`, `\p{Kaithi}`, `\p{Kannada}`,
-  `\p{Katakana}`, `\p{Kayah_Li}`, `\p{Kharoshthi}`, `\p{Khmer}`, `\p{Khojki}`,
-  `\p{Khudawadi}`, `\p{Lao}`, `\p{Latin}`, `\p{Lepcha}`, `\p{Limbu}`,
-  `\p{Linear_A}`, `\p{Linear_B}`, `\p{Lisu}`, `\p{Lycian}`, `\p{Lydian}`,
-  `\p{Mahajani}`, `\p{Malayalam}`, `\p{Mandaic}`, `\p{Manichaean}`,
-  `\p{Marchen}`, `\p{Masaram_Gondi}`, `\p{Meetei_Mayek}`, `\p{Mende_Kikakui}`,
+  `\p{Katakana}`, `\p{Kayah_Li}`, `\p{Kharoshthi}`, `\p{Khitan_Small_Script}`,
+  `\p{Khmer}`, `\p{Khojki}`, `\p{Khudawadi}`, `\p{Lao}`, `\p{Latin}`,
+  `\p{Lepcha}`, `\p{Limbu}`, `\p{Linear_A}`, `\p{Linear_B}`, `\p{Lisu}`,
+  `\p{Lycian}`, `\p{Lydian}`, `\p{Mahajani}`, `\p{Makasar}`, `\p{Malayalam}`,
+  `\p{Mandaic}`, `\p{Manichaean}`, `\p{Marchen}`, `\p{Masaram_Gondi}`,
+  `\p{Medefaidrin}`, `\p{Meetei_Mayek}`, `\p{Mende_Kikakui}`,
   `\p{Meroitic_Cursive}`, `\p{Meroitic_Hieroglyphs}`, `\p{Miao}`, `\p{Modi}`,
   `\p{Mongolian}`, `\p{Mro}`, `\p{Multani}`, `\p{Myanmar}`, `\p{Nabataean}`,
-  `\p{New_Tai_Lue}`, `\p{Newa}`, `\p{Nko}`, `\p{Nushu}`, `\p{Ogham}`,
-  `\p{Ol_Chiki}`, `\p{Old_Hungarian}`, `\p{Old_Italic}`,
-  `\p{Old_North_Arabian}`, `\p{Old_Permic}`, `\p{Old_Persian}`,
+  `\p{Nandinagari}`, `\p{New_Tai_Lue}`, `\p{Newa}`, `\p{Nko}`, `\p{Nushu}`,
+  `\p{Nyiakeng_Puachue_Hmong}`, `\p{Ogham}`, `\p{Ol_Chiki}`,
+  `\p{Old_Hungarian}`, `\p{Old_Italic}`, `\p{Old_North_Arabian}`,
+  `\p{Old_Permic}`, `\p{Old_Persian}`, `\p{Old_Sogdian}`,
   `\p{Old_South_Arabian}`, `\p{Old_Turkic}`, `\p{Oriya}`, `\p{Osage}`,
   `\p{Osmanya}`, `\p{Pahawh_Hmong}`, `\p{Palmyrene}`, `\p{Pau_Cin_Hau}`,
   `\p{Phags_Pa}`, `\p{Phoenician}`, `\p{Psalter_Pahlavi}`, `\p{Rejang}`,
   `\p{Runic}`, `\p{Samaritan}`, `\p{Saurashtra}`, `\p{Sharada}`, `\p{Shavian}`,
-  `\p{Siddham}`, `\p{SignWriting}`, `\p{Sinhala}`, `\p{Sora_Sompeng}`,
-  `\p{Soyombo}`, `\p{Sundanese}`, `\p{Syloti_Nagri}`, `\p{Syriac}`,
-  `\p{Tagalog}`, `\p{Tagbanwa}`, `\p{Tai_Le}`, `\p{Tai_Tham}`, `\p{Tai_Viet}`,
-  `\p{Takri}`, `\p{Tamil}`, `\p{Tangut}`, `\p{Telugu}`, `\p{Thaana}`,
-  `\p{Thai}`, `\p{Tibetan}`, `\p{Tifinagh}`, `\p{Tirhuta}`, `\p{Ugaritic}`,
-  `\p{Vai}`, `\p{Warang_Citi}`, `\p{Yi}`, `\p{Zanabazar_Square}`.
+  `\p{Siddham}`, `\p{SignWriting}`, `\p{Sinhala}`, `\p{Sogdian}`,
+  `\p{Sora_Sompeng}`, `\p{Soyombo}`, `\p{Sundanese}`, `\p{Syloti_Nagri}`,
+  `\p{Syriac}`, `\p{Tagalog}`, `\p{Tagbanwa}`, `\p{Tai_Le}`, `\p{Tai_Tham}`,
+  `\p{Tai_Viet}`, `\p{Takri}`, `\p{Tamil}`, `\p{Tangut}`, `\p{Telugu}`,
+  `\p{Thaana}`, `\p{Thai}`, `\p{Tibetan}`, `\p{Tifinagh}`, `\p{Tirhuta}`,
+  `\p{Ugaritic}`, `\p{Vai}`, `\p{Wancho}`, `\p{Warang_Citi}`, `\p{Yezidi}`,
+  `\p{Yi}`, `\p{Zanabazar_Square}`,
 
 @note Unicode language script character classes differ from the Unicode blocks
 that have a similar name.  For example, the `\p{Greek}` class represents Greek
@@ -2927,8 +2932,8 @@ cannot be empty.
 Note that `<<EOF>>` in lexer specifications match the end of input, which 
 can be used in place of the pattern `\z`.
 
-Actions for the start of input can be specified
-in an initial code block preceding the rules, see \ref reflex-code-blocks.
+Actions for the start of input can be specified in an initial code block
+preceding the rules, see \ref reflex-code-blocks.
 
 Word boundaries demarcate words.  Word characters `\w` are letters, digits, and
 the underscore.
@@ -3330,8 +3335,8 @@ free-space mode when the `−−matcher=reflex` option is specified (the default
 matcher).
 
 Free space mode requires lexer actions in \ref reflex-spec-rules of a lexer
-specification to be placed in <i>`{`</i> and <i>`}`</i> blocks and other code
-to be placed in <i>`%{`</i> and <i>`%}`</i> instead of indented.
+specification to be placed in <i>`{ }`</i> blocks and user code to be placed in
+<i>`%{ %}`</i> blocks instead of indented.
 
 To enable free space mode in <b>`reflex`</b> use the `−−freespace` option (or
 <i>`%%option freespace`</i>).
@@ -3424,12 +3429,12 @@ specification template:
 
     %class{
       MEMBERS
-    %}
+    }
 
     %option ctorarg="CTORARG"
     %init{
       INIT
-    %}
+    }
 
     %%
 
@@ -3508,8 +3513,11 @@ Flex with option `-+` for C++):
 
 ~~~{.cpp}
     #include <reflex/flexlexer.h>
+
     namespace NAMESPACE {
+
       typedef reflex::FlexLexer<reflex::Matcher> FlexLexer;
+
       class LEXER : public FlexLexer {
         MEMBERS
        public:
@@ -3533,6 +3541,7 @@ Flex with option `-+` for C++):
           return LEX();
         }
       };
+
       int NAMESPACE::LEXER::LEX()
       {
         static const reflex::Pattern PATTERN_INITIAL("(?m)(REGEX)");
@@ -3594,6 +3603,7 @@ inherits Lexer and declares a public `int lex()` method:
 <div class="alt">
 ~~~{.cpp}
     %option class=MyLexer
+
     %{
       class MyLexer : public Lexer {
        public:
@@ -3617,6 +3627,7 @@ For example:
 <div class="alt">
 ~~~{.cpp}
     %option yyclass="MyLexer"
+
     %{
       class MyLexer : public yyFlexLexer {
        public:
@@ -3938,7 +3949,7 @@ reached EOF:
         in(std::cin);
         return in().good() ? 0 : 1;
       }
-    %}
+    }
 ~~~
 </div>
 
@@ -4073,7 +4084,7 @@ input from some source of text:
         // populate s[0..k-1] for some k with k <= n
         return k; // return number of bytes filled in s[]
       }
-    %}
+    }
 ~~~
 </div>
 
@@ -4099,7 +4110,7 @@ permit nested `#include` directives up to a depth of as much as 99 files:
 ~~~{.cpp}
     %top{
       #include <stdio.h>
-    %}
+    }
 
     %class{
 
@@ -4130,11 +4141,11 @@ permit nested `#include` directives up to a depth of as much as 99 files:
         return false;                   // return false: continue reading
       }
 
-    %}
+    }
 
     %init{
       depth = 0;
-    %}
+    }
 
     %%
 
@@ -4458,8 +4469,8 @@ code blocks may be associated with start condition states as follows:
 ~~~
 </div>
 
-Initial code blocks should be indented or should be placed within <i>`%{`</i>
-and <i>`%}`</i>.
+Initial code blocks should be indented or should be placed within
+<i>`%{ %}`</i> blocks.
 
 An initial code block can be used to configure the lexer's matcher, since a
 new matcher with the lexer patterns is created by the lexer just before the
@@ -4469,11 +4480,14 @@ rules are matched.  For example:
 ~~~{.cpp}
     %class{
       bool init_matcher;
-    %}
+    }
+
     %init{
       init_matcher = true;
-    %}
+    }
+
     %%
+
     %{
       if (init_matcher)            // init the new matcher?
       {
@@ -4509,7 +4523,7 @@ specification to `extern "C"` to enable C linkage rules:
     %top{
       #include "y.tab.h"               /* include y.tab.h generated by bison */
       #define YY_EXTERN_C extern "C"   /* yylex() must use C linkage rules */
-    %}
+    }
 
     %option noyywrap bison
 
@@ -4619,8 +4633,8 @@ The second option requires the generated parser to be compiled in C++, because
 needed with Flex to redeclare the `yylex()` function signature, for example to
 take an additional `yylval` parameter that must be passed through from
 `yyparse()` to `yylex()`.  Because the generated scanner uses a Lexer class for
-scanning, the class can be extended with <i>`%%class{`</i> and <i>`%}`</i> to
-hold state information and additional token-related values.  These values can
+scanning, the class can be extended with <i>`%%class{ }`</i> block to hold
+state information and additional token-related values.  These values can
 then be exchanged with the parser using getters and setters, which is preferred
 over changing the `yylex()` function signature with `YY_DECL`.
 
@@ -4909,7 +4923,7 @@ values of this type, constructed with `yy::parser::symbol_type` or with
 ~~~{.cpp}
     %top{
     #include "parser.hpp"  /* Generated by bison. */
-    %}
+    }
 
     %option bison-complete
     %option bison-cc-namespace=yy
@@ -5058,7 +5072,7 @@ values of this type, constructed with `yy::parser::symbol_type` or with
     %top{
     #include "parser.hpp"    /* Generated by bison. */
     #include "location.hpp"  /* Generated by bison %locations. */
-    %}
+    }
 
     %option bison-complete
     %option bison-cc-namespace=yy
@@ -5313,7 +5327,7 @@ be used as such in the scanner's rules.
 ~~~{.cpp}
     %top{
       #include "y.tab.h"    /* include y.tab.h generated by bison */
-    %}
+    }
 ~~~
 </div>
 
@@ -5861,15 +5875,15 @@ functions:
       #include <iostream>
       #include <iomanip>
       using namespace std;
-    %}
+    }
 
     %class{
       int ch, wd, nl;
-    %}
+    }
 
     %init{
       ch = wd = nl = 0;
-    %}
+    }
 
     %option unicode
     %option main
@@ -5911,15 +5925,15 @@ regexes.
 ~~~{.cpp}
     %top{
       #include <stdio.h>
-    %}
+    }
 
     %class{
       int level;
-    %}
+    }
 
     %init{
       level = 0;
-    %}
+    }
 
     %o matcher=reflex dotall main
     %x ATTRIBUTES
@@ -6027,8 +6041,8 @@ Free space mode permits spacing between concatenations and alternations.  To
 match a single space, use `" "` or `[ ]`.  Long patterns can continue on the
 next line(s) when lines ends with an escape `\`.
 
-In free space mode you MUST place actions in <i>`{`</i> and <i>`}`</i> blocks
-and other code in <i>`%{`</i> and <i>`%}`</i>.
+In free space mode you MUST place actions in <i>`{ }`</i> blocks and user code
+in <i>`%{ %}`</i> blocks instead of indented.
 
 When used with option `unicode`, the scanner automatically recognizes and scans
 Unicode identifier names.  Note that we can use `matcher().columno()` or
@@ -8255,11 +8269,11 @@ recognized, for example:
     %class{
       static const size_t max_errors = 10;
       size_t errors;
-    %}
+    }
 
     %init{
       errors = 0;
-    %}
+    }
 
     %%
     ...  // lexer rules
@@ -8771,7 +8785,7 @@ constructor and in the `wrap()` method as follows:
       #include <stdio.h>
       #include <readline/readline.h>
       #include <readline/history.h>
-    %}
+    }
 
     %class{
       const char *prompt;
@@ -8796,7 +8810,7 @@ constructor and in the `wrap()` method as follows:
       char *line;
       // the line with \n appended
       std::string linen;
-    %}
+    }
 
     %init{
       prompt = NULL;
@@ -8808,7 +8822,7 @@ constructor and in the `wrap()` method as follows:
         linen.assign(line).push_back('\n');
       }
       in(linen);
-    %}
+    }
 ~~~
 </div>
 

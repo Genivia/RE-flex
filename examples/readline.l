@@ -5,7 +5,7 @@
   #include <stdio.h>
   #include <readline/readline.h>
   #include <readline/history.h>
-%}
+}
 
 // yyFlexLexer class members
 %class{
@@ -51,7 +51,7 @@
   char *line;
   // the line with \n appended
   std::string linen;
-%}
+}
 
 // yyFlexLexer class initialization at construction
 %init{
@@ -64,7 +64,7 @@
     linen.assign(line).push_back('\n');
   }
   in(linen);
-%}
+}
 
 %option flex main nodefault
 

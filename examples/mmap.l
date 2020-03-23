@@ -28,7 +28,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <sys/mman.h>
-%}
+}
 
 /* may add %option unicode before the %include to match unicode identifiers */
 
