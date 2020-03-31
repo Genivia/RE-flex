@@ -506,6 +506,7 @@ Changelog
 - Mar 19, 2020: 1.6.3 updated to Unicode 13; fixed start condition scope specifications for patterns that start with a `{`; updated lex.vim.
 - Mar 22, 2020: 1.6.4 added option `--yy` to enable `--flex` and `--bison`, but also defines the global `FILE*` variables `yyin` and `yyout` for enhanced Lex/Flex compatibility (`yyin` is otherwise a pointer to the `reflex::Input` object to read files, streams, and strings).
 - Mar 23, 2020: 1.6.5 updated to permit `}` as closing marker for `%top{`, `%class{`, and `%init{` code blocks, i.e. `%}` or `}` may be used as closing markers.
+- Mar 31, 2020: 1.6.6 fixed an issue where a trailing backslash in a pattern in a lexer specification causes a reflex-generated C++ comment to extend to the next line, which results in a compilation warning and possibly a line of code being skipped.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
