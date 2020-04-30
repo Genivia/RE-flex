@@ -4,10 +4,10 @@
 [![build status][travis-image]][travis-url] [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url] [![CodeProject][codeproject-image]][codeproject-url]
 
 The regex-centric, fast lexical analyzer generator for C++ with full Unicode
-support.  Flex reimagined: fast, flexible, adds PCRE2 and Boost 💪
+support.
 
-[RE/flex][reflex-url] is as fast or faster than Flex while providing a wealth
-of new features.  RE/flex is also much faster than regex libraries such as
+[RE/flex][reflex-url] is faster than Flex while providing a wealth of new
+features.  RE/flex is also much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
 representative C source code file into 244 tokens takes only 8 microseconds:
 
@@ -507,6 +507,7 @@ Changelog
 - Mar 22, 2020: 1.6.4 added option `--yy` to enable `--flex` and `--bison`, but also defines the global `FILE*` variables `yyin` and `yyout` for enhanced Lex/Flex compatibility (`yyin` is otherwise a pointer to the `reflex::Input` object to read files, streams, and strings).
 - Mar 23, 2020: 1.6.5 updated to permit `}` as closing marker for `%top{`, `%class{`, and `%init{` code blocks, i.e. `%}` or `}` may be used as closing markers.
 - Mar 31, 2020: 1.6.6 fixed an issue where a trailing backslash in a pattern in a lexer specification causes a reflex-generated C++ comment to extend to the next line, which results in a compilation warning and possibly a line of code being skipped.
+- Apr 30, 2020: 1.6.7 minor improvements to parse and convert regex patterns to DFAs.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

@@ -7562,10 +7562,10 @@ See also \ref regex-input-dosstreambuf.
 ### DOS CRLF newlines                               {#regex-input-dosstreambuf}
 
 DOS files and other DOS or Windows input sources typically end lines with CRLF
-byte pairs, see \ref crlf.  To automatically replace CRLF by LF you can use the
-`reflex::Input::dos_streambuf` class to construct a `std::istream` object.
-This normalized stream can then be used as input to a RE/flex scanner or to a
-regex matcher:
+byte pairs, see \ref crlf.  To automatically replace CRLF by LF when reading
+files in "binary mode" you can use the `reflex::Input::dos_streambuf` class to
+construct a `std::istream` object.  This normalized stream can then be used as
+input to a RE/flex scanner or to a regex matcher:
 
 ~~~{.cpp}
     reflex::Input input(...);                // create an Input object for some given input

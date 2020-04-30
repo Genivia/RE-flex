@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Mar 31 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Apr 30 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -3074,7 +3074,7 @@ Input streambuf</h3>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="regex-input-dosstreambuf"></a>
 DOS CRLF newlines</h3>
-<p>DOS files and other DOS or Windows input sources typically end lines with CRLF byte pairs, see <a class="el" href="index.html#crlf">Handling DOS CRLF newlines </a>. To automatically replace CRLF by LF you can use the <code><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html" title="Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf...">reflex::Input::dos_streambuf</a></code> class to construct a <code>std::istream</code> object. This normalized stream can then be used as input to a RE/flex scanner or to a regex matcher:</p>
+<p>DOS files and other DOS or Windows input sources typically end lines with CRLF byte pairs, see <a class="el" href="index.html#crlf">Handling DOS CRLF newlines </a>. To automatically replace CRLF by LF when reading files in "binary mode" you can use the <code><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html" title="Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf...">reflex::Input::dos_streambuf</a></code> class to construct a <code>std::istream</code> object. This normalized stream can then be used as input to a RE/flex scanner or to a regex matcher:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(...);                <span class="comment">// create an Input object for some given input</span></div><div class="line"><a class="code" href="classreflex_1_1_input_1_1dos__streambuf.html">reflex::Input::dos_streambuf</a> buf(input); <span class="comment">// create a dos_streambuf</span></div><div class="line">std::istream is(&amp;buf);</div><div class="line"><span class="keywordflow">if</span> (is.good())</div><div class="line">{</div><div class="line">  <span class="comment">// read the stream</span></div><div class="line">}</div></div><!-- fragment --><p>Once the stream object is created it can be used to create a new input object for a RE/flex scanner, for example:</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (is.good())</div><div class="line">{</div><div class="line">  Lexer lexer(is); <span class="comment">// create a lexer</span></div><div class="line">  lexer.lex();     <span class="comment">// scan the normalized input (DOS CRLF -&gt; LF)</span></div><div class="line">}</div></div><!-- fragment --><p>or for a regex matcher that uses Boost.Regex or PCRE2:</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (is.good())</div><div class="line">{</div><div class="line">  <a class="code" href="classreflex_1_1_boost_matcher.html">reflex::BoostMatcher</a> matcher(<span class="stringliteral">&quot;\\w+&quot;</span>, is); <span class="comment">// read normalized input (DOS CRLF -&gt; LF)</span></div><div class="line">  <span class="keywordflow">while</span> (matcher.find() != 0)</div><div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Found &quot;</span> &lt;&lt; matcher.text() &lt;&lt; std::endl;</div><div class="line">}</div></div><!-- fragment --><p>Note that when the input is a <code>FILE*</code>, CRLF pairs are replaced by LF and UTF-16/32 encodings are automatically normalized to UTF-8 (when a UTF BOM is present in the file or you can specify <a class="el" href="index.html#regex-input-file">FILE encodings</a>).</p>
@@ -3307,7 +3307,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Mar 31 2020 16:38:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Apr 30 2020 10:16:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
