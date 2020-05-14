@@ -14,10 +14,10 @@ microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
-<tr><td><b>reflex --fast --noindent</b></td><td><b>RE/flex 1.6.7</b></td><td><b>8</b></td></tr>
-<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.6.7</b></td><td><b>9</b></td></tr>
+<tr><td><b>reflex --fast --noindent</b></td><td><b>RE/flex 2.0.0</b></td><td><b>8</b></td></tr>
+<tr><td><b>reflex --fast</b></td><td><b>RE/flex 2.0.0</b></td><td><b>9</b></td></tr>
 <tr><td>flex -+ --full</td><td>Flex 2.5.35</td><td>17</td></tr>
-<tr><td>reflex --full</td><td>RE/flex 1.6.7</td><td>18</td></tr>
+<tr><td>reflex --full</td><td>RE/flex 2.0.0</td><td>18</td></tr>
 <tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex 1.66.0</td><td>40</td></tr>
 <tr><td>pcre2_jit_match()</td><td>PCRE2 (jit) 10.32</td><td>60</td></tr>
 <tr><td>hs_compile_multi(), hs_scan()</td><td>Hyperscan 5.1.0</td><td>209</td></tr>
