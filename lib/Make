@@ -14,7 +14,6 @@ CWFLAGS=-Wall -Wunused -Wextra
 CIFLAGS=-I. -I../include
 CMFLAGS=
 # CMFLAGS=-DDEBUG
-# CMFLAGS=-DWITH_BITS
 CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
 
 .PHONY:			release install clean distclean

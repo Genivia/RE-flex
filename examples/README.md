@@ -70,14 +70,15 @@ RE/flex scanner examples using RE/flex lexer methods
 - `reflexexample10.l` example RE/flex scanner adapted from the Flex documentation to use multiple buffers
 - `reflexexample11.lxx` example RE/flex scanner with Bison 3.2 C++ bison-complete and bison-locations
 
-Regex pattern matching with the RE/flex pattern matching library
-----------------------------------------------------------------
+Regex pattern matching with the easy-to-use RE/flex regex API
+-------------------------------------------------------------
 
-- `cards.cpp` matches credit card numbers
+- `cards.cpp` RE/flex regex API demo: matches credit card numbers (uses the fast RE/flex regex matcher)
 - `cvt2utf` demonstrates `reflex::Input` UTF-8 normalization to convert files to UTF-8/16/32
-- `fastsearch.cpp` demonstrates super fast search with fixed regex patterns, faster than GNU grep
-- `ugrep.cpp` [universal grep](https://github.com/Genivia/ugrep) ultra fast file searcher, uses the RE/flex regex engine
-- `url.cpp` capture domain, path, and query keys from URLs (requires Boost.Regex or PCRE2 libraries)
+- `fastsearch.cpp` demonstrates super fast search with regex patterns compiled to C++ (typically much faster than any grep tool)
+- `ugrep.cpp` file searcher (simple version), [fully-featured high-performance version on GitHub](https://github.com/Genivia/ugrep)
+- `url_boost.cpp` RE/flex regex API demo: capture domain, path, and query keys from URLs (uses the Boost.Regex library)
+- `url_pcre2.cpp` RE/flex regex API demo: capture domain, path, and query keys from URLs (uses the PCRE2 library)
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/get-reflex.html

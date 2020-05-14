@@ -14,8 +14,11 @@
 # flexexample9xx, reflexexample9xx, flexexample11xx, reflexexample11xx require Bison 3.0 or greater:
 # > make -f Make examples3.2
 #
-# url and wc_boost require Boost:
+# url_boost and wc_boost requires Boost.Regex installed:
 # > make -f Make boostexamples
+#
+# url_pcre2 and wc_pcre2 requires PCRE2 installed:
+# > make -f Make pcre2examples
 
 REFLEX    = $(top_builddir)/src/reflex
 REFLAGS   =
@@ -36,7 +39,7 @@ CXXFLAGS  = $(CXXWFLAGS) $(CXXOFLAGS) $(CXXIFLAGS) $(CXXMFLAGS)
 
 all-local:	examples examplesxx
 
-.PHONY:		examples examplesxx examples3.2 boostexamples
+.PHONY:		examples examplesxx examples3.2 boostexamples pcre2examples
 
 examples:	flexexample1 \
 		flexexample2 \
@@ -104,7 +107,9 @@ examples3.2:	flexexample9xx \
 		flexexample11xx \
 		reflexexample11xx
 
-boostexamples:  url wc_boost
+boostexamples:  url_boost wc_boost
+
+pcre2examples:  url_pcre2 wc_pcre2
 
 flexexample1:		flexexample1.l
 			$(REFLEX) $(REFLAGS) --flex flexexample1.l
@@ -411,9 +416,6 @@ fastsearch:	fastsearch.cpp fastsearch_fsm.cpp
 cards:		cards.cpp
 		$(CXX) $(CXXFLAGS) -o $@ cards.cpp $(LIBREFLEX)
 
-url:		url.cpp
-		$(CXX) $(CXXFLAGS) -I $(INCBOOST) -o $@ url.cpp $(LIBREFLEX) $(LIBBOOST)
-
 cvt2utf:	cvt2utf.cpp
 		$(CXX) $(CXXFLAGS) -o $@ cvt2utf.cpp $(LIBREFLEX)
 
@@ -428,9 +430,19 @@ dos:		dos.l
 		$(REFLEX) $(REFLAGS) dos.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
+url_boost:	url_boost.cpp
+		$(CXX) $(CXXFLAGS) -I $(INCBOOST) -o $@ url_boost.cpp $(LIBREFLEX) $(LIBBOOST)
+
 wc_boost:	wc.l
 		$(REFLEX) $(REFLAGS) --matcher=boost --flex wc.l
 		$(CXX) $(CXXFLAGS) -I $(INCBOOST) -o $@ lex.yy.cpp $(LIBREFLEX) $(LIBBOOST)
+
+url_pcre2:	url_pcre2.cpp
+		$(CXX) $(CXXFLAGS) -I $(INCPCRE2) -o $@ url_pcre2.cpp $(LIBREFLEX) $(LIBPCRE2)
+
+wc_pcre2:	wc.l
+		$(REFLEX) $(REFLAGS) --matcher=pcre2 --flex wc.l
+		$(CXX) $(CXXFLAGS) -I $(INCPCRE2) -o $@ lex.yy.cpp $(LIBREFLEX) $(LIBPCRE2)
 
 .PHONY:		clean
 
@@ -440,4 +452,4 @@ clean:
 		-rm -f lex.yy.h lex.yy.hpp lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx parser.hpp parser.cpp scanner.hpp scanner.cpp location.hh location.hpp position.hh position.hpp stack.hh stack.hpp reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
 		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent1 indent2 json yaml braille unicode csv scanstrings yyscanstrings mmap fastfind fastsearch cards url cvt2utf ugrep gz dos wc_boost
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent1 indent2 json yaml braille unicode csv scanstrings yyscanstrings mmap fastfind fastsearch cards cvt2utf ugrep gz dos url_boost wc_boost url_pcre2 wc_pcre2

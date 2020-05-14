@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Class Members</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Apr 30 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu May 14 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -115,13 +115,13 @@
 : <a class="el" href="classreflex_1_1_input_1_1streambuf.html#a795433eee5b2cee82d573687e0f1e8b0">reflex::Input::streambuf</a>
 </li>
 <li>Char
-: <a class="el" href="classreflex_1_1_pattern.html#a98c79e11448d94900f6db02a09fecd69">reflex::Pattern</a>
+: <a class="el" href="classreflex_1_1_pattern.html#a1d74385d9faa9b77a0fd17614a17d3b1">reflex::Pattern</a>
 </li>
-<li>Chars
-: <a class="el" href="classreflex_1_1_pattern.html#ab5941659aec38a8a39608088e0799555">reflex::Pattern</a>
+<li>Chars()
+: <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a69d2608fdcdcdabfd39f42687dfb4908">reflex::Pattern::Chars</a>
 </li>
 <li>check_dfa_closure()
-: <a class="el" href="classreflex_1_1_pattern.html#aa2456a0755ae0642d444ea26fe1c52d0">reflex::Pattern</a>
+: <a class="el" href="classreflex_1_1_pattern.html#aae6a8c124ddb4d6ae3afb280f270bd9a">reflex::Pattern</a>
 </li>
 <li>chr()
 : <a class="el" href="classreflex_1_1_abstract_lexer.html#aa08720e165486e2db19cdcd99ee80fb1">reflex::AbstractLexer&lt; M &gt;</a>
@@ -133,7 +133,10 @@
 <li>clear()
 : <a class="el" href="classreflex_1_1_bits.html#a93ad4ff056134aba0d01bb4242a1617e">reflex::Bits</a>
 , <a class="el" href="classreflex_1_1_input.html#a2d8062373d7ce9522e1962af7fd9a49a">reflex::Input</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#af67a80ebb9cbf929f5a4cfbd7b8f6180">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_pattern.html#a7e09054af04bea1f99c87fc4b71f952a">reflex::Pattern</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#ab454eb57d8a0bfd3f2432f19eb7a655b">reflex::Pattern::DFA</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_tree.html#ad851484b84e134a7551488cd562dd3e6">reflex::Pattern::Tree</a>
 </li>
 <li>clear_stops()
 : <a class="el" href="classreflex_1_1_matcher.html#a06cc1f381a99c834a0abf213b617b895">reflex::Matcher</a>
@@ -180,20 +183,17 @@
 , <a class="el" href="classreflex_1_1_abstract_matcher.html#a84fe081ea4237a44ea659c5400fffccd">reflex::AbstractMatcher</a>
 </li>
 <li>compact_dfa()
-: <a class="el" href="classreflex_1_1_pattern.html#a885813800facf0d10934583600ad454f">reflex::Pattern</a>
+: <a class="el" href="classreflex_1_1_pattern.html#ad5673f499cd57bd5ae47174b014f666f">reflex::Pattern</a>
 </li>
 <li>compile()
-: <a class="el" href="classreflex_1_1_pattern.html#ab9f370970f771824574863df077d8495">reflex::Pattern</a>
+: <a class="el" href="classreflex_1_1_pattern.html#aedbda116af17780987a9bdcd1af13ff2">reflex::Pattern</a>
 , <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a5d0bb66f8cabd893e24f24762e2b48df">reflex::PCRE2Matcher</a>
-</li>
-<li>compile_esc()
-: <a class="el" href="classreflex_1_1_pattern.html#af4f83afeefbbfb31baf8e685bffaa837">reflex::Pattern</a>
 </li>
 <li>compile_list()
 : <a class="el" href="classreflex_1_1_pattern.html#a0d479e51b4026545c75878def0d764de">reflex::Pattern</a>
 </li>
 <li>compile_transition()
-: <a class="el" href="classreflex_1_1_pattern.html#a3eda0c761f49da20c4b23a529a541af9">reflex::Pattern</a>
+: <a class="el" href="classreflex_1_1_pattern.html#ae0a61361962b6b182b8abe0f8f018906">reflex::Pattern</a>
 </li>
 <li>conditions
 : <a class="el" href="class_reflex.html#a19a51b8e2bb114d8e237736464ac1110">Reflex</a>
@@ -215,6 +215,7 @@
 </li>
 <li>contains()
 : <a class="el" href="classreflex_1_1_bits.html#a4b528a08e89e3d83ab902123769819b4">reflex::Bits</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a195162ced0b086f99458a2102b587048">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#af1e84aa26790720fa68ac1882839db0c">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>convert()
@@ -287,7 +288,7 @@
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Apr 30 2020 10:16:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu May 14 2020 13:20:19 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

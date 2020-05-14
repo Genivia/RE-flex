@@ -7,16 +7,17 @@ The regex-centric, fast lexical analyzer generator for C++ with full Unicode
 support.
 
 [RE/flex][reflex-url] is faster than Flex while providing a wealth of new
-features.  RE/flex is also much faster than regex libraries such as
-Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
-representative C source code file into 244 tokens takes only 8 microseconds:
+features and contributions.  RE/flex is also much faster than regex libraries
+such as Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing
+a 2 KB representative C source code file into 244 tokens takes only 8
+microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
-<tr><td><b>reflex --fast --noindent</b></td><td><b>RE/flex 1.5.6</b></td><td><b>8</b></td></tr>
-<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.5.6</b></td><td><b>9</b></td></tr>
+<tr><td><b>reflex --fast --noindent</b></td><td><b>RE/flex 1.6.7</b></td><td><b>8</b></td></tr>
+<tr><td><b>reflex --fast</b></td><td><b>RE/flex 1.6.7</b></td><td><b>9</b></td></tr>
 <tr><td>flex -+ --full</td><td>Flex 2.5.35</td><td>17</td></tr>
-<tr><td>reflex --full</td><td>RE/flex 1.5.6</td><td>18</td></tr>
+<tr><td>reflex --full</td><td>RE/flex 1.6.7</td><td>18</td></tr>
 <tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex 1.66.0</td><td>40</td></tr>
 <tr><td>pcre2_jit_match()</td><td>PCRE2 (jit) 10.32</td><td>60</td></tr>
 <tr><td>hs_compile_multi(), hs_scan()</td><td>Hyperscan 5.1.0</td><td>209</td></tr>
@@ -48,43 +49,42 @@ information incurs some overhead.
 Features
 --------
 
-- Compatible with Flex to eliminate a learning curve, making a transition to
-  RE/flex frustration-free.
+- Compatible with Flex to eliminate a learning curve, making a transition from
+  Flex++ to RE/flex frustration-free.
 - Generates reusable source code that is easy to understand.
-- Works with Bison and supports reentrant, bison-bridge, bison-locations,
-  Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison complete symbols.
+- Integrates seamlessly with Bison and supports reentrant, bison-bridge,
+  bison-locations, Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison
+  complete symbols.
+- Fully supports Unicode and Unicode properties `\p{C}`, including Unicode
+  identifier matching for C++11, Java, C#, and Python source code.
+- Auto-detects UTF-8/16/32 input to match Unicode patterns.
+- Supports file encodings ISO-8859-1 through ISO-8859-15, CP 1250 through 1258,
+  CP 437, CP 850, CP 858, KOI8, MACROMAN, EBCDIC, and custom code pages.
+- Generates scanners for lexical analysis on files, C++ streams, (wide)
+  strings, and memory such as mmap files.
 - Includes many examples, such as a tokenizer for C/C++ source code, a
   tokenizer for Python source code, a tokenizer for Java source code, and more.
 - Extensive documentation in the online [User Guide][manual-url].
-- Full Unicode support with Unicode property matching `\p{C}` and C++11, Java,
-  C#, and Python Unicode properties for identifier name matching.
 - Indent/nodent/dedent anchors to match text with indentation, including
   custom `\t` (tab) widths.
-- Lazy quantifiers, so hacks are no longer needed to work around greedy
-  repetitions in Flex.
+- Lazy quantifiers, no hacks are needed to work around greedy repetitions.
 - Word boundary anchors.
 - Freespace mode option to improve readability of lexer specifications.
 - `%class` and `%init` to customize the generated Lexer classes.
 - `%include` to modularize lexer specifications.
-- Includes an extensible hierarchy of pattern matcher engines, with a choice of
-  regex engines, including the RE/flex regex engine, PCRE2, and Boost.Regex.
-- Generates clean source code that defines an thread-safe (reentrant) C++ Lexer
-  class derived from an abstract lexer class template, parameterized by matcher
-  class type.
 - Multiple lexer classes can be combined and used in one application, e.g. by
-  multiple threads.
+  multiple threads in a thread-safe manner.
 - Configurable Lexer class generation to customize the interface for various
   parsers, including Yacc and Bison.
-- Generates scanners for lexical analysis on files, C++ streams, and (wide)
-  strings, with automatic fast conversion of UTF-16/32 to UTF-8 for matching
-  Unicode on UTF-encoded input files.
-- Generates search engines for optimal searching large files (new option -S).
-- Generates lex.yy.cpp files while Flex++ generates lex.yy.cc files, to
-  distinguish the generated files.
 - Generates Graphviz files to visualize FSMs with the Graphviz dot tool.
-- Conversion of regex expressions, for regex engines that lack regex features.
+- Includes an extensible hierarchy of pattern matcher engines, with a choice of
+  regex engines, including the RE/flex regex engine, PCRE2, and Boost.Regex.
 - The RE/flex regex library makes C++11 std::regex, PCRE2, and Boost.Regex much
   easier to use for pattern matching on (wide) strings, files, and streams.
+- Lots of other improvements over Flex++, such as `yypush_buffer_state` saves
+  the scanner state (line, column, and indentation positions), not just the
+  input buffer; no input buffer length limit (Flex has a 16KB limit); `line()`
+  returns the current line (e.g. for error reporting).
 
 The RE/flex software is fully self-contained.  No other libraries are required.
 PCRE2 and Boost.Regex are optional to use as regex engines.
@@ -507,7 +507,8 @@ Changelog
 - Mar 22, 2020: 1.6.4 added option `--yy` to enable `--flex` and `--bison`, but also defines the global `FILE*` variables `yyin` and `yyout` for enhanced Lex/Flex compatibility (`yyin` is otherwise a pointer to the `reflex::Input` object to read files, streams, and strings).
 - Mar 23, 2020: 1.6.5 updated to permit `}` as closing marker for `%top{`, `%class{`, and `%init{` code blocks, i.e. `%}` or `}` may be used as closing markers.
 - Mar 31, 2020: 1.6.6 fixed an issue where a trailing backslash in a pattern in a lexer specification causes a reflex-generated C++ comment to extend to the next line, which results in a compilation warning and possibly a line of code being skipped.
-- Apr 30, 2020: 1.6.7 minor improvements to parse and convert regex patterns to DFAs.
+- Apr 30, 2020: 1.6.7 minor improvements to parse and convert regex patterns to FSMs.
+- May 14, 2020: 2.0.0 faster FSM construction; new FSM VM opcodes; relaxed limits of pattern length and complexity (max 16,711,679 FSM opcode words, from 65,536 words previously) for high-performance pattern matching with very long and complex regex patterns.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

@@ -100,8 +100,7 @@ Test tests[] = {
     "[\\d]-"
     "[\\l]-"
     "[\\u]-"
-    "[\\w]-"
-    "[\\_]", "", "", "\r-\x01-0-l-U-_-_", { 1 } },
+    "[\\w]", "", "", "\r-\x01-0-l-U-_", { 1 } },
   // Pattern option e
   { "%(%x41%xFF%)", "e=%", "", "(A\xFF)", { 1 } },
   // Pattern option q
@@ -119,7 +118,6 @@ Test tests[] = {
   { "(?x) a\tb\n c | ( xy ) z ?", "", "", "abcxy", { 1, 2 } },
   { "(?x: a b\n c)", "", "", "abc", { 1 } },
   { "(?x) a b c\n|\n# COMMENT\n x y z", "", "", "abcxyz", { 1, 2 } },
-  { "(?x) a b c\n|\n/* COMMENT\n*/ x y z", "l", "", "abcxyz", { 1, 2 } },
   { "(?# test option (?x:... )(?x: a b c)|x y z", "", "", "abcx y z", { 1, 2 } },
   // Pattern option s
   { "(?s).", "", "", "a\n", { 1, 1 } },
@@ -146,7 +144,6 @@ Test tests[] = {
   // Lazy optional X?
   { "(a|b)?\?a", "", "", "aaba", { 1, 1, 1 } },
   { "a(a|b)?\?(?=a|ab)|ac", "", "", "aababac", { 1, 1, 1, 2 } },
-  { "a(a|b)?\?/(a|ab)|ac", "l", "", "aababac", { 1, 1, 1, 2 } },
   { "(a|b)?\?(a|b)?\?aa", "", "", "baaaabbaa", { 1, 1, 1 } },
   { "(a|b)?\?(a|b)?\?(a|b)?\?aaa", "", "", "baaaaaa", { 1, 1 } },
   { "a?\?b?a", "", "", "aba", { 1, 1 } }, // 'a' 'ba'
@@ -208,22 +205,18 @@ Test tests[] = {
   { "[][]", "", "", "[]", { 1, 1 } },
   // Lookahead
   { "a(?=bc)|ab(?=d)|bc|d", "", "", "abcdabd", { 1, 3, 4, 2, 4 } },
-  { "a/bc|ab/d|bc|d", "l", "", "abcdabd", { 1, 3, 4, 2, 4 } },
-  { "a(a|b)?/a|a", "l", "", "aba", { 1, 2 } }, // Ambiguous, undefined in POSIX
-  // { "(a|ab)/ba|ba", "l", "", "aba", { 1, 2 } }, // Ambiguous, undefined in POSIX
-  { "zx*/xy*|x?y*", "l", "", "zxxy", { 1, 2 } }, // Ambiguous, undefined in POSIX
+  { "a(a|b)?(?=a)|a", "", "", "aba", { 1, 2 } }, // Ambiguous, undefined in POSIX
+  { "zx*(?=xy*)|x?y*", "", "", "zxxy", { 1, 2 } }, // Ambiguous, undefined in POSIX
   // { "[ab]+(?=ab)|-|ab", "", "", "aaab-bbab", { 1, 3, 2, 1, 3 } }, // Ambiguous, undefined in POSIX
   { "(?m)a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
   { "(?m)a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } },
   { "(?m)^a(?=b$)|b|\\n", "m", "", "ab\n", { 1, 2, 3 } },
-  { "(?m)^a/b$|b|\\n", "ml", "", "ab\n", { 1, 2, 3 } },
   { "(?m)a(?=\n)|a|\\n", "m", "", "aa\n", { 2, 1, 3 } },
   { "(?m)^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
-  { "^( +/a|b)|a|\\n", "ml", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
   { "abc(?=\\w+|(?^def))|xyzabcdef", "", "", "abcxyzabcdef", { 1, 2 } },
   // Negative patterns and option A (all)
   { "(?^ab)|\\w+| ", "", "", "aa ab abab ababba", { 2, 3, 3, 2, 3, 2 } },
-  { "(?^ab)|\\w+| ", "", "A", "aa ab abab ababba", { 2, 3, 65535, 3, 2, 3, 2 } },
+  { "(?^ab)|\\w+| ", "", "A", "aa ab abab ababba", { 2, 3, reflex::Matcher::Const::REDO, 3, 2, 3, 2 } },
   { "\\w+|(?^ab)| ", "", "", "aa ab abab ababba", { 1, 3, 3, 1, 3, 1 } }, // non-reachable warning is given, but works
   { "\\w+|(?^\\s)", "", "", "99 Luftballons", { 1, 1 } },
   { "(\\w+|(?^ab(?=\\w*)))| ", "", "", "aa ab abab ababba", { 1, 2, 2, 2, 1 } },

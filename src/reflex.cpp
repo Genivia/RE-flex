@@ -112,6 +112,7 @@ static const char *options_table[] = {
   "noyywrap",
   "outfile",
   "pattern",
+  "permissive",
   "pointer",
   "perf_report",
   "posix_compat",
@@ -229,7 +230,7 @@ static const Reflex::Library library_table[] = {
     "reflex/matcher.h",
     "reflex::Pattern",
     "reflex::Matcher",
-    "imsx#=^:abcdefhijklnrstuvwxzABDHLNQSUW<>?+.",
+    "imsx#=^:abcdefhijklnrstuvwxzABDHLNQSUW<>?.",
   },
   {
     "boost",
@@ -1106,6 +1107,8 @@ std::string Reflex::get_regex(size_t& pos)
       flags |= reflex::convert_flag::freespace;
     if (!options["unicode"].empty())
       flags |= reflex::convert_flag::unicode;
+    if (!options["permissive"].empty())
+      flags |= reflex::convert_flag::permissive;
     try
     {
       regex = reflex::convert(regex, library->signature, flags, &definitions); 

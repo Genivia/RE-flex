@@ -2,10 +2,10 @@
 // Reads UTF-8 files (with or without UTF-8 BOM) and UTF-16/32 files (with UTF-16/32 BOM)
 // Converts Unicode Escapes \uxxxx first, prior to lexical analysis
 //
-// Note that identifiers may contain IdentifierIgnorable chars. To remove these
+// Note that identifiers may contain IdentifierIgnorable chars. To remove these,
 // use condition states to collect the identifier in a wstring:
 // %class{
-// std::wstring id;
+//   std::wstring id;
 // }
 // %x ID
 // {JavaIdentifierStart}     id.assign(wstr()); start(ID);
@@ -19,8 +19,16 @@
 static bool is_keyword(const char *);
 %}
 
+// import Java token definitions
 %include "jdefs.l"
-%option dotall unicode
+
+// dot matches \n
+%option dotall
+
+// enable Unicode pattern matching
+%option unicode
+
+// use full/fast option for speed and to eliminate tokenizer startup time
 %option full
 
 %%

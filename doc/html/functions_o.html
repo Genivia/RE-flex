@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Class Members</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Apr 30 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu May 14 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -113,6 +113,9 @@
 <li>opcode_head()
 : <a class="el" href="classreflex_1_1_pattern.html#aa6ca25d94886ac2d6f3ee51e9ac789f3">reflex::Pattern</a>
 </li>
+<li>opcode_long()
+: <a class="el" href="classreflex_1_1_pattern.html#ab18e3a249e1226da9d0b46e2ea12a677">reflex::Pattern</a>
+</li>
 <li>opcode_redo()
 : <a class="el" href="classreflex_1_1_pattern.html#af1eb6fb5ae37a0762a1bbaeeeaa351d5">reflex::Pattern</a>
 </li>
@@ -129,6 +132,7 @@
 : <a class="el" href="structreflex_1_1_bits_1_1_bitref.html#acc077366b8dc314571d93f26809f139d">reflex::Bits::Bitref</a>
 , <a class="el" href="classreflex_1_1_buffered_input.html#ad4c104c9e1230db7e3762b10fcb7fb97">reflex::BufferedInput</a>
 , <a class="el" href="classreflex_1_1_input.html#ab728a9612c2ddd8e30f97bf094dfbe6c">reflex::Input</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a66c95501307d2bd70d01effd8bc0798e">reflex::Pattern::Chars</a>
 </li>
 <li>operator const char *()
 : <a class="el" href="classreflex_1_1_input.html#ab3031e26bf48ef36126f7d789793b4a3">reflex::Input</a>
@@ -167,12 +171,14 @@
 <li>operator&amp;()
 : <a class="el" href="classreflex_1_1_bits.html#a94e2fd08b23a879b19914ade7da650ee">reflex::Bits</a>
 , <a class="el" href="classreflex_1_1_o_ranges.html#a289c62f602d438c6ef63a3c32dbd5292">reflex::ORanges&lt; T &gt;</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a6a253ef2ef00982d05fd0af8d68a2b01">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a2bc03786da54f6077febdea2f83110e2">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator&amp;=()
 : <a class="el" href="structreflex_1_1_bits_1_1_bitref.html#a19a3c6496645b0e75db479a776e7a179">reflex::Bits::Bitref</a>
 , <a class="el" href="classreflex_1_1_bits.html#a8c3ca7ea4be7cb808dff49bfe563ab9b">reflex::Bits</a>
 , <a class="el" href="classreflex_1_1_o_ranges.html#ad59deda9697985a3c07af43a6204e4fd">reflex::ORanges&lt; T &gt;</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#aebf85e6798f2d694e143288789eb901a">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a3d2feb520bce89afdf80f7d06d8c3bcd">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator()()
@@ -187,6 +193,7 @@
 </li>
 <li>operator+()
 : <a class="el" href="classreflex_1_1_o_ranges.html#a36e2177782a200135ec63a4bc12df2c6">reflex::ORanges&lt; T &gt;</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a8b9006bf8ec609a7d30a60b953eba106">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a14efc99f9c25db9e9b4ef0dbb72e3801">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator++()
@@ -195,25 +202,30 @@
 , <a class="el" href="structreflex_1_1lazy__union_1_1iterator.html#afbffa1e9f5aba4a3731062ed6e79087e">reflex::lazy_union&lt; S1, S2 &gt;::iterator</a>
 </li>
 <li>operator+=()
-: <a class="el" href="classreflex_1_1_ranges.html#ab0aa356a5eec364aad70a795aeab68f5">reflex::Ranges&lt; T &gt;</a>
+: <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a8d3986dba58a04090b9a31a901a41c44">reflex::Pattern::Chars</a>
+, <a class="el" href="classreflex_1_1_ranges.html#ab0aa356a5eec364aad70a795aeab68f5">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator-()
 : <a class="el" href="classreflex_1_1_bits.html#af8981b775bc4e1ca61f38d4b58d25da4">reflex::Bits</a>
 , <a class="el" href="classreflex_1_1_o_ranges.html#aa11bc3908554b1604f953d3001820a46">reflex::ORanges&lt; T &gt;</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a832765245b7540d51c980ce3a7c409bd">reflex::Pattern::Chars</a>
 </li>
 <li>operator-=()
 : <a class="el" href="classreflex_1_1_bits.html#a155b67c62ef98f0cedfd10fe54d62dab">reflex::Bits</a>
 , <a class="el" href="classreflex_1_1_o_ranges.html#a6e399bf2042c81e928e283566097f8b9">reflex::ORanges&lt; T &gt;</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a5f42357c6413a5daf352b4da61b8df2c">reflex::Pattern::Chars</a>
 </li>
 <li>operator-&gt;()
 : <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a01a4e7a1eddbedc7a0945561eaeba197">reflex::AbstractMatcher::Iterator&lt; T &gt;</a>
 </li>
 <li>operator&lt;()
 : <a class="el" href="classreflex_1_1_bits.html#a8dc13e8f63354375cf00c2da1795d8d6">reflex::Bits</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#aa1460e33aeae957bc54a52a9e5bb8df2">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a412f3f7392b76411ed5f1e02ecdebd0c">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator&lt;=()
 : <a class="el" href="classreflex_1_1_bits.html#a9ab5fbed1af24ecff7a3c4a104da00aa">reflex::Bits</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a8dd9d79d31c9acc019dc12c8ce5afc4b">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a21dec3fa4c006ba98e5888b724e7178e">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator=()
@@ -223,7 +235,8 @@
 , <a class="el" href="classreflex_1_1_buffered_input.html#ae45e77c0e90c0089cc788b236433c02e">reflex::BufferedInput</a>
 , <a class="el" href="classreflex_1_1_input.html#a822489aba32803c08ed6db9f50f2caf5">reflex::Input</a>
 , <a class="el" href="classreflex_1_1_matcher.html#a6399eeb89db316e51bbcfc0aaaedf604">reflex::Matcher</a>
-, <a class="el" href="classreflex_1_1_pattern.html#a405dc0bc89070a8c694e6d012c00a807">reflex::Pattern</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#adc4e957323855b74203ee4390d19489c">reflex::Pattern::Chars</a>
+, <a class="el" href="classreflex_1_1_pattern.html#add516e864534d6704b43592232b81366">reflex::Pattern</a>
 , <a class="el" href="structreflex_1_1_pattern_1_1_position.html#a72e00ef67e10477988039cb67d708b81">reflex::Pattern::Position</a>
 , <a class="el" href="classreflex_1_1_pattern_matcher.html#af0ff6275eeb1deb602b2f3335a1ce7f6">reflex::PatternMatcher&lt; P &gt;</a>
 , <a class="el" href="classreflex_1_1_pattern_matcher_3_01std_1_1string_01_4.html#a277f62477beaa9e19e087335069852ee">reflex::PatternMatcher&lt; std::string &gt;</a>
@@ -236,13 +249,16 @@
 , <a class="el" href="classreflex_1_1_bits.html#ae877e24f5bd0dfb68a87c9b21f0c9859">reflex::Bits</a>
 , <a class="el" href="structreflex_1_1lazy__intersection_1_1iterator.html#acc19c0d84151f1280e2e6ddf46fc56b5">reflex::lazy_intersection&lt; S1, S2 &gt;::iterator</a>
 , <a class="el" href="structreflex_1_1lazy__union_1_1iterator.html#a80f693671a7135312befbe6ec88ead70">reflex::lazy_union&lt; S1, S2 &gt;::iterator</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a126f0d4ad5059a36ef28364f0596d38b">reflex::Pattern::Chars</a>
 </li>
 <li>operator&gt;()
 : <a class="el" href="classreflex_1_1_bits.html#a6c7f149ae92ca60ee63b9b59376082d6">reflex::Bits</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#abadb45e22b1bf459418cb044b89e87c4">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a2be1924a5c28eff510256c8345f65241">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator&gt;=()
 : <a class="el" href="classreflex_1_1_bits.html#a935b56b5f7b0d767d73165a80f9e410e">reflex::Bits</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a848888268818431d596542f6b0e7f31f">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a3ef3e519c643b66d0ab50f77f1780236">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator[]()
@@ -250,29 +266,34 @@
 , <a class="el" href="classreflex_1_1_bits.html#a9583e4fcb869c739e217603f88eb1b13">reflex::Bits</a>
 , <a class="el" href="classreflex_1_1_boost_matcher.html#aafdb43bb11cab6eac43ba846e17ca33e">reflex::BoostMatcher</a>
 , <a class="el" href="classreflex_1_1_matcher.html#acf0031339b3f8426b730a6860e5feba2">reflex::Matcher</a>
-, <a class="el" href="classreflex_1_1_pattern.html#a5dd78d5f44f64407561e6cf7945d34ea">reflex::Pattern</a>
+, <a class="el" href="classreflex_1_1_pattern.html#a2fae3b0a405d18d421b1b75f2d76ef18">reflex::Pattern</a>
 , <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a0c9a3b53d00fb2bba35956c437018530">reflex::PCRE2Matcher</a>
 , <a class="el" href="classreflex_1_1_std_matcher.html#aa48c631145c803cbda9f3891eccc1b3e">reflex::StdMatcher</a>
 </li>
 <li>operator^()
 : <a class="el" href="classreflex_1_1_bits.html#a82adff70812b58388cd07c5613991e38">reflex::Bits</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a457dd3ec960c459a24ca61dfad2a2274">reflex::Pattern::Chars</a>
 </li>
 <li>operator^=()
 : <a class="el" href="structreflex_1_1_bits_1_1_bitref.html#a1b4df3c83974c109cb43568aa3418710">reflex::Bits::Bitref</a>
 , <a class="el" href="classreflex_1_1_bits.html#a3de7dd0e5c09211ee4a15f13c9fb932c">reflex::Bits</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a3096f974cb3d91db6e774587f7249a0c">reflex::Pattern::Chars</a>
 </li>
 <li>operator|()
 : <a class="el" href="classreflex_1_1_bits.html#ac4aa634abafed337ff54081ffc745f48">reflex::Bits</a>
 , <a class="el" href="classreflex_1_1_o_ranges.html#a4f2dc1305d1dc89e8043b1867d00e89c">reflex::ORanges&lt; T &gt;</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#af4f45d58054ccf2b83da6a17d07c9356">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a658a2b69b4e435ecf079e0e5cc98c880">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator|=()
 : <a class="el" href="structreflex_1_1_bits_1_1_bitref.html#a0e35a866dc110d49b6b770ebab46ea6d">reflex::Bits::Bitref</a>
 , <a class="el" href="classreflex_1_1_bits.html#a4f5eb0c2b46d731895e64933d2c6b3df">reflex::Bits</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a6c436f897a9f8b495b8275c335dd6338">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#ad86ade66b0f5c3003dbc11e1d4e2d738">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>operator~()
 : <a class="el" href="classreflex_1_1_bits.html#ab55857d3f823da8526418e1f99fe034e">reflex::Bits</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a9880b791ae1d780691708e1f4b8bfe23">reflex::Pattern::Chars</a>
 </li>
 <li>opt_
 : <a class="el" href="classreflex_1_1_abstract_matcher.html#a7d944c389bc36abb15ba6c9f0601ab1b">reflex::AbstractMatcher</a>
@@ -314,7 +335,7 @@
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Apr 30 2020 10:16:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu May 14 2020 13:20:19 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -28,37 +28,25 @@
 
 /**
 @file      ugrep.cpp
-@brief     Universal grep - high-performance Unicode file search utility
+@brief     a file search utility like grep
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2019-2019, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 
-Universal grep - high-performance universal search utility finds Unicode
-patterns in UTF-8/16/32, ASCII, ISO-8859-1, EBCDIC, code pages 437, 850, 1250
-to 1258, and other file formats.
+Find patterns in files encoded in UTF-8/16/32, ASCII, ISO-8859-1, EBCDIC, code
+pages 437, 850, 1250 to 1258, and other file formats.
 
-For download and installation of the latest version, please see:
+For the latest fully-featured high-performance version of ugrep, please visit:
 
   https://github.com/Genivia/ugrep
 
-Features:
+This simple version features:
 
+  - Searches the specified files only, no directory recursion.
   - Patterns are ERE POSIX syntax compliant, extended with RE/flex pattern syntax.
   - Unicode support for \p{} character categories, bracket list classes, etc.
   - File encoding support for UTF-8/16/32, EBCDIC, and many other code pages.
   - ugrep command-line options are the same as grep, simulates grep behavior.
-
-Differences with grep:
-
-  - When option -b is used with option -o or with option -g, ugrep displays the
-    exact byte offset of the pattern match instead of the byte offset of the
-    start of the matched line.
-  - Adds option -g, --no-group to not group matches per line.  This option
-    displays a matched input line again for each additional pattern match.
-    This option also changes option -c to report the total number of pattern
-    matches per file instead of the number of lines matched.
-  - Adds option -k, --column-number to display the column number, taking tab
-    spacing into account by expanding tabs.
 
 Examples:
 
@@ -87,7 +75,7 @@ Examples:
   ugrep -c 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
 
   # count the number of occurrences of the names Gödel (or Goedel), Escher, or Bach in GEB.txt and wiki.txt
-  ugrep -c -g 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
+  ugrep -c -u 'G(ö|oe)del|Escher|Bach' GEB.txt wiki.txt
 
   # check if some.txt file contains any non-ASCII (i.e. Unicode) characters
   ugrep -q '[^[:ascii:]]' some.txt && echo "some.txt contains Unicode"
@@ -147,7 +135,6 @@ const char *grep_color = NULL;
 // ugrep command-line options
 bool flag_filename           = false;
 bool flag_no_filename        = false;
-bool flag_no_group           = false;
 bool flag_no_messages        = false;
 bool flag_byte_offset        = false;
 bool flag_count              = false;
@@ -160,6 +147,7 @@ bool flag_line_number        = false;
 bool flag_line_buffered      = false;
 bool flag_only_matching      = false;
 bool flag_quiet              = false;
+bool flag_ungroup            = false;
 bool flag_word_regexp        = false;
 bool flag_line_regexp        = false;
 const char *flag_color       = NULL;
@@ -285,8 +273,8 @@ int main(int argc, char **argv)
               flag_line_regexp = true;
             else if (strcmp(arg, "no-filename") == 0)
               flag_no_filename = true;
-            else if (strcmp(arg, "no-group") == 0)
-              flag_no_group = true;
+            else if (strcmp(arg, "ungroup") == 0)
+              flag_ungroup = true;
             else if (strcmp(arg, "no-messages") == 0)
               flag_no_messages = true;
             else if (strcmp(arg, "only-matching") == 0)
@@ -302,7 +290,7 @@ int main(int argc, char **argv)
             else if (strcmp(arg, "word-regexp") == 0)
               flag_word_regexp = true;
             else
-              help("unknown option --", arg);
+              help("invalid option --", arg);
             is_grouped = false;
             break;
 
@@ -330,10 +318,6 @@ int main(int argc, char **argv)
 
           case 'F':
             flag_fixed_strings = true;
-            break;
-
-          case 'g':
-            flag_no_group = true;
             break;
 
           case 'H':
@@ -370,6 +354,10 @@ int main(int argc, char **argv)
             flag_no_messages = true;
             break;
 
+          case 'u':
+            flag_ungroup = true;
+            break;
+
           case 'V':
             version();
             break;
@@ -391,7 +379,7 @@ int main(int argc, char **argv)
             break;
 
           default:
-            help("unknown option -", arg);
+            help("invalid option -", arg);
         }
       }
     }
@@ -436,10 +424,10 @@ int main(int argc, char **argv)
       regex.insert(0, "^(").append(")$");
   }
 
-  // if -v invert-match: options -g --no-group and -o --only-matching options cannot be used
+  // if -v invert-match: options -u --ungroup and -o --only-matching options cannot be used
   if (flag_invert_match)
   {
-    flag_no_group = false;
+    flag_ungroup = false;
     flag_only_matching = false;
   }
 
@@ -610,9 +598,9 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
 
       std::cout << label << lines << std::endl;
     }
-    else if (flag_no_group)
+    else if (flag_ungroup)
     {
-      // -c count mode w/ -g: count the number of patterns matched in the file
+      // -c count mode w/ -u: count the number of patterns matched in the file
 
       reflex::Matcher matcher(pattern, input);
       size_t matches = std::distance(matcher.find.begin(), matcher.find.end());
@@ -622,7 +610,7 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
     }
     else
     {
-      // -c count mode w/o -g: count the number of matching lines
+      // -c count mode w/o -u: count the number of matching lines
 
       size_t lineno = 0;
       size_t lines = 0;
@@ -646,7 +634,7 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
     // line-buffered: display lines that matched the pattern
 
 #if defined(WITH_SPAN)
-    if (!flag_no_group && !flag_invert_match)
+    if (!flag_ungroup && !flag_invert_match)
     {
       size_t lineno = 0;
 
@@ -701,7 +689,7 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
             found = true;
           }
         }
-        else if (flag_no_group)
+        else if (flag_ungroup)
         {
           // search the line for pattern matches and display the line again (with exact offset) for each pattern match
 
@@ -767,7 +755,7 @@ bool ugrep(reflex::Pattern& pattern, FILE *file, reflex::Input::file_encoding_ty
     reflex::Matcher matcher(pattern, input);
     for (auto& match : matcher.find)
     {
-      if (flag_no_group || lineno != match.lineno())
+      if (flag_ungroup || lineno != match.lineno())
       {
         lineno = match.lineno();
         std::cout << label;
@@ -798,7 +786,7 @@ void help(const char *message, const char *arg)
             the respective matched line.\n\
     -c, --count\n\
             Only a count of selected lines is written to standard output.\n\
-            When used with option -g, counts the number of patterns matched.\n\
+            When used with option -u, counts the number of patterns matched.\n\
     --colour[=when], --color[=when]\n\
             Mark up the matching text with the expression stored in the\n\
             GREP_COLOR environment variable.  The possible values of when can\n\
@@ -821,9 +809,6 @@ void help(const char *message, const char *arg)
             behave as fgrep).\n\
     --free-space\n\
             Spacing (blanks and tabs) in regular expressions are ignored.\n\
-    -g, --no-group\n\
-            Do not group pattern matches on the same line.  Display the\n\
-            matched line again for each additional pattern match.\n\
     -H\n\
             Always print filename headers with output lines.\n\
     -h, --no-filename\n\
@@ -854,6 +839,9 @@ void help(const char *message, const char *arg)
             their error messages are suppressed).\n\
     --tabs=size\n\
             Set the tab size to 1, 2, 4, or 8 to expand tabs for option -k.\n\
+    -u, --ungroup\n\
+            Do not group pattern matches on the same line.  Display the\n\
+            matched line again for each additional pattern match.\n\
     -V, --version\n\
             Display version information and exit.\n\
     -v, --invert-match\n\
@@ -878,6 +866,6 @@ void help(const char *message, const char *arg)
 // Display version info
 void version()
 {
-  std::cout << "ugrep " VERSION " " PLATFORM << std::endl;
+  std::cout << "ugrep (simple) " VERSION " " PLATFORM << std::endl;
   exit(EXIT_OK);
 }

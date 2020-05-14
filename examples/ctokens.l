@@ -1,12 +1,15 @@
-// C/C++ tokenizer (plain, no Unicode)
+// C/C++ tokenizer (plain, no Unicode but see below)
 
 %{
 #include <stdio.h>
 %}
 
-/* may add %option unicode before the %include to match unicode identifiers */
+/* may enable %option unicode before the %include to match unicode identifiers for C++11 */
+// %option unicode
 
+// import C/C++ token definitions
 %include "cdefs.l"
+
 %option flex
 %option nodefault
 %option fast

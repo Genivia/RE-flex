@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Class Members</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Apr 30 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu May 14 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -133,11 +133,11 @@
 <li>indent()
 : <a class="el" href="classreflex_1_1_matcher.html#a505a765341793c9d4b0cbbe833920e93">reflex::Matcher</a>
 </li>
-<li>Index
-: <a class="el" href="classreflex_1_1_pattern.html#a38d69acf1e472d48225a3ba50b138e02">reflex::Pattern</a>
-</li>
 <li>index
-: <a class="el" href="structreflex_1_1_pattern_1_1_state.html#a042a505a9ef02630fe9265e506770c80">reflex::Pattern::State</a>
+: <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html#a06a3c30420041f7866d2115fab11d357">reflex::Pattern::DFA::State</a>
+</li>
+<li>Index
+: <a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">reflex::Pattern</a>
 </li>
 <li>index_of()
 : <a class="el" href="classreflex_1_1_pattern.html#a777335bd99f117906b726541a66141b1">reflex::Pattern</a>
@@ -171,6 +171,7 @@
 <li>insert()
 : <a class="el" href="classreflex_1_1_bits.html#a65dab33f00d00f90cbd188dd6f250476">reflex::Bits</a>
 , <a class="el" href="classreflex_1_1_o_ranges.html#acab8cad7c40e07960001634985f2d050">reflex::ORanges&lt; T &gt;</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a7b40599f5617588d49b47c0380e04525">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a45b80affbf56f12faafae17b0c64dc00">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>insert_stop()
@@ -182,6 +183,7 @@
 <li>intersects()
 : <a class="el" href="classreflex_1_1_bits.html#a1fb8cd25c81bf48e53fe9d02e016c059">reflex::Bits</a>
 , <a class="el" href="classreflex_1_1_o_ranges.html#aafab298888e6e86590afb7b6e00ea56c">reflex::ORanges&lt; T &gt;</a>
+, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html#a83f14dab848dcd7b8ec4d7af22e8d38c">reflex::Pattern::Chars</a>
 , <a class="el" href="classreflex_1_1_ranges.html#a8ff9a255f63c79bc945cbcde112bd79a">reflex::Ranges&lt; T &gt;</a>
 </li>
 <li>invalid_anchor
@@ -232,14 +234,17 @@
 <li>is_modified()
 : <a class="el" href="classreflex_1_1_pattern.html#a54ddf1635a08c0c6a1c3c8bb77d84aca">reflex::Pattern</a>
 </li>
+<li>is_opcode_goto()
+: <a class="el" href="classreflex_1_1_pattern.html#ae57466849ffc7bf07edfb5f8dc454c9e">reflex::Pattern</a>
+</li>
 <li>is_opcode_halt()
 : <a class="el" href="classreflex_1_1_pattern.html#a6d6ea49de77878489110b55a5490ab15">reflex::Pattern</a>
 </li>
 <li>is_opcode_head()
 : <a class="el" href="classreflex_1_1_pattern.html#ae1828d30256e594a9f20309bc4b9b211">reflex::Pattern</a>
 </li>
-<li>is_opcode_match()
-: <a class="el" href="classreflex_1_1_pattern.html#a51011375bc3412782dedcfa2ce4acdc8">reflex::Pattern</a>
+<li>is_opcode_long()
+: <a class="el" href="classreflex_1_1_pattern.html#adabea312f0c03830acc3910dbf576c41">reflex::Pattern</a>
 </li>
 <li>is_opcode_meta()
 : <a class="el" href="classreflex_1_1_pattern.html#a67b1f57c6c67c6b97bfa700cf2fb066a">reflex::Pattern</a>
@@ -307,18 +312,21 @@
 <li>istream_size()
 : <a class="el" href="classreflex_1_1_input.html#a603cfde978e8ff1153073540ff39aae8">reflex::Input</a>
 </li>
+<li>Iter
+: <a class="el" href="classreflex_1_1_pattern.html#aea59f78bfd3d8e70fc56fd4c3018a6a0">reflex::Pattern</a>
+</li>
 <li>iter()
-: <a class="el" href="structreflex_1_1_pattern_1_1_position.html#a320ba1e9c11a4a7449e010d6af4ec101">reflex::Pattern::Position</a>
+: <a class="el" href="structreflex_1_1_pattern_1_1_position.html#a342b009e32df50a36e930bd979306f86">reflex::Pattern::Position</a>
 </li>
 <li>iterator
 : <a class="el" href="classreflex_1_1_abstract_matcher.html#a7237c1fb8ab2a2283117739e6516c31f">reflex::AbstractMatcher</a>
 </li>
 <li>Iterator()
-: <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a47aa8cbb98fb36e94c2abc627cdee4e2">reflex::AbstractMatcher::Iterator&lt; T &gt;</a>
+: <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a542f03189190e6ae05a26da0537ad5c4">reflex::AbstractMatcher::Iterator&lt; T &gt;</a>
 </li>
 <li>iterator()
 : <a class="el" href="structreflex_1_1lazy__intersection_1_1iterator.html#ac3ab9cbe5cf95968c04a58b5bab8f45e">reflex::lazy_intersection&lt; S1, S2 &gt;::iterator</a>
-, <a class="el" href="structreflex_1_1lazy__union_1_1iterator.html#a70b6ef61be50e4ba0b7e4b2e04b47046">reflex::lazy_union&lt; S1, S2 &gt;::iterator</a>
+, <a class="el" href="structreflex_1_1lazy__union_1_1iterator.html#ad58fc206506cf0bf92dfac48b3014f00">reflex::lazy_union&lt; S1, S2 &gt;::iterator</a>
 , <a class="el" href="classreflex_1_1_o_ranges.html#a2a822980610d3f4deb3cb0e42ad49a85">reflex::ORanges&lt; T &gt;</a>
 , <a class="el" href="classreflex_1_1_ranges.html#ac6f32a9642333820fd0b9b66af654cb6">reflex::Ranges&lt; T &gt;</a>
 </li>
@@ -336,7 +344,7 @@
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Apr 30 2020 10:16:11 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu May 14 2020 13:20:19 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

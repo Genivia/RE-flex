@@ -15,7 +15,7 @@ mkdir -p doc/man
 echo '.TH REFLEX "1" "'`date '+%B %d, %Y'`'" "reflex '$1'" "User Commands"' > doc/man/reflex.1
 cat >> doc/man/reflex.1 << 'END'
 .SH NAME
-reflex \- the regex\-centric fast and flexible lexical analyzer generator
+\fBreflex\fR -- regex\-centric, fast and flexible lexical analyzer generator
 .SH SYNOPSIS
 .B reflex
 [\fIOPTIONS\fR] [\fIFILE\fR]
@@ -41,7 +41,7 @@ bin/reflex -h \
 cat >> doc/man/reflex.1 << 'END'
 .SH DEPENDENCIES
 None, except when option \fB-m\fR specifies an external pattern\-matcher engine
-such as boost that requires the Boost.Regex library installed.
+such as pcre2 or boost that requires the corresponding library.
 .SH "DOCUMENTATION"
 The full documentation for \fBreflex\fR is maintained as a Doxygen\-generated
 manual reflex/doc/html/index.html located in the source directory of the reflex
@@ -49,7 +49,7 @@ installation.  Or visit:
 .IP
 https://www.genivia.com/doc/reflex/html/index.html
 .PP
-to browse the reflex user guide.
+to browse the latest version of the reflex user guide.
 .SH BUGS
 REJECT is not functional and not available.
 .PP

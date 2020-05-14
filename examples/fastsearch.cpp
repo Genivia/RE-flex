@@ -1,36 +1,44 @@
 // Super fast search with fixed regex patterns compiled into FSM code with hash
 //
 // Build steps:
+//
 // 1. change PATTERN below as desired
 // 2. build fastsearch by 'make fastsearch' or 'make -f Make fastsearch'
 // 3. run 'fastsearch' to generate fastsearch_fsm.cpp
 // 4. build fastsearch by 'make fastsearch' or 'make -f Make fastsearch'
 //
 // Usage:
+//
 // run 'fastsearch FILE' to search FILE fast, for example:
 // ./fastsearch ../tests/lorem.txt
 //
 // How does this work?
+//
 // The first build step generates FSM code for PATTERN and hash data to speed
-// up search with the following algorithms and libraries:
-// - memchr()
-// - Boyer-Moore
-// - hash-based accellerator to search multiple words (works with any regex)
+// up search with the following:
+// - memchr() or AVX/SSE2/NEON-AArch64 optimized code
+// - hash-based match predictor to search multiple words (works with any regex)
+// - FSM direct code in C++ runs efficiently when a possible match is detected
+//
 // The FSM code is generated with reflex::Pattern option "o" (optimize).
-// The predictor data is generated with reflex::Pattern option "p" (precict).
+// The predictor data is generated with reflex::Pattern option "p" (predict).
 // The FSM code and predictor are saved to fastsearch_fsm.cpp with
 // reflex::Pattern option "f=fastsearch_fsm.cpp;o;p".
 //
-// How much faster?
-// At least twice as fast as GNU grep.
-//
 // Suggestions:
+//
 // Use mmap(2) for large files, at least larger than 16K.  To use mmap call
 // matcher.buffer(base, size + 1), where base is the mmap base address and
 // size is the size of the file.
 //
 // See also:
+//
 // fastfind.l and mmap.l
+//
+// Output timing results:
+//
+// Compile with -DWARM_START_RUNS=100 to run the search 100 times on the same
+// file, to display the average search time and number of matches found.
 
 #include <reflex/matcher.h>
 #include <reflex/timer.h>
@@ -80,9 +88,7 @@ int main(int argc, char **argv)
       rewind(file);
       matcher.input(file);
       while (matcher.find())
-      {
         ++hit;
-      }
     }
 
     printf("Search took %.3g ms for %zu matches\n", reflex::timer_elapsed(t)/WARM_START_RUNS, hit/WARM_START_RUNS);
