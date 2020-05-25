@@ -263,12 +263,6 @@ static const Reflex::Library library_table[] = {
   { NULL, NULL, NULL, NULL, NULL } // end of table
 };
 
-#ifdef OS_WIN
-static const char *newline = "\r\n";
-#else
-static const char *newline = "\n";
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
 //  Helper functions                                                          //
@@ -1163,13 +1157,13 @@ std::string Reflex::get_code(size_t& pos)
             at_lineno = lineno;
             is_usercode = true;
           }
-          code.append(newline);
+          code.push_back('\n');
           ++blk;
           pos = linelen;
         }
         else if (is("%}") || (!is_usercode && is("}") && blk == 1 && lev == 0))
         {
-          code.append(newline);
+          code.push_back('\n');
           if (blk > 0)
             --blk;
           if (blk == 0)
@@ -1186,12 +1180,12 @@ std::string Reflex::get_code(size_t& pos)
         {
           if (blk == 0 && lev == 0 && linelen > 0 && (!std::isspace(line.at(0)) || !options["freespace"].empty()))
             return code;
-          code.append(newline).append(line);
+          code.append("\n").append(line);
         }
       }
       else
       {
-        code.append(newline).append(line);
+        code.append("\n").append(line);
       }
     }
     switch (line.at(pos))

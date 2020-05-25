@@ -509,6 +509,7 @@ Changelog
 - Mar 31, 2020: 1.6.6 fixed an issue where a trailing backslash in a pattern in a lexer specification causes a reflex-generated C++ comment to extend to the next line, which results in a compilation warning and possibly a line of code being skipped.
 - Apr 30, 2020: 1.6.7 minor improvements to parse and convert regex patterns to FSMs.
 - May 14, 2020: 2.0.0 faster FSM construction; new FSM VM opcodes; relaxed limits of pattern length and complexity (max 16,711,679 FSM opcode words, from 65,536 words previously) for high-performance pattern matching with very long and complex regex patterns.
+- May 25, 2020: 2.0.1 resolved 64-bit build warnings; fixed reflex CRLF output in C++ source code on Windows.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

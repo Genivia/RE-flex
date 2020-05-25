@@ -20,7 +20,7 @@
 // implicit line joining is done with the JOINING start condition state
 %x JOINING
 
-// use full/fast option for speed and to eliminate tokenizer startup time, set indent tabs=8
+// use full/fast option for speed and to eliminate tokenizer startup time
 %option full
 
 // set indent tabs=8
@@ -174,7 +174,7 @@ yield                   emit("KEYWORD    ", text());
 
 int main(int argc, char **argv)
 {
-  // in this example we'll use the Input class for convenience
+  // in this example we'll use the Input class with a FILE or stdin to scan UTF-8/16/32 input
   reflex::Input input;
 
   if (argc > 1)

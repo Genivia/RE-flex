@@ -28,7 +28,7 @@
 
 /**
 @file      pcre2matcher.h
-@brief     PCRE2-based matcher engines for pattern matching
+@brief     PCRE2-JIT-based matcher engines for pattern matching
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2016-2020, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
@@ -51,7 +51,7 @@ class PCRE2Matcher : public PatternMatcher<std::string> {
   template<typename T>
   static std::string convert(T regex, convert_flag_type flags = convert_flag::none)
   {
-    return reflex::convert(regex, "imsx!#<=:abcdefghlnrstuvwxzABDGHKLNQRSUWXZ0123456789?+", flags);
+    return reflex::convert(regex, "imPRsx!#<=&:abcdefghlnrstuvwxzABDGHKLNQRSUWXZ0123456789?+", flags);
   }
   /// Default constructor.
   PCRE2Matcher()
@@ -332,10 +332,11 @@ class PCRE2Matcher : public PatternMatcher<std::string> {
          pattern for complete and partial matching (these are not exclusive):
          pcre2_jit_compile(opc_, PCRE2_JIT_COMPLETE | PCRE2_JIT_PARTIAL_HARD);
          then pcre2_jit_match() without option PCRE2_PARTIAL_HARD always
-         returns error PCRE2_ERROR_JIT_BADOPTION when we want the complete
-         match when the end of the input is reached.  A final complete match is
-         required because we cannot tell whether the final partial match is
-         also a complete match.  Therefore, pcre2_jit_match is disabled.
+         returns error PCRE2_ERROR_JIT_BADOPTION when we actually want the
+         complete match when the end of the input is reached.  A final complete
+         match is required, because we cannot tell whether the final partial
+         match is also a complete match.  Therefore, pcre2_jit_match() is
+         unusable and disabled below in favor of pcre2_match().
          */
 #if 0
       if (jit_ && !(flg & PCRE2_ANCHORED))
