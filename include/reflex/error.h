@@ -48,7 +48,7 @@ inline std::string ztoa(size_t n)
 #if (defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__BORLANDC__)) && !defined(__CYGWIN__) && !defined(__MINGW32__) && !defined(__MINGW64__)
   sprintf_s(buf, sizeof(buf), "%zu", n);
 #else
-  sprintf(buf, "%zu", n);
+  snprintf(buf, sizeof(buf), "%zu", n);
 #endif
   return std::string(buf);
 }
