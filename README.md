@@ -62,8 +62,9 @@ Features
   CP 437, CP 850, CP 858, KOI8, MACROMAN, EBCDIC, and custom code pages.
 - Generates scanners for lexical analysis on files, C++ streams, (wide)
   strings, and memory such as mmap files.
-- Includes many examples, such as a tokenizer for C/C++ source code, a
-  tokenizer for Python source code, a tokenizer for Java source code, and more.
+- Includes many examples, such as a mini C compiler to Java bytecode, a
+  tokenizer for C/C++ source code, a tokenizer for Python source code, a
+  tokenizer for Java source code, and more.
 - Extensive documentation in the online [User Guide][manual-url].
 - Indent/nodent/dedent anchors to match text with indentation, including
   custom `\t` (tab) widths.
@@ -510,6 +511,7 @@ Changelog
 - Apr 30, 2020: 1.6.7 minor improvements to parse and convert regex patterns to FSMs.
 - May 14, 2020: 2.0.0 faster FSM construction; new FSM VM opcodes; relaxed limits of pattern length and complexity (max 16,711,679 FSM opcode words, from 65,536 words previously) for high-performance pattern matching with very long and complex regex patterns.
 - May 25, 2020: 2.0.1 resolved 64-bit build warnings; fixed reflex CRLF output in C++ source code on Windows.
+- Jun 29, 2020: 2.1.0 added Bison complete locations filename member access; added example Mini C compiler `minic` using RE/flex scanner with Bison 3.2 C++ complete locations, compiles C-like source code to Java bytecode (class files); added fast fuzzy (approximate) regex matcher `reflex::FuzzyMatcher` derived from `reflex::Matcher`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

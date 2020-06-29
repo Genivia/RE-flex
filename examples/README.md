@@ -35,12 +35,12 @@ RE/flex scanner examples using Flex lexer functions
 RE/flex scanner examples using RE/flex lexer methods
 ----------------------------------------------------
 
-- `braille.l` a braille translator, inspired by the re2c example but expanded and fixed to make it useable
+- `minic.l,` `minic.y`, `minic.hpp`, and `minicdemo.c` Mini C compiler with Bison 3.2 C++ complete parser, generates Java bytecode (class files)
+- `braille.l` a braille translator, inspired by the re2c example but extended and fixed to make it useable
 - `ptokens.l` and `pdefs.l` a Python tokenizer
 - `calc.l` and `calc.y` calculator, supports Unicode identifier variables, resolves input errors
-- `cow.l` scanner to convert cows
-- `cows.l` scanner to convert cows, uses word boundary anchors
 - `csv.l` scanner to parse CSV rows from a file into a C++ vector
+- `yaml.l` YAML 1.2 parser and writer
 - `indent1.l` indentation detection and reformatting example, basic
 - `indent2.l` indentation detection and reformatting example, advanced with start conditions
 - `unicode.l` a very simple Unicode word matcher to demonstrate Unicode matching
@@ -54,7 +54,8 @@ RE/flex scanner examples using RE/flex lexer methods
 - `tag_lazystates.l` lexer to print XML tags, uses lazy quants and states
 - `tag_unicode.l` lexer to print XML tags, uses lazy quants and states, checks UTF-8 validity
 - `tag_tidy.l` lexer to tidy and normalize HTML
-- `yaml.l` YAML 1.2 parser and writer
+- `cow.l` scanner to convert cows
+- `cows.l` scanner to convert cows, uses word boundary anchors
 - `reflexexample3.l` example RE/flex scanner adapted from the Flex documentation with C bison
 - `reflexexample3.lxx` example RE/flex scanner adapted from the Flex documentation with C++ bison
 - `reflexexample4.l` example RE/flex scanner adapted from the Flex documentation with C bison-bridge

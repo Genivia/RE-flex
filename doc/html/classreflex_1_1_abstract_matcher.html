@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu May 14 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Jun 29 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -94,13 +94,14 @@ Collaboration diagram for reflex::AbstractMatcher:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreflex_1_1_abstract_matcher__coll__graph.png" border="0" usemap="#reflex_1_1_abstract_matcher_coll__map" alt="Collaboration graph"/></div>
 <map name="reflex_1_1_abstract_matcher_coll__map" id="reflex_1_1_abstract_matcher_coll__map">
-<area shape="rect" id="node3" href="classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="57,560,216,601"/>
-<area shape="rect" id="node2" href="structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="5,337,164,379"/>
-<area shape="rect" id="node4" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="188,345,280,371"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="189,248,279,275"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="169,157,299,199"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="157,81,311,108"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="184,5,284,32"/>
+<area shape="rect" id="node4" href="classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1239,71,1397,112"/>
+<area shape="rect" id="node2" href="structreflex_1_1_abstract_matcher_1_1_handler.html" title="Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched. " alt="" coords="732,5,891,47"/>
+<area shape="rect" id="node3" href="structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="732,71,891,112"/>
+<area shape="rect" id="node5" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="765,137,857,163"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="537,137,628,163"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="359,129,488,171"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="155,137,309,163"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="5,137,105,163"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -108,6 +109,12 @@ Collaboration diagram for reflex::AbstractMatcher:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html">Const</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html" title="AbstractMatcher::Const common constants. ">AbstractMatcher::Const</a> common constants.  <a href="structreflex_1_1_abstract_matcher_1_1_const.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_context.html">Context</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_context.html" title="Context returned by before() and after() ">Context</a> returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#ae08cc80655fe7c723dd15da0ac80eb35" title="Get the buffered context before the matching line. ">before()</a> and <a class="el" href="classreflex_1_1_abstract_matcher.html#a1422cc4d5a78f997393081a1416b1f52" title="Get the buffered context after EOF is reached. ">after()</a>  <a href="structreflex_1_1_abstract_matcher_1_1_context.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_handler.html">Handler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched.  <a href="structreflex_1_1_abstract_matcher_1_1_handler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> class for scanning, searching, and splitting input character sequences.  <a href="classreflex_1_1_abstract_matcher_1_1_iterator.html#details">More...</a><br /></td></tr>
@@ -147,6 +154,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0fb96965d228951194f0a2b9ee574dcf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a0fb96965d228951194f0a2b9ee574dcf">buffer</a> (size_t blk=0)</td></tr>
 <tr class="memdesc:a0fb96965d228951194f0a2b9ee574dcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set buffer block size for reading: use 1 for interactive input, 0 (or omit argument) to buffer all input in which case returns true if all the data could be read and false if a read error occurred.  <a href="#a0fb96965d228951194f0a2b9ee574dcf">More...</a><br /></td></tr>
 <tr class="separator:a0fb96965d228951194f0a2b9ee574dcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf7e85c26dc2e1252f8fb0511cf16067"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#aaf7e85c26dc2e1252f8fb0511cf16067">set_handler</a> (<a class="el" href="structreflex_1_1_abstract_matcher_1_1_handler.html">Handler</a> *handler)</td></tr>
+<tr class="memdesc:aaf7e85c26dc2e1252f8fb0511cf16067"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set event handler functor to invoke when the buffer contents are shifted out, e.g. for logging the data searched.  <a href="#aaf7e85c26dc2e1252f8fb0511cf16067">More...</a><br /></td></tr>
+<tr class="separator:aaf7e85c26dc2e1252f8fb0511cf16067"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae08cc80655fe7c723dd15da0ac80eb35"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_context.html">Context</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae08cc80655fe7c723dd15da0ac80eb35">before</a> ()</td></tr>
+<tr class="memdesc:ae08cc80655fe7c723dd15da0ac80eb35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the buffered context before the matching line.  <a href="#ae08cc80655fe7c723dd15da0ac80eb35">More...</a><br /></td></tr>
+<tr class="separator:ae08cc80655fe7c723dd15da0ac80eb35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1422cc4d5a78f997393081a1416b1f52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_context.html">Context</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a1422cc4d5a78f997393081a1416b1f52">after</a> ()</td></tr>
+<tr class="memdesc:a1422cc4d5a78f997393081a1416b1f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the buffered context after EOF is reached.  <a href="#a1422cc4d5a78f997393081a1416b1f52">More...</a><br /></td></tr>
+<tr class="separator:a1422cc4d5a78f997393081a1416b1f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb1d22133cb4cf88f208c45ee8cdc0e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#acb1d22133cb4cf88f208c45ee8cdc0e0">interactive</a> ()</td></tr>
 <tr class="memdesc:acb1d22133cb4cf88f208c45ee8cdc0e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set buffer to 1 for interactive input.  <a href="#acb1d22133cb4cf88f208c45ee8cdc0e0">More...</a><br /></td></tr>
 <tr class="separator:acb1d22133cb4cf88f208c45ee8cdc0e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -265,10 +281,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:acb8a8eff9fc980c7028c9399a1310849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character available for reading from the current input source.  <a href="#acb8a8eff9fc980c7028c9399a1310849">More...</a><br /></td></tr>
 <tr class="separator:acb8a8eff9fc980c7028c9399a1310849"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a640e70bf23e06e40ae52cadea0ecf19a"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a">bol</a> ()</td></tr>
-<tr class="memdesc:a640e70bf23e06e40ae52cadea0ecf19a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns pointer to the begin of line in the buffer before the matched text.  <a href="#a640e70bf23e06e40ae52cadea0ecf19a">More...</a><br /></td></tr>
+<tr class="memdesc:a640e70bf23e06e40ae52cadea0ecf19a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns pointer to the begin of the line in the buffer containing the matched text.  <a href="#a640e70bf23e06e40ae52cadea0ecf19a">More...</a><br /></td></tr>
 <tr class="separator:a640e70bf23e06e40ae52cadea0ecf19a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b5244017d854301305afbf8326c9e98"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7b5244017d854301305afbf8326c9e98">eol</a> (bool inclusive=false)</td></tr>
-<tr class="memdesc:a7b5244017d854301305afbf8326c9e98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns pointer to the end of line in the buffer after the matched text, DANGER: invalidates previous <a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a" title="Returns pointer to the begin of line in the buffer before the matched text. ">bol()</a> and <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> pointers, use <a class="el" href="classreflex_1_1_abstract_matcher.html#a7b5244017d854301305afbf8326c9e98" title="Returns pointer to the end of line in the buffer after the matched text, DANGER: invalidates previous...">eol()</a> before <a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a" title="Returns pointer to the begin of line in the buffer before the matched text. ">bol()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a329001b2880a756dd4d6f6fd0192d004" title="Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation...">begin()</a>, and <a class="el" href="classreflex_1_1_abstract_matcher.html#aaf1c25cf25951b7eeda7aa50d4736fd4" title="Returns pointer to the exclusive end of the matched text, a constant-time operation. ">end()</a> when those are required.  <a href="#a7b5244017d854301305afbf8326c9e98">More...</a><br /></td></tr>
+<tr class="memdesc:a7b5244017d854301305afbf8326c9e98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns pointer to the end of the line (last char + 1) in the buffer containing the matched text, DANGER: invalidates previous <a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a" title="Returns pointer to the begin of the line in the buffer containing the matched text. ">bol()</a> and <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> pointers, use <a class="el" href="classreflex_1_1_abstract_matcher.html#a7b5244017d854301305afbf8326c9e98" title="Returns pointer to the end of the line (last char + 1) in the buffer containing the matched text...">eol()</a> before <a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a" title="Returns pointer to the begin of the line in the buffer containing the matched text. ">bol()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a329001b2880a756dd4d6f6fd0192d004" title="Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation...">begin()</a>, and <a class="el" href="classreflex_1_1_abstract_matcher.html#aaf1c25cf25951b7eeda7aa50d4736fd4" title="Returns pointer to the exclusive end of the matched text, a constant-time operation. ">end()</a> when those are used.  <a href="#a7b5244017d854301305afbf8326c9e98">More...</a><br /></td></tr>
 <tr class="separator:a7b5244017d854301305afbf8326c9e98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cc9812e0bdaadc404a962754ce11226"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a1cc9812e0bdaadc404a962754ce11226">border</a> ()</td></tr>
 <tr class="memdesc:a1cc9812e0bdaadc404a962754ce11226"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the byte offset of the match from the start of the line.  <a href="#a1cc9812e0bdaadc404a962754ce11226">More...</a><br /></td></tr>
@@ -342,6 +358,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a99e23c24c8e576f4f6463eda78539d05"><td class="memItemLeft" align="right" valign="top">virtual std::pair&lt; const char *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a99e23c24c8e576f4f6463eda78539d05">operator[]</a> (size_t n) const  =0</td></tr>
 <tr class="memdesc:a99e23c24c8e576f4f6463eda78539d05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns captured text as a std::pair&lt;const char*,size_t&gt; with string pointer (non-0-terminated) and length.  <a href="#a99e23c24c8e576f4f6463eda78539d05">More...</a><br /></td></tr>
 <tr class="separator:a99e23c24c8e576f4f6463eda78539d05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afffc3490ec1d0b72b7fb56653f2afe3e"><td class="memItemLeft" align="right" valign="top">virtual std::pair&lt; size_t, const char * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#afffc3490ec1d0b72b7fb56653f2afe3e">group_id</a> ()=0</td></tr>
+<tr class="memdesc:afffc3490ec1d0b72b7fb56653f2afe3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the group capture identifier containing the group capture index &gt;0 and name (or NULL) of a named group capture, or (1,NULL) by default.  <a href="#afffc3490ec1d0b72b7fb56653f2afe3e">More...</a><br /></td></tr>
+<tr class="separator:afffc3490ec1d0b72b7fb56653f2afe3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68b6cc6ab090c4539b08fa575b34d065"><td class="memItemLeft" align="right" valign="top">virtual std::pair&lt; size_t, const char * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a68b6cc6ab090c4539b08fa575b34d065">group_next_id</a> ()=0</td></tr>
+<tr class="memdesc:a68b6cc6ab090c4539b08fa575b34d065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next group capture identifier containing the group capture index &gt;0 and name (or NULL) of a named group capture, or (0,NULL) when no more groups matched.  <a href="#a68b6cc6ab090c4539b08fa575b34d065">More...</a><br /></td></tr>
+<tr class="separator:a68b6cc6ab090c4539b08fa575b34d065"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae56a20f5b1cb4d25faea0e40508900c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ae56a20f5b1cb4d25faea0e40508900c0">tabs</a> (char n)</td></tr>
 <tr class="memdesc:ae56a20f5b1cb4d25faea0e40508900c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set tab size 1, 2, 4, or 8.  <a href="#ae56a20f5b1cb4d25faea0e40508900c0">More...</a><br /></td></tr>
 <tr class="separator:ae56a20f5b1cb4d25faea0e40508900c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -405,9 +427,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a7a57145ce5ead569c3758be586d28f41"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7a57145ce5ead569c3758be586d28f41">peek_more</a> ()</td></tr>
 <tr class="memdesc:a7a57145ce5ead569c3758be586d28f41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character and grow the buffer to make more room if necessary.  <a href="#a7a57145ce5ead569c3758be586d28f41">More...</a><br /></td></tr>
 <tr class="separator:a7a57145ce5ead569c3758be586d28f41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a345dcf64f1671bbb12056408045fa441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a345dcf64f1671bbb12056408045fa441">update</a> ()</td></tr>
-<tr class="memdesc:a345dcf64f1671bbb12056408045fa441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the newline count, column count, and character count when shifting the buffer.  <a href="#a345dcf64f1671bbb12056408045fa441">More...</a><br /></td></tr>
-<tr class="separator:a345dcf64f1671bbb12056408045fa441"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -453,6 +472,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:aa31133e43feb9f31e14fb8bf76812c33"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#aa31133e43feb9f31e14fb8bf76812c33">bol_</a></td></tr>
 <tr class="memdesc:aa31133e43feb9f31e14fb8bf76812c33"><td class="mdescLeft">&#160;</td><td class="mdescRight">begin of line pointer in buffer  <a href="#aa31133e43feb9f31e14fb8bf76812c33">More...</a><br /></td></tr>
 <tr class="separator:aa31133e43feb9f31e14fb8bf76812c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d4857240b9fc10fae94e23401c345e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_handler.html">Handler</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a8d4857240b9fc10fae94e23401c345e1">evh_</a></td></tr>
+<tr class="memdesc:a8d4857240b9fc10fae94e23401c345e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">event handler functor to invoke when buffer contents are shifted out  <a href="#a8d4857240b9fc10fae94e23401c345e1">More...</a><br /></td></tr>
+<tr class="separator:a8d4857240b9fc10fae94e23401c345e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53795b9e0e5dd91b6016ebb4fa2cc4dd"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a53795b9e0e5dd91b6016ebb4fa2cc4dd">lpb_</a></td></tr>
 <tr class="memdesc:a53795b9e0e5dd91b6016ebb4fa2cc4dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">line pointer in buffer, updated when counting line numbers with <a class="el" href="classreflex_1_1_abstract_matcher.html#a3bbfcc6386048d9c3613f7de919ba242" title="Updates and returns the starting line number of the match in the input character sequence. ">lineno()</a>  <a href="#a53795b9e0e5dd91b6016ebb4fa2cc4dd">More...</a><br /></td></tr>
 <tr class="separator:a53795b9e0e5dd91b6016ebb4fa2cc4dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -460,7 +482,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memdesc:ad237874fc8405e2f701765de41d6cd37"><td class="mdescLeft">&#160;</td><td class="mdescRight">line number count (cached)  <a href="#ad237874fc8405e2f701765de41d6cd37">More...</a><br /></td></tr>
 <tr class="separator:ad237874fc8405e2f701765de41d6cd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf059b818f76cda98cfd8ef059d8586e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#acf059b818f76cda98cfd8ef059d8586e">num_</a></td></tr>
-<tr class="memdesc:acf059b818f76cda98cfd8ef059d8586e"><td class="mdescLeft">&#160;</td><td class="mdescRight">character count (number of characters flushed prior to this buffered input)  <a href="#acf059b818f76cda98cfd8ef059d8586e">More...</a><br /></td></tr>
+<tr class="memdesc:acf059b818f76cda98cfd8ef059d8586e"><td class="mdescLeft">&#160;</td><td class="mdescRight">character count of the input till bol_  <a href="#acf059b818f76cda98cfd8ef059d8586e">More...</a><br /></td></tr>
 <tr class="separator:acf059b818f76cda98cfd8ef059d8586e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62b02b00048ab1b2bbb2b548f8b7aa02"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a62b02b00048ab1b2bbb2b548f8b7aa02">own_</a></td></tr>
 <tr class="memdesc:a62b02b00048ab1b2bbb2b548f8b7aa02"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if <a class="el" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9" title="input character sequence buffer ">AbstractMatcher::buf_</a> was allocated and should be deleted  <a href="#a62b02b00048ab1b2bbb2b548f8b7aa02">More...</a><br /></td></tr>
@@ -475,8 +497,7 @@ Protected Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The abstract matcher base class template defines an interface for all pattern matcher engines. </p>
 <p>The buffer expands when matches do not fit. The buffer size is initially 2*BLOCK size.</p>
-<div class="fragment"><div class="line">      _________________</div><div class="line">     |  |    |    |    |</div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a>=|  |<a class="code" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1">text</a>|<a class="code" href="classreflex_1_1_abstract_matcher.html#ab39dc592de42a7e044296f03bee4fdb3">rest</a>|free|</div><div class="line">     |__|____|____|____|</div><div class="line">        ^    ^    ^    ^</div><div class="line">        <a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a></div><div class="line"></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a> <span class="comment">// points to buffered input, buffer may grow to fit long matches</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <span class="comment">// current position in buf_ while matching text, cur_ = pos_ afterwards, can be changed by more()</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <span class="comment">// position in buf_ to start the next match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <span class="comment">// position in buf_ that is free to fill with more input</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a> <span class="comment">// allocated size of buf_, must ensure that max_ &gt; end_ for text() to add a final \0</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a6ce676b26fd73f76186ed5cfb4a9b9dc">txt_</a> <span class="comment">// points to the match, will be 0-terminated when text() or rest() are called</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a63c1bbabe9a7e0dd1a8b43b9bce58dfc">len_</a> <span class="comment">// length of the match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#ae712053969ae8fadeee28c1e08421cf5">chr_</a> <span class="comment">// char located at txt_[len_] when txt_[len_] is set to \0 by text(), is \0 otherwise</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a15e3fb0e851b132fd1e902de9ab56dba">got_</a> <span class="comment">// buf_[cur_-1] or txt_[-1] character before this match (assigned before each match), initially Const::BOB</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a2bbc10723ccc884bb90ed85a0dbdaabd">eof_</a> <span class="comment">// true if no more data can/should be fetched to fill the buffer</span></div></div><!-- fragment --><p>More info TODO </p>
-</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<div class="fragment"><div class="line">      _________________</div><div class="line">     |  |    |    |    |</div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a>=|  |<a class="code" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1">text</a>|<a class="code" href="classreflex_1_1_abstract_matcher.html#ab39dc592de42a7e044296f03bee4fdb3">rest</a>|free|</div><div class="line">     |__|____|____|____|</div><div class="line">        ^    ^    ^    ^</div><div class="line">        <a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a></div><div class="line"></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a522144cc1e11d86a7a44f3f41acc4ba9">buf_</a> <span class="comment">// points to buffered input, buffer may grow to fit long matches</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a19d1bb45408688e9fe41050363a2240c">cur_</a> <span class="comment">// current position in buf_ while matching text, cur_ = pos_ afterwards, can be changed by more()</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a028118ceb0a16e9ee12cfb74d7141689">pos_</a> <span class="comment">// position in buf_ to start the next match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a5567cb2217e7d76122b4a7332cf12215">end_</a> <span class="comment">// position in buf_ that is free to fill with more input</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a8c3372a98e775f5dd2d816d4f8dacf78">max_</a> <span class="comment">// allocated size of buf_, must ensure that max_ &gt; end_ for text() to add a final \0</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a6ce676b26fd73f76186ed5cfb4a9b9dc">txt_</a> <span class="comment">// points to the match, will be 0-terminated when text() or rest() are called</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a63c1bbabe9a7e0dd1a8b43b9bce58dfc">len_</a> <span class="comment">// length of the match</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#ae712053969ae8fadeee28c1e08421cf5">chr_</a> <span class="comment">// char located at txt_[len_] when txt_[len_] is set to \0 by text(), is \0 otherwise</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a15e3fb0e851b132fd1e902de9ab56dba">got_</a> <span class="comment">// buf_[cur_-1] or txt_[-1] character before this match (assigned before each match), initially Const::BOB</span></div><div class="line"><a class="code" href="classreflex_1_1_abstract_matcher.html#a2bbc10723ccc884bb90ed85a0dbdaabd">eof_</a> <span class="comment">// true if no more data can/should be fetched to fill the buffer</span></div></div><!-- fragment --> </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a24336f3d3f122aa0e904fc18954943f8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -665,6 +686,31 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a1422cc4d5a78f997393081a1416b1f52"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_context.html">Context</a> reflex::AbstractMatcher::after </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the buffered context after EOF is reached. </p>
+
+</div>
+</div>
 <a class="anchor" id="a146013ac9f6dcb1af9edef6ee5f3dc58"></a>
 <div class="memitem">
 <div class="memproto">
@@ -795,6 +841,31 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ae08cc80655fe7c723dd15da0ac80eb35"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_context.html">Context</a> reflex::AbstractMatcher::before </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the buffered context before the matching line. </p>
+
+</div>
+</div>
 <a class="anchor" id="a329001b2880a756dd4d6f6fd0192d004"></a>
 <div class="memitem">
 <div class="memproto">
@@ -842,7 +913,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns pointer to the begin of line in the buffer before the matched text. </p>
+<p>Returns pointer to the begin of the line in the buffer containing the matched text. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to the begin of line </dd></dl>
 
 </div>
@@ -1129,11 +1200,11 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns pointer to the end of line in the buffer after the matched text, DANGER: invalidates previous <a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a" title="Returns pointer to the begin of line in the buffer before the matched text. ">bol()</a> and <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> pointers, use <a class="el" href="classreflex_1_1_abstract_matcher.html#a7b5244017d854301305afbf8326c9e98" title="Returns pointer to the end of line in the buffer after the matched text, DANGER: invalidates previous...">eol()</a> before <a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a" title="Returns pointer to the begin of line in the buffer before the matched text. ">bol()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a329001b2880a756dd4d6f6fd0192d004" title="Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation...">begin()</a>, and <a class="el" href="classreflex_1_1_abstract_matcher.html#aaf1c25cf25951b7eeda7aa50d4736fd4" title="Returns pointer to the exclusive end of the matched text, a constant-time operation. ">end()</a> when those are required. </p>
+<p>Returns pointer to the end of the line (last char + 1) in the buffer containing the matched text, DANGER: invalidates previous <a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a" title="Returns pointer to the begin of the line in the buffer containing the matched text. ">bol()</a> and <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> pointers, use <a class="el" href="classreflex_1_1_abstract_matcher.html#a7b5244017d854301305afbf8326c9e98" title="Returns pointer to the end of the line (last char + 1) in the buffer containing the matched text...">eol()</a> before <a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a" title="Returns pointer to the begin of the line in the buffer containing the matched text. ">bol()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a329001b2880a756dd4d6f6fd0192d004" title="Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation...">begin()</a>, and <a class="el" href="classreflex_1_1_abstract_matcher.html#aaf1c25cf25951b7eeda7aa50d4736fd4" title="Returns pointer to the exclusive end of the matched text, a constant-time operation. ">end()</a> when those are used. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to the end of line </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">inclusive</td><td>true if eol should be inclusive, i.e. after <br />
+    <tr><td class="paramname">inclusive</td><td>true if inclusive, i.e. point after <br />
  </td></tr>
   </table>
   </dd>
@@ -1293,6 +1364,62 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afffc3490ec1d0b72b7fb56653f2afe3e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::pair&lt;size_t,const char*&gt; reflex::AbstractMatcher::group_id </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the group capture identifier containing the group capture index &gt;0 and name (or NULL) of a named group capture, or (1,NULL) by default. </p>
+<dl class="section return"><dt>Returns</dt><dd>a pair of size_t and string </dd></dl>
+
+<p>Implemented in <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a2e4cddcd72c972bbfbd9e7a410818da4">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a354995008f1e51281594cc72749ef1b9">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#a82f61242adaa3db4d546cefb5a518a92">reflex::StdMatcher</a>, and <a class="el" href="classreflex_1_1_matcher.html#a19ee864fe3ae325d28b900c7bd4b919a">reflex::Matcher</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a68b6cc6ab090c4539b08fa575b34d065"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::pair&lt;size_t,const char*&gt; reflex::AbstractMatcher::group_next_id </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the next group capture identifier containing the group capture index &gt;0 and name (or NULL) of a named group capture, or (0,NULL) when no more groups matched. </p>
+<dl class="section return"><dt>Returns</dt><dd>a pair of size_t and string </dd></dl>
+
+<p>Implemented in <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#abe198fe92683178695e6d772a4207176">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a0693b14273884a92a3682c1524c61646">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#a818cf4601fcb97125890e1935315d4e9">reflex::StdMatcher</a>, and <a class="el" href="classreflex_1_1_matcher.html#aff7790e539b65f03b5c45403c37da7c9">reflex::Matcher</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a450e338dc97b63c595ae3b583ccc9037"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1316,7 +1443,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Shift or expand the internal buffer when it is too small to accommodate more input, where the buffer size is doubled when needed, change cur_, pos_, end_, max_, ind_, buf_, bol_, lpb_, and txt_. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if buffer was shifted or was enlarged </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if buffer was shifted or enlarged </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">need</td><td>optional needed space = <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer growth factor, buffer is initially 2*BLOCK size, at least 256 ">Const::BLOCK</a> size by default </td></tr>
@@ -2420,6 +2547,32 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aaf7e85c26dc2e1252f8fb0511cf16067"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::AbstractMatcher::set_handler </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_handler.html">Handler</a> *&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set event handler functor to invoke when the buffer contents are shifted out, e.g. for logging the data searched. </p>
+
+</div>
+</div>
 <a class="anchor" id="adb5fec59e6c6a86b8cf405c40f93d1de"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2710,31 +2863,6 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a class="anchor" id="a345dcf64f1671bbb12056408045fa441"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void reflex::AbstractMatcher::update </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Update the newline count, column count, and character count when shifting the buffer. </p>
 
 </div>
 </div>
@@ -3130,6 +3258,28 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a8d4857240b9fc10fae94e23401c345e1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_handler.html">Handler</a>* reflex::AbstractMatcher::evh_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>event handler functor to invoke when buffer contents are shifted out </p>
+
+</div>
+</div>
 <a class="anchor" id="a3ec40e4c9070975bcafa94af5db0e514"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3330,7 +3480,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>character count (number of characters flushed prior to this buffered input) </p>
+<p>character count of the input till bol_ </p>
 
 </div>
 </div>
@@ -3456,7 +3606,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu May 14 2020 13:20:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Jun 29 2020 13:44:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

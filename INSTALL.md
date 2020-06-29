@@ -175,6 +175,12 @@ following files:
     |   |__ build.sh              quick build examples
     |   |__ ...
     |
+    |__ fuzzy/                    fuzzy (approximate) pattern matcher
+    |   |__ README.md
+    |   |__ Makefile
+    |   |__ fuzzymatcher.h        FuzzyMatcher class for fast fuzzy matching
+    |   |__ ftest.cpp             FuzzyMatcher testing
+    |
     |__ include/                  reflex header files to install
     |   |__ reflex/
     |       |__ abslexer.h

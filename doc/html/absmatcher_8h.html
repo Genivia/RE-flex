@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">absmatcher.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu May 14 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Jun 29 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -73,12 +73,12 @@ Include dependency graph for absmatcher.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="absmatcher_8h__incl.png" border="0" usemap="#absmatcher_8h" alt=""/></div>
 <map name="absmatcher_8h" id="absmatcher_8h">
-<area shape="rect" id="node2" href="convert_8h.html" title="RE/flex regex converter. " alt="" coords="95,80,208,107"/>
-<area shape="rect" id="node7" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="245,80,351,107"/>
-<area shape="rect" id="node9" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="389,80,487,107"/>
-<area shape="rect" id="node14" href="traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="511,80,610,107"/>
+<area shape="rect" id="node2" href="convert_8h.html" title="RE/flex regex converter. " alt="" coords="115,80,228,107"/>
+<area shape="rect" id="node7" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="315,80,422,107"/>
+<area shape="rect" id="node10" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="470,80,569,107"/>
+<area shape="rect" id="node15" href="traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="593,80,691,107"/>
 <area shape="rect" id="node3" href="error_8h.html" title="RE/flex regex errors. " alt="" coords="5,155,103,181"/>
-<area shape="rect" id="node10" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="392,155,484,181"/>
+<area shape="rect" id="node11" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="473,155,565,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -89,7 +89,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" id="node2" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="5,80,89,107"/>
 <area shape="rect" id="node4" href="boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="113,80,227,107"/>
 <area shape="rect" id="node5" href="matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="251,80,332,107"/>
-<area shape="rect" id="node6" href="pcre2matcher_8h.html" title="PCRE2&#45;based matcher engines for pattern matching. " alt="" coords="357,80,471,107"/>
+<area shape="rect" id="node6" href="pcre2matcher_8h.html" title="PCRE2&#45;JIT&#45;based matcher engines for pattern matching. " alt="" coords="357,80,471,107"/>
 <area shape="rect" id="node7" href="stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="495,80,594,107"/>
 <area shape="rect" id="node3" href="flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Lex/Flex&#45;compatible macros. " alt="" coords="6,155,89,181"/>
 </map>
@@ -102,6 +102,12 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html">reflex::AbstractMatcher::Const</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html" title="AbstractMatcher::Const common constants. ">AbstractMatcher::Const</a> common constants.  <a href="structreflex_1_1_abstract_matcher_1_1_const.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_context.html">reflex::AbstractMatcher::Context</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_context.html" title="Context returned by before() and after() ">Context</a> returned by <a class="el" href="classreflex_1_1_abstract_matcher.html#ae08cc80655fe7c723dd15da0ac80eb35" title="Get the buffered context before the matching line. ">before()</a> and <a class="el" href="classreflex_1_1_abstract_matcher.html#a1422cc4d5a78f997393081a1416b1f52" title="Get the buffered context after EOF is reached. ">after()</a>  <a href="structreflex_1_1_abstract_matcher_1_1_context.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_handler.html">reflex::AbstractMatcher::Handler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched.  <a href="structreflex_1_1_abstract_matcher_1_1_handler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_option.html">reflex::AbstractMatcher::Option</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">AbstractMatcher::Options for matcher engines.  <a href="structreflex_1_1_abstract_matcher_1_1_option.html#details">More...</a><br /></td></tr>
@@ -127,7 +133,7 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a848ff944c984502c0739b440d647f0ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="absmatcher_8h.html#a848ff944c984502c0739b440d647f0ce">WITH_REALLOC</a></td></tr>
-<tr class="memdesc:a848ff944c984502c0739b440d647f0ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">This compile-time option speeds up buffer reallocation.  <a href="#a848ff944c984502c0739b440d647f0ce">More...</a><br /></td></tr>
+<tr class="memdesc:a848ff944c984502c0739b440d647f0ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">This compile-time option may speed up buffer reallocation with realloc() instead of new and delete.  <a href="#a848ff944c984502c0739b440d647f0ce">More...</a><br /></td></tr>
 <tr class="separator:a848ff944c984502c0739b440d647f0ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52b73659b2f527a60c6b59f43b8e511a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="absmatcher_8h.html#a52b73659b2f527a60c6b59f43b8e511a">WITH_FAST_GET</a></td></tr>
 <tr class="memdesc:a52b73659b2f527a60c6b59f43b8e511a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This compile-time option speeds up matching, but slows input().  <a href="#a52b73659b2f527a60c6b59f43b8e511a">More...</a><br /></td></tr>
@@ -179,7 +185,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>This compile-time option speeds up buffer reallocation. </p>
+<p>This compile-time option may speed up buffer reallocation with realloc() instead of new and delete. </p>
 
 </div>
 </div>
@@ -273,7 +279,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu May 14 2020 13:20:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Jun 29 2020 13:44:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

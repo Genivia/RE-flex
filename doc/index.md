@@ -2438,11 +2438,11 @@ patterns syntax.  These pattern should only be used in lexer specifications:
   `<*>φ`             | matches `φ` in any state of the \ref reflex-states
   `<<EOF>>`          | matches EOF in any state of the \ref reflex-states
   `<S><<EOF>>`       | matches EOF only if state `S` is enabled in \ref reflex-states
-  `[a-z⎮⎮[A-Z]]`     | matches a letter, see \ref reflex-pattern-class
+  `[a-z￨￨[A-Z]]`     | matches a letter, see \ref reflex-pattern-class
   `[a-z&&[^aeiou]]`  | matches a consonant, see \ref reflex-pattern-class
   `[a-z−−[aeiou]]`   | matches a consonant, see \ref reflex-pattern-class
-  `[a-z]{+}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]`, see \ref reflex-pattern-class
-  `[a-z]{⎮}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]`, see \ref reflex-pattern-class
+  `[a-z]{+}[A-Z]`    | matches a letter, same as `[a-z￨￨[A-Z]]`, see \ref reflex-pattern-class
+  `[a-z]{￨}[A-Z]`    | matches a letter, same as `[a-z￨￨[A-Z]]`, see \ref reflex-pattern-class
   `[a-z]{&}[^aeiou]` | matches a consonant, same as `[a-z&&[^aeiou]]`, see \ref reflex-pattern-class
   `[a-z]{-}[aeiou]`  | matches a consonant, same as `[a-z−−[aeiou]]`, see \ref reflex-pattern-class
 
@@ -2489,7 +2489,7 @@ negated (or inverted), subtracted, intersected, and merged:
   ----------------- | ---------------------------------------------------------
   `[a-zA-Z]`        | matches a letter
   `[^a-zA-Z]`       | matches a non-letter (character class negation)
-  `[a-z⎮⎮[A-Z]]`    | matches a letter (character class union)
+  `[a-z￨￨[A-Z]]`    | matches a letter (character class union)
   `[a-z&&[^aeiou]]` | matches a consonant (character class intersection)
   `[a-z−−[aeiou]]`  | matches a consonant (character class subtraction)
 
@@ -2569,8 +2569,8 @@ lexer specifications.  Note that Flex only supports the two operators `{+}` and
 
   Pattern            | Matches
   ------------------ | --------------------------------------------------------
-  `[a-z]{+}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]`
-  `[a-z]{⎮}[A-Z]`    | matches a letter, same as `[a-z⎮⎮[A-Z]]`
+  `[a-z]{+}[A-Z]`    | matches a letter, same as `[a-z￨￨[A-Z]]`
+  `[a-z]{￨}[A-Z]`    | matches a letter, same as `[a-z￨￨[A-Z]]`
   `[a-z]{&}[^aeiou]` | matches a consonant, same as `[a-z&&[^aeiou]]`
   `[a-z]{-}[aeiou]`  | matches a consonant, same as `[a-z−−[aeiou]]`
 
@@ -5033,7 +5033,11 @@ symbols grammar file with Bison <i>`%%locations`</i> enabled:
     %token EOF 0 "end of file"                    // This defines TOK_EOF with value 0
 
     %%
-    ...  // grammar rules
+    ...  // grammar rules, note that we can use @1, @2 etc as locations, like this:
+    type ID : {
+                if (exists($2))
+                  error(@2, "Redefined identifier");
+              }
     %%
 
     void yy::parser::error(const location& loc, const std::string& msg)
@@ -5124,10 +5128,14 @@ follows:
 
 <div class="alt">
 ~~~{.cpp}
-    yy::Lexer lexer(std::cin);  // read from stdin (or a stream, string or FILE)
-    yy::parser parser(lexer);
-    if (parser.parse() != 0)
-      ... // error
+    FILE *f = fopen(filename, "r");
+    if (f != NULL)
+    {
+      yy::Lexer lexer(f);        // read file, decode UTF-8/16/32 format
+      lexer.filename = filename; // the filename to display with error locations
+      yy::parser parser(lexer);
+      if (parser.parse() != 0)
+        ... // error
 ~~~
 </div>
 

@@ -1,10 +1,11 @@
 <map id="reflex::AbstractMatcher::Iterator&lt; T &gt;" name="reflex::AbstractMatcher::Iterator&lt; T &gt;">
-<area shape="rect" id="node3" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="190,449,349,475"/>
-<area shape="rect" id="node5" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="245,575,403,616"/>
-<area shape="rect" id="node4" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="137,337,295,379"/>
-<area shape="rect" id="node6" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="319,345,411,371"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="320,248,411,275"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="301,157,430,199"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="288,81,443,108"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="315,5,415,32"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="973,93,1131,119"/>
+<area shape="rect" id="node6" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1240,115,1399,156"/>
+<area shape="rect" id="node4" href="$structreflex_1_1_abstract_matcher_1_1_handler.html" title="Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched. " alt="" coords="732,20,891,61"/>
+<area shape="rect" id="node5" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="732,85,891,127"/>
+<area shape="rect" id="node7" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="765,151,857,178"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="537,151,628,178"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="359,144,488,185"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="155,151,309,178"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="5,151,105,178"/>
 </map>

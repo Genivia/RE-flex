@@ -1384,7 +1384,7 @@ void Pattern::compile(
             if (i->first.any())
               ++i;
             else
-              moves.erase(i++);
+              i = moves.erase(i);
           }
           else
           {
@@ -1799,7 +1799,7 @@ void Pattern::compile_transition(
   {
     trim_lazy(&i->second);
     if (i->second.empty())
-      moves.erase(i++);
+      i = moves.erase(i);
     else
       ++i;
   }
@@ -1818,7 +1818,7 @@ void Pattern::transition(
     if (is_subset(i->second, follow))
     {
       chars += i->first;
-      moves.erase(i++);
+      i = moves.erase(i);
     }
     else
     {
@@ -2003,7 +2003,7 @@ void Pattern::compact_dfa(DFA::State *start)
         if (j->second.second == i->second.second)
         {
           i->second.first = hi;
-          state->edges.erase(j++);
+          j = state->edges.erase(j);
         }
         else
         {
@@ -2062,7 +2062,7 @@ void Pattern::encode_dfa(DFA::State *start)
       if (is_meta(lo))
         nop_ += i->second.first - lo;
     }
-    // add dead state only when needed, i.e. skip dead state only if all input is covered
+    // add final dead state (HALT opcode) only when needed, i.e. skip dead state if all chars 0-255 are already covered
     if (hi <= 0xFF)
     {
       state->edges[hi] = std::pair<Char,DFA::State*>(0xFF, NULL);
@@ -2085,7 +2085,7 @@ void Pattern::encode_dfa(DFA::State *start)
       if (is_meta(lo))
         nop_ += hi - i->second.first;
     }
-    // add dead state only when needed, i.e. skip dead state only if all input is covered
+    // add final dead state (HALT opcode) only when needed, i.e. skip dead state if all chars 0-255 are already covered
     if (!covered)
     {
       state->edges[lo] = std::pair<Char,DFA::State*>(0x00, NULL);
@@ -2098,7 +2098,7 @@ void Pattern::encode_dfa(DFA::State *start)
   }
   if (nop_ > Const::LONG)
   {
-    // over 64K opcodes: use 64-bit GOTO opcodes
+    // over 64K opcodes: use 64-bit GOTO LONG opcodes
     nop_ = 0;
     for (DFA::State *state = start; state; state = state->next)
     {

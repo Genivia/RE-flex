@@ -984,15 +984,15 @@ std::string Reflex::get_string(size_t& pos)
   return string;
 }
 
-/// Get regex string, converted to a format understood by the selected regex engine library
-std::string Reflex::get_regex(size_t& pos)
+/// Get pattern and its regex form converted to a format understood by the selected regex engine library
+bool Reflex::get_pattern(size_t& pos, std::string& pattern, std::string& regex)
 {
-  std::string regex;
   size_t at_lineno = lineno;
   (void)ws(pos); // skip indent, if any
   size_t loc = pos;
   bool fsp = !options["freespace"].empty();
   size_t nsp = pos;
+  pattern.clear();
   while (pos < linelen)
   {
     int c = line.at(pos);
@@ -1065,7 +1065,7 @@ std::string Reflex::get_regex(size_t& pos)
       if (pos == linelen)
       {
         // line ends in \ and continues on the next line
-        regex.append(line.substr(loc, pos - loc));
+        pattern.append(line.substr(loc, pos - loc));
         if (!get_line())
           error("EOF encountered inside a pattern", NULL, at_lineno);
         if (is("%%"))
@@ -1089,8 +1089,12 @@ std::string Reflex::get_regex(size_t& pos)
     if (fsp && !std::isspace(c))
       nsp = pos;
   }
-  regex.append(line.substr(loc, pos - loc));
-  if (regex != "<<EOF>>")
+  pattern.append(line.substr(loc, pos - loc));
+  if (pattern == "<<EOF>>")
+  {
+    regex = pattern; // special case <<EOF>> pattern
+  }
+  else
   {
     reflex::convert_flag_type flags = reflex::convert_flag::lex;
     if (!options["case_insensitive"].empty())
@@ -1105,14 +1109,14 @@ std::string Reflex::get_regex(size_t& pos)
       flags |= reflex::convert_flag::permissive;
     try
     {
-      regex = reflex::convert(regex, library->signature, flags, &definitions); 
+      regex = reflex::convert(pattern, library->signature, flags, &definitions); 
     }
     catch (reflex::regex_error& e)
     {
       error("malformed regular expression or unsupported syntax\n", e.what(), at_lineno);
     }
   }
-  return regex;
+  return !regex.empty();
 }
 
 /// Get line(s) of code, %{ %}, %%top, %%class, and %%init
@@ -1241,6 +1245,20 @@ std::string Reflex::escape_bs(const std::string& s)
   {
     t.replace(i, 1, "\\\\");
     i += 2;
+  }
+  return t;
+}
+
+/// Returns string in upper case as a name, replacing non-alphanum by underscore
+std::string Reflex::upper_name(const std::string& s)
+{
+  std::string t;
+  for (size_t i = 0; i < s.size(); ++i)
+  {
+    if (std::isalnum(s.at(i)))
+      t.push_back(std::toupper(s.at(i)));
+    else
+      t.push_back('_');
   }
   return t;
 }
@@ -1499,8 +1517,9 @@ void Reflex::parse_section_1()
         {
           size_t pos = 0;
           std::string name;
+          std::string pattern;
           std::string regex;
-          if ((name = get_name(pos)).empty() || !ws(pos) || (regex = get_regex(pos)).empty() || !nl(pos))
+          if ((name = get_name(pos)).empty() || !ws(pos) || !get_pattern(pos, pattern, regex) || !nl(pos))
             error("bad line in section 1: ", line.c_str());
           if (definitions.find(name) != definitions.end())
             error("attempt to redefine ", name.c_str());
@@ -1574,15 +1593,16 @@ void Reflex::parse_section_2()
         {
           if ((has_starts && starts.empty()) || (!has_starts && !scopes.empty() && scopes.top().empty()))
             warning("rule cannot be matched because the scope of start conditions is empty");
-          std::string regex = get_regex(pos);
-          if (regex.empty())
+          std::string pattern;
+          std::string regex;
+          if (!get_pattern(pos, pattern, regex))
             error("bad line in section 2: ", line.c_str());
           size_t rule_lineno = lineno;
           std::string code = get_code(pos);
           if (has_starts)
           {
             for (Starts::const_iterator start = starts.begin(); start != starts.end(); ++start)
-              rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
+              rules[*start].push_back(Rule(pattern, regex, Code(code, infile, rule_lineno)));
           }
           else if (scopes.empty() && regex == "<<EOF>>")
           {
@@ -1590,17 +1610,17 @@ void Reflex::parse_section_2()
             if (code == "|")
               error("bad <<EOF>> action | in section 2: ", line.c_str());
             for (Start start = 0; start < conditions.size(); ++start)
-              rules[start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
+              rules[start].push_back(Rule(pattern, regex, Code(code, infile, rule_lineno)));
           }
           else if (!scopes.empty())
           {
             for (Starts::const_iterator start = scopes.top().begin(); start != scopes.top().end(); ++start)
-              rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
+              rules[*start].push_back(Rule(pattern, regex, Code(code, infile, rule_lineno)));
           }
           else
           {
             for (Starts::const_iterator start = inclusive.begin(); start != inclusive.end(); ++start)
-              rules[*start].push_back(Rule(regex, Code(code, infile, rule_lineno)));
+              rules[*start].push_back(Rule(pattern, regex, Code(code, infile, rule_lineno)));
           }
           init = false;
         }
@@ -1711,7 +1731,7 @@ void Reflex::write()
       abort("cannot open file ", options["outfile"].c_str());
     out = &ofs;
   }
-  *out << "// " << options["outfile"] << " generated by reflex " REFLEX_VERSION " from " << infile << "\n";
+  *out << "// " << options["outfile"] << " generated by reflex " REFLEX_VERSION " from " << infile << '\n';
   write_prelude();
   write_section_top();
   write_defines();
@@ -1776,8 +1796,8 @@ void Reflex::write()
     out = &ofs;
     *out <<
       "// " << options["header_file"] << " generated by reflex " REFLEX_VERSION " from " << infile << "\n\n" <<
-      "#ifndef " << (options["prefix"] == "yy" ? "" : options["prefix"].c_str()) << "REFLEX_HEADER_H\n" <<
-      "#define " << (options["prefix"] == "yy" ? "" : options["prefix"].c_str()) << "REFLEX_HEADER_H\n" <<
+      "#ifndef " << (options["prefix"] == "yy" ? "" : options["prefix"].c_str()) << "REFLEX_" << upper_name(options["header_file"]) << '\n' <<
+      "#define " << (options["prefix"] == "yy" ? "" : options["prefix"].c_str()) << "REFLEX_" << upper_name(options["header_file"]) << '\n' <<
       "#define " << (options["prefix"] == "yy" ? "" : options["prefix"].c_str()) << "IN_HEADER 1\n";
     write_prelude();
     write_section_top();
@@ -1891,7 +1911,7 @@ void Reflex::write()
 void Reflex::write_banner(const char *title)
 {
   size_t i;
-  *out << "\n";
+  *out << '\n';
   for (i = 0; i < 80; i++)
     out->put('/');
   *out << "\n//";
@@ -1926,7 +1946,7 @@ void Reflex::write_prelude()
       if (option->first.size() > 4 && option->first.compare(option->first.size() - 4, 4, "file") == 0)
         *out << "\"" << escape_bs(option->second) << "\"\n";
       else
-        *out << option->second << "\n";
+        *out << option->second << '\n';
     }
   }
   if (!options["debug"].empty())
@@ -1984,14 +2004,14 @@ void Reflex::write_class()
     }
     if (!options["namespace"].empty())
     {
-      *out << "\n";
+      *out << '\n';
       write_namespace_open();
-      *out << "\n";
+      *out << '\n';
     }
     *out << "typedef reflex::FlexLexer" << "<" << matcher << "> FlexLexer;\n";
     if (!options["namespace"].empty())
     {
-      *out << "\n";
+      *out << '\n';
       write_namespace_close();
     }
     base = "FlexLexer";
@@ -2007,7 +2027,7 @@ void Reflex::write_class()
   if (!options["namespace"].empty())
   {
     write_namespace_open();
-    *out << "\n";
+    *out << '\n';
   }
   *out <<
     "class " << lexer << " : public " << base << " {\n";
@@ -2029,11 +2049,14 @@ void Reflex::write_class()
     {
       if (!options["bison_locations"].empty())
         *out <<
-          "  virtual " << yyltype << " location(void) const\n"
+          "  std::string filename;\n"
+          "  virtual " << yyltype << " location(void)\n"
           "  {\n"
           "    " << yyltype << " yylloc;\n"
+          "    yylloc.begin.filename = &filename;\n"
           "    yylloc.begin.line = static_cast<unsigned int>(matcher().lineno());\n"
           "    yylloc.begin.column = static_cast<unsigned int>(matcher().columno());\n"
+          "    yylloc.end.filename = &filename;\n"
           "    yylloc.end.line = static_cast<unsigned int>(matcher().lineno_end());\n"
           "    yylloc.end.column = static_cast<unsigned int>(matcher().columno_end());\n"
           "    return yylloc;\n"
@@ -2146,11 +2169,14 @@ void Reflex::write_class()
     {
       if (!options["bison_locations"].empty())
         *out <<
-          "  virtual " << yyltype << " location(void) const\n"
+          "  std::string filename;\n"
+          "  virtual " << yyltype << " location(void)\n"
           "  {\n"
           "    " << yyltype << " yylloc;\n"
+          "    yylloc.begin.filename = &filename;\n"
           "    yylloc.begin.line = static_cast<unsigned int>(matcher().lineno());\n"
           "    yylloc.begin.column = static_cast<unsigned int>(matcher().columno());\n"
+          "    yylloc.end.filename = &filename;\n"
           "    yylloc.end.line = static_cast<unsigned int>(matcher().lineno_end());\n"
           "    yylloc.end.column = static_cast<unsigned int>(matcher().columno_end());\n"
           "    return yylloc;\n"
@@ -2225,7 +2251,7 @@ void Reflex::write_class()
     "};\n";
   if (!options["namespace"].empty())
   {
-    *out << "\n";
+    *out << '\n';
     write_namespace_close();
   }
 }
@@ -2374,9 +2400,9 @@ void Reflex::write_code(const Codes& codes)
       *out << "#line " << code->lineno;
       if (!code->file.empty())
         *out << " \"" << escape_bs(code->file) << "\"";
-      *out << "\n";
+      *out << '\n';
     }
-    *out << code->line << "\n";
+    *out << code->line << '\n';
     this_lineno = code->lineno + 1;
   }
 }
@@ -2389,10 +2415,10 @@ void Reflex::write_code(const Code& code)
     *out << "#line " << code.lineno;
     if (!infile.empty())
       *out << " \"" << escape_bs(infile) << "\"";
-    *out << "\n";
+    *out << '\n';
   }
   if (!code.line.empty())
-    *out << code.line << "\n";
+    *out << code.line << '\n';
 }
 
 /// Write lexer code and lex() method code
@@ -2543,13 +2569,13 @@ void Reflex::write_lexer()
             "  if (" << options["prefix"] << "in != YY_SCANNER.in()->file())\n"
             "    YY_SCANNER.in(" << options["prefix"] << "in);\n";
         *out <<
-          "  " << token_type << " ret = YY_SCANNER." << lex << "();\n"
+          "  " << token_type << " " << lex << "_token = YY_SCANNER." << lex << "();\n"
           "  " << options["prefix"] << "leng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
           "  if (" << options["prefix"] << "leng >= YYLMAX)\n"
           "    YY_SCANNER.LexerError(\"token too large, exceeds YYLMAX\");\n"
           "  memcpy(" << options["prefix"] << "text, YY_SCANNER.YYText(), " << options["prefix"] << "leng + 1);\n"
           "  " << options["prefix"] << "lineno = static_cast<int>(YY_SCANNER.lineno());\n"
-          "  return ret;\n"
+          "  return " << lex << "_token;\n"
           "}\n";
       }
       else
@@ -2566,11 +2592,11 @@ void Reflex::write_lexer()
             "  if (" << options["prefix"] << "in != YY_SCANNER.in())\n"
             "    YY_SCANNER.in(" << options["prefix"] << "in);";
         *out <<
-          "  " << token_type << " ret = YY_SCANNER." << lex << "();\n"
+          "  " << token_type << " " << lex << "_token = YY_SCANNER." << lex << "();\n"
           "  " << options["prefix"] << "text = const_cast<char*>(YY_SCANNER.YYText());\n"
           "  " << options["prefix"] << "leng = static_cast<yy_size_t>(YY_SCANNER.YYLeng());\n"
           "  " << options["prefix"] << "lineno = static_cast<int>(YY_SCANNER.lineno());\n"
-          "  return ret;\n"
+          "  return " << lex << "_token;\n"
           "}\n";
       }
       *out <<
@@ -2601,7 +2627,7 @@ void Reflex::write_lexer()
       if (!options["namespace"].empty())
         write_namespace_close();
     }
-    *out << "\n";
+    *out << '\n';
   }
   else if (options["matcher"].empty() && !options["full"].empty())
   {
@@ -2615,7 +2641,7 @@ void Reflex::write_lexer()
       if (!options["namespace"].empty())
         write_namespace_close();
     }
-    *out << "\n";
+    *out << '\n';
   }
   *out << token_type << " ";
   if (!options["namespace"].empty())
@@ -2840,7 +2866,7 @@ void Reflex::write_lexer()
       {
         if (!eof_rule)
           *out <<
-            "          case " << accept << ": // rule at line " << rule->code.lineno << ": " << rule->regex << " :\n";
+            "          case " << accept << ": // rule " << rule->code.file << ":" << rule->code.lineno << ": " << rule->pattern << " :\n";
         has_code = rule->code.line != "|";
         if (has_code)
         {
@@ -2988,10 +3014,10 @@ void Reflex::write_namespace_close()
   size_t i = 0, j;
   while ((j = s.find("::", i)) != std::string::npos)
   {
-    *out << "} // namespace " << s.substr(i, j-i) << "\n";
+    *out << "} // namespace " << s.substr(i, j-i) << '\n';
     i = j + 2;
   }
-  *out << "} // namespace " << s.substr(i) << "\n";
+  *out << "} // namespace " << s.substr(i) << '\n';
 }
 
 /// Write namespace scope NAME ::
@@ -3019,7 +3045,7 @@ void Reflex::stats()
     std::cout << "reflex " REFLEX_VERSION " " << infile << " usage report:\n" << "  options used:\n";
     for (StringMap::const_iterator option = options.begin(); option != options.end(); ++option)
       if (!option->second.empty())
-        std::cout << "    " << option->first << "=" << option->second << "\n";
+        std::cout << "    " << option->first << "=" << option->second << '\n';
     if (!options["verbose"].empty())
       std::cout << "  inclusive (%s) and exclusive (%x) start conditions (with construction time):\n";
   }
@@ -3036,7 +3062,7 @@ void Reflex::stats()
           std::cout << "%x ";
         std::cout << conditions[start] << ": " << rules[start].size() << " rules\n";
       }
-      std::cout << "\n";
+      std::cout << '\n';
     }
   }
   else
@@ -3084,7 +3110,7 @@ void Reflex::stats()
           if (n < rules[start].size())
             std::cout << " + <<EOF>> rule";
           std::cout
-            << "\n"
+            << '\n'
             << std::setw(10) << pattern.nodes() << " nodes (" << pattern.nodes_time() << " ms)\n"
             << std::setw(10) << pattern.edges() << " edges (" << pattern.edges_time() << " ms)\n"
             << std::setw(10) << pattern.words() << " words (" << pattern.words_time() << " ms)\n";

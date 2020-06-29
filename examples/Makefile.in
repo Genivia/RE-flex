@@ -516,7 +516,8 @@ examplesxx:	flexexample3xx \
 examples3.2:	flexexample9xx \
 		reflexexample9xx \
 		flexexample11xx \
-		reflexexample11xx
+		reflexexample11xx \
+                minic
 
 boostexamples:  url_boost wc_boost
 
@@ -855,6 +856,14 @@ wc_pcre2:	wc.l
 		$(REFLEX) $(REFLAGS) --matcher=pcre2 --flex wc.l
 		$(CXX) $(CXXFLAGS) -I $(INCPCRE2) -o $@ lex.yy.cpp $(LIBREFLEX) $(LIBPCRE2)
 
+minic:		minic.l minic.y minic.hpp
+		$(BISON) -d minic.y
+		$(REFLEX) $(REFLAGS) minic.l
+		$(CXX) $(CXXFLAGS) -o $@ parser.cpp scanner.cpp $(LIBREFLEX)
+		rm -f minicdemo.class
+		./minic minicdemo.c
+		java minicdemo
+
 .PHONY:		clean
 
 clean:
@@ -863,7 +872,7 @@ clean:
 		-rm -f lex.yy.h lex.yy.hpp lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx parser.hpp parser.cpp scanner.hpp scanner.cpp location.hh location.hpp position.hh position.hpp stack.hh stack.hpp reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
 		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent1 indent2 json yaml braille unicode csv scanstrings yyscanstrings mmap fastfind fastsearch cards cvt2utf ugrep gz dos url_boost wc_boost url_pcre2 wc_pcre2
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent1 indent2 json yaml braille unicode csv scanstrings yyscanstrings mmap fastfind fastsearch cards cvt2utf ugrep gz dos url_boost wc_boost url_pcre2 wc_pcre2 minic minicdemo.class
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

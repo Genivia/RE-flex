@@ -59,7 +59,6 @@
 namespace reflex {
 
 /// Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher engine.
-/** More info TODO */
 class Pattern {
   friend class Matcher;      ///< permit access by the reflex::Matcher engine
   friend class FuzzyMatcher; ///< permit access by the reflex::FuzzyMatcher engine
@@ -81,7 +80,7 @@ class Pattern {
     static const Hash   HASH = 0x1000;     ///< size of the predict match array
   };
   /// Construct an unset pattern.
-  explicit Pattern()
+  Pattern()
     :
       opc_(NULL),
       nop_(0),
@@ -99,7 +98,7 @@ class Pattern {
     init(options);
   }
   /// Construct a pattern object given a regex string.
-  explicit Pattern(
+  Pattern(
       const char        *regex,
       const std::string& options)
     :
@@ -121,7 +120,7 @@ class Pattern {
     init(options);
   }
   /// Construct a pattern object given a regex string.
-  explicit Pattern(
+  Pattern(
       const std::string& regex,
       const std::string& options)
     :

@@ -66,7 +66,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "2.0.1"
+#define REFLEX_VERSION "2.1.0"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -101,22 +101,25 @@ class Reflex
         file(file),
         lineno(lineno)
     { }
-    std::string line;
-    std::string file;
-    size_t      lineno;
+    std::string line;   ///< line of code
+    std::string file;   ///< source filename
+    size_t      lineno; ///< source line number
   };
 
   /// A regex pattern and action pair that forms a rule
   struct Rule {
     Rule(
+        const std::string& pattern,
         const std::string& regex,
         const Code&        code)
       :
+        pattern(pattern),
         regex(regex),
         code(code)
     { }
-    std::string regex;
-    Code        code;
+    std::string pattern; ///< the pattern
+    std::string regex;   ///< the pattern-converted regex for the selected regex engine
+    Code        code;    ///< the action code corresponding to the pattern
   };
 
   typedef std::map<std::string,Library>     LibraryMap; ///< Dictionary of regex libraries
@@ -177,10 +180,11 @@ class Reflex
   std::string get_option(size_t& pos);
   std::string get_start(size_t& pos);
   std::string get_string(size_t& pos);
-  std::string get_regex(size_t& pos);
+  bool        get_pattern(size_t& pos, std::string& pattern, std::string& regex);
   std::string get_namespace(size_t& pos);
   std::string get_code(size_t& pos);
   std::string escape_bs(const std::string& s);
+  std::string upper_name(const std::string& s);
   bool        get_starts(size_t& pos, Starts& starts);
   void        abort(const char *message, const char *arg = NULL);
   void        error(const char *message, const char *arg = NULL, size_t at_lineno = 0);

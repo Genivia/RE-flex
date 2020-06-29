@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">debug.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu May 14 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Jun 29 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -50,7 +50,9 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">debug.h File Reference</div>  </div>
 </div><!--header-->
@@ -59,6 +61,7 @@
 <p>RE/flex debug logs and assertions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;cassert&gt;</code><br />
+<code>#include &lt;cstdio&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for debug.h:</div>
 <div class="dyncontent">
@@ -74,7 +77,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" id="node3" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="5,155,89,181"/>
 <area shape="rect" id="node5" href="boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="113,155,227,181"/>
 <area shape="rect" id="node6" href="matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="513,155,595,181"/>
-<area shape="rect" id="node7" href="pcre2matcher_8h.html" title="PCRE2&#45;based matcher engines for pattern matching. " alt="" coords="251,155,366,181"/>
+<area shape="rect" id="node7" href="pcre2matcher_8h.html" title="PCRE2&#45;JIT&#45;based matcher engines for pattern matching. " alt="" coords="251,155,366,181"/>
 <area shape="rect" id="node8" href="stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="390,155,489,181"/>
 <area shape="rect" id="node4" href="flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Lex/Flex&#45;compatible macros. " alt="" coords="6,229,89,256"/>
 <area shape="rect" id="node10" href="reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="619,155,684,181"/>
@@ -87,17 +90,38 @@ Macros</h2></td></tr>
 <tr class="memitem:aad4e5b6078e35a063d909d9a2db2e5e0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#aad4e5b6078e35a063d909d9a2db2e5e0">ASSERT</a>(c)</td></tr>
 <tr class="memdesc:aad4e5b6078e35a063d909d9a2db2e5e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If ASSERT not defined, make ASSERT a no-op.  <a href="#aad4e5b6078e35a063d909d9a2db2e5e0">More...</a><br /></td></tr>
 <tr class="separator:aad4e5b6078e35a063d909d9a2db2e5e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace7cf475884df9a50d6f494250668d83"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#ace7cf475884df9a50d6f494250668d83">DBGXIFY</a>(S)&#160;&#160;&#160;<a class="el" href="debug_8h.html#ac2953ae994a87fa1dc926708fbada5a1">DBGIFY_</a>(S)</td></tr>
+<tr class="separator:ace7cf475884df9a50d6f494250668d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2953ae994a87fa1dc926708fbada5a1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#ac2953ae994a87fa1dc926708fbada5a1">DBGIFY_</a>(S)&#160;&#160;&#160;#S</td></tr>
+<tr class="separator:ac2953ae994a87fa1dc926708fbada5a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac77237912440cd4d13e960fb88043f70"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#ac77237912440cd4d13e960fb88043f70">DBGFILE</a>&#160;&#160;&#160;<a class="el" href="debug_8h.html#ace7cf475884df9a50d6f494250668d83">DBGXIFY</a>(DEBUG) &quot;.log&quot;</td></tr>
+<tr class="separator:ac77237912440cd4d13e960fb88043f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a456f93b8499794e044b8ac6b64893d60"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a456f93b8499794e044b8ac6b64893d60">DBGSTR</a>(S)&#160;&#160;&#160;(S?S:&quot;(NULL)&quot;)</td></tr>
+<tr class="separator:a456f93b8499794e044b8ac6b64893d60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec7c7bc7da9e541a2a59a877d323e38b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#aec7c7bc7da9e541a2a59a877d323e38b">_DBGLOG</a>(...)&#160;&#160;&#160;( <a class="el" href="debug_8h.html#a5044f26be98eb3fb8a04376b3e3666a5">REFLEX_DBGOUT_</a>(<a class="el" href="debug_8h.html#ac77237912440cd4d13e960fb88043f70">DBGFILE</a>, __FILE__, __LINE__), ::fprintf(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>, &quot;&quot; __VA_ARGS__), ::fflush(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>))</td></tr>
+<tr class="separator:aec7c7bc7da9e541a2a59a877d323e38b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a556fee43f16e4bf80c489b9252455bae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a556fee43f16e4bf80c489b9252455bae">_DBGLOGN</a>(...)&#160;&#160;&#160;( ::fprintf(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>, &quot;\n                                        &quot; __VA_ARGS__), ::fflush(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>) )</td></tr>
+<tr class="separator:a556fee43f16e4bf80c489b9252455bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab134fe921e33059350a70a8ca26e37f8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#ab134fe921e33059350a70a8ca26e37f8">_DBGLOGA</a>(...)&#160;&#160;&#160;( ::fprintf(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>, &quot;&quot; __VA_ARGS__), ::fflush(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>) )</td></tr>
+<tr class="separator:ab134fe921e33059350a70a8ca26e37f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d20ed9010534224290496a3ec91b1fc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a1d20ed9010534224290496a3ec91b1fc">DBGCHK</a>(c)&#160;&#160;&#160;(void)0</td></tr>
 <tr class="separator:a1d20ed9010534224290496a3ec91b1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53b7d4ef6b5cc76b0bce2fd6fe5733ed"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(...)&#160;&#160;&#160;(void)0</td></tr>
-<tr class="memdesc:a53b7d4ef6b5cc76b0bce2fd6fe5733ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">When compiled with -DDEBUG, adds a timestamped log entry with a printf-formatted message.  <a href="#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">More...</a><br /></td></tr>
 <tr class="separator:a53b7d4ef6b5cc76b0bce2fd6fe5733ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42d3120c8e5ce7a7d0edc67db476de11"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a42d3120c8e5ce7a7d0edc67db476de11">DBGLOGN</a>(...)&#160;&#160;&#160;(void)0</td></tr>
-<tr class="memdesc:a42d3120c8e5ce7a7d0edc67db476de11"><td class="mdescLeft">&#160;</td><td class="mdescRight">When compiled with -DDEBUG, adds a log entry with a printf-formatted message.  <a href="#a42d3120c8e5ce7a7d0edc67db476de11">More...</a><br /></td></tr>
 <tr class="separator:a42d3120c8e5ce7a7d0edc67db476de11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f77c970ada64b34cd82308462c9ea76"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a8f77c970ada64b34cd82308462c9ea76">DBGLOGA</a>(...)&#160;&#160;&#160;(void)0</td></tr>
-<tr class="memdesc:a8f77c970ada64b34cd82308462c9ea76"><td class="mdescLeft">&#160;</td><td class="mdescRight">When compiled with -DDEBUG, appends a printf-formatted message to the last log entry.  <a href="#a8f77c970ada64b34cd82308462c9ea76">More...</a><br /></td></tr>
 <tr class="separator:a8f77c970ada64b34cd82308462c9ea76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a5044f26be98eb3fb8a04376b3e3666a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a5044f26be98eb3fb8a04376b3e3666a5">REFLEX_DBGOUT_</a> (const char *log, const char *file, int line)</td></tr>
+<tr class="separator:a5044f26be98eb3fb8a04376b3e3666a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:afd4db5de66800d91ebe6881df2e7cb9b"><td class="memItemLeft" align="right" valign="top">FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a></td></tr>
+<tr class="separator:afd4db5de66800d91ebe6881df2e7cb9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex debug logs and assertions. </p>
@@ -107,7 +131,7 @@ Macros</h2></td></tr>
 (c) BSD-3 License - see LICENSE.txt</dd></dl>
 <p>Exploiting macro magic to simplify debug logging.</p>
 <h2>Usage </h2>
-<p><code>DBGLOG(format, ...)</code> creates a timestamped log entry with a printf-formatted message. The log entry is added to a log file or sent to <code>stderr</code> as specified:</p>
+<p>Enable macro DEBUG to debug the compiled source code:</p>
 <table class="doxtable">
 <tr>
 <th>Source files compiled with </th><th>DBGLOG(...) entry added to  </th></tr>
@@ -118,12 +142,15 @@ Macros</h2></td></tr>
 <tr>
 <td><code>c++ -DDEBUG=</code> </td><td><code>stderr</code> </td></tr>
 </table>
+<p><code>DBGLOG(format, ...)</code> creates a timestamped log entry with a printf-formatted message. The log entry is added to a log file or sent to <code>stderr</code> as specified:</p>
 <p><code>DBGLOGN(format, ...)</code> creates a log entry without a timestamp.</p>
 <p><code>DBGLOGA(format, ...)</code> appends the formatted string to the previous log entry.</p>
 <p><code><a class="el" href="debug_8h.html#a1d20ed9010534224290496a3ec91b1fc">DBGCHK(condition)</a></code> calls <code>assert(condition)</code> when compiled in DEBUG mode.</p>
-<p>The utility macro <code>DBGSTR(const char *s)</code> returns string <code>s</code> or <code>"(null)"</code> when <code>s == NULL</code>.</p>
+<p>The utility macro <code><a class="el" href="debug_8h.html#a456f93b8499794e044b8ac6b64893d60">DBGSTR(const char *s)</a></code> returns string <code>s</code> or <code>"(null)"</code> when <code>s == NULL</code>.</p>
+<dl class="section note"><dt>Note</dt><dd>to temporarily enable debugging a specific block of code without globally debugging all code, use a leading underscore, e.g. <code>_DBGLOG(format, ...)</code>. This appends the debugging information to <code>DEBUG.log</code>.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Be careful to revert these statements by removing the leading underscore for production-quality code.</dd></dl>
 <h2>Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="debug_8h.html">reflex/debug.h</a>&gt;</span></div><div class="line"></div><div class="line"><span class="keywordtype">int</span> <a class="code" href="reflex_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div><div class="line">{</div><div class="line">  FILE *fd;</div><div class="line">  <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Program start&quot;</span>);</div><div class="line">  <span class="keywordflow">if</span> ((fd = fopen(<span class="stringliteral">&quot;foo.bar&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>)) == NULL)</div><div class="line">  {</div><div class="line">    <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Error %d: %s &quot;</span>, errno, DBGSTR(strerror(errno)));</div><div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; argc; ++i)</div><div class="line">      <a class="code" href="debug_8h.html#a8f77c970ada64b34cd82308462c9ea76">DBGLOGA</a>(<span class="stringliteral">&quot; %s&quot;</span>, argv[1]);</div><div class="line">  }</div><div class="line">  <span class="keywordflow">else</span></div><div class="line">  {</div><div class="line">    <a class="code" href="debug_8h.html#a1d20ed9010534224290496a3ec91b1fc">DBGCHK</a>(fd != NULL);</div><div class="line">    <span class="comment">// OK, so go ahead to read foo.bar ...</span></div><div class="line">    <span class="comment">// ...</span></div><div class="line">    fclose(fd);</div><div class="line">  }</div><div class="line">  <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Program end&quot;</span>);</div><div class="line">}</div></div><!-- fragment --><p>Compiled with <code>-DDEBUG</code> this example logs the following messages in <code>DEBUG.log</code>:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="debug_8h.html">reflex/debug.h</a>&gt;</span></div><div class="line"></div><div class="line"><span class="keywordtype">int</span> <a class="code" href="reflex_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div><div class="line">{</div><div class="line">  FILE *fd;</div><div class="line">  <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Program start&quot;</span>);</div><div class="line">  <span class="keywordflow">if</span> ((fd = fopen(<span class="stringliteral">&quot;foo.bar&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>)) == NULL)</div><div class="line">  {</div><div class="line">    <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Error %d: %s &quot;</span>, errno, <a class="code" href="debug_8h.html#a456f93b8499794e044b8ac6b64893d60">DBGSTR</a>(strerror(errno)));</div><div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; argc; ++i)</div><div class="line">      <a class="code" href="debug_8h.html#a8f77c970ada64b34cd82308462c9ea76">DBGLOGA</a>(<span class="stringliteral">&quot; %s&quot;</span>, argv[1]);</div><div class="line">  }</div><div class="line">  <span class="keywordflow">else</span></div><div class="line">  {</div><div class="line">    <a class="code" href="debug_8h.html#a1d20ed9010534224290496a3ec91b1fc">DBGCHK</a>(fd != NULL);</div><div class="line">    <span class="comment">// OK, so go ahead to read foo.bar ...</span></div><div class="line">    <span class="comment">// ...</span></div><div class="line">    fclose(fd);</div><div class="line">  }</div><div class="line">  <a class="code" href="debug_8h.html#a53b7d4ef6b5cc76b0bce2fd6fe5733ed">DBGLOG</a>(<span class="stringliteral">&quot;Program end&quot;</span>);</div><div class="line">}</div></div><!-- fragment --><p>Compiled with <code>-DDEBUG</code> this example logs the following messages in <code>DEBUG.log</code>:</p>
 <div class="fragment"><div class="line">140201/225654.692194   example.cpp:11   Program has started</div><div class="line">140201/225654.692564   example.cpp:15   Error 2: No such file or directory</div><div class="line">140201/225654.692577   example.cpp:17   Program ended</div></div><!-- fragment --><p>The first column records the date (140201 is February 1, 2014) and the time (225654 is 10:56PM + 54 seconds) with microsecond fraction. The second column records the source code file name and the line number of the <code>DBGLOG</code> command. The third column shows the printf-formatted message.</p>
 <p>The <code>DEBUG.log</code> file is created in the current directory when it does not already exist.</p>
 <p>Techniques used:</p>
@@ -135,6 +162,54 @@ Macros</h2></td></tr>
 <li><code>"" __VA_ARGS__</code> forces <code>__VA_ARGS__</code> to start with a literal format string (printf security advisory). </li>
 </ul>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="aec7c7bc7da9e541a2a59a877d323e38b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _DBGLOG</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td>&#160;&#160;&#160;( <a class="el" href="debug_8h.html#a5044f26be98eb3fb8a04376b3e3666a5">REFLEX_DBGOUT_</a>(<a class="el" href="debug_8h.html#ac77237912440cd4d13e960fb88043f70">DBGFILE</a>, __FILE__, __LINE__), ::fprintf(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>, &quot;&quot; __VA_ARGS__), ::fflush(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab134fe921e33059350a70a8ca26e37f8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _DBGLOGA</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td>&#160;&#160;&#160;( ::fprintf(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>, &quot;&quot; __VA_ARGS__), ::fflush(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>) )</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a556fee43f16e4bf80c489b9252455bae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _DBGLOGN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td>&#160;&#160;&#160;( ::fprintf(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>, &quot;\n                                        &quot; __VA_ARGS__), ::fflush(<a class="el" href="debug_8h.html#afd4db5de66800d91ebe6881df2e7cb9b">REFLEX_DBGFD_</a>) )</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="aad4e5b6078e35a063d909d9a2db2e5e0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -169,6 +244,34 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ac77237912440cd4d13e960fb88043f70"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DBGFILE&#160;&#160;&#160;<a class="el" href="debug_8h.html#ace7cf475884df9a50d6f494250668d83">DBGXIFY</a>(DEBUG) &quot;.log&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac2953ae994a87fa1dc926708fbada5a1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DBGIFY_</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">S</td><td>)</td>
+          <td>&#160;&#160;&#160;#S</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a53b7d4ef6b5cc76b0bce2fd6fe5733ed"></a>
 <div class="memitem">
 <div class="memproto">
@@ -182,8 +285,6 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>When compiled with -DDEBUG, adds a timestamped log entry with a printf-formatted message. </p>
 
 </div>
 </div>
@@ -201,8 +302,6 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>When compiled with -DDEBUG, appends a printf-formatted message to the last log entry. </p>
-
 </div>
 </div>
 <a class="anchor" id="a42d3120c8e5ce7a7d0edc67db476de11"></a>
@@ -219,14 +318,90 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>When compiled with -DDEBUG, adds a log entry with a printf-formatted message. </p>
+</div>
+</div>
+<a class="anchor" id="a456f93b8499794e044b8ac6b64893d60"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DBGSTR</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">S</td><td>)</td>
+          <td>&#160;&#160;&#160;(S?S:&quot;(NULL)&quot;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ace7cf475884df9a50d6f494250668d83"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DBGXIFY</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">S</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="debug_8h.html#ac2953ae994a87fa1dc926708fbada5a1">DBGIFY_</a>(S)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a5044f26be98eb3fb8a04376b3e3666a5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void REFLEX_DBGOUT_ </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>log</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="afd4db5de66800d91ebe6881df2e7cb9b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FILE* REFLEX_DBGFD_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu May 14 2020 13:20:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Jun 29 2020 13:44:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -1216,8 +1216,7 @@ static std::string convert_unicode_ranges(const ORanges<int>& ranges, convert_fl
   for (ORanges<int>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
     regex.append(utf8(i->first, i->second - 1, esc, par, !(flags & convert_flag::permissive))).push_back('|');
   regex.resize(regex.size() - 1);
-  if (regex.find('|') != std::string::npos)
-    regex.insert(0, par).push_back(')');
+  regex.insert(0, par).push_back(')');
   return regex;
 }
 
@@ -1922,7 +1921,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           throw regex_error(regex_error::invalid_syntax, pattern, pos);
         if (beg)
           throw regex_error(regex_error::empty_expression, pattern, pos);
-        if (pos + 1 < len && (pattern[pos + 1] == '?' || pattern[pos + 1] == '+') && !supports_escape(signature, pattern[pos + 1]))
+        if (pos + 1 < len && !(flags & convert_flag::basic) && (pattern[pos + 1] == '?' || pattern[pos + 1] == '+') && !supports_escape(signature, pattern[pos + 1]))
           throw regex_error(regex_error::invalid_quantifier, pattern, pos + 1);
         break;
       case '\t':

@@ -1,9 +1,10 @@
 <map id="reflex::AbstractMatcher" name="reflex::AbstractMatcher">
-<area shape="rect" id="node3" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="57,560,216,601"/>
-<area shape="rect" id="node2" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="5,337,164,379"/>
-<area shape="rect" id="node4" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="188,345,280,371"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="189,248,279,275"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="169,157,299,199"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="157,81,311,108"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="184,5,284,32"/>
+<area shape="rect" id="node4" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1239,71,1397,112"/>
+<area shape="rect" id="node2" href="$structreflex_1_1_abstract_matcher_1_1_handler.html" title="Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched. " alt="" coords="732,5,891,47"/>
+<area shape="rect" id="node3" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="732,71,891,112"/>
+<area shape="rect" id="node5" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="765,137,857,163"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="537,137,628,163"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="359,129,488,171"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="155,137,309,163"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="5,137,105,163"/>
 </map>
