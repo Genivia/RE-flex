@@ -37,6 +37,7 @@
 #ifndef REFLEX_ERROR_H
 #define REFLEX_ERROR_H
 
+#include <cstdio>
 #include <stdexcept>
 #include <string>
 
