@@ -2,8 +2,8 @@
 
 The examples with Bison require the installation of [Bison][bison-url].
 
-RE/flex scanner examples using RE/flex lexer methods
-----------------------------------------------------
+Examples with RE/flex C++ lexer methods
+---------------------------------------
 
 - `minic.l,` `minic.y`, `minic.hpp`, and `minicdemo.c` Mini C compiler with Bison 3.2 C++ complete parser, generates Java bytecode (class files)
 - `braille.l` a braille translator, inspired by the re2c example but extended and fixed to make it useable
@@ -41,8 +41,8 @@ RE/flex scanner examples using RE/flex lexer methods
 - `reflexexample10.l` example RE/flex scanner adapted from the Flex documentation to use multiple buffers
 - `reflexexample11.lxx` example RE/flex scanner with Bison 3.2 C++ bison-complete and bison-locations
 
-RE/flex scanner examples using old-style Flex lexer functions
--------------------------------------------------------------
+Examples with the backward-compatible Flex lexer functions
+----------------------------------------------------------
 
 - `json.l` JSON parser and writer
 - `ctokens.l` and `cdefs.l` a C/C++ tokenizer
