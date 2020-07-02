@@ -54,7 +54,9 @@
     static const Keyword keywords[] =
     {
       { "break",    Parser::token::TOKEN_BREAK },
+      { "case",     Parser::token::TOKEN_CASE },
       { "continue", Parser::token::TOKEN_CONTINUE },
+      { "default",  Parser::token::TOKEN_DEFAULT },
       { "do",       Parser::token::TOKEN_DO },
       { "else",     Parser::token::TOKEN_ELSE },
       { "false",    Parser::token::TOKEN_FALSE },
@@ -66,6 +68,7 @@
       { "print",    Parser::token::TOKEN_PRINT },
       { "return",   Parser::token::TOKEN_RETURN },
       { "string",   Parser::token::TOKEN_STRING },
+      { "switch",   Parser::token::TOKEN_SWITCH },
       { "true",     Parser::token::TOKEN_TRUE },
       { "void",     Parser::token::TOKEN_VOID },
       { "while",    Parser::token::TOKEN_WHILE },

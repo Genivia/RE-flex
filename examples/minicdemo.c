@@ -45,7 +45,7 @@ int main()
   // strings may contain \a, \b, \t, \n, \v, \f, \r, \\, and \"
   print "\n\n";
 
-  // besides the for loop we also have while and do-while loops, and if-else control flow
+  // besides the for loop we also have while and do-while loops, if-else and switch control flow
   while (true) // 'true' is essentially the same as 1 but optimized for logic, same for 'false'
   {
     if (--i <= 0)
@@ -53,8 +53,8 @@ int main()
   }
 
   // functions may or may not return values; functions that return void have no return value
-  init_statics();                    // initialize static variables
-  print "static variable pi = ", pi, "\n\n";         // print static variable value
+  init_statics();                                       // first initialize static variables
+  print "static variable pi = ", pi, "\n\n";            // print static variable value
   print "recursive function fac(7) = ", fac(7), "\n\n"; // print return value of recursive function
 
   // operations on strings

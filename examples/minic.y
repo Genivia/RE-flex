@@ -3,13 +3,12 @@
 //
 // Ideas for compiler improvements (from easy to hard, roughly):
 // - add more library functions that compile to JVM virtual and static method invocations
-// - allow polymorphic functions instead of producing redeclaration errors
-// - add variable declaration initializers, e.g. int a=1; or implicit initialization
-// - add 'switch' statement, compiled to tableswitch and lookupswitch instructions
-// - add type casts, e.g. (int)x, requires changing the grammar to avoid shift-reduce conflicts
-// - add arrays, e.g. int a[]; or perhaps int[] a;
+// - allow polymorphic functions instead of generating redeclaration errors
+// - add variable declaration initializers, e.g. int a=1; and/or implicit initialization
+// - add type casts, e.g. (int)x or int(x), requires changing the grammar to avoid sr conflicts
+// - add arrays, e.g. int a[]; or perhaps int[] a; requires adding expression lvalues to the grammar
 // - allow variable declarations anywhere in code blocks, not just at the start of a function body 
-// - add structs (classes)
+// - add structs/classes (structs without methods or classes with methods)
 // - add exceptions, e.g. 'try' and 'catch' blocks
 
 %require "3.2"
@@ -53,7 +52,9 @@
 
 %token
   BREAK    "break"
+  CASE     "case"
   CONTINUE "continue"
+  DEFAULT  "default"
   DO       "do"
   ELSE     "else"
   FALSE    "false"
@@ -65,6 +66,7 @@
   PRINT    "print"
   RETURN   "return"
   STRING   "string"
+  SWITCH   "switch"
   TRUE     "true"
   VOID     "void"
   WHILE    "while"
@@ -107,6 +109,7 @@
 %left      '+' '-'
 %left      '*' '/' '%'
 %right     '!' '~'
+%left      '[' '.' AR
 %nonassoc  '#' '$' PP NN
 
 // the code to include with parser.hpp
@@ -136,7 +139,7 @@
 %type <ID> id
 
 // marker nonterminals with U4 address semantic values
-%type <U4> B C L G
+%type <U4> switch B C L G
 
 %%
 
@@ -197,7 +200,7 @@ main    : type MAIN     {
                           // this is the main() function
                           comp.main = true;
                           // main() may return int or void
-                          if (!comp.type_is_void(comp.return_type) && !comp.type_is_int(comp.return_type))
+                          if (!comp.type_is_void($1.type) && !comp.type_is_int($1.type))
                             error(@1, "main can only return an int or void");
                           // the function's return type
                           comp.return_type = $1.type;
@@ -238,6 +241,9 @@ type    : VOID          {
                         }
         | STRING        {
                           $$.type = comp.type = comp.type_string();
+                        }
+        | type '[' ']'  {
+                          $$.type = comp.type = comp.type_array($1.type);
                         }
         ;
 
@@ -318,6 +324,13 @@ stmt    : IF '(' cond ')' L stmt
                           comp.backpatch($3.falselist, $9);
                           comp.backpatch($8, comp.addr());
                         }
+        | switch G '{' cases '}' G
+                        {
+                          comp.backpatch($2, comp.addr());
+                          // generate switch lookup table and backpatch break instruction jumps
+                          comp.switch_done();
+                          comp.backpatch($6, comp.addr());
+                        }
         | WHILE '(' C cond ')' B stmt G
                         {
                           comp.backpatch($4.truelist, $6);
@@ -367,7 +380,7 @@ stmt    : IF '(' cond ')' L stmt
                               comp.emit(ireturn);
                             else if (comp.type_is_double(type))
                               comp.emit(freturn);
-                            else if (comp.type_is_string(type))
+                            else if (comp.type_is_string(type) || comp.type_is_array(type))
                               comp.emit(areturn);
                           }
                         }
@@ -395,37 +408,50 @@ stmt    : IF '(' cond ')' L stmt
                         }
         | prints ';'    {
                           comp.emit(pop);
-                          /*
-                          Type type = comp.decircuit($2);
-                          if (comp.type_is_int(type))
-                          {
-                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", $1, "(I)V"));
-                          }
-                          else if (comp.type_is_double(type))
-                          {
-                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", $1, "(D)V"));
-                          }
-                          else if (comp.type_is_string(type))
-                          {
-                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", $1, "(Ljava/lang/String;)V"));
-                          }
-                          else
-                          {
-                            error(@2, "Type error");
-                          }
-                          */
                         }
         | BREAK ';'     {
-                          if (!comp.loop_break())
-                            error(@1, "break not in loop");
+                          if (!comp.emit_break())
+                            error(@1, "break not in loop or switch");
                         }
         | CONTINUE ';'  {
-                          if (!comp.loop_continue())
+                          if (!comp.emit_continue())
                             error(@1, "continue not in loop");
                         }
         | '{' stmts '}'
         | optexpr ';'
-        | error ';'     { yyerrok; }
+        | error ';'     {
+                          yyerrok;
+                        }
+        ;
+
+switch  : SWITCH '(' expr ')'
+                        {
+                          if (!comp.type_is_int(comp.decircuit($3)))
+                            error(@3, "Type error");
+                          comp.switch_init();
+                        }
+        ;
+
+cases   : cases case ':' stmts
+        | /* empty */
+        ;
+
+case    : CASE U8       {
+                          if ($2 > 0x7fffffff)
+                            error(@2, "Integer constant out of range");
+                          else if (!comp.emit_case(static_cast<U4>($2), comp.addr()))
+                            error(@2, "Duplicate case value");
+                        }
+        | CASE '-' U8   {
+                          if ($3 > 0x80000000)
+                            error(@3, "Integer constant out of range");
+                          else if (!comp.emit_case(static_cast<U4>(-$3), comp.addr()))
+                            error(@2 + @3, "Duplicate case value");
+                        }
+        | DEFAULT       {
+                          if (!comp.emit_default(comp.addr()))
+                            error(@1, "Duplicate default");
+                        }
         ;
 
 prints  : prints ',' D expr
@@ -749,19 +775,19 @@ expr    : ID   '=' expr {
                           if (!ok)
                             error(@1 + @3, "Type error");
                         }
-        | expr EQ  expr {
+        | expr EQ expr  {
                           bool ok;
                           $$ = comp.emit_rel($1, $3, ifeq, if_icmpeq, dsub, true, ok);
                           if (!ok)
                             error(@1 + @3, "Type error");
                         }
-        | expr NE  expr {
+        | expr NE expr  {
                           bool ok;
                           $$ = comp.emit_rel($1, $3, ifne, if_icmpne, dsub, false, ok);
                           if (!ok)
                             error(@1 + @3, "Type error");
                         }
-        | expr GE  expr {
+        | expr GE expr  {
                           bool ok;
                           $$ = comp.emit_rel($1, $3, ifge, if_icmpge, dcmpl, true, ok);
                           if (!ok)
@@ -773,7 +799,7 @@ expr    : ID   '=' expr {
                           if (!ok)
                             error(@1 + @3, "Type error");
                         }
-        | expr LE  expr {
+        | expr LE expr  {
                           bool ok;
                           $$ = comp.emit_rel($1, $3, ifle, if_icmple, dcmpg, true, ok);
                           if (!ok)
@@ -785,13 +811,13 @@ expr    : ID   '=' expr {
                           if (!ok)
                             error(@1 + @3, "Type error");
                         }
-        | expr LS  expr {
+        | expr LS expr  {
                           bool ok;
                           $$ = comp.emit_op($1, $3, ishl, nop, ok);
                           if (!ok)
                             error(@1 + @3, "Type error");
                         }
-        | expr RS  expr {
+        | expr RS expr  {
                           bool ok;
                           $$ = comp.emit_op($1, $3, ishr, nop, ok);
                           if (!ok)
@@ -872,6 +898,10 @@ expr    : ID   '=' expr {
                           {
                             comp.emit3(invokevirtual, comp.pool_add_Method("java/lang/String", "length", "()I"));
                           }
+                          else if (comp.type_is_array(type))
+                          {
+                            comp.emit(arraylength);
+                          }
                           else
                           {
                             error(@2, "Type error");
@@ -911,6 +941,40 @@ expr    : ID   '=' expr {
                             error(@1, "Invalid use of $");
                           }
                           $$.type = comp.type_string();
+                        }
+        | expr '[' expr ']'
+                        {
+                          if (!comp.type_is_int(comp.decircuit($3)))
+                          {
+                            error(@3, "Type error");
+                          }
+                          else
+                          {
+                            TD type = comp.type_get_element($1.type);
+                            if (comp.type_is_int(type))
+                            {
+                              comp.emit(iaload);
+                            }
+                            else if (comp.type_is_double(type))
+                            {
+                              comp.emit(daload);
+                            }
+                            else if (comp.type_is_string(type) || comp.type_is_array(type))
+                            {
+                              comp.emit(aaload);
+                            }
+                            else
+                            {
+                              error(@1, "Type error");
+                            }
+                            $$.type = type;
+                          }
+                        }
+        | expr '.' ID   {
+                          error(@1 + @3, "Not implemented");
+                        }
+        | expr AR ID    {
+                          error(@1 + @3, "Not implemented");
                         }
         | PP ID         {
                           Entry *entry = comp.table[comp.scope]->lookup($2);
@@ -1104,7 +1168,7 @@ expr    : ID   '=' expr {
                               else
                                 comp.emit3(invokestatic, comp.pool_add_Method(lib->package, lib->method, lib->type));
                               // boolean and char are ints, computationally so "Z" and "C" return types are OK to use as "I"
-                              $$.type = comp.type_return(lib->type);
+                              $$.type = comp.type_get_return(lib->type);
                               if (comp.type_is_boolean($$.type) || comp.type_is_char($$.type))
                                 $$.type = comp.type_int();
                             }
@@ -1121,7 +1185,7 @@ expr    : ID   '=' expr {
                           {
                             // invoke a compiled function
                             comp.emit3(invokestatic, comp.pool_add_Method($1->c_str(), entry->type));
-                            $$.type = comp.type_return(entry->type);
+                            $$.type = comp.type_get_return(entry->type);
                           }
                           else
                           {
@@ -1183,14 +1247,16 @@ id      : ID            {
                           }
                           $$ = $1;
                         }
+        ;
+
 B       : /* empty */   {
-                          comp.loop_break_init();
+                          comp.break_init();
                           $$ = comp.addr();
                         }
         ;
 
 C       : /* empty */   {
-                          comp.loop_continue_init();
+                          comp.continue_init();
                           $$ = comp.addr();
                         }
         ;

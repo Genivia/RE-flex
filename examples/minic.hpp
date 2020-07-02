@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <cstdint>
 #include <string>
+#include <map>
 #include <set>
 #include <vector>
 
@@ -422,8 +423,9 @@ class Compiler {
       type(NULL),
       return_type(NULL),
       scope(-1),
-      loop_break_nest(0),
-      loop_continue_nest(0),
+      break_nest(0),
+      continue_nest(0),
+      switch_nest(0),
       cf(name)
   { }
 
@@ -588,7 +590,7 @@ class Compiler {
   }
 
   // return the return type of a function or NULL
-  TD type_return(TD type_func)
+  TD type_get_return(TD type_func)
   {
     if (type_func != NULL)
     {
@@ -596,6 +598,15 @@ class Compiler {
       if (s != NULL)
         return s + 1;
     }
+    return NULL;
+  }
+
+  // return the element type of an array
+  TD type_get_element(TD array_type)
+  {
+    if (array_type != NULL && *array_type == '[')
+      return array_type + 1;
+
     return NULL;
   }
 
@@ -607,15 +618,6 @@ class Compiler {
 
     const char *s = strrchr(type_func, ')');
     return s != NULL && s == type_func + strlen(type_actuals) + 1 && strncmp(type_actuals, type_func + 1, s - type_func - 1) == 0;
-  }
-
-  // return the element type of an array
-  TD type_element(TD array_type)
-  {
-    if (array_type != NULL && *array_type == '[')
-      return array_type + 1;
-
-    return NULL;
   }
 
   // true if the type of an expression is short-circuit (i.e. logic, not a value on the stack)
@@ -682,6 +684,12 @@ class Compiler {
   bool type_is_string(TD type)
   {
     return type != NULL && strcmp(type, "Ljava/lang/String;") == 0;
+  }
+
+  // true if the type of an expression is an array
+  bool type_is_array(TD type)
+  {
+    return type != NULL && *type == '[';
   }
 
   // true if two types are equal
@@ -917,41 +925,41 @@ class Compiler {
   }
 
   // open loop scope
-  void loop_break_init()
+  void break_init()
   {
-    ++loop_break_nest;
-    if (breaks.size() < loop_break_nest)
+    if (breaks.size() <= break_nest)
       breaks.push_back(NULL);
     else
-      breaks[loop_break_nest - 1] = NULL;
+      breaks[break_nest] = NULL;
+    ++break_nest;
   }
 
   // break statement in a loop
-  bool loop_break()
+  bool emit_break()
   {
-    if (loop_break_nest == 0)
+    if (break_nest == 0)
       return false;
-    breaks[loop_break_nest - 1] = merge(breaks[loop_break_nest - 1], backpatch_addr());
+    breaks[break_nest - 1] = merge(breaks[break_nest - 1], backpatch_addr());
     emit3(goto_, 0);
     return true;
   }
 
   // open loop scope
-  void loop_continue_init()
+  void continue_init()
   {
-    ++loop_continue_nest;
-    if (continues.size() < loop_continue_nest)
+    if (continues.size() <= continue_nest)
       continues.push_back(NULL);
     else
-      continues[loop_continue_nest - 1] = NULL;
+      continues[continue_nest] = NULL;
+    ++continue_nest;
   }
 
   // continue statement in a loop
-  bool loop_continue()
+  bool emit_continue()
   {
-    if (loop_continue_nest == 0)
+    if (continue_nest == 0)
       return false;
-    continues[loop_continue_nest - 1] = merge(continues[loop_continue_nest - 1], backpatch_addr());
+    continues[continue_nest - 1] = merge(continues[continue_nest - 1], backpatch_addr());
     emit3(goto_, 0);
     return true;
   }
@@ -959,8 +967,72 @@ class Compiler {
   // close loop scope and backpatch the break and continue statements in the loop if any
   void loop_done()
   {
-    backpatch(breaks[--loop_break_nest], addr());
-    backpatch(continues[--loop_continue_nest], addr());
+    backpatch(breaks[--break_nest], addr());
+    backpatch(continues[--continue_nest], addr());
+  }
+
+  // open switch scope
+  void switch_init()
+  {
+    if (cases.size() <= switch_nest)
+      cases.push_back(std::map<U4,U4>());
+    else
+      cases[switch_nest].clear();
+    if (defaults.size() <= switch_nest)
+      defaults.push_back(0);
+    else
+      defaults[switch_nest] = 0;
+    break_init();
+    ++switch_nest;
+  }
+
+  // record case value: address pair to resolve at the end of switch
+  bool emit_case(U4 value, U4 addr)
+  {
+    if (cases[switch_nest - 1].find(value) != cases[switch_nest - 1].end())
+      return false;
+    cases[switch_nest - 1][value] = addr;
+    return true;
+  }
+
+  // record default: address to resolve at the end of switch
+  bool emit_default(U4 addr)
+  {
+    if (defaults[switch_nest - 1] != 0)
+      return false;
+    defaults[switch_nest - 1] = addr;
+    return true;
+  }
+
+  // emit switch lookup table
+  void switch_done()
+  {
+    --switch_nest;
+    // emit switch lookup table
+    U4 bpa1 = addr();
+    emit(lookupswitch);
+    U4 padding = (-addr()) & 3;
+    for (U4 pad = 0; pad < padding; ++pad)
+      emit(nop);
+    // default case jump offset
+    U4 bpa2 = addr();
+    if (defaults[switch_nest] == 0)
+      emit4(0);
+    else
+      emit4(defaults[switch_nest] - bpa1);
+    // number of key-offset pairs
+    emit4(static_cast<U4>(cases[switch_nest].size()));
+    // emit key-offset pairs sorted by key
+    for (std::map<U4,U4>::iterator i = cases[switch_nest].begin(); i != cases[switch_nest].end(); ++i)
+    {
+      emit4(i->first);
+      emit4(i->second - bpa1);
+    }
+    // if no default case, the default case jump offset is after the table
+    if (defaults[switch_nest] == 0)
+      backpatch(bpa2 + 1, addr() + (bpa2 + 1 - bpa1));
+    // backpatch the break statements
+    backpatch(breaks[--break_nest], addr());
   }
 
   // coerce value on top of JVM stack
@@ -1408,6 +1480,15 @@ class Compiler {
     code.push_back(operand2);
   }
 
+  // emit integer value
+  void emit4(U4 value)
+  {
+    emit(H1(H2(value)));
+    emit(L1(H2(value)));
+    emit(H1(L2(value)));
+    emit(L1(L2(value)));
+  }
+
   // save the class file to file "name.class", "name" is the name of the source code file without extension suffix
   bool save()
   {
@@ -1439,16 +1520,19 @@ class Compiler {
     return err == 0;
   }
 
-  bool                        main;        // if we are compiling the body of main()
-  TD                          type;        // the last type declared
-  TD                          return_type; // the return type of the function we are compiling
-  Table                      *table[2];    // table[0] holds statics, table[1] holds locals
-  int                         scope;       // 0 for static scope, 1 for local scope
-  size_t                      loop_break_nest;    // depth of the loop
-  size_t                      loop_continue_nest; // depth of the loop
-  std::vector<BackpatchList*> breaks;      // break jumps to the instructions after the loop
-  std::vector<BackpatchList*> continues;   // continue jumps to the loop condition expression
-  std::set<std::string>       types;       // collection of TD strings
+  bool                           main;          // if we are compiling the body of main()
+  TD                             type;          // the last type declared
+  TD                             return_type;   // the return type of the function we are compiling
+  Table                         *table[2];      // table[0] holds statics, table[1] holds locals
+  int                            scope;         // 0 for static scope, 1 for local scope
+  size_t                         break_nest;    // depth of the loop
+  size_t                         continue_nest; // depth of the loop
+  size_t                         switch_nest;   // depth of the loop
+  std::vector<BackpatchList*>    breaks;        // break jumps to the instructions after the loop
+  std::vector<BackpatchList*>    continues;     // continue jumps to the loop condition expression
+  std::vector< std::map<U4,U4> > cases;         // 
+  std::vector<U4>                defaults;      // 
+  std::set<std::string>          types;         // collection of TD strings
 
  private:
 
