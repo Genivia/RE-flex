@@ -2065,7 +2065,7 @@ void Pattern::encode_dfa(DFA::State *start)
     // add final dead state (HALT opcode) only when needed, i.e. skip dead state if all chars 0-255 are already covered
     if (hi <= 0xFF)
     {
-      state->edges[hi] = std::pair<Char,DFA::State*>(0xFF, NULL);
+      state->edges[hi] = std::pair<Char,DFA::State*>(0xFF, reinterpret_cast<DFA::State*>(NULL));
       ++nop_;
     }
 #else
@@ -2088,7 +2088,7 @@ void Pattern::encode_dfa(DFA::State *start)
     // add final dead state (HALT opcode) only when needed, i.e. skip dead state if all chars 0-255 are already covered
     if (!covered)
     {
-      state->edges[lo] = std::pair<Char,DFA::State*>(0x00, NULL);
+      state->edges[lo] = std::pair<Char,DFA::State*>(0x00, reinterpret_cast<DFA::State*>(NULL));
       ++nop_;
     }
 #endif
