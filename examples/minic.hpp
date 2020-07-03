@@ -14,13 +14,22 @@
 
 // JVM computational types
 
-typedef uint8_t     U1; // JVM byte
-typedef uint16_t    U2; // JVM short
-typedef uint32_t    U4; // JVM int
-typedef uint64_t    U8; // JVM long
+typedef int8_t      I1; // JVM byte (signed)
+typedef uint8_t     U1; // JVM byte (unsigned)
+
+typedef int16_t     I2; // JVM short (signed)
+typedef uint16_t    U2; // JVM short (unsigned)
+
+typedef int32_t     I4; // JVM int (signed)
+typedef uint32_t    U4; // JVM int (unsigned)
+
+typedef int64_t     I8; // JVM long (signed)
+typedef uint64_t    U8; // JVM long (unsigned)
+
 typedef float       F4; // JVM float
 typedef double      F8; // JVM double
-typedef const char *CS; // JVM string
+
+typedef const char *CS; // JVM string literal
 
 // JVM opcodes
 
@@ -239,6 +248,7 @@ const U1 T_INT           = 10;
 const U1 T_LONG          = 11;
 
 // JVM access flags
+
 typedef U2 AF;
 
 const AF ACC_PUBLIC    = 0x0001; // declared public; may be accessed from outside its package
@@ -254,15 +264,15 @@ const AF ACC_ABSTRACT  = 0x0400; // declared abstract; may not be instantiated
 const AF ACC_STRICT    = 0x0800; // declared strictfp; floating-point mode is FP-strict
 const AF ACC_SYNTHETIC = 0x1000; // declared synthetic; not present in the source code
 
-// identifiers are efficienty compared by their pointer to a string in the Scanner::symbols set
+// identifiers are efficienty compared for equality by their pointer to a string stored in the Scanner::symbols set
 typedef const std::string *ID;
 
-// JVM type descriptor, as a special case we use NULL to denote short-circuit boolean
+// JVM type descriptor, as a special case we use NULL to denote short-circuit boolean resolved via backpatching, without a value on the stack
 typedef const char *TD;
 
 class Table;
 
-// entry in a Table
+// table entry with identifier properties
 class Entry {
 
  public:
@@ -280,7 +290,7 @@ class Entry {
   TD     type;  // JVM type descriptor
   U2     place; // variables have a place that is the index of a local or a constant pool index
   Table *table; // the table to which this entry belongs
-  bool   proto; // prototype of a function
+  bool   proto; // true if prototype of a function
 
 };
 
@@ -345,15 +355,15 @@ class Table {
     return NULL;
   }
 
-  Table             *parent;  // parent table defines the outer scope
+  Table             *parent;  // pointer to parent table defining the outer scope or NULL
   std::vector<Entry> entries; // entries in the table
-  int                scope;   // scope depth, zero for outermost scope (no parent)
-  U2                 locals;  // number of arguments and locals declared
+  int                scope;   // scope nesting depth, zero for outermost scope (no parent)
+  U2                 locals;  // number of arguments and locals declared (long and double take two slots)
 
 };
 
 // backpatch list to resolve jump instruction targets
-// concept from "Compilers: Principles, Techniques, and Tools" by Aho, Sethi, and Ullman
+// see also: "Compilers: Principles, Techniques, and Tools" by Aho, Sethi, and Ullman
 class BackpatchList {
 
  public:
@@ -364,8 +374,8 @@ class BackpatchList {
       next(NULL)
   { }
 
-  U4             addr;
-  BackpatchList *next;
+  U4             addr; // address of jump instruction to backpatch
+  BackpatchList *next; // next node in linked list
 
 };
 
@@ -379,7 +389,7 @@ class Type {
       type(type)
   { }
 
-  TD type;
+  TD type; // JVM type descriptor or NULL for short-circuit boolean
 };
 
 // semantic value for expressions, see minic.y %type <Expr>
@@ -399,13 +409,13 @@ class Expr : public Type {
 
 };
 
-// a library entry to store Java packages to invoke built-in methods
+// library to store Java packages to invoke virtual and static library methods as functions in mini C
 class Library {
 
  public:
 
-  const char *name;    // library function name
-  const char *package; // JVM package
+  const char *name;    // mini C library function name
+  const char *package; // JVM package path
   const char *method;  // JVM method name
   const char *virtype; // type to match if method is virtual otherwise NULL when static
   const char *type;    // JVM method type descriptor
@@ -511,7 +521,7 @@ class Compiler {
     return types.insert(std::string("(").append(args).append(")").append(result)).first->c_str();
   }
 
-  // return two types (to construct a function type)
+  // return two types concatenated (to construct a function type)
   TD type_concat(TD type1, TD type2)
   {
     return types.insert(std::string(type1).append(type2)).first->c_str();
@@ -523,7 +533,7 @@ class Compiler {
     return types.insert(std::string("[").append(type)).first->c_str();
   }
 
-  // return a "no type" (e.g. function without arguments)
+  // return "no type" (e.g. function without arguments)
   TD type_none()
   {
     return "";
@@ -559,7 +569,7 @@ class Compiler {
     return "S";
   }
 
-  // return a int type
+  // return an int type
   TD type_int()
   {
     return "I";
@@ -583,7 +593,7 @@ class Compiler {
     return "D";
   }
 
-  // return a string object type
+  // return a string object reference type
   TD type_string()
   {
     return "Ljava/lang/String;";
@@ -601,7 +611,7 @@ class Compiler {
     return NULL;
   }
 
-  // return the element type of an array
+  // return the element type of an array or NULL
   TD type_get_element(TD array_type)
   {
     if (array_type != NULL && *array_type == '[')
@@ -620,7 +630,7 @@ class Compiler {
     return s != NULL && s == type_func + strlen(type_actuals) + 1 && strncmp(type_actuals, type_func + 1, s - type_func - 1) == 0;
   }
 
-  // true if the type of an expression is short-circuit (i.e. logic, not a value on the stack)
+  // true if the type of an expression is short-circuit (i.e. logic, no value on the stack)
   bool type_is_circuit(TD type)
   {
     return type == NULL;
@@ -698,7 +708,7 @@ class Compiler {
     return type1 == type2 || (type1 != NULL && type2 != NULL && strcmp(type1, type2) == 0);
   }
 
-  // reset the emitter to generate code for a method, stored in a buffer
+  // reset the emitter to generate new code for a method, stored in a buffer
   void new_method_code()
   {
     code.clear();
@@ -710,7 +720,7 @@ class Compiler {
     return static_cast<U4>(code.size());
   }
 
-  // add a UTF-8 formatted string to the ClassFile constant pool
+  // add a UTF-8 formatted string to the ClassFile constant pool if not already stored
   U2 pool_add_Utf8(CS s)
   {
     for (std::vector<ConstantPool>::iterator p = cf.pool.begin(); p != cf.pool.end(); ++p)
@@ -722,7 +732,7 @@ class Compiler {
     return static_cast<U2>(cf.pool.size());
   }
 
-  // add a 32-bit unsigned integer to the ClassFile constant pool
+  // add a 32-bit unsigned integer to the ClassFile constant pool if not already stored
   U2 pool_add_Integer(U4 i)
   {
     for (std::vector<ConstantPool>::iterator p = cf.pool.begin(); p != cf.pool.end(); ++p)
@@ -734,7 +744,7 @@ class Compiler {
     return static_cast<U2>(cf.pool.size());
   }
 
-  // add a 32-bit float to the ClassFile constant pool
+  // add a 32-bit float to the ClassFile constant pool if not already stored
   U2 pool_add_Float(F4 f)
   {
     for (std::vector<ConstantPool>::iterator p = cf.pool.begin(); p != cf.pool.end(); ++p)
@@ -746,7 +756,7 @@ class Compiler {
     return static_cast<U2>(cf.pool.size());
   }
 
-  // add a 64-bit unsigned integer to the ClassFile constant pool
+  // add a 64-bit unsigned integer to the ClassFile constant pool if not already stored
   U2 pool_add_Long(U8 l)
   {
     for (std::vector<ConstantPool>::iterator p = cf.pool.begin(); p != cf.pool.end(); ++p)
@@ -755,13 +765,13 @@ class Compiler {
 
     cf.pool.push_back(ConstantPool(CONSTANT_Long, l));
 
-    // Double requires one extra entry in the constant pool; use non-existent CONSTANT_Padding
+    // double requires one extra entry in the constant pool; use non-existent CONSTANT_Padding
     cf.pool.push_back(ConstantPool());
 
     return static_cast<U2>(cf.pool.size() - 1);
   }
 
-  // add a 64-bit float to the ClassFile constant pool
+  // add a 64-bit float to the ClassFile constant pool if not already stored
   U2 pool_add_Double(F8 d)
   {
     for (std::vector<ConstantPool>::iterator p = cf.pool.begin(); p != cf.pool.end(); ++p)
@@ -770,13 +780,13 @@ class Compiler {
 
     cf.pool.push_back(ConstantPool(CONSTANT_Double, d));
 
-    // Double requires one extra entry in the constant pool; use non-existent CONSTANT_Padding
+    // double requires one extra entry in the constant pool; use non-existent CONSTANT_Padding
     cf.pool.push_back(ConstantPool());
 
     return static_cast<U2>(cf.pool.size() - 1);
   }
 
-  // Add a string to the ClassFile constant pool
+  // add a string to the ClassFile constant pool if not already stored
   U2 pool_add_String(CS s)
   {
     U2 r = pool_add_Utf8(s);
@@ -790,7 +800,7 @@ class Compiler {
     return static_cast<U2>(cf.pool.size());
   }
 
-  // add a class name to the ClassFile constant pool
+  // add a class name to the ClassFile constant pool if not already stored
   U2 pool_add_Class(CS name)
   {
     U2 r = pool_add_Utf8(name);
@@ -804,13 +814,13 @@ class Compiler {
     return static_cast<U2>(cf.pool.size());
   }
 
-  // add a field for the current ClassFile to the ClassFile constant pool
+  // add a field for the current ClassFile to the ClassFile constant pool if not already stored
   U2 pool_add_Field(CS field_name, CS type)
   {
     return pool_add_Field(cf.name.c_str(), field_name, type);
   }
 
-  // add a field to the ClassFile constant pool
+  // add a field to the ClassFile constant pool if not already stored
   U2 pool_add_Field(CS class_name, CS field_name, CS type)
   {
     U2 r1 = pool_add_Class(class_name);
@@ -825,13 +835,13 @@ class Compiler {
     return static_cast<U2>(cf.pool.size());
   }
 
-  // add a method for the current ClassFile to the ClassFile constant pool
+  // add a method for the current ClassFile to the ClassFile constant pool if not already stored
   U2 pool_add_Method(CS method_name, CS type)
   {
     return pool_add_Method(cf.name.c_str(), method_name, type);
   }
 
-  // add a method to the ClassFile constant pool
+  // add a method to the ClassFile constant pool if not already stored
   U2 pool_add_Method(CS class_name, CS method_name, CS type)
   {
     U2 r1 = pool_add_Class(class_name);
@@ -846,7 +856,7 @@ class Compiler {
     return static_cast<U2>(cf.pool.size());
   }
 
-  // add a (name,type) pair to the ClassFile constant pool
+  // add a (name,type) pair to the ClassFile constant pool if not already stored
   U2 pool_add_NameAndType(CS name, CS type)
   {
     U2 r1 = pool_add_Utf8(name);
@@ -861,7 +871,7 @@ class Compiler {
     return static_cast<U2>(cf.pool.size());
   }
 
-  // add a new method to the ClassFile
+  // add a new method definition to the ClassFile
   void new_method(AF access, ID name, TD type, U2 max_locals, U2 max_stack)
   {
     U2 r1 = pool_add_Utf8(name->c_str());
@@ -870,7 +880,7 @@ class Compiler {
     cf.methods.push_back(MethodInfo(access, r1, r2, max_locals, max_stack, code));
   }
 
-  // add a new field to the ClassFile
+  // add a new field definition to the ClassFile
   U2 new_field(AF access, ID name, TD type)
   {
     U2 r1 = pool_add_Utf8(name->c_str());
@@ -881,7 +891,7 @@ class Compiler {
     return pool_add_Field(name->c_str(), type);
   }
 
-  // append the second list to the first list, either one can be NULL
+  // append the second backpatch list to the first list, either one can be NULL
   BackpatchList *merge(BackpatchList *list1, BackpatchList *list2)
   {
     BackpatchList *end = NULL;
@@ -898,13 +908,13 @@ class Compiler {
     return list2;
   }
 
-  // return new backpatch list for the next instruction address
+  // return new backpatch list for the next jump instruction address
   BackpatchList *backpatch_addr()
   {
     return new BackpatchList(addr());
   }
 
-  // backpatch opcodes in the backpatch list
+  // backpatch opcodes in the backpatch list, deleting all nodes in the list
   void backpatch(BackpatchList *list, U4 addr)
   {
     while (list != NULL)
@@ -916,7 +926,7 @@ class Compiler {
     }
   }
 
-  // backpatch opcodes in the backpatch list
+  // backpatch one jump instruction
   void backpatch(U4 inst, U4 addr)
   {
     U2 offset = static_cast<U2>(addr - inst); // should error if out of range?
@@ -924,7 +934,7 @@ class Compiler {
     code[inst + 2] = L1(offset);
   }
 
-  // open loop scope
+  // init loop/switch scope for break statements
   void break_init()
   {
     if (breaks.size() <= break_nest)
@@ -944,7 +954,7 @@ class Compiler {
     return true;
   }
 
-  // open loop scope
+  // init loop scope for continue statements
   void continue_init()
   {
     if (continues.size() <= continue_nest)
@@ -964,18 +974,18 @@ class Compiler {
     return true;
   }
 
-  // close loop scope and backpatch the break and continue statements in the loop if any
+  // close loop scope and backpatch the break and continue statements in the loop, if any
   void loop_done()
   {
     backpatch(breaks[--break_nest], addr());
     backpatch(continues[--continue_nest], addr());
   }
 
-  // open switch scope
+  // init switch scope
   void switch_init()
   {
     if (cases.size() <= switch_nest)
-      cases.push_back(std::map<U4,U4>());
+      cases.push_back(std::map<I4,U4>());
     else
       cases[switch_nest].clear();
     if (defaults.size() <= switch_nest)
@@ -986,16 +996,16 @@ class Compiler {
     ++switch_nest;
   }
 
-  // record case value: address pair to resolve at the end of switch
-  bool emit_case(U4 value, U4 addr)
+  // record switch case key-address pair to resolve at the end of switch
+  bool emit_case(U4 key, U4 addr)
   {
-    if (cases[switch_nest - 1].find(value) != cases[switch_nest - 1].end())
+    if (cases[switch_nest - 1].find(key) != cases[switch_nest - 1].end())
       return false;
-    cases[switch_nest - 1][value] = addr;
+    cases[switch_nest - 1][key] = addr;
     return true;
   }
 
-  // record default: address to resolve at the end of switch
+  // record switch default-address to resolve at the end of switch
   bool emit_default(U4 addr)
   {
     if (defaults[switch_nest - 1] != 0)
@@ -1008,7 +1018,7 @@ class Compiler {
   void switch_done()
   {
     --switch_nest;
-    // emit switch lookup table
+    // emit switch lookup table (we could optimize this with tableswitch when applicable)
     U4 bpa1 = addr();
     emit(lookupswitch);
     U4 padding = (-addr()) & 3;
@@ -1023,7 +1033,7 @@ class Compiler {
     // number of key-offset pairs
     emit4(static_cast<U4>(cases[switch_nest].size()));
     // emit key-offset pairs sorted by key
-    for (std::map<U4,U4>::iterator i = cases[switch_nest].begin(); i != cases[switch_nest].end(); ++i)
+    for (std::map<I4,U4>::iterator i = cases[switch_nest].begin(); i != cases[switch_nest].end(); ++i)
     {
       emit4(i->first);
       emit4(i->second - bpa1);
@@ -1031,11 +1041,11 @@ class Compiler {
     // if no default case, the default case jump offset is after the table
     if (defaults[switch_nest] == 0)
       backpatch(bpa2 + 1, addr() + (bpa2 + 1 - bpa1));
-    // backpatch the break statements
+    // backpatch the switch break statements
     backpatch(breaks[--break_nest], addr());
   }
 
-  // coerce value on top of JVM stack
+  // coerce value on top of stack
   bool coerce(Expr& expr, TD type)
   {
     if (type_equal(expr.type, type))
@@ -1053,7 +1063,7 @@ class Compiler {
     return true;;
   }
 
-  // Coerce value under stack top value
+  // coerce value under stack top value
   bool coerce_x1(Expr& expr, TD type)
   {
     if (type_equal(expr.type, type))
@@ -1090,7 +1100,7 @@ class Compiler {
     return false;
   }
 
-  // Coerce value under top two stack values
+  // coerce value under top two stack values (top is one long or double)
   bool coerce_x2(Expr& expr, TD type)
   {
     if (type_equal(expr.type, type))
@@ -1170,7 +1180,7 @@ class Compiler {
     return result;
   }
 
-  // convert short-circuit logic to push 0 or 1, no change when not short-circuit
+  // convert short-circuit logic to push 0 or 1 on stack, no change when not short-circuit
   TD decircuit(Expr& expr)
   {
     if (!type_is_circuit(expr.type))
@@ -1219,7 +1229,7 @@ class Compiler {
     return type;
   }
 
-  // emit ldc or ldc_w
+  // emit ldc or ldc_w for the specified constant pool index
   void emit_ldc(U2 index)
   {
     if (index <= 0xff)
@@ -1480,8 +1490,8 @@ class Compiler {
     code.push_back(operand2);
   }
 
-  // emit integer value
-  void emit4(U4 value)
+  // emit signed int value
+  void emit4(I4 value)
   {
     emit(H1(H2(value)));
     emit(L1(H2(value)));
@@ -1530,7 +1540,7 @@ class Compiler {
   size_t                         switch_nest;   // depth of the loop
   std::vector<BackpatchList*>    breaks;        // break jumps to the instructions after the loop
   std::vector<BackpatchList*>    continues;     // continue jumps to the loop condition expression
-  std::vector< std::map<U4,U4> > cases;         // 
+  std::vector< std::map<I4,U4> > cases;         // 
   std::vector<U4>                defaults;      // 
   std::set<std::string>          types;         // collection of TD strings
 

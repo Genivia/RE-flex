@@ -33,7 +33,7 @@ int main()
   // ?: || && == != <= < >= > << >> & | ^ + = * / % ! ~ = <<= >>= &= |= ^= += -= *= /= %= ++ --
   // the following operators may be used with string operands:
   // == != <= < >= > + = +=
-  // mismatching operand types are coerced, while mismatching function argument rypes are not
+  // mismatching operand types are coerced, while mismatching function arguments are not
 
   // the print statement takes one or more expressions to print
   print "command line arguments:";
