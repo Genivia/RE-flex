@@ -1,5 +1,6 @@
 // Mini C code generator for the JVM by Robert van Engelen
 // A simple one-pass, syntax-directed translation of mini C to JVM bytecode
+// Requires minic.l, minic.y, minic.hpp
 
 #ifndef MINIC_HPP
 #define MINIC_HPP

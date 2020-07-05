@@ -1,5 +1,6 @@
 // Mini C parser by Robert van Engelen
 // A simple one-pass, syntax-directed translation of mini C to JVM bytecode
+// Requires minic.l, minic.y, minic.hpp
 //
 // Ideas for compiler improvements (from easy to hard, roughly):
 // - add more library functions that compile to JVM virtual and static method invocations
@@ -243,6 +244,7 @@ type    : VOID          {
                           $$.type = comp.type = comp.type_string();
                         }
         | type '[' ']'  {
+                          // array types can be declared but arrays are not fully implemented
                           $$.type = comp.type = comp.type_array($1.type);
                         }
         ;

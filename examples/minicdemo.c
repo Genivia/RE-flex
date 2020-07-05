@@ -1,6 +1,7 @@
 // Mini C feature demo by Robert van Engelen
+// The minic compiler is build from minic.l, minic.y, and minic.hpp
 //
-// compile this file with:
+// compile this file with the minic compiler:
 //   ./minic minicdemo.c
 //
 // to view the contents of the generated minicdemo.class file:
@@ -78,7 +79,7 @@ int main()
   print "lower(\"Abc\")           \t= ", lower("Abc"),          "\n";
   print "upper(\"Abc\")           \t= ", upper("Abc"),          "\n";
   print "substr(\"abc\", 1)       \t= ", substr("abc", 1),      "\n";
-  print "substr(\"abc\", 0, 1)    \t= ", substr("abc", 0, 1),   "\n";
+  print "substr(\"abc\", 1, 2)    \t= ", substr("abc", 1, 2),   "\n";
   print "trim(\" abc \")          \t= ", trim(" abc "),         "\n";
   print "matches(\"ab\", \"\\w+\")\t= ", matches("ab", "\\w+"), "\n";
   print "strtoi(\"123\")          \t= ", strtoi("123"),         "\n";
