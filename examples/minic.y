@@ -44,6 +44,9 @@
 // generate yy::Parser::token::TOKEN_<name> token constants
 %define api.token.prefix {TOKEN_}
 
+// we expect on shift-reduce conflict (for the if-else)
+%expect 1
+
 // tokens with semantic values
 %token <ID> ID "Identifier";
 %token <U8> U8 "Integer";

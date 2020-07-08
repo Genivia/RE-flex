@@ -20,8 +20,11 @@
   void yyerror(Lexer *lexer, const char *msg);
 %}
 
+// construct a bison-bridge parser that is reentrant
 %pure-parser
+// bison-bridge passes the lexer to yylex() constructed with %option bison-bridge
 %lex-param   { Lexer *lexer }
+// to pass the lexer to yyparse()
 %parse-param { Lexer *lexer }
 
 %union {

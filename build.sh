@@ -20,37 +20,37 @@ fi
 # check if this piece of metal has AVX512BW
 cat > conftest.c << END
 #include <immintrin.h>
-main() { __m512 n = _mm512_set1_epi8(42); __mmask64 m = _mm512_cmpeq_epi8_mask(n, n); }
+main() { __m512 n = _mm512_set1_epi8(42); (void)_mm512_cmpeq_epi8_mask(n, n); }
 END
 if cc -march=native -c conftest.c >& /dev/null ; then
-  CMFLAGS='-march=native -mavx512bw -DHAVE_AVX512BW'
+  CMFLAGS='-mavx512bw -DHAVE_AVX512BW'
   echo "Compiling reflex with AVX512BW optimizations"
   echo
 else
 
-# if not AVX512BW, check if this piece of metal has AVX
+# if not AVX512BW, check if this piece of metal has AVX2
 cat > conftest.c << END
 #include <immintrin.h>
-main() { __m256i n = _mm256_set1_epi8(42); n = _mm256_and_si256(n, n); }
+main() { __m256i n = _mm256_set1_epi8(42); (void)_mm256_movemask_epi8(_mm256_and_si256(n, n)); }
 END
 if cc -march=native -c conftest.c >& /dev/null ; then
-  CMFLAGS='-march=native -mavx -DHAVE_AVX'
-  echo "Compiling reflex with AVX optimizations"
+  CMFLAGS='-mavx2 -DHAVE_AVX2'
+  echo "Compiling reflex with AVX2 optimizations"
   echo
 else
 
-# if not AVX, check if this piece of metal has SSE2
+# if not AVX2, check if this piece of metal has SSE2
 cat > conftest.c << END
 #include <emmintrin.h>
 main() { __m128i n = _mm_set1_epi8(42); }
 END
 if cc -march=native -c conftest.c >& /dev/null ; then
-  CMFLAGS='-march=native -msse2 -DHAVE_SSE2'
+  CMFLAGS='-msse2 -DHAVE_SSE2'
   echo "Compiling reflex with SSE2 optimizations"
   echo
 else
 
-# if not AVX/SSE2, check if this piece of metal has ARM NEON/AArch64
+# if not AVX512BW/AVX2/SSE2, check if this piece of metal has ARM NEON/AArch64
 cat > conftest.c << END
 #include <arm_neon.h>
 main() { uint64x2_t n; uint64_t m = vgetq_lane_u64(n, 0); }
@@ -58,13 +58,11 @@ END
 if cc -march=native -E conftest.c >& /dev/null ; then
   if cc -march=native -c conftest.c >& /dev/null ; then
     CMFLAGS='-march=native -DHAVE_NEON'
-    echo "Compiling reflex with ARM AArch64 optimizations"
-    echo
   elif cc -march=native -mfpu=neon -c conftest.c >& /dev/null ; then
     CMFLAGS='-march=native -mfpu=neon -DHAVE_NEON'
-    echo "Compiling reflex with ARM NEON optimizations"
-    echo
   fi
+  echo "Compiling reflex with ARM NEON/AArch64 optimizations"
+  echo
 fi
 fi
 fi

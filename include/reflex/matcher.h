@@ -381,10 +381,10 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   {
     return HW & (1ULL << 62);
   }
-  /// Check CPU hardware for AVX capability.
-  static bool have_HW_AVX()
+  /// Check CPU hardware for AVX2 capability.
+  static bool have_HW_AVX2()
   {
-    return HW & (1ULL << 28);
+    return HW & (1ULL << 37);
   }
   /// Check CPU hardware for SSE2 capability.
   static bool have_HW_SSE2()
@@ -889,7 +889,7 @@ unrolled:
         // skip one char to keep searching
         set_current(++cur_);
         // allow FIND with "N" to match an empty line, with ^$ etc.
-        if (cap_ == 0 || !opt_.N || (!bol && (c1 == '\n' || (c1 == '\r' && peek() == '\n'))))
+        if (cap_ == 0 || !opt_.N)
           goto scan;
         DBGLOG("Accept empty match");
       }

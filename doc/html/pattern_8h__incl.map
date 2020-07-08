@@ -1,9 +1,9 @@
 <map id="pattern.h" name="pattern.h">
-<area shape="rect" id="node2" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="31,80,122,107"/>
-<area shape="rect" id="node5" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="775,80,882,107"/>
-<area shape="rect" id="node8" href="$error_8h.html" title="RE/flex regex errors. " alt="" coords="653,80,751,107"/>
-<area shape="rect" id="node11" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="378,80,477,107"/>
-<area shape="rect" id="node15" href="$ranges_8h.html" title="RE/flex range sets as closed and open&#45;ended set containers. " alt="" coords="907,80,1017,107"/>
-<area shape="rect" id="node18" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="1093,80,1196,107"/>
-<area shape="rect" id="node12" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="333,155,425,181"/>
+<area shape="rect" id="node2" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="58,80,149,107"/>
+<area shape="rect" id="node5" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="529,80,635,107"/>
+<area shape="rect" id="node8" href="$error_8h.html" title="RE/flex regex errors. " alt="" coords="660,80,757,107"/>
+<area shape="rect" id="node11" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="355,80,454,107"/>
+<area shape="rect" id="node14" href="$ranges_8h.html" title="RE/flex range sets as closed and open&#45;ended set containers. " alt="" coords="781,80,892,107"/>
+<area shape="rect" id="node17" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="968,80,1071,107"/>
+<area shape="rect" id="node12" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="275,155,367,181"/>
 </map>
