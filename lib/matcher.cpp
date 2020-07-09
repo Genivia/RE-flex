@@ -90,8 +90,8 @@ inline uint32_t ctzl(uint64_t x)
 
 uint64_t Matcher::get_HW()
 {
-  uint32_t CPUInfo1[4] = { 0, 0, 0, 0 };
-  uint32_t CPUInfo7[4] = { 0, 0, 0, 0 };
+  int CPUInfo1[4] = { 0, 0, 0, 0 };
+  int CPUInfo7[4] = { 0, 0, 0, 0 };
   cpuidex(CPUInfo1, 0, 0);
   int n = CPUInfo1[0];
   if (n == 0)
@@ -99,7 +99,7 @@ uint64_t Matcher::get_HW()
   cpuidex(CPUInfo1, 1, 0);
   if (n >= 7)
     cpuidex(CPUInfo7, 7, 0);
-  return static_cast<uint64_t>(CPUInfo1[2]) | (static_cast<uint64_t>(CPUInfo7[1]) << 32);
+  return static_cast<uint32_t>(CPUInfo1[2]) | (static_cast<uint64_t>(static_cast<uint32_t>(CPUInfo7[1])) << 32);
 }
 
 #else

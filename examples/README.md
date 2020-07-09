@@ -47,7 +47,7 @@ Examples with the backward-compatible Flex lexer functions
 - `json.l` JSON parser and writer
 - `ctokens.l` and `cdefs.l` a C/C++ tokenizer
 - `jtokens.l` and `jdefs.l` a Java tokenizer, meets Java Lexical Structure requirements
-- `readline.l` interactive scanner to echo input using readline(3)
+- `readline.l` demonstrates scanning with readline(3) interactive input
 - `yyscanstrings.l` demonstrates string and buffer scanning
 - `echo.l` classic interactive scanner to echo input
 - `wc.l` word count example

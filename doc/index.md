@@ -3273,7 +3273,7 @@ not look too far behind, see \ref reflex-limitations.
 ### Trailing context                                 {#reflex-pattern-trailing}
 
 Flex "trailing context" `φ/ψ` matches a pattern `φ` only when followed by the
-lookahead pattern `φ`.  A trailing context `φ/ψ` has the same meaning as the
+lookahead pattern `ψ`.  A trailing context `φ/ψ` has the same meaning as the
 lookahead `φ(?=ψ)`, see \ref reflex-pattern-lookahead.
 
 A trailing context can only be used in lexer specifications and should only
