@@ -5,7 +5,7 @@ The examples with Bison require the installation of [Bison][bison-url].
 Examples with RE/flex C++ lexer methods
 ---------------------------------------
 
-- `minic.l,` `minic.y`, `minic.hpp`, and `minicdemo.c` Mini C compiler with Bison 3.2 C++ complete parser, generates Java bytecode (class files)
+- `minic.l,` `minic.y`, `minic.hpp`, and `minicdemo.c` Mini C compiler with Bison 3.2 C++ complete parser, generates Java bytecode in class files
 - `braille.l` a braille translator, inspired by the re2c example but extended and fixed to make it useable
 - `ptokens.l` and `pdefs.l` a Python tokenizer
 - `calc.l` and `calc.y` calculator, supports Unicode identifier variables, resolves input errors

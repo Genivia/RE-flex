@@ -6,8 +6,6 @@ RE/flex user guide                                                  {#mainpage}
 
   "The asteroid to kill this dinosaur is still in orbit."  -- Lex Manual
 
-  "Optimize: this currently has no effect in Boost.Regex." -- Boost Manual
-
   "Reflex: a thing that is determined by and reproduces
    the essential features or qualities of something else." -- Oxford Dictionary
 
