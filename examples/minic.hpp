@@ -1,6 +1,7 @@
 // Mini C code generator for the JVM by Robert van Engelen
 // A simple one-pass, syntax-directed translation of mini C to JVM bytecode
 // Requires minic.l, minic.y, minic.hpp
+// See minicdemo.c for a description of the mini C features
 
 #ifndef MINIC_HPP
 #define MINIC_HPP
@@ -237,7 +238,7 @@ const U1 ifnonnull       = 0xc7;
 const U1 goto_w          = 0xc8;  
 const U1 jsr_w           = 0xc9;  
 
-// JVM atype operands
+// JVM newarray atype operands
 
 const U1 T_BOOLEAN       = 4;
 const U1 T_CHAR          = 5;
@@ -393,20 +394,43 @@ class Type {
   TD type; // JVM type descriptor or NULL for short-circuit boolean
 };
 
+// semantic value for function prototypes
+class Proto : public Type {
+
+ public:
+
+  Proto(TD type = NULL)
+    :
+      Type(type),
+      id()
+  { }
+
+  ID id;
+
+};
+
 // semantic value for expressions, see minic.y %type <Expr>
 class Expr : public Type {
 
  public:
 
+  enum Mode { VALUE, LOCAL, STATIC, ARRAY };
+
   Expr(TD type = NULL)
     :
       Type(type),
+      mode(VALUE),
+      place(0),
       truelist(NULL),
-      falselist(NULL)
+      falselist(NULL),
+      after(0)
   { }
 
-  BackpatchList *truelist;
-  BackpatchList *falselist;
+  Mode           mode;      // VALUE (on the stack or short-circuit), LOCAL var, STATIC var, or ARRAY ref + index on the stack
+  U2             place;     // local or constant pool index when expression is an lvalue (LOCAL or STATIC)
+  BackpatchList *truelist;  // short-circuit backpatch list for jump instructions on true condition
+  BackpatchList *falselist; // short-circuit backpatch list for jump instructions on false condition
+  U4             after;     // the opcode location after the generated code for this expression
 
 };
 
@@ -431,7 +455,7 @@ class Compiler {
   Compiler(const std::string& name)
     :
       main(false),
-      type(NULL),
+      decl_type(NULL),
       return_type(NULL),
       scope(-1),
       break_nest(0),
@@ -452,6 +476,8 @@ class Compiler {
       { "bin",     "java/lang/Integer", "toBinaryString", NULL, "(I)Ljava/lang/String;"  },
       { "hex",     "java/lang/Integer", "toHexString",    NULL, "(I)Ljava/lang/String;"  },
       { "oct",     "java/lang/Integer", "toOctalString",  NULL, "(I)Ljava/lang/String;"  },
+      { "dec",     "java/lang/String",  "valueOf",        NULL, "(I)Ljava/lang/String;" },
+      { "dec",     "java/lang/String",  "valueOf",        NULL, "(D)Ljava/lang/String;" },
       { "strtoi",  "java/lang/Integer", "parseInt",       NULL, "(Ljava/lang/String;)I"  },
       { "strtoi",  "java/lang/Integer", "parseInt",       NULL, "(Ljava/lang/String;I)I" },
       // Double
@@ -476,8 +502,6 @@ class Compiler {
       { "substr",  "java/lang/String",  "substring",      "(Ljava/lang/String;II)Ljava/lang/String;", "(II)Ljava/lang/String;" },
       { "upper",   "java/lang/String",  "toUpperCase",    "(Ljava/lang/String;)Ljava/lang/String;", "()Ljava/lang/String;" },
       { "trim",    "java/lang/String",  "trim",           "(Ljava/lang/String;)Ljava/lang/String;", "()Ljava/lang/String;" },
-      { "str",     "java/lang/String",  "valueOf",        NULL, "(I)Ljava/lang/String;" },
-      { "str",     "java/lang/String",  "valueOf",        NULL, "(D)Ljava/lang/String;" },
       // Math
       { "abs",     "java/lang/Math",    "abs",            NULL, "(I)I"  },
       { "abs",     "java/lang/Math",    "abs",            NULL, "(D)D"  },
@@ -600,8 +624,16 @@ class Compiler {
     return "Ljava/lang/String;";
   }
 
+  // return the referenced type if reference to a class, or the type itself
+  TD type_of_reference(TD type)
+  {
+    if (type != NULL && *type == 'L')
+      return types.insert(std::string(type + 1, strlen(type) - 2)).first->c_str();
+    return type;
+  }
+
   // return the return type of a function or NULL
-  TD type_get_return(TD type_func)
+  TD type_of_return(TD type_func)
   {
     if (type_func != NULL)
     {
@@ -613,7 +645,7 @@ class Compiler {
   }
 
   // return the element type of an array or NULL
-  TD type_get_element(TD array_type)
+  TD type_of_element(TD array_type)
   {
     if (array_type != NULL && *array_type == '[')
       return array_type + 1;
@@ -703,10 +735,32 @@ class Compiler {
     return type != NULL && *type == '[';
   }
 
+  // true if the type of an expression is a function
+  bool type_is_function(TD type)
+  {
+    return type != NULL && *type == '(';
+  }
+
   // true if two types are equal
   bool type_equal(TD type1, TD type2)
   {
     return type1 == type2 || (type1 != NULL && type2 != NULL && strcmp(type1, type2) == 0);
+  }
+
+  // return the wider type or NULL when coercion will fail
+  TD type_wider(TD type1, TD type2)
+  {
+    if ((!type_is_circuit(type1) && !type_is_int(type1) && !type_is_double(type1) && !type_is_string(type1)) ||
+        (!type_is_circuit(type2) && !type_is_int(type2) && !type_is_double(type2) && !type_is_string(type2)))
+      return NULL;
+
+    if (type_is_string(type1) || type_is_string(type2))
+      return type_string();
+
+    if (type_is_double(type1) || type_is_double(type2))
+      return type_double();
+
+    return type_int();
   }
 
   // reset the emitter to generate new code for a method, stored in a buffer
@@ -909,10 +963,16 @@ class Compiler {
     return list2;
   }
 
-  // return new backpatch list for the next jump instruction address
-  BackpatchList *backpatch_addr()
+  // return new backpatch list for the given address
+  BackpatchList *backpatch_list(U4 addr)
   {
-    return new BackpatchList(addr());
+    return new BackpatchList(addr);
+  }
+
+  // return new backpatch list for the next jump instruction address
+  BackpatchList *backpatch_list_addr()
+  {
+    return backpatch_list(addr());
   }
 
   // backpatch opcodes in the backpatch list, deleting all nodes in the list
@@ -950,7 +1010,7 @@ class Compiler {
   {
     if (break_nest == 0)
       return false;
-    breaks[break_nest - 1] = merge(breaks[break_nest - 1], backpatch_addr());
+    breaks[break_nest - 1] = merge(breaks[break_nest - 1], backpatch_list_addr());
     emit3(goto_, 0);
     return true;
   }
@@ -970,7 +1030,7 @@ class Compiler {
   {
     if (continue_nest == 0)
       return false;
-    continues[continue_nest - 1] = merge(continues[continue_nest - 1], backpatch_addr());
+    continues[continue_nest - 1] = merge(continues[continue_nest - 1], backpatch_list_addr());
     emit3(goto_, 0);
     return true;
   }
@@ -1019,7 +1079,7 @@ class Compiler {
   void switch_done()
   {
     --switch_nest;
-    // emit switch lookup table (we could optimize this with tableswitch when applicable)
+    // emit switch lookup table (we could optimize this with tableswitch for consecutive case values)
     U4 bpa1 = addr();
     emit(lookupswitch);
     U4 padding = (-addr()) & 3;
@@ -1046,188 +1106,402 @@ class Compiler {
     backpatch(breaks[--break_nest], addr());
   }
 
-  // coerce value on top of stack
+  // coerce expression from short-circuit or int/double to double/int when applicable
   bool coerce(Expr& expr, TD type)
   {
-    if (type_equal(expr.type, type))
-      return true;
-
-    TD conv = decircuit(expr);
+    TD conv = rvalue(expr);
 
     if (type_is_int(conv) && type_is_double(type))
-      emit(i2d);
+    {
+      insert(expr.after, i2d);
+    }
     else if (type_is_double(conv) && type_is_int(type))
-      emit(d2i);
+    {
+      insert(expr.after, d2i);
+    }
+    else if ((type_is_int(conv) || type_is_double(conv)) && type_is_string(type))
+    {
+      if (type_is_double(conv))
+        insert(expr.after, d2i);
+
+      // create a char[1] array, assign int value to first char[], then convert array to a string containing a single character
+      insert3(expr.after, new_, pool_add_Class("java/lang/String"));
+      insert(expr.after, dup_x1);            // aString int aString
+      insert(expr.after, swap);              // aString aString int
+      insert(expr.after, iconst_1);          // aString aString int 1
+      insert2(expr.after, newarray, T_CHAR); // aString aString int char[]
+      insert(expr.after, dup_x1);            // aString aString char[] int char[]
+      insert(expr.after, swap);              // aString aString char[] char[] int
+      insert(expr.after, iconst_0);          // aString aString char[] char[] int 0
+      insert(expr.after, swap);              // aString aString char[] char[] 0 int
+      insert(expr.after, castore);           // aString aString char[] 
+      insert3(expr.after, invokespecial, pool_add_Method("java/lang/String", "<init>", "([C)V"));
+    }
     else if (!type_equal(conv, type))
+    {
       return false;
+    }
+
+    expr.type = type;
 
     return true;;
   }
 
-  // coerce value under stack top value
-  bool coerce_x1(Expr& expr, TD type)
+  // convert expression to short-circuit logic (conditional code), no change when already short circuit
+  U4 circuit(Expr& expr)
   {
-    if (type_equal(expr.type, type))
-      return true;
+    U4 addr = expr.after;
 
     if (!type_is_circuit(expr.type))
     {
-      if (type_is_double(expr.type))
+      TD type = rvalue(expr);
+
+      if (type_is_int(expr.type))
       {
-        emit(dup_x2); // v3 v2 v1 -> v1 v3 v2 v1
-        emit(pop);    // v1 v3 v2 v1 -> v1 v3 v2
+        expr.falselist = backpatch_list(expr.after);
+        insert3(expr.after, ifeq, 0);
+        expr.truelist = backpatch_list(expr.after);
+        insert3(expr.after, goto_, 0);
+      }
+      else if (type_is_double(type))
+      {
+        insert(expr.after, dconst_0);
+        insert(expr.after, dcmpg);
+        expr.falselist = backpatch_list(expr.after);
+        insert3(expr.after, ifeq, 0);
+        expr.truelist = backpatch_list(expr.after);
+        insert3(expr.after, goto_, 0);
+      }
+      else if (type_is_string(type))
+      {
+        insert3(expr.after, invokevirtual, pool_add_Method("java/lang/String", "isEmpty", "()Z"));
+        expr.falselist = backpatch_list(expr.after);
+        insert3(expr.after, ifne, 0);
+        expr.truelist = backpatch_list(expr.after);
+        insert3(expr.after, goto_, 0);
       }
       else
       {
-        emit(swap);
+        expr.falselist = backpatch_list(expr.after);
+        insert3(expr.after, ifnull, 0);
+        expr.truelist = backpatch_list(expr.after);
+        insert3(expr.after, goto_, 0);
       }
     }
 
-    if (coerce(expr, type))
-    {
-      if (type_is_double(type))
-      {
-        emit(dup2_x1); // v3 v2 v1 -> v2 v1 v3 v2 v1
-        emit(pop2);    // v2 v1 v3 v2 v1 -> v2 v1 v3
-      }
-      else
-      {
-        emit(swap);
-      }
-
-      return true;
-    }
-
-    return false;
+    return expr.after - addr;
   }
 
-  // coerce value under top two stack values (top is one long or double)
-  bool coerce_x2(Expr& expr, TD type)
+  // convert expression at the specified address to an rvalue, converts short-circuit logic to push 0 or 1 on stack
+  TD rvalue(Expr& expr)
   {
-    if (type_equal(expr.type, type))
-      return true;
-
-    if (!type_is_circuit(expr.type))
-    {
-      if (type_is_double(expr.type))
-      {
-        emit(dup2_x2); // v4 v3 v2 v1 -> v2 v1 v4 v3 v2 v1
-        emit(pop2);    // v2 v1 v4 v3 v2 v1 -> v2 v1 v4 v3
-      }
-      else
-      {
-        emit(dup2_x1); // v3 v2 v1 -> v2 v1 v3 v2 v1
-        emit(pop2);    // v2 v1 v3 v2 v1 -> v2 v1 v3
-      }
-    }
-
-    if (coerce(expr, type))
-    {
-      if (type_is_double(type))
-      {
-        emit(dup2_x2); // v4 v3 v2 v1 -> v2 v1 v4 v3 v2 v1
-        emit(pop2);    // v2 v1 v4 v3 v2 v1 -> v2 v1 v4 v3
-      }
-      else
-      {
-        emit(dup_x2); // v3 v2 v1 -> v1 v3 v2 v1
-        emit(pop);    // v1 v3 v2 v1 -> v1 v3 v2
-      }
-
-      return true;
-    }
-
-    return false;
-  }
-
-  // convert any type to short-circuit logic, no change when already short circuit
-  Expr circuit(Expr& expr, bool& ok)
-  {
-    ok = true;
-
     if (type_is_circuit(expr.type))
-      return expr;
-
-    Expr result;
-
-    if (type_is_int(expr.type))
     {
-      result.falselist = backpatch_addr();
-      emit3(ifeq, 0);
-      result.truelist = backpatch_addr();
-      emit3(goto_, 0);
-    }
-    else if (type_is_double(expr.type))
-    {
-      emit(dconst_0);
-      emit(dcmpl);
-      result.falselist = backpatch_addr();
-      emit3(ifeq, 0);
-      result.truelist = backpatch_addr();
-      emit3(goto_, 0);
-    }
-    else if (type_is_string(expr.type))
-    {
-      result.falselist = backpatch_addr();
-      emit3(ifnull, 0);
-      result.truelist = backpatch_addr();
-      emit3(goto_, 0);
-    }
-    else
-    {
-      ok = false;
-    }
-
-    return result;
-  }
-
-  // convert short-circuit logic to push 0 or 1 on stack, no change when not short-circuit
-  TD decircuit(Expr& expr)
-  {
-    if (!type_is_circuit(expr.type))
-      return expr.type;
-
-    if (expr.falselist != NULL)
-    {
-      backpatch(expr.falselist, addr());
-      emit(iconst_0);
-      expr.falselist = NULL;
+      if (expr.falselist != NULL)
+      {
+        backpatch(expr.falselist, expr.after);
+        insert(expr.after, iconst_0);
+        if (expr.truelist != NULL)
+          insert3(expr.after, goto_, 4);
+        expr.falselist = NULL;
+      }
       if (expr.truelist != NULL)
-        emit3(goto_, 4);
+      {
+        backpatch(expr.truelist, expr.after);
+        insert(expr.after, iconst_1);
+        expr.truelist = NULL;
+      }
+
+      expr.type = type_int();
     }
-    if (expr.truelist != NULL)
+    else
     {
-      backpatch(expr.truelist, addr());
-      emit(iconst_1);
-      expr.truelist = NULL;
+      load(expr);
     }
 
-    return type_int();
+    return expr.type;
   }
 
-  // coerce and return the wider type (int or double) of two types
-  TD widen(Expr& expr1, Expr& expr2, bool& ok)
+  // adjust the "after location" and "backpatch lists" of an expression when instructions were inserted before it
+  void adjust(Expr& expr, U4 offset)
   {
-    TD type;
+    for (BackpatchList *bp = expr.truelist; bp != NULL; bp = bp->next)
+      bp->addr += offset;
 
-    if (type_is_double(expr1.type))
-      type = expr1.type;
-    else if (type_is_double(expr2.type))
-      type = expr2.type;
-    else
-      type = type_int();
+    for (BackpatchList *bp = expr.falselist; bp != NULL; bp = bp->next)
+      bp->addr += offset;
 
-    ok = coerce(expr2, type);
+    expr.after += offset;
+  }
 
-    if (ok)
+  // load value of local or static variable onto the top of stack when not already on the stack
+  void load(Expr& expr)
+  {
+    switch (expr.mode)
     {
-      if (type_is_double(type))
-        ok = coerce_x2(expr1, type);
-      else
-        ok = coerce_x1(expr1, type);
+      case Expr::VALUE:
+        break;
+
+      case Expr::LOCAL:
+        if (type_is_int(expr.type))
+        {
+          switch (expr.place)
+          {
+            case 0:  insert(expr.after, iload_0); break;
+            case 1:  insert(expr.after, iload_1); break;
+            case 2:  insert(expr.after, iload_2); break;
+            case 3:  insert(expr.after, iload_3); break;
+            default: insert2(expr.after, iload, expr.place);
+          }
+        }
+        else if (type_is_double(expr.type))
+        {
+          switch (expr.place)
+          {
+            case 0:  insert(expr.after, dload_0); break;
+            case 1:  insert(expr.after, dload_1); break;
+            case 2:  insert(expr.after, dload_2); break;
+            case 3:  insert(expr.after, dload_3); break;
+            default: insert2(expr.after, dload, expr.place);
+          }
+        }
+        else
+        {
+          switch (expr.place)
+          {
+            case 0:  insert(expr.after, aload_0); break;
+            case 1:  insert(expr.after, aload_1); break;
+            case 2:  insert(expr.after, aload_2); break;
+            case 3:  insert(expr.after, aload_3); break;
+            default: insert2(expr.after, aload, expr.place);
+          }
+        }
+        break;
+
+      case Expr::STATIC:
+        insert3(expr.after, getstatic, expr.place);
+        break;
+
+      case Expr::ARRAY:
+        if (type_is_int(expr.type))
+          insert(expr.after, iaload);
+        else if (type_is_double(expr.type))
+          insert(expr.after, daload);
+        else
+          insert(expr.after, aaload);
+        break;
     }
 
-    return type;
+    expr.mode = Expr::VALUE;
+  }
+
+  // store top of stack into local or static variable
+  void store(Expr& expr)
+  {
+    switch (expr.mode)
+    {
+      case Expr::VALUE:
+        break;
+
+      case Expr::LOCAL:
+        if (type_is_int(expr.type))
+        {
+          switch (expr.place)
+          {
+            case 0:  emit(istore_0); break;
+            case 1:  emit(istore_1); break;
+            case 2:  emit(istore_2); break;
+            case 3:  emit(istore_3); break;
+            default: emit2(istore, expr.place);
+          }
+        }
+        else if (type_is_double(expr.type))
+        {
+          switch (expr.place)
+          {
+            case 0:  emit(dstore_0); break;
+            case 1:  emit(dstore_1); break;
+            case 2:  emit(dstore_2); break;
+            case 3:  emit(dstore_3); break;
+            default: emit2(dstore, expr.place);
+          }
+        }
+        else
+        {
+          switch (expr.place)
+          {
+            case 0:  emit(astore_0); break;
+            case 1:  emit(astore_1); break;
+            case 2:  emit(astore_2); break;
+            case 3:  emit(astore_3); break;
+            default: emit2(astore, expr.place);
+          }
+        }
+        break;
+
+      case Expr::STATIC:
+        emit3(putstatic, expr.place);
+        break;
+
+      case Expr::ARRAY:
+        if (type_is_int(expr.type))
+          emit(iastore);
+        else if (type_is_double(expr.type))
+          emit(dastore);
+        else
+          emit(aastore);
+        break;
+    }
+  }
+
+  // emit integer/double/string comparison
+  bool emit_compare(Expr& expr1, Expr& expr2, U1 if_op, U1 if_icmp_op, Expr& result)
+  {
+    TD type = type_wider(expr1.type, expr2.type);
+
+    coerce(expr2, type);
+    coerce(expr1, type);
+
+    if (type_is_int(type))
+    {
+      result.truelist = backpatch_list_addr();
+      emit3(if_icmp_op, 0);
+    }
+    else if (type_is_double(type))
+    {
+      emit(dcmpg);
+      result.truelist = backpatch_list_addr();
+      emit3(if_op, 0);
+    }
+    else if (type_is_string(expr1.type) && type_is_string(expr2.type))
+    {
+      emit3(invokevirtual, pool_add_Method("java/lang/String", "compareTo", "(Ljava/lang/String;)I"));
+      result.truelist = backpatch_list_addr();
+      emit3(if_op, 0);
+    }
+
+    result.falselist = backpatch_list_addr();
+    emit3(goto_, 0);
+
+    return true;
+  }
+
+  // emit integer/double/string dyadic operation
+  bool emit_oper(Expr& expr1, Expr& expr2, U1 i_op, U1 d_op, Expr& result)
+  {
+    result.type = type_wider(expr1.type, expr2.type);
+
+    coerce(expr2, result.type);
+    coerce(expr1, result.type);
+
+    if (type_is_int(result.type))
+      emit(i_op);
+    else if (type_is_double(result.type) && d_op != nop)
+      emit(d_op);
+    else if (i_op == iadd && type_is_string(expr1.type) && type_is_string(expr2.type))
+      emit3(invokevirtual, pool_add_Method("java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;"));
+    else
+      return false;
+
+    return true;
+  }
+
+  // emit integer/double/string (combined) assignment operation
+  bool emit_assign(Expr& expr1, Expr& expr2, U1 i_op, U1 d_op, Expr& result)
+  {
+    if (expr1.mode == Expr::VALUE)
+      return false;
+
+    result.type = expr1.type;
+
+    if (!coerce(expr2, expr1.type))
+      return false;
+
+    Expr lhs = expr1;
+
+    if (i_op != nop)
+    {
+      if (lhs.mode == Expr::ARRAY)
+        insert(expr1.after, dup2);
+
+      load(expr1);
+
+      if (type_is_int(expr1.type))
+        emit(i_op);
+      else if (type_is_double(expr1.type) && d_op != nop)
+        emit(d_op);
+      else if (type_is_string(expr1.type) && type_is_string(expr2.type) && i_op == iadd)
+        emit3(invokevirtual, pool_add_Method("java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;"));
+      else
+        return false;
+    }
+
+    if (lhs.mode == Expr::ARRAY)
+    {
+      if (type_is_double(lhs.type))
+        emit(dup2_x2);
+      else
+        emit(dup_x2);
+    }
+    else
+    {
+      if (type_is_double(lhs.type))
+        emit(dup2);
+      else
+        emit(dup);
+    }
+
+    store(lhs);
+
+    return true;
+  }
+  
+  // emit pre/post increment/decrement integer variable update
+  bool emit_update(Expr& expr, bool pre, bool inc, Expr& result)
+  {
+    if (!type_is_int(expr.type))
+      return false;
+
+    switch (expr.mode)
+    {
+      case Expr::VALUE:
+        return false;
+
+      case Expr::LOCAL:
+        if (!pre)
+          emit2(iload, expr.place);
+        emit3(iinc, expr.place, inc ? 1 : 0xff);
+        if (pre)
+          emit2(iload, expr.place);
+        break;
+
+      case Expr::STATIC:
+        emit3(getstatic, expr.place);
+        if (!pre)
+          emit(dup);
+        emit(iconst_1);
+        emit(inc ? iadd : isub);
+        if (pre)
+          emit(dup);
+        emit3(putstatic, expr.place);
+        break;
+
+      case Expr::ARRAY:
+        emit(dup2);
+        emit(iaload);
+        if (!pre)
+          emit(dup_x2);
+        emit(iconst_1);
+        emit(inc ? iadd : isub);
+        if (pre)
+          emit(dup_x2);
+        emit(iastore);
+        break;
+    }
+
+    result.type = type_int();
+
+    return true;
   }
 
   // emit ldc or ldc_w for the specified constant pool index
@@ -1239,229 +1513,6 @@ class Compiler {
       emit3(ldc_w, index);
   }
 
-  // emit load
-  void emit_load(TD type, U2 local, bool& ok)
-  {
-    ok = true;
-
-    if (type_is_int(type))
-    {
-      switch (local)
-      {
-        case 0:  emit(iload_0); break;
-        case 1:  emit(iload_1); break;
-        case 2:  emit(iload_2); break;
-        case 3:  emit(iload_3); break;
-        default: emit2(iload, local);
-      }
-    }
-    else if (type_is_double(type))
-    {
-      switch (local)
-      {
-        case 0:  emit(dload_0); break;
-        case 1:  emit(dload_1); break;
-        case 2:  emit(dload_2); break;
-        case 3:  emit(dload_3); break;
-        default: emit2(dload, local);
-      }
-    }
-    else if (type_is_string(type))
-    {
-      switch (local)
-      {
-        case 0:  emit(aload_0); break;
-        case 1:  emit(aload_1); break;
-        case 2:  emit(aload_2); break;
-        case 3:  emit(aload_3); break;
-        default: emit2(aload, local);
-      }
-    }
-    else
-    {
-      ok = false;
-    }
-  }
-
-  // emit store
-  void emit_store(TD type, U2 local, bool& ok)
-  {
-    if (type_is_int(type))
-    {
-      switch (local)
-      {
-        case 0:  emit(istore_0); break;
-        case 1:  emit(istore_1); break;
-        case 2:  emit(istore_2); break;
-        case 3:  emit(istore_3); break;
-        default: emit2(istore, local);
-      }
-    }
-    else if (type_is_double(type))
-    {
-      switch (local)
-      {
-        case 0:  emit(dstore_0); break;
-        case 1:  emit(dstore_1); break;
-        case 2:  emit(dstore_2); break;
-        case 3:  emit(dstore_3); break;
-        default: emit2(dstore, local);
-      }
-    }
-    else if (type_is_string(type))
-    {
-      switch (local)
-      {
-        case 0:  emit(astore_0); break;
-        case 1:  emit(astore_1); break;
-        case 2:  emit(astore_2); break;
-        case 3:  emit(astore_3); break;
-        default: emit2(astore, local);
-      }
-    }
-    else
-    {
-      ok = false;
-    }
-  }
-
-  // emit integer/double/string comparison relation
-  Expr emit_rel(Expr& expr1, Expr& expr2, int if_op, int if_icmp_op, int d_op, bool eq, bool& ok)
-  {
-    Expr result;
-
-    if (type_is_string(expr1.type) && type_is_string(expr2.type))
-    {
-      emit3(invokevirtual, pool_add_Method("java/lang/String", "compareTo", "(Ljava/lang/String;)I"));
-      result.truelist = backpatch_addr();
-      emit3(if_op, 0);
-      result.falselist = backpatch_addr();
-      emit3(goto_, 0);
-    }
-    else
-    {
-      TD type = widen(expr1, expr2, ok);
-
-      if (type_is_int(type))
-      {
-        result.truelist = backpatch_addr();
-        emit3(if_icmp_op, 0);
-      }
-      else if (type_is_double(type))
-      {
-        emit(d_op);
-        if (d_op == dsub)
-          emit(f2i);
-        result.truelist = backpatch_addr();
-        emit3(eq ? ifeq : ifne, 0);
-      }
-
-      result.falselist = backpatch_addr();
-      emit3(goto_, 0);
-    }
-
-    return result;
-  }
-
-  // emit integer/double/string dyadic operation
-  Expr emit_op(Expr& expr1, Expr& expr2, int i_op, int d_op, bool& ok)
-  {
-    ok = true;
-
-    Expr result;
-
-    if (type_is_string(expr1.type) && type_is_string(expr2.type) && i_op == iadd)
-    {
-      emit3(invokevirtual, pool_add_Method("java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;"));
-
-      result.type = type_string();
-    }
-    else
-    {
-      result.type = widen(expr1, expr2, ok);
-
-      if (type_is_int(result.type))
-        emit(i_op);
-      else if (type_is_double(result.type) && d_op != nop)
-        emit(d_op);
-      else
-        ok = false;
-    }
-
-    return result;
-  }
-
-  // emit integer/double/string (combined) assignment operation
-  Expr emit_asg(Entry *entry, Expr& expr, int i_op, int d_op, bool& ok)
-  {
-    ok = true;
-
-    Expr result;
-
-    if (entry != NULL)
-    {
-      if (type_is_string(entry->type) && type_is_string(expr.type) && i_op == iadd)
-      {
-        emit3(invokevirtual, pool_add_Method("java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;"));
-        emit(dup);
-        emit_store(entry->type, entry->place, ok);
-
-        result.type = type_string();
-      }
-      else if (coerce(expr, entry->type))
-      {
-        result.type = entry->type;
-
-        if (entry->table->scope == 0)
-        {
-          if (i_op != nop)
-          {
-            if (type_is_int(result.type))
-              emit(i_op);
-            else if (type_is_double(result.type) && d_op != nop)
-              emit(d_op);
-            else
-              ok = false;
-          }
-          if (type_is_double(result.type))
-            emit(dup2);
-          else
-            emit(dup);
-          emit3(putstatic, entry->place);
-        }
-        else if (type_is_int(result.type))
-        {
-          if (i_op != nop)
-            emit(i_op);
-          emit(dup);
-          emit_store(entry->type, entry->place, ok);
-        }
-        else if (type_is_double(result.type) && (i_op == nop || d_op != nop))
-        {
-          if (d_op != nop)
-            emit(d_op);
-          emit(dup2);
-          emit_store(entry->type, entry->place, ok);
-        }
-        else if (type_is_string(result.type) && i_op == nop)
-        {
-          emit(dup);
-          emit_store(entry->type, entry->place, ok);
-        }
-        else
-        {
-          ok = false;
-        }
-      }
-      else
-      {
-        ok = false;
-      }
-    }
-
-    return result;
-  }
-  
   // emit opcode
   void emit(U1 opcode)
   {
@@ -1500,6 +1551,27 @@ class Compiler {
     emit(L1(L2(value)));
   }
 
+  // insert opcode at address
+  void insert(U4& addr, U1 opcode)
+  {
+    code.insert(addr++, 1, opcode);
+  }
+
+  // insert opcode with single-byte operand at address
+  void insert2(U4& addr, U1 opcode, U2 operand)
+  {
+    code.insert(addr++, 2, opcode);
+    code[addr++] = operand;
+  }
+
+  // insert opcode with double-byte operand at address
+  void insert3(U4& addr, U2 opcode, U2 operand)
+  {
+    code.insert(addr++, 3, opcode);
+    code[addr++] = H1(operand);
+    code[addr++] = L1(operand);
+  }
+
   // save the class file to file "name.class", "name" is the name of the source code file without extension suffix
   bool save()
   {
@@ -1532,7 +1604,7 @@ class Compiler {
   }
 
   bool                           main;          // if we are compiling the body of main()
-  TD                             type;          // the last type declared
+  TD                             decl_type;     // the last type declared
   TD                             return_type;   // the return type of the function we are compiling
   Table                         *table[2];      // table[0] holds statics, table[1] holds locals
   int                            scope;         // 0 for static scope, 1 for local scope

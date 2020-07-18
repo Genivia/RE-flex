@@ -1,20 +1,29 @@
-// Mini C feature demo by Robert van Engelen
-// The minic compiler is build from minic.l, minic.y, and minic.hpp
+// Mini C demo by Robert van Engelen
+// The minic compiler is built from minic.l, minic.y, and minic.hpp with:
+//   $ bison -d minic.y
+//   $ reflex minic.l
+//   $ c++ -o minic parser.cpp scanner.cpp -lreflex
+// the last step without RE/flex install: c++ -I. -I../include -o minic parser.cpp scanner.cpp ../lib/libreflex.a
 //
 // compile this file with the minic compiler:
-//   ./minic minicdemo.c
+//   $ ./minic minicdemo.c
 //
 // to view the contents of the generated minicdemo.class file:
-//   javap -c minicdemo
+//   $ javap -c minicdemo
 //
 // to run the code:
-//   java minicdemo
+//   $ java minicdemo
 
-// functions must be declared (with a prototype) before referenced
+// functions should be declared as a "function prototype" when not defined before used
 void init_statics();
-int fac(int n);
 
-// static variables are declared outside of function scopes and must be declared before referenced
+// a recursive function with conditional expression
+int fac(int n)
+{
+  return n <= 0 ? 1 : n * fac(n - 1);
+}
+
+// static variables are declared outside of function scopes and must be declared before used
 float pi; // a static variable; variables are not implicitly initialized
 
 // the main function may return int or void and takes no arguments (its arguments are accessed with $1, $2, ...)
@@ -22,28 +31,47 @@ int main()
 {
   // locals are declared at the top of a function, not in blocks, and may be int, float or string
   int i;    // integers are signed 32 bit
-  float x;  // floats are 64 bit
+  float x;  // floats are 64 bit (double precision)
   string s; // strings are immutable and contain 16 bit wide chars
 
-  // variables are not implicitly initialized, should do this explicitly
+  // arrays of ints, floats, strings, and arrays-of-arrays can be declared
+  string[] words;
+  float[][] matrix;
+
+  // variables are not implicitly initialized, we should do this explicitly
   i = 0;
   x = 0.0;
   s = "";
 
-  // the usual operators may be used with integers and floats (but no bit-ops for floats):
+  // arrays are passed and assigned by reference and are allocated with 'new'
+  words = new string[2];
+  words[0] = "hello";
+  words[1] = "world";
+  matrix = new float[][2];
+  matrix[0] = new float[3];
+  matrix[1] = new float[3];
+
+  // # returns the length of an array or string
+  i = #words;    // = 2
+  i = #words[0]; // = 5
+
+  // the usual operators may be used with integers and floats (but not the bit-ops for floats):
   // ?: || && == != <= < >= > << >> & | ^ + = * / % ! ~ = <<= >>= &= |= ^= += -= *= /= %= ++ --
   // the following operators may be used with string operands:
   // == != <= < >= > + = +=
   // mismatching operand types are coerced, while mismatching function arguments are not
 
-  // the print statement takes one or more expressions to print
+  // the println statement takes one or more expressions and prints each value on a separate line
+  println "MINIC DEMO", "----------";
+
+  // the print statement takes one or more expressions to print without inserting newlines
   print "command line arguments:";
 
   // #$ is the number of arguments of main(), $i is the i'th string argument of main()
   for (i = 1; i <= #$; ++i)
     print " ", $i;
 
-  // strings may contain \a, \b, \t, \n, \v, \f, \r, \\, and \"
+  // strings may contain escapes: \a, \b, \t, \n, \v, \f, \r, \\, and \"
   print "\n\n";
 
   // besides the for loop we also have while and do-while loops, if-else and switch control flow
@@ -60,14 +88,14 @@ int main()
 
   // operations on strings
   print "#\"ab\"                  \t= ", #"ab",                 "\n";
-  print "length(\"ab\")           \t= ", length("ab"),          " (same as #)\n";
+  print "length(\"ab\")           \t= ", length("ab"),          " (same as #\"ab\")\n";
   print "empty(\"\")              \t= ", empty(""),             "\n";
   print "\"ab\" == \"cd\"         \t= ", "ab" == "cd",          "\n";
   print "\"ab\" < \"cd\"          \t= ", "ab" < "cd",           "\n";
   print "compare(\"ab\", \"cd\")  \t= ", compare("ab", "cd"),   "\n";
   print "\"ab\" + \"cd\"          \t= ", "ab" + "cd",           "\n";
-  print "concat(\"ab\", \"cd\")   \t= ", concat("ab", "cd"),    " (same as +)\n";
-  print "at(\"abb\", 1)           \t= ", at("abb", 1),          "\n";
+  print "concat(\"ab\", \"cd\")   \t= ", concat("ab", "cd"),    " (same as \"ab\"+\"cd\")\n";
+  print "at(\"abb\", 1)           \t= ", at("abb", 1),          " (same as \"abb\"[1])\n";
   print "find(\"ab\", 98)         \t= ", find("abb", 98),       "\n";
   print "find(\"abb\", 98, 1)     \t= ", find("abb", 98, 1),    "\n";
   print "find(\"abb\", \"b\")     \t= ", find("abb", "b"),      "\n";
@@ -82,6 +110,9 @@ int main()
   print "substr(\"abc\", 1, 2)    \t= ", substr("abc", 1, 2),   "\n";
   print "trim(\" abc \")          \t= ", trim(" abc "),         "\n";
   print "matches(\"ab\", \"\\w+\")\t= ", matches("ab", "\\w+"), "\n";
+  print "\n";
+
+  // converting string to int or float
   print "strtoi(\"123\")          \t= ", strtoi("123"),         "\n";
   print "strtoi(\"ff\", 16)       \t= ", strtoi("ff", 16),      "\n";
   print "strtof(\"1.3\")          \t= ", strtof("1.3"),         "\n";
@@ -113,13 +144,26 @@ int main()
   print "min(0.5, -0.5)\t= ", min(0.5, -0.5), "\n";
   print "max(1, 2)     \t= ", max(1, 2),      "\n";
   print "max(0.5, -0.5)\t= ", max(0.5, -0.5), "\n";
-  print "str(0.5)      \t= ", str(0.5),       "\n";
-  print "bin(123)      \t= ", bin(123),       "\n";
-  print "hex(123)      \t= ", hex(123),       "\n";
-  print "oct(123)      \t= ", oct(123),       "\n";
   print "\n";
 
-  // coercing int to float and back is lossless
+  // converting ints and floats to string
+  print "bin(123)      \t= ", "\"", bin(123), "\"\n";
+  print "hex(123)      \t= ", "\"", hex(123), "\"\n";
+  print "oct(123)      \t= ", "\"", oct(123), "\"\n";
+  print "dec(123)      \t= ", "\"", dec(123), "\"\n";
+  print "dec(0.5)      \t= ", "\"", dec(0.5), "\"\n";
+  print "\n";
+
+  // casting
+  print "(int)1.5      \t= ", (int)1.5, "\n";
+  print "(float)1      \t= ", (float)1, "\n";
+  print "(string)97    \t= ", "\"", (string)'a', "\"\n";
+  print "(string)'a'   \t= ", "\"", (string)'a', "\"\n";
+  print "\"ab\" + 99   \t= ", "\"", "ab" + 99,   "\"\n";
+  print "\"ab\" + 'c'  \t= ", "\"", "ab" + 'c',  "\"\n";
+  print "\n";
+
+  // converting int to float and back is lossless
   print "max int = ", i = x = i = 2147483647, "\n\n";
 
   // we have two system functions
@@ -129,14 +173,9 @@ int main()
   exit(0);
 }
 
-// functions must be declared before being referenced
+// function to initialize statics
 void init_statics()
 {
   pi = 3.141592653589793; // initialize a static variable
 }
 
-// even recursive functions must be declared before self-referenced (this begs for compiler improvements)
-int fac(int n)
-{
-  return n == 0 ? 1 : n * fac(n - 1);
-}

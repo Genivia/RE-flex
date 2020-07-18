@@ -1,13 +1,12 @@
 // Mini C parser by Robert van Engelen
 // A simple one-pass, syntax-directed translation of mini C to JVM bytecode
 // Requires minic.l, minic.y, minic.hpp
+// See minicdemo.c for a description of the mini C features
 //
 // Ideas for compiler improvements (from easy to hard, roughly):
 // - add more library functions that compile to JVM virtual and static method invocations
 // - allow polymorphic functions instead of generating redeclaration errors
 // - add variable declaration initializers, e.g. int a=1; and/or implicit initialization
-// - add type casts, e.g. (int)x or int(x), requires changing the grammar to avoid sr conflicts
-// - add arrays, e.g. int a[]; or perhaps int[] a; requires adding expression lvalues to the grammar
 // - allow variable declarations anywhere in code blocks, not just at the start of a function body 
 // - add structs/classes (structs without methods or classes with methods)
 // - add exceptions, e.g. 'try' and 'catch' blocks
@@ -24,7 +23,7 @@
 %define api.value.type variant
 %define api.token.constructor
 
-// verbose error messages, reported with yy::Parser::syntax_error()
+// verbose error messages, reported with yy::Parser::error()
 %define parse.error verbose
 
 // generate parser.hpp
@@ -40,11 +39,12 @@
 // pass Scanner and Compiler objects to yy::Parser::parse(), to use lexer and comp in semantic actions
 %parse-param {yy::Scanner& lexer}
 %parse-param {Compiler& comp}
+%parse-param {size_t& errors}
 
 // generate yy::Parser::token::TOKEN_<name> token constants
 %define api.token.prefix {TOKEN_}
 
-// we expect on shift-reduce conflict (for the if-else)
+// we expect one shift-reduce conflict, for the ambiguous if-else
 %expect 1
 
 // tokens with semantic values
@@ -67,7 +67,9 @@
   IF       "if"
   INT      "int"
   MAIN     "main"
+  NEW      "new"
   PRINT    "print"
+  PRINTLN  "println"
   RETURN   "return"
   STRING   "string"
   SWITCH   "switch"
@@ -99,7 +101,7 @@
 
 %token '!' '#' '$' '%' '&' '(' ')' '*' '+' ',' '-' '.' '/' ':' ';' '<' '=' '>' '?' '[' ']' '^' '{' '|' '}' '~'
 
-// precedence and associativity
+// operator precedence and associativity (includes ')' for casts and '[' for array indexing)
 %right     '=' PA NA TA DA MA AA XA OA LA RA
 %right     '?'
 %right     ':'
@@ -112,9 +114,9 @@
 %left      LS RS
 %left      '+' '-'
 %left      '*' '/' '%'
-%right     '!' '~'
-%left      '[' '.' AR
+%right     '!' '~' ')'
 %nonassoc  '#' '$' PP NN
+%left      '[' '.' AR
 
 // the code to include with parser.hpp
 %code requires {
@@ -136,14 +138,17 @@
 // nonterminals with Type semantic values
 %type <Type> type list args optargs exprs optexprs
 
+// nonterminals with Proto semantic values
+%type <Proto> proto
+
 // nonterminals with Expr semantic values
 %type <Expr> expr cond optcond
 
-// nonterminals with ID semantic values
-%type <ID> id
+// for print or println functions
+%type <CS> print prints
 
 // marker nonterminals with U4 address semantic values
-%type <U4> switch B C L G
+%type <U4> A B C G
 
 %%
 
@@ -170,28 +175,29 @@ func    : main '(' ')' block
                           comp.new_method(ACC_PUBLIC | ACC_STATIC, id, type, table->locals, 256);
                           delete table;
                           if (!comp.table[--comp.scope]->enter_func(id, type, false))
-                            error(@1, "Redefined main");
+                            error(@1, "redefined main");
                         }
-        | type ID '(' A optargs ')' block
-                        {
+        | proto block   {
                           // make sure we return (compiler does not check if functions return a value)
                           comp.emit(return_);
                           // constuct a static function
-                          TD type = comp.type_function($5.type, $1.type);
-                          Table *table = comp.table[comp.scope];
-                          comp.new_method(ACC_PUBLIC | ACC_STATIC, $2, type, table->locals, 256);
-                          delete table;
-                          if (!comp.table[--comp.scope]->enter_func($2, type, false))
-                            error(@2, "Redefined function");
+                          comp.new_method(ACC_PUBLIC | ACC_STATIC, $1.id, $1.type, comp.table[comp.scope]->locals, 256);
+                          delete comp.table[comp.scope--];
+                          if (!comp.table[comp.scope]->enter_func($1.id, $1.type, false))
+                            error(@2, "redefined function");
                         }
-        | type ID '(' A optargs ')' ';'
-                        {
-                          // add function declaration to the table of statics (static scope 0)
-                          delete comp.table[comp.scope];
-                          if (!comp.table[--comp.scope]->enter_func($2, comp.type_function($5.type, $1.type), true))
-                            error(@2, "Redefined function");
+        | proto ';'     {
+                          delete comp.table[comp.scope--];
                         }
         ;
+
+proto   : type ID '(' S optargs ')'
+                        {
+                          $$.type = comp.type_function($5.type, $1.type);
+                          if (!comp.table[comp.scope - 1]->enter_func($2, $$.type, true))
+                            error(@2, "redefined function");
+                          $$.id = $2;
+                        }
 
 main    : type MAIN     {
                           // start parsing the main() function, create a local scope table
@@ -211,8 +217,8 @@ main    : type MAIN     {
                         }
         ;
 
-A       : /* empty */   {
-                          // start parsing a function, create a local scope table
+S       : /* empty */   {
+                          // start parsing the scope of a function, create a local scope table
                           Table *table = new Table(comp.table[comp.scope]);
                           comp.table[++comp.scope] = table;
                           // to emit code in a buffer, copy the code to the method later
@@ -220,7 +226,7 @@ A       : /* empty */   {
                           // not the main() function
                           comp.main = false;
                           // the function's return type
-                          comp.return_type = comp.type;
+                          comp.return_type = comp.decl_type;
                         }
         ;
 
@@ -235,55 +241,53 @@ decl    : list ';'
         ;
 
 type    : VOID          {
-                          $$.type = comp.type = comp.type_void();
+                          $$.type = comp.decl_type = comp.type_void();
                         }
         | INT           {
-                          $$.type = comp.type = comp.type_int();
+                          $$.type = comp.decl_type = comp.type_int();
                         }
         | FLOAT         {
-                          $$.type = comp.type = comp.type_double();
+                          $$.type = comp.decl_type = comp.type_double();
                         }
         | STRING        {
-                          $$.type = comp.type = comp.type_string();
+                          $$.type = comp.decl_type = comp.type_string();
                         }
         | type '[' ']'  {
                           // array types can be declared but arrays are not fully implemented
-                          $$.type = comp.type = comp.type_array($1.type);
+                          $$.type = comp.decl_type = comp.type_array($1.type);
                         }
         ;
 
 list    : list ',' ID   {
-                          bool ok;
                           if (comp.scope == 0)
                           {
                             // add a static variable, stored as a static field
-                            ok = comp.table[0]->enter($3, $1.type, comp.new_field(ACC_STATIC, $3, $1.type));
+                            if (!comp.table[0]->enter($3, $1.type, comp.new_field(ACC_STATIC, $3, $1.type)))
+                              error(@3, "redefined static variable");
                           }
                           else
                           {
                             // add a local variable, stored in the method frame (double takes two frame slots)
-                            ok = comp.table[comp.scope]->enter($3, $1.type, comp.table[comp.scope]->locals);
+                            if (!comp.table[comp.scope]->enter($3, $1.type, comp.table[comp.scope]->locals))
+                              error(@3, "redefined variable");
                             comp.table[comp.scope]->locals += 1 + comp.type_is_double($1.type);
                           }
-                          if (!ok)
-                            error(@3, "Redefined variable");
                           $$ = $1;
                         }
         | type ID       {
-                          bool ok;
                           if (comp.scope == 0)
                           {
                             // add a static variable, stored as a static field
-                            ok = comp.table[0]->enter($2, $1.type, comp.new_field(ACC_STATIC, $2, $1.type));
+                            if (!comp.table[0]->enter($2, $1.type, comp.new_field(ACC_STATIC, $2, $1.type)))
+                              error(@2, "redefined static variable");
                           }
                           else
                           {
                             // add a local variable, stored in the method frame (double takes two frame slots)
-                            ok = comp.table[comp.scope]->enter($2, $1.type, comp.table[comp.scope]->locals);
+                            if (!comp.table[comp.scope]->enter($2, $1.type, comp.table[comp.scope]->locals))
+                              error(@2, "redefined variable");
                             comp.table[comp.scope]->locals += 1 + comp.type_is_double($1.type);
                           }
-                          if (!ok)
-                            error(@2, "Redefined variable");
                           $$ = $1;
                         }
         ;
@@ -292,7 +296,7 @@ args    : args ',' type ID
                         {
                           // add an argument variable, stored in the method frame (double takes two frame slots)
                           if (!comp.table[comp.scope]->enter($4, $3.type, comp.table[comp.scope]->locals))
-                            error(@4, "Redefined argument");
+                            error(@4, "redefined argument");
                           comp.table[comp.scope]->locals += 1 + comp.type_is_double($3.type);
                           // concat argument types to produce the JVM type descriptor of the method, e.g. "II" in "(II)I"
                           $$.type = comp.type_concat($1.type, $3.type);
@@ -300,7 +304,7 @@ args    : args ',' type ID
         | type ID       {
                           // add an argument variable, stored in the method frame (double takes two frame slots)
                           if (!comp.table[comp.scope]->enter($2, $1.type, comp.table[comp.scope]->locals))
-                            error(@2, "Redefined argument");
+                            error(@2, "redefined argument");
                           comp.table[comp.scope]->locals += 1 + comp.type_is_double($1.type);
                           $$ = $1;
                         }
@@ -318,21 +322,21 @@ stmts   : stmts stmt
         | /* empty */
         ;
 
-stmt    : IF '(' cond ')' L stmt
+stmt    : IF '(' cond ')' stmt
                         {
-                          comp.backpatch($3.truelist, $5);
+                          comp.backpatch($3.truelist, $3.after);
                           comp.backpatch($3.falselist, comp.addr());
                         }
-        | IF '(' cond ')' L stmt ELSE G L stmt
+        | IF '(' cond ')' stmt ELSE G A stmt
                         {
-                          comp.backpatch($3.truelist, $5);
-                          comp.backpatch($3.falselist, $9);
-                          comp.backpatch($8, comp.addr());
+                          comp.backpatch($3.truelist, $3.after);
+                          comp.backpatch($3.falselist, $8);
+                          comp.backpatch($7, comp.addr());
                         }
         | switch G '{' cases '}' G
                         {
                           comp.backpatch($2, comp.addr());
-                          // generate switch lookup table and backpatch break instruction jumps
+                          // generate switch lookup table and backpatch the break instruction jumps
                           comp.switch_done();
                           comp.backpatch($6, comp.addr());
                         }
@@ -341,74 +345,61 @@ stmt    : IF '(' cond ')' L stmt
                           comp.backpatch($4.truelist, $6);
                           comp.backpatch($4.falselist, comp.addr());
                           comp.backpatch($8, $3);
-                          // backpatch break and continue goto instruction jumps
+                          // backpatch the break and continue goto instruction jumps
                           comp.loop_done();
                         }
         | DO B stmt WHILE '(' C cond ')' ';'
                         {
                           comp.backpatch($7.truelist, $2);
                           comp.backpatch($7.falselist, comp.addr());
-                          // backpatch break and continue goto instruction jumps
+                          // backpatch the break and continue goto instruction jumps
                           comp.loop_done();
                         }
-        | FOR '(' optexpr ';' C optcond ';' L optexpr G ')' B stmt G
+        | FOR '(' optexpr ';' C optcond ';' A optexpr G ')' B stmt G
                         {
                           comp.backpatch($6.truelist, $12);
                           comp.backpatch($6.falselist, comp.addr());
                           comp.backpatch($10, $5);
                           comp.backpatch($14, $8);
-                          // backpatch break and continue goto instruction jumps
+                          // backpatch the break and continue goto instruction jumps
                           comp.loop_done();
                         }
         | RETURN expr ';'
                         {
-                          TD type = comp.decircuit($2);
+                          TD type = comp.rvalue($2);
                           if (comp.main)
                           {
-                            if (comp.type_is_int(comp.return_type))
-                            {
-                              if (comp.coerce($2, comp.return_type))
-                                comp.emit3(invokestatic, comp.pool_add_Method("java/lang/System", "exit", "(I)V"));
-                              else
-                                error(@2, "Return type error");
-                            }
-                            else
-                            {
-                              error(@2, "Return type error");
-                            }
+                            if (!comp.type_is_int(comp.return_type))
+                              error(@2, "return type error");
+                            else if (!comp.coerce($2, comp.return_type))
+                              error(@2, "type error");
+                            comp.emit3(invokestatic, comp.pool_add_Method("java/lang/System", "exit", "(I)V"));
                           }
                           else
                           {
                             if (!comp.coerce($2, comp.return_type))
-                              error(@2, "Type error");
+                              error(@2, "type error");
                             else if (comp.type_is_int(comp.return_type))
                               comp.emit(ireturn);
                             else if (comp.type_is_double(type))
                               comp.emit(freturn);
-                            else if (comp.type_is_string(type) || comp.type_is_array(type))
+                            else
                               comp.emit(areturn);
                           }
                         }
-        | RETURN ';'
-                        {
+        | RETURN ';'    {
                           if (comp.main)
                           {
-                            if (comp.type_is_void(comp.return_type))
-                            {
-                              comp.emit(iconst_0);
-                              comp.emit3(invokestatic, comp.pool_add_Method("java/lang/System", "exit", "(I)V"));
-                            }
-                            else
-                            {
-                              error(@1, "Return requires a value");
-                            }
+                            if (!comp.type_is_void(comp.return_type))
+                              error(@1, "return requires a value");
+                            comp.emit(iconst_0);
+                            comp.emit3(invokestatic, comp.pool_add_Method("java/lang/System", "exit", "(I)V"));
                           }
                           else
                           {
-                            if (comp.type_is_void(comp.return_type))
-                              comp.emit(return_);
-                            else
-                              error(@1, "Return requires a value");
+                            if (!comp.type_is_void(comp.return_type))
+                              error(@1, "return requires a value");
+                            comp.emit(return_);
                           }
                         }
         | prints ';'    {
@@ -425,14 +416,15 @@ stmt    : IF '(' cond ')' L stmt
         | '{' stmts '}'
         | optexpr ';'
         | error ';'     {
+                          // synchronize on ; to continue parsing
                           yyerrok;
                         }
         ;
 
 switch  : SWITCH '(' expr ')'
                         {
-                          if (!comp.type_is_int(comp.decircuit($3)))
-                            error(@3, "Type error");
+                          if (!comp.type_is_int(comp.rvalue($3)))
+                            error(@3, "type error");
                           comp.switch_init();
                         }
         ;
@@ -443,76 +435,68 @@ cases   : cases case ':' stmts
 
 case    : CASE U8       {
                           if ($2 > 0x7fffffff)
-                            error(@2, "Integer constant out of range");
+                            error(@2, "integer constant out of range");
                           else if (!comp.emit_case(static_cast<U4>($2), comp.addr()))
-                            error(@2, "Duplicate case value");
+                            error(@2, "duplicate case value");
                         }
         | CASE '-' U8   {
                           if ($3 > 0x80000000)
-                            error(@3, "Integer constant out of range");
+                            error(@3, "integer constant out of range");
                           else if (!comp.emit_case(static_cast<U4>(-$3), comp.addr()))
-                            error(@2 + @3, "Duplicate case value");
+                            error(@2 + @3, "duplicate case value");
                         }
         | DEFAULT       {
                           if (!comp.emit_default(comp.addr()))
-                            error(@1, "Duplicate default");
+                            error(@1, "duplicate default");
                         }
         ;
 
 prints  : prints ',' D expr
                         {
-                          TD type = comp.decircuit($4);
+                          TD type = comp.rvalue($4);
                           if (comp.type_is_int(type))
-                          {
-                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", "print", "(I)V"));
-                          }
+                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", $1, "(I)V"));
                           else if (comp.type_is_double(type))
-                          {
-                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", "print", "(D)V"));
-                          }
+                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", $1, "(D)V"));
                           else if (comp.type_is_string(type))
-                          {
-                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", "print", "(Ljava/lang/String;)V"));
-                          }
+                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", $1, "(Ljava/lang/String;)V"));
                           else
-                          {
-                            error(@4, "Type error");
-                          }
+                            error(@4, "type error");
+                          $$ = $1;
                         }
         | print expr    {
-                          TD type = comp.decircuit($2);
+                          TD type = comp.rvalue($2);
                           if (comp.type_is_int(type))
-                          {
-                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", "print", "(I)V"));
-                          }
+                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", $1, "(I)V"));
                           else if (comp.type_is_double(type))
-                          {
-                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", "print", "(D)V"));
-                          }
+                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", $1, "(D)V"));
                           else if (comp.type_is_string(type))
-                          {
-                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", "print", "(Ljava/lang/String;)V"));
-                          }
+                            comp.emit3(invokevirtual, comp.pool_add_Method("java/io/PrintStream", $1, "(Ljava/lang/String;)V"));
                           else
-                          {
-                            error(@2, "Type error");
-                          }
+                            error(@2, "type error");
+                          $$ = $1;
                         }
         ;
 
 print   : PRINT         {
                           comp.emit3(getstatic, comp.pool_add_Field("java/lang/System", "out", "Ljava/io/PrintStream;"));
                           comp.emit(dup);
+                          $$ = "print";
+                        }
+        | PRINTLN       {
+                          comp.emit3(getstatic, comp.pool_add_Field("java/lang/System", "out", "Ljava/io/PrintStream;"));
+                          comp.emit(dup);
+                          $$ = "println";
                         }
         ;
 
 exprs   : exprs ',' expr
                         {
                           // concat argument types to produce the JVM type descriptor of the method, e.g. "II" in "(II)I"
-                          $$.type = comp.type_concat($1.type, comp.decircuit($3));
+                          $$.type = comp.type_concat($1.type, comp.rvalue($3));
                         }
         | expr          {
-                          $$.type = comp.decircuit($1);
+                          $$.type = comp.rvalue($1);
                         }
         ;
 
@@ -524,596 +508,391 @@ optexprs: exprs         {
                         }
         ;
 
-expr    : ID   '=' expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, nop, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+expr    : expr '=' expr {
+                          if (!comp.emit_assign($1, $3, nop, nop, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | id   PA  expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, iadd, dadd, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+        | expr PA expr  {
+                          if (!comp.emit_assign($1, $3, iadd, dadd, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | id   NA  expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, isub, dsub, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+        | expr NA expr  {
+                          if (!comp.emit_assign($1, $3, isub, dsub, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | id   TA  expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, imul, dmul, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+        | expr TA expr  {
+                          if (!comp.emit_assign($1, $3, imul, dmul, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | id   DA  expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, idiv, ddiv, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+        | expr DA expr  {
+                          if (!comp.emit_assign($1, $3, idiv, ddiv, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | id   MA  expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, irem, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+        | expr MA expr  {
+                          if (!comp.emit_assign($1, $3, irem, nop, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | id   AA  expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, iand, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+        | expr AA expr  {
+                          if (!comp.emit_assign($1, $3, iand, nop, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | id   XA  expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, ixor, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+        | expr XA expr  {
+                          if (!comp.emit_assign($1, $3, ixor, nop, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | id   OA  expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, ior, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+        | expr OA expr  {
+                          if (!comp.emit_assign($1, $3, ior, nop, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | id   LA  expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, ishl, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+        | expr LA expr  {
+                          if (!comp.emit_assign($1, $3, ishl, nop, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | id   RA  expr {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                            error(@1, "Undefined name");
-                          bool ok;
-                          $$ = comp.emit_asg(entry, $3, ishr, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+        | expr RA expr  {
+                          if (!comp.emit_assign($1, $3, ishr, nop, $$))
+                            error(@1 + @3, "not assignable");
+                          $$.after = comp.addr();
                         }
-        | expr '?' G L expr ':' G L expr
+        | expr '?' expr ':' expr
                         {
-                          BackpatchList *bl = NULL;
-                          if (comp.type_is_circuit($1.type))
+                          U4 offset = comp.circuit($1);
+                          comp.backpatch($1.truelist, $1.after);
+                          comp.adjust($3, offset);
+                          comp.adjust($5, offset);
+                          if (comp.type_is_circuit($3.type) && comp.type_is_circuit($5.type))
                           {
-                            comp.backpatch($1.truelist, $4);
-                            comp.backpatch($1.falselist, $8);
+                            $$.truelist = comp.merge($3.truelist, $5.truelist);
+                            $$.falselist = comp.merge($3.falselist, $5.falselist);
                           }
-                          else
+                          else if (comp.type_is_circuit($3.type))
                           {
-                            bl = comp.backpatch_addr();
-                            comp.emit3(goto_, 0);
-                            comp.backpatch($3, comp.addr());
-                            bool ok;
-                            Expr cond = comp.circuit($1, ok);
-                            if (!ok)
-                              error(@1, "Type error");
-                            comp.backpatch(cond.truelist, $4);
-                            comp.backpatch(cond.falselist, $8);
-                          }
-                          comp.backpatch($7, comp.addr());
-                          if (comp.type_is_circuit($5.type) && comp.type_is_circuit($9.type))
-                          {
-                            $$.truelist = comp.merge($5.truelist, $9.truelist);
-                            $$.falselist = comp.merge($5.falselist, $9.falselist);
+                            comp.circuit($5);
+                            $$.truelist = comp.merge($3.truelist, $5.truelist);
+                            $$.falselist = comp.merge($3.falselist, $5.falselist);
                           }
                           else if (comp.type_is_circuit($5.type))
                           {
-                            bool ok;
-                            Expr expr = comp.circuit($9, ok);
-                            if (!ok)
-                              error(@9, "Type error");
-                            $$.truelist = comp.merge($5.truelist, expr.truelist);
-                            $$.falselist = comp.merge($5.falselist, expr.falselist);
-                          }
-                          else if (comp.type_is_circuit($9.type))
-                          {
-                            bool ok;
-                            Expr expr = comp.circuit($5, ok);
-                            if (!ok)
-                              error(@5, "Type error");
-                            $$.truelist = comp.merge(expr.truelist, $9.truelist);
-                            $$.falselist = comp.merge(expr.falselist, $9.falselist);
-                          }
-                          else if (comp.type_equal($5.type, $9.type))
-                          {
-                            $$.type = $5.type;
+                            comp.adjust($5, comp.circuit($3));
+                            $$.truelist = comp.merge($3.truelist, $5.truelist);
+                            $$.falselist = comp.merge($3.falselist, $5.falselist);
                           }
                           else
                           {
-                            error(@5 + @9, "Type mismatch error");
+                            if (comp.type_equal($3.type, $5.type))
+                            {
+                              $$.type = $3.type;
+                            }
+                            else
+                            {
+                              $$.type = comp.type_wider($3.type, $5.type);
+                              if ($$.type == NULL)
+                                error(@3 + @5, "type error");
+                              comp.coerce($5, $$.type);
+                              comp.coerce($3, $$.type);
+                            }
+                            comp.insert3($3.after, goto_, 0);
+                            comp.backpatch($3.after - 3, comp.addr());
                           }
-                          if (bl != NULL)
-                            comp.backpatch(bl, comp.addr());
-                          else
-                            comp.backpatch($3, comp.addr());
+                          comp.backpatch($1.falselist, $3.after);
+                          $$.after = comp.addr();
                         }
-        | expr OR L expr
-                        {
-                          if (comp.type_is_circuit($1.type) && comp.type_is_circuit($4.type))
-                          {
-                            $$.truelist = comp.merge($1.truelist, $4.truelist);
-                            comp.backpatch($1.falselist, $3);
-                            $$.falselist = $4.falselist;
-                          }
-                          else if (comp.type_is_circuit($1.type))
-                          {
-                            bool ok;
-                            Expr expr = comp.circuit($4, ok);
-                            if (!ok)
-                              error(@4, "Type error");
-                            $$.truelist = comp.merge($1.truelist, expr.truelist);
-                            comp.backpatch($1.falselist, $3);
-                            $$.falselist = expr.falselist;
-                          }
-                          else if (comp.type_is_circuit($4.type))
-                          {
-                            bool ok;
-                            Expr expr = comp.circuit($1, ok);
-                            if (!ok)
-                              error(@1, "Type error");
-                            $$.truelist = comp.merge(expr.truelist, $4.truelist);
-                            comp.backpatch(expr.falselist, $3);
-                            $$.falselist = $4.falselist;
-                          }
-                          else if (comp.type_is_int($1.type))
-                          {
-                            comp.emit3(ifeq, 5);
-                            comp.emit(pop);
-                            comp.emit(iconst_1);
-                            bool ok;
-                            $$ = comp.circuit($4, ok);
-                            if (!ok)
-                              error(@4, "Type error");
-                          }
-                          else
-                          {
-                            error(@1 + @4, "Type error");
-                          }
+        | expr OR expr  {
+                          comp.adjust($3, comp.circuit($1));
+                          comp.circuit($3);
+                          $$.truelist = comp.merge($1.truelist, $3.truelist);
+                          comp.backpatch($1.falselist, $1.after);
+                          $$.falselist = $3.falselist;
+                          $$.after = comp.addr();
                         }
-        | expr AN L expr 
-                        {
-                          if (comp.type_is_circuit($1.type) && comp.type_is_circuit($4.type))
-                          {
-                            $$.falselist = comp.merge($1.falselist, $4.falselist);
-                            comp.backpatch($1.truelist, $3);
-                            $$.truelist = $4.truelist;
-                          }
-                          else if (comp.type_is_circuit($1.type))
-                          {
-                            bool ok;
-                            Expr expr = comp.circuit($4, ok);
-                            if (!ok)
-                              error(@4, "Type error");
-                            $$.falselist = comp.merge($1.falselist, expr.falselist);
-                            comp.backpatch($1.truelist, $3);
-                            $$.truelist = expr.truelist;
-                          }
-                          else if (comp.type_is_circuit($4.type))
-                          {
-                            bool ok;
-                            Expr expr = comp.circuit($1, ok);
-                            if (!ok)
-                              error(@1, "Type error");
-                            $$.falselist = comp.merge(expr.falselist, $4.falselist);
-                            comp.backpatch(expr.truelist, $3);
-                            $$.truelist = $4.truelist;
-                          }
-                          else if (comp.type_is_int($1.type))
-                          {
-                            comp.emit3(ifne, 5);
-                            comp.emit(pop);
-                            comp.emit(iconst_0);
-                            bool ok;
-                            $$ = comp.circuit($4, ok);
-                            if (!ok)
-                              error(@4, "Type error");
-                          }
-                          else
-                          {
-                            error(@1 + @4, "Type error");
-                          }
+        | expr AN expr  {
+                          comp.adjust($3, comp.circuit($1));
+                          comp.circuit($3);
+                          $$.falselist = comp.merge($1.falselist, $3.falselist);
+                          comp.backpatch($1.truelist, $1.after);
+                          $$.truelist = $3.truelist;
+                          $$.after = comp.addr();
                         }
         | expr '|' expr {
-                          bool ok;
-                          $$ = comp.emit_op($1, $3, ior, nop, ok);
+                          if (!comp.emit_oper($1, $3, ior, nop, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr '^' expr {
-                          bool ok;
-                          $$ = comp.emit_op($1, $3, ixor, nop, ok);
+                          if (!comp.emit_oper($1, $3, ixor, nop, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr '&' expr {
-                          bool ok;
-                          $$ = comp.emit_op($1, $3, iand, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_oper($1, $3, iand, nop, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr EQ expr  {
-                          bool ok;
-                          $$ = comp.emit_rel($1, $3, ifeq, if_icmpeq, dsub, true, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_compare($1, $3, ifeq, if_icmpeq, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr NE expr  {
-                          bool ok;
-                          $$ = comp.emit_rel($1, $3, ifne, if_icmpne, dsub, false, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_compare($1, $3, ifne, if_icmpne, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr GE expr  {
-                          bool ok;
-                          $$ = comp.emit_rel($1, $3, ifge, if_icmpge, dcmpl, true, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_compare($1, $3, ifge, if_icmpge, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr '<' expr {
-                          bool ok;
-                          $$ = comp.emit_rel($1, $3, iflt, if_icmplt, dcmpl, false, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_compare($1, $3, iflt, if_icmplt, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr LE expr  {
-                          bool ok;
-                          $$ = comp.emit_rel($1, $3, ifle, if_icmple, dcmpg, true, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_compare($1, $3, ifle, if_icmple, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr '>' expr {
-                          bool ok;
-                          $$ = comp.emit_rel($1, $3, ifgt, if_icmpgt, dcmpg, false, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_compare($1, $3, ifgt, if_icmpgt, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr LS expr  {
-                          bool ok;
-                          $$ = comp.emit_op($1, $3, ishl, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_oper($1, $3, ishl, nop, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr RS expr  {
-                          bool ok;
-                          $$ = comp.emit_op($1, $3, ishr, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_oper($1, $3, ishr, nop, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr '+' expr {
-                          bool ok;
-                          $$ = comp.emit_op($1, $3, iadd, dadd, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_oper($1, $3, iadd, dadd, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr '-' expr {
-                          bool ok;
-                          $$ = comp.emit_op($1, $3, isub, dsub, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_oper($1, $3, isub, dsub, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr '*' expr {
-                          bool ok;
-                          $$ = comp.emit_op($1, $3, imul, dmul, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_oper($1, $3, imul, dmul, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr '/' expr {
-                          bool ok;
-                          $$ = comp.emit_op($1, $3, idiv, ddiv, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_oper($1, $3, idiv, ddiv, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | expr '%' expr {
-                          bool ok;
-                          $$ = comp.emit_op($1, $3, irem, nop, ok);
-                          if (!ok)
-                            error(@1 + @3, "Type error");
+                          if (!comp.emit_oper($1, $3, irem, nop, $$))
+                            error(@1 + @3, "type error");
+                          $$.after = comp.addr();
                         }
         | '!' expr      {
-                          bool ok;
-                          $$ = comp.circuit($2, ok);
-                          if (!ok)
-                            error(@2, "Type error");
-                          BackpatchList *tmp = $$.truelist;
-                          $$.truelist = $$.falselist;
-                          $$.falselist = tmp;
+                          comp.circuit($2);
+                          $$.truelist = $2.falselist;
+                          $$.falselist = $2.truelist;
+                          $$.after = comp.addr();
                         }
         | '~' expr      {
-                          $$.type = comp.decircuit($2);
+                          $$.type = comp.rvalue($2);
                           if (!comp.type_is_int($$.type))
-                            error(@1 + @2, "Type error");
+                            error(@1 + @2, "type error");
                           comp.emit(iconst_m1);
                           comp.emit(ixor);
+                          $$.after = comp.addr();
                         }
         | '+' expr %prec '!'
                         {
-                          $$.type = comp.decircuit($2);
+                          $$.type = comp.rvalue($2);
                           if (!comp.type_is_int($$.type) && !comp.type_is_double($$.type))
-                            error(@2, "Type error");
+                            error(@1 + @2, "type error");
+                          $$.after = comp.addr();
                         }
         | '-' expr %prec '!'
                         {
-                          $$.type = comp.decircuit($2);
+                          $$.type = comp.rvalue($2);
                           if (comp.type_is_int($$.type))
                             comp.emit(ineg);
                           else if (comp.type_is_double($$.type))
                             comp.emit(dneg);
                           else
-                            error(@1 + @2, "Type error");
+                            error(@1 + @2, "type error");
+                          $$.after = comp.addr();
                         }
         | '(' expr ')'  {
                           $$ = $2;
                         }
         | '#' expr      {
-                          TD type = comp.decircuit($2);
+                          TD type = comp.rvalue($2);
                           if (comp.type_is_int(type))
-                          {
                             comp.emit3(invokestatic, comp.pool_add_Method("java/lang/Integer", "bitCount", "(I)I"));
-                          }
                           else if (comp.type_is_string(type))
-                          {
                             comp.emit3(invokevirtual, comp.pool_add_Method("java/lang/String", "length", "()I"));
-                          }
                           else if (comp.type_is_array(type))
-                          {
                             comp.emit(arraylength);
-                          }
                           else
-                          {
-                            error(@2, "Type error");
-                          }
+                            error(@1 + @2, "type error");
                           $$.type = comp.type_int();
+                          $$.after = comp.addr();
                         }
         | '#' '$'       {
-                          if (comp.main)
-                          {
-                            comp.emit(aload_0);
-                            comp.emit(arraylength);
-                          }
-                          else
-                          {
-                            error(@1, "Invalid use of $");
-                          }
+                          if (!comp.main)
+                            error(@2, "invalid use of $");
+                          comp.emit(aload_0);
+                          comp.emit(arraylength);
                           $$.type = comp.type_int();
+                          $$.after = comp.addr();
                         }
         | '$' expr      {
-                          if (comp.main)
-                          {
-                            if (comp.type_is_int(comp.decircuit($2)))
-                            {
-                              comp.emit(iconst_1);
-                              comp.emit(isub);
-                              comp.emit(aload_0);
-                              comp.emit(swap);
-                              comp.emit(aaload);
-                            }
-                            else
-                            {
-                              error(@2, "Type error");
-                            }
-                          }
-                          else
-                          {
-                            error(@1, "Invalid use of $");
-                          }
+                          if (!comp.main)
+                            error(@1, "invalid use of $");
+                          if (!comp.type_is_int(comp.rvalue($2)))
+                            error(@1 + @2, "type error");
+                          comp.emit(iconst_1);
+                          comp.emit(isub);
+                          comp.emit(aload_0);
+                          comp.emit(swap);
+                          comp.emit(aaload);
                           $$.type = comp.type_string();
+                          $$.after = comp.addr();
+                        }
+        | PP expr       {
+                          if (!comp.emit_update($2, true, true, $$))
+                            error(@2, "not assignable");
+                          $$.after = comp.addr();
+                        }
+        | NN expr       {
+                          if (!comp.emit_update($2, true, false, $$))
+                            error(@2, "not assignable");
+                          $$.after = comp.addr();
+                        }
+        | expr PP       {
+                          if (!comp.emit_update($1, false, true, $$))
+                            error(@1, "not assignable");
+                          $$.after = comp.addr();
+                        }
+        | expr NN       {
+                          if (!comp.emit_update($1, false, false, $$))
+                            error(@1, "not assignable");
+                          $$.after = comp.addr();
+                        }
+        | '(' type ')' expr
+                        {
+                          if (!comp.coerce($4, $2.type))
+                            error(@4, "type error");
+                          $$ = $4;
                         }
         | expr '[' expr ']'
                         {
-                          if (!comp.type_is_int(comp.decircuit($3)))
+                          if (!comp.type_is_int(comp.rvalue($3)))
+                            error(@3, "type error");
+                          TD type = comp.rvalue($1);
+                          if (comp.type_is_string(type))
                           {
-                            error(@3, "Type error");
+                            comp.emit3(invokevirtual, comp.pool_add_Method("java/lang/String", "charAt", "(I)C"));
+                            $$.type = comp.type_int();
+                          }
+                          else if (comp.type_is_array(type))
+                          {
+                            $$.type = comp.type_of_element(type);
+                            $$.mode = Expr::ARRAY;
                           }
                           else
                           {
-                            TD type = comp.type_get_element($1.type);
-                            if (comp.type_is_int(type))
+                            error(@1, "type error");
+                          }
+                          $$.after = comp.addr();
+                        }
+        | expr '.' ID   {
+                          error(@2, "not implemented");
+                          $$ = $1;
+                        }
+        | expr AR ID    {
+                          error(@2, "invalid operation");
+                          $$ = $1;
+                        }
+        | ID '(' optexprs ')'
+                        {
+                          Entry *entry = comp.table[comp.scope]->lookup($1);
+                          if (entry == NULL)
+                          {
+                            const Library *lib = comp.library($1, $3.type);
+                            if (lib != NULL)
                             {
-                              comp.emit(iaload);
-                            }
-                            else if (comp.type_is_double(type))
-                            {
-                              comp.emit(daload);
-                            }
-                            else if (comp.type_is_string(type) || comp.type_is_array(type))
-                            {
-                              comp.emit(aaload);
+                              // emit virtual or static method invocation of the library function
+                              if (lib->virtype != NULL)
+                                comp.emit3(invokevirtual, comp.pool_add_Method(lib->package, lib->method, lib->type));
+                              else
+                                comp.emit3(invokestatic, comp.pool_add_Method(lib->package, lib->method, lib->type));
+                              // boolean and char are ints, computationally so "Z" and "C" return types are OK to use as "I"
+                              $$.type = comp.type_of_return(lib->type);
+                              if (comp.type_is_boolean($$.type) || comp.type_is_char($$.type))
+                                $$.type = comp.type_int();
                             }
                             else
                             {
-                              error(@1, "Type error");
+                              error(@1, "undefined function or type error in arguments");
                             }
-                            $$.type = type;
                           }
-                        }
-        | expr '.' ID   {
-                          error(@1 + @3, "Not implemented");
-                        }
-        | expr AR ID    {
-                          error(@1 + @3, "Not implemented");
-                        }
-        | PP ID         {
-                          Entry *entry = comp.table[comp.scope]->lookup($2);
-                          if (entry == NULL)
+                          else if (!comp.type_is_function(entry->type))
                           {
-                            error(@2, "Undefined name");
+                            error(@1, "not a function");
                           }
-                          else if (!comp.type_is_int(entry->type))
+                          else if (comp.type_check_args($3.type, entry->type))
                           {
-                            error(@2, "Type error");
-                          }
-                          else if (entry->table->scope == 0)
-                          {
-                            comp.emit3(getstatic, entry->place);
-                            comp.emit(iconst_1);
-                            comp.emit(iadd);
-                            comp.emit(dup);
-                            comp.emit3(putstatic, entry->place);
+                            // invoke a compiled function
+                            comp.emit3(invokestatic, comp.pool_add_Method($1->c_str(), entry->type));
+                            $$.type = comp.type_of_return(entry->type);
                           }
                           else
                           {
-                            comp.emit3(iinc, entry->place, 1);
-                            bool ok;
-                            comp.emit_load(entry->type, entry->place, ok);
-                            if (!ok)
-                              error(@2, "Type error");
+                            error(@3, "type error in arguments");
                           }
-                          $$.type = comp.type_int();
+                          $$.after = comp.addr();
                         }
-        | NN ID         {
-                          Entry *entry = comp.table[comp.scope]->lookup($2);
-                          if (entry == NULL)
-                          {
-                            error(@2, "Undefined name");
-                          }
-                          else if (!comp.type_is_int(entry->type))
-                          {
-                            error(@2, "Type error");
-                          }
-                          else if (entry->table->scope == 0)
-                          {
-                            comp.emit3(getstatic, entry->place);
-                            comp.emit(iconst_1);
-                            comp.emit(isub);
-                            comp.emit(dup);
-                            comp.emit3(putstatic, entry->place);
-                          }
+        | NEW type '[' expr ']'
+                        {
+                          if (!comp.type_is_int(comp.rvalue($4)))
+                            error(@4, "type error");
+                          if (comp.type_is_int($2.type))
+                            comp.emit2(newarray, T_INT);
+                          else if (comp.type_is_double($2.type))
+                            comp.emit2(newarray, T_DOUBLE);
                           else
-                          {
-                            comp.emit3(iinc, entry->place, 0xff);
-                            bool ok;
-                            comp.emit_load(entry->type, entry->place, ok);
-                            if (!ok)
-                              error(@2, "Type error");
-                          }
-                          $$.type = comp.type_int();
-                        }
-        | ID PP         {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                          {
-                            error(@1, "Undefined name");
-                          }
-                          else if (!comp.type_is_int(entry->type))
-                          {
-                            error(@1, "Type error");
-                          }
-                          else if (entry->table->scope == 0)
-                          {
-                            comp.emit3(getstatic, entry->place);
-                            comp.emit(dup);
-                            comp.emit(iconst_1);
-                            comp.emit(iadd);
-                            comp.emit3(putstatic, entry->place);
-                          }
-                          else
-                          {
-                            bool ok;
-                            comp.emit_load(entry->type, entry->place, ok);
-                            if (!ok)
-                              error(@1, "Type error");
-                            comp.emit3(iinc, entry->place, 1);
-                          }
-                          $$.type = comp.type_int();
-                        }
-        | ID NN         {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                          {
-                            error(@1, "Undefined name");
-                          }
-                          else if (!comp.type_is_int(entry->type))
-                          {
-                            error(@1, "Type error");
-                          }
-                          else if (entry->table->scope == 0)
-                          {
-                            comp.emit3(getstatic, entry->place);
-                            comp.emit(dup);
-                            comp.emit(iconst_1);
-                            comp.emit(isub);
-                            comp.emit3(putstatic, entry->place);
-                          }
-                          else
-                          {
-                            bool ok;
-                            comp.emit_load(entry->type, entry->place, ok);
-                            if (!ok)
-                              error(@1, "Type error");
-                            comp.emit3(iinc, entry->place, 0xff);
-                          }
-                          $$.type = comp.type_int();
+                            comp.emit3(anewarray, comp.pool_add_Class(comp.type_of_reference($2.type)));
+                          $$.type = comp.type_array($2.type);
+                          $$.after = comp.addr();
                         }
         | ID            {
                           Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
+                          if (entry != NULL)
                           {
-                            error(@1, "Undefined name");
+                            if (comp.type_is_function(entry->type))
+                              error(@1, "not a variable");
+                            $$.type = entry->type;
+                            $$.mode = entry->table->scope > 0 ? Expr::LOCAL : Expr::STATIC;
+                            $$.place = entry->place;
                           }
                           else
                           {
-                            if (entry->table->scope == 0)
-                            {
-                              comp.emit3(getstatic, entry->place);
-                            }
-                            else
-                            {
-                              bool ok;
-                              comp.emit_load(entry->type, entry->place, ok);
-                              if (!ok)
-                                error(@1, "Type error");
-                            }
-                            $$.type = entry->type;
+                            error(@1, "undefined name");
                           }
+                          $$.after = comp.addr();
                         }
         | U8            {
                           if ($1 == 0)
@@ -1135,8 +914,9 @@ expr    : ID   '=' expr {
                           else if ($1 <= 0x7fffffff)
                             comp.emit_ldc(comp.pool_add_Integer(static_cast<U4>($1)));
                           else
-                            error(@1, "Integer constant out of range");
+                            error(@1, "integer constant out of range");
                           $$.type = comp.type_int();
+                          $$.after = comp.addr();
                         }
         | F8            {
                           if ($1 == 0.0)
@@ -1146,56 +926,22 @@ expr    : ID   '=' expr {
                           else
                             comp.emit3(ldc2_w, comp.pool_add_Double($1));
                           $$.type = comp.type_double();
+                          $$.after = comp.addr();
                         }
         | CS            {
                           comp.emit_ldc(comp.pool_add_String($1));
                           $$.type = comp.type_string();
+                          $$.after = comp.addr();
                         }
         | FALSE         {
-                          $$.falselist = comp.backpatch_addr();
+                          $$.falselist = comp.backpatch_list_addr();
                           comp.emit3(goto_, 0);
+                          $$.after = comp.addr();
                         }
         | TRUE          {
-                          $$.truelist = comp.backpatch_addr();
+                          $$.truelist = comp.backpatch_list_addr();
                           comp.emit3(goto_, 0);
-                        }
-        | ID '(' optexprs ')'
-                        {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                          {
-                            const Library *lib = comp.library($1, $3.type);
-                            if (lib != NULL)
-                            {
-                              // emit virtual or static method invocation of the library function
-                              if (lib->virtype != NULL)
-                                comp.emit3(invokevirtual, comp.pool_add_Method(lib->package, lib->method, lib->type));
-                              else
-                                comp.emit3(invokestatic, comp.pool_add_Method(lib->package, lib->method, lib->type));
-                              // boolean and char are ints, computationally so "Z" and "C" return types are OK to use as "I"
-                              $$.type = comp.type_get_return(lib->type);
-                              if (comp.type_is_boolean($$.type) || comp.type_is_char($$.type))
-                                $$.type = comp.type_int();
-                            }
-                            else
-                            {
-                              error(@1, "Undefined function or type error in arguments");
-                            }
-                          }
-                          else if (entry->table->scope != 0)
-                          {
-                            error(@1, "Not a function");
-                          }
-                          else if (comp.type_check_args($3.type, entry->type))
-                          {
-                            // invoke a compiled function
-                            comp.emit3(invokestatic, comp.pool_add_Method($1->c_str(), entry->type));
-                            $$.type = comp.type_get_return(entry->type);
-                          }
-                          else
-                          {
-                            error(@3, "Type error in arguments");
-                          }
+                          $$.after = comp.addr();
                         }
         ;
 
@@ -1207,20 +953,25 @@ optexpr : expr          {
                           }
                           else if (!comp.type_is_void($1.type))
                           {
-                            if (comp.type_is_double($1.type))
+                            if ($1.mode == Expr::VALUE)
+                            {
+                              if (comp.type_is_double($1.type))
+                                comp.emit(pop2);
+                              else
+                                comp.emit(pop);
+                            }
+                            else if ($1.mode == Expr::ARRAY)
+                            {
                               comp.emit(pop2);
-                            else
-                              comp.emit(pop);
+                            }
                           }
                         }
         | /* empty */
         ;
 
 cond    : expr          {
-                          bool ok;
-                          $$ = comp.circuit($1, ok);
-                          if (!ok)
-                            error(@1, "Type error");
+                          comp.circuit($1);
+                          $$ = $1;
                         }
         ;
 
@@ -1228,29 +979,14 @@ optcond : cond          {
                           $$ = $1;
                         }
         | /* empty */   {
-                          $$.truelist = comp.backpatch_addr();
+                          $$.truelist = comp.backpatch_list_addr();
                           comp.emit3(goto_, 0);
+                          $$.after = comp.addr();
                         }
         ;
 
-id      : ID            {
-                          Entry *entry = comp.table[comp.scope]->lookup($1);
-                          if (entry == NULL)
-                          {
-                            error(@1, "Undefined name");
-                          }
-                          else if (entry->table->scope == 0)
-                          {
-                            comp.emit3(getstatic, entry->place);
-                          }
-                          else
-                          {
-                            bool ok;
-                            comp.emit_load(entry->type, entry->place, ok);
-                            if (!ok)
-                              error(@1, "Type error");
-                          }
-                          $$ = $1;
+A       : /* empty */   {
+                          $$ = comp.addr();
                         }
         ;
 
@@ -1268,11 +1004,6 @@ C       : /* empty */   {
 
 D       : /* empty */   {
                           comp.emit(dup);
-                        }
-        ;
-
-L       : /* empty */   {
-                          $$ = comp.addr();
                         }
         ;
 
@@ -1315,11 +1046,14 @@ int main(int argc, char **argv)
   // construct a compiler for the class
   Compiler comp(name);
 
+  // keep track of the number of errors reported with yy:Parser::error()
+  size_t errors = 0;
+
   // construct a parser, needs the lexer and compiler for semantic actions
-  yy::Parser parser(lexer, comp);
+  yy::Parser parser(lexer, comp, errors);
 
   // parse and compile the source into a JVM class file
-  if (parser.parse())
+  if (parser.parse() || errors > 0)
   {
     std::cerr << "Compilation errors: class file " << name << ".class not saved\n";
     exit(EXIT_FAILURE);
@@ -1337,6 +1071,8 @@ int main(int argc, char **argv)
 // display error and location in the source code
 void yy::Parser::error(const location& loc, const std::string& msg)
 {
+  ++errors;
+
   std::cerr << loc << ": " << msg << std::endl;
   if (loc.begin.line == loc.end.line && loc.begin.line == lexer.lineno())
   {
