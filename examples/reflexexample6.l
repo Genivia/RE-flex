@@ -10,8 +10,8 @@
 .|\n
 
 <COMMENT>{
-\n                   pop_state();
-([^\n]|\\\n)+        out() << text() << std::endl;
+\n                   echo(); pop_state();
+([^\n]|\\\n)+        echo();
 }
 
 %%

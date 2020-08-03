@@ -13,8 +13,8 @@
 
 %%
 
-[[:digit:]]+  { yylval.num = atoi(text());   return NUMBER; }
-[[:alnum:]]+  { yylval.str = strdup(text()); return STRING; }
+\d+           { yylval.num = atoi(text());   return NUMBER; }
+\w+           { yylval.str = strdup(text()); return STRING; }
 "="|";"       { return text()[0]; }
 .|\n          {}
 

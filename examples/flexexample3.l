@@ -1,5 +1,5 @@
 /* Scanner for "C" assignment statements... sort of. */
-/* Compile: reflex --flex --bison flexexample3.l */
+/* Compile: reflex --flex --bison --header-file flexexample3.l */
 /* Compile: bison -d -y flexexample3.y */
 
 %top{
@@ -7,7 +7,7 @@
 #define YY_EXTERN_C extern "C" /* this is needed for yylex C linkage when compiling y.tab.c in C */
 }
 
-%option bison noyywrap
+%option bison noyywrap header-file
 
 %%
 

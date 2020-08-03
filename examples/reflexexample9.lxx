@@ -14,8 +14,8 @@
 
 %%
 
-[[:digit:]]+  { yylval.num = atoi(text());   return yy::parser::token::NUMBER; }
-[[:alnum:]]+  { yylval.str = strdup(text()); return yy::parser::token::STRING; }
+\d+           { yylval.num = atoi(text());   return yy::parser::token::NUMBER; }
+\w+           { yylval.str = strdup(text()); return yy::parser::token::STRING; }
 "="|";"       { return text()[0]; }
 .|\n          {}
 

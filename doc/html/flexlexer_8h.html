@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">flexlexer.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Jul 9 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Aug 3 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -58,7 +58,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p>RE/flex Flex-compatible FlexLexer base class and Lex/Flex-compatible macros.  
+<p>RE/flex Flex-compatible FlexLexer base class and Flex-compatible macros.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="abslexer_8h.html">reflex/abslexer.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -114,7 +114,7 @@ Macros</h2></td></tr>
 <tr class="memdesc:ae93e67b85c44f6bd31ead14a552a35c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: exit error code.  <a href="#ae93e67b85c44f6bd31ead14a552a35c8">More...</a><br /></td></tr>
 <tr class="separator:ae93e67b85c44f6bd31ead14a552a35c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7e51116e747d3390e7a6cfc6532834c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#ae7e51116e747d3390e7a6cfc6532834c">YY_BUF_SIZE</a>&#160;&#160;&#160;(16384)</td></tr>
-<tr class="memdesc:ae7e51116e747d3390e7a6cfc6532834c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: size of default input buffer.  <a href="#ae7e51116e747d3390e7a6cfc6532834c">More...</a><br /></td></tr>
+<tr class="memdesc:ae7e51116e747d3390e7a6cfc6532834c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: size of default input buffer (not applicable to RE/flex, buffer is dynamic).  <a href="#ae7e51116e747d3390e7a6cfc6532834c">More...</a><br /></td></tr>
 <tr class="separator:ae7e51116e747d3390e7a6cfc6532834c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee8ea091fc2f81244fcda7b6540e24a8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aee8ea091fc2f81244fcda7b6540e24a8">yy_state_type</a>&#160;&#160;&#160;int</td></tr>
 <tr class="memdesc:aee8ea091fc2f81244fcda7b6540e24a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: the type of a state variable.  <a href="#aee8ea091fc2f81244fcda7b6540e24a8">More...</a><br /></td></tr>
@@ -128,7 +128,7 @@ Macros</h2></td></tr>
 <tr class="memitem:af8ef002da9f9ba35951176ec0be7ab23"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#af8ef002da9f9ba35951176ec0be7ab23">YY_BUFFER_STATE</a>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#acac4a8e151705f78bafbba1b91d1eaa0">yy_buffer_state</a>*</td></tr>
 <tr class="memdesc:af8ef002da9f9ba35951176ec0be7ab23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: a pointer to the type of the scanner buffer.  <a href="#af8ef002da9f9ba35951176ec0be7ab23">More...</a><br /></td></tr>
 <tr class="separator:af8ef002da9f9ba35951176ec0be7ab23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad1dc60a04a1d8cfc8b3ded13601e361"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aad1dc60a04a1d8cfc8b3ded13601e361">ECHO</a>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> LexerOutput(YYText(), YYLeng())</td></tr>
+<tr class="memitem:aad1dc60a04a1d8cfc8b3ded13601e361"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aad1dc60a04a1d8cfc8b3ded13601e361">ECHO</a>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> LexerOutput(<a class="el" href="flexlexer_8h.html#a0d71f919dbec1ffd74b2460fa7e5ac28">yytext</a>, <a class="el" href="flexlexer_8h.html#afa07a629486cb790560bb95713ec7794">yyleng</a>)</td></tr>
 <tr class="memdesc:aad1dc60a04a1d8cfc8b3ded13601e361"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: ECHO action to output the content of yytext.  <a href="#aad1dc60a04a1d8cfc8b3ded13601e361">More...</a><br /></td></tr>
 <tr class="separator:aad1dc60a04a1d8cfc8b3ded13601e361"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab766bbbee08d04b67e3fe599d6900873"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#ab766bbbee08d04b67e3fe599d6900873">BEGIN</a>&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> start_ =</td></tr>
@@ -183,10 +183,10 @@ Macros</h2></td></tr>
 <tr class="memdesc:a1584c58cbc37bb021cbce23ddb7594c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: interactive mode on/off (use only when scanner has started).  <a href="#a1584c58cbc37bb021cbce23ddb7594c7">More...</a><br /></td></tr>
 <tr class="separator:a1584c58cbc37bb021cbce23ddb7594c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa28e58c21d4fbe7132b6de8edf76e43a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#aa28e58c21d4fbe7132b6de8edf76e43a">yy_create_buffer</a>(i,  _)  &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> new_matcher(i)</td></tr>
-<tr class="memdesc:aa28e58c21d4fbe7132b6de8edf76e43a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: create and return a new buffer.  <a href="#aa28e58c21d4fbe7132b6de8edf76e43a">More...</a><br /></td></tr>
+<tr class="memdesc:aa28e58c21d4fbe7132b6de8edf76e43a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: create and return a new buffer (new <a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a>).  <a href="#aa28e58c21d4fbe7132b6de8edf76e43a">More...</a><br /></td></tr>
 <tr class="separator:aa28e58c21d4fbe7132b6de8edf76e43a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1fd8c499dd3f229841b390187fd2a15b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a1fd8c499dd3f229841b390187fd2a15b">yy_new_buffer</a>(i,  _)        &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> new_matcher(i)</td></tr>
-<tr class="memdesc:a1fd8c499dd3f229841b390187fd2a15b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: create and return a new buffer.  <a href="#a1fd8c499dd3f229841b390187fd2a15b">More...</a><br /></td></tr>
+<tr class="memdesc:a1fd8c499dd3f229841b390187fd2a15b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: create and return a new buffer (new <a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a>).  <a href="#a1fd8c499dd3f229841b390187fd2a15b">More...</a><br /></td></tr>
 <tr class="separator:a1fd8c499dd3f229841b390187fd2a15b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66cce193d3578e9236f33137cff97229"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flexlexer_8h.html#a66cce193d3578e9236f33137cff97229">yy_delete_buffer</a>(b)      &#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> del_matcher(b)</td></tr>
 <tr class="memdesc:a66cce193d3578e9236f33137cff97229"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flex-compatible macro: delete a buffer.  <a href="#a66cce193d3578e9236f33137cff97229">More...</a><br /></td></tr>
@@ -256,7 +256,7 @@ Macros</h2></td></tr>
 <tr class="separator:a301f4439c9b191c80db45f5b1a8c7269"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>RE/flex Flex-compatible FlexLexer base class and Lex/Flex-compatible macros. </p>
+<div class="textblock"><p>RE/flex Flex-compatible FlexLexer base class and Flex-compatible macros. </p>
 <dl class="section author"><dt>Author</dt><dd>Robert van Engelen - <a href="#" onclick="location.href='mai'+'lto:'+'eng'+'el'+'en@'+'ge'+'niv'+'ia'+'.co'+'m'; return false;">engel<span style="display: none;">.nosp@m.</span>en@g<span style="display: none;">.nosp@m.</span>enivi<span style="display: none;">.nosp@m.</span>a.co<span style="display: none;">.nosp@m.</span>m</a> </dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>(c) 2016-2020, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
 <dd>
@@ -281,7 +281,7 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ECHO&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> LexerOutput(YYText(), YYLeng())</td>
+          <td class="memname">#define ECHO&#160;&#160;&#160;<a class="el" href="flexlexer_8h.html#a56cf2e8416a25e023c050b36b453d488">YY_SCANNER_DOT_</a> LexerOutput(<a class="el" href="flexlexer_8h.html#a0d71f919dbec1ffd74b2460fa7e5ac28">yytext</a>, <a class="el" href="flexlexer_8h.html#afa07a629486cb790560bb95713ec7794">yyleng</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -345,7 +345,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flex-compatible macro: size of default input buffer. </p>
+<p>Flex-compatible macro: size of default input buffer (not applicable to RE/flex, buffer is dynamic). </p>
 
 </div>
 </div>
@@ -401,7 +401,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flex-compatible macro: create and return a new buffer. </p>
+<p>Flex-compatible macro: create and return a new buffer (new <a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a>). </p>
 
 </div>
 </div>
@@ -535,7 +535,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flex-compatible macro: create and return a new buffer. </p>
+<p>Flex-compatible macro: create and return a new buffer (new <a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a>). </p>
 
 </div>
 </div>
@@ -1170,7 +1170,7 @@ Macros</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Jul 9 2020 08:58:38 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Aug 3 2020 10:35:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

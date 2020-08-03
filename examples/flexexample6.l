@@ -1,8 +1,9 @@
-// Reentrant example taken from the Flex documentation
+/* Reentrant example taken from the Flex documentation */
+/* Compile: reflex --flex flexexample6.l */
 
 /* This scanner prints "//" comments. */
 
-%option flex reentrant stack noyywrap
+%option reentrant stack noyywrap
 
 %x COMMENT
 
@@ -12,7 +13,7 @@
 .|\n
 
 <COMMENT>{
-\n                   yy_pop_state(yyscanner);
+\n                   ECHO; yy_pop_state(yyscanner);
 ([^\n]|\\\n)+        ECHO;
 }
 

@@ -513,7 +513,8 @@ Changelog
 - May 25, 2020: 2.0.1 resolved 64-bit build warnings; fixed reflex CRLF output in C++ source code on Windows.
 - Jun 29, 2020: 2.1.0 added Bison complete locations filename member access; added example Mini C compiler `minic` using RE/flex scanner with Bison 3.2 C++ complete locations, compiles C-like source code to Java bytecode (class files); added fast fuzzy (approximate) regex matcher `reflex::FuzzyMatcher` derived from `reflex::Matcher`.
 - Jul  8, 2020: 2.1.1 added `%option params` to extend `lex()`/`yylex()` parameters; updated AVX2 detection for SIMD optimizations.
-- Jul  9, 2020: 2.1.2 minor change to fix MSVC++ compiler error.
+- Jul  9, 2020: 2.1.2 minor update to fix MSVC++ compiler error.
+- Aug  3, 2020: 2.1.3 improved `--bison-bridge` option; updated examples.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

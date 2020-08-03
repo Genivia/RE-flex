@@ -124,33 +124,35 @@ flexexample2:		flexexample2.l
 
 flexexample3:		flexexample3.l flexexample3.y
 			$(YACC) -d flexexample3.y
-			$(REFLEX) $(REFLAGS) --flex --bison flexexample3.l
+			$(REFLEX) $(REFLAGS) --flex --bison --header-file flexexample3.l
 			$(CC) $(CXXFLAGS) -c y.tab.c
 			$(CXX) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
 			./flexexample3 < flexexample3.test
 
 flexexample3xx:		flexexample3.lxx flexexample3.yxx
 			$(BISON) -d flexexample3.yxx
-			$(REFLEX) $(REFLAGS) --flex --bison flexexample3.lxx
+			$(REFLEX) $(REFLAGS) --flex --bison --header-file flexexample3.lxx
 			$(CXX) $(CXXFLAGS) -o $@ flexexample3.tab.cxx lex.yy.cpp $(LIBREFLEX)
 			./flexexample3xx < flexexample3.test
 
 flexexample4:		flexexample4.l flexexample4.y
 			$(YACC) -d flexexample4.y
 			$(REFLEX) $(REFLAGS) --flex --bison-bridge --header-file flexexample4.l
-			$(CXX) $(CXXFLAGS) -DWITH_NO_C -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+			$(CC) $(CXXFLAGS) -c y.tab.c
+			$(CXX) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
 			./flexexample4 < flexexample4.test
 
 flexexample4xx:		flexexample4.lxx flexexample4.yxx
 			$(BISON) -d flexexample4.yxx
 			$(REFLEX) $(REFLAGS) --flex --bison-bridge --header-file flexexample4.lxx
-			$(CXX) $(CXXFLAGS) -DWITH_NO_C -o $@ flexexample4.tab.cxx lex.yy.cpp $(LIBREFLEX)
+			$(CXX) $(CXXFLAGS) -o $@ flexexample4.tab.cxx lex.yy.cpp $(LIBREFLEX)
 			./flexexample4xx < flexexample4.test
 
 flexexample5:		flexexample5.l flexexample5.y
 			$(YACC) -d flexexample5.y
 			$(REFLEX) $(REFLAGS) --flex --bison-bridge --header-file flexexample5.l
-			$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+			$(CC) $(CXXFLAGS) -c y.tab.c
+			$(CXX) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
 			./flexexample5 < flexexample5.test
 
 flexexample5xx:		flexexample5.lxx flexexample5.yxx
@@ -166,21 +168,22 @@ flexexample6:		flexexample6.l
 
 flexexample7:		flexexample7.l flexexample7.y
 			$(YACC) -d flexexample7.y
-			$(REFLEX) $(REFLAGS) --flex --bison-locations flexexample7.l
+			$(REFLEX) $(REFLAGS) --flex --bison-locations --header-file flexexample7.l
 			$(CC) $(CXXFLAGS) -c y.tab.c
 			$(CXX) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
 			./flexexample7 < flexexample7.test
 
 flexexample7xx:		flexexample7.lxx flexexample7.yxx
 			$(BISON) -d flexexample7.yxx
-			$(REFLEX) $(REFLAGS) --flex --bison-locations flexexample7.lxx
+			$(REFLEX) $(REFLAGS) --flex --bison-locations --header-file flexexample7.lxx
 			$(CXX) $(CXXFLAGS) -o $@ flexexample7.tab.cxx lex.yy.cpp $(LIBREFLEX)
 			./flexexample7xx < flexexample7.test
 
 flexexample8:		flexexample8.l flexexample8.y
 			$(YACC) -d flexexample8.y
 			$(REFLEX) $(REFLAGS) --flex --bison-locations --bison-bridge --header-file flexexample8.l
-			$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+			$(CC) $(CXXFLAGS) -c y.tab.c
+			$(CXX) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
 			./flexexample8 < flexexample8.test
 
 flexexample8xx:		flexexample8.lxx flexexample8.yxx
@@ -206,8 +209,8 @@ flexexample11xx:	flexexample11.lxx flexexample11.yxx
 			$(CXX) $(CXXFLAGS) -o $@ parser.cpp scanner.cpp $(LIBREFLEX)
 			./flexexample11xx flexexample11.test
 
-reflexexample3:		reflexexample3.l reflexexample3.y
-			$(YACC) -d reflexexample3.y
+reflexexample3:		reflexexample3.l reflexexample3.yxx
+			$(YACC) -d reflexexample3.yxx
 			$(REFLEX) $(REFLAGS) --bison --header-file reflexexample3.l
 			$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
 			./reflexexample3 < flexexample3.test
@@ -218,20 +221,20 @@ reflexexample3xx:	reflexexample3.lxx reflexexample3.yxx
 			$(CXX) $(CXXFLAGS) -o $@ reflexexample3.tab.cxx lex.yy.cpp $(LIBREFLEX)
 			./reflexexample3xx < flexexample3.test
 
-reflexexample4:		reflexexample4.l flexexample4.y
-			$(YACC) -d flexexample4.y
+reflexexample4:		reflexexample4.l flexexample4.yxx
+			$(YACC) -d flexexample4.yxx
 			$(REFLEX) $(REFLAGS) --bison-bridge --header-file reflexexample4.l
-			$(CXX) $(CXXFLAGS) -DWITH_NO_C -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+			$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
 			./reflexexample4 < flexexample4.test
 
 reflexexample4xx:	reflexexample4.lxx flexexample4.yxx
 			$(BISON) -d flexexample4.yxx
 			$(REFLEX) $(REFLAGS) --bison-bridge --header-file reflexexample4.lxx
-			$(CXX) $(CXXFLAGS) -DWITH_NO_C -o $@ flexexample4.tab.cxx lex.yy.cpp $(LIBREFLEX)
+			$(CXX) $(CXXFLAGS) -o $@ flexexample4.tab.cxx lex.yy.cpp $(LIBREFLEX)
 			./reflexexample4xx < flexexample4.test
 
-reflexexample5:		reflexexample5.l flexexample5.y
-			$(YACC) -d flexexample5.y
+reflexexample5:		reflexexample5.l flexexample5.yxx
+			$(YACC) -d flexexample5.yxx
 			$(REFLEX) $(REFLAGS) --bison-bridge --header-file reflexexample5.l
 			$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
 			./reflexexample5 < flexexample5.test
@@ -247,11 +250,10 @@ reflexexample6:		reflexexample6.l
 			$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 			./reflexexample6 < reflexexample6.l
 
-reflexexample7:		reflexexample7.l flexexample7.y
-			$(YACC) -d flexexample7.y
+reflexexample7:		reflexexample7.l flexexample7.yxx
+			$(YACC) -d flexexample7.yxx
 			$(REFLEX) $(REFLAGS) --bison-locations reflexexample7.l
-			$(CC) $(CXXFLAGS) -c y.tab.c
-			$(CXX) $(CXXFLAGS) -o $@ y.tab.o lex.yy.cpp $(LIBREFLEX)
+			$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
 			./reflexexample7 < flexexample7.test
 
 reflexexample7xx:	reflexexample7.lxx flexexample7.yxx
@@ -442,7 +444,7 @@ url_pcre2:	url_pcre2.cpp
 		$(CXX) $(CXXFLAGS) -I $(INCPCRE2) -o $@ url_pcre2.cpp $(LIBREFLEX) $(LIBPCRE2)
 
 wc_pcre2:	wc.l
-		$(REFLEX) $(REFLAGS) --matcher=pcre2 --flex wc.l
+		$(REFLEX) $(REFLAGS) --matcher=pcre2_perl --flex wc.l
 		$(CXX) $(CXXFLAGS) -I $(INCPCRE2) -o $@ lex.yy.cpp $(LIBREFLEX) $(LIBPCRE2)
 
 minic:		minic.l minic.y minic.hpp

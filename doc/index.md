@@ -780,10 +780,10 @@ change its pattern, use the following methods:
   `has_pattern()` | true if the matcher has a pattern assigned to it
   `own_pattern()` | true if the matcher has a pattern to manage and delete
   `pattern()`     | a reference to the pattern object
-  `interactive()` | sets buffer size to 1 for console-based (TTY) input
   `buffer()`      | buffer all input at once, returns true if successful
   `buffer(n)`     | set the initial buffer size to `n` bytes to buffer input
-  `buffer(b, n)`  | read `n` bytes at address `b` containing a string of `n`-1 bytes (zero copy)
+  `buffer(b, n)`  | use buffer of `n` bytes at address `b` containing a string of `n`-1 bytes (zero copy)
+  `interactive()` | set buffer size to 1 for console-based (TTY) input
   `flush()`       | flush the remaining input from the internal buffer
   `reset()`       | resets the matcher, restarting it from the remaining input
   `reset(o)`      | resets the matcher with new options string `o` ("A?N?T?")
@@ -1510,9 +1510,12 @@ generates <i>`lex.NAME.h`</i> with option `−−header-file`.
 
 #### `−−nostdinit`
 
-This option initializes input to `std::cin` instead of using `stdin`.
-Automatic UTF decoding is not supported.  Use `stdin` for automatic UTF BOM
-detection and UTF decoding of standard input streams, not `std::cin`.
+This option initializes input to `std::cin` instead of `stdin`, if no input was
+assigned to the scanner.  This option also prevents a scanner to automatically
+read `stdin` before any other input is assigned, when detecting UTF encodings
+on standard input.  Note that automatic UTF decoding is not supported on
+`std::cin`.  Use `stdin` for automatic UTF BOM detection and UTF decoding of
+standard input streams, not `std::cin`.
 
 #### `−−bison`
 
@@ -3233,16 +3236,15 @@ was not part of the input, which ensures that the current indent positions
 defined by `\i` are not affected.  See \ref reflex-pattern-dents for more
 details on indentation matching.
 
-Note that any actions corresponding to negative patterns in the lexer
-specification are never executed, because negative pattern matches are never
-returned by the matcher engine.
+@note Negative patterns may be preceded or followed by any pattern, which
+enlarges the negative pattern.  That is, the pattern `X(?^Y)` equals `(?^XY)`
+and the pattern `(?^Y)Z` equals `(?^YZ)`.  At least one character should be
+matched in a negative pattern for the pattern to be effective.  For example,
+`X(?^Y)?` matches `X` but not `XY`, which is the same as `X|(?^XY)`.
 
-@warning Negative patterns may be preceded by any pattern to enlarge the
-negative pattern.  That is, `X(?^Y)` equals `(?^XY)`.  However, when followed
-by a pattern `(?^X)Y` the matching behavior is currently not well defined.  For
-example `(?^ab)c` matches `abc` but ignores input `ab` when not followed by a
-`c`, as if the pattern was `(?^ab)c?`.  Future RE/flex updates will meet the
-requirement that patterns of the form `(?^X)Y` equal `(?^XY)`.
+@warning Actions corresponding to negative patterns in the lexer specification
+are never executed, because negative pattern matches are never returned by the
+matcher engine.
 
 🔝 [Back to table of contents](#)
 
@@ -4084,6 +4086,10 @@ input from some source of text:
 The `LexerInput` method may be invoked multiple times by the matcher engine
 and should eventually return zero to indicate the end of input is reached (e.g.
 when at EOF).
+
+To prevent the scanner from initializing the input to `stdin` before reading
+input with `LexerInput()`, use option `−−nostdinit`.
+
 
 🔝 [Back to table of contents](#)
 
@@ -7276,6 +7282,7 @@ interactive, you can use the following methods:
   `input(i)`      | set input to `reflex::Input i` (string, stream, or `FILE*`)
   `buffer()`      | buffer all input at once, returns true if successful
   `buffer(n)`     | set the adaptive buffer size to `n` bytes to buffer input
+  `buffer(b, n)`  | use buffer of `n` bytes at address `b` containing a string of `n`-1 bytes (zero copy)
   `interactive()` | sets buffer size to 1 for console-based (TTY) input
   `flush()`       | flush the remaining input from the internal buffer
   `reset()`       | resets the matcher, restarting it from the remaining input

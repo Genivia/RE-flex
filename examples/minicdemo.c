@@ -14,7 +14,7 @@
 // to run the code:
 //   $ java minicdemo
 
-// functions should be declared as a "function prototype" when not defined before used
+// because minic is a classic one-pass compiler, functions should be declared as a "function prototype" when not defined before used
 void init_statics();
 
 // a recursive function with conditional expression
@@ -24,15 +24,15 @@ int fac(int n)
 }
 
 // static variables are declared outside of function scopes and must be declared before used
-float pi; // a static variable; variables are not implicitly initialized
+float pi; // a static variable; variables are not implicitly initialized, using them uninitialized is a runtime error
 
-// the main function may return int or void and takes no arguments (its arguments are accessed with $1, $2, ...)
+// the main function may return int or void and takes no arguments, command line arguments are $1, $2, ..., $n with n = #$
 int main()
 {
   // locals are declared at the top of a function, not in blocks, and may be int, float or string
   int i;    // integers are signed 32 bit
   float x;  // floats are 64 bit (double precision)
-  string s; // strings are immutable and contain 16 bit wide chars
+  string s; // strings are immutable and contain 16 bit wide chars, they are assigned and passed to functions by reference
 
   // arrays of ints, floats, strings, and arrays-of-arrays can be declared
   string[] words;
@@ -43,12 +43,12 @@ int main()
   x = 0.0;
   s = "";
 
-  // arrays are passed and assigned by reference and are allocated with 'new'
-  words = new string[2];
+  // arrays are assigned and passed to functions by reference, they should be allocated with 'new' and are garbage collected
+  words = new string[2];    // array of two strings
   words[0] = "hello";
   words[1] = "world";
-  matrix = new float[][2];
-  matrix[0] = new float[3];
+  matrix = new float[][2];  // array of two arrays of floats
+  matrix[0] = new float[3]; // array of three floats
   matrix[1] = new float[3];
 
   // # returns the length of an array or string
@@ -163,7 +163,7 @@ int main()
   print "\"ab\" + 'c'  \t= ", "\"", "ab" + 'c',  "\"\n";
   print "\n";
 
-  // converting int to float and back is lossless
+  // converting int (32 bit) to float (64 bit) and back is lossless
   print "max int = ", i = x = i = 2147483647, "\n\n";
 
   // we have two system functions
@@ -178,4 +178,3 @@ void init_statics()
 {
   pi = 3.141592653589793; // initialize a static variable
 }
-

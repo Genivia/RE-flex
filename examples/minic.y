@@ -6,7 +6,8 @@
 // Ideas for compiler improvements (from easy to hard, roughly):
 // - add more library functions that compile to JVM virtual and static method invocations
 // - allow polymorphic functions instead of generating redeclaration errors
-// - add variable declaration initializers, e.g. int a=1; and/or implicit initialization
+// - add constant folding, i.e. Expr class contains U4, F8, and std::string constants to combine
+// - add variable declaration initializers, e.g. int a=1; and/or implicit initialization, requires init method to init statics
 // - allow variable declarations anywhere in code blocks, not just at the start of a function body 
 // - add structs/classes (structs without methods or classes with methods)
 // - add exceptions, e.g. 'try' and 'catch' blocks
