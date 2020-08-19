@@ -6,8 +6,8 @@ Examples with RE/flex C++ lexer methods
 ---------------------------------------
 
 - `minic.l,` `minic.y`, `minic.hpp`, and `minicdemo.c` Mini C compiler with Bison 3.2 C++ complete parser, generates Java bytecode in class files
-- `braille.l` a braille translator, inspired by the re2c example but extended and fixed to make it useable
-- `ptokens.l` and `pdefs.l` a Python tokenizer
+- `braille.l` a braille translator, inspired by the re2c example but extended and fixed to make it usable
+- `ptokens.l` and `pdefs.l` a Python source tokenizer
 - `calc.l` and `calc.y` calculator, supports Unicode identifier variables, resolves input errors
 - `csv.l` scanner to parse CSV rows from a file into a C++ vector
 - `yaml.l` YAML 1.2 parser and writer
@@ -15,7 +15,7 @@ Examples with RE/flex C++ lexer methods
 - `indent2.l` indentation detection and reformatting example, advanced with start conditions
 - `unicode.l` a very simple Unicode word matcher to demonstrate Unicode matching
 - `scanstrings.l` demonstrates string and buffer scanning
-- `mmap.l` demonstrates mmap(2) to scan C/C++ source code files fast
+- `mmap.l` demonstrates mmap(2) to scan C/C++ source code files fast with RE/flex read-only memory scanning
 - `gz.l` demonstrates scanning zlib-compressed (and uncompressed) C/C++ source code files
 - `dos.l` demonstrates scanning DOS-formatted files with `reflex::BufferedInput::dos_streambuf`
 - `fastfind.l` demonstrates fast search for patterns in input, rather than scanning the input
@@ -45,8 +45,8 @@ Examples with the backward-compatible Flex lexer functions
 ----------------------------------------------------------
 
 - `json.l` JSON parser and writer
-- `ctokens.l` and `cdefs.l` a C/C++ tokenizer
-- `jtokens.l` and `jdefs.l` a Java tokenizer, meets Java Lexical Structure requirements
+- `ctokens.l` and `cdefs.l` a C/C++ source tokenizer
+- `jtokens.l` and `jdefs.l` a Java source tokenizer, meets the official Java Lexical Structure requirements
 - `readline.l` demonstrates scanning with readline(3) interactive input
 - `yyscanstrings.l` demonstrates string and buffer scanning
 - `echo.l` classic interactive scanner to echo input

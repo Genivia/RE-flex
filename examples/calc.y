@@ -21,7 +21,8 @@
 %}
 
 // construct a bison-bridge parser that is reentrant
-%pure-parser
+// %pure-parser is the equivalent old declaration (deprecated)
+%define api.pure
 // bison-bridge passes the lexer to yylex() constructed with %option bison-bridge
 %lex-param   { Lexer *lexer }
 // to pass the lexer to yyparse()

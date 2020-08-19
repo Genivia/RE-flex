@@ -133,14 +133,17 @@ with MS Visual Studio C++.
 
 ### Unix/Linux and Mac OS X
 
-On Linux and macOS systems you can use [homebrew](https://brew.sh) to install
-RE/flex with `brew install re-flex`.
+On macOS systems you can use [homebrew](https://brew.sh) to install RE/flex
+with `brew install re-flex`.
+
+On NetBSD systems you can use the standard NetBSD package installer (pkgsrc):
+<http://cdn.netbsd.org/pub/pkgsrc/current/pkgsrc/devel/RE-flex/README.html>
 
 Otherwise, you have two options: 1) quick install or 2) configure and make.
 
 **Note:** GCC 8 and greater may produce warnings of the sort *"note: parameter
-passing for argument ... changed in GCC 7.1"*.  These warnings can be ignored
-because RE/flex is built and tested with GCC 8.3.
+passing for argument ... changed in GCC 7.1"*.  These warnings should be
+ignored.
 
 ### Quick install
 
@@ -515,6 +518,7 @@ Changelog
 - Jul  8, 2020: 2.1.1 added `%option params` to extend `lex()`/`yylex()` parameters; updated AVX2 detection for SIMD optimizations.
 - Jul  9, 2020: 2.1.2 minor update to fix MSVC++ compiler error.
 - Aug  3, 2020: 2.1.3 improved `--bison-bridge` option; updated examples.
+- Aug 19, 2020: 2.1.4 changed `IN_HEADER` to `yyIN_HEADER` when `--flex` is used with `--header-file`; added `reflex::Input::Handler` event handler for custom handling of `FILE*` errors and non-blocking `FILE*` streams.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

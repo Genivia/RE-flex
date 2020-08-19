@@ -313,8 +313,8 @@ readline:	readline.l
 
 calc:		calc.l calc.y
 		$(REFLEX) $(REFLAGS) calc.l
-		$(YACC) -d calc.y
-		$(CXX) $(CXXFLAGS) -o $@ y.tab.c lex.yy.cpp $(LIBREFLEX)
+		$(BISON) -d calc.y
+		$(CXX) $(CXXFLAGS) -o $@ calc.tab.c lex.yy.cpp $(LIBREFLEX)
 		./calc < calc.test
 
 wc:		wc.l

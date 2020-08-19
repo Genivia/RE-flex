@@ -5,13 +5,13 @@
 //   $ c++ -o minic parser.cpp scanner.cpp -lreflex
 // the last step without RE/flex install: c++ -I. -I../include -o minic parser.cpp scanner.cpp ../lib/libreflex.a
 //
-// compile this file with the minic compiler:
+// compile this file with the minic compiler to a minicdemo.class file:
 //   $ ./minic minicdemo.c
 //
 // to view the contents of the generated minicdemo.class file:
 //   $ javap -c minicdemo
 //
-// to run the code:
+// to run the code in a JVM:
 //   $ java minicdemo
 
 // because minic is a classic one-pass compiler, functions should be declared as a "function prototype" when not defined before used

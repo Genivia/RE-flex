@@ -566,6 +566,8 @@ matching the input from a console:
       std::cout << "Found " << matcher.text() << std::endl;
 ~~~
 
+Interactive input is slow to consume due to non-buffered input.
+
 We can also pattern match text from `FILE` descriptors.  The additional benefit
 of using `FILE` descriptors is the automatic decoding of UTF-16/32 input to
 UTF-8 by the `reflex::Input` class that manages input sources and their state.
@@ -2244,7 +2246,7 @@ create a new matcher, push/pop a matcher on/from a stack, and delete a matcher:
   `matcher(m)`      | `yy_switch_to_buffer(m)` | use matcher `m`
   `new_matcher(i)`  | `yy_create_buffer(i, n)` | returns new matcher for `reflex::Input i`
   `del_matcher(m)`  | `yy_delete_buffer(m)`    | delete matcher `m`
-  `push_matcher(m)` | `yypush_buffer_state(m)` | push current matcher, use `m`
+  `push_matcher(m)` | `yypush_buffer_state(m)` | push current matcher, then use `m`
   `pop_matcher()`   | `yypop_buffer_state()`   | pop matcher and delete current
   `ptr_matcher()`   | `YY_CURRENT_BUFFER`      | pointer to current matcher
   `has_matcher()`   | `YY_CURRENT_BUFFER != 0` | current matcher is usable
@@ -3887,7 +3889,7 @@ The following methods are available to specify a matcher `Matcher m` (a Flex
   `matcher(m)`      | `yy_switch_to_buffer(m)` | use matcher `m`
   `new_matcher(i)`  | `yy_create_buffer(i, n)` | returns new matcher for `reflex::Input i`
   `del_matcher(m)`  | `yy_delete_buffer(m)`    | delete matcher `m`
-  `push_matcher(m)` | `yypush_buffer_state(m)` | push current matcher, use `m`
+  `push_matcher(m)` | `yypush_buffer_state(m)` | push current matcher, then use `m`
   `pop_matcher()`   | `yypop_buffer_state()`   | pop matcher and delete current
   `ptr_matcher()`   | `YY_CURRENT_BUFFER`      | pointer to current matcher
   `has_matcher()`   | `YY_CURRENT_BUFFER != 0` | current matcher is usable
@@ -4043,9 +4045,12 @@ a `const char*` string that points to the internal buffer that is enlarged to
 contain all remaining input.  Copy the string before using the matcher again.
 
 To read a number of bytes `n` into a string buffer `s[0..n-1]`, use
-`matcher().in.get(s, n)`, which is the same as invoking the virtual method
-`matcher().get(s, n)`.  This matcher method can be overriden by a derived
-matcher class (to customize reading).
+the virtual `matcher().get(s, n)` method.  This method is the same as invoking
+`matcher().in.get(s, n)` to directly read data from the `reflex::Input` source
+`in`, but also handles interactive input when enabled with
+`matcher().interactive()` to not read beyond the next newline character.  The
+`gets, n)` matcher method can be overriden by a derived matcher class to
+customize reading.
 
 The Flex `YY_INPUT` macro is not supported by RE/flex.  It is recommended to
 use `YY_BUFFER_STATE` (Flex), which is a `reflex::FlexLexer::Matcher` class in
@@ -4055,9 +4060,9 @@ not have to be saved and restored when switching buffers).  See also section
 \ref reflex-spec on the actions to use.
 
 To implement a custom input handler you can use a proper object-oriented
-approach: create a derived class of `reflex::Matcher` (or
-`reflex::BoostPosixMatcher`) and in the derived class override the
-`size_t reflex::Matcher::get(char *s, size_t n)` method for input handling.
+approach: create a derived class of `reflex::Matcher` (or another matcher
+class derived from `reflex::AbstractMatcher`) and in the derived class override
+the `size_t reflex::Matcher::get(char *s, size_t n)` method for input handling.
 This function is called with a string buffer `s` of size `n` bytes.  Fill the
 string buffer `s` up to `n` bytes and return the number of bytes stored in `s`.
 Return zero upon EOF.  Use <b>`reflex`</b> options `−−matcher=NAME` and
@@ -5182,6 +5187,8 @@ is declared as follows in a Bison grammar file:
 ~~~
 </div>
 
+@note `%%pure-parser` is deprecated and replaced with `%%define api.pure`.
+
 With the `−−bison-bridge` option of <b>`reflex`</b>, the `yyscan_t` argument
 type of `yylex()` is a `void*` type that passes the scanner object to this
 global function (as defined by `YYPARSE_PARAM` and `YYLEX_PARAM`).  The
@@ -5316,6 +5323,8 @@ locations enabled:
     }
 ~~~
 </div>
+
+@note `%%pure-parser` is deprecated and replaced with `%%define api.pure`.
 
 @note When Bison <i>`%%locations`</i> with <i>`%%define api.pure full`</i> is
 used, `yyerror` has the signature `void yyerror(YYLTYPE *locp, char const
@@ -7309,10 +7318,13 @@ The `input()`, `winput()`, and `peek()` methods return a non-negative character
 code and EOF (-1) when the end of input is reached.
 
 A matcher reads from the specified input source using its virtual method
-`size_t get(char *s, size_t n)` that simply returns `in.get(s, n)`, that is,
-the result of the `reflex::Input::get(s, n)` method of the `reflex::Input`
-object.  The following protected methods may be overriden by a derived matcher
-class to customize reading:
+`size_t get(char *s, size_t n)`.  This method is the same as invoking
+`matcher().in.get(s, n)` to directly read data from the `reflex::Input` source
+`in`, but also handles interactive input when enabled with
+`matcher().interactive()` to not read beyond the next newline character.  
+
+The following protected methods may be overriden by a derived matcher class to
+customize reading:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
@@ -8397,8 +8409,10 @@ example on a semicolon in a \ref reflex-bison-bridge parser:
 ~~~
 </div>
 
-Note that the lexer keeps track of the number of errors.  When the maximum number
-of lexical and syntax errors is reached, we bail out.
+@note `%%pure-parser` is deprecated and replaced with `%%define api.pure`.
+
+We keep track of the number of errors by incrementing `lexer->errors`.  When
+the maximum number of lexical and syntax errors is reached, we bail out.
 
 The line of input where the syntax error occurs is reported with `yyerror()` for
 the \ref reflex-bison-bridge parser:
@@ -8451,6 +8465,8 @@ And the `yyerror()` function is updated as follows:
     }
 ~~~
 </div>
+
+@note `%%pure-parser` is deprecated and replaced with `%%define api.pure`.
 
 These examples assume that the syntax error was detected immediately at the
 last token scanned and displayed with `lexer->str()`, which may not always be
@@ -8784,11 +8800,18 @@ flushed repeately:
       std::cout << "we're not getting anywhere?" << std::endl;
 ~~~
 
-If you need to read a file or stream again, you must rewind it to the location
-in the file to start reading.  Beware that `FILE*` input is checked against an
-UTF BOM at the start of a file, which means that you cannot reliably move to a
-location in the file to start reading when files are encoded in UTF-8 or
-UTF-16.
+If you need to read a file or stream again, you have two options:
+
+1. Save the current matcher and its input state with `push_matcher(m)` or
+   `yypush_buffer_state(m)` to start using a new matcher `m`, e.g. created
+   with `Matcher m = new_matcher(i)` to consume the specified input `i`.
+   Restore the original matcher with `pop_matcher()` or `yypop_buffer_state()`.
+   See also \ref reflex-multiple-input.
+
+2. Rewind the file to the location in the file to start reading.  Beware
+   that `FILE*` input is checked against an UTF BOM at the start of a file,
+   which means that you cannot reliably move to an arbitrary location in the
+   file to start reading when the file is encoded in UTF-8, UTF-16, or UTF-32.
 
 🔝 [Back to table of contents](#)
 
@@ -8797,8 +8820,8 @@ Where is FlexLexer.h?                                              {#flexlexer}
 ---------------------
 
 RE/flex uses its own header file <i>`reflex/flexlexer.h`</i> for compatibility
-with Flex, instead of Flex file `FlexLexer.h`.  The latter is specific to Flex
-and cannot be used with RE/flex.  You should not have to include
+with Flex, instead of the Flex file `FlexLexer.h`.  The latter is specific to
+Flex and cannot be used with RE/flex.  You should not have to include
 <i>`FlexLexer.h`</i> but if you do, use:
 
 ~~~{.cpp}
@@ -8913,6 +8936,96 @@ example:
 🔝 [Back to table of contents](#)
 
 
+Registering a handler to support non-blocking reads                 {#nonblock}
+---------------------------------------------------
+
+When `FILE*` input is read, the read operation performed with an `fread` by the
+`reflex::Input` class should normally block until data is available.
+Otherwise, when no data is available, an EOF condition is set and further reads
+are blocked.
+
+To support error recovery and non-blocking `FILE*` input, an event handler
+can be registered.  This handler is invoked when no input is available (i.e.
+`fread` returns zero) and the end of the file is not reached yet (i.e. `feof()`
+returns zero).
+
+The handler should be derived from the `reflex::Inout::Handler` abstract base
+functor class as follows:
+
+~~~{.cpp}
+    struct NonBlockHandler : public reflex::Input::Handler {
+      NonBlockHandler(State& state)
+      :
+        state(state)
+      { }
+
+      // state info: the handler does not need to be stateless
+      // for example this can be the FILE* or reflex::Input object
+      State& state;
+
+      // the functor operator invoked by the reflex::Input class when fread()==0 and feof()==0
+      int operator()()
+      {
+        ... // perform some operation here
+
+        return 0; // do not continue, signals end of input
+        return 1; // continue reading, which may fail again
+      }
+    };
+~~~
+
+When your event handler allows non-blocking reads to continue, make sure that
+your handler does not return nonzero without delay.  A busy loop is otherwise
+the result that unnecessarily burns CPU cycles.  Instead of a fixed delay,
+`select()` can be effectively used to wait for input to become ready again:
+
+~~~{.cpp}
+    while (true)
+    {
+      struct timeval tv;
+      fd_set fds;
+      FD_ZERO(&fds);
+      int fd = fileno(in.file());
+      FD_SET(fd, &fds);
+      tv.tv_sec = 1;
+      tv.tv_usec = 0;
+      int r = ::select(fd + 1, &fds, NULL, &fds, &tv);
+      if (r < 0 && errno != EINTR)
+        return 0;
+      if (r > 0)
+        return 1;
+    }
+~~~
+
+Here we wait in periods of one second until data is pending on the `FILE*`
+stream `in.file()`, where `in` is a `reflex::Input` object.  This object can
+be part of the `NonBlockHandler` state.  A timeout can be implemented by
+bounding the number of loop iterations.
+
+Note that a `FILE*` stream is set to non-blocking mode in Unix/Linux with
+`fcntl()`.  Your handler is registered with `reflex::Input::set_handler()`:
+
+~~~{.cpp}
+    #include <fcntl.h>
+
+    FILE *file = ...;
+    int fd = fileno(file);
+    fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
+    reflex::Input in(file);
+    NonBlockHandler nonblock_handler(in);
+    in.set_handler(&nonblock_handler);
+    ...
+    fclose(in.file());
+~~~
+
+The custom event handler can also be used to detect and clear `FILE*` errors by
+checking if an error conditions exist on the `FILE*` input indicated by
+`ferror()`.  Errors are cleared with `clearerr()`.  Note that a non-blocking
+read that returns zero always produces nonzero `ferror()` values.
+
+🔝 [Back to table of contents](#)
+
+
 Undefined symbols and link errors                                {#link-errors}
 ---------------------------------
 
@@ -8970,8 +9083,8 @@ version of the RE/flex library `libreflexmin`:
 
       c++ ... -lreflexmin
 
-The regex converters and the Unicode tables that take up space are excluded
-from this minimized library.
+The regex Unicode converters and the Unicode tables that are not used at run
+time are excluded from the minimized library.
 
 🔝 [Back to table of contents](#)
 

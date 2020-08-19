@@ -18,7 +18,7 @@
   // fixes problem with Bison 2.7 that needs the Lexer class type:
   class REFLEX_OPTION_lexer;  // = %option lexer (which is 'Lexer' by default)
 
-  #include "y.tab.h"
+  #include "calc.tab.h"
 }
 
 %{

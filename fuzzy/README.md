@@ -23,6 +23,8 @@ Matcher class for efficient fuzzy matching and fuzzy search with regex patterns.
   to ensure that fuzzy matches do not extend the pattern match beyond the
   number of lines specified by the regex pattern
 
+- quote regex patterns with `\Q` and `\E` for fuzzy string matching and search
+
 - FuzzyMatcher is used in the [ugrep](https://github.com/Genivia/ugrep) project
 
 Examples

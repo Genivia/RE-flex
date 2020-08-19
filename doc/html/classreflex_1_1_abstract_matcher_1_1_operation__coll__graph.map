@@ -3,8 +3,9 @@
 <area shape="rect" id="node3" href="$structreflex_1_1_abstract_matcher_1_1_handler.html" title="Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched. " alt="" coords="188,337,347,379"/>
 <area shape="rect" id="node4" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="371,337,529,379"/>
 <area shape="rect" id="node5" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="553,345,645,371"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="554,248,645,275"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="535,157,664,199"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="522,81,677,108"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="549,5,649,32"/>
+<area shape="rect" id="node6" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="469,248,615,275"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="639,248,730,275"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="620,157,749,199"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="607,81,762,108"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="635,5,735,32"/>
 </map>

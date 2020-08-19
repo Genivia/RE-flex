@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::FlexLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Aug 3 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Aug 19 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -77,15 +77,16 @@ Collaboration diagram for reflex::FlexLexer&lt; M &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreflex_1_1_flex_lexer__coll__graph.png" border="0" usemap="#reflex_1_1_flex_lexer_3_01_m_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="reflex_1_1_flex_lexer_3_01_m_01_4_coll__map" id="reflex_1_1_flex_lexer_3_01_m_01_4_coll__map">
-<area shape="rect" id="node2" href="classreflex_1_1_abstract_lexer.html" title="The abstract lexer class template that is the abstract root class of all reflex&#45;generated scanners..." alt="" coords="981,108,1160,135"/>
-<area shape="rect" id="node4" href="classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. " alt="" coords="1273,43,1417,85"/>
-<area shape="rect" id="node6" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="788,108,880,135"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="541,107,632,133"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="361,95,490,137"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="155,144,309,171"/>
-<area shape="rect" id="node13" title="STL class. " alt="" coords="359,161,492,202"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="5,144,105,171"/>
-<area shape="rect" id="node12" title="STL class. " alt="" coords="656,160,752,187"/>
+<area shape="rect" id="node2" href="classreflex_1_1_abstract_lexer.html" title="The abstract lexer class template that is the abstract root class of all reflex&#45;generated scanners..." alt="" coords="1036,107,1215,133"/>
+<area shape="rect" id="node4" href="classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. " alt="" coords="1328,49,1472,90"/>
+<area shape="rect" id="node6" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="843,107,935,133"/>
+<area shape="rect" id="node7" href="structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="541,56,687,83"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="569,107,659,133"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="361,98,490,139"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="155,139,309,165"/>
+<area shape="rect" id="node14" title="STL class. " alt="" coords="359,163,492,205"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="5,139,105,165"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="711,161,807,188"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -208,7 +209,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a85d33059076b03430591e369b5ef96eb inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the current matcher, NULL if none was set.  <a href="#a85d33059076b03430591e369b5ef96eb">More...</a><br /></td></tr>
 <tr class="separator:a85d33059076b03430591e369b5ef96eb inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91254a55027878842695841c8caffdb3 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a91254a55027878842695841c8caffdb3">new_matcher</a> (const <a class="el" href="classreflex_1_1_input.html">Input</a> &amp;input=<a class="el" href="classreflex_1_1_input.html">Input</a>(), const char *opt=NULL)</td></tr>
-<tr class="memdesc:a91254a55027878842695841c8caffdb3 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new matcher for the given input.  <a href="#a91254a55027878842695841c8caffdb3">More...</a><br /></td></tr>
+<tr class="memdesc:a91254a55027878842695841c8caffdb3 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new copy of the matcher for the given input.  <a href="#a91254a55027878842695841c8caffdb3">More...</a><br /></td></tr>
 <tr class="separator:a91254a55027878842695841c8caffdb3 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45d00ce513ed727dc4fdde304fcb8d97 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a45d00ce513ed727dc4fdde304fcb8d97">del_matcher</a> (<a class="el" href="classreflex_1_1_abstract_lexer_1_1_matcher.html">Matcher</a> *<a class="el" href="classreflex_1_1_abstract_lexer.html#a70ee52cef2c37c2ca47a686eea75a5db">matcher</a>)</td></tr>
 <tr class="memdesc:a45d00ce513ed727dc4fdde304fcb8d97 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a matcher.  <a href="#a45d00ce513ed727dc4fdde304fcb8d97">More...</a><br /></td></tr>
@@ -868,7 +869,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Aug 3 2020 10:35:14 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Aug 19 2020 17:16:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

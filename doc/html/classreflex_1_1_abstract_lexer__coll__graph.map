@@ -1,10 +1,11 @@
 <map id="reflex::AbstractLexer&lt; M &gt;" name="reflex::AbstractLexer&lt; M &gt;">
-<area shape="rect" id="node3" href="$classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. " alt="" coords="1268,47,1412,89"/>
-<area shape="rect" id="node5" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="788,85,880,112"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="541,84,632,111"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="361,73,490,114"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="155,121,309,148"/>
-<area shape="rect" id="node12" title="STL class. " alt="" coords="359,138,492,179"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="5,121,105,148"/>
-<area shape="rect" id="node11" title="STL class. " alt="" coords="656,137,752,164"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_abstract_lexer_1_1_matcher.html" title="Extend matcher class M with a member pointing to the instantiating lexer class. " alt="" coords="1323,47,1467,89"/>
+<area shape="rect" id="node5" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="843,85,935,112"/>
+<area shape="rect" id="node6" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="541,35,687,61"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="569,85,659,112"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="361,77,490,118"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="155,117,309,144"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="359,142,492,183"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="5,117,105,144"/>
+<area shape="rect" id="node12" title="STL class. " alt="" coords="711,140,807,167"/>
 </map>
