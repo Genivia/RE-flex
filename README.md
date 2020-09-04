@@ -154,8 +154,8 @@ First clone the code:
 Then simply do a quick clean build, assuming your environment is pretty much
 standard:
 
-    $ sh clean.sh
-    $ sh build.sh
+    $ ./clean.sh
+    $ ./build.sh
 
 This compiles the **reflex** tool and installs it locally in `reflex/bin`.  For
 local use of RE/flex in your project, you can add this location to your `$PATH`
@@ -179,7 +179,7 @@ project are locally located in `include/reflex`.
 To install the man page, the header files in `/usr/local/include/reflex`, the
 library in `/usr/local/lib` and the `reflex` command in `/usr/local/bin`:
 
-    $ sudo sh allinstall.sh
+    $ sudo ./allinstall.sh
 
 ### Configure and make
 
