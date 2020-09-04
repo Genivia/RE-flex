@@ -6,11 +6,11 @@
 The regex-centric, fast lexical analyzer generator for C++ with full Unicode
 support.
 
-[RE/flex][reflex-url] is faster than Flex while providing a wealth of new
-features and contributions.  RE/flex is also much faster than regex libraries
-such as Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing
-a 2 KB representative C source code file into 244 tokens takes only 8
-microseconds:
+[RE/flex][reflex-url] is compatible with Flex lexer specifications and Bison
+parsers.  RE/flex is faster than Flex while providing a wealth of new features
+and contributions.  RE/flex is also much faster than regex libraries such as
+Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
+representative C source code file into 244 tokens takes only 8 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
@@ -32,25 +32,32 @@ microseconds:
 <tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>5979</td></tr>
 </table>
 
-Note: *Best times of 30 tests with average time in microseconds over 100 runs
-using Mac OS X 10.12.6 clang 9.0.0 -O2, 2.9 GHz Intel Core i7, 16 GB 2133 MHz
-LPDDR3.  Hyperscan disqualifies as a scanner due to its "All matches reported"
-semantics resulting in 1915 matches for this test, and due to its event handler
-requirements.* [Download the tests](https://www.genivia.com/files/perfcomp.zip)
-*Timings on other platforms may differ, though in the worst cases tested,
-reflex ran equally fast or slightly faster than the best times of Flex.*
+The performance table is indicative of the impact on performance when using
+PCRE2 and Boost.Regex with RE/flex.  PCRE2 and Boost.Regex are optional
+libraries integrated with RE/flex for Perl matching because of their
+efficiency.  By default, RE/flex uses DFA-based extended POSIX matching.
 
 The RE/flex matcher tracks line numbers, column numbers, and indentations,
 whereas Flex does not (option noyylineno) and neither do the other regex
-matchers in the table, except Boost.Regex with reflex.  Tracking this
-information incurs some overhead.
+matchers in the table, except PCRE2 and Boost.Regex when used with RE/flex.
+Tracking this information incurs some overhead.  RE/flex also automatically
+decodes UTF-8/16/32 input and accepts `std::istream`, strings and wide strings
+as input.
 
+Note: *Best times of 30 tests with average time in microseconds over 100 runs
+executed on the command line using Mac OS X 10.12.6 clang 9.0.0 -O2, 2.9 GHz
+Intel Core i7, 16 GB 2133 MHz LPDDR3.  Hyperscan disqualifies as a scanner due
+to its "All matches reported" semantics resulting in 1915 matches for this
+test, and due to its event handler requirements.*
+[Download the tests](https://www.genivia.com/files/perfcomp.zip)
+*Timings on other platforms may differ, though in the worst cases tested,
+reflex ran equally fast or slightly faster than the best times of Flex.*
 
 Features
 --------
 
-- Compatible with Flex to eliminate a learning curve, making a transition from
-  Flex++ to RE/flex frustration-free.
+- Compatible with Flex and Bison to eliminate a learning curve, making a
+  transition from Flex++ to RE/flex frustration-free.
 - Generates reusable source code that is easy to understand.
 - Integrates seamlessly with Bison and supports reentrant, bison-bridge,
   bison-locations, Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison
