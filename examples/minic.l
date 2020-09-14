@@ -36,7 +36,7 @@
 
  public:
 
-  // lookup a symbol in the "symbol table"
+  // lookup/insert a symbol in the "symbol table"
   ID symbol(const char *str)
   {
     return &*symbols.insert(str).first;
@@ -50,7 +50,7 @@
     int         token;
   };
 
-  // translate keyword to token or 0
+  // translate keyword to the corresponding token or return 0 if not a keyword
   int keyword_token(const char *str)
   {
     static const Keyword keywords[] =
@@ -86,13 +86,13 @@
     return 0;
   }
 
-  // lookup matched text() matching an {identifier}
+  // lookup/insert matched text() in the "symbol table" matching an {identifier}
   ID symbol()
   {
     return symbol(text());
   }
 
-  // lookup matched text() matching a quoted {string}
+  // lookup/insert matched text() int the "symbol table" matching a quoted {string}
   CS string()
   {
     return symbols.insert(translate_escapes()).first->c_str();
@@ -156,9 +156,60 @@
     return Parser::make_CS(string(), location());
   }
 
+  // file inclusion with #include
+  void include()
+  {
+    if (++depth > 9)
+    {
+      std::cerr << location() << ": too many nested #include, max is 9\n" << matcher().line() << "\n~\n";
+      exit(EXIT_FAILURE);
+    }
+    else
+    {
+      const char *str = strchr(text(), '"');
+      std::string name(str + 1, strlen(str) - 2);
+      FILE *fd = fopen(name.c_str(), "r");
+      if (fd == NULL)
+      {
+        std::cerr << location() << ": cannot open " << name << '\n' << matcher().line() << "\n~\n";
+        exit(EXIT_FAILURE);
+      }
+      else
+      {
+        filenames.push(filename);       // save the current file name of the lexer
+        filename = name;                // use the new file name for syntax error reporting
+        push_matcher(new_matcher(fd));  // push current matcher, use new matcher
+      }
+    }
+  }
+
+  // true if finished including one or more files, to stop scanning at EOF
+  bool end_of_file()
+  {
+    if (depth == 0)
+      return true;              // no more input to read
+    fclose(in());               // close current input in(), i.e. the FILE* opened in include()
+    pop_matcher();              // delete current matcher, pop previous matcher to use again
+    filename = filenames.top(); // restore the previous file name
+    filenames.pop();
+    depth--;
+    return false;               // continue reading
+  }
+
   // a symbol table
   std::set<std::string> symbols;
 
+  // stack of saved filenames that are currently in use with #include
+  std::stack<std::string> filenames;
+
+  // recursive depth of #include
+  size_t depth;
+
+}
+
+// Scanner class constructor
+%init{
+  depth = 0;
 }
 
 digit                           [0-9]
@@ -167,14 +218,16 @@ identifier                      {alpha} ( {alpha} | {digit} )*
 integer                         {digit}+ | 0 [xX] [0-9a-fA-F]+
 exp     	                [eE] [-+]? {digit}+
 float                           {digit}+ \. {digit}* {exp}?
-character                       \' ( \\. | [^\\'] )* \'
-string                          \" ( \\. | [^\\"] )* \"
+character                       \' ( \\. | [^\\'\n] )* \'
+string                          \" ( \\. | [^\\"\n] )* \"
+include                         "#" \h* "include" \h* {string}
 
 %%
 
 [[:space:]]+                    // skip white space
 "//".*                          // ignore inline comment
 "/*"(.|\n)*?"*/"                // ignore multi-line comment using a lazy regex pattern
+^ \h* {include}                 { include(); }
 {identifier}                    { return ID(); }
 {integer}                       { return U8(); }
 {float}                         { return FP(); }
@@ -202,6 +255,6 @@ string                          \" ( \\. | [^\\"] )* \"
 "--"                            { return Parser::symbol_type(Parser::token::TOKEN_NN, location()); }
 "->"                            { return Parser::symbol_type(Parser::token::TOKEN_AR, location()); }
 [!#$%&()*+,\-./:;<=>?\[\]^{|}~] { return Parser::symbol_type(chr(), location()); }
-<<EOF>>                         { return Parser::make_EOF(location()); }
+<<EOF>>                         { if (end_of_file()) return Parser::make_EOF(location()); }
 
 %%

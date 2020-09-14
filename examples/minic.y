@@ -49,11 +49,11 @@
 %expect 1
 
 // tokens with semantic values
-%token <ID> ID "Identifier";
-%token <U8> U8 "Integer";
-%token <F8> F8 "Float";
-%token <CS> CS "String";
-%token EOF  0  "End of file";
+%token <ID> ID "identifier";
+%token <U8> U8 "integer constant";
+%token <F8> F8 "float constant";
+%token <CS> CS "string literal";
+%token EOF  0  "end of file";
 
 %token
   BREAK    "break"
@@ -1050,7 +1050,7 @@ int main(int argc, char **argv)
   // keep track of the number of errors reported with yy:Parser::error()
   size_t errors = 0;
 
-  // construct a parser, needs the lexer and compiler for semantic actions
+  // construct a parser, needs the lexer for tokens and compiler for semantic actions
   yy::Parser parser(lexer, comp, errors);
 
   // parse and compile the source into a JVM class file
@@ -1075,13 +1075,13 @@ void yy::Parser::error(const location& loc, const std::string& msg)
   ++errors;
 
   std::cerr << loc << ": " << msg << std::endl;
-  if (loc.begin.line == loc.end.line && loc.begin.line == lexer.lineno())
+  if (loc.begin.line == loc.end.line && loc.begin.line == static_cast<int>(lexer.lineno()))
   {
     // the error is on the current line and spans only one line
     std::cerr << lexer.matcher().line() << std::endl;
-    for (size_t i = 0; i < loc.begin.column; ++i)
+    for (int i = 0; i < loc.begin.column; ++i)
       std::cerr << " ";
-    for (size_t i = loc.begin.column; i <= loc.end.column; ++i)
+    for (int i = loc.begin.column; i <= loc.end.column; ++i)
       std::cerr << "~";
     std::cerr << std::endl;
   }
@@ -1095,9 +1095,9 @@ void yy::Parser::error(const location& loc, const std::string& msg)
       lexer.push_matcher(m); // save the current matcher
       off_t pos = ftell(file); // save current position in the file
       fseek(file, 0, SEEK_SET); // go to the start of the file
-      for (size_t i = 1; i < loc.begin.line; ++i)
+      for (int i = 1; i < loc.begin.line; ++i)
         m->skip('\n'); // skip to the next line
-      for (size_t i = loc.begin.line; i <= loc.end.line; ++i)
+      for (int i = loc.begin.line; i <= loc.end.line; ++i)
       {
         std::cerr << m->line() << std::endl; // display offending line
         m->skip('\n'); // next line

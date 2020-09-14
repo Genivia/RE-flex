@@ -14,6 +14,8 @@
 // to run the code in a JVM:
 //   $ java minicdemo
 
+// #include "file.h" // #include files is supported, but #define is not
+
 // because minic is a classic one-pass compiler, functions should be declared as a "function prototype" when not defined before used
 void init_statics();
 
