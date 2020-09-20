@@ -97,7 +97,8 @@ Features
 The RE/flex software is fully self-contained.  No other libraries are required.
 PCRE2 and Boost.Regex are optional to use as regex engines.
 
-The RE/flex repo includes tokenizers for Java, Python, C/C++, JSON, XML, YAML.
+The RE/flex repo includes a Mini C compiler demo and tokenizers for Java,
+Python, C/C++, JSON, XML, YAML.
 
 
 Installation
@@ -526,6 +527,7 @@ Changelog
 - Jul  9, 2020: 2.1.2 minor update to fix MSVC++ compiler error.
 - Aug  3, 2020: 2.1.3 improved `--bison-bridge` option; updated examples.
 - Aug 19, 2020: 2.1.4 changed `IN_HEADER` to `yyIN_HEADER` when `--flex` is used with `--header-file`; added `reflex::Input::Handler` event handler for custom handling of `FILE*` errors and non-blocking `FILE*` streams.
+- Sep 20, 2020: 2.1.5 added matcher method `lineno(n)` to set or change the line number to `n`; added `yyset_lineno(n,s)` to `flexlexer.h`; updated Mini C compiler example.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
