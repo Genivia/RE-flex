@@ -38,11 +38,12 @@
 #define REFLEX_INPUT_H
 
 #include <reflex/utf8.h>
-#include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <string>
+
+#include <stdint.h>
 
 #if defined(HAVE_AVX512BW)
 # include <immintrin.h>
