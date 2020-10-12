@@ -528,6 +528,7 @@ Changelog
 - Aug  3, 2020: 2.1.3 improved `--bison-bridge` option; updated examples.
 - Aug 19, 2020: 2.1.4 changed `IN_HEADER` to `yyIN_HEADER` when `--flex` is used with `--header-file`; added `reflex::Input::Handler` event handler for custom handling of `FILE*` errors and non-blocking `FILE*` streams.
 - Sep 20, 2020: 2.1.5 added matcher method `lineno(n)` to set or change the line number to `n`; added `yyset_lineno(n,s)` to `flexlexer.h`; updated Mini C compiler example.
+- Oct 12, 2020: 3.0.0 fixed a regression bug since 2.0; redesigned internals to increase IO efficiency and regex pattern search speed.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

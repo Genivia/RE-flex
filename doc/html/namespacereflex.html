@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Sep 20 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Oct 12 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -49,7 +49,8 @@
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">reflex Namespace Reference</div>  </div>
 </div><!--header-->
@@ -168,6 +169,12 @@ Functions</h2></td></tr>
 <tr class="separator:aa303caed5382f8e85ae90061a2bc7163"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af28a7d81300acbe54be048b558352c22"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#af28a7d81300acbe54be048b558352c22">ztoa</a> (size_t n)</td></tr>
 <tr class="separator:af28a7d81300acbe54be048b558352c22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3596d5c6c1b9e8da035b7c9e0418155d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a3596d5c6c1b9e8da035b7c9e0418155d">have_HW_AVX512BW</a> ()</td></tr>
+<tr class="separator:a3596d5c6c1b9e8da035b7c9e0418155d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaab95927dea0d271f47c31c02368d37"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#adaab95927dea0d271f47c31c02368d37">have_HW_AVX2</a> ()</td></tr>
+<tr class="separator:adaab95927dea0d271f47c31c02368d37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe6bde132a91a505ed3f80248aafea93"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#abe6bde132a91a505ed3f80248aafea93">have_HW_SSE2</a> ()</td></tr>
+<tr class="separator:abe6bde132a91a505ed3f80248aafea93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3deed9d6b147d91074913f47c330d232"><td class="memTemplParams" colspan="2">template&lt;typename S1 , typename S2 &gt; </td></tr>
 <tr class="memitem:a3deed9d6b147d91074913f47c330d232"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a3deed9d6b147d91074913f47c330d232">is_disjoint</a> (const S1 &amp;s1, const S2 &amp;s2)</td></tr>
 <tr class="memdesc:a3deed9d6b147d91074913f47c330d232"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if sets <code>s1</code> and <code>s2</code> are disjoint.  <a href="#a3deed9d6b147d91074913f47c330d232">More...</a><br /></td></tr>
@@ -212,6 +219,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a713b79db623aa036afa3aa7f4fda8d5b"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a713b79db623aa036afa3aa7f4fda8d5b">wcs</a> (const std::string &amp;s)</td></tr>
 <tr class="memdesc:a713b79db623aa036afa3aa7f4fda8d5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert UTF-8 string to wide string.  <a href="#a713b79db623aa036afa3aa7f4fda8d5b">More...</a><br /></td></tr>
 <tr class="separator:a713b79db623aa036afa3aa7f4fda8d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a9b15f365bfbaf8ac295c4ce259cd6cd8"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a9b15f365bfbaf8ac295c4ce259cd6cd8">HW</a></td></tr>
+<tr class="separator:a9b15f365bfbaf8ac295c4ce259cd6cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="ab659f1b759d66631c2e2e32771af1200"></a>
@@ -403,6 +415,75 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="adaab95927dea0d271f47c31c02368d37"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::have_HW_AVX2 </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3596d5c6c1b9e8da035b7c9e0418155d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::have_HW_AVX512BW </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="abe6bde132a91a505ed3f80248aafea93"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::have_HW_SSE2 </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -976,10 +1057,23 @@ template&lt;typename S1 , typename S2 &gt; </div>
 
 </div>
 </div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="a9b15f365bfbaf8ac295c4ce259cd6cd8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t reflex::HW</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Sep 20 2020 12:47:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Oct 12 2020 08:48:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

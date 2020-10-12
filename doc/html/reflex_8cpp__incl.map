@@ -2,7 +2,7 @@
 <area shape="rect" id="node2" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="803,80,868,107"/>
 <area shape="rect" id="node3" href="$convert_8h.html" title="RE/flex regex converter. " alt="" coords="43,155,156,181"/>
 <area shape="rect" id="node4" href="$error_8h.html" title="RE/flex regex errors. " alt="" coords="109,229,207,256"/>
-<area shape="rect" id="node9" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="282,229,381,256"/>
+<area shape="rect" id="node9" href="$input_8h.html" title="RE/flex input character sequence class and HW accelleration. " alt="" coords="282,229,381,256"/>
 <area shape="rect" id="node10" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="148,304,240,331"/>
 <area shape="rect" id="node13" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="687,155,797,181"/>
 <area shape="rect" id="node14" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="738,229,829,256"/>

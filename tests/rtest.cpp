@@ -135,6 +135,9 @@ Test tests[] = {
   { "a*z", "", "", "azaazz", { 1, 1, 1 } },
   // Positive closure X+
   { "a+z", "", "", "azaaz", { 1, 1 } },
+  // Combi ? * +
+  { "a?b+|a", "", "", "baba", { 1, 1, 2 } },
+  { "a*b+|a", "", "", "baabaa", { 1, 1, 2, 2 } },
   // Iterations {n,m}
   { "ab{2}", "", "", "abbabb", { 1, 1 } },
   { "ab{2,3}", "", "", "abbabbb", { 1, 1 } },

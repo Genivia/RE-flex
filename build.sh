@@ -53,9 +53,13 @@ else
 # if not AVX512BW/AVX2/SSE2, check if this piece of metal has ARM NEON/AArch64
 cat > conftest.c << END
 #include <arm_neon.h>
-main() { uint64x2_t n; uint64_t m = vgetq_lane_u64(n, 0); }
+int main() { uint64x2_t n; uint64_t m = vgetq_lane_u64(n, 0); }
 END
-if cc -march=native -E conftest.c >& /dev/null ; then
+if cc -c conftest.c >& /dev/null ; then
+  CMFLAGS='-DHAVE_NEON'
+  echo "Compiling reflex with ARM NEON/AArch64 optimizations"
+  echo
+elif cc -march=native -E conftest.c >& /dev/null ; then
   if cc -march=native -c conftest.c >& /dev/null ; then
     CMFLAGS='-march=native -DHAVE_NEON'
   elif cc -march=native -mfpu=neon -c conftest.c >& /dev/null ; then

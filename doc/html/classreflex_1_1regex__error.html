@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::regex_error Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Sep 20 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Oct 12 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -170,6 +170,10 @@ Static Private Member Functions</h2></td></tr>
 <tr class="separator:a5d8cff181b136fcb3de021466e57b723"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f5621d417a346dec753867badcefba5"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1regex__error.html#a8f5621d417a346dec753867badcefba5">regex_error_message</a> (const char *message, const char *pattern, size_t <a class="el" href="classreflex_1_1regex__error.html#a48b97d698aaf312d39a67bbfccbd6dc6">pos</a>)</td></tr>
 <tr class="separator:a8f5621d417a346dec753867badcefba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00f205c206fc5c79d05505a48a341c03"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1regex__error.html#a00f205c206fc5c79d05505a48a341c03">displen</a> (const char *s, size_t k)</td></tr>
+<tr class="separator:a00f205c206fc5c79d05505a48a341c03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ccb4d5bebb0e0502501fa32d25236db"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1regex__error.html#a6ccb4d5bebb0e0502501fa32d25236db">disppos</a> (const char *s, size_t k)</td></tr>
+<tr class="separator:a6ccb4d5bebb0e0502501fa32d25236db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -372,6 +376,74 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns error code, a <a class="el" href="namespacereflex.html#a776c689092282b15974a151328083b2d" title="Regex syntax error exception error code. ">reflex::regex_error_type</a> constant. </p>
+
+</div>
+</div>
+<a class="anchor" id="a00f205c206fc5c79d05505a48a341c03"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static size_t reflex::regex_error::displen </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>k</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6ccb4d5bebb0e0502501fa32d25236db"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static const char* reflex::regex_error::disppos </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>k</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -944,7 +1016,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Sep 20 2020 12:47:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Oct 12 2020 08:48:27 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

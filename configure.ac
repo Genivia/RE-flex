@@ -1,7 +1,7 @@
-AC_INIT(re-flex,2.1)
+AC_INIT(re-flex,3.0)
 AM_INIT_AUTOMAKE([foreign])
 AM_CONFIG_HEADER(config.h)
-AC_COPYRIGHT([Copyright (C) 2016-2019 Robert van Engelen, Genivia Inc.])
+AC_COPYRIGHT([Copyright (C) 2016-2020 Robert van Engelen, Genivia Inc.])
 
 AC_HEADER_TIME
 
@@ -98,24 +98,31 @@ AC_MSG_CHECKING(for --disable-neon)
 if test "x$with_no_neon" = "xno"; then
   AC_MSG_RESULT(no)
   AC_MSG_CHECKING([whether ${CXX} supports ARM NEON/AArch64 intrinsics])
-  save_CXXFLAGS=$CXXFLAGS
-  CXXFLAGS="-march=native"
-  AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[#include <arm_neon.h>]], [[uint64x2_t n; uint64_t m = vgetq_lane_u64(n, 0);]])],
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <arm_neon.h>]], [[uint64x2_t n; uint64_t m = vgetq_lane_u64(n, 0);]])],
                     [mneon_ok=yes],
                     [mneon_ok=no])
   if test "x$mneon_ok" = "xyes"; then
-    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <arm_neon.h>]], [[uint64x2_t n; uint64_t m = vgetq_lane_u64(n, 0);]])],
+    SIMD_FLAGS="-DHAVE_NEON"
+  else
+    save_CXXFLAGS=$CXXFLAGS
+    CXXFLAGS="-march=native"
+    AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[#include <arm_neon.h>]], [[uint64x2_t n; uint64_t m = vgetq_lane_u64(n, 0);]])],
                       [mneon_ok=yes],
                       [mneon_ok=no])
     if test "x$mneon_ok" = "xyes"; then
-      SIMD_FLAGS="-march=native -DHAVE_NEON"
-    else
-      CXXFLAGS="-march=native -mfpu=neon"
       AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <arm_neon.h>]], [[uint64x2_t n; uint64_t m = vgetq_lane_u64(n, 0);]])],
                         [mneon_ok=yes],
                         [mneon_ok=no])
       if test "x$mneon_ok" = "xyes"; then
-        SIMD_FLAGS="-march=native -mfpu=neon -DHAVE_NEON"
+        SIMD_FLAGS="-march=native -DHAVE_NEON"
+      else
+        CXXFLAGS="-march=native -mfpu=neon"
+        AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <arm_neon.h>]], [[uint64x2_t n; uint64_t m = vgetq_lane_u64(n, 0);]])],
+                          [mneon_ok=yes],
+                          [mneon_ok=no])
+        if test "x$mneon_ok" = "xyes"; then
+          SIMD_FLAGS="-march=native -mfpu=neon -DHAVE_NEON"
+        fi
       fi
     fi
   fi

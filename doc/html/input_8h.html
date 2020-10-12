@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">input.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Sep 20 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Oct 12 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -51,13 +51,15 @@
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">input.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>RE/flex input character sequence class.  
+<p>RE/flex input character sequence class and HW accelleration.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="utf8_8h.html">reflex/utf8.h</a>&gt;</code><br />
 <code>#include &lt;cstdio&gt;</code><br />
@@ -121,9 +123,23 @@ Classes</h2></td></tr>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacereflex"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html">reflex</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a3596d5c6c1b9e8da035b7c9e0418155d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a3596d5c6c1b9e8da035b7c9e0418155d">reflex::have_HW_AVX512BW</a> ()</td></tr>
+<tr class="separator:a3596d5c6c1b9e8da035b7c9e0418155d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaab95927dea0d271f47c31c02368d37"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#adaab95927dea0d271f47c31c02368d37">reflex::have_HW_AVX2</a> ()</td></tr>
+<tr class="separator:adaab95927dea0d271f47c31c02368d37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe6bde132a91a505ed3f80248aafea93"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#abe6bde132a91a505ed3f80248aafea93">reflex::have_HW_SSE2</a> ()</td></tr>
+<tr class="separator:abe6bde132a91a505ed3f80248aafea93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a9b15f365bfbaf8ac295c4ce259cd6cd8"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a9b15f365bfbaf8ac295c4ce259cd6cd8">reflex::HW</a></td></tr>
+<tr class="separator:a9b15f365bfbaf8ac295c4ce259cd6cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>RE/flex input character sequence class. </p>
+<div class="textblock"><p>RE/flex input character sequence class and HW accelleration. </p>
 <dl class="section author"><dt>Author</dt><dd>Robert van Engelen - <a href="#" onclick="location.href='mai'+'lto:'+'eng'+'el'+'en@'+'ge'+'niv'+'ia'+'.co'+'m'; return false;">engel<span style="display: none;">.nosp@m.</span>en@g<span style="display: none;">.nosp@m.</span>enivi<span style="display: none;">.nosp@m.</span>a.co<span style="display: none;">.nosp@m.</span>m</a> </dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>(c) 2016-2020, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
 <dd>
@@ -131,7 +147,7 @@ Namespaces</h2></td></tr>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Sep 20 2020 12:47:55 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Oct 12 2020 08:48:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

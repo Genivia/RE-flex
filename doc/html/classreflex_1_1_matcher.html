@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Sep 20 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Oct 12 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -56,9 +56,7 @@
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
-<a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="classreflex_1_1_matcher-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">reflex::Matcher Class Reference</div>  </div>
@@ -520,15 +518,6 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a8862686f6d5680d4d0e5af146c4aed69"><td class="memTemplItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a8862686f6d5680d4d0e5af146c4aed69">convert</a> (T regex, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>)</td></tr>
 <tr class="memdesc:a8862686f6d5680d4d0e5af146c4aed69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a regex to an acceptable form, given the specified regex library signature <code>"[decls:]escapes[?+]"</code>, see <a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.  <a href="#a8862686f6d5680d4d0e5af146c4aed69">More...</a><br /></td></tr>
 <tr class="separator:a8862686f6d5680d4d0e5af146c4aed69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5958736d66654ba1f465237fe32f87f0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a5958736d66654ba1f465237fe32f87f0">have_HW_AVX512BW</a> ()</td></tr>
-<tr class="memdesc:a5958736d66654ba1f465237fe32f87f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check CPU hardware for AVX512BW capability.  <a href="#a5958736d66654ba1f465237fe32f87f0">More...</a><br /></td></tr>
-<tr class="separator:a5958736d66654ba1f465237fe32f87f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a581159d8945ca4495aa1a5600dc37761"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a581159d8945ca4495aa1a5600dc37761">have_HW_AVX2</a> ()</td></tr>
-<tr class="memdesc:a581159d8945ca4495aa1a5600dc37761"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check CPU hardware for AVX2 capability.  <a href="#a581159d8945ca4495aa1a5600dc37761">More...</a><br /></td></tr>
-<tr class="separator:a581159d8945ca4495aa1a5600dc37761"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6bfa49b2416332f3f908f96688035e2"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ac6bfa49b2416332f3f908f96688035e2">have_HW_SSE2</a> ()</td></tr>
-<tr class="memdesc:ac6bfa49b2416332f3f908f96688035e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check CPU hardware for SSE2 capability.  <a href="#ac6bfa49b2416332f3f908f96688035e2">More...</a><br /></td></tr>
-<tr class="separator:ac6bfa49b2416332f3f908f96688035e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
 Protected Types</h2></td></tr>
@@ -600,12 +589,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7a57145ce5ead569c3758be586d28f41">peek_more</a> ()</td></tr>
 <tr class="memdesc:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next character and grow the buffer to make more room if necessary.  <a href="#a7a57145ce5ead569c3758be586d28f41">More...</a><br /></td></tr>
 <tr class="separator:a7a57145ce5ead569c3758be586d28f41 inherit pro_methods_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
-Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:a2126409515d02718ca4afb95389b060b"><td class="memItemLeft" align="right" valign="top">static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a2126409515d02718ca4afb95389b060b">get_HW</a> ()</td></tr>
-<tr class="memdesc:a2126409515d02718ca4afb95389b060b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get CPU hardware info.  <a href="#a2126409515d02718ca4afb95389b060b">More...</a><br /></td></tr>
-<tr class="separator:a2126409515d02718ca4afb95389b060b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -713,12 +696,6 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a4fdfd4999a13a782643d33da7bd2b5cf inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a4fdfd4999a13a782643d33da7bd2b5cf">mat_</a></td></tr>
 <tr class="memdesc:a4fdfd4999a13a782643d33da7bd2b5cf inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if <a class="el" href="classreflex_1_1_abstract_matcher.html#ab880e6c8fe0df7c4ee7bb629aab41d0f" title="Returns nonzero capture index (i.e. true) if the entire input matches this matcher&#39;s pattern (and int...">AbstractMatcher::matches()</a> was successful  <a href="#a4fdfd4999a13a782643d33da7bd2b5cf">More...</a><br /></td></tr>
 <tr class="separator:a4fdfd4999a13a782643d33da7bd2b5cf inherit pro_attribs_classreflex_1_1_abstract_matcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
-Static Protected Attributes</h2></td></tr>
-<tr class="memitem:a9bf1c01c10d40158a2991e70a8a8cefb"><td class="memItemLeft" align="right" valign="top">static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a9bf1c01c10d40158a2991e70a8a8cefb">HW</a></td></tr>
-<tr class="memdesc:a9bf1c01c10d40158a2991e70a8a8cefb"><td class="mdescLeft">&#160;</td><td class="mdescRight">CPU hardware info[2].  <a href="#a9bf1c01c10d40158a2991e70a8a8cefb">More...</a><br /></td></tr>
-<tr class="separator:a9bf1c01c10d40158a2991e70a8a8cefb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -1942,31 +1919,6 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a2126409515d02718ca4afb95389b060b"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static uint64_t reflex::Matcher::get_HW </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get CPU hardware info. </p>
-
-</div>
-</div>
 <a class="anchor" id="a19ee864fe3ae325d28b900c7bd4b919a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2020,81 +1972,6 @@ template&lt;typename T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>(0,NULL) </dd></dl>
 
 <p>Implements <a class="el" href="classreflex_1_1_abstract_matcher.html#a68b6cc6ab090c4539b08fa575b34d065">reflex::AbstractMatcher</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a581159d8945ca4495aa1a5600dc37761"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool reflex::Matcher::have_HW_AVX2 </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Check CPU hardware for AVX2 capability. </p>
-
-</div>
-</div>
-<a class="anchor" id="a5958736d66654ba1f465237fe32f87f0"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool reflex::Matcher::have_HW_AVX512BW </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Check CPU hardware for AVX512BW capability. </p>
-
-</div>
-</div>
-<a class="anchor" id="ac6bfa49b2416332f3f908f96688035e2"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool reflex::Matcher::have_HW_SSE2 </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Check CPU hardware for SSE2 capability. </p>
 
 </div>
 </div>
@@ -2536,28 +2413,6 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a9bf1c01c10d40158a2991e70a8a8cefb"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint64_t reflex::Matcher::HW</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>CPU hardware info[2]. </p>
-
-</div>
-</div>
 <a class="anchor" id="a31187ae9febac87f463145c18d248476"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2696,7 +2551,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Sep 20 2020 12:47:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Oct 12 2020 08:48:27 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

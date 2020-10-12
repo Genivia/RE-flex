@@ -1,5 +1,5 @@
 <map id="abslexer.h" name="abslexer.h">
-<area shape="rect" id="node2" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="25,155,124,181"/>
+<area shape="rect" id="node2" href="$input_8h.html" title="RE/flex input character sequence class and HW accelleration. " alt="" coords="25,155,124,181"/>
 <area shape="rect" id="node8" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="273,80,412,107"/>
 <area shape="rect" id="node3" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="31,229,123,256"/>
 <area shape="rect" id="node9" href="$convert_8h.html" title="RE/flex regex converter. " alt="" coords="529,155,642,181"/>
