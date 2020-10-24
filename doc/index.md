@@ -7619,13 +7619,23 @@ See also \ref regex-input-dosstreambuf.
 
 🔝 [Back to table of contents](#)
 
-### DOS CRLF newlines                               {#regex-input-dosstreambuf}
+### Windows CRLF pairs                              {#regex-input-dosstreambuf}
 
-DOS files and other DOS or Windows input sources typically end lines with CRLF
-byte pairs, see \ref crlf.  To automatically replace CRLF by LF when reading
-files in "binary mode" you can use the `reflex::Input::dos_streambuf` class to
-construct a `std::istream` object.  This normalized stream can then be used as
-input to a RE/flex scanner or to a regex matcher:
+Reading files in Windows "binary mode" is recommended when the file is encoded
+in UTF-16 or UTF-32.  Reading a file in the default "text mode" replaces CRLF
+by LF and interprets ^Z (0x1A) as EOF.  Because a ^Z code may be part of a
+UTF-16 or UTF-32 multibyte sequence, this can cause premature EOF on Windows
+machines.  The latest RE/flex releases automatically switch `FILE*` input to
+binary mode on Windows systems when the file is encoded in UTF-16 or UTF-32.
+
+In addition, DOS files and other DOS or Windows input sources typically end
+lines with CRLF byte pairs, see \ref crlf.  Reading a file in binary mode
+retains these CRLF pairs.
+
+To automatically replace CRLF by LF when reading files in binary mode on
+Windows you can use the `reflex::Input::dos_streambuf` class to construct a
+`std::istream` object.  This normalized stream can then be used as input to a
+RE/flex scanner or to a regex matcher:
 
 ~~~{.cpp}
     reflex::Input input(...);                // create an Input object for some given input
@@ -8682,31 +8692,38 @@ See \ref regex-input-file to set file encodings.
 🔝 [Back to contents](#)
 
 
-Handling DOS CRLF newlines                                              {#crlf}
---------------------------
+Files with CRLF pairs                                                   {#crlf}
+---------------------
 
 DOS files and other DOS or Windows input sources typically end lines with CRLF
-byte pairs.  There are two ways to deal with CRLF pairs:
+byte pairs.  There are two ways to effectively deal with CRLF pairs:
 
 1. Use `reflex::Input::dos_streambuf` to automatically convert
-   \ref regex-input-dosstreambuf by creating a `std::istream` for the
-   specified `reflex::Input::dos_streambuf`.  Due to the extra layer
-   introduced in the input processing stack, this option adds some overhead but
-   requires no changes to the patterns and application code.
+   \ref regex-input-dosstreambuf by creating a `std::istream` for the specified
+   `reflex::Input::dos_streambuf`.  Due to the extra layer introduced in the
+   input processing stack, this option adds some overhead but requires no
+   changes to the patterns and application code.
 
-2. Rewrite the patterns to match both `\n` and `\r\n` to allow DOS CRLF input.
-   This is option is fast to process input, but requires specialized patterns
-   and the matched multi-line text will include `\r` (CR) characters that may
-   need to be dealt with by the application code.
+2. Rewrite the patterns to match both `\n` and `\r\n` to allow CRLF line
+   endings.  This is option is fast to process input, but requires specialized
+   patterns and the matched multi-line text will include `\r` (CR) characters
+   that may need to be dealt with by the application code.
 
-To rewrite your patterns to support DOS CRLF matching:
+To rewrite your patterns to support CRLF end-of-line matching:
 
 - Replace `\n` in patterns by `\r?\n`.
 
 - Replace `.*` in patterns by `([^\n\r]|\r[^\n])*` to match any non-newline
   characters.  Likewise replace `.+` by its longer version.  Note that a single
   `.` can still be used in patterns but may match a `\r` just before a `\n`
-  when a DOS CRLF is encountered.
+  when a CRLF is encountered.
+
+With the above changes, reading files on Windows systems in "binary mode" is
+recommended, i.e. open `FILE*` files with the `"rb"` mode.
+
+Reading a file in the default "text mode" interprets ^Z (0x1A) as EOF.  The
+latest RE/flex releases automatically switch `FILE*` input to binary mode on
+Windows systems when the file is encoded in UTF-16 or UTF-32, but not UTF-8.
 
 🔝 [Back to contents](#)
 

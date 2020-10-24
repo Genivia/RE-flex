@@ -35,13 +35,14 @@ representative C source code file into 244 tokens takes only 8 microseconds:
 The performance table is indicative of the impact on performance when using
 PCRE2 and Boost.Regex with RE/flex.  PCRE2 and Boost.Regex are optional
 libraries integrated with RE/flex for Perl matching because of their
-efficiency.  By default, RE/flex uses DFA-based extended POSIX matching.
+efficiency.  By default, RE/flex uses DFA-based extended POSIX matching,
+which is the fastest method as shown in the table.
 
 The RE/flex matcher tracks line numbers, column numbers, and indentations,
 whereas Flex does not (option noyylineno) and neither do the other regex
-matchers in the table, except PCRE2 and Boost.Regex when used with RE/flex.
+matchers in the table (except PCRE2 and Boost.Regex when used with RE/flex).
 Tracking this information incurs some overhead.  RE/flex also automatically
-decodes UTF-8/16/32 input and accepts `std::istream`, strings and wide strings
+decodes UTF-8/16/32 input and accepts `std::istream`, strings, and wide strings
 as input.
 
 Note: *Best times of 30 tests with average time in microseconds over 100 runs
@@ -529,6 +530,7 @@ Changelog
 - Aug 19, 2020: 2.1.4 changed `IN_HEADER` to `yyIN_HEADER` when `--flex` is used with `--header-file`; added `reflex::Input::Handler` event handler for custom handling of `FILE*` errors and non-blocking `FILE*` streams.
 - Sep 20, 2020: 2.1.5 added matcher method `lineno(n)` to set or change the line number to `n`; added `yyset_lineno(n,s)` to `flexlexer.h`; updated Mini C compiler example.
 - Oct 12, 2020: 3.0.0 fixed a regression bug since v2.x; redesigned internals to increase IO efficiency and regex pattern search speed.
+- Oct 24, 2020: 3.0.1 improved handling of UTF-16/32 file encodings on Windows to prevent ^Z eof when files are opened in text mode.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

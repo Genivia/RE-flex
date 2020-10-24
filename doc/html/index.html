@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Oct 12 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Oct 24 2020 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -126,7 +126,7 @@
 <li class="level3"><a href="#regex-input-file">FILE encodings</a></li>
 <li class="level3"><a href="#regex-input-properties">Input properties</a></li>
 <li class="level3"><a href="#regex-input-streambuf">Input streambuf</a></li>
-<li class="level3"><a href="#regex-input-dosstreambuf">DOS CRLF newlines</a></li>
+<li class="level3"><a href="#regex-input-dosstreambuf">Windows CRLF pairs</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#regex-examples">Examples                                                      </a></li>
@@ -137,7 +137,7 @@
 <li class="level2"><a href="#errors">Error reporting and recovery                                          </a></li>
 <li class="level2"><a href="#setlocale">On using setlocale                                                 </a></li>
 <li class="level2"><a href="#iso-8859-1">Scanning ISO-8859-1 (latin-1) files with a Unicode scanner        </a></li>
-<li class="level2"><a href="#crlf">Handling DOS CRLF newlines                                              </a></li>
+<li class="level2"><a href="#crlf">Files with CRLF pairs                                                   </a></li>
 <li class="level2"><a href="#cr">Handling old Macintosh files containing CR newlines                       </a></li>
 <li class="level2"><a href="#lazy">Lazy repetitions                                                        </a></li>
 <li class="level2"><a href="#trigraphs">Lazy optional patterns and trigraphs                               </a></li>
@@ -3096,11 +3096,13 @@ Input streambuf</h3>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(...);            <span class="comment">// create an Input object for some given input</span></div><div class="line"><a class="code" href="classreflex_1_1_input_1_1streambuf.html">reflex::Input::streambuf</a> buf(input); <span class="comment">// create a streambuf</span></div><div class="line">std::istream is(&amp;buf);</div><div class="line"><span class="keywordflow">if</span> (is.good())</div><div class="line">{</div><div class="line">  <span class="comment">// read the stream</span></div><div class="line">}</div></div><!-- fragment --><p>The <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> object may be created from strings, wide strings, streams, and <code>FILE*</code> values. These are readable as a <code>std::istream</code> via <code><a class="el" href="classreflex_1_1_input_1_1streambuf.html" title="Stream buffer for reflex::Input, derived from std::streambuf. ">reflex::Input::streambuf</a></code> that returns normalized UTF-8 characters. For <code>FILE*</code> values we can specify <a class="el" href="index.html#regex-input-file">FILE encodings</a> to normalize the encoded input to UTF-8.</p>
 <p>Keep in mind that adding a <code>std::istream</code> with <code><a class="el" href="classreflex_1_1_input_1_1streambuf.html" title="Stream buffer for reflex::Input, derived from std::streambuf. ">reflex::Input::streambuf</a></code> layer on top of the efficient <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> class will impact file reading performance, especially because <code><a class="el" href="classreflex_1_1_input_1_1streambuf.html" title="Stream buffer for reflex::Input, derived from std::streambuf. ">reflex::Input::streambuf</a></code> is unbuffered (despite its name). When performance is important, use the buffered version <code><a class="el" href="classreflex_1_1_buffered_input_1_1streambuf.html" title="Buffered stream buffer for reflex::Input, derived from std::streambuf. ">reflex::BufferedInput::streambuf</a></code>:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(...);                    <span class="comment">// create an Input object for some given input</span></div><div class="line"><a class="code" href="classreflex_1_1_buffered_input_1_1streambuf.html">reflex::BufferedInput::streambuf</a> buf(input); <span class="comment">// create a buffered streambuf</span></div><div class="line">std::istream is(&amp;buf);</div><div class="line"><span class="keywordflow">if</span> (is.good())</div><div class="line">{</div><div class="line">  <span class="comment">// read the stream</span></div><div class="line">}</div></div><!-- fragment --><p>Because the buffered vesion reads ahead to fill its buffer, the buffered version may not be suitable for interactive input.</p>
-<p>See also <a class="el" href="index.html#regex-input-dosstreambuf">DOS CRLF newlines</a>.</p>
+<p>See also <a class="el" href="index.html#regex-input-dosstreambuf">Windows CRLF pairs</a>.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="regex-input-dosstreambuf"></a>
-DOS CRLF newlines</h3>
-<p>DOS files and other DOS or Windows input sources typically end lines with CRLF byte pairs, see <a class="el" href="index.html#crlf">Handling DOS CRLF newlines </a>. To automatically replace CRLF by LF when reading files in "binary mode" you can use the <code><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html" title="Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf...">reflex::Input::dos_streambuf</a></code> class to construct a <code>std::istream</code> object. This normalized stream can then be used as input to a RE/flex scanner or to a regex matcher:</p>
+Windows CRLF pairs</h3>
+<p>Reading files in Windows "binary mode" is recommended when the file is encoded in UTF-16 or UTF-32. Reading a file in the default "text mode" replaces CRLF by LF and interprets ^Z (0x1A) as EOF. Because a ^Z code may be part of a UTF-16 or UTF-32 multibyte sequence, this can cause premature EOF on Windows machines. The latest RE/flex releases automatically switch <code>FILE*</code> input to binary mode on Windows systems when the file is encoded in UTF-16 or UTF-32.</p>
+<p>In addition, DOS files and other DOS or Windows input sources typically end lines with CRLF byte pairs, see <a class="el" href="index.html#crlf">Files with CRLF pairs </a>. Reading a file in binary mode retains these CRLF pairs.</p>
+<p>To automatically replace CRLF by LF when reading files in binary mode on Windows you can use the <code><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html" title="Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf...">reflex::Input::dos_streambuf</a></code> class to construct a <code>std::istream</code> object. This normalized stream can then be used as input to a RE/flex scanner or to a regex matcher:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(...);                <span class="comment">// create an Input object for some given input</span></div><div class="line"><a class="code" href="classreflex_1_1_input_1_1dos__streambuf.html">reflex::Input::dos_streambuf</a> buf(input); <span class="comment">// create a dos_streambuf</span></div><div class="line">std::istream is(&amp;buf);</div><div class="line"><span class="keywordflow">if</span> (is.good())</div><div class="line">{</div><div class="line">  <span class="comment">// read the stream</span></div><div class="line">}</div></div><!-- fragment --><p>Once the stream object is created it can be used to create a new input object for a RE/flex scanner, for example:</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (is.good())</div><div class="line">{</div><div class="line">  Lexer lexer(is); <span class="comment">// create a lexer</span></div><div class="line">  lexer.lex();     <span class="comment">// scan the normalized input (DOS CRLF -&gt; LF)</span></div><div class="line">}</div></div><!-- fragment --><p>or for a regex matcher that uses Boost.Regex or PCRE2:</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (is.good())</div><div class="line">{</div><div class="line">  <a class="code" href="classreflex_1_1_boost_matcher.html">reflex::BoostMatcher</a> matcher(<span class="stringliteral">&quot;\\w+&quot;</span>, is); <span class="comment">// read normalized input (DOS CRLF -&gt; LF)</span></div><div class="line">  <span class="keywordflow">while</span> (matcher.find() != 0)</div><div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Found &quot;</span> &lt;&lt; matcher.text() &lt;&lt; std::endl;</div><div class="line">}</div></div><!-- fragment --><p>Note that when the input is a <code>FILE*</code>, CRLF pairs are replaced by LF and UTF-16/32 encodings are automatically normalized to UTF-8 (when a UTF BOM is present in the file or you can specify <a class="el" href="index.html#regex-input-file">FILE encodings</a>).</p>
@@ -3234,17 +3236,19 @@ Scanning ISO-8859-1 (latin-1) files with a Unicode scanner        </h2>
 <p>See <a class="el" href="index.html#regex-input-file">FILE encodings</a> to set file encodings.</p>
 <p>🔝 <a href="#">Back to contents</a></p>
 <h2><a class="anchor" id="crlf"></a>
-Handling DOS CRLF newlines                                              </h2>
-<p>DOS files and other DOS or Windows input sources typically end lines with CRLF byte pairs. There are two ways to deal with CRLF pairs:</p>
+Files with CRLF pairs                                                   </h2>
+<p>DOS files and other DOS or Windows input sources typically end lines with CRLF byte pairs. There are two ways to effectively deal with CRLF pairs:</p>
 <ol type="1">
-<li>Use <code><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html" title="Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf...">reflex::Input::dos_streambuf</a></code> to automatically convert <a class="el" href="index.html#regex-input-dosstreambuf">DOS CRLF newlines</a> by creating a <code>std::istream</code> for the specified <code><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html" title="Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf...">reflex::Input::dos_streambuf</a></code>. Due to the extra layer introduced in the input processing stack, this option adds some overhead but requires no changes to the patterns and application code.</li>
-<li>Rewrite the patterns to match both <code>\n</code> and <code>\r\n</code> to allow DOS CRLF input. This is option is fast to process input, but requires specialized patterns and the matched multi-line text will include <code>\r</code> (CR) characters that may need to be dealt with by the application code.</li>
+<li>Use <code><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html" title="Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf...">reflex::Input::dos_streambuf</a></code> to automatically convert <a class="el" href="index.html#regex-input-dosstreambuf">Windows CRLF pairs</a> by creating a <code>std::istream</code> for the specified <code><a class="el" href="classreflex_1_1_input_1_1dos__streambuf.html" title="Stream buffer for reflex::Input to read DOS files, replaces CRLF by LF, derived from std::streambuf...">reflex::Input::dos_streambuf</a></code>. Due to the extra layer introduced in the input processing stack, this option adds some overhead but requires no changes to the patterns and application code.</li>
+<li>Rewrite the patterns to match both <code>\n</code> and <code>\r\n</code> to allow CRLF line endings. This is option is fast to process input, but requires specialized patterns and the matched multi-line text will include <code>\r</code> (CR) characters that may need to be dealt with by the application code.</li>
 </ol>
-<p>To rewrite your patterns to support DOS CRLF matching:</p>
+<p>To rewrite your patterns to support CRLF end-of-line matching:</p>
 <ul>
 <li>Replace <code>\n</code> in patterns by <code>\r?\n</code>.</li>
-<li>Replace <code>.*</code> in patterns by <code>([^\n\r]|\r[^\n])*</code> to match any non-newline characters. Likewise replace <code>.+</code> by its longer version. Note that a single <code>.</code> can still be used in patterns but may match a <code>\r</code> just before a <code>\n</code> when a DOS CRLF is encountered.</li>
+<li>Replace <code>.*</code> in patterns by <code>([^\n\r]|\r[^\n])*</code> to match any non-newline characters. Likewise replace <code>.+</code> by its longer version. Note that a single <code>.</code> can still be used in patterns but may match a <code>\r</code> just before a <code>\n</code> when a CRLF is encountered.</li>
 </ul>
+<p>With the above changes, reading files on Windows systems in "binary mode" is recommended, i.e. open <code>FILE*</code> files with the <code>"rb"</code> mode.</p>
+<p>Reading a file in the default "text mode" interprets ^Z (0x1A) as EOF. The latest RE/flex releases automatically switch <code>FILE*</code> input to binary mode on Windows systems when the file is encoded in UTF-16 or UTF-32, but not UTF-8.</p>
 <p>🔝 <a href="#">Back to contents</a></p>
 <h2><a class="anchor" id="cr"></a>
 Handling old Macintosh files containing CR newlines                       </h2>
@@ -3351,7 +3355,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Oct 12 2020 09:06:17 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Oct 24 2020 13:57:53 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

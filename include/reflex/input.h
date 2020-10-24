@@ -464,7 +464,7 @@ class Input {
       istream_(NULL),
       size_(0)
   {
-    init();
+    init(enc);
     if (file_encoding() == file_encoding::plain)
       file_encoding(enc, page);
   }
@@ -744,17 +744,17 @@ class Input {
     return utfx_;
   }
   /// Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the file size is known.
-  void init()
+  void init(file_encoding_type enc = file_encoding::plain)
   {
     std::memset(utf8_, 0, sizeof(utf8_));
     uidx_ = sizeof(utf8_);
     utfx_ = 0;
     page_ = NULL;
     if (file_ != NULL)
-      file_init();
+      file_init(enc);
   }
   /// Called by init() for a FILE*.
-  void file_init();
+  void file_init(file_encoding_type enc);
   /// Called by size() for a wstring.
   void wstring_size();
   /// Called by size() for a FILE*.
