@@ -62,7 +62,7 @@ int main()
 
   // test file, open a UTF-16 file with UTF-16 BOM
   FILE *fd = fopen("utf16lorem.txt", "r");
-  if (fd == NULL)
+  if (!fd)
     exit(EXIT_FAILURE);
   input = fd;
   // input.file_encoding(...); // optionally specify the encoding of the input file here
@@ -196,6 +196,8 @@ void make_buffered_streambuf2(reflex::Input& input, size_t size)
     std::cerr << cs << std::endl << "Failed reflex::Input::streambuf read() size=" << is.gcount() << std::endl;
     exit(EXIT_FAILURE);
   }
+
+  delete[] cs;
 }
 
 void make_buffered_dos_streambuf1(reflex::Input& input, size_t size)
@@ -229,5 +231,7 @@ void make_buffered_dos_streambuf2(reflex::Input& input, size_t size)
     std::cerr << cs << std::endl << "Failed reflex::Input::streambuf DOS read() size=" << is.gcount() << std::endl;
     exit(EXIT_FAILURE);
   }
+
+  delete[] cs;
 }
 

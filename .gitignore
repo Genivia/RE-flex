@@ -50,3 +50,8 @@ config.h
 config.status
 config.log
 stamp-h1
+
+# CMake
+cmake-build-*/*
+.idea/workspace.xml
+
