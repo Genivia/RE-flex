@@ -104,7 +104,7 @@ static std::string unicode_class(const char *s, int esc, convert_flag_type flags
   const int *wc = Unicode::range(s + (s[0] == '^'));
   if (wc != NULL)
   {
-    if (s[0] == '^')
+    if (s[0] == '^') // inverted class \P{C} or \p{^C}
     {
       if (wc[0] > 0x00)
       {
@@ -153,7 +153,7 @@ static std::string unicode_class(const char *s, int esc, convert_flag_type flags
         }
       }
       if (!regex.empty())
-        regex.resize(regex.size() - 1);
+        regex.pop_back();
     }
     else
     {
@@ -487,10 +487,10 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
     if (std::isalpha(wc) && is_modified(mod, 'i'))
     {
       // anycase: translate A to [Aa]
-      regex.append(&pattern[loc], pos - loc - 1).append("[");
+      regex.append(&pattern[loc], pos - loc - 1).push_back('[');
       regex.push_back(wc);
       regex.push_back(wc ^ 0x20);
-      regex.append("]");
+      regex.push_back(']');
     }
     else
     {
@@ -534,10 +534,10 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
           if (std::isalpha(wc) && is_modified(mod, 'i'))
           {
             // anycase: translate A to [Aa]
-            regex.append(&pattern[loc], pos - loc - 1).append("[");
+            regex.append(&pattern[loc], pos - loc - 1).push_back('[');
             regex.push_back(wc);
             regex.push_back(wc ^ 0x20);
-            regex.append("]");
+            regex.push_back(']');
           }
           else
           {
@@ -553,7 +553,7 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
           // translate \u{X}, \uXXXX, \uDXXX\uDYYY, and \x{X} to UTF-8 pattern
           char buf[8];
           buf[utf8(wc, buf)] = '\0';
-          regex.append(&pattern[loc], pos - loc - 1).append(par).append(buf).append(")");
+          regex.append(&pattern[loc], pos - loc - 1).append(par).append(buf).push_back(')');
         }
         else
         {
@@ -653,6 +653,61 @@ static const std::string& expand(const std::map<std::string,std::string> *macros
 //  Regex converter bracket list character class conversions                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
+
+static std::string convert_unicode_ranges(const ORanges<int>& ranges, convert_flag_type flags, const char *signature, const char *par)
+{
+  std::string regex;
+  int esc = hex_or_octal_escape(signature);
+  for (ORanges<int>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
+    regex.append(utf8(i->first, i->second - 1, esc, par, !(flags & convert_flag::permissive))).push_back('|');
+  regex.pop_back();
+  regex.insert(0, par).push_back(')');
+  return regex;
+}
+
+static std::string convert_posix_ranges(const ORanges<int>& ranges, const char *signature)
+{
+  int esc = hex_or_octal_escape(signature);
+  std::string regex;
+  bool negate = ranges.lo() == 0x00 && ranges.hi() >= 0x7F;
+  if (negate && ranges.size() > 1)
+  {
+    ORanges<int> inverse(0x00, 0xFF);
+    inverse -= ranges;
+    regex = "[^";
+    for (ORanges<int>::const_iterator i = inverse.begin(); i != inverse.end(); ++i)
+      regex.append(latin1(i->first, i->second - 1, esc, false));
+  }
+  else
+  {
+    regex = "[";
+    for (ORanges<int>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
+      regex.append(latin1(i->first, i->second - 1, esc, false));
+  }
+  regex.push_back(']');
+  return regex;
+}
+
+static void convert_anycase_ranges(ORanges<int>& ranges)
+{
+  ORanges<int> letters;
+  letters.insert('A', 'Z');
+  letters.insert('a', 'z');
+  letters &= ranges;
+  for (ORanges<int>::const_iterator i = letters.begin(); i != letters.end(); ++i)
+    ranges.insert(i->first ^ 0x20, (i->second - 1) ^ 0x20);
+}
+
+static std::string convert_ranges(const char *pattern, size_t pos, ORanges<int>& ranges, const std::map<size_t,std::string>& mod, convert_flag_type flags, const char *signature, const char *par)
+{
+  if (is_modified(mod, 'i'))
+    convert_anycase_ranges(ranges);
+  if (is_modified(mod, 'u') && ranges.hi() > 0x7F)
+    return convert_unicode_ranges(ranges, flags, signature, par);
+  if (ranges.hi() > 0xFF)
+    throw regex_error(regex_error::invalid_class, pattern, pos);
+  return convert_posix_ranges(ranges, signature);
+}
 
 static void expand_list(const char *pattern, size_t len, size_t& loc, size_t& pos, convert_flag_type flags, const std::map<size_t,std::string>& mod, const char *signature, const char *par, const std::map<std::string,std::string> *macros, std::string& regex)
 {
@@ -1082,6 +1137,8 @@ static void extend_list(const char *pattern, size_t len, size_t& pos, convert_fl
 
 static void negate_list(convert_flag_type flags, const std::map<size_t,std::string>& mod, ORanges<int>& ranges)
 {
+  if (is_modified(mod, 'i'))
+    convert_anycase_ranges(ranges);
   if (is_modified(mod, 'u'))
   {
     ORanges<int> inverse(0x00, 0x10FFFF);
@@ -1209,60 +1266,6 @@ static void insert_list(const char *pattern, size_t len, size_t& pos, convert_fl
     throw regex_error(regex_error::empty_class, pattern, loc);
 }
 
-static std::string convert_unicode_ranges(const ORanges<int>& ranges, convert_flag_type flags, const char *signature, const char *par)
-{
-  std::string regex;
-  int esc = hex_or_octal_escape(signature);
-  for (ORanges<int>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
-    regex.append(utf8(i->first, i->second - 1, esc, par, !(flags & convert_flag::permissive))).push_back('|');
-  regex.resize(regex.size() - 1);
-  regex.insert(0, par).push_back(')');
-  return regex;
-}
-
-static std::string convert_posix_ranges(const ORanges<int>& ranges, const char *signature)
-{
-  int esc = hex_or_octal_escape(signature);
-  std::string regex;
-  bool negate = ranges.lo() == 0x00 && ranges.hi() >= 0x7F;
-  if (negate && ranges.size() > 1)
-  {
-    ORanges<int> inverse(0x00, 0xFF);
-    inverse -= ranges;
-    regex = "[^";
-    for (ORanges<int>::const_iterator i = inverse.begin(); i != inverse.end(); ++i)
-      regex.append(latin1(i->first, i->second - 1, esc, false));
-  }
-  else
-  {
-    regex = "[";
-    for (ORanges<int>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
-      regex.append(latin1(i->first, i->second - 1, esc, false));
-  }
-  return regex.append("]");
-}
-
-static void convert_anycase_ranges(ORanges<int>& ranges)
-{
-  ORanges<int> letters;
-  letters.insert('A', 'Z');
-  letters.insert('a', 'z');
-  letters &= ranges;
-  for (ORanges<int>::const_iterator i = letters.begin(); i != letters.end(); ++i)
-    ranges.insert(i->first ^ 0x20, (i->second - 1) ^ 0x20);
-}
-
-static std::string convert_ranges(const char *pattern, size_t pos, ORanges<int>& ranges, const std::map<size_t,std::string>& mod, convert_flag_type flags, const char *signature, const char *par)
-{
-  if (is_modified(mod, 'i'))
-    convert_anycase_ranges(ranges);
-  if (is_modified(mod, 'u') && ranges.hi() > 0x7F)
-    return convert_unicode_ranges(ranges, flags, signature, par);
-  if (ranges.hi() > 0xFF)
-    throw regex_error(regex_error::invalid_class, pattern, pos);
-  return convert_posix_ranges(ranges, signature);
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
 //  Regex converter                                                           //
@@ -1311,11 +1314,19 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
       else if (!invert)
       {
         if (supports_modifier(signature, pattern[k]))
+        {
           mods.push_back(pattern[k]);
+          if (pattern[k] == 'i' && (flags & convert_flag::unicode))
+            enable_modifier(pattern[k], pattern, k, mod, lev);
+        }
         else if (pattern[k] == 'm')
+        {
           throw regex_error(regex_error::invalid_modifier, pattern, pos);
+        }
         else
+        {
           enable_modifier(pattern[k], pattern, k, mod, lev);
+        }
       }
       else
       {
@@ -1338,7 +1349,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           regex.append(mods);
         if (!unmods.empty())
           regex.append("-").append(unmods);
-        regex.append(")");
+        regex.push_back(')');
       }
       pos = k + 1;
       loc = pos;
@@ -1355,7 +1366,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
   if ((flags & convert_flag::recap))
   {
     // recap: translate x|y to (x)|(y)
-    regex.append(&pattern[loc], pos - loc).append("(");
+    regex.append(&pattern[loc], pos - loc).push_back('(');
     loc = pos;
   }
   while (pos < len)
@@ -1409,7 +1420,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           if (!is_modified(mod, 'u') || !supports_escape(signature, 'R'))
           {
             // translate \R to match Unicode line break U+000D U+000A | [U+000A - U+000D] | U+0085 | U+2028 | U+2029
-            regex.append(&pattern[loc], pos - loc - 1).append(par).append("\\r\\n|[\\x0a-\\x0d]|\\xc2\\x85|\\xe2\\x80[\\xa8\\xa9]").append(")");
+            regex.append(&pattern[loc], pos - loc - 1).append(par).append("\\r\\n|[\\x0a-\\x0d]|\\xc2\\x85|\\xe2\\x80[\\xa8\\xa9]").push_back(')');
             loc = pos + 1;
           }
           beg = false;
@@ -1420,10 +1431,10 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           {
 #ifndef WITH_UTF8_UNRESTRICTED
             // translate \X to match any ISO-8859-1 and valid UTF-8
-            regex.append(&pattern[loc], pos - loc - 1).append(par).append("[\\x00-\\xff]|[\\xc2-\\xdf][\\x80-\\xbf]|\\xe0[\\xa0-\\xbf][\\x80-\\xbf]|[\\xe1-\\xec][\\x80-\\xbf][\\x80-\\xbf]|\\xed[\\x80-\\x9f][\\x80-\\xbf]|[\\xee\\xef][\\x80-\\xbf][\\x80-\\xbf]|\\xf0[\\x90-\\xbf][\\x80-\\xbf][\\x80-\\xbf]|[\\xf1-\\xf3][\\x80-\\xbf][\\x80-\\xbf][\\x80-\\xbf]|\\xf4[\\x80-\\x8f][\\x80-\\xbf][\\x80-\\xbf]").append(")");
+            regex.append(&pattern[loc], pos - loc - 1).append(par).append("[\\x00-\\xff]|[\\xc2-\\xdf][\\x80-\\xbf]|\\xe0[\\xa0-\\xbf][\\x80-\\xbf]|[\\xe1-\\xec][\\x80-\\xbf][\\x80-\\xbf]|\\xed[\\x80-\\x9f][\\x80-\\xbf]|[\\xee\\xef][\\x80-\\xbf][\\x80-\\xbf]|\\xf0[\\x90-\\xbf][\\x80-\\xbf][\\x80-\\xbf]|[\\xf1-\\xf3][\\x80-\\xbf][\\x80-\\xbf][\\x80-\\xbf]|\\xf4[\\x80-\\x8f][\\x80-\\xbf][\\x80-\\xbf]").push_back(')');
 #else
             // translate \X to match any ISO-8859-1 and UTF-8 encodings, including malformed UTF-8 with overruns
-            regex.append(&pattern[loc], pos - loc - 1).append(par).append("[\\x00-\\xff]|[\\xc0-\\xff][\\x80-\\xbf]+").append(")");
+            regex.append(&pattern[loc], pos - loc - 1).append(par).append("[\\x00-\\xff]|[\\xc0-\\xff][\\x80-\\xbf]+").push_back(')');
 #endif
             loc = pos + 1;
           }
@@ -1601,7 +1612,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           if (lap == lev)
           {
             // lex lookahead: translate ) to ))
-            regex.append(&pattern[loc], pos - loc).append(")");
+            regex.append(&pattern[loc], pos - loc).push_back(')');
             loc = pos;
             lap = 0;
           }
@@ -1626,7 +1637,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           if (lap == lev)
           {
             // lex lookahead: translate | to )|
-            regex.append(&pattern[loc], pos - loc).append(")");
+            regex.append(&pattern[loc], pos - loc).push_back(')');
             loc = pos;
             lap = 0;
           }
@@ -1720,7 +1731,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
               }
               ++pos;
             }
-            regex.append(&pattern[loc], pos - loc).append(")");
+            regex.append(&pattern[loc], pos - loc).push_back(')');
             if (k < pos)
               beg = false;
           }
@@ -1746,7 +1757,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
               }
               ++pos;
             }
-            regex.append(&pattern[loc], pos - loc).append("\\E").append(")");
+            regex.append(&pattern[loc], pos - loc).append("\\E").push_back(')');
             if (k < pos)
               beg = false;
           }
@@ -1791,7 +1802,7 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
             }
             else
             {
-              regex.append(par).append(subregex).append(")");
+              regex.append(par).append(subregex).push_back(')');
             }
             loc = pos + (pattern[pos] == '\\') + 1;
             anc = false;
@@ -1954,20 +1965,20 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
           if (is_modified(mod, 'i'))
           {
             // anycase: translate A to [Aa]
-            regex.append(&pattern[loc], pos - loc).append("[");
+            regex.append(&pattern[loc], pos - loc).push_back('[');
             regex.push_back(c);
             regex.push_back(c ^ 0x20);
-            regex.append("]");
+            regex.push_back(']');
             loc = pos + 1;
           }
         }
         else if ((c & 0xC0) == 0xC0 && is_modified(mod, 'u'))
         {
           // unicode: group UTF-8 sequence
-          regex.append(&pattern[loc], pos - loc).append(par).push_back(c);
+          regex.append(&pattern[loc], pos - loc).append(par);
           while (((c = pattern[++pos]) & 0xC0) == 0x80)
-            regex.push_back(c);
-          regex.append(")");
+            continue;
+          regex.append(pattern + loc, pos - loc).push_back(')');
           loc = pos;
           --pos;
         }
@@ -1984,9 +1995,9 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
     throw regex_error(regex_error::empty_expression, pattern, pos);
   regex.append(&pattern[loc], pos - loc);
   if (lap > 0)
-    regex.append(")");
+    regex.push_back(')');
   if ((flags & convert_flag::recap))
-    regex.append(")");
+    regex.push_back(')');
   return regex;
 }
 

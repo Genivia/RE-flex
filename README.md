@@ -59,10 +59,12 @@ Features
 
 - Compatible with Flex and Bison to eliminate a learning curve, making a
   transition from Flex++ to RE/flex frustration-free.
+- IEEE POSIX P1003.2 standard compliant (like Lex and Flex).
+- Includes methods for lex/syntax error reporting and recovery.
 - Generates reusable source code that is easy to understand.
-- Integrates seamlessly with Bison and supports reentrant, bison-bridge,
-  bison-locations, Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison
-  complete symbols.
+- Integrates seamlessly with Bison and generates Reentrant, Bison-Bridge,
+  Bison-Locations, Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison
+  Complete Symbols.
 - Fully supports Unicode and Unicode properties `\p{C}`, including Unicode
   identifier matching for C++11, Java, C#, and Python source code.
 - Auto-detects UTF-8/16/32 input to match Unicode patterns.
@@ -531,6 +533,7 @@ Changelog
 - Sep 20, 2020: 2.1.5 added matcher method `lineno(n)` to set or change the line number to `n`; added `yyset_lineno(n,s)` to `flexlexer.h`; updated Mini C compiler example.
 - Oct 12, 2020: 3.0.0 fixed a regression bug since v2.x; redesigned internals to increase IO efficiency and regex pattern search speed.
 - Oct 24, 2020: 3.0.1 improved handling of UTF-16/32 file encodings on Windows to prevent ^Z eof when files are opened in text mode.
+- Mar 16, 2021: 3.0.2 minor improvements and additions; fixed MinGW builds.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

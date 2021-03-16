@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">Reflex Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Oct 24 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Mar 16 2021 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -302,6 +302,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a8924b6e4c378a6c02e84e55bb73025d1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a8924b6e4c378a6c02e84e55bb73025d1">is</a> (const char *s)</td></tr>
 <tr class="memdesc:a8924b6e4c378a6c02e84e55bb73025d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match case-insensitive string s while ignoring the rest of the line, return true if OK.  <a href="#a8924b6e4c378a6c02e84e55bb73025d1">More...</a><br /></td></tr>
 <tr class="separator:a8924b6e4c378a6c02e84e55bb73025d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57cce94afb743a343bd176f5c532660d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a57cce94afb743a343bd176f5c532660d">ins</a> (const char *s)</td></tr>
+<tr class="memdesc:a57cce94afb743a343bd176f5c532660d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match case-insensitive string s at any indent while ignoring the rest of the line, return true if OK.  <a href="#a57cce94afb743a343bd176f5c532660d">More...</a><br /></td></tr>
+<tr class="separator:a57cce94afb743a343bd176f5c532660d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a912cf86121c6df25d06a049db13fe3fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_reflex.html#a912cf86121c6df25d06a049db13fe3fa">br</a> (size_t pos, const char *s=NULL)</td></tr>
 <tr class="memdesc:a912cf86121c6df25d06a049db13fe3fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match s then look for a '{' at the end of the line (skipping whitespace) and return true, false otherwise (pos is unchanged)  <a href="#a912cf86121c6df25d06a049db13fe3fa">More...</a><br /></td></tr>
 <tr class="separator:a912cf86121c6df25d06a049db13fe3fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1076,6 +1079,32 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="class_reflex.html" title="RE/flex scanner generator class, a variation of the classic &quot;lex&quot; tool to generate scanners...">Reflex</a> initialization. </p>
+
+</div>
+</div>
+<a class="anchor" id="a57cce94afb743a343bd176f5c532660d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Reflex::ins </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Match case-insensitive string s at any indent while ignoring the rest of the line, return true if OK. </p>
 
 </div>
 </div>
@@ -2589,7 +2618,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Oct 24 2020 13:57:47 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Mar 16 2021 14:06:44 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -25,8 +25,10 @@ Features:
 
 - faster than Flex++ for typical applications such as tokenization;
 - accepts Flex/Lex lexer specifications, extended to support Unicode;
-- fully supports Unicode, auto-detects UTF-8/16/32 input;
+- IEEE POSIX P1003.2 standard compliant (like Lex and Flex);
+- fully supports Unicode, auto-detects UTF-8/16/32 with smart input handling;
 - supports legacy file encoding formats, e.g. CP 1250, EBCDIC.
+- offers methods for lex/syntax \ref errors;
 - easily integrates with Bison reentrant, C++, bridge and location parsers;
 - generates source code that is easy to understand;
 - generates thread-safe scanners;
@@ -1351,12 +1353,12 @@ encoded character in a regex is properly matched as one wide character.
 #### `-x`, `−−freespace`
 
 This option switches the <b>`reflex`</b> scanner to *free space mode*.  Regular
-expressions in free space mode may contain spacing to improve readability.
-Spacing within regular expressions is ignored, so use `" "` or `[ ]` to match a
-space and `\h` to match a space or a tab character.  Actions in free space mode
-MUST be placed in <i>`{ }`</i> blocks and user code must be placed in
-<i>`%{ %}`</i> blocks.  Patterns ending in an escape `\` continue on the next
-line.
+expressions in free space mode may contain spacing and may be indented to
+improve readability.  All spacing before, within and after regular expressions
+is ignored.  To match a space use `" "` or `[ ]`, and use `\h` to match a space
+or a tab character.  Actions in free space mode MUST be placed in <i>`{ }`</i>
+blocks and user code must be placed in <i>`%{ %}`</i> blocks.  Patterns ending
+in an escape `\` continue on the next line.
 
 🔝 [Back to table of contents](#)
 
@@ -4424,9 +4426,11 @@ construct is only useful when the empty scope is extended by start conditions
 specified in sub-scopes.
 
 @note Contrary to some Flex manuals, rules cannot be indented in a start
-condition scope in Flex and RE/flex.  When a code block is specified indented
-at the begin of a start condition scope it is considered an initial code block,
-see \ref reflex-code-blocks.
+condition scope.  When a code block is indented at the begin of a start
+condition scope it is considered an initial code block, see \ref
+reflex-code-blocks.  All indented lines are considered actions.  Note that
+<i>`%%option freespace`</i> allows patterns to be indented.  With this option
+all action code blocks must be bracketed.
 
 🔝 [Back to table of contents](#)
 

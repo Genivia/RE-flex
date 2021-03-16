@@ -349,7 +349,7 @@ class AbstractMatcher {
         throw std::bad_alloc();
 #else
       buf_ = NULL;
-      if (::posix_memalign(reinterpret_cast<void**>(&buf_), 4096, max_) != 0)
+      if (posix_memalign(reinterpret_cast<void**>(&buf_), 4096, max_) != 0)
         throw std::bad_alloc();
 #endif
 #else
@@ -1098,6 +1098,13 @@ class AbstractMatcher {
       }
     }
     return buf_ + end_;
+  }
+  /// Returns the number of bytes in the buffer available to search from the current begin()/text() position.
+  size_t avail()
+  {
+    if (peek() == EOF)
+      return 0;
+    return end_ - (txt_ - buf_);
   }
   /// Returns the byte offset of the match from the start of the line.
   size_t border()

@@ -820,6 +820,20 @@ bool Reflex::is(const char *s)
   return *s == '\0';
 }
 
+/// Match case-insensitive string s at any indent while ignoring the rest of the line, return true if OK
+bool Reflex::ins(const char *s)
+{
+  size_t pos = 0;
+  while (pos < linelen && std::isspace(line.at(pos)))
+    ++pos;
+  while (pos < linelen && *s != '\0' && lower(line.at(pos)) == *s)
+  {
+    ++pos;
+    ++s;
+  }
+  return *s == '\0';
+}
+
 /// Match s then look for a '{' at the end of the line (skipping whitespace) and return true, false otherwise (pos is unchanged)
 bool Reflex::br(size_t pos, const char *s)
 {
@@ -1600,7 +1614,7 @@ void Reflex::parse_section_2()
             section_2[*start].push_back(Code(code, infile, lineno));
         }
       }
-      else if (is("}") && !scopes.empty())
+      else if (ins("}") && !scopes.empty())
       {
         scopes.pop();
         if (!get_line())
@@ -2409,13 +2423,13 @@ void Reflex::write_perf_report()
         if (rule->regex != "<<EOF>>" && rule->code.line != "|")
         {
           *out <<
-            "\n      \"    rule at line " << rule->code.lineno << " accepted \" << perf_report_" << conditions[start] << "_rule[" << report << "] << \" times matching \" << perf_report_" << conditions[start] << "_size[" << report << "] << \" bytes total in \" << perf_report_" << conditions[start] << "_time[" << report << "] << \" ms\\n\"";
+            "\n      \"    rule at line " << rule->code.lineno << " matched \" << perf_report_" << conditions[start] << "_rule[" << report << "] << \" times, matching \" << perf_report_" << conditions[start] << "_size[" << report << "] << \" bytes total in \" << perf_report_" << conditions[start] << "_time[" << report << "] << \" ms\\n\"";
           ++report;
         }
       }
       if (options["nodefault"].empty())
         *out <<
-          "\n      \"    default rule accepted \" << perf_report_" << conditions[start] << "_default << \" times\\n\"";
+          "\n      \"    default rule invoked \" << perf_report_" << conditions[start] << "_default << \" times\\n\"";
       *out <<
         ";\n";
     }
@@ -2956,8 +2970,8 @@ void Reflex::write_lexer()
           if (!options["debug"].empty())
             *out <<
               "              if (debug()) std::cerr << \"--" <<
-              SGR("\\033[1;35m") << "EOF rule at line " << rule->code.lineno << SGR("\\033[0m") <<
-              " (start condition \" << start() << \")\\n\";\n";
+              SGR("\\033[1;35m") << "EOF rule " << escape_bs(rule->code.file) << ":" << rule->code.lineno << SGR("\\033[0m") <<
+              " start(\" << start() << \")\\n\";\n";
           write_code(rule->code);
           has_eof = true;
           break;
@@ -2966,8 +2980,7 @@ void Reflex::write_lexer()
       if (!has_eof && !options["debug"].empty())
         *out <<
           "              if (debug()) std::cerr << \"--" <<
-          SGR("\\033[1;35m") << "EOF" << SGR("\\033[0m") <<
-          " (start condition \" << start() << \")\\n\";\n";
+          SGR("\\033[1;35m") << "EOF" << SGR("\\033[0m") << " start(\" << start() << \")\\n\";\n";
       if (!options["perf_report"].empty())
         *out << "              perf_report();\n";
       if (!has_eof)
@@ -2986,7 +2999,7 @@ void Reflex::write_lexer()
       if (!options["debug"].empty())
         *out <<
           "              if (debug()) std::cerr << \"--" <<
-          SGR("\\033[1;31m") << "accepting default rule" << SGR("\\033[0m") <<
+          SGR("\\033[1;31m") << "default rule" << SGR("\\033[0m") <<
           "\\n\";\n";
       if (!options["nodefault"].empty())
       {
@@ -2998,8 +3011,9 @@ void Reflex::write_lexer()
           *out <<
             "              char ch = matcher().input();\n"
             "              if (debug()) std::cerr << \"--" <<
-            SGR("\\033[1;31m") << "suppressing default rule for" << SGR("\\033[0m") <<
-            " (\\\"\" << ch << \"\\\")\\n\";\n";
+            SGR("\\033[1;31m") << "suppressed default rule " << SGR("\\033[0m") <<
+            "\" << matcher().lineno() << \",\" << matcher().columno() << \":" <<
+            "'\" << (ch > 32 && ch < 127 ? ch : ' ') << \"'(\" << (int)ch << \")\\n\";\n";
         else if (!options["exception"].empty())
           *out <<
             "              throw " << options["exception"] << ";\n";
@@ -3060,8 +3074,9 @@ void Reflex::write_lexer()
           if (!options["debug"].empty())
             *out <<
               "            if (debug()) std::cerr << \"--" <<
-              SGR("\\033[1;35m") << "accepting rule at line " << rule->code.lineno << SGR("\\033[0m") <<
-              " (\\\"" << SGR("\\033[1m") << "\" << matcher().text() << \"" << SGR("\\033[0m") << "\\\")\\n\";\n";
+              SGR("\\033[1;35m") << "rule " << escape_bs(rule->code.file) << ":" << rule->code.lineno << SGR("\\033[0m") <<
+              " start(\" << start() << \") \" << matcher().lineno() << \",\" << matcher().columno() << \":"
+              "\\\"" << SGR("\\033[1m") << "\" << matcher().text() << \"" << SGR("\\033[0m") << "\\\"\\n\";\n";
           if (!options["flex"].empty())
             *out <<
               "            YY_USER_ACTION\n";

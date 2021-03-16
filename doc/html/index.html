@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Oct 24 2020 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Mar 16 2021 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -165,8 +165,10 @@ What is RE/flex?                                                       </h1>
 <ul>
 <li>faster than Flex++ for typical applications such as tokenization;</li>
 <li>accepts Flex/Lex lexer specifications, extended to support Unicode;</li>
-<li>fully supports Unicode, auto-detects UTF-8/16/32 input;</li>
+<li>IEEE POSIX P1003.2 standard compliant (like Lex and Flex);</li>
+<li>fully supports Unicode, auto-detects UTF-8/16/32 with smart input handling;</li>
 <li>supports legacy file encoding formats, e.g. CP 1250, EBCDIC.</li>
+<li>offers methods for lex/syntax <a class="el" href="index.html#errors">Error reporting and recovery </a>;</li>
 <li>easily integrates with Bison reentrant, C++, bridge and location parsers;</li>
 <li>generates source code that is easy to understand;</li>
 <li>generates thread-safe scanners;</li>
@@ -634,7 +636,7 @@ Scanner options</h3>
 <h4><code>-u</code>, <code>−−unicode</code></h4>
 <p>This option makes <code>.</code>, <code>\s</code>, <code>\w</code>, <code>\l</code>, <code>\u</code>, <code>\S</code>, <code>\W</code>, <code>\L</code>, <code>\U</code> match Unicode. Also groups UTF-8 sequences in the regex, such that each UTF-8 encoded character in a regex is properly matched as one wide character.</p>
 <h4><code>-x</code>, <code>−−freespace</code></h4>
-<p>This option switches the <b><code>reflex</code></b> scanner to <em>free space mode</em>. Regular expressions in free space mode may contain spacing to improve readability. Spacing within regular expressions is ignored, so use <code>" "</code> or <code>[ ]</code> to match a space and <code>\h</code> to match a space or a tab character. Actions in free space mode MUST be placed in <em><code>{ }</code></em> blocks and user code must be placed in <em><code>%{ %}</code></em> blocks. Patterns ending in an escape <code>\</code> continue on the next line.</p>
+<p>This option switches the <b><code>reflex</code></b> scanner to <em>free space mode</em>. Regular expressions in free space mode may contain spacing and may be indented to improve readability. All spacing before, within and after regular expressions is ignored. To match a space use <code>" "</code> or <code>[ ]</code>, and use <code>\h</code> to match a space or a tab character. Actions in free space mode MUST be placed in <em><code>{ }</code></em> blocks and user code must be placed in <em><code>%{ %}</code></em> blocks. Patterns ending in an escape <code>\</code> continue on the next line.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-options-files"></a>
 Output files options</h3>
@@ -2047,7 +2049,7 @@ Start condition states                                         </h2>
 <div class="alt"> <div class="fragment"><div class="line">%s A B C</div><div class="line"></div><div class="line">%%</div><div class="line"></div><div class="line">&lt;B,C&gt;{</div><div class="line">pattern    action    <span class="comment">// rule for states B and C</span></div><div class="line">&lt;A,^B&gt;{</div><div class="line">pattern    action    <span class="comment">// rule for states A and C</span></div><div class="line">}</div><div class="line">}</div><div class="line"></div><div class="line">&lt;*,^A,^C&gt;pattern    action    <span class="comment">// rule for states INITIAL and B (all states except A and C)</span></div><div class="line"></div><div class="line">%%</div></div><!-- fragment --> </div><p>Note that scopes should be read from outer to inner scope, and from left to right in a <code>&lt;...&gt;</code> scope declaration. This means that <code>&lt;*,^A,^C&gt;</code> first extends the scope to include all start conditions and then removes <code>A</code> and <code>C</code>.</p>
 <p>A start condition cannot be removed when it is not included in the current scope. For example, <code>&lt;*,^A&gt;</code> is correct but <code>&lt;^A,*&gt;</code> is incorrect when used as a top-level scope.</p>
 <p>Empty <code>&lt;&gt;</code> without start condition states cannot be specified because this is a valid regex pattern. To remove all states from a scope use <code>&lt;^*&gt;</code>. This construct is only useful when the empty scope is extended by start conditions specified in sub-scopes.</p>
-<dl class="section note"><dt>Note</dt><dd>Contrary to some Flex manuals, rules cannot be indented in a start condition scope in Flex and RE/flex. When a code block is specified indented at the begin of a start condition scope it is considered an initial code block, see <a class="el" href="index.html#reflex-code-blocks">Initial code blocks </a>.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Contrary to some Flex manuals, rules cannot be indented in a start condition scope. When a code block is indented at the begin of a start condition scope it is considered an initial code block, see <a class="el" href="index.html#reflex-code-blocks">Initial code blocks </a>. All indented lines are considered actions. Note that <em><code>%option freespace</code></em> allows patterns to be indented. With this option all action code blocks must be bracketed.</dd></dl>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="reflex-code-blocks"></a>
 Initial code blocks                                       </h2>
@@ -3355,7 +3357,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Oct 24 2020 13:57:53 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Mar 16 2021 14:06:50 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
