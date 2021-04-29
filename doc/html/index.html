@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Mar 16 2021 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Apr 29 2021 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -1200,7 +1200,7 @@ Character classes</h3>
 <p>Character class operations can be chained together in a bracket list. The union <code>||</code>, intersection <code>&amp;&amp;</code>, and subtraction <code>--</code> operations are left associative and have the same operator precedence. For example, <code>[a-z||[A-Z]--[aeiou]--[AEIOU]]</code>, <code>[a-z--[aeiou]||[A-Z]--[AEIUO]]</code>, <code>[a-z&amp;&amp;[^aeiou]||[A-Z]&amp;&amp;[^AEIOU]]</code>, and <code>[B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]</code> are the same character classes.</p>
 <p>Character class operations may be nested. For example, <code>[a-z||[A-Z||[0-9]]]</code> is the same as <code>[a-zA-Z0-9]</code>.</p>
 <p>Character class negation, when specified, is applied to the resulting character class after the character class operations are applied. For example, <code>[^a-z||[A-Z]]</code> is the same as <code>[^||[a-z]||[A-Z]]</code>, which is the class <code>[^a-zA-Z]</code>.</p>
-<p>Note that negated character classes such as <code>[^a-zA-Z]</code> match newlines when <code>\n</code> is not included in the class. Include <code>\n</code> in the negated character class to prevent matching newlines. The <code><a class="el" href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9" title="inverted character classes do not match newline \n ">reflex::convert_flag::notnewline</a></code> removes newlines from negated character classes when used with <a class="el" href="index.html#regex-convert">Regex converters </a>.</p>
+<p>Note that negated character classes such as <code>[^a-zA-Z]</code> match newlines when <code>\n</code> is not included in the class. Include <code>\n</code> in the negated character class to prevent matching newlines. The <code><a class="el" href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9" title="inverted character classes and  do not match newline \n ">reflex::convert_flag::notnewline</a></code> removes newlines from negated character classes when used with <a class="el" href="index.html#regex-convert">Regex converters </a>.</p>
 <p>A lexer specification may use a defined name in place of the second operand of a character class operation. A defined name when used as an operand should expand into a POSIX character class containing ASCII characters only. For example:</p>
 <div class="alt"> <div class="fragment"><div class="line"><a class="code" href="reflex_8cpp.html#afd21dbba9aaf2944d477caa4caddd963">lower</a>     [a-z]</div><div class="line">upper     [A-Z]</div><div class="line">letter    [||{<a class="code" href="reflex_8cpp.html#afd21dbba9aaf2944d477caa4caddd963">lower</a>}||{upper}]</div><div class="line">alnum     [0-9||{letter}]</div><div class="line">name      {letter}{alnum}*</div><div class="line">%%</div><div class="line">{name}    std::cout &lt;&lt; <span class="stringliteral">&quot;name: &quot;</span> &lt;&lt; text() &lt;&lt; std::endl;</div><div class="line">.|\n      <span class="comment">// skip everything else</span></div><div class="line">%%</div></div><!-- fragment --> </div><dl class="section warning"><dt>Warning</dt><dd>Defined names may only occur immediately after a <code>||</code>, <code>&amp;&amp;</code>, and a <code>--</code> operator in a bracket list. Do not place a defined name as the first operand to a union, intersection, and subtraction operation, because the definition is not expanded. For example, <code>[{lower}||{upper}]</code> contains <code>[A-Zelorw{}]</code>. The name and the <code>{</code>, <code>}</code> characters are literally included in the resulting character class. Instead, this bracket list should be written as <code>[||{lower}||{upper}]</code>. Likewise, <code>[^{lower}||{upper}]</code> should be written as <code>[^||{lower}||{upper}]</code>.</dd></dl>
 <p>Alternatively, unions may be written as alternations. That is, <code>[||{name1}||{name2}||{name3}||...]</code> can be written as <code>({name1}|{name2}|{name3}|...)</code>, where the latter form supports full Unicode not restricted to ASCII.</p>
@@ -2648,7 +2648,7 @@ Regex converters                                               </h2>
 <tr>
 <td><code><a class="el" href="namespacereflex_1_1convert__flag.html#a1e3e66422498b8e4c6fd7770393ea988" title="convert \uXXXX and UTF-16 surrogate pairs ">reflex::convert_flag::u4</a></code> </td><td>convert <code>\uXXXX</code> (shorthand for <code>\u{XXXX}</code>), may conflict with <code>\u</code> (upper case letter). </td></tr>
 <tr>
-<td><code><a class="el" href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9" title="inverted character classes do not match newline \n ">reflex::convert_flag::notnewline</a></code> </td><td>inverted character classes do not match newline <code>\n</code>, e.g. <code>[^a-z]</code> does not match <code>\n</code> </td></tr>
+<td><code><a class="el" href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9" title="inverted character classes and  do not match newline \n ">reflex::convert_flag::notnewline</a></code> </td><td>inverted character classes do not match newline <code>\n</code>, e.g. <code>[^a-z]</code> does not match <code>\n</code> </td></tr>
 <tr>
 <td><code><a class="el" href="namespacereflex_1_1convert__flag.html#a2fcbe121a0a80ba46baa1a4b67b045df" title="convert Unicode to compact UTF-8 patterns and DFA, permits some invalid UTF-8 sequences ...">reflex::convert_flag::permissive</a></code> </td><td>when used with <code>unicode</code>, produces a more compact FSM that tolerates some invalid UTF-8 sequences </td></tr>
 </table>
@@ -3357,7 +3357,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Mar 16 2021 14:06:50 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Apr 29 2021 08:34:18 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
