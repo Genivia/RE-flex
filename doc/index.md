@@ -2412,7 +2412,7 @@ patterns `φ` and `ψ`:
   `(?:φ)`   | matches `φ` without group capture
   `(?=φ)`   | matches `φ` without consuming it (\ref reflex-pattern-lookahead)
   `(?<=φ)`  | matches `φ` to the left without consuming it (\ref reflex-pattern-lookbehind, not supported by the RE/flex matcher)
-  `(?^φ)`   | matches `φ` and ignore it to continue matching (RE/flex matcher only)
+  `(?^φ)`   | matches `φ` and ignores it, marking everything as a non-match to continue matching (RE/flex matcher only)
   `^φ`      | matches `φ` at the begin of input or begin of a line (requires multi-line mode) (top-level `φ`, not nested in a sub-pattern)
   `φ$`      | matches `φ` at the end of input or end of a line (requires multi-line mode) (top-level `φ`, not nested in a sub-pattern)
   `\Aφ`     | matches `φ` at the begin of input (top-level `φ`, not nested in a sub-pattern)
@@ -2498,7 +2498,8 @@ unless in standard-conforming modes, such as `-ansi` and `-std=c++98`.
 ### Character classes                                   {#reflex-pattern-class}
 
 Character classes in bracket lists represent sets of characters.  Sets can be
-negated (or inverted), subtracted, intersected, and merged:
+negated (or inverted), subtracted, intersected, and merged (except for the
+`PCRE2Matcher`):
 
   Pattern           | Matches
   ----------------- | ---------------------------------------------------------
@@ -2611,14 +2612,14 @@ The 7-bit ASCII POSIX character categories are:
   `[:alnum:]`  | `\p{Alnum}`       | matches a alphanumeric character `[0-9A-Za-z]`
   `[:alpha:]`  | `\p{Alpha}`       | matches a letter `[A-Za-z]`
   `[:blank:]`  | `\p{Blank}`, `\h` | matches a blank `[ \t]`
-  `[:digit:]`  | `\p{Digit}`, `\d` | matches a digit `[0-9]`
+  `[:digit:]`  | `\p{Digit}`       | matches a digit `[0-9]`
   `[:graph:]`  | `\p{Graph}`       | matches a visible character `[\x21-\x7e]`
   `[:lower:]`  | `\p{Lower}`       | matches a lower case letter `[a-z]`
   `[:punct:]`  | `\p{Punct}`       | matches a punctuation character `[\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]`
   `[:upper:]`  | `\p{Upper}`       | matches an upper case letter `[A-Z]`
   `[:word:]`   | `\p{Word}`        | matches a word character `[0-9A-Za-z_]`
   `[:^blank:]` | `\P{Blank}`, `\H` | matches a non-blank character `[^ \t]`
-  `[:^digit:]` | `\P{Digit}`, `\D` | matches a non-digit `[^0-9]`
+  `[:^digit:]` | `\P{Digit}`       | matches a non-digit `[^0-9]`
 
 The POSIX forms are used in bracket lists.  For example `[[:lower:][:digit:]]`
 matches an ASCII lower case letter or a digit.  
@@ -2640,14 +2641,27 @@ library:
   Unicode category                       | Matches
   -------------------------------------- | ------------------------------------
   `.`                                    | matches any single Unicode character except newline (including \ref invalid-utf)
-  `\X`                                   | matches any Unicode character (with or without the `−−unicode` option)
-  `\x{3B1}`, `\u{3B1}`                   | matches Unicode character U+03B1, i.e. `α`
+  `\a`                                   | matches BEL U+0007
+  `\d`                                   | matches a digit `\p{Nd}`
+  `\D`                                   | matches a non-digit
+  `\e`                                   | matches ESC U+001b
+  `\f`                                   | matches FF U+000c
+  `\l`                                   | matches a lower case letter `\p{Ll}`
+  `\n`                                   | matches LF U+000a
+  `\N`                                   | matches any non-LF character
+  `\r`                                   | matches CR U+000d
   `\R`                                   | matches a Unicode line break
-  `\s`, `\p{Zs}`                         | matches a white space character with Unicode sub-propert Zs
-  `\l`, `\p{Ll}`                         | matches a lower case letter with Unicode sub-property Ll
-  `\u`, `\p{Lu}`                         | matches an upper case letter with Unicode sub-property Lu
-  `\w`, `\p{Word}`                       | matches a Unicode word character with property L, Nd, or Pc
-  `\p{Unicode}`                          | matches any Unicode character (U+0000 to U+10FFFF minus U+D800 to U+DFFF)
+  `\s`                                   | matches a white space character `[ \t\v\f\r\x85\p{Z}]` excluding `\n`
+  `\S`                                   | matches a non-white space character
+  `\t`                                   | matches TAB U+0009
+  `\u`                                   | matches an upper case letter `\p{Lu}`
+  `\v`                                   | matches VT U+000b
+  `\w`                                   | matches a Unicode word character `[\p{L}\p{Nd}\p{Pc}]`
+  `\W`                                   | matches a non-Unicode word character
+  `\X`                                   | matches any ISO-8859-1 or Unicode character
+  `\p{Space}`                            | matches a white space character `[ \t\n\v\f\r\x85\p{Z}]` including `\n`
+  `\p{Unicode}`                          | matches any Unicode character U+0000 to U+10FFFF minus U+D800 to U+DFFF
+  `\p{ASCII}`                            | matches an ASCII character U+0000 to U+007F
   `\p{ASCII}`                            | matches an ASCII character U+0000 to U+007F)
   `\p{Non_ASCII_Unicode}`                | matches a non-ASCII character U+0080 to U+10FFFF minus U+D800 to U+DFFF)
   `\p{L&}`                               | matches a character with Unicode property L& (i.e. property Ll, Lu, or Lt)
@@ -3304,7 +3318,7 @@ the following patterns to be used:
   `[€¥£]` (UTF-8)    | matches wide character `€`, `¥` or `£`, encoded in UTF-8
   `\X`               | matches any ISO-8859-1 or Unicode character
   `\R`               | matches a Unicode line break `\r\n` or `[\u{000A}-\u{000D}u{U+0085}\u{2028}\u{2029}]`
-  `\s`               | matches a white space character with Unicode sub-property Zs
+  `\s`               | matches a white space character `[ \t\n\v\f\r\p{Z}]`
   `\l`               | matches a lower case letter with Unicode sub-property Ll
   `\u`               | matches an upper case letter with Unicode sub-property Lu
   `\w`               | matches a Unicode word character with property L, Nd, or Pc

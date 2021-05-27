@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Apr 29 2021 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu May 27 2021 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -1079,7 +1079,7 @@ Pattern syntax</h3>
 <tr>
 <td><code>(?&lt;=φ)</code> </td><td>matches <code>φ</code> to the left without consuming it (<a class="el" href="index.html#reflex-pattern-lookbehind">Lookbehind</a>, not supported by the RE/flex matcher) </td></tr>
 <tr>
-<td><code>(?^φ)</code> </td><td>matches <code>φ</code> and ignore it to continue matching (RE/flex matcher only) </td></tr>
+<td><code>(?^φ)</code> </td><td>matches <code>φ</code> and ignores it, marking everything as a non-match to continue matching (RE/flex matcher only) </td></tr>
 <tr>
 <td><code>^φ</code> </td><td>matches <code>φ</code> at the begin of input or begin of a line (requires multi-line mode) (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
 <tr>
@@ -1178,7 +1178,7 @@ Trigraphs in C/C++ strings are special tripple-character sequences, beginning wi
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-pattern-class"></a>
 Character classes</h3>
-<p>Character classes in bracket lists represent sets of characters. Sets can be negated (or inverted), subtracted, intersected, and merged:</p>
+<p>Character classes in bracket lists represent sets of characters. Sets can be negated (or inverted), subtracted, intersected, and merged (except for the <code>PCRE2Matcher</code>):</p>
 <table class="doxtable">
 <tr>
 <th>Pattern </th><th>Matches  </th></tr>
@@ -1242,7 +1242,7 @@ Character categories</h3>
 <tr>
 <td><code>[:blank:]</code> </td><td><code>\p{Blank}</code>, <code>\h</code> </td><td>matches a blank <code>[ \t]</code> </td></tr>
 <tr>
-<td><code>[:digit:]</code> </td><td><code>\p{Digit}</code>, <code>\d</code> </td><td>matches a digit <code>[0-9]</code> </td></tr>
+<td><code>[:digit:]</code> </td><td><code>\p{Digit}</code> </td><td>matches a digit <code>[0-9]</code> </td></tr>
 <tr>
 <td><code>[:graph:]</code> </td><td><code>\p{Graph}</code> </td><td>matches a visible character <code>[\x21-\x7e]</code> </td></tr>
 <tr>
@@ -1256,7 +1256,7 @@ Character categories</h3>
 <tr>
 <td><code>[:^blank:]</code> </td><td><code>\P{Blank}</code>, <code>\H</code> </td><td>matches a non-blank character <code>[^ \t]</code> </td></tr>
 <tr>
-<td><code>[:^digit:]</code> </td><td><code>\P{Digit}</code>, <code>\D</code> </td><td>matches a non-digit <code>[^0-9]</code> </td></tr>
+<td><code>[:^digit:]</code> </td><td><code>\P{Digit}</code> </td><td>matches a non-digit <code>[^0-9]</code> </td></tr>
 </table>
 <p>The POSIX forms are used in bracket lists. For example <code>[[:lower:][:digit:]]</code> matches an ASCII lower case letter or a digit.</p>
 <p>You can also use the upper case <code>\P{C}</code> form that has the same meaning as <code>\p{^C}</code>, which matches any character except characters in the class <code>C</code>. For example, <code>\P{ASCII}</code> is the same as <code>\p{^ASCII}</code> which is the same as <code>[^[:ascii:]]</code>.</p>
@@ -1268,21 +1268,47 @@ Character categories</h3>
 <tr>
 <td><code>.</code> </td><td>matches any single Unicode character except newline (including <a class="el" href="index.html#invalid-utf">Invalid UTF encodings </a>) </td></tr>
 <tr>
-<td><code>\X</code> </td><td>matches any Unicode character (with or without the <code>−−unicode</code> option) </td></tr>
+<td><code>\a</code> </td><td>matches BEL U+0007 </td></tr>
 <tr>
-<td><code>\x{3B1}</code>, <code>\u{3B1}</code> </td><td>matches Unicode character U+03B1, i.e. <code>α</code> </td></tr>
+<td><code>\d</code> </td><td>matches a digit <code>\p{Nd}</code> </td></tr>
+<tr>
+<td><code>\D</code> </td><td>matches a non-digit </td></tr>
+<tr>
+<td><code>\e</code> </td><td>matches ESC U+001b </td></tr>
+<tr>
+<td><code>\f</code> </td><td>matches FF U+000c </td></tr>
+<tr>
+<td><code>\l</code> </td><td>matches a lower case letter <code>\p{Ll}</code> </td></tr>
+<tr>
+<td><code>\n</code> </td><td>matches LF U+000a </td></tr>
+<tr>
+<td><code>\N</code> </td><td>matches any non-LF character </td></tr>
+<tr>
+<td><code>\r</code> </td><td>matches CR U+000d </td></tr>
 <tr>
 <td><code>\R</code> </td><td>matches a Unicode line break </td></tr>
 <tr>
-<td><code>\s</code>, <code>\p{Zs}</code> </td><td>matches a white space character with Unicode sub-propert Zs </td></tr>
+<td><code>\s</code> </td><td>matches a white space character <code>[ \t\v\f\r\x85\p{Z}]</code> excluding <code>\n</code> </td></tr>
 <tr>
-<td><code>\l</code>, <code>\p{Ll}</code> </td><td>matches a lower case letter with Unicode sub-property Ll </td></tr>
+<td><code>\S</code> </td><td>matches a non-white space character </td></tr>
 <tr>
-<td><code>\u</code>, <code>\p{Lu}</code> </td><td>matches an upper case letter with Unicode sub-property Lu </td></tr>
+<td><code>\t</code> </td><td>matches TAB U+0009 </td></tr>
 <tr>
-<td><code>\w</code>, <code>\p{Word}</code> </td><td>matches a Unicode word character with property L, Nd, or Pc </td></tr>
+<td><code>\u</code> </td><td>matches an upper case letter <code>\p{Lu}</code> </td></tr>
 <tr>
-<td><code>\p{Unicode}</code> </td><td>matches any Unicode character (U+0000 to U+10FFFF minus U+D800 to U+DFFF) </td></tr>
+<td><code>\v</code> </td><td>matches VT U+000b </td></tr>
+<tr>
+<td><code>\w</code> </td><td>matches a Unicode word character <code>[\p{L}\p{Nd}\p{Pc}]</code> </td></tr>
+<tr>
+<td><code>\W</code> </td><td>matches a non-Unicode word character </td></tr>
+<tr>
+<td><code>\X</code> </td><td>matches any ISO-8859-1 or Unicode character </td></tr>
+<tr>
+<td><code>\p{Space}</code> </td><td>matches a white space character <code>[ \t\n\v\f\r\x85\p{Z}]</code> including <code>\n</code> </td></tr>
+<tr>
+<td><code>\p{Unicode}</code> </td><td>matches any Unicode character U+0000 to U+10FFFF minus U+D800 to U+DFFF </td></tr>
+<tr>
+<td><code>\p{ASCII}</code> </td><td>matches an ASCII character U+0000 to U+007F </td></tr>
 <tr>
 <td><code>\p{ASCII}</code> </td><td>matches an ASCII character U+0000 to U+007F) </td></tr>
 <tr>
@@ -1857,7 +1883,7 @@ Unicode mode</h3>
 <tr>
 <td><code>\R</code> </td><td>matches a Unicode line break <code>\r\n</code> or <code>[\u{000A}-\u{000D}u{U+0085}\u{2028}\u{2029}]</code> </td></tr>
 <tr>
-<td><code>\s</code> </td><td>matches a white space character with Unicode sub-property Zs </td></tr>
+<td><code>\s</code> </td><td>matches a white space character <code>[ \t\n\v\f\r\p{Z}]</code> </td></tr>
 <tr>
 <td><code>\l</code> </td><td>matches a lower case letter with Unicode sub-property Ll </td></tr>
 <tr>
@@ -3357,7 +3383,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Apr 29 2021 08:34:18 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu May 27 2021 14:48:41 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

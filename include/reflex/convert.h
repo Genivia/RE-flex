@@ -101,7 +101,7 @@ namespace convert_flag {
 /// - `j` for `\k` reflex undent anchor
 /// - `l` for `\l` ASCII lower case letter `[a-z]`
 /// - `n` for `\n` LF U+000A
-/// - `p` for `\p{C}` Unicode character classes, also implies Unicode \x{X}, \l, \u, \d, \s, \w
+/// - `p` for `\p{C}` Unicode character classes, also implies Unicode ., \x{X}, \l, \u, \d, \s, \w, and UTF-8 patterns
 /// - `r` for `\r` CR U+000D
 /// - `s` for `\s` space (SP, TAB, LF, VT, FF, or CR)
 /// - `t` for `\t` TAB U+0009
@@ -143,8 +143,11 @@ namespace convert_flag {
 /// - `?` lazy quantifiers for repeats are supported
 /// - `+` possessive quantifiers for repeats are supported
 ///
-/// The optional `"."` (dot) specifies that dot matches any character except newline.
+/// An optional `"."` (dot) specifies that dot matches any character except newline.
 /// A dot is implied by the presence of the 's' modifier, and can be omitted in that case.
+///
+/// An optional `"["` specifies that bracket list union, intersection, and
+/// subtraction are supported, i.e. [\w--[a-z]].
 std::string convert(
     const char                              *pattern,                    ///< regex string pattern to convert
     const char                              *signature,                  ///< regex library signature

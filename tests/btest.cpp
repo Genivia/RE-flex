@@ -185,6 +185,7 @@ Test tests[] = {
 #endif
   // Bracket lists
   { "[a-z]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } },
+  { "[a-d-z]", "", "", "abcd-z", { 1, 1, 1, 1, 1, 1 } },
   { "[-z]", "", "", "-z", { 1, 1 } },
   { "[z-]", "", "", "-z", { 1, 1 } },
   { "[--z]", "", "", "-az", { 1, 1, 1 } },
@@ -205,6 +206,7 @@ Test tests[] = {
   { "(?m)^( +(?=a)|b)|a|\\n", "m", "", " a\n  a\nb\n", { 1, 2, 3, 1, 2, 3, 1, 3 } },
   // Word boundaries \<, \>, \b, and \B
   { "\\<a\\>|\\<a|a\\>|a|-", "", "", "a-aaa", { 1, 5, 2, 4, 3 } },
+  { "\\<.*ab\\>|[ab]*|-|\\n", "", "", "-aaa-aaba-aab-\n-aaa", { 3, 1, 3, 4, 3, 2 } },
 #ifndef INTERACTIVE
   { "\\<.*\\>", "", "", "abc def", { 1 } }, // boost has a partial match bug when interactive() blk=1
 #endif
