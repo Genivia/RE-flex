@@ -3177,7 +3177,7 @@ void Reflex::write_regex(const std::string *condition, const std::string& regex)
       else if (std::isprint(static_cast<unsigned char>(*i)))
         *out << "'" << *i << "', ";
       else
-        *out << static_cast<unsigned int>(*i) << ", ";
+        *out << static_cast<int>(*i) << ", ";
     }
     *out << "0 }";
   }
