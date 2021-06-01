@@ -299,6 +299,31 @@ static int convert_hex(const char *pattern, size_t len, size_t& pos, convert_fla
   return -1;
 }
 
+static int convert_oct(const char *pattern, size_t len, size_t& pos)
+{
+  char oct[9];
+  oct[0] = '\0';
+  size_t k = pos;
+  int c = pattern[k++];
+  if (k < len && pattern[k] == '{')
+  {
+    char *s = oct;
+    while (++k < len && s < oct + sizeof(oct) - 1 && (c = pattern[k]) != '}')
+      *s++ = c;
+    *s = '\0';
+  }
+  if (oct[0] != '\0')
+  {
+    char *r;
+    unsigned long n = std::strtoul(oct, &r, 8);
+    if (*r != '\0' || n > 0x10FFFF)
+      throw regex_error(regex_error::invalid_class, pattern, pos);
+    pos = k;
+    return static_cast<int>(n);
+  }
+  return -1;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
 //  Definition name expansion                                                 //
@@ -311,10 +336,9 @@ static const std::string& expand(const std::map<std::string,std::string> *macros
   size_t k = pos++;
   while (pos < len && (std::isalnum(pattern[pos]) || pattern[pos] == '_' || (pattern[pos] & 0x80) == 0x80))
     ++pos;
-  std::string name;
-  name.append(&pattern[k], pos - k);
-  if (pos >= len && (pattern[pos] != '\\' || pattern[pos + 1] != '}') && pattern[pos] != '}')
+  if (pos >= len || (pattern[pos] == '\\' ? pattern[pos + 1] != '}' : pattern[pos] != '}'))
     throw regex_error(regex_error::undefined_name, pattern, pos);
+  std::string name(&pattern[k], pos - k);
   std::map<std::string,std::string>::const_iterator i = macros->find(name);
   if (i == macros->end())
     throw regex_error(regex_error::undefined_name, pattern, k);
@@ -1198,10 +1222,10 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
     pos = k - 1;
     loc = pos + 1;
   }
-  else if (c == 'u' || c == 'x')
+  else if (c == 'o' || c == 'u' || c == 'x')
   {
     size_t k = pos;
-    int wc = convert_hex(pattern, len, k, flags);
+    int wc = (c == 'o' ? convert_oct(pattern, len, k) : convert_hex(pattern, len, k, flags));
     if (wc >= 0)
     {
       if (c == 'u' && wc >= 0xD800 && wc < 0xE000)
@@ -1670,6 +1694,14 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
                 }
               }
             }
+          }
+          else if (pos + 1 < len && pattern[pos + 1] == '*' && supports_modifier(signature, '*'))
+          {
+            pos += 2;
+            while (pos < len && pattern[pos] != ')')
+              ++pos;
+            if (pos < len)
+              --lev;
           }
           else
           {
