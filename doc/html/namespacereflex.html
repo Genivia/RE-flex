@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu May 27 2021 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Jun 1 2021 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -309,30 +309,39 @@ Variables</h2></td></tr>
 <p>A regex library signature is a string of the form <code>"decls:escapes?+."</code>.</p>
 <p>The optional <code>"decls:"</code> part specifies which modifiers and other special <code>(?...)</code> constructs are supported:</p><ul>
 <li>non-capturing group <code>(?:...)</code> is supported</li>
-<li>one or all of "imsx" specify which (?ismx) modifiers are supported:</li>
+<li>letters and digits specify which modifiers e.g. (?ismx) are supported:</li>
 <li>'i' specifies that <code>(?i...)</code> case-insensitive matching is supported</li>
 <li>'m' specifies that <code>(?m...)</code> multiline mode is supported for the ^ and $ anchors</li>
 <li>'s' specifies that <code>(?s...)</code> dotall mode is supported</li>
 <li>'x' specifies that <code>(?x...)</code> freespace mode is supported</li>
+<li>... any other letter or digit modifier, where digit modifiers support <code>(?123)</code> for example</li>
 <li><code>#</code> specifies that <code>(?#...)</code> comments are supported</li>
 <li><code>=</code> specifies that <code>(?=...)</code> lookahead is supported</li>
-<li><code>&lt;</code> specifies that <code>(?&lt;...)</code> lookbehind is supported</li>
+<li><code>&lt;</code> specifies that `(?'...)` 'name' groups are supported</li>
+<li><code>&lt;</code> specifies that <code>(?&lt;...)</code> lookbehind and &lt;name&gt; groups are supported</li>
+<li><code>&gt;</code> specifies that <code>(?&gt;...)</code> atomic groups are supported</li>
+<li><code>&gt;</code> specifies that <code>(?|...)</code> group resets are supported</li>
+<li><code>&gt;</code> specifies that <code>(?&amp;...)</code> subroutines are supported</li>
+<li><code>&gt;</code> specifies that <code>(?(...)</code> conditionals are supported</li>
 <li><code>!</code> specifies that <code>(?!=...)</code> and <code>(?!&lt;...)</code> are supported</li>
 <li><code>^</code> specifies that <code>(?^...)</code> negative (reflex) patterns are supported</li>
+<li><code>*</code> specifies that <code>(*VERB)</code> verbs are supported</li>
 </ul>
 <p>The <code>"escapes"</code> characters specify which standard escapes are supported:</p><ul>
 <li><code>a</code> for <code>\a</code> (BEL U+0007)</li>
-<li><code>b</code> for <code>\b</code> (BS U+0008) in brackets <code>[\b]</code> only AND the <code>\b</code> word boundary</li>
+<li><code>b</code> for <code>\b</code> the <code>\b</code> word boundary</li>
 <li><code>c</code> for <code>\cX</code> control character specified by <code>X</code> modulo 32</li>
-<li><code>d</code> for <code>\d</code> ASCII digit <code>[0-9]</code></li>
+<li><code>d</code> for <code>\d</code> digit <code>[0-9]</code> ASCII or <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> digit</li>
 <li><code>e</code> for <code>\e</code> ESC U+001B</li>
 <li><code>f</code> for <code>\f</code> FF U+000C</li>
+<li><code>j</code> for <code>\g</code> group capture e.g. {1}</li>
 <li><code>h</code> for <code>\h</code> ASCII blank <code>[ \t]</code> (SP U+0020 or TAB U+0009)</li>
 <li><code>i</code> for <code>\i</code> reflex indent anchor</li>
 <li><code>j</code> for <code>\j</code> reflex dedent anchor</li>
-<li><code>j</code> for <code>\k</code> reflex undent anchor</li>
-<li><code>l</code> for <code>\l</code> ASCII lower case letter <code>[a-z]</code></li>
+<li><code>j</code> for <code>\k</code> reflex undent anchor or group capture e.g. {1}</li>
+<li><code>l</code> for <code>\l</code> lower case letter <code>[a-z]</code> ASCII or <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> letter</li>
 <li><code>n</code> for <code>\n</code> LF U+000A</li>
+<li><code>o</code> for <code>\o</code> octal ASCII or <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> code</li>
 <li><code>p</code> for <code>\p{C}</code> <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> character classes, also implies <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> ., {X}, , , , , , and UTF-8 patterns</li>
 <li><code>r</code> for <code>\r</code> CR U+000D</li>
 <li><code>s</code> for <code>\s</code> space (SP, TAB, LF, VT, FF, or CR)</li>
@@ -1088,7 +1097,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu May 27 2021 14:48:34 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Jun 1 2021 19:27:45 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

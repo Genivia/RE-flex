@@ -37,8 +37,8 @@ BinaryIntegerLiteral            {BinaryNumeral}{IntegerTypeSuffix}?
 IntegerLiteral                  {DecimalIntegerLiteral}|{HexIntegerLiteral}|{OctalIntegerLiteral}|{BinaryIntegerLiteral}
 
 FloatTypeSuffix                 [fFdD]
-DecimalFloatingPointLiteral     (\d[0-9_]*\.?[0-9_]*|\.[0-9_]+)([eE][-+]?\d+)?{FloatTypeSuffix}?
-HexadecimalFloatingPointLiteral 0[xX][[:xdigit:]_]*\.[[:xdigit:]_]*[pP][-+]?\d+{FloatTypeSuffix}?
+DecimalFloatingPointLiteral     ([0-9][0-9_]*\.?[0-9_]*|\.[0-9_]+)([eE][-+]?[0-9]+)?{FloatTypeSuffix}?
+HexadecimalFloatingPointLiteral 0[xX][[:xdigit:]_]*\.[[:xdigit:]_]*[pP][-+]?[0-9]+{FloatTypeSuffix}?
 FloatingPointLiteral            {DecimalFloatingPointLiteral}|{HexadecimalFloatingPointLiteral}
 
 CharacterLiteral                '({SingleCharacter}|{EscapeSequence})'

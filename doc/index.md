@@ -2387,9 +2387,11 @@ patterns `φ` and `ψ`:
   `\N`      | matches any single character except newline
   `\0`      | matches the NUL character
   `\cX`     | matches the control character `X` mod 32 (e.g. `\cA` is `\x01`)
-  `\0177`   | matches an 8-bit character with octal value `177` (use `\177` in lexer specifications instead, see below)
+  `\0141`   | matches an 8-bit character with octal value `141` (use `\141` in lexer specifications instead, see below)
   `\x7f`    | matches an 8-bit character with hexadecimal value `7f`
-  `\x{7f}`  | matches an 8-bit character with hexadecimal value `7f`
+  `\x{3B1}` | matches Unicode character U+03B1, i.e. `α`
+  `\u{3B1}` | matches Unicode character U+03B1, i.e. `α`
+  `\o{141}` | matches U+0061, i.e. `a`, in octal
   `\p{C}`   | matches a character in category C of \ref reflex-pattern-cat
   `\Q...\E` | matches the quoted content between `\Q` and `\E` literally
   `[abc]`   | matches one of `a`, `b`, or `c` as \ref reflex-pattern-class
@@ -2518,10 +2520,10 @@ It is an error to construct an empty character class by subtraction or by
 intersection, for example `[a&&[b]]` is invalid.
 
 Bracket lists may contain ASCII and Unicode \ref reflex-pattern-cat, for
-example `[a-z\d]` and `[a-z[:digit:]]` contain the letters `a` to `z` and
-digits `0` to `9`.  To add Unicode character categories and wide characters
-(encoded in UTF-8) to bracket lists \ref reflex-pattern-unicode should be
-enabled.
+example `[a-z\d]` contains the letters `a` to `z` and digits `0` to `9` (or
+Unicode digits when Unicode is enabled).  To add Unicode character categories
+and wide characters (encoded in UTF-8) to bracket lists
+\ref reflex-pattern-unicode should be enabled.
 
 An negated Unicode character class is constructed by subtracting the character
 class from the Unicode range U+0000 to U+D7FF and U+E000 to U+10FFFF.
@@ -6079,13 +6081,13 @@ free space mode to enhance readability.
 
     directive       ^ \h* # (. | \\ \r? \n)+
     name            [\u\l_] \w*
-    udec            0 | [1-9] \d*
+    udec            0 | [1-9] [0-9]*
     uhex            0 [Xx] [[:xdigit:]]+
     uoct            0 [0-7]+
     int             [-+]? ({udec} | {uhex}) \
                       ([Ll]{0,2} [Uu]? | [Uu] [Ll]{0,2})
-    float           [-+] \d* (\d | \.\d | \d\.) \d* \
-                      ([Ee][-+]? \d+)? \
+    float           [-+] [0-9]* ([0-9] | \.[0-9] | [0-9]\.) [0-9]* \
+                      ([Ee][-+]? [0-9]+)? \
                       [FfLl]?
     char            L? ' (\\. | [^\\\n'])* '
     string          L? \" (\\. | \\\r?\n | [^\\\n"])* \"

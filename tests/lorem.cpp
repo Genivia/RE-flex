@@ -253,6 +253,22 @@ void test_lorem(const char *title, AbstractMatcher &tokenizer, AbstractMatcher &
   if (hits != 2682)
     printf("FAIL hits=%zu\n", hits);
 
+  file = fopen("utf16lelorem.txt", "r");
+  tokenizer.input(file);
+  timer();
+  for (size_t run = 0; run < RUNS; ++run)
+  {
+    rewind(file);
+    tokenizer.input(file);
+    hits = 0;
+    while (tokenizer.scan())
+      ++hits;
+  }
+  timer("Scanning utf16lelorem.txt took");
+  fclose(file);
+  if (hits != 2682)
+    printf("FAIL hits=%zu\n", hits);
+
   file = fopen("utf32lorem.txt", "r");
   tokenizer.input(file);
   timer();
