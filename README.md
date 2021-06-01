@@ -536,7 +536,7 @@ Changelog
 - Mar 16, 2021: 3.0.2 minor improvements and additions; fixed MinGW builds.
 - Apr 29, 2021: 3.0.3 fixed `reflex::Input` copy constructor; minor improvements.
 - May 27, 2021: 3.0.4 improvements and fixes for minor issues.
-- Jun  1, 2021: 3.0.5 minor usability improvements.
+- Jun  1, 2021: 3.0.5 minor usability improvements; changed `\d` to match Unicode when option `unicode` is enabled.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
