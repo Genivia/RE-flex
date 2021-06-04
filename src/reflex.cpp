@@ -1039,7 +1039,7 @@ bool Reflex::get_pattern(size_t& pos, std::string& pattern, std::string& regex)
       // eat [...]
       if (pos < linelen && line.at(pos) == '^')
         ++pos;
-      if (line.at(pos) == ']')
+      if (pos < linelen && line.at(pos) == ']')
         ++pos;
       size_t nest = 1;
       while (pos < linelen)

@@ -68,7 +68,10 @@ std::string regex_error::regex_error_message_code(regex_error_type code, const c
 
 std::string regex_error::regex_error_message(const char *message, const char *pattern, size_t pos)
 {
-  size_t l = strlen(message);
+  size_t l = strlen(pattern);
+  if (pos > l)
+    pos = l;
+  l = strlen(message);
   size_t n = pos / 40;
   size_t k = pos % 40 + (n == 0 ? 0 : 20);
   const char *p = n == 0 ? pattern : pattern + 40 * n - 20;
@@ -77,7 +80,7 @@ std::string regex_error::regex_error_message(const char *message, const char *pa
     --p;
     ++k;
   }
-  size_t m = disppos(p, 79) - p;
+  size_t m = disppos(p, k) - p;
   size_t r = displen(p, k);
   std::string what("error in regex at position ");
   what.append(ztoa(pos)).append("\n").append(p, m).append("\n");
