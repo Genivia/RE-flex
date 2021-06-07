@@ -80,7 +80,7 @@ std::string regex_error::regex_error_message(const char *message, const char *pa
     --p;
     ++k;
   }
-  size_t m = disppos(p, k) - p;
+  size_t m = disppos(p, 79) - p;
   size_t r = displen(p, k);
   std::string what("error in regex at position ");
   what.append(ztoa(pos)).append("\n").append(p, m).append("\n");
@@ -111,7 +111,7 @@ size_t regex_error::displen(const char *s, size_t k)
         ++n;
         if (k < 4)
           break;
-        s += 3;
+        s += (s[0] != '\0') + (s[1] != '\0') + (s[2] != 0);
         k -= 3;
       }
       else
@@ -147,7 +147,7 @@ const char *regex_error::disppos(const char *s, size_t k)
         // U+1F18E (UTF-8 F0 9F 86 8E) and higher is usually double width
         if (k < 4)
           break;
-        s += 3;
+        s += (s[0] != '\0') + (s[1] != '\0') + (s[2] != 0);
         k -= 3;
       }
       else

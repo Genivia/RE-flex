@@ -13,6 +13,8 @@
 // π/2
 // => 1.57
 
+%require "3.2"
+
 %{
   #include "lex.yy.h"
   #define YYPARSE_PARAM lexer
@@ -21,8 +23,9 @@
 %}
 
 // construct a bison-bridge parser that is reentrant
-// %pure-parser is the equivalent old declaration (deprecated)
+// %pure-parser // the equivalent old declaration before Bison 3 (deprecated)
 %define api.pure
+
 // bison-bridge passes the lexer to yylex() constructed with %option bison-bridge
 %lex-param   { Lexer *lexer }
 // to pass the lexer to yyparse()

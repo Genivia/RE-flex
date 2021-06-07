@@ -8,7 +8,7 @@ Examples with RE/flex C++ lexer methods
 - `minic.l,` `minic.y`, `minic.hpp`, and `minicdemo.c` Mini C compiler with Bison 3.2 C++ complete parser, generates Java bytecode in class files
 - `braille.l` a braille translator, inspired by the re2c example but extended and fixed to make it usable
 - `ptokens.l` and `pdefs.l` a Python source tokenizer
-- `calc.l` and `calc.y` calculator, supports Unicode identifier variables, resolves input errors
+- `calc.l` and `calc.y` calculator with Bison 3.2 bison-bridge parser, supports Unicode identifier variables, resolves input errors
 - `csv.l` scanner to parse CSV rows from a file into a C++ vector
 - `yaml.l` YAML 1.2 parser and writer
 - `indent1.l` indentation detection and reformatting example, basic

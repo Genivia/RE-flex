@@ -61,7 +61,6 @@ examples:	flexexample1 \
 		jtokens \
 		ptokens \
 		echo \
-		calc \
 		wc \
 		wcu \
 		wcpp \
@@ -106,6 +105,7 @@ examples3.2:	flexexample9xx \
 		reflexexample9xx \
 		flexexample11xx \
 		reflexexample11xx \
+		calc \
                 minic
 
 boostexamples:  url_boost wc_boost
