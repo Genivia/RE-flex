@@ -166,8 +166,7 @@ class Pattern {
   void clear()
   {
     rex_.clear();
-    if (nop_ > 0 && opc_ != NULL)
-      delete[] opc_;
+    delete[] opc_;
     opc_ = NULL;
     nop_ = 0;
     fsm_ = NULL;
@@ -965,7 +964,7 @@ class Pattern {
   std::vector<bool>     acc_; ///< true if subpattern n is accepting (state is reachable)
   size_t                vno_; ///< number of finite state machine vertices |V|
   size_t                eno_; ///< number of finite state machine edges |E|
-  const Opcode         *opc_; ///< points to the opcode table
+  const Opcode         *opc_ = NULL; ///< points to the opcode table
   Index                 nop_; ///< number of opcodes generated
   FSM                   fsm_; ///< function pointer to FSM code
   size_t                len_; ///< prefix length of pre_[], less or equal to 255
