@@ -166,7 +166,8 @@ class Pattern {
   void clear()
   {
     rex_.clear();
-    delete[] opc_;
+    if (opc_ != NULL && nop_ > 0)
+      delete[] opc_;
     opc_ = NULL;
     nop_ = 0;
     fsm_ = NULL;
