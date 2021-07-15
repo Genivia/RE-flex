@@ -700,7 +700,7 @@ class Input {
           if (k < l)
           {
             uidx_ = static_cast<unsigned short>(k);
-            ulen_ = static_cast<unsigned short>(l);
+            ulen_ = static_cast<unsigned short>(l - k);
             std::memcpy(s, utf8_, k);
             s += k;
             k = 0;
@@ -785,7 +785,7 @@ class Input {
   size_t                size_;    ///< size of the remaining input in bytes (size_ == 0 may indicate size is not set)
   char                  utf8_[8]; ///< UTF-8 normalization buffer, >=8 bytes
   unsigned short        uidx_;    ///< index in utf8_[]
-  unsigned short        ulen_;    ///< length of data in utf8_[] or 0 if no data
+  unsigned short        ulen_;    ///< length of data (remaining after uidx_) in utf8_[] or 0 if no data
   file_encoding_type    utfx_;    ///< file_encoding
   const unsigned short *page_;    ///< custom code page
   Handler              *handler_; ///< to handle FILE* errors and non-blocking FILE* reads

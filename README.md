@@ -539,6 +539,7 @@ Changelog
 - Jun  1, 2021: 3.0.5 minor usability improvements; changed `\d` to match Unicode when option `unicode` is enabled.
 - Jun  4, 2021: 3.0.6 minor improvements.
 - Jun  6, 2021: 3.0.7 updated examples to fix build problems.
+- Jul 15, 2021: 3.0.8 minor improvements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
