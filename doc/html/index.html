@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Jul 15 2021 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Jul 22 2021 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -133,6 +133,7 @@
 </ul>
 </li>
 <li class="level1"><a href="#tricks">Tips, tricks, and gotchas                                             </a><ul><li class="level2"><a href="#extern-yyin">Errors when declaring extern yyin, yytext, yylineno              </a></li>
+<li class="level2"><a href="#yy-functions">Compilation errors when using yy functions                      </a></li>
 <li class="level2"><a href="#invalid-utf">Invalid UTF encodings                                            </a></li>
 <li class="level2"><a href="#errors">Error reporting and recovery                                          </a></li>
 <li class="level2"><a href="#setlocale">On using setlocale                                                 </a></li>
@@ -586,7 +587,7 @@ The reflex command line tool                                  </h2>
 </pre><p>The <b><code>reflex</code></b> command accepts <code>−−flex</code> and <code>−−bison</code> options for compatibility with Flex and Bison/Yacc, respectively. These options allow <b><code>reflex</code></b> to be used as a replacement of the classic Flex and Lex tools: </p><pre class="fragment">reflex −−flex −−bison lexerspec.l
 </pre><p>The first option <code>−−flex</code> specifies that <em><code>lexerspec.l</code></em> is a classic Flex/Lex specification with <code>yytext</code> or <code>YYText()</code> and the usual "yy" variables and functions.</p>
 <p>The second option <code>−−bison</code> generates a scanner class and the usual global "yy" variables and functions such as <code>yytext</code>, <code>yyleng</code>, <code>yylineno</code>, and <code>yylex()</code> for compatibility with non-reentrant <a href="dinosaur.compilertools.net/#bison">Bison</a> parsers. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison/Yacc </a> for more details on Bison parsers that are reentrant and/or use bison-bridge and bison-locations options. For Bison 3.0 C++ parsers, use <code>−−bison-cc</code> and optionally <code>−−bison-locations</code>.</p>
-<p>Option <code>−−yy</code> enables both <code>−−flex</code> and <code>−−bison</code> and maximizes compatibility with Lex/Flex by generating the global <code>yyin</code> and <code>yyout</code> variables. Otherwise, <code>yyin</code> points to a <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> object for advanced input handling, which is more powerful than the traditional <code>FILE*</code> type <code>yyin</code>.</p>
+<p>Option <code>−−yy</code> enables both <code>−−flex</code> and <code>−−bison</code> and maximizes compatibility with Lex/Flex by generating the global <code>yyin</code> and <code>yyout</code> variables and global <code>yy</code> functions. Otherwise, <code>yyin</code> points to a <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> object for advanced input handling, which is more powerful than the traditional <code>FILE*</code> type <code>yyin</code>.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="reflex-options"></a>
 Options                                                       </h2>
@@ -3218,6 +3219,17 @@ Errors when declaring extern yyin, yytext, yylineno              </h2>
 <div class="alt"> <div class="fragment"><div class="line">FILE *<a class="code" href="flexlexer_8h.html#aa789f4617e33fb99594cb04a3688a0c1">yyin</a>;</div><div class="line">FILE *<a class="code" href="flexlexer_8h.html#a4fd44867d448dcb6fc32ea004a15de54">yyout</a>;</div></div><!-- fragment --> </div><p>Note that without option <code>−−yy</code>, when options <code>−−flex</code> and <code>−−bison</code> are used, <code>yyin</code> is a pointer to a <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> object. This means that <code>yyin</code> is not restricted to <code>FILE*</code> types:</p>
 <div class="alt"> <div class="fragment"><div class="line">std::ifstream ifs(filename, std::ios::in);</div><div class="line">yyin = &amp;ifs; <span class="comment">// FILE* or std::istream</span></div></div><!-- fragment --> </div><div class="alt"> <div class="fragment"><div class="line">yyin = <span class="stringliteral">&quot;...&quot;</span>; <span class="comment">// (wide) strings</span></div></div><!-- fragment --> </div><p>See <a class="el" href="index.html#reflex-input">Switching input sources </a>.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
+<h2><a class="anchor" id="yy-functions"></a>
+Compilation errors when using yy functions                      </h2>
+<p>To use Flex' <code>yy</code> functions in your scanner's actions, use option <code>−−flex</code> for Flex compatibility.</p>
+<p>In addition, note that by default the <b><code>reflex</code></b> command generates a reentrant C++ scanner class, unless option <code>−−bison</code> is used. This means that by default all <code>yy</code> functions are scanner class methods, not global functions. This obviously means that <code>yy</code> functions cannot be globally invoked, e.g. from your parser. These are the alternatives:</p>
+<ul>
+<li>Generate global <code>yy</code> functions like Flex with option <code>−−yy</code> (or <code>−−flex</code> and <code>−−bison</code>). This approach is not thread safe.</li>
+<li>Generate thread-safe C++ scanner class (by default) and pass the scanner object to your parser to invoke the scanner's methods. Note that scanner methods are not <code>yy</code> functions, see the list of scanner methods listed in <a class="el" href="index.html#reflex-spec-rules">The rules section</a>.</li>
+<li>Generate a thread-safe C++ scanner class and let the parser class inherit the scanner class. All scanner methods are available in the parser too.</li>
+<li>Generate a thread-safe C++ scanner class but also <code>#define YY_SCANNER</code> (redefine) in your parser and in other parts of the program that need to invoke <code>yy</code> functions: <div class="alt"> <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;lexer.hpp&quot;</span>  <span class="comment">// generated with --header-file=lexer.hpp</span></div><div class="line">...</div><div class="line">#undef <a class="code" href="flexlexer_8h.html#a65fc8b80947ad814f705067fd72fb6bf">YY_SCANNER</a></div><div class="line"><span class="preprocessor">#define YY_SCANNER lexer</span></div><div class="line"><span class="keywordtype">int</span> parser(Lexer&amp; lexer, ...) {</div><div class="line">  ...</div><div class="line">  <span class="keywordtype">int</span> c = <a class="code" href="flexlexer_8h.html#a89cb0e26f2aed856887fdbbc8d10c73a">yyinput</a>();  <span class="comment">// is lexer.input() which is lexer.matcher().input()</span></div><div class="line">  ...</div><div class="line">}</div></div><!-- fragment --> </div> Note that the <code><a class="el" href="flexlexer_8h.html#a89cb0e26f2aed856887fdbbc8d10c73a" title="Flex-compatible macro: read one 8-bit character, returns zero when EOF. ">yyinput()</a></code> macro expands to <code>YY_SCANNER.input()</code>, where <code>YY_SCANNER</code> is normally <code>(*this)</code>, i.e. the current scanner object, or <code>YY_SCANNER</code> is the global scanner object/state when option <code>−−bison</code> is used to generate global <code>yy</code> variables and functions stored in the global <code>YY_SCANNER</code> object.</li>
+</ul>
+<p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="invalid-utf"></a>
 Invalid UTF encodings                                            </h2>
 <p>It may be tempting to write a pattern with <code>.</code> (dot) as a wildcard in a lexer specification, but beware that in Unicode mode enabled with <em><code>%option unicode</code></em> or with modifier <code>(?u:φ)</code>, the dot matches any code point, including code points outside of the valid Unicode character range and invalid overlong UTF-8 (except that it won't match newline unless <em><code>%option dotall</code></em> is specified.) The reason for this design choice is that a lexer should be able to implement a "catch all else" rule to report errors in the input:</p>
@@ -3355,7 +3367,8 @@ Minimized library and cross compiling                                </h2>
 </pre><p>The regex Unicode converters and the Unicode tables that are not used at run time are excluded from the minimized library.</p>
 <p>If the RE/flex library is not installed, for example when cross-compiling a RE/flex scanner to a different platform, then compile directly from the RE/flex C++ source files located in the <code>reflex/lib</code> and <code>reflex/include</code> directories: </p><pre class="fragment">c++ -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
     lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp
-</pre><p>🔝 <a href="#">Back to table of contents</a></p>
+</pre><p>This compiles the code without SIMD optimizations. SIMD intrinsics for SSE/AVX and ARM NEON/AArch64 are used to speed up string search and newline detection in the library. These optimizations are not applicable to scanners.</p>
+<p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="msvc"></a>
 MSVC++ compiler bug                                                     </h2>
 <p>Some older MSVC++ compilers may cause problems with C++11 range-based loops. When a matcher object is constructed in a range-based loop it is destroyed before the first loop iteration. This means that the following example crashes:</p>
@@ -3387,7 +3400,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Jul 15 2021 09:03:12 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Jul 22 2021 15:48:22 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

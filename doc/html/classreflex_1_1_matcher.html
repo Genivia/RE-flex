@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Jul 15 2021 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Jul 22 2021 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -539,6 +539,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a239f292c95cb04fba2ee063f000b270f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a239f292c95cb04fba2ee063f000b270f">advance</a> ()</td></tr>
 <tr class="memdesc:a239f292c95cb04fba2ee063f000b270f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if able to advance to next possible match.  <a href="#a239f292c95cb04fba2ee063f000b270f">More...</a><br /></td></tr>
 <tr class="separator:a239f292c95cb04fba2ee063f000b270f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0735c851608d6c0350549fc6fe65306"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ab0735c851608d6c0350549fc6fe65306">simd_advance_avx2</a> (const char *&amp;b, const char *e, size_t &amp;loc, size_t min, const char *pre, size_t len)</td></tr>
+<tr class="separator:ab0735c851608d6c0350549fc6fe65306"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a033a52fbd78743002bc224567f3fe440"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#a033a52fbd78743002bc224567f3fe440">simd_advance_avx512bw</a> (const char *&amp;b, const char *e, size_t &amp;loc, size_t min, const char *pre, size_t len)</td></tr>
+<tr class="separator:a033a52fbd78743002bc224567f3fe440"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9219c4d9993612e8afe8d9d97af234a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html#ac9219c4d9993612e8afe8d9d97af234a">newline</a> ()</td></tr>
 <tr class="memdesc:ac9219c4d9993612e8afe8d9d97af234a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update indentation column counter for <a class="el" href="classreflex_1_1_matcher.html#a505a765341793c9d4b0cbbe833920e93" title="Returns true if looking at indent. ">indent()</a> and <a class="el" href="classreflex_1_1_matcher.html#a05ff32e0519d3af80d376b51c561d71e" title="Returns true if looking at dedent. ">dedent()</a>.  <a href="#ac9219c4d9993612e8afe8d9d97af234a">More...</a><br /></td></tr>
 <tr class="separator:ac9219c4d9993612e8afe8d9d97af234a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2282,6 +2286,122 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="ab0735c851608d6c0350549fc6fe65306"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::simd_advance_avx2 </td>
+          <td>(</td>
+          <td class="paramtype">const char *&amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>e</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>pre</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a033a52fbd78743002bc224567f3fe440"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Matcher::simd_advance_avx512bw </td>
+          <td>(</td>
+          <td class="paramtype">const char *&amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>e</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>pre</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="adf84adb39572b43c63f56aecd1aaa35d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2579,7 +2699,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Jul 15 2021 09:03:08 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Jul 22 2021 15:48:19 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

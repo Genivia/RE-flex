@@ -1,5 +1,5 @@
 <map id="utf8.h" name="utf8.h">
-<area shape="rect" id="node2" href="$input_8h.html" title="RE/flex input character sequence class and HW accelleration. " alt="" coords="508,80,571,107"/>
+<area shape="rect" id="node2" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="508,80,571,107"/>
 <area shape="rect" id="node11" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="619,229,684,256"/>
 <area shape="rect" id="node3" href="$abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="5,229,89,256"/>
 <area shape="rect" id="node5" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="309,155,412,181"/>

@@ -1151,9 +1151,10 @@ reentrant and/or use bison-bridge and bison-locations options.  For Bison 3.0
 C++ parsers, use `−−bison-cc` and optionally `−−bison-locations`.
 
 Option `−−yy` enables both `−−flex` and `−−bison` and maximizes compatibility
-with Lex/Flex by generating the global `yyin` and `yyout` variables.
-Otherwise, `yyin` points to a `reflex::Input` object for advanced input
-handling, which is more powerful than the traditional `FILE*` type `yyin`.
+with Lex/Flex by generating the global `yyin` and `yyout` variables and global
+`yy` functions.  Otherwise, `yyin` points to a `reflex::Input` object for
+advanced input handling, which is more powerful than the traditional `FILE*`
+type `yyin`.
 
 🔝 [Back to table of contents](#)
 
@@ -8289,6 +8290,52 @@ See \ref reflex-input.
 🔝 [Back to table of contents](#)
 
 
+Compilation errors when using yy functions                      {#yy-functions}
+------------------------------------------
+
+To use Flex' `yy` functions in your scanner's actions, use option `−−flex` for
+Flex compatibility.
+
+In addition, note that by default the <b>`reflex`</b> command generates a
+reentrant C++ scanner class, unless option `−−bison` is used.  This means that
+by default all `yy` functions are scanner class methods, not global functions.
+This obviously means that `yy` functions cannot be globally invoked, e.g. from
+your parser.  These are the alternatives:
+
+- Generate global `yy` functions like Flex with option `−−yy` (or `−−flex` and
+  `−−bison`).  This approach is not thread safe.
+- Generate thread-safe C++ scanner class (by default) and pass the scanner
+  object to your parser to invoke the scanner's methods.  Note that scanner
+  methods are not `yy` functions, see the list of scanner methods listed in 
+  \ref reflex-spec-rules.
+- Generate a thread-safe C++ scanner class and let the parser class inherit the
+  scanner class.  All scanner methods are available in the parser too.
+- Generate a thread-safe C++ scanner class but also `#define YY_SCANNER`
+  (redefine) in your parser and in other parts of the program that need to
+  invoke `yy` functions:
+<div class="alt">
+~~~{.cpp}
+    #include "lexer.hpp"  // generated with --header-file=lexer.hpp
+    ...
+    #undef YY_SCANNER
+    #define YY_SCANNER lexer
+    int parser(Lexer& lexer, ...) {
+      ...
+      int c = yyinput();  // is lexer.input() which is lexer.matcher().input()
+      ...
+    }
+~~~
+</div>
+ Note that the `yyinput()` macro expands to `YY_SCANNER.input()`, where
+ `YY_SCANNER` is normally `(*this)`, i.e. the current scanner object, or
+ `YY_SCANNER` is the global scanner object/state when option `−−bison` is used
+ to generate global `yy` variables and functions stored in the global
+ `YY_SCANNER` object.
+
+🔝 [Back to table of contents](#)
+
+
+
 Invalid UTF encodings                                            {#invalid-utf}
 ---------------------
 
@@ -9134,6 +9181,9 @@ directories:
     c++ -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
         lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp
 
+This compiles the code without SIMD optimizations.  SIMD intrinsics for SSE/AVX
+and ARM NEON/AArch64 are used to  speed up string search and newline detection
+in the library.  These optimizations are not applicable to scanners.
 
 🔝 [Back to table of contents](#)
 

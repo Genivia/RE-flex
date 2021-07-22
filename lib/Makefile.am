@@ -5,16 +5,22 @@ reflexinclude_HEADERS   = $(top_srcdir)/include/reflex/abslexer.h $(top_srcdir)/
 lib_LIBRARIES           = libreflex.a libreflexmin.a
 
 libreflex_a_CPPFLAGS    = -I$(top_srcdir)/include $(SIMD_FLAGS)
-libreflex_a_SOURCES     = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp posix.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp
+libreflex_a_SOURCES     = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp posix.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp
 
 libreflexmin_a_CPPFLAGS = -I$(top_srcdir)/include $(SIMD_FLAGS)
-libreflexmin_a_SOURCES  = debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp utf8.cpp
+libreflexmin_a_SOURCES  = debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp simd_avx2.cpp simd_avx512bw.cpp utf8.cpp
+
+libreflex_a-simd_avx2.$(OBJEXT) : CXXFLAGS += $(SIMD_AVX2_FLAGS)
+libreflex_a-simd_avx512bw.$(OBJEXT) : CXXFLAGS += $(SIMD_AVX512BW_FLAGS)
+
+libreflexmin_a-simd_avx2.$(OBJEXT) : CXXFLAGS += $(SIMD_AVX2_FLAGS)
+libreflexmin_a-simd_avx512bw.$(OBJEXT) : CXXFLAGS += $(SIMD_AVX512BW_FLAGS)
 
 # removed to avoid Max OS X libtool issues, alas...
 # lib_LTLIBRARIES       = libreflex.la libreflexmin.a
 #
-# libreflex_la_CPPFLAGS = -I$(top_srcdir)/include
-# libreflex_la_SOURCES  = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp posix.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp
+# libreflex_la_CPPFLAGS = -I$(top_srcdir)/include $(SIMD_FLAGS)
+# libreflex_la_SOURCES  = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp posix.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp
 #
 # libreflexmin_la_CPPFLAGS = -I$(top_srcdir)/include
-# libreflexmin_la_SOURCES  = debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp utf8.cpp
+# libreflexmin_la_SOURCES  = debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp simd_avx2.cpp simd_avx512bw.cpp utf8.cpp

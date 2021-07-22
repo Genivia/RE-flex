@@ -219,6 +219,15 @@ work around this problem, run:
     $ autoreconf -fi
     $ ./configure && make
 
+The above builds the library with SSE/AVX optimizations applied.  To disable
+AVX optimizations:
+
+    $ ./configure --disable-avx && make
+
+To disable both SSE2 and AVX optimizations:
+
+    $ ./configure --disable-sse2 && make
+
 ### Optional libraries to install
 
 - To use PCRE2 as a regex engine with the RE/flex library and scanner
@@ -540,6 +549,7 @@ Changelog
 - Jun  4, 2021: 3.0.6 minor improvements.
 - Jun  6, 2021: 3.0.7 updated examples to fix build problems.
 - Jul 15, 2021: 3.0.8 minor improvements.
+- Jul 22, 2021: 3.0.9 SIMD code split into `simd_avx2.cpp` and `simd_avx512bw.cpp` to support runtime CPU ID checking when the library is built with `./configure; make`, disable AVX with `./configure --disable-avx`, disable SSE2 with `./configure --disable-sse2`; UTF-16LE BOM detection correction.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

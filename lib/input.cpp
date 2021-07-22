@@ -28,7 +28,7 @@
 
 /**
 @file      input.cpp
-@brief     RE/flex input character sequence class
+@brief     RE/flex input character sequence class and simd.h CPUID check
 @author    Robert van Engelen - engelen@genivia.com
 @copyright (c) 2016-2020, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
@@ -684,7 +684,7 @@ void Input::file_init(file_encoding_type enc)
           ulen_ = 2;
           if (utf8_[0] == '\0' && utf8_[1] == '\0')  // UTF-32 big endian BOM 0000XXXX?
           {
-            if (::fread(&utf8_[2], 2, 1, file_) == 1)
+            if (::fread(utf8_ + 2, 2, 1, file_) == 1)
             {
               ulen_ = 4;
               if (utf8_[2] == '\xfe' && utf8_[3] == '\xff') // UTF-32 big endian BOM 0000FEFF?
@@ -703,26 +703,41 @@ void Input::file_init(file_encoding_type enc)
           }
           else if (utf8_[0] == '\xff' && utf8_[1] == '\xfe') // UTF-16 or UTF-32 little endian BOM FFFEXXXX?
           {
-            if (::fread(&utf8_[2], 2, 1, file_) == 1)
+            if (::fread(utf8_ + 2, 2, 1, file_) == 1)
             {
+              size_ = 0;
               if (utf8_[2] == '\0' && utf8_[3] == '\0') // UTF-32 little endian BOM FFFE0000?
               {
-                size_ = 0;
                 ulen_ = 0;
                 utfx_ = file_encoding::utf32le;
               }
               else
               {
-                size_ = 0;
-                uidx_ = 2;
-                ulen_ = 1;
+                int c = static_cast<unsigned char>(utf8_[2]) | static_cast<unsigned char>(utf8_[3]) << 8;
+                if (c < 0x80)
+                {
+                  uidx_ = 2;
+                  ulen_ = 1;
+                }
+                else
+                {
+                  if (c >= 0xD800 && c < 0xE000)
+                  {
+                    // UTF-16 surrogate pair
+                    if (c < 0xDC00 && ::fread(utf8_, 2, 1, file_) == 1 && (static_cast<unsigned char>(utf8_[1]) & 0xFC) == 0xDC)
+                      c = 0x010000 - 0xDC00 + ((c - 0xD800) << 10) + (static_cast<unsigned char>(utf8_[0]) | static_cast<unsigned char>(utf8_[1]) << 8);
+                    else
+                      c = REFLEX_NONCHAR;
+                  }
+                  ulen_ = static_cast<unsigned short>(utf8(c, utf8_)); // always a short unsigned int
+                }
                 utfx_ = file_encoding::utf16le;
               }
             }
           }
           else if (utf8_[0] == '\xef' && utf8_[1] == '\xbb') // UTF-8 BOM EFBBXX?
           {
-            if (::fread(&utf8_[2], 1, 1, file_) == 1)
+            if (::fread(utf8_ + 2, 1, 1, file_) == 1)
             {
               ulen_ = 3;
               if (utf8_[2] == '\xbf') // UTF-8 BOM EFBBBF?
@@ -1366,14 +1381,9 @@ void Input::file_encoding(unsigned short enc, const unsigned short *page)
 
 #if defined(HAVE_AVX512BW) || defined(HAVE_AVX2) || defined(HAVE_SSE2)
 
-#ifdef _MSC_VER
-# include <intrin.h>
-# define cpuidex __cpuidex
-#else
-# include <cpuid.h>
-# define cpuidex(CPUInfo, id, subid) __cpuid_count(id, subid, CPUInfo[0], CPUInfo[1], CPUInfo[2], CPUInfo[3])
-#endif
+#include <reflex/simd.h>
 
+// simd.h get_HW()
 static uint64_t get_HW()
 {
   int CPUInfo1[4] = { 0, 0, 0, 0 };
@@ -1388,15 +1398,8 @@ static uint64_t get_HW()
   return static_cast<uint32_t>(CPUInfo1[2]) | (static_cast<uint64_t>(static_cast<uint32_t>(CPUInfo7[1])) << 32);
 }
 
-#else
-
-static uint64_t get_HW()
-{
-  return 0ULL;
-}
+uint64_t HW = get_HW();
 
 #endif
-
-uint64_t HW = get_HW();
 
 } // namespace reflex
