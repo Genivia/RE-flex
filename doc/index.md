@@ -785,8 +785,8 @@ change its pattern, use the following methods:
   `own_pattern()` | true if the matcher has a pattern to manage and delete
   `pattern()`     | a reference to the pattern object
   `buffer()`      | buffer all input at once, returns true if successful
-  `buffer(n)`     | set the initial buffer size to `n` bytes to buffer input
-  `buffer(b, n)`  | use buffer of `n` bytes at address `b` containing a string of `n`-1 bytes (zero copy)
+  `buffer(n)`     | set the buffer size to `n` bytes to buffer input
+  `buffer(b, n)`  | use buffer of `n` bytes at address `b` with to a string of `n`-1 bytes (zero copy)
   `interactive()` | set buffer size to 1 for console-based (TTY) input
   `flush()`       | flush the remaining input from the internal buffer
   `reset()`       | resets the matcher, restarting it from the remaining input
@@ -838,8 +838,8 @@ all input data at once is done with the `>>` operator as a shortcut:
 ~~~
 
 Zero-copy overhead is achieved by specifying `buffer(b, n)` to read `n`-1 bytes
-at address `b` for in-place matching, where bytes `b[0...n]` are possibly
-modified by the matcher:
+located at address `b` for in-place matching, where bytes `b[0...n]` are
+possibly modified by the matcher:
 
 ~~~{.cpp}
     // read a 0-terminated buffer in place, buffer content is changed!!
@@ -3715,8 +3715,8 @@ The following methods are available to specify an input source:
   `in(i)`             | `yyrestart(i)`           | reset and scan input from `reflex::Input i`
   `in(s)`             | `yy_scan_string(s)`      | reset and scan string `s` (`std::string` or `char*`)
   `in(s)`             | `yy_scan_wstring(s)`     | reset and scan wide string `s` (`std::wstring` or `wchar_t*`)
-  `in(b, n)`          | `yy_scan_bytes(b, n)`    | reset and scan `n` bytes at `b` address (buffered)
-  `buffer(b, n+1)`    | `yy_scan_buffer(b, n+2)` | reset and scan `n` bytes at `b` address (zero copy)
+  `in(b, n)`          | `yy_scan_bytes(b, n)`    | reset and scan `n` bytes at address `b` (buffered)
+  `buffer(b, n+1)`    | `yy_scan_buffer(b, n+2)` | reset and scan `n` bytes at address `b` (zero copy)
 
 For example, to switch input to another source while using the scanner, use
 `in(i)` with `reflex::Input i` as an argument:
@@ -7315,7 +7315,7 @@ interactive, you can use the following methods:
   `input(i)`      | set input to `reflex::Input i` (string, stream, or `FILE*`)
   `buffer()`      | buffer all input at once, returns true if successful
   `buffer(n)`     | set the adaptive buffer size to `n` bytes to buffer input
-  `buffer(b, n)`  | use buffer of `n` bytes at address `b` containing a string of `n`-1 bytes (zero copy)
+  `buffer(b, n)`  | use buffer of `n` bytes at address `b` with to a string of `n`-1 bytes (zero copy)
   `interactive()` | sets buffer size to 1 for console-based (TTY) input
   `flush()`       | flush the remaining input from the internal buffer
   `reset()`       | resets the matcher, restarting it from the remaining input
@@ -8246,10 +8246,11 @@ the following declarations are generated with `−−flex` and `−−bison`:
 
 Note that `yyin` is not a global variable, because the `yyin` macro expands to
 a pointer to the `reflex::Input` of the matcher.  This offers advanced input
-handling capabilities that may be useful.
+handling capabilities with `reflex::Input` that is more useful compared to the
+traditional global `FILE *yyin` variable.
 
 However, the following declaration, when present in a Lex/Flex lexer
-specification, causes a compilation error:
+specification, may cause a compilation error:
 
 <div class="alt">
 ~~~{.cpp}
@@ -8270,7 +8271,7 @@ global `FILE*` type variables:
 
 Note that without option `−−yy`, when options `−−flex` and `−−bison` are used,
 `yyin` is a pointer to a `reflex::Input` object.  This means that `yyin` is not
-restricted to `FILE*` types:
+restricted to `FILE*` types and accepts files, steams and strings:
 
 <div class="alt">
 ~~~{.cpp}
@@ -8294,7 +8295,7 @@ Compilation errors when using yy functions                      {#yy-functions}
 ------------------------------------------
 
 To use Flex' `yy` functions in your scanner's actions, use option `−−flex` for
-Flex compatibility.
+Flex compatibility (see also previous section).
 
 In addition, note that by default the <b>`reflex`</b> command generates a
 reentrant C++ scanner class, unless option `−−bison` is used.  This means that
@@ -8326,14 +8327,13 @@ your parser.  These are the alternatives:
     }
 ~~~
 </div>
- Note that the `yyinput()` macro expands to `YY_SCANNER.input()`, where
- `YY_SCANNER` is normally `(*this)`, i.e. the current scanner object, or
- `YY_SCANNER` is the global scanner object/state when option `−−bison` is used
- to generate global `yy` variables and functions stored in the global
- `YY_SCANNER` object.
+Note that the `yyinput()` macro expands to `YY_SCANNER.input()`, where
+`YY_SCANNER` is normally `(*this)`, i.e. the current scanner object, or
+`YY_SCANNER` is the global scanner object/state when option `−−bison` is used
+to generate global `yy` variables and functions stored in the global
+`YY_SCANNER` object.
 
 🔝 [Back to table of contents](#)
-
 
 
 Invalid UTF encodings                                            {#invalid-utf}
@@ -8385,7 +8385,7 @@ character class by intersecting the class with `[\p{Unicode}]`, that is
 in classes that are within range U+0000 to U+10FFFF and excludes surrogate
 halves.
 
-🔝 [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Error reporting and recovery                                          {#errors}
@@ -8678,7 +8678,7 @@ enabled with:
 For more details on Bison error messaging, resolution, and LAC, please see the
 Bison documentation.
 
-🔝 [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 On using setlocale                                                 {#setlocale}
@@ -8756,7 +8756,7 @@ a BOM is detected the scanner switches to UTF scanning.
 
 See \ref regex-input-file to set file encodings.
 
-🔝 [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Files with CRLF pairs                                                   {#crlf}
@@ -8792,7 +8792,7 @@ Reading a file in the default "text mode" interprets ^Z (0x1A) as EOF.  The
 latest RE/flex releases automatically switch `FILE*` input to binary mode on
 Windows systems when the file is encoded in UTF-16 or UTF-32, but not UTF-8.
 
-🔝 [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Handling old Macintosh files containing CR newlines                       {#cr}
@@ -8833,7 +8833,7 @@ normalizing to UTF-8:
 Then use the `input` object to read `stdin` or any other `FILE*`.  See also
 \ref regex-input-file.
 
-🔝 [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Lazy repetitions                                                        {#lazy}
@@ -9159,7 +9159,7 @@ RE/flex applications:
   <i>`lex.yy.h`</i> with the lexer class to include in the source code of your
   lexer application.
 
-🔝 [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Minimized library and cross compiling                                {#linking}
@@ -9188,6 +9188,37 @@ in the library.  These optimizations are not applicable to scanners.
 🔝 [Back to table of contents](#)
 
 
+How to minimize runtime memory usage                                {#memusage}
+------------------------------------
+
+Runtime memory usage is determined by two entities, the pattern DFA and the
+input buffer:
+
+- Use <b>`reflex`</b> option `−−full` to create a statically-allocated table
+  DFA for the scanner's regular expression patterns or option `−−fast` to
+  generate a direct-coded DFA.  Without one of these options, by default a DFA
+  is created at runtime and stored in heap space.
+
+- Compile the generated source code with `-DREFLEX_BLOCK_SIZE=4096` to override
+  the internal buffer `reflex::AbstractMatcher::Const::BLOCK` size.  By
+  default, the `reflex::AbstractMatcher::Const::BLOCK` size is 256K for a large
+  512K buffer optimized for high-performance file searching and tokenization.
+  The buffer is a sliding window over the input, i.e. input files may be much
+  larger than the buffer size.  A reasonably small `REFLEX_BLOCK_SIZE` is 8192
+  for a 16K buffer that grows in increments of 8192 bytes to fit pattern
+  matches that exceed 16K.  A small buffer automatically expands to accommodate
+  larger pattern matches.  However, when using the `line()` and `wline()`
+  methods, very long lines may not fit and the return string values of `line()`
+  and `wline()` may be truncated as a result.  Furtheremore, a small buffer
+  increase processing time, i.e. to frequently move the buffered window along a
+  file and increases the cost to decode UTF-16/32 into UTF-8 multibyte
+  sequences.
+
+@warning The value of `REFLEX_BLOCK_SIZE` should not be less than 4096.
+
+🔝 [Back to table of contents](#)
+
+
 MSVC++ compiler bug                                                     {#msvc}
 -------------------
 
@@ -9209,7 +9240,7 @@ Instead, we should write the following:
       std::cout << match.text() << std::endl;
 ~~~
 
-🔝 [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Bugs                                                                    {#bugs}
@@ -9224,7 +9255,7 @@ old with new versions may cause problems.  For example, when new versions of
 RE/flex header files are imported into your project but an old RE/flex library
 version is still linked with your code, the library may likely misbehave.
 
-🔝 [Back to contents](#)
+🔝 [Back to table of contents](#)
 
 
 Installing RE/flex                                                  {#download}
