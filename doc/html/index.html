@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Aug 14 2021 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Sep 14 2021 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -1964,9 +1964,9 @@ Inheriting Lexer/yyFlexLexer                                  </h2>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="reflex-multiple"></a>
 Combining multiple lexers                                    </h2>
-<p>To combine multiple lexers in one application, use the <code>−−lexer=NAME</code> option. This option renames the generated lexer class to avoid lexer class name clashes. Use this option in combination with option <code>−−header-file</code> to output a header file with the lexer class declaration to include in your application source code.</p>
-<p>Use option <code>−−prefix=NAME</code> to output the generated code in file <em><code>lex.NAME.cpp</code></em> instead of the standard <em><code>lex.yy.cpp</code></em> to avoid file name clashes. This option also affect the <code>−−flex</code> option by generating <code>xxFlexLexer</code> with a <code>xxlex()</code> method when option <code>−−prefix=xx</code> is specified. The generated <code>#define</code> names (some of which are added to support option <code>−−flex</code>) are prefixed to avoid macro name clashes.</p>
-<p>Alternatively to <code>−−lexer=NAME</code> you can use <code>−−namespace=NAME</code> to place the generated lexer class in a C++ namespace to avoid lexer class name clashes.</p>
+<p>To rename a lexer class to combine multiple lexers in one application, use the <code>−−lexer=NAME</code> option. This option renames the generated lexer class to avoid lexer class name clashes. Use this option in combination with option <code>−−header-file</code> to output a header file with the lexer class declaration to include in your application source code.</p>
+<p>In addition, use option <code>−−prefix=NAME</code> to output the generated code in file <em><code>lex.NAME.cpp</code></em> instead of the standard <em><code>lex.yy.cpp</code></em> to avoid name clashes. This option also affect the <code>−−flex</code> option by generating <code>xxFlexLexer</code> with a <code>xxlex()</code> method when option <code>−−prefix=xx</code> is specified. The generated <code>#define</code> names (some of which are added to support option <code>−−flex</code>) are prefixed to avoid macro name clashes.</p>
+<p>Alternatively to <code>−−lexer=NAME</code> and <code>−−prefix=NAME</code>, you can use <code>−−namespace=NAME</code> to place the generated lexer class in a C++ namespace to avoid lexer class name clashes.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="reflex-input"></a>
 Switching input sources                                         </h2>
@@ -3410,7 +3410,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Aug 14 2021 12:24:39 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Sep 14 2021 14:28:20 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

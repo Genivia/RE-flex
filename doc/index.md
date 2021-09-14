@@ -3664,21 +3664,22 @@ lexer specification.
 Combining multiple lexers                                    {#reflex-multiple}
 -------------------------
 
-To combine multiple lexers in one application, use the `−−lexer=NAME` option.
-This option renames the generated lexer class to avoid lexer class name
-clashes.  Use this option in combination with option `−−header-file` to output
-a header file with the lexer class declaration to include in your application
-source code.
+To rename a lexer class to combine multiple lexers in one application, use the
+`−−lexer=NAME` option.  This option renames the generated lexer class to avoid
+lexer class name clashes.  Use this option in combination with option
+`−−header-file` to output a header file with the lexer class declaration to
+include in your application source code.
 
-Use option `−−prefix=NAME` to output the generated code in file
-<i>`lex.NAME.cpp`</i> instead of the standard <i>`lex.yy.cpp`</i> to avoid file
-name clashes.  This option also affect the `−−flex` option by generating
+In addition, use option `−−prefix=NAME` to output the generated code in file
+<i>`lex.NAME.cpp`</i> instead of the standard <i>`lex.yy.cpp`</i> to avoid name
+clashes.  This option also affect the `−−flex` option by generating
 `xxFlexLexer` with a `xxlex()` method when option `−−prefix=xx` is specified.
 The generated `#define` names (some of which are added to support option
 `−−flex`) are prefixed to avoid macro name clashes.
 
-Alternatively to `−−lexer=NAME` you can use `−−namespace=NAME` to place the
-generated lexer class in a C++ namespace to avoid lexer class name clashes.
+Alternatively to `−−lexer=NAME` and `−−prefix=NAME`, you can use
+`−−namespace=NAME` to place the generated lexer class in a C++ namespace to
+avoid lexer class name clashes.
 
 🔝 [Back to table of contents](#)
 
