@@ -50,3 +50,6 @@ config.h
 config.status
 config.log
 stamp-h1
+
+# default cmake build directory
+/build/
