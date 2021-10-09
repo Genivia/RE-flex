@@ -32,11 +32,11 @@ set(bin_sources
 )
 
 set(headers
-  ${CMAKE_CURRENT_LIST_DIR}/include
+  ${PROJECT_SOURCE_DIR}/include
 )
 
-list(TRANSFORM lib_sources PREPEND ${CMAKE_CURRENT_LIST_DIR}/)
-list(TRANSFORM bin_sources PREPEND ${CMAKE_CURRENT_LIST_DIR}/)
+list(TRANSFORM lib_sources PREPEND ${PROJECT_SOURCE_DIR}/)
+list(TRANSFORM bin_sources PREPEND ${PROJECT_SOURCE_DIR}/)
 
 add_library(libreflex SHARED "")
 target_sources(libreflex PRIVATE ${lib_sources})
@@ -51,10 +51,28 @@ target_compile_definitions(libreflexStatic PRIVATE ${simd_definitions})
 target_compile_options(libreflexStatic PRIVATE ${simd_flags})
 
 # Renaming static lib output to match the name (without the extention) of the shared library
-set_target_properties(libreflexStatic PROPERTIES OUTPUT_NAME libreflex)
+set_target_properties(libreflexStatic
+    PROPERTIES OUTPUT_NAME reflex
+)
+set_target_properties(libreflex
+    PROPERTIES OUTPUT_NAME reflex
+)
+
 
 add_executable(reflex "")
 target_sources(reflex PRIVATE ${bin_sources})
 target_link_libraries(reflex PRIVATE libreflexStatic)
 target_compile_definitions(reflex PRIVATE ${simd_definitions})
 target_compile_options(reflex PRIVATE ${simd_flags})
+
+include(GNUInstallDirs)
+
+install(TARGETS reflex libreflex libreflexStatic
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+install(DIRECTORY include/reflex
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    FILES_MATCHING PATTERN "*.h"
+)
