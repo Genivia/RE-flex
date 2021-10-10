@@ -2,12 +2,16 @@ cmake_minimum_required(VERSION 3.15)
 
 project(reflex CXX)
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake;${CMAKE_CURRENT_LIST_DIR}/cmake/modules")
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 set(CMAKE_CXX_STANDARD 11)
 
 # The following setups the simd_* variables
 include(SIMDTestAndSetup)
+
+#
+# Defining source variables
+#
 
 set(lib_sources
   lib/convert.cpp
@@ -34,50 +38,75 @@ set(bin_sources
 list(TRANSFORM lib_sources PREPEND ${PROJECT_SOURCE_DIR}/)
 list(TRANSFORM bin_sources PREPEND ${PROJECT_SOURCE_DIR}/)
 
-add_library(libreflex SHARED "")
-target_sources(libreflex PRIVATE ${lib_sources})
-target_include_directories(libreflex PUBLIC
+#
+# Defining targets section
+#
+
+add_library(ReflexLib SHARED "")
+target_sources(ReflexLib PRIVATE ${lib_sources})
+target_include_directories(ReflexLib PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-target_compile_definitions(libreflex PRIVATE ${simd_definitions})
-target_compile_options(libreflex PRIVATE ${simd_flags})
+target_compile_definitions(ReflexLib PRIVATE ${simd_definitions})
+target_compile_options(ReflexLib PRIVATE ${simd_flags})
 
-add_library(libreflexStatic STATIC "")
-target_sources(libreflexStatic PRIVATE ${lib_sources})
-target_include_directories(libreflexStatic PUBLIC
+add_library(ReflexLibStatic STATIC "")
+target_sources(ReflexLibStatic PRIVATE ${lib_sources})
+target_include_directories(ReflexLibStatic PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-target_compile_definitions(libreflexStatic PRIVATE ${simd_definitions})
-target_compile_options(libreflexStatic PRIVATE ${simd_flags})
+target_compile_definitions(ReflexLibStatic PRIVATE ${simd_definitions})
+target_compile_options(ReflexLibStatic PRIVATE ${simd_flags})
 
-# Renaming static lib output to match the name (without the extention) of the shared library
-set_target_properties(libreflexStatic
-    PROPERTIES OUTPUT_NAME reflex
-)
-set_target_properties(libreflex
-    PROPERTIES OUTPUT_NAME reflex
+add_executable(Reflex "")
+target_sources(Reflex PRIVATE ${bin_sources})
+target_link_libraries(Reflex PRIVATE ReflexLibStatic)
+target_compile_definitions(Reflex PRIVATE ${simd_definitions})
+target_compile_options(Reflex PRIVATE ${simd_flags})
+
+# Don't user target name as filename instead use lowercase name for backwards compatibility
+set_target_properties(ReflexLibStatic ReflexLib Reflex
+  PROPERTIES OUTPUT_NAME reflex
 )
 
-add_executable(reflex "")
-target_sources(reflex PRIVATE ${bin_sources})
-target_link_libraries(reflex PRIVATE libreflexStatic)
-target_compile_definitions(reflex PRIVATE ${simd_definitions})
-target_compile_options(reflex PRIVATE ${simd_flags})
+#
+# Exporting targets section
+#
 
 include(GNUInstallDirs)
 
-install(TARGETS reflex libreflex libreflexStatic EXPORT reflex
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+install(TARGETS Reflex ReflexLib ReflexLibStatic
+  EXPORT ReflexTargets
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
+
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/reflex
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    FILES_MATCHING PATTERN "*.h"
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  FILES_MATCHING PATTERN "*.h"
 )
 
-install(FILES ${CMAKE_CURRENT_LIST_DIR}/cmake/reflex-config.cmake DESTINATION reflex/share/reflex)
+install(EXPORT ReflexTargets
+  NAMESPACE Reflex::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/reflex
+)
 
-install(EXPORT reflex DESTINATION reflex/share/reflex)
+#
+# Packaging section (find_package support)
+#
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/ReflexConfig.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/reflex
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/ReflexConfig.cmake"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/reflex
+)
