@@ -552,6 +552,7 @@ Changelog
 - Jul 22, 2021: 3.0.9 SIMD code split into `simd_avx2.cpp` and `simd_avx512bw.cpp` to support runtime CPU ID checking when the library is built with `./configure; make`, disable AVX with `./configure --disable-avx`, disable SSE2 with `./configure --disable-sse2`; UTF-16LE BOM detection correction.
 - Aug 14, 2021: 3.0.10 fixed missing `simd.h` after installation, added `REFLEX_BUFFER_SIZE` to customize the initial size and growth of the input buffer.
 - Sep 14, 2021: 3.0.11 minor change to apply `--prefix` to the generated `REFLEX_code_[PREFIX]STATE` code.
+- Oct 11, 2021: 3.0.12 updated to Unicode 14; fixed a compilation issue with `--params` when used with `--flex`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
