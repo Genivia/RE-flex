@@ -69,7 +69,78 @@ library in `/usr/local/lib` and the `reflex` command in `/usr/local/bin`:
 
     $ sudo sh allinstall.sh
 
-### Configure and make
+### Configure and make - CMake
+
+Configuring the build is done in a separate directory like so:
+
+    $ mkdir build && cd build && cmake ..
+
+Adding options to the configuration step can be done via the -D option when configuring the build.
+The following configuration option `CMAKE_INSTALL_PREFIX` will set the install prefix to a custom
+location:
+
+    $ mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=<path/to/install/dir> ..
+
+To see more configuration options the following the follow command in the build directory:
+
+    $ cmake -LAH ..
+
+To run the main build target the following command can be issued in the build directory:
+
+    $ cmake --build .
+
+To build a specific target, the `--target` option can be used together `--build`.
+
+The following command will install the binary, and libraries in the path specified by 
+`CMAKE_INSTALL_PREFIX`:
+
+    $ cmake --build --target install .
+
+By default, this will place the build artifacts in system accessible path (On Linux /usr/local/,
+Windows C:\Program Files\ ) and may therefore require admin permissions to be executed.
+
+#### Using the reflex in your own CMake supported project as a package
+
+When installed on the system, the `find_package` CMake can be used find the reflex libraries and
+binary, in your own CMake supported project. To do this, add the following line in your CMakeLists.txt
+file:
+
+    find_package(Reflex)
+
+This adds the following targets to your CMakeLists.txt file:
+
+- `Reflex::Reflex` The reflex binary that can be used to generate parser and lexers.
+- `Reflex::ReflexLib` The reflex shared library, that can be used in `target_link_libraries` statements
+to link your targets with the reflex implementation.
+- `Reflex::ReflexLibStatic` The reflex static library, can be used in the same way as the shared
+library target.
+
+Linking against any of the library targets also makes header files available for the targets linking
+against library targets.
+
+#### Using CMake to generate the lexer/parser source files
+
+Following snippet can be used to setup lexer/parser generation using the reflex binary available from 
+the `Reflex:Reflex` target imported with the `find_package` command:
+
+```
+add_custom_command(
+    OUTPUT lex.yy.cpp
+    COMMAND Reflex::Reflex -+ ${CMAKE_CURRENT_SOURCE_DIR}/lexerDefine.l
+    DEPENDS Reflex::Reflex
+    COMMENT "Generating lexer from 'lexerDefine.l'..."
+    VERBATIM
+)
+```
+Here we generate the `lex.yy.cpp` source file from a lexer file located in `CMAKE_CURRENT_SOURCE_DIR`
+directory (which usually is the same directory path that the CMakeLists.txt file is located in).
+Using the `lex.yy.cpp` file as a source file in any of the `target_sources`, `add_executable` or
+`add_library` statements will then trigger this command and generate the `lex.yy.cpp` file.
+
+Any command line arguments that the reflex binary take can be added the `COMMAND` line after the
+`Reflex:Reflex` name.
+
+### Configure and make - Autotools
 
 The configure script accepts configuration and installation options.  To view
 these options, run:
