@@ -9358,22 +9358,21 @@ input buffer:
   generate a direct-coded DFA.  Without one of these options, by default a DFA
   is created at runtime and stored in heap space.
 
-- Compile the generated source code with `-DREFLEX_BLOCK_SIZE=4096` to override
-  the internal buffer `reflex::AbstractMatcher::Const::BLOCK` size.  By
-  default, the `reflex::AbstractMatcher::Const::BLOCK` size is 256K for a large
-  512K buffer optimized for high-performance file searching and tokenization.
-  The buffer is a sliding window over the input, i.e. input files may be much
-  larger than the buffer size.  A reasonably small `REFLEX_BLOCK_SIZE` is 8192
-  for a 16K buffer that grows in increments of 8192 bytes to fit pattern
-  matches that exceed 16K.  A small buffer automatically expands to accommodate
-  larger pattern matches.  However, when using the `line()` and `wline()`
-  methods, very long lines may not fit and the return string values of `line()`
-  and `wline()` may be truncated as a result.  Furtheremore, a small buffer
+- Compile the generated source code with `-DREFLEX_BUFSZ=16384` to override
+  the internal buffer `reflex::AbstractMatcher::Const::BUFSZ` size.  By
+  default, the `reflex::AbstractMatcher::Const::BLOCK` size is 64K, which is
+  reasonably optimal for high-performance file searching and tokenization.  The
+  buffer is a sliding window over the input, i.e. input files may be much
+  larger than the buffer size.  A reasonably small `REFLEX_BUFSZ` is 16384
+  for a 16K buffer.  A small buffer automatically expands to accommodate larger
+  pattern matches.  However, when using the `line()` and `wline()` methods,
+  very long lines may not fit and the return string values of `line()` and
+  `wline()` may be truncated as a result.  Furtheremore, a small buffer
   increase processing time, i.e. to frequently move the buffered window along a
   file and increases the cost to decode UTF-16/32 into UTF-8 multibyte
   sequences.
 
-@warning The value of `REFLEX_BLOCK_SIZE` should not be less than 4096.
+@warning The value of `REFLEX_BUFSZ` should not be less than 8192.
 
 🔝 [Back to table of contents](#)
 

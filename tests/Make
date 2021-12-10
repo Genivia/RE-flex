@@ -8,7 +8,7 @@
 # requires Boost.Regex and std::regex
 #
 
-CXX       = c++
+CXX       = c++ -std=c++11
 REFLEX    = ../bin/reflex
 REFLAGS   =
 LIBREFLEX =../lib/libreflex.a

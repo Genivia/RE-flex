@@ -2159,6 +2159,20 @@ void Reflex::write_class()
           "    yylloc.end.column = static_cast<unsigned int>(matcher().columno_end());\n"
           "    return yylloc;\n"
           "  }\n";
+      if (lex != "yylex")
+        *out <<
+          "  virtual " << token_type << " yylex(void)\n"
+          "  {\n"
+          "    LexerError(\"" << lexer << "::yylex invoked but %option lex=" << lex << " is used\");\n"
+          "    yyterminate();\n"
+          "  }\n";
+      else if (!options["params"].empty())
+        *out <<
+          "  virtual " << token_type << " yylex(void)\n"
+          "  {\n"
+          "    LexerError(\"" << lexer << "::yylex invoked but %option params=\"" << params << "\" is used\");\n"
+          "    yyterminate();\n"
+          "  }\n";
       *out <<
         "  virtual " << token_type << " " << lex << "(" << params << ")";
     }

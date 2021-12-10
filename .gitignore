@@ -42,7 +42,7 @@ a.out
 .*.swa
 
 # Autotools
-.deps
+.deps/
 .dirstamp
 autom4te.cache
 Makefile

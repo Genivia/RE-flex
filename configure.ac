@@ -1,9 +1,7 @@
-AC_INIT(re-flex,3.0)
+AC_INIT([re-flex],3.1)
 AM_INIT_AUTOMAKE([foreign])
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h,sys/time.h])
 AC_COPYRIGHT([Copyright (C) 2016-2021 Robert van Engelen, Genivia Inc.])
-
-AC_HEADER_TIME
 
 AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
@@ -32,7 +30,7 @@ PLATFORM=${host}
 AC_SUBST(PLATFORM)
 
 AC_ARG_ENABLE(sse2,
-  [AC_HELP_STRING([--disable-sse2],
+  [AS_HELP_STRING([--disable-sse2],
                   [disable SSE2 and AVX optimizations])],
   [with_no_sse2="yes"],
   [with_no_sse2="no"])
@@ -50,7 +48,7 @@ if test "x$with_no_sse2" = "xno"; then
   if test "x$msse2_ok" = "xyes"; then
     SIMD_FLAGS="-msse2 -DHAVE_SSE2"
     AC_ARG_ENABLE(avx,
-      [AC_HELP_STRING([--disable-avx],
+      [AS_HELP_STRING([--disable-avx],
                       [disable AVX optimizations])],
       [with_no_avx="yes"],
       [with_no_avx="no"])
@@ -89,7 +87,7 @@ fi
 
 if test "x$SIMD_FLAGS" = "x"; then
 AC_ARG_ENABLE(neon,
-  [AC_HELP_STRING([--disable-neon],
+  [AS_HELP_STRING([--disable-neon],
                   [disable ARM NEON/AArch64 optimizations])],
   [with_no_neon="yes"],
   [with_no_neon="no"])

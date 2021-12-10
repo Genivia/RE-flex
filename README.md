@@ -553,6 +553,7 @@ Changelog
 - Aug 14, 2021: 3.0.10 fixed missing `simd.h` after installation, added `REFLEX_BUFFER_SIZE` to customize the initial size and growth of the input buffer.
 - Sep 14, 2021: 3.0.11 minor change to apply `--prefix` to the generated `REFLEX_code_[PREFIX]STATE` code.
 - Oct 11, 2021: 3.0.12 updated to Unicode 14; fixed a compilation issue with `--params` when used with `--flex`.
+- Dec 10, 2021: 3.1.0 improved buffering mechanism with reduced buffer sizes; faster `columno()` for long lines; fix CP-1251 table typo.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
