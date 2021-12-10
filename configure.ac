@@ -1,6 +1,6 @@
 AC_INIT([re-flex],3.1)
 AM_INIT_AUTOMAKE([foreign])
-AC_CONFIG_HEADERS([config.h,sys/time.h])
+AC_CONFIG_HEADERS([config.h])
 AC_COPYRIGHT([Copyright (C) 2016-2021 Robert van Engelen, Genivia Inc.])
 
 AC_TYPE_SIZE_T
@@ -18,6 +18,8 @@ AC_PROG_CXX
 AM_PROG_AR
 AC_PROG_RANLIB
 AC_PROG_INSTALL
+
+AC_CHECK_HEADERS([sys/time.h])
 
 # removed to avoid Max OS X libtool issues, alas...
 # LT_INIT
