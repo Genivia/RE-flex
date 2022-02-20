@@ -36,6 +36,7 @@
 
 #include <reflex/pattern.h>
 #include <reflex/timer.h>
+#include <algorithm>
 #include <cstdlib>
 #include <cerrno>
 #include <cmath>
@@ -168,6 +169,12 @@ void Pattern::init(const char *options, const uint8_t *pred)
   len_ = 0;
   min_ = 0;
   one_ = false;
+  vno_ = 0;
+  eno_ = 0;
+  pms_ = 0.0;
+  vms_ = 0.0;
+  ems_ = 0.0;
+  wms_ = 0.0;
   if (opc_ != NULL || fsm_ != NULL )
   {
     if (pred != NULL)
@@ -202,18 +209,36 @@ void Pattern::init(const char *options, const uint8_t *pred)
   {
     Positions startpos;
     Follow    followpos;
-    Map       modifiers;
+    Mods      modifiers;
     Map       lookahead;
     // parse the regex pattern to construct the followpos NFA without epsilon transitions
     parse(startpos, followpos, modifiers, lookahead);
     // start state = startpos = firstpost of the followpos NFA, also merge the tree DFA root when non-NULL
+#ifdef WITH_TREE_DFA
+    DFA::State *start;
+    if (startpos.empty())
+    {
+      // all patterns are strings, do not construct a DFA with subset construction
+      start = tfa_.root();
+    }
+    else
+    {
+      // combine tree DFA (if any) with the DFA start state to construct a combined DFA with subset construction
+      start = dfa_.state(tfa_.root(), startpos);
+      // compile the NFA into a DFA
+      compile(start, followpos, modifiers, lookahead);
+    }
+#else
     DFA::State *start = dfa_.state(tfa_.tree, startpos);
     // compile the NFA into a DFA
     compile(start, followpos, modifiers, lookahead);
+#endif
     // assemble DFA opcode tables or direct code
     assemble(start);
     // delete the DFA
     dfa_.clear();
+    // delete the tree DFA
+    tfa_.clear();
   }
 }
 
@@ -286,7 +311,7 @@ void Pattern::init_options(const char *options)
         case 'n':
           for (const char *t = s += (s[1] == '='); *s != ';' && *s != '\0'; ++t)
           {
-            if (*t == ',' || std::isspace(*t) || *t == ';' || *t == '\0')
+            if (*t == ',' || *t == ';' || *t == '\0')
             {
               if (t > s + 1)
               {
@@ -309,7 +334,7 @@ void Pattern::init_options(const char *options)
 void Pattern::parse(
     Positions& startpos,
     Follow&    followpos,
-    Map&       modifiers,
+    Mods       modifiers,
     Map&       lookahead)
 {
   DBGLOG("BEGIN parse()");
@@ -323,6 +348,9 @@ void Pattern::parse(
   Positions  lastpos;
   bool       nullable;
   Iter       iter;
+#ifdef WITH_TREE_DFA
+  DFA::State *last_state = NULL;
+#endif
   timer_type t;
   timer_start(t);
   if (at(0) == '(' && at(1) == '?')
@@ -398,18 +426,16 @@ void Pattern::parse(
     {
       // string pattern found w/o regex metas: merge string into the tree DFA
       bool quote = false;
+#ifdef WITH_TREE_DFA
+      DFA::State *t = tfa_.start();
+#else
       Tree::Node *t = tfa_.root();
+#endif
       while (loc < end)
       {
         Char c = at(loc++);
         if (c == opt_.e)
         {
-          if (at(loc) == 'Q')
-          {
-            quote = true;
-            ++loc;
-            continue;
-          }
           if (at(loc) == 'E')
           {
             quote = false;
@@ -418,6 +444,12 @@ void Pattern::parse(
           }
           if (!quote)
           {
+            if (at(loc) == 'Q')
+            {
+              quote = true;
+              ++loc;
+              continue;
+            }
             static const char abtnvfr[] = "abtnvfr";
             c = at(loc++);
             const char *s = std::strchr(abtnvfr, c);
@@ -429,10 +461,38 @@ void Pattern::parse(
         {
           c = lowercase(c);
         }
+#ifdef WITH_TREE_DFA
+        DFA::State *target_state;
+        DFA::State::Edges::iterator i = t->edges.find(c);
+        if (i == t->edges.end())
+        {
+          if (last_state == NULL)
+            last_state = t; // t points to the tree DFA start state
+          target_state = last_state = last_state->next = tfa_.state();
+          t->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+          if (c >= 'a' && c <= 'z' && opt_.i)
+          {
+            t->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+            ++eno_;
+          }
+          ++eno_;
+          ++vno_;
+        }
+        else
+        {
+          target_state = i->second.second;
+        }
+        t = target_state;
+#else
         t = tfa_.edge(t, c);
+#endif
       }
       if (t->accept == 0)
         t->accept = choice;
+#ifdef WITH_TREE_DFA
+      acc_.resize(choice, false);
+      acc_[choice - 1] = true;
+#endif
     }
     else
     {
@@ -449,35 +509,35 @@ void Pattern::parse(
           modifiers,
           lookahead[choice],
           iter);
-      end_.push_back(loc);
-      set_insert(startpos, firstpos);
+      pos_insert(startpos, firstpos);
       if (nullable)
       {
         if (lazyset.empty())
         {
-          startpos.insert(Position(choice).accept(true));
+          pos_add(startpos, Position(choice).accept(true));
         }
         else
         {
           for (Lazyset::const_iterator l = lazyset.begin(); l != lazyset.end(); ++l)
-            startpos.insert(Position(choice).accept(true).lazy(*l));
+            pos_add(startpos, Position(choice).accept(true).lazy(*l));
         }
       }
       for (Positions::const_iterator p = lastpos.begin(); p != lastpos.end(); ++p)
       {
         if (lazyset.empty())
         {
-          followpos[p->pos()].insert(Position(choice).accept(true));
+          pos_add(followpos[p->pos()], Position(choice).accept(true));
         }
         else
         {
           for (Lazyset::const_iterator l = lazyset.begin(); l != lazyset.end(); ++l)
-            followpos[p->pos()].insert(Position(choice).accept(true).lazy(*l));
+            pos_add(followpos[p->pos()], Position(choice).accept(true).lazy(*l));
         }
       }
     }
     if (++choice == 0)
       error(regex_error::exceeds_limits, loc); // overflow: too many top-level alternations (should never happen)
+    end_.push_back(loc);
   } while (at(loc++) == '|');
   --loc;
   if (at(loc) == ')')
@@ -485,11 +545,11 @@ void Pattern::parse(
   else if (at(loc) != 0)
     error(regex_error::invalid_syntax, loc);
   if (opt_.i)
-    update_modified('i', modifiers, 0, len - 1);
+    update_modified(ModConst::i, modifiers, 0, len - 1);
   if (opt_.m)
-    update_modified('m', modifiers, 0, len - 1);
+    update_modified(ModConst::m, modifiers, 0, len - 1);
   if (opt_.s)
-    update_modified('s', modifiers, 0, len - 1);
+    update_modified(ModConst::s, modifiers, 0, len - 1);
   pms_ = timer_elapsed(t);
 #ifdef DEBUG
   DBGLOGN("startpos = {");
@@ -518,7 +578,7 @@ void Pattern::parse1(
     Follow&    followpos,
     Lazy&      lazyidx,
     Lazyset&   lazyset,
-    Map&       modifiers,
+    Mods       modifiers,
     Locations& lookahead,
     Iter&      iter)
 {
@@ -555,9 +615,9 @@ void Pattern::parse1(
         modifiers,
         lookahead,
         iter1);
-    set_insert(firstpos, firstpos1);
-    set_insert(lastpos, lastpos1);
-    set_insert(lazyset, lazyset1);
+    pos_insert(firstpos, firstpos1);
+    pos_insert(lastpos, lastpos1);
+    lazy_insert(lazyset, lazyset1);
     if (nullable1)
       nullable = true;
     if (iter1 > iter)
@@ -575,7 +635,7 @@ void Pattern::parse2(
     Follow&    followpos,
     Lazy&      lazyidx,
     Lazyset&   lazyset,
-    Map&       modifiers,
+    Mods       modifiers,
     Locations& lookahead,
     Iter&      iter)
 {
@@ -591,12 +651,12 @@ void Pattern::parse2(
           ++loc;
       if (at(loc) == '^')
       {
-        a_pos.insert(Position(loc++));
+        pos_add(a_pos, Position(loc++));
         begin = false; // CHECKED algorithmic options: 7/29 but does not allow ^ as a pattern
       }
       else if (escapes_at(loc, "ABb<>"))
       {
-        a_pos.insert(Position(loc));
+        pos_add(a_pos, Position(loc));
         loc += 2;
         begin = false; // CHECKED algorithmic options: 7/29 but does not allow \b as a pattern
       }
@@ -646,18 +706,18 @@ void Pattern::parse2(
         // CHECKED algorithmic options: lazy(lazyset, firstpos1); does not work for (a|b)*?a*b+, below works
         Positions firstpos2;
         lazy(lazyset, firstpos1, firstpos2);
-        set_insert(firstpos1, firstpos2);
+        pos_insert(firstpos1, firstpos2);
         // if (lazyset1.empty())
         // greedy(firstpos1); // CHECKED algorithmic options: 8/1 works except fails for ((a|b)*?b){2} and (a|b)??(a|b)??aa
       }
       if (nullable)
-        set_insert(firstpos, firstpos1);
+        pos_insert(firstpos, firstpos1);
       for (Positions::const_iterator p = lastpos.begin(); p != lastpos.end(); ++p)
-        set_insert(followpos[p->pos()], firstpos1);
+        pos_insert(followpos[p->pos()], firstpos1);
       if (nullable1)
       {
-        set_insert(lastpos, lastpos1);
-        set_insert(lazyset, lazyset1); // CHECKED 10/21
+        pos_insert(lastpos, lastpos1);
+        lazy_insert(lazyset, lazyset1); // CHECKED 10/21
       }
       else
       {
@@ -665,7 +725,7 @@ void Pattern::parse2(
         lazyset.swap(lazyset1); // CHECKED 10/21
         nullable = false;
       }
-      // CHECKED 10/21 set_insert(lazyset, lazyset1);
+      // CHECKED 10/21 lazy_insert(lazyset, lazyset1);
       if (iter1 > iter)
         iter = iter1;
     }
@@ -674,14 +734,14 @@ void Pattern::parse2(
   {
     for (Positions::const_iterator k = lastpos.begin(); k != lastpos.end(); ++k)
       if (at(k->loc()) == ')' && lookahead.find(k->loc()) != lookahead.end())
-        followpos[p->pos()].insert(*k);
+        pos_add(followpos[p->pos()], *k);
     for (Positions::const_iterator k = lastpos.begin(); k != lastpos.end(); ++k)
-      followpos[k->pos()].insert(p->anchor(!nullable || k->pos() != p->pos()));
+      pos_add(followpos[k->pos()], p->anchor(!nullable || k->pos() != p->pos()));
     lastpos.clear();
-    lastpos.insert(*p);
+    pos_add(lastpos, *p);
     if (nullable || firstpos.empty())
     {
-      firstpos.insert(*p);
+      pos_add(firstpos, *p);
       nullable = false;
     }
   }
@@ -697,7 +757,7 @@ void Pattern::parse3(
     Follow&    followpos,
     Lazy&      lazyidx,
     Lazyset&   lazyset,
-    Map&       modifiers,
+    Mods       modifiers,
     Locations& lookahead,
     Iter&      iter)
 {
@@ -729,7 +789,7 @@ void Pattern::parse3(
       {
         if (++lazyidx == 0)
           error(regex_error::exceeds_limits, loc); // overflow: exceeds max 255 lazy quantifiers
-        lazyset.insert(lazyidx);
+        lazy_add(lazyset, lazyidx);
         if (nullable)
           lazy(lazyset, firstpos);
         ++loc;
@@ -745,13 +805,13 @@ void Pattern::parse3(
         Positions firstpos1;
         lazy(lazyset, firstpos, firstpos1);
         for (Positions::const_iterator p = lastpos.begin(); p != lastpos.end(); ++p)
-          set_insert(followpos[p->pos()], firstpos1);
-        set_insert(firstpos, firstpos1);
+          pos_insert(followpos[p->pos()], firstpos1);
+        pos_insert(firstpos, firstpos1);
       }
       else if (c == '*' || c == '+')
       {
         for (Positions::const_iterator p = lastpos.begin(); p != lastpos.end(); ++p)
-          set_insert(followpos[p->pos()], firstpos);
+          pos_insert(followpos[p->pos()], firstpos);
       }
     }
     else if (c == '{') // {n,m} repeat min n times to max m
@@ -789,13 +849,13 @@ void Pattern::parse3(
         {
           if (++lazyidx == 0)
             error(regex_error::exceeds_limits, loc); // overflow: exceeds max 255 lazy quantifiers
-          lazyset.insert(lazyidx);
+          lazy_add(lazyset, lazyidx);
           if (nullable)
             lazy(lazyset, firstpos);
           /* CHECKED algorithmic options: 8/1 else
              {
              lazy(lazyset, firstpos, firstpos1);
-             set_insert(firstpos, firstpos1);
+             pos_insert(firstpos, firstpos1);
              pfirstpos = &firstpos1;
              } */
           ++loc;
@@ -817,7 +877,7 @@ void Pattern::parse3(
         if (nullable && unlimited) // {0,} == *
         {
           for (Positions::const_iterator p = lastpos.begin(); p != lastpos.end(); ++p)
-            set_insert(followpos[p->pos()], *pfirstpos);
+            pos_insert(followpos[p->pos()], *pfirstpos);
         }
         else if (m > 0)
         {
@@ -829,31 +889,31 @@ void Pattern::parse3(
             if (fp->first.loc() >= b_pos)
               for (Iter i = 0; i < m - 1; ++i)
                 for (Positions::const_iterator p = fp->second.begin(); p != fp->second.end(); ++p)
-                  followpos1[fp->first.iter(iter * (i + 1))].insert(p->iter(iter * (i + 1)));
+                  pos_add(followpos1[fp->first.iter(iter * (i + 1))], p->iter(iter * (i + 1)));
           for (Follow::const_iterator fp = followpos1.begin(); fp != followpos1.end(); ++fp)
-            set_insert(followpos[fp->first], fp->second);
+            pos_insert(followpos[fp->first], fp->second);
           // add m-1 times virtual concatenation (by indexed positions k.i)
           for (Iter i = 0; i < m - 1; ++i)
             for (Positions::const_iterator k = lastpos.begin(); k != lastpos.end(); ++k)
               for (Positions::const_iterator j = pfirstpos->begin(); j != pfirstpos->end(); ++j)
-                followpos[k->pos().iter(iter * i)].insert(j->iter(iter * i + iter));
+                pos_add(followpos[k->pos().iter(iter * i)], j->iter(iter * i + iter));
           if (unlimited)
             for (Positions::const_iterator k = lastpos.begin(); k != lastpos.end(); ++k)
               for (Positions::const_iterator j = pfirstpos->begin(); j != pfirstpos->end(); ++j)
-                followpos[k->pos().iter(iter * (m - 1))].insert(j->iter(iter * (m - 1)));
+                pos_add(followpos[k->pos().iter(iter * (m - 1))], j->iter(iter * (m - 1)));
           if (nullable1)
           {
             // extend firstpos when sub-regex is nullable
             Positions firstpos1 = *pfirstpos;
             for (Iter i = 1; i <= m - 1; ++i)
               for (Positions::const_iterator k = firstpos1.begin(); k != firstpos1.end(); ++k)
-                firstpos.insert(k->iter(iter * i));
+                pos_add(firstpos, k->iter(iter * i));
           }
           // n to m-1 are optional with all 0 to m-1 are optional when nullable
           Positions lastpos1;
           for (Iter i = (nullable ? 0 : n - 1); i <= m - 1; ++i)
             for (Positions::const_iterator k = lastpos.begin(); k != lastpos.end(); ++k)
-              lastpos1.insert(k->iter(iter * i));
+              pos_add(lastpos1, k->iter(iter * i));
           lastpos.swap(lastpos1);
           iter *= m;
         }
@@ -887,7 +947,7 @@ void Pattern::parse4(
     Follow&    followpos,
     Lazy&      lazyidx,
     Lazyset&   lazyset,
-    Map&       modifiers,
+    Mods       modifiers,
     Locations& lookahead,
     Iter&      iter)
 {
@@ -927,7 +987,7 @@ void Pattern::parse4(
             lookahead,
             iter);
         for (Positions::iterator p = firstpos1.begin(); p != firstpos1.end(); ++p)
-          firstpos.insert(p->negate(true));
+          pos_add(firstpos, p->negate(true));
       }
       else if (c == '=') // (?= lookahead
       {
@@ -944,18 +1004,18 @@ void Pattern::parse4(
             modifiers,
             lookahead,
             iter);
-        firstpos.insert(l_pos);
+        pos_add(firstpos, l_pos);
         if (nullable)
-          lastpos.insert(l_pos);
+          pos_add(lastpos, l_pos);
         if (lookahead.find(l_pos.loc(), loc) == lookahead.end()) // do not permit nested lookaheads
           lookahead.insert(l_pos.loc(), loc); // lookstop at )
         for (Positions::const_iterator p = lastpos.begin(); p != lastpos.end(); ++p)
-          followpos[p->pos()].insert(Position(loc).ticked(true));
-        lastpos.insert(Position(loc).ticked(true));
+          pos_add(followpos[p->pos()], Position(loc).ticked(true));
+        pos_add(lastpos, Position(loc).ticked(true));
         if (nullable)
         {
-          firstpos.insert(Position(loc).ticked(true));
-          lastpos.insert(l_pos);
+          pos_add(firstpos, Position(loc).ticked(true));
+          pos_add(lastpos, l_pos);
         }
       }
       else if (c == ':')
@@ -977,24 +1037,24 @@ void Pattern::parse4(
       else
       {
         Location m_loc = loc;
+        bool negative = false;
         bool opt_q = opt_.q;
         bool opt_x = opt_.x;
-        bool active = true;
         do
         {
           if (c == '-')
-            active = false;
+            negative = true;
           else if (c == 'q')
-            opt_.q = active;
+            opt_.q = !negative;
           else if (c == 'x')
-            opt_.x = active;
+            opt_.x = !negative;
           else if (c != 'i' && c != 'm' && c != 's')
             error(regex_error::invalid_modifier, loc);
           c = at(++loc);
         } while (c != '\0' && c != ':' && c != ')');
         if (c != '\0')
           ++loc;
-        // enforce (?imqsx) modes
+        // enforce (?imqsux) modes
         parse1(
             begin,
             loc,
@@ -1007,20 +1067,27 @@ void Pattern::parse4(
             modifiers,
             lookahead,
             iter);
-        active = true;
+        negative = false;
         do
         {
           c = at(m_loc++);
-          if (c == '-')
+          switch (c)
           {
-            active = false;
-          }
-          else if (c != '\0' && c != 'q' && c != 'x' && c != ':' && c != ')')
-          {
-            if (active)
-              update_modified(c, modifiers, m_loc, loc);
-            else
-              update_modified(uppercase(c), modifiers, m_loc, loc);
+            case '-': 
+              negative = true;
+              break;
+            case 'i':
+              update_modified(ModConst::i ^ static_cast<Mod>(negative), modifiers, m_loc, loc);
+              break;
+            case 'm':
+              update_modified(ModConst::m ^ static_cast<Mod>(negative), modifiers, m_loc, loc);
+              break;
+            case 's':
+              update_modified(ModConst::s ^ static_cast<Mod>(negative), modifiers, m_loc, loc);
+              break;
+            case 'u':
+              update_modified(ModConst::u ^ static_cast<Mod>(negative), modifiers, m_loc, loc);
+              break;
           }
         } while (c != '\0' && c != ':' && c != ')');
         opt_.q = opt_q;
@@ -1052,8 +1119,8 @@ void Pattern::parse4(
   }
   else if (c == '[')
   {
-    firstpos.insert(loc);
-    lastpos.insert(loc);
+    pos_add(firstpos, loc);
+    pos_add(lastpos, loc);
     nullable = false;
     if ((c = at(++loc)) == '^')
       c = at(++loc);
@@ -1085,20 +1152,20 @@ void Pattern::parse4(
     c = at(loc);
     if (c != '\0' && (quoted ? c != '"' : c != opt_.e || at(loc + 1) != 'E'))
     {
-      firstpos.insert(loc);
+      pos_add(firstpos, loc);
       Position p;
       do
       {
         if (quoted && c == opt_.e && at(loc + 1) == '"')
           ++loc;
         if (p != Position::NPOS)
-          followpos[p.pos()].insert(loc);
+          pos_add(followpos[p.pos()], loc);
         p = loc++;
         c = at(loc);
       } while (c != '\0' && (!quoted || c != '"') && (quoted || c != opt_.e || at(loc + 1) != 'E'));
-      lastpos.insert(p);
+      pos_add(lastpos, p);
       nullable = false;
-      modifiers['q'].insert(q_loc, loc - 1);
+      modifiers[ModConst::q].insert(q_loc, loc - 1);
     }
     if (!quoted && at(loc) != '\0')
       ++loc;
@@ -1121,10 +1188,7 @@ void Pattern::parse4(
   }
   else if (c == ')')
   {
-    if (begin)
-      error(regex_error::empty_expression, loc++);
-    else
-      error(regex_error::mismatched_parens, loc++);
+    error(begin ? regex_error::empty_expression : regex_error::mismatched_parens, loc++);
   }
   else if (c == '}')
   {
@@ -1132,8 +1196,8 @@ void Pattern::parse4(
   }
   else if (c != '\0' && c != '|' && c != '?' && c != '*' && c != '+')
   {
-    firstpos.insert(loc);
-    lastpos.insert(loc);
+    pos_add(firstpos, loc);
+    pos_add(lastpos, loc);
     nullable = false;
     if (c == opt_.e)
       (void)parse_esc(loc);
@@ -1215,8 +1279,8 @@ Pattern::Char Pattern::parse_esc(Location& loc, Chars *chars) const
   {
     if (chars != NULL)
     {
-      chars->insert(0, 9);
-      chars->insert(11, 255);
+      chars->add(0, 9);
+      chars->add(11, 255);
     }
     ++loc;
     c = META_EOL;
@@ -1279,27 +1343,24 @@ Pattern::Char Pattern::parse_esc(Location& loc, Chars *chars) const
     ++loc;
   }
   if (c <= 0xFF && chars != NULL)
-    chars->insert(c);
+    chars->add(c);
   return c;
 }
 
 void Pattern::compile(
     DFA::State *start,
     Follow&     followpos,
-    const Map&  modifiers,
+    const Mods  modifiers,
     const Map&  lookahead)
 {
   DBGLOG("BEGIN compile()");
-  // init stats and timers
-  vno_ = 0;
-  eno_ = 0;
-  ems_ = 0.0;
+  // init timers
   timer_type vt, et;
   timer_start(vt);
   // construct the DFA
   acc_.resize(end_.size(), false);
   trim_lazy(start);
-  // hash table with 64K entries (uint16_t indexed)
+  // hash table with 64K pointer entries uint16_t indexed
   DFA::State **table = new DFA::State*[65536];
   for (int i = 0; i < 65536; ++i)
     table[i] = NULL;
@@ -1323,26 +1384,21 @@ void Pattern::compile(
         moves);
     if (state->tnode != NULL)
     {
+#ifdef WITH_TREE_DFA
       // merge tree DFA transitions into the final DFA transitions to target states
       if (moves.empty())
       {
         // no DFA transitions: the final DFA transitions are the tree DFA transitions to target states
-        for (Char c = 0; c < 256; ++c)
+        for (DFA::State::Edges::iterator t = state->tnode->edges.begin(); t != state->tnode->edges.end(); ++t)
         {
-          if (state->tnode->edge[c] != NULL)
+          Char c = t->first;
+          DFA::State *target_state = last_state = last_state->next = dfa_.state(t->second.second);
+          state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+          ++eno_;
+          if (opt_.i && c >= 'a' && c <= 'z')
           {
-            DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edge[c]);
-            if (opt_.i && std::isalpha(c))
-            {
-              state->edges[lowercase(c)] = std::pair<Char,DFA::State*>(lowercase(c), target_state);
-              state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
-              eno_ += 2;
-            }
-            else
-            {
-              state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
-              ++eno_;
-            }
+            state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+            ++eno_;
           }
         }
       }
@@ -1350,16 +1406,21 @@ void Pattern::compile(
       {
         // combine the tree DFA transitions with the regex DFA transition moves
         Chars chars;
-        for (Char c = 0; c < 256; ++c)
-          if (state->tnode->edge[c] != NULL)
-            chars.insert(c);
+        for (DFA::State::Edges::iterator t = state->tnode->edges.begin(); t != state->tnode->edges.end(); ++t)
+          chars.add(t->first);
         if (opt_.i)
-          for (Char c = 'a'; c <= 'z'; ++c)
-            if (state->tnode->edge[c] != NULL)
-              chars.insert(uppercase(c));
+        {
+          for (DFA::State::Edges::iterator t = state->tnode->edges.find('a'); t != state->tnode->edges.end(); ++t)
+          {
+            Char c = t->first;
+            if (c > 'z')
+              break;
+            chars.add(uppercase(c));
+          }
+        }
         Moves::iterator i = moves.begin();
-        Moves::iterator end = moves.end();
-        while (i != end)
+        Positions pos;
+        while (i != moves.end())
         {
           if (chars.intersects(i->first))
           {
@@ -1368,24 +1429,41 @@ void Pattern::compile(
             chars -= common;
             Char lo = common.lo();
             Char hi = common.hi();
-            for (Char c = lo; c <= hi; ++c)
+            if (opt_.i)
             {
-              if (common.contains(c))
+              for (Char c = lo; c <= hi; ++c)
               {
-                Positions pos(i->second);
-                if (opt_.i && std::isalpha(c))
+                if (common.contains(c))
                 {
-                  if (c >= 'a' && c <= 'z')
+                  if (std::isalpha(c))
                   {
-                    DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edge[c], pos);
+                    if (c >= 'a' && c <= 'z')
+                    {
+                      pos = i->second;
+                      DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edges[c].second, pos);
+                      state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                      state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+                      eno_ += 2;
+                    }
+                  }
+                  else
+                  {
+                    pos = i->second;
+                    DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edges[c].second, pos);
                     state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
-                    state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
-                    eno_ += 2;
+                    ++eno_;
                   }
                 }
-                else
+              }
+            }
+            else
+            {
+              for (Char c = lo; c <= hi; ++c)
+              {
+                if (common.contains(c))
                 {
-                  DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edge[c], pos);
+                  pos = i->second;
+                  DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edges[c].second, pos);
                   state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
                   ++eno_;
                 }
@@ -1416,7 +1494,7 @@ void Pattern::compile(
           {
             if (chars.contains(c))
             {
-              DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edge[c]);
+              DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edges[c].second);
               if (opt_.i && std::isalpha(c))
               {
                 state->edges[lowercase(c)] = std::pair<Char,DFA::State*>(lowercase(c), target_state);
@@ -1432,61 +1510,328 @@ void Pattern::compile(
           }
         }
       }
+#else
+#ifdef WITH_TREE_MAP
+      // merge tree DFA transitions into the final DFA transitions to target states
+      if (moves.empty())
+      {
+        // no DFA transitions: the final DFA transitions are the tree DFA transitions to target states
+        for (std::map<Char,Tree::Node>::iterator t = state->tnode->edges.begin(); t != state->tnode->edges.end(); ++t)
+        {
+          Char c = t->first;
+          DFA::State *target_state = last_state = last_state->next = dfa_.state(&t->second);
+          state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+          ++eno_;
+          if (opt_.i && c >= 'a' && c <= 'z')
+          {
+            state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+            ++eno_;
+          }
+        }
+      }
+      else
+      {
+        // combine the tree DFA transitions with the regex DFA transition moves
+        Chars chars;
+        for (std::map<Char,Tree::Node>::iterator t = state->tnode->edges.begin(); t != state->tnode->edges.end(); ++t)
+          chars.add(t->first);
+        if (opt_.i)
+        {
+          for (std::map<Char,Tree::Node>::iterator t = state->tnode->edges.find('a'); t != state->tnode->edges.end(); ++t)
+          {
+            Char c = t->first;
+            if (c > 'z')
+              break;
+            chars.add(uppercase(c));
+          }
+        }
+        Moves::iterator i = moves.begin();
+        Positions pos;
+        while (i != moves.end())
+        {
+          if (chars.intersects(i->first))
+          {
+            // tree DFA transitions intersect with this DFA transition move
+            Chars common = chars & i->first;
+            chars -= common;
+            Char lo = common.lo();
+            Char hi = common.hi();
+            if (opt_.i)
+            {
+              for (Char c = lo; c <= hi; ++c)
+              {
+                if (common.contains(c))
+                {
+                  if (std::isalpha(c))
+                  {
+                    if (c >= 'a' && c <= 'z')
+                    {
+                      pos = i->second;
+                      DFA::State *target_state = last_state = last_state->next = dfa_.state(&state->tnode->edges[c], pos);
+                      state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                      state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+                      eno_ += 2;
+                    }
+                  }
+                  else
+                  {
+                    pos = i->second;
+                    DFA::State *target_state = last_state = last_state->next = dfa_.state(&state->tnode->edges[c], pos);
+                    state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                    ++eno_;
+                  }
+                }
+              }
+            }
+            else
+            {
+              for (Char c = lo; c <= hi; ++c)
+              {
+                if (common.contains(c))
+                {
+                  pos = i->second;
+                  DFA::State *target_state = last_state = last_state->next = dfa_.state(&state->tnode->edges[c], pos);
+                  state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                  ++eno_;
+                }
+              }
+            }
+            i->first -= common;
+            if (i->first.any())
+              ++i;
+            else
+              moves.erase(i++);
+          }
+          else
+          {
+            ++i;
+          }
+        }
+        if (opt_.i)
+        {
+          // normalize by removing upper case if option i (case insensitivem matching) is enabled
+          static const uint64_t upper[5] = { 0x0000000000000000, 0x0000000007FFFFFE, 0, 0, 0 };
+          chars -= Chars(upper);
+        }
+        if (chars.any())
+        {
+          Char lo = chars.lo();
+          Char hi = chars.hi();
+          for (Char c = lo; c <= hi; ++c)
+          {
+            if (chars.contains(c))
+            {
+              DFA::State *target_state = last_state = last_state->next = dfa_.state(&state->tnode->edges[c]);
+              if (opt_.i && std::isalpha(c))
+              {
+                state->edges[lowercase(c)] = std::pair<Char,DFA::State*>(lowercase(c), target_state);
+                state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+                eno_ += 2;
+              }
+              else
+              {
+                state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                ++eno_;
+              }
+            }
+          }
+        }
+      }
+#else
+      // merge tree DFA transitions into the final DFA transitions to target states
+      if (moves.empty())
+      {
+        // no DFA transitions: the final DFA transitions are the tree DFA transitions to target states
+        for (Char i = 0; i < 16; ++i)
+        {
+          Tree::Node **p = state->tnode->edge[i];
+          if (p != NULL)
+          {
+            for (Char j = 0; j < 16; ++j)
+            {
+              if (p[j] != NULL)
+              {
+                Char c = (i << 4) + j;
+                DFA::State *target_state = last_state = last_state->next = dfa_.state(p[j]);
+                if (opt_.i && std::isalpha(c))
+                {
+                  state->edges[lowercase(c)] = std::pair<Char,DFA::State*>(lowercase(c), target_state);
+                  state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+                  eno_ += 2;
+                }
+                else
+                {
+                  state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                  ++eno_;
+                }
+              }
+            }
+          }
+        }
+      }
+      else
+      {
+        // combine the tree DFA transitions with the regex DFA transition moves
+        Chars chars;
+        for (Char i = 0; i < 16; ++i)
+        {
+          Tree::Node **p = state->tnode->edge[i];
+          if (p != NULL)
+          {
+            for (Char j = 0; j < 16; ++j)
+            {
+              if (p[j] != NULL)
+              {
+                Char c = (i << 4) + j;
+                chars.add(c);
+              }
+            }
+          }
+        }
+        if (opt_.i)
+          for (Char c = 'a'; c <= 'z'; ++c)
+            if (state->tnode->edge[c >> 4] != NULL && state->tnode->edge[c >> 4][c & 0xf] != NULL)
+              chars.add(uppercase(c));
+        Moves::iterator i = moves.begin();
+        Positions pos;
+        while (i != moves.end())
+        {
+          if (chars.intersects(i->first))
+          {
+            // tree DFA transitions intersect with this DFA transition move
+            Chars common = chars & i->first;
+            chars -= common;
+            Char lo = common.lo();
+            Char hi = common.hi();
+            if (opt_.i)
+            {
+              for (Char c = lo; c <= hi; ++c)
+              {
+                if (common.contains(c))
+                {
+                  if (std::isalpha(c))
+                  {
+                    if (c >= 'a' && c <= 'z')
+                    {
+                      pos = i->second;
+                      DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edge[c >> 4][c & 0xf], pos);
+                      state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                      state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+                      eno_ += 2;
+                    }
+                  }
+                  else
+                  {
+                    pos = i->second;
+                    DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edge[c >> 4][c & 0xf], pos);
+                    state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                    ++eno_;
+                  }
+                }
+              }
+            }
+            else
+            {
+              for (Char c = lo; c <= hi; ++c)
+              {
+                if (common.contains(c))
+                {
+                  pos = i->second;
+                  DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edge[c >> 4][c & 0xf], pos);
+                  state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                  ++eno_;
+                }
+              }
+            }
+            i->first -= common;
+            if (i->first.any())
+              ++i;
+            else
+              moves.erase(i++);
+          }
+          else
+          {
+            ++i;
+          }
+        }
+        if (opt_.i)
+        {
+          // normalize by removing upper case if option i (case insensitivem matching) is enabled
+          static const uint64_t upper[5] = { 0x0000000000000000, 0x0000000007FFFFFE, 0, 0, 0 };
+          chars -= Chars(upper);
+        }
+        if (chars.any())
+        {
+          Char lo = chars.lo();
+          Char hi = chars.hi();
+          for (Char c = lo; c <= hi; ++c)
+          {
+            if (chars.contains(c))
+            {
+              DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edge[c >> 4][c & 0xf]);
+              if (opt_.i && std::isalpha(c))
+              {
+                state->edges[lowercase(c)] = std::pair<Char,DFA::State*>(lowercase(c), target_state);
+                state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+                eno_ += 2;
+              }
+              else
+              {
+                state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                ++eno_;
+              }
+            }
+          }
+        }
+      }
+#endif
+#endif
     }
     ems_ += timer_elapsed(et);
     Moves::iterator end = moves.end();
     for (Moves::iterator i = moves.begin(); i != end; ++i)
     {
       Positions& pos = i->second;
-      if (!pos.empty())
+      uint16_t h = hash_pos(&pos);
+      DFA::State **branch_ptr = &table[h];
+      DFA::State *target_state = *branch_ptr;
+      // binary search the target state for a possible matching state in the hash table overflow tree
+      while (target_state != NULL)
       {
-        uint16_t h = hash_pos(&pos);
-        DFA::State **branch_ptr = &table[h];
-        DFA::State *target_state = *branch_ptr;
-        // binary search the target state for a possible matching state in the hash table overflow tree
-        while (target_state != NULL)
-        {
-          if (pos < *target_state)
-            target_state = *(branch_ptr = &target_state->left);
-          else if (pos > *target_state)
-            target_state = *(branch_ptr = &target_state->right);
-          else
-            break;
-        }
-        if (target_state == NULL)
-        {
-          target_state = last_state = last_state->next = dfa_.state(NULL, pos);
-          if (branch_ptr != NULL)
-            *branch_ptr = target_state;
-          else
-            table[h] = target_state;
-        }
-        Char lo = i->first.lo();
-        Char max = i->first.hi();
+        if (pos < *target_state)
+          target_state = *(branch_ptr = &target_state->left);
+        else if (pos > *target_state)
+          target_state = *(branch_ptr = &target_state->right);
+        else
+          break;
+      }
+      if (target_state == NULL)
+        *branch_ptr = target_state = last_state = last_state->next = dfa_.state(NULL, pos);
+      Char lo = i->first.lo();
+      Char max = i->first.hi();
 #ifdef DEBUG
-        DBGLOGN("from state %p on %02x-%02x move to {", state, lo, max);
-        for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
-          DBGLOGPOS(*p);
-        DBGLOGN(" } = state %p", target_state);
+      DBGLOGN("from state %p on %02x-%02x move to {", state, lo, max);
+      for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
+        DBGLOGPOS(*p);
+      DBGLOGN(" } = state %p", target_state);
 #endif
-        while (lo <= max)
+      while (lo <= max)
+      {
+        if (i->first.contains(lo))
         {
-          if (i->first.contains(lo))
-          {
-            Char hi = lo + 1;
-            while (hi <= max && i->first.contains(hi))
-              ++hi;
-            --hi;
+          Char hi = lo + 1;
+          while (hi <= max && i->first.contains(hi))
+            ++hi;
+          --hi;
 #if WITH_COMPACT_DFA == -1
-            state->edges[lo] = std::pair<Char,DFA::State*>(hi, target_state);
+          state->edges[lo] = std::pair<Char,DFA::State*>(hi, target_state);
 #else
-            state->edges[hi] = std::pair<Char,DFA::State*>(lo, target_state);
+          state->edges[hi] = std::pair<Char,DFA::State*>(lo, target_state);
 #endif
-            eno_ += hi - lo + 1;
-            lo = hi + 1;
-          }
-          ++lo;
+          eno_ += hi - lo + 1;
+          lo = hi + 1;
         }
+        ++lo;
       }
     }
     if (state->accept > 0 && state->accept <= end_.size())
@@ -1494,7 +1839,6 @@ void Pattern::compile(
     ++vno_;
   }
   delete[] table;
-  tfa_.clear();
   vms_ = timer_elapsed(vt) - ems_;
   DBGLOG("END compile()");
 }
@@ -1519,16 +1863,24 @@ void Pattern::lazy(
   for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
     for (Lazyset::const_iterator l = lazyset.begin(); l != lazyset.end(); ++l)
       // pos1.insert(p->lazy() ? *p : p->lazy(*l)); // CHECKED algorithmic options: only if p is not already lazy??
-      pos1.insert(p->lazy(*l)); // overrides lazyness even when p is already lazy
+      pos_add(pos1, p->lazy(*l)); // overrides lazyness even when p is already lazy
 }
 
 void Pattern::greedy(Positions& pos) const
 {
+#ifdef WITH_VECTOR
+  // in-place
+  for (Positions::iterator p = pos.begin(); p != pos.end(); ++p)
+    if (!p->lazy())
+      *p = p->greedy(true); // CHECKED algorithmic options: 7/29 guard added: p->lazy() ? *p : p->greedy(true)
+    // CHECKED 10/21 pos_add(pos1, p->lazy(0).greedy(true));
+#else
   Positions pos1;
   for (Positions::const_iterator p = pos.begin(); p != pos.end(); ++p)
-    pos1.insert(p->lazy() ? *p : p->greedy(true)); // CHECKED algorithmic options: 7/29 guard added: p->lazy() ? *p : p->greedy(true)
+    pos_add(pos1, p->lazy() ? *p : p->greedy(true)); // CHECKED algorithmic options: 7/29 guard added: p->lazy() ? *p : p->greedy(true)
     // CHECKED 10/21 pos1.insert(p->lazy(0).greedy(true));
   pos.swap(pos1);
+#endif
 }
 
 void Pattern::trim_anchors(Positions& follow, const Position p) const
@@ -1549,11 +1901,11 @@ void Pattern::trim_anchors(Positions& follow, const Position p) const
     q = follow.begin();
     if (p.anchor())
     {
-      while (q != end)
+      while (q != follow.end())
       {
         // erase if not accepting and not a begin anchor and not a ) lookahead tail
         if (!q->accept() && !q->anchor() && at(q->loc()) != ')')
-          follow.erase(q++);
+          q = follow.erase(q);
         else
           ++q;
       }
@@ -1561,11 +1913,11 @@ void Pattern::trim_anchors(Positions& follow, const Position p) const
     else
     {
       Location loc = p.loc();
-      while (q != end)
+      while (q != follow.end())
       {
         // erase if not accepting and not a begin anchor and back edge
         if (!q->accept() && !q->anchor() && q->loc() <= loc)
-          follow.erase(q++);
+          q = follow.erase(q);
         else
           ++q;
       }
@@ -1587,10 +1939,39 @@ void Pattern::trim_lazy(Positions *pos) const
     DBGLOGPOS(*q);
   DBGLOGA(" })");
 #endif
+#ifdef WITH_VECTOR
+  // sort the positions and remove duplicates
+  std::sort(pos->begin(), pos->end());
+  pos->erase(unique(pos->begin(), pos->end()), pos->end());
+  // note: positions are sorted w/o duplicates, may no longer be strictly sorted afterwards
+  Positions::iterator p = pos->begin();
+  while (p != pos->end())
+  {
+    Lazy l = p->lazy();
+    if (l && (p->accept() || p->anchor()))
+    {
+      *p = p->lazy(0);
+      p = pos->begin();
+      while (p != pos->end())
+      {
+        if (p->lazy() == l)
+          p = pos->erase(p);
+        else
+          ++p;
+      }
+      p = pos->begin();
+      continue;
+    }
+    ++p;
+  }
+  for (Positions::reverse_iterator q = pos->rbegin(); q != pos->rend() && q->lazy(); ++q)
+    if (q->greedy())
+      *q = q->lazy(0);
+#else
   Positions::reverse_iterator p = pos->rbegin();
   while (p != pos->rend() && p->lazy())
   {
-    Location l = p->lazy();
+    Lazy l = p->lazy();
     if (p->accept() || p->anchor()) // CHECKED algorithmic options: 7/28 added p->anchor()
     {
       pos->insert(p->lazy(0)); // make lazy accept/anchor a non-lazy accept/anchor
@@ -1631,22 +2012,29 @@ void Pattern::trim_lazy(Positions *pos) const
     pos->erase(--p.base());
   }
 #endif
-  // trims accept positions keeping the first only
-  Positions::iterator q = pos->begin(), a = pos->end();
+  // trim accept positions keeping the first (smallest) only
+  Positions::iterator q = pos->begin();
+  bool keep = true;
   while (q != pos->end())
   {
     if (q->accept() && !q->negate())
     {
-      if (a == pos->end())
-        a = q++;
+      if (keep)
+      {
+        keep = false;
+        ++q;
+      }
       else
-        pos->erase(q++);
+      {
+        q = pos->erase(q);
+      }
     }
     else
     {
       ++q;
     }
   }
+#endif
 #ifdef DEBUG
   DBGLOG("END trim_lazy({");
   for (Positions::const_iterator q = pos->begin(); q != pos->end(); ++q)
@@ -1658,7 +2046,7 @@ void Pattern::trim_lazy(Positions *pos) const
 void Pattern::compile_transition(
     DFA::State *state,
     Follow&     followpos,
-    const Map&  modifiers,
+    const Mods  modifiers,
     const Map&  lookahead,
     Moves&      moves) const
 {
@@ -1679,7 +2067,7 @@ void Pattern::compile_transition(
       Location loc = k->loc();
       Char c = at(loc);
       DBGLOGN("At %u: %c", loc, c);
-      bool literal = is_modified('q', modifiers, loc);
+      bool literal = is_modified(ModConst::q, modifiers, loc);
       if (c == '(' && !literal)
       {
         Lookahead n = 0;
@@ -1734,13 +2122,19 @@ void Pattern::compile_transition(
         {
           if (k->negate())
           {
-            Positions::const_iterator b = i->second.begin();
+            Positions::iterator b = i->second.begin();
             if (b != i->second.end() && !b->negate())
             {
+#ifdef WITH_VECTOR
+              // in-place
+              for (Positions::iterator p = b; p != i->second.end(); ++p)
+                *p = p->negate(true);
+#else
               Positions to;
               for (Positions::const_iterator p = b; p != i->second.end(); ++p)
-                to.insert(p->negate(true));
+                pos_add(to, p->negate(true));
               i->second.swap(to);
+#endif
             }
           }
           if (k->lazy())
@@ -1755,7 +2149,7 @@ void Pattern::compile_transition(
               // followpos is not defined for lazy pos yet, so add lazy followpos (memoization)
               j = followpos.insert(std::pair<Position,Positions>(*k, Positions())).first;
               for (Positions::const_iterator p = i->second.begin(); p != i->second.end(); ++p)
-                j->second.insert(/* p->lazy() || CHECKED algorithmic options: 7/31 */ p->ticked() ? *p : /* CHECKED algorithmic options: 7/31 adds too many states p->greedy() ? p->lazy(0).greedy(false) : */ p->lazy(k->lazy())); // CHECKED algorithmic options: 7/18 ticked() preserves lookahead tail at '/' and ')'
+                pos_add(j->second, /* p->lazy() || CHECKED algorithmic options: 7/31 */ p->ticked() ? *p : /* CHECKED algorithmic options: 7/31 adds too many states p->greedy() ? p->lazy(0).greedy(false) : */ p->lazy(k->lazy())); // CHECKED algorithmic options: 7/18 ticked() preserves lookahead tail at '/' and ')'
 #ifdef DEBUG
               DBGLOGN("lazy followpos(");
               DBGLOGPOS(*k);
@@ -1771,14 +2165,14 @@ void Pattern::compile_transition(
           Chars chars;
           if (literal)
           {
-            if (std::isalpha(c) && is_modified('i', modifiers, loc))
+            if (std::isalpha(c) && is_modified(ModConst::i, modifiers, loc))
             {
-              chars.insert(uppercase(c));
-              chars.insert(lowercase(c));
+              chars.add(uppercase(c));
+              chars.add(lowercase(c));
             }
             else
             {
-              chars.insert(c);
+              chars.add(c);
             }
           }
           else
@@ -1786,7 +2180,7 @@ void Pattern::compile_transition(
             switch (c)
             {
               case '.':
-                if (is_modified('s', modifiers, loc))
+                if (is_modified(ModConst::s, modifiers, loc))
                 {
                   static const uint64_t dot[5] = { 0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL, 0 };
                   chars |= Chars(dot);
@@ -1798,11 +2192,11 @@ void Pattern::compile_transition(
                 }
                 break;
               case '^':
-                chars.insert(is_modified('m', modifiers, loc) ? META_BOL : META_BOB);
+                chars.add(is_modified(ModConst::m, modifiers, loc) ? META_BOL : META_BOB);
                 trim_anchors(follow, *k);
                 break;
               case '$':
-                chars.insert(is_modified('m', modifiers, loc) ? META_EOL : META_EOB);
+                chars.add(is_modified(ModConst::m, modifiers, loc) ? META_EOL : META_EOB);
                 trim_anchors(follow, *k);
                 break;
               default:
@@ -1815,58 +2209,58 @@ void Pattern::compile_transition(
                   switch (escape_at(loc))
                   {
                     case '\0': // no escape at current loc
-                      if (std::isalpha(c) && is_modified('i', modifiers, loc))
+                      if (std::isalpha(c) && is_modified(ModConst::i, modifiers, loc))
                       {
-                        chars.insert(uppercase(c));
-                        chars.insert(lowercase(c));
+                        chars.add(uppercase(c));
+                        chars.add(lowercase(c));
                       }
                       else
                       {
-                        chars.insert(c);
+                        chars.add(c);
                       }
                       break;
                     case 'i':
-                      chars.insert(META_IND);
+                      chars.add(META_IND);
                       break;
                     case 'j':
-                      chars.insert(META_DED);
+                      chars.add(META_DED);
                       break;
                     case 'k':
-                      chars.insert(META_UND);
+                      chars.add(META_UND);
                       break;
                     case 'A':
-                      chars.insert(META_BOB);
+                      chars.add(META_BOB);
                       trim_anchors(follow, *k);
                       break;
                     case 'z':
-                      chars.insert(META_EOB);
+                      chars.add(META_EOB);
                       trim_anchors(follow, *k);
                       break;
                     case 'B':
-                      chars.insert(k->anchor() ? META_NWB : META_NWE);
+                      chars.add(k->anchor() ? META_NWB : META_NWE);
                       trim_anchors(follow, *k);
                       break;
                     case 'b':
                       if (k->anchor())
-                        chars.insert(META_BWB, META_EWB);
+                        chars.add(META_BWB, META_EWB);
                       else
-                        chars.insert(META_BWE, META_EWE);
+                        chars.add(META_BWE, META_EWE);
                       trim_anchors(follow, *k);
                       break;
                     case '<':
-                      chars.insert(k->anchor() ? META_BWB : META_BWE);
+                      chars.add(k->anchor() ? META_BWB : META_BWE);
                       trim_anchors(follow, *k);
                       break;
                     case '>':
-                      chars.insert(k->anchor() ? META_EWB : META_EWE);
+                      chars.add(k->anchor() ? META_EWB : META_EWE);
                       trim_anchors(follow, *k);
                       break;
                     default:
                       c = parse_esc(loc, &chars);
-                      if (c <= 'z' && std::isalpha(c) && is_modified('i', modifiers, loc))
+                      if (c <= 'z' && std::isalpha(c) && is_modified(ModConst::i, modifiers, loc))
                       {
-                        chars.insert(uppercase(c));
-                        chars.insert(lowercase(c));
+                        chars.add(uppercase(c));
+                        chars.add(lowercase(c));
                       }
                   }
                 }
@@ -1878,8 +2272,7 @@ void Pattern::compile_transition(
     }
   }
   Moves::iterator i = moves.begin();
-  Moves::iterator e = moves.end();
-  while (i != e)
+  while (i != moves.end())
   {
     trim_lazy(&i->second);
     if (i->second.empty())
@@ -1895,43 +2288,42 @@ void Pattern::transition(
     Chars&           chars,
     const Positions& follow) const
 {
-  Moves::iterator i = moves.begin();
+  Moves::iterator i;
   Moves::iterator end = moves.end();
-  while (i != end)
+  for (i = moves.begin(); i != end; ++i)
   {
     if (i->second == follow)
     {
-      chars += i->first;
-      moves.erase(i++);
+      i->first += chars;
+      return;
     }
-    else
+#ifndef WITH_VECTOR
+    if (is_subset(follow, i->second))
     {
-      ++i;
+      chars -= i->first;
+      if (!chars.any())
+        return;
     }
+#endif
   }
+  Chars common;
   for (i = moves.begin(); i != end; ++i)
   {
-    if (chars.intersects(i->first))
+    common = chars & i->first;
+    if (common.any())
     {
-      if (is_subset(follow, i->second))
+      if (common == i->first)
       {
-        chars -= i->first;
+        chars -= common;
+        pos_insert(i->second, follow);
       }
       else
       {
-        if (chars.contains(i->first))
-        {
-          chars -= i->first;
-          set_insert(i->second, follow);
-        }
-        else
-        {
-          Move back(chars & i->first, i->second);
-          set_insert(back.second, follow);
-          chars -= back.first;
-          i->first -= back.first;
-          moves.push_back(back);
-        }
+        moves.push_back(Move(common, i->second));
+        Move& back = moves.back();
+        pos_insert(back.second, follow);
+        chars -= back.first;
+        i->first -= back.first;
       }
       if (!chars.any())
         return;
@@ -1941,7 +2333,7 @@ void Pattern::transition(
     moves.push_back(Move(chars, follow));
 }
 
-void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) const
+void Pattern::compile_list(Location loc, Chars& chars, const Mods modifiers) const
 {
   bool complement = (at(loc) == '^');
   if (complement)
@@ -1988,31 +2380,31 @@ void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) con
         if (!is_meta(lo))
         {
           if (lo <= c)
-            chars.insert(lo, c);
+            chars.add(lo, c);
           else
             error(regex_error::invalid_class_range, loc);
-          if (is_modified('i', modifiers, loc))
+          if (is_modified(ModConst::i, modifiers, loc))
           {
             for (Char a = lo; a <= c; ++a)
             {
-              if (std::isupper(a))
-                chars.insert(lowercase(a));
-              else if (std::islower(a))
-                chars.insert(uppercase(a));
+              if (a >= 'A' && a <= 'Z')
+                chars.add(lowercase(a));
+              else if (a >= 'a' && a <= 'z')
+                chars.add(uppercase(a));
             }
           }
           c = META_EOL;
         }
         else
         {
-          if (std::isalpha(c) && is_modified('i', modifiers, loc))
+          if (std::isalpha(c) && is_modified(ModConst::i, modifiers, loc))
           {
-            chars.insert(uppercase(c));
-            chars.insert(lowercase(c));
+            chars.add(uppercase(c));
+            chars.add(lowercase(c));
           }
           else
           {
-            chars.insert(c);
+            chars.add(c);
           }
         }
       }
@@ -2021,7 +2413,7 @@ void Pattern::compile_list(Location loc, Chars& chars, const Map& modifiers) con
     }
   }
   if (!is_meta(lo))
-    chars.insert('-');
+    chars.add('-');
   if (complement)
     flip(chars);
 }
@@ -2059,12 +2451,17 @@ void Pattern::assemble(DFA::State *start)
   timer_type t;
   timer_start(t);
   predict_match_dfa(start);
-  export_dfa(start);
+  graph_dfa(start);
   compact_dfa(start);
   encode_dfa(start);
   wms_ = timer_elapsed(t);
-  gencode_dfa(start);
-  export_code();
+  if (!opt_.f.empty())
+  {
+    if (opt_.o)
+      gencode_dfa(start);
+    else
+      export_code();
+  }
   DBGLOG("END assemble()");
 }
 
@@ -2132,6 +2529,7 @@ void Pattern::encode_dfa(DFA::State *start)
   nop_ = 0;
   for (DFA::State *state = start; state; state = state->next)
   {
+    // clamp max accept
     if (state->accept > Const::AMAX)
       state->accept = Const::AMAX;
     state->first = state->index = nop_;
@@ -2275,23 +2673,7 @@ void Pattern::encode_dfa(DFA::State *start)
       Char hi = i->second.first;
       Index target_first = i->second.second != NULL ? i->second.second->first : Const::IMAX;
       Index target_index = i->second.second != NULL ? i->second.second->index : Const::IMAX;
-      if (!is_meta(lo))
-      {
-        if (target_index == Const::IMAX)
-        {
-          opcode[pc++] = opcode_goto(lo, hi, Const::HALT);
-        }
-        else if (nop_ > Const::LONG && ((target_first > state->first && target_first >= Const::LONG / 2) || target_index >= Const::LONG))
-        {
-          opcode[pc++] = opcode_goto(lo, hi, Const::LONG);
-          opcode[pc++] = opcode_long(target_index);
-        }
-        else
-        {
-          opcode[pc++] = opcode_goto(lo, hi, target_index);
-        }
-      }
-      else
+      if (is_meta(lo))
       {
         do
         {
@@ -2309,6 +2691,22 @@ void Pattern::encode_dfa(DFA::State *start)
             opcode[pc++] = opcode_goto(lo, lo, target_index);
           }
         } while (++lo <= hi);
+      }
+      else
+      {
+        if (target_index == Const::IMAX)
+        {
+          opcode[pc++] = opcode_goto(lo, hi, Const::HALT);
+        }
+        else if (nop_ > Const::LONG && ((target_first > state->first && target_first >= Const::LONG / 2) || target_index >= Const::LONG))
+        {
+          opcode[pc++] = opcode_goto(lo, hi, Const::LONG);
+          opcode[pc++] = opcode_long(target_index);
+        }
+        else
+        {
+          opcode[pc++] = opcode_goto(lo, hi, target_index);
+        }
       }
     }
 #else
@@ -2370,8 +2768,6 @@ void Pattern::encode_dfa(DFA::State *start)
 
 void Pattern::gencode_dfa(const DFA::State *start) const
 {
-  if (!opt_.o)
-    return;
   for (std::vector<std::string>::const_iterator i = opt_.f.begin(); i != opt_.f.end(); ++i)
   {
     const std::string& filename = *i;
@@ -2389,287 +2785,286 @@ void Pattern::gencode_dfa(const DFA::State *start) const
         err = reflex::fopen_s(&file, filename.c_str() + 1, "a");
       else
         err = reflex::fopen_s(&file, filename.c_str(), "w");
-      if (!err && file)
+      if (err || file == NULL)
+        throw regex_error(regex_error::cannot_save_tables, filename);
+      ::fprintf(file,
+          "#include <reflex/matcher.h>\n\n"
+          "#if defined(OS_WIN)\n"
+          "#pragma warning(disable:4101 4102)\n"
+          "#elif defined(__GNUC__)\n"
+          "#pragma GCC diagnostic ignored \"-Wunused-variable\"\n"
+          "#pragma GCC diagnostic ignored \"-Wunused-label\"\n"
+          "#elif defined(__clang__)\n"
+          "#pragma clang diagnostic ignored \"-Wunused-variable\"\n"
+          "#pragma clang diagnostic ignored \"-Wunused-label\"\n"
+          "#endif\n\n");
+      write_namespace_open(file);
+      ::fprintf(file,
+          "void reflex_code_%s(reflex::Matcher& m)\n"
+          "{\n"
+          "  int c0 = 0, c1 = 0;\n"
+          "  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
+      for (const DFA::State *state = start; state; state = state->next)
       {
-        ::fprintf(file,
-            "#include <reflex/matcher.h>\n\n"
-            "#if defined(OS_WIN)\n"
-            "#pragma warning(disable:4101 4102)\n"
-            "#elif defined(__GNUC__)\n"
-            "#pragma GCC diagnostic ignored \"-Wunused-variable\"\n"
-            "#pragma GCC diagnostic ignored \"-Wunused-label\"\n"
-            "#elif defined(__clang__)\n"
-            "#pragma clang diagnostic ignored \"-Wunused-variable\"\n"
-            "#pragma clang diagnostic ignored \"-Wunused-label\"\n"
-            "#endif\n\n");
-        write_namespace_open(file);
-        ::fprintf(file,
-            "void reflex_code_%s(reflex::Matcher& m)\n"
-            "{\n"
-            "  int c0 = 0, c1 = 0;\n"
-            "  m.FSM_INIT(c1);\n", opt_.n.empty() ? "FSM" : opt_.n.c_str());
-        for (const DFA::State *state = start; state; state = state->next)
+        ::fprintf(file, "\nS%u:\n", state->index);
+        if (state == start)
+          ::fprintf(file, "  m.FSM_FIND();\n");
+        if (state->redo)
+          ::fprintf(file, "  m.FSM_REDO();\n");
+        else if (state->accept > 0)
+          ::fprintf(file, "  m.FSM_TAKE(%u);\n", state->accept);
+        for (Lookaheads::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
+          ::fprintf(file, "  m.FSM_TAIL(%u);\n", *i);
+        for (Lookaheads::const_iterator i = state->heads.begin(); i != state->heads.end(); ++i)
+          ::fprintf(file, "  m.FSM_HEAD(%u);\n", *i);
+        if (state->edges.rbegin() != state->edges.rend() && state->edges.rbegin()->first == META_DED)
+          ::fprintf(file, "  if (m.FSM_DENT()) goto S%u;\n", state->edges.rbegin()->second.second->index);
+        bool peek = false; // if we need to read a character into c1
+        bool prev = false; // if we need to keep the previous character in c0
+        for (DFA::State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
         {
-          ::fprintf(file, "\nS%u:\n", state->index);
-          if (state == start)
-            ::fprintf(file, "  m.FSM_FIND();\n");
-          if (state->redo)
-            ::fprintf(file, "  m.FSM_REDO();\n");
-          else if (state->accept > 0)
-            ::fprintf(file, "  m.FSM_TAKE(%u);\n", state->accept);
-          for (Lookaheads::const_iterator i = state->tails.begin(); i != state->tails.end(); ++i)
-            ::fprintf(file, "  m.FSM_TAIL(%u);\n", *i);
-          for (Lookaheads::const_iterator i = state->heads.begin(); i != state->heads.end(); ++i)
-            ::fprintf(file, "  m.FSM_HEAD(%u);\n", *i);
-          if (state->edges.rbegin() != state->edges.rend() && state->edges.rbegin()->first == META_DED)
-            ::fprintf(file, "  if (m.FSM_DENT()) goto S%u;\n", state->edges.rbegin()->second.second->index);
-          bool peek = false; // if we need to read a character into c1
-          bool prev = false; // if we need to keep the previous character in c0
-          for (DFA::State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
-          {
 #if WITH_COMPACT_DFA == -1
-            Char lo = i->first;
-            Char hi = i->second.first;
+          Char lo = i->first;
+          Char hi = i->second.first;
 #else
-            Char hi = i->first;
-            Char lo = i->second.first;
+          Char hi = i->first;
+          Char lo = i->second.first;
 #endif
-            if (!is_meta(lo))
-            {
-              Index target_index = Const::IMAX;
-              if (i->second.second != NULL)
-                target_index = i->second.second->index;
-              DFA::State::Edges::const_reverse_iterator j = i;
-              if (target_index == Const::IMAX && (++j == state->edges.rend() || is_meta(j->second.first)))
-                break;
-              peek = true;
-            }
-            else
-            {
-              do
-              {
-                if (lo == META_EOB || lo == META_EOL)
-                  peek = true;
-                else if (lo == META_EWE || lo == META_BWE || lo == META_NWE)
-                  prev = peek = true;
-                if (prev && peek)
-                  break;
-                check_dfa_closure(i->second.second, 1, peek, prev);
-              } while (++lo <= hi);
-            }
-          }
-          bool read = peek;
-          bool elif = false;
-#if WITH_COMPACT_DFA == -1
-          for (DFA::State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
+          if (is_meta(lo))
           {
-            Char lo = i->first;
-            Char hi = i->second.first;
-            Index target_index = Const::IMAX;
-            if (i->second.second != NULL)
-              target_index = i->second.second->index;
-            if (read)
+            do
             {
-              if (prev)
-                ::fprintf(file, "  c0 = c1, c1 = m.FSM_CHAR();\n");
-              else
-                ::fprintf(file, "  c1 = m.FSM_CHAR();\n");
-              read = false;
-            }
-            if (!is_meta(lo))
-            {
-              DFA::State::Edges::const_reverse_iterator j = i;
-              if (target_index == Const::IMAX && (++j == state->edges.rend() || is_meta(j->second.first)))
+              if (lo == META_EOB || lo == META_EOL)
+                peek = true;
+              else if (lo == META_EWE || lo == META_BWE || lo == META_NWE)
+                prev = peek = true;
+              if (prev && peek)
                 break;
-              if (lo == hi)
-              {
-                ::fprintf(file, "  if (c1 == ");
-                print_char(file, lo);
-                ::fprintf(file, ")");
-              }
-              else if (hi == 0xFF)
-              {
-                ::fprintf(file, "  if (");
-                print_char(file, lo);
-                ::fprintf(file, " <= c1)");
-              }
-              else
-              {
-                ::fprintf(file, "  if (");
-                print_char(file, lo);
-                ::fprintf(file, " <= c1 && c1 <= ");
-                print_char(file, hi);
-                ::fprintf(file, ")");
-              }
-              if (target_index == Const::IMAX)
-              {
-                if (peek)
-                  ::fprintf(file, " return m.FSM_HALT(c1);\n");
-                else
-                  ::fprintf(file, " return m.FSM_HALT();\n");
-              }
-              else
-              {
-                ::fprintf(file, " goto S%u;\n", target_index);
-              }
-            }
-            else
-            {
-              do
-              {
-                switch (lo)
-                {
-                  case META_EOB:
-                  case META_EOL:
-                    ::fprintf(file, "  ");
-                    if (elif)
-                      ::fprintf(file, "else ");
-                    ::fprintf(file, "if (m.FSM_META_%s(c1)) {\n", meta_label[lo - META_MIN]);
-                    gencode_dfa_closure(file, i->second.second, 2, peek);
-                    ::fprintf(file, "  }\n");
-                    elif = true;
-                    break;
-                  case META_EWE:
-                  case META_BWE:
-                  case META_NWE:
-                    ::fprintf(file, "  ");
-                    if (elif)
-                      ::fprintf(file, "else ");
-                    ::fprintf(file, "if (m.FSM_META_%s(c0, c1)) {\n", meta_label[lo - META_MIN]);
-                    gencode_dfa_closure(file, i->second.second, 2, peek);
-                    ::fprintf(file, "  }\n");
-                    elif = true;
-                    break;
-                  default:
-                    ::fprintf(file, "  ");
-                    if (elif)
-                      ::fprintf(file, "else ");
-                    ::fprintf(file, "if (m.FSM_META_%s()) {\n", meta_label[lo - META_MIN]);
-                    gencode_dfa_closure(file, i->second.second, 2, peek);
-                    ::fprintf(file, "  }\n");
-                    elif = true;
-                }
-              } while (++lo <= hi);
-            }
+              check_dfa_closure(i->second.second, 1, peek, prev);
+            } while (++lo <= hi);
           }
-#else
-          for (DFA::State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
-          {
-            Char hi = i->first;
-            Char lo = i->second.first;
-            if (is_meta(lo))
-            {
-              if (read)
-              {
-                if (prev)
-                  ::fprintf(file, "  c0 = c1, c1 = m.FSM_CHAR();\n");
-                else
-                  ::fprintf(file, "  c1 = m.FSM_CHAR();\n");
-                read = false;
-              }
-              do
-              {
-                switch (lo)
-                {
-                  case META_EOB:
-                  case META_EOL:
-                    ::fprintf(file, "  ");
-                    if (elif)
-                      ::fprintf(file, "else ");
-                    ::fprintf(file, "if (m.FSM_META_%s(c1)) {\n", meta_label[lo - META_MIN]);
-                    gencode_dfa_closure(file, i->second.second, 2, peek);
-                    ::fprintf(file, "  }\n");
-                    elif = true;
-                    break;
-                  case META_EWE:
-                  case META_BWE:
-                  case META_NWE:
-                    ::fprintf(file, "  ");
-                    if (elif)
-                      ::fprintf(file, "else ");
-                    ::fprintf(file, "if (m.FSM_META_%s(c0, c1)) {\n", meta_label[lo - META_MIN]);
-                    gencode_dfa_closure(file, i->second.second, 2, peek);
-                    ::fprintf(file, "  }\n");
-                    elif = true;
-                    break;
-                  default:
-                    ::fprintf(file, "  ");
-                    if (elif)
-                      ::fprintf(file, "else ");
-                    ::fprintf(file, "if (m.FSM_META_%s()) {\n", meta_label[lo - META_MIN]);
-                    gencode_dfa_closure(file, i->second.second, 2, peek);
-                    ::fprintf(file, "  }\n");
-                    elif = true;
-                }
-              } while (++lo <= hi);
-            }
-          }
-          for (DFA::State::Edges::const_iterator i = state->edges.begin(); i != state->edges.end(); ++i)
-          {
-            Char hi = i->first;
-            Char lo = i->second.first;
-            Index target_index = Const::IMAX;
-            if (i->second.second != NULL)
-              target_index = i->second.second->index;
-            if (read)
-            {
-              if (prev)
-                ::fprintf(file, "  c0 = c1, c1 = m.FSM_CHAR();\n");
-              else
-                ::fprintf(file, "  c1 = m.FSM_CHAR();\n");
-              read = false;
-            }
-            if (!is_meta(lo))
-            {
-              DFA::State::Edges::const_iterator j = i;
-              if (target_index == Const::IMAX && (++j == state->edges.end() || is_meta(j->second.first)))
-                break;
-              if (lo == hi)
-              {
-                ::fprintf(file, "  if (c1 == ");
-                print_char(file, lo);
-                ::fprintf(file, ")");
-              }
-              else if (hi == 0xFF)
-              {
-                ::fprintf(file, "  if (");
-                print_char(file, lo);
-                ::fprintf(file, " <= c1)");
-              }
-              else
-              {
-                ::fprintf(file, "  if (");
-                print_char(file, lo);
-                ::fprintf(file, " <= c1 && c1 <= ");
-                print_char(file, hi);
-                ::fprintf(file, ")");
-              }
-              if (target_index == Const::IMAX)
-              {
-                if (peek)
-                  ::fprintf(file, " return m.FSM_HALT(c1);\n");
-                else
-                  ::fprintf(file, " return m.FSM_HALT();\n");
-              }
-              else
-              {
-                ::fprintf(file, " goto S%u;\n", target_index);
-              }
-            }
-          }
-#endif
-          if (peek)
-            ::fprintf(file, "  return m.FSM_HALT(c1);\n");
           else
-            ::fprintf(file, "  return m.FSM_HALT();\n");
+          {
+            Index target_index = Const::IMAX;
+            if (i->second.second != NULL)
+              target_index = i->second.second->index;
+            DFA::State::Edges::const_reverse_iterator j = i;
+            if (target_index == Const::IMAX && (++j == state->edges.rend() || is_meta(j->second.first)))
+              break;
+            peek = true;
+          }
         }
-        ::fprintf(file, "}\n\n");
-        if (opt_.p)
-          write_predictor(file);
-        write_namespace_close(file);
-        if (file != stdout)
-          ::fclose(file);
+        bool read = peek;
+        bool elif = false;
+#if WITH_COMPACT_DFA == -1
+        for (DFA::State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
+        {
+          Char lo = i->first;
+          Char hi = i->second.first;
+          Index target_index = Const::IMAX;
+          if (i->second.second != NULL)
+            target_index = i->second.second->index;
+          if (read)
+          {
+            if (prev)
+              ::fprintf(file, "  c0 = c1, c1 = m.FSM_CHAR();\n");
+            else
+              ::fprintf(file, "  c1 = m.FSM_CHAR();\n");
+            read = false;
+          }
+          if (is_meta(lo))
+          {
+            do
+            {
+              switch (lo)
+              {
+                case META_EOB:
+                case META_EOL:
+                  ::fprintf(file, "  ");
+                  if (elif)
+                    ::fprintf(file, "else ");
+                  ::fprintf(file, "if (m.FSM_META_%s(c1)) {\n", meta_label[lo - META_MIN]);
+                  gencode_dfa_closure(file, i->second.second, 2, peek);
+                  ::fprintf(file, "  }\n");
+                  elif = true;
+                  break;
+                case META_EWE:
+                case META_BWE:
+                case META_NWE:
+                  ::fprintf(file, "  ");
+                  if (elif)
+                    ::fprintf(file, "else ");
+                  ::fprintf(file, "if (m.FSM_META_%s(c0, c1)) {\n", meta_label[lo - META_MIN]);
+                  gencode_dfa_closure(file, i->second.second, 2, peek);
+                  ::fprintf(file, "  }\n");
+                  elif = true;
+                  break;
+                default:
+                  ::fprintf(file, "  ");
+                  if (elif)
+                    ::fprintf(file, "else ");
+                  ::fprintf(file, "if (m.FSM_META_%s()) {\n", meta_label[lo - META_MIN]);
+                  gencode_dfa_closure(file, i->second.second, 2, peek);
+                  ::fprintf(file, "  }\n");
+                  elif = true;
+              }
+            } while (++lo <= hi);
+          }
+          else
+          {
+            DFA::State::Edges::const_reverse_iterator j = i;
+            if (target_index == Const::IMAX && (++j == state->edges.rend() || is_meta(j->second.first)))
+              break;
+            if (lo == hi)
+            {
+              ::fprintf(file, "  if (c1 == ");
+              print_char(file, lo);
+              ::fprintf(file, ")");
+            }
+            else if (hi == 0xFF)
+            {
+              ::fprintf(file, "  if (");
+              print_char(file, lo);
+              ::fprintf(file, " <= c1)");
+            }
+            else
+            {
+              ::fprintf(file, "  if (");
+              print_char(file, lo);
+              ::fprintf(file, " <= c1 && c1 <= ");
+              print_char(file, hi);
+              ::fprintf(file, ")");
+            }
+            if (target_index == Const::IMAX)
+            {
+              if (peek)
+                ::fprintf(file, " return m.FSM_HALT(c1);\n");
+              else
+                ::fprintf(file, " return m.FSM_HALT();\n");
+            }
+            else
+            {
+              ::fprintf(file, " goto S%u;\n", target_index);
+            }
+          }
+        }
+#else
+        for (DFA::State::Edges::const_reverse_iterator i = state->edges.rbegin(); i != state->edges.rend(); ++i)
+        {
+          Char hi = i->first;
+          Char lo = i->second.first;
+          if (is_meta(lo))
+          {
+            if (read)
+            {
+              if (prev)
+                ::fprintf(file, "  c0 = c1, c1 = m.FSM_CHAR();\n");
+              else
+                ::fprintf(file, "  c1 = m.FSM_CHAR();\n");
+              read = false;
+            }
+            do
+            {
+              switch (lo)
+              {
+                case META_EOB:
+                case META_EOL:
+                  ::fprintf(file, "  ");
+                  if (elif)
+                    ::fprintf(file, "else ");
+                  ::fprintf(file, "if (m.FSM_META_%s(c1)) {\n", meta_label[lo - META_MIN]);
+                  gencode_dfa_closure(file, i->second.second, 2, peek);
+                  ::fprintf(file, "  }\n");
+                  elif = true;
+                  break;
+                case META_EWE:
+                case META_BWE:
+                case META_NWE:
+                  ::fprintf(file, "  ");
+                  if (elif)
+                    ::fprintf(file, "else ");
+                  ::fprintf(file, "if (m.FSM_META_%s(c0, c1)) {\n", meta_label[lo - META_MIN]);
+                  gencode_dfa_closure(file, i->second.second, 2, peek);
+                  ::fprintf(file, "  }\n");
+                  elif = true;
+                  break;
+                default:
+                  ::fprintf(file, "  ");
+                  if (elif)
+                    ::fprintf(file, "else ");
+                  ::fprintf(file, "if (m.FSM_META_%s()) {\n", meta_label[lo - META_MIN]);
+                  gencode_dfa_closure(file, i->second.second, 2, peek);
+                  ::fprintf(file, "  }\n");
+                  elif = true;
+              }
+            } while (++lo <= hi);
+          }
+        }
+        for (DFA::State::Edges::const_iterator i = state->edges.begin(); i != state->edges.end(); ++i)
+        {
+          Char hi = i->first;
+          Char lo = i->second.first;
+          Index target_index = Const::IMAX;
+          if (i->second.second != NULL)
+            target_index = i->second.second->index;
+          if (read)
+          {
+            if (prev)
+              ::fprintf(file, "  c0 = c1, c1 = m.FSM_CHAR();\n");
+            else
+              ::fprintf(file, "  c1 = m.FSM_CHAR();\n");
+            read = false;
+          }
+          if (!is_meta(lo))
+          {
+            DFA::State::Edges::const_iterator j = i;
+            if (target_index == Const::IMAX && (++j == state->edges.end() || is_meta(j->second.first)))
+              break;
+            if (lo == hi)
+            {
+              ::fprintf(file, "  if (c1 == ");
+              print_char(file, lo);
+              ::fprintf(file, ")");
+            }
+            else if (hi == 0xFF)
+            {
+              ::fprintf(file, "  if (");
+              print_char(file, lo);
+              ::fprintf(file, " <= c1)");
+            }
+            else
+            {
+              ::fprintf(file, "  if (");
+              print_char(file, lo);
+              ::fprintf(file, " <= c1 && c1 <= ");
+              print_char(file, hi);
+              ::fprintf(file, ")");
+            }
+            if (target_index == Const::IMAX)
+            {
+              if (peek)
+                ::fprintf(file, " return m.FSM_HALT(c1);\n");
+              else
+                ::fprintf(file, " return m.FSM_HALT();\n");
+            }
+            else
+            {
+              ::fprintf(file, " goto S%u;\n", target_index);
+            }
+          }
+        }
+#endif
+        if (peek)
+          ::fprintf(file, "  return m.FSM_HALT(c1);\n");
+        else
+          ::fprintf(file, "  return m.FSM_HALT();\n");
       }
+      ::fprintf(file, "}\n\n");
+      if (opt_.p)
+        write_predictor(file);
+      write_namespace_close(file);
+      if (file != stdout)
+        ::fclose(file);
     }
   }
 }
@@ -2774,7 +3169,7 @@ void Pattern::gencode_dfa_closure(FILE *file, const DFA::State *state, int nest,
   }
 }
 
-void Pattern::export_dfa(const DFA::State *start) const
+void Pattern::graph_dfa(const DFA::State *start) const
 {
   for (std::vector<std::string>::const_iterator i = opt_.f.begin(); i != opt_.f.end(); ++i)
   {
@@ -2921,8 +3316,6 @@ void Pattern::export_dfa(const DFA::State *start) const
 void Pattern::export_code() const
 {
   if (nop_ == 0)
-    return;
-  if (opt_.o)
     return;
   for (std::vector<std::string>::const_iterator i = opt_.f.begin(); i != opt_.f.end(); ++i)
   {

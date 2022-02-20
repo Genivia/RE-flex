@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Sep 14 2021 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Feb 20 2022 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -665,7 +665,7 @@ Output code options</h3>
 <h4><code>−−namespace=NAME</code></h4>
 <p>This option places the generated scanner class in the C++ namespace <code>NAME</code> scope, that is <code>NAME::Lexer</code> (and <code>NAME::yyFlexLexer</code> when option <code>−−flex</code> is used). <code>NAME</code> can be a list of nested namespaces of the form <code>NAME1::NAME2::NAME3</code> ... or by using a dot as in <code>NAME1.NAME2.NAME3</code> ...</p>
 <h4><code>−−lexer=NAME</code></h4>
-<p>This option defines the <code>NAME</code> of the generated scanner class and replaces the default name <code>Lexer</code> (and replaces <code>yyFlexLexer</code> when option <code>−−flex</code> is specified). The scanner class members may be declared within a <em><code>%class{ }</code></em> block. The scanner class constructor code may be defined within a <em><code>%init{ }</code></em> block. Additional constructor arguments may be declared with <em><code>%option ctorarg="argument, argument, ...</code></em>.</p>
+<p>This option defines the <code>NAME</code> of the generated scanner class and replaces the default name <code>Lexer</code> (and replaces <code>yyFlexLexer</code> when option <code>−−flex</code> is specified). The scanner class members may be declared within a <em><code>%class{ }</code></em> block. The scanner class constructor code may be defined within a <em><code>%init{ }</code></em> block. Additional constructor arguments may be declared with <em><code>%option ctorarg="argument, argument, ..."</code></em> and initializers with <em><code>%option ctorinit="initializer, initializer, ..."</code></em>.</p>
 <h4><code>−−lex=NAME</code></h4>
 <p>This option defines the <code>NAME</code> of the generated scanner function to replace the function name <code><a class="el" href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805" title="convert Lex/Flex regular expression syntax ">lex()</a></code> (and <code>yylex()</code> when option <code>−−flex</code> is specified).</p>
 <h4><code>−−params="TYPE NAME, ..."</code></h4>
@@ -761,7 +761,7 @@ The definitions section</h3>
 <div class="alt"> <div class="fragment"><div class="line">%option <a class="code" href="namespacereflex_1_1convert__flag.html#ab6a63c3a106c2dbcbad7b86797453f58">dotall</a> <a class="code" href="reflex_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div><div class="line"></div><div class="line">%top{</div><div class="line"><span class="preprocessor">  #include &lt;iostream&gt;</span>    <span class="comment">// std::cout etc.</span></div><div class="line">}</div><div class="line"></div><div class="line">%{</div><div class="line">  <span class="keyword">static</span> <span class="keywordtype">int</span> herd = 0;   <span class="comment">// a global static variable to count cows</span></div><div class="line">%}</div><div class="line"></div><div class="line">cow        \&lt;[Cc]ow\&gt;</div><div class="line"></div><div class="line">%%</div><div class="line"></div><div class="line">{cow}      herd++;       <span class="comment">// found a cow, bump count by one</span></div><div class="line">.          <span class="comment">// do nothing</span></div><div class="line">&lt;&lt;EOF&gt;&gt;    out() &lt;&lt; herd &lt;&lt; <span class="stringliteral">&quot; cows!&quot;</span> &lt;&lt; std::endl; <span class="keywordflow">return</span> 0;</div><div class="line"></div><div class="line">%%</div></div><!-- fragment --> </div><p>The above works fine, but we are using a global counter which is not a best practice and is not thread-safe: multiple Lexer class instances may compete to bump the counter. Another problem is that the Lexer can only be used once, there is no proper initialization to restart the Lexer on new input.</p>
 <p>RE/flex allows you to inject code in the generated Lexer class, meaning that class members and constructor code can be added to manage the Lexer class state. All Lexer class members are visible in actions, even when private. New Lexers can be instantiated given some input to scan. Lexers can run in parallel in threads without requiring synchronization when their state is part of the instance and not managed by global variables.</p>
 <p>To inject Lexer class member declarations such as variables and methods, place the declarations within <em><code>%class{ }</code></em> block. The <em><code>%class{</code></em> and the matching <em><code>}</code></em> should each be placed at the start of a new line.</p>
-<p>Likewise, to inject Lexer class constructor code, for example to initialize members, place the code within <em><code>%init{ }</code></em> block. The <em><code>%init{</code></em> and the matching <em><code>}</code></em> should each be placed at the start of a new line. Option <em><code>%option ctorarg="argument, argument, ..."</code></em> may be used to declare the constructor arguments of the Lexer class constructor.</p>
+<p>Likewise, to inject Lexer class constructor code, for example to initialize members, place the code within <em><code>%init{ }</code></em> block. The <em><code>%init{</code></em> and the matching <em><code>}</code></em> should each be placed at the start of a new line. Option <em><code>%option ctorarg="argument, argument, ..."</code></em> may be used to declare the constructor arguments of the Lexer class constructor. Option <em><code>%option ctorinit="initializer, initializer, ..."</code></em> specifies constructor initializers. See also <a class="el" href="index.html#reflex-lexer">The Lexer/yyFlexLexer class </a>.</p>
 <p>Additional constructors and/or a destructor may be placed in a <em><code>%class{ }</code></em> block, for class <code>Lexer</code> (or <code>yyFlexLexer</code> with option <code>−−flex</code>), unless the class is renamed with option <code>−−lexer=NAME</code> (<em><code>%option lexer=NAME</code></em>).</p>
 <p>For convenience you can use the generated <code>REFLEX_OPTION_lexer</code> macro in your code that expands to the class name. To do so, use <b><code>reflex</code></b> option <code>−−header-file</code> to generate a header file to include in your code.</p>
 <p>For example, we use these code injectors to make our cow counter <code>herd</code> part of the Lexer class state:</p>
@@ -936,7 +936,7 @@ Do not invoke <code>matcher()</code> before the <code><a class="el" href="namesp
 <p>The <code>matcher().rest()</code> method returns the rest of the input character sequence as a 0-terminated <code>char*</code> string. This method buffers all remaining input to return the string.</p>
 <p>The <code>matcher().span()</code> method enlarges the text matched to span the entire line and returns the matching line as a 0-terminated <code>char*</code> string without the <code>\n</code>.</p>
 <p>The <code>matcher().line()</code> and <code>matcher().wline()</code> methods return the entire line as a (wide) string with the matched text as a substring. These methods can be used to obtain the context of a match, for example to display the line where a lexical error or syntax error occurred.</p>
-<dl class="section warning"><dt>Warning</dt><dd>The methods <code>matcher().span()</code>, <code>matcher().line()</code>, and <code>matcher().wline()</code> invalidate the previous <code>text()</code>, <code>yytext</code>, <code>begin()</code>, and <code>end()</code> string pointers. Call these methods again to retrieve the updated pointer or call <code>str()</code> or <code>wstr()</code> to obtain a string copy of the match: <div class="fragment"><div class="line"><span class="comment">// INCORRECT, because t is invalid after line():</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *t = matcher().text();</div><div class="line">std::string s = matcher().line();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div><div class="line"><span class="comment">// OK with line():</span></div><div class="line">std::string s = matcher().line();</div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *t = matcher().text();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div><div class="line"><span class="comment">// OK with span():</span></div><div class="line">std::string t = matcher().str();</div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *s = matcher().span();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div></div><!-- fragment --> The start of a line is truncated when the line is too long. The length of the line's contents before the pattern match on the line is restricted to 8KB, which is the size specified by <code><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer size and growth, buffer is initially 2*BLOCK size, at least 4096 bytes ">reflex::AbstractMatcher::Const::BLOCK</a></code>. When this length is exceeded, the line's length before the match is truncated to 8KB. This ensures that pattern matching binary files or files with very long lines cannot cause memory allocation exceptions.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The methods <code>matcher().span()</code>, <code>matcher().line()</code>, and <code>matcher().wline()</code> invalidate the previous <code>text()</code>, <code>yytext</code>, <code>begin()</code>, and <code>end()</code> string pointers. Call these methods again to retrieve the updated pointer or call <code>str()</code> or <code>wstr()</code> to obtain a string copy of the match: <div class="fragment"><div class="line"><span class="comment">// INCORRECT, because t is invalid after line():</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *t = matcher().text();</div><div class="line">std::string s = matcher().line();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div><div class="line"><span class="comment">// OK with line():</span></div><div class="line">std::string s = matcher().line();</div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *t = matcher().text();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div><div class="line"><span class="comment">// OK with span():</span></div><div class="line">std::string t = matcher().str();</div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *s = matcher().span();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div></div><!-- fragment --> The start of a line is truncated when the line is too long. The length of the line's contents before the pattern match on the line is restricted to 8KB, which is the size specified by <code><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="minimum remaining unused space in the buffer, to prevent excessive shifting ">reflex::AbstractMatcher::Const::BLOCK</a></code>. When this length is exceeded, the line's length before the match is truncated to 8KB. This ensures that pattern matching binary files or files with very long lines cannot cause memory allocation exceptions.</dd></dl>
 <p>Because <code>matcher()</code> returns the current matcher object, the following Flex-like actions are also supported:</p>
 <table class="doxtable">
 <tr>
@@ -1408,339 +1408,653 @@ Character categories</h3>
 <tr>
 <td><code>\p{PythonIdentifierPart}</code> </td><td>matches a character in the Python IdentifierPart class </td></tr>
 </table>
-<p>To specify a Unicode block as a category when using the <code>−−unicode</code> option, use <code>\p{IsBlockName}</code>. The table below lists the block categories up to U+FFFF, However, all Unicode blocks up to U+10FFFF are available (not listed):</p>
+<p>To specify a Unicode block as a category when using the <code>−−unicode</code> option, use <code>\p{IsBlockName}</code>. The table below lists the block categories:</p>
 <table class="doxtable">
 <tr>
 <th>IsBlockName </th><th>Unicode character range  </th></tr>
 <tr>
-<td><code>\p{IsBasicLatin}</code> </td><td>U+0000 to U+007F </td></tr>
+<td><code>\p{BasicLatin}</code> </td><td>U+0000 to U+007F </td></tr>
 <tr>
-<td><code>\p{IsLatin-1Supplement}</code> </td><td>U+0080 to U+00FF </td></tr>
+<td><code>\p{Latin-1Supplement}</code> </td><td>U+0080 to U+00FF </td></tr>
 <tr>
-<td><code>\p{IsLatinExtended-A}</code> </td><td>U+0100 to U+017F </td></tr>
+<td><code>\p{LatinExtended-A}</code> </td><td>U+0100 to U+017F </td></tr>
 <tr>
-<td><code>\p{IsLatinExtended-B}</code> </td><td>U+0180 to U+024F </td></tr>
+<td><code>\p{LatinExtended-B}</code> </td><td>U+0180 to U+024F </td></tr>
 <tr>
-<td><code>\p{IsIPAExtensions}</code> </td><td>U+0250 to U+02AF </td></tr>
+<td><code>\p{IPAExtensions}</code> </td><td>U+0250 to U+02AF </td></tr>
 <tr>
-<td><code>\p{IsSpacingModifierLetters}</code> </td><td>U+02B0 to U+02FF </td></tr>
+<td><code>\p{SpacingModifierLetters}</code> </td><td>U+02B0 to U+02FF </td></tr>
 <tr>
-<td><code>\p{IsCombiningDiacriticalMarks}</code> </td><td>U+0300 to U+036F </td></tr>
+<td><code>\p{CombiningDiacriticalMarks}</code> </td><td>U+0300 to U+036F </td></tr>
 <tr>
-<td><code>\p{IsGreekandCoptic}</code> </td><td>U+0370 to U+03FF </td></tr>
+<td><code>\p{GreekandCoptic}</code> </td><td>U+0370 to U+03FF </td></tr>
 <tr>
-<td><code>\p{IsCyrillic}</code> </td><td>U+0400 to U+04FF </td></tr>
+<td><code>\p{Cyrillic}</code> </td><td>U+0400 to U+04FF </td></tr>
 <tr>
-<td><code>\p{IsCyrillicSupplement}</code> </td><td>U+0500 to U+052F </td></tr>
+<td><code>\p{CyrillicSupplement}</code> </td><td>U+0500 to U+052F </td></tr>
 <tr>
-<td><code>\p{IsArmenian}</code> </td><td>U+0530 to U+058F </td></tr>
+<td><code>\p{Armenian}</code> </td><td>U+0530 to U+058F </td></tr>
 <tr>
-<td><code>\p{IsHebrew}</code> </td><td>U+0590 to U+05FF </td></tr>
+<td><code>\p{Hebrew}</code> </td><td>U+0590 to U+05FF </td></tr>
 <tr>
-<td><code>\p{IsArabic}</code> </td><td>U+0600 to U+06FF </td></tr>
+<td><code>\p{Arabic}</code> </td><td>U+0600 to U+06FF </td></tr>
 <tr>
-<td><code>\p{IsSyriac}</code> </td><td>U+0700 to U+074F </td></tr>
+<td><code>\p{Syriac}</code> </td><td>U+0700 to U+074F </td></tr>
 <tr>
-<td><code>\p{IsArabicSupplement}</code> </td><td>U+0750 to U+077F </td></tr>
+<td><code>\p{ArabicSupplement}</code> </td><td>U+0750 to U+077F </td></tr>
 <tr>
-<td><code>\p{IsThaana}</code> </td><td>U+0780 to U+07BF </td></tr>
+<td><code>\p{Thaana}</code> </td><td>U+0780 to U+07BF </td></tr>
 <tr>
-<td><code>\p{IsNKo}</code> </td><td>U+07C0 to U+07FF </td></tr>
+<td><code>\p{NKo}</code> </td><td>U+07C0 to U+07FF </td></tr>
 <tr>
-<td><code>\p{IsSamaritan}</code> </td><td>U+0800 to U+083F </td></tr>
+<td><code>\p{Samaritan}</code> </td><td>U+0800 to U+083F </td></tr>
 <tr>
-<td><code>\p{IsMandaic}</code> </td><td>U+0840 to U+085F </td></tr>
+<td><code>\p{Mandaic}</code> </td><td>U+0840 to U+085F </td></tr>
 <tr>
-<td><code>\p{IsSyriacSupplement}</code> </td><td>U+0860 to U+086F </td></tr>
+<td><code>\p{SyriacSupplement}</code> </td><td>U+0860 to U+086F </td></tr>
 <tr>
-<td><code>\p{IsArabicExtended-A}</code> </td><td>U+08A0 to U+08FF </td></tr>
+<td><code>\p{ArabicExtended-B}</code> </td><td>U+0870 to U+089F </td></tr>
 <tr>
-<td><code>\p{IsDevanagari}</code> </td><td>U+0900 to U+097F </td></tr>
+<td><code>\p{ArabicExtended-A}</code> </td><td>U+08A0 to U+08FF </td></tr>
 <tr>
-<td><code>\p{IsBengali}</code> </td><td>U+0980 to U+09FF </td></tr>
+<td><code>\p{Devanagari}</code> </td><td>U+0900 to U+097F </td></tr>
 <tr>
-<td><code>\p{IsGurmukhi}</code> </td><td>U+0A00 to U+0A7F </td></tr>
+<td><code>\p{Bengali}</code> </td><td>U+0980 to U+09FF </td></tr>
 <tr>
-<td><code>\p{IsGujarati}</code> </td><td>U+0A80 to U+0AFF </td></tr>
+<td><code>\p{Gurmukhi}</code> </td><td>U+0A00 to U+0A7F </td></tr>
 <tr>
-<td><code>\p{IsOriya}</code> </td><td>U+0B00 to U+0B7F </td></tr>
+<td><code>\p{Gujarati}</code> </td><td>U+0A80 to U+0AFF </td></tr>
 <tr>
-<td><code>\p{IsTamil}</code> </td><td>U+0B80 to U+0BFF </td></tr>
+<td><code>\p{Oriya}</code> </td><td>U+0B00 to U+0B7F </td></tr>
 <tr>
-<td><code>\p{IsTelugu}</code> </td><td>U+0C00 to U+0C7F </td></tr>
+<td><code>\p{Tamil}</code> </td><td>U+0B80 to U+0BFF </td></tr>
 <tr>
-<td><code>\p{IsKannada}</code> </td><td>U+0C80 to U+0CFF </td></tr>
+<td><code>\p{Telugu}</code> </td><td>U+0C00 to U+0C7F </td></tr>
 <tr>
-<td><code>\p{IsMalayalam}</code> </td><td>U+0D00 to U+0D7F </td></tr>
+<td><code>\p{Kannada}</code> </td><td>U+0C80 to U+0CFF </td></tr>
 <tr>
-<td><code>\p{IsSinhala}</code> </td><td>U+0D80 to U+0DFF </td></tr>
+<td><code>\p{Malayalam}</code> </td><td>U+0D00 to U+0D7F </td></tr>
 <tr>
-<td><code>\p{IsThai}</code> </td><td>U+0E00 to U+0E7F </td></tr>
+<td><code>\p{Sinhala}</code> </td><td>U+0D80 to U+0DFF </td></tr>
 <tr>
-<td><code>\p{IsLao}</code> </td><td>U+0E80 to U+0EFF </td></tr>
+<td><code>\p{Thai}</code> </td><td>U+0E00 to U+0E7F </td></tr>
 <tr>
-<td><code>\p{IsTibetan}</code> </td><td>U+0F00 to U+0FFF </td></tr>
+<td><code>\p{Lao}</code> </td><td>U+0E80 to U+0EFF </td></tr>
 <tr>
-<td><code>\p{IsMyanmar}</code> </td><td>U+1000 to U+109F </td></tr>
+<td><code>\p{Tibetan}</code> </td><td>U+0F00 to U+0FFF </td></tr>
 <tr>
-<td><code>\p{IsGeorgian}</code> </td><td>U+10A0 to U+10FF </td></tr>
+<td><code>\p{Myanmar}</code> </td><td>U+1000 to U+109F </td></tr>
 <tr>
-<td><code>\p{IsHangulJamo}</code> </td><td>U+1100 to U+11FF </td></tr>
+<td><code>\p{Georgian}</code> </td><td>U+10A0 to U+10FF </td></tr>
 <tr>
-<td><code>\p{IsEthiopic}</code> </td><td>U+1200 to U+137F </td></tr>
+<td><code>\p{HangulJamo}</code> </td><td>U+1100 to U+11FF </td></tr>
 <tr>
-<td><code>\p{IsEthiopicSupplement}</code> </td><td>U+1380 to U+139F </td></tr>
+<td><code>\p{Ethiopic}</code> </td><td>U+1200 to U+137F </td></tr>
 <tr>
-<td><code>\p{IsCherokee}</code> </td><td>U+13A0 to U+13FF </td></tr>
+<td><code>\p{EthiopicSupplement}</code> </td><td>U+1380 to U+139F </td></tr>
 <tr>
-<td><code>\p{IsUnifiedCanadianAboriginalSyllabics}</code> </td><td>U+1400 to U+167F </td></tr>
+<td><code>\p{Cherokee}</code> </td><td>U+13A0 to U+13FF </td></tr>
 <tr>
-<td><code>\p{IsOgham}</code> </td><td>U+1680 to U+169F </td></tr>
+<td><code>\p{UnifiedCanadianAboriginalSyllabics}</code> </td><td>U+1400 to U+167F </td></tr>
 <tr>
-<td><code>\p{IsRunic}</code> </td><td>U+16A0 to U+16FF </td></tr>
+<td><code>\p{Ogham}</code> </td><td>U+1680 to U+169F </td></tr>
 <tr>
-<td><code>\p{IsTagalog}</code> </td><td>U+1700 to U+171F </td></tr>
+<td><code>\p{Runic}</code> </td><td>U+16A0 to U+16FF </td></tr>
 <tr>
-<td><code>\p{IsHanunoo}</code> </td><td>U+1720 to U+173F </td></tr>
+<td><code>\p{Tagalog}</code> </td><td>U+1700 to U+171F </td></tr>
 <tr>
-<td><code>\p{IsBuhid}</code> </td><td>U+1740 to U+175F </td></tr>
+<td><code>\p{Hanunoo}</code> </td><td>U+1720 to U+173F </td></tr>
 <tr>
-<td><code>\p{IsTagbanwa}</code> </td><td>U+1760 to U+177F </td></tr>
+<td><code>\p{Buhid}</code> </td><td>U+1740 to U+175F </td></tr>
 <tr>
-<td><code>\p{IsKhmer}</code> </td><td>U+1780 to U+17FF </td></tr>
+<td><code>\p{Tagbanwa}</code> </td><td>U+1760 to U+177F </td></tr>
 <tr>
-<td><code>\p{IsMongolian}</code> </td><td>U+1800 to U+18AF </td></tr>
+<td><code>\p{Khmer}</code> </td><td>U+1780 to U+17FF </td></tr>
 <tr>
-<td><code>\p{IsUnifiedCanadianAboriginalSyllabicsExtended}</code> </td><td>U+18B0 to U+18FF </td></tr>
+<td><code>\p{Mongolian}</code> </td><td>U+1800 to U+18AF </td></tr>
 <tr>
-<td><code>\p{IsLimbu}</code> </td><td>U+1900 to U+194F </td></tr>
+<td><code>\p{UnifiedCanadianAboriginalSyllabicsExtended}</code> </td><td>U+18B0 to U+18FF </td></tr>
 <tr>
-<td><code>\p{IsTaiLe}</code> </td><td>U+1950 to U+197F </td></tr>
+<td><code>\p{Limbu}</code> </td><td>U+1900 to U+194F </td></tr>
 <tr>
-<td><code>\p{IsNewTaiLue}</code> </td><td>U+1980 to U+19DF </td></tr>
+<td><code>\p{TaiLe}</code> </td><td>U+1950 to U+197F </td></tr>
 <tr>
-<td><code>\p{IsKhmerSymbols}</code> </td><td>U+19E0 to U+19FF </td></tr>
+<td><code>\p{NewTaiLue}</code> </td><td>U+1980 to U+19DF </td></tr>
 <tr>
-<td><code>\p{IsBuginese}</code> </td><td>U+1A00 to U+1A1F </td></tr>
+<td><code>\p{KhmerSymbols}</code> </td><td>U+19E0 to U+19FF </td></tr>
 <tr>
-<td><code>\p{IsTaiTham}</code> </td><td>U+1A20 to U+1AAF </td></tr>
+<td><code>\p{Buginese}</code> </td><td>U+1A00 to U+1A1F </td></tr>
 <tr>
-<td><code>\p{IsCombiningDiacriticalMarksExtended}</code> </td><td>U+1AB0 to U+1AFF </td></tr>
+<td><code>\p{TaiTham}</code> </td><td>U+1A20 to U+1AAF </td></tr>
 <tr>
-<td><code>\p{IsBalinese}</code> </td><td>U+1B00 to U+1B7F </td></tr>
+<td><code>\p{CombiningDiacriticalMarksExtended}</code> </td><td>U+1AB0 to U+1AFF </td></tr>
 <tr>
-<td><code>\p{IsSundanese}</code> </td><td>U+1B80 to U+1BBF </td></tr>
+<td><code>\p{Balinese}</code> </td><td>U+1B00 to U+1B7F </td></tr>
 <tr>
-<td><code>\p{IsBatak}</code> </td><td>U+1BC0 to U+1BFF </td></tr>
+<td><code>\p{Sundanese}</code> </td><td>U+1B80 to U+1BBF </td></tr>
 <tr>
-<td><code>\p{IsLepcha}</code> </td><td>U+1C00 to U+1C4F </td></tr>
+<td><code>\p{Batak}</code> </td><td>U+1BC0 to U+1BFF </td></tr>
 <tr>
-<td><code>\p{IsOlChiki}</code> </td><td>U+1C50 to U+1C7F </td></tr>
+<td><code>\p{Lepcha}</code> </td><td>U+1C00 to U+1C4F </td></tr>
 <tr>
-<td><code>\p{IsCyrillicExtended-C}</code> </td><td>U+1C80 to U+1C8F </td></tr>
+<td><code>\p{OlChiki}</code> </td><td>U+1C50 to U+1C7F </td></tr>
 <tr>
-<td><code>\p{IsGeorgianExtended}</code> </td><td>U+1C90 to U+1CBF </td></tr>
+<td><code>\p{CyrillicExtended-C}</code> </td><td>U+1C80 to U+1C8F </td></tr>
 <tr>
-<td><code>\p{IsSundaneseSupplement}</code> </td><td>U+1CC0 to U+1CCF </td></tr>
+<td><code>\p{GeorgianExtended}</code> </td><td>U+1C90 to U+1CBF </td></tr>
 <tr>
-<td><code>\p{IsVedicExtensions}</code> </td><td>U+1CD0 to U+1CFF </td></tr>
+<td><code>\p{SundaneseSupplement}</code> </td><td>U+1CC0 to U+1CCF </td></tr>
 <tr>
-<td><code>\p{IsPhoneticExtensions}</code> </td><td>U+1D00 to U+1D7F </td></tr>
+<td><code>\p{VedicExtensions}</code> </td><td>U+1CD0 to U+1CFF </td></tr>
 <tr>
-<td><code>\p{IsPhoneticExtensionsSupplement}</code> </td><td>U+1D80 to U+1DBF </td></tr>
+<td><code>\p{PhoneticExtensions}</code> </td><td>U+1D00 to U+1D7F </td></tr>
 <tr>
-<td><code>\p{IsCombiningDiacriticalMarksSupplement}</code> </td><td>U+1DC0 to U+1DFF </td></tr>
+<td><code>\p{PhoneticExtensionsSupplement}</code> </td><td>U+1D80 to U+1DBF </td></tr>
 <tr>
-<td><code>\p{IsLatinExtendedAdditional}</code> </td><td>U+1E00 to U+1EFF </td></tr>
+<td><code>\p{CombiningDiacriticalMarksSupplement}</code> </td><td>U+1DC0 to U+1DFF </td></tr>
 <tr>
-<td><code>\p{IsGreekExtended}</code> </td><td>U+1F00 to U+1FFF </td></tr>
+<td><code>\p{LatinExtendedAdditional}</code> </td><td>U+1E00 to U+1EFF </td></tr>
 <tr>
-<td><code>\p{IsGeneralPunctuation}</code> </td><td>U+2000 to U+206F </td></tr>
+<td><code>\p{GreekExtended}</code> </td><td>U+1F00 to U+1FFF </td></tr>
 <tr>
-<td><code>\p{IsSuperscriptsandSubscripts}</code> </td><td>U+2070 to U+209F </td></tr>
+<td><code>\p{GeneralPunctuation}</code> </td><td>U+2000 to U+206F </td></tr>
 <tr>
-<td><code>\p{IsCurrencySymbols}</code> </td><td>U+20A0 to U+20CF </td></tr>
+<td><code>\p{SuperscriptsandSubscripts}</code> </td><td>U+2070 to U+209F </td></tr>
 <tr>
-<td><code>\p{IsCombiningDiacriticalMarksforSymbols}</code> </td><td>U+20D0 to U+20FF </td></tr>
+<td><code>\p{CurrencySymbols}</code> </td><td>U+20A0 to U+20CF </td></tr>
 <tr>
-<td><code>\p{IsLetterlikeSymbols}</code> </td><td>U+2100 to U+214F </td></tr>
+<td><code>\p{CombiningDiacriticalMarksforSymbols}</code> </td><td>U+20D0 to U+20FF </td></tr>
 <tr>
-<td><code>\p{IsNumberForms}</code> </td><td>U+2150 to U+218F </td></tr>
+<td><code>\p{LetterlikeSymbols}</code> </td><td>U+2100 to U+214F </td></tr>
 <tr>
-<td><code>\p{IsArrows}</code> </td><td>U+2190 to U+21FF </td></tr>
+<td><code>\p{NumberForms}</code> </td><td>U+2150 to U+218F </td></tr>
 <tr>
-<td><code>\p{IsMathematicalOperators}</code> </td><td>U+2200 to U+22FF </td></tr>
+<td><code>\p{Arrows}</code> </td><td>U+2190 to U+21FF </td></tr>
 <tr>
-<td><code>\p{IsMiscellaneousTechnical}</code> </td><td>U+2300 to U+23FF </td></tr>
+<td><code>\p{MathematicalOperators}</code> </td><td>U+2200 to U+22FF </td></tr>
 <tr>
-<td><code>\p{IsControlPictures}</code> </td><td>U+2400 to U+243F </td></tr>
+<td><code>\p{MiscellaneousTechnical}</code> </td><td>U+2300 to U+23FF </td></tr>
 <tr>
-<td><code>\p{IsOpticalCharacterRecognition}</code> </td><td>U+2440 to U+245F </td></tr>
+<td><code>\p{ControlPictures}</code> </td><td>U+2400 to U+243F </td></tr>
 <tr>
-<td><code>\p{IsEnclosedAlphanumerics}</code> </td><td>U+2460 to U+24FF </td></tr>
+<td><code>\p{OpticalCharacterRecognition}</code> </td><td>U+2440 to U+245F </td></tr>
 <tr>
-<td><code>\p{IsBoxDrawing}</code> </td><td>U+2500 to U+257F </td></tr>
+<td><code>\p{EnclosedAlphanumerics}</code> </td><td>U+2460 to U+24FF </td></tr>
 <tr>
-<td><code>\p{IsBlockElements}</code> </td><td>U+2580 to U+259F </td></tr>
+<td><code>\p{BoxDrawing}</code> </td><td>U+2500 to U+257F </td></tr>
 <tr>
-<td><code>\p{IsGeometricShapes}</code> </td><td>U+25A0 to U+25FF </td></tr>
+<td><code>\p{BlockElements}</code> </td><td>U+2580 to U+259F </td></tr>
 <tr>
-<td><code>\p{IsMiscellaneousSymbols}</code> </td><td>U+2600 to U+26FF </td></tr>
+<td><code>\p{GeometricShapes}</code> </td><td>U+25A0 to U+25FF </td></tr>
 <tr>
-<td><code>\p{IsDingbats}</code> </td><td>U+2700 to U+27BF </td></tr>
+<td><code>\p{MiscellaneousSymbols}</code> </td><td>U+2600 to U+26FF </td></tr>
 <tr>
-<td><code>\p{IsMiscellaneousMathematicalSymbols-A}</code> </td><td>U+27C0 to U+27EF </td></tr>
+<td><code>\p{Dingbats}</code> </td><td>U+2700 to U+27BF </td></tr>
 <tr>
-<td><code>\p{IsSupplementalArrows-A}</code> </td><td>U+27F0 to U+27FF </td></tr>
+<td><code>\p{MiscellaneousMathematicalSymbols-A}</code> </td><td>U+27C0 to U+27EF </td></tr>
 <tr>
-<td><code>\p{IsBraillePatterns}</code> </td><td>U+2800 to U+28FF </td></tr>
+<td><code>\p{SupplementalArrows-A}</code> </td><td>U+27F0 to U+27FF </td></tr>
 <tr>
-<td><code>\p{IsSupplementalArrows-B}</code> </td><td>U+2900 to U+297F </td></tr>
+<td><code>\p{BraillePatterns}</code> </td><td>U+2800 to U+28FF </td></tr>
 <tr>
-<td><code>\p{IsMiscellaneousMathematicalSymbols-B}</code> </td><td>U+2980 to U+29FF </td></tr>
+<td><code>\p{SupplementalArrows-B}</code> </td><td>U+2900 to U+297F </td></tr>
 <tr>
-<td><code>\p{IsSupplementalMathematicalOperators}</code> </td><td>U+2A00 to U+2AFF </td></tr>
+<td><code>\p{MiscellaneousMathematicalSymbols-B}</code> </td><td>U+2980 to U+29FF </td></tr>
 <tr>
-<td><code>\p{IsMiscellaneousSymbolsandArrows}</code> </td><td>U+2B00 to U+2BFF </td></tr>
+<td><code>\p{SupplementalMathematicalOperators}</code> </td><td>U+2A00 to U+2AFF </td></tr>
 <tr>
-<td><code>\p{IsGlagolitic}</code> </td><td>U+2C00 to U+2C5F </td></tr>
+<td><code>\p{MiscellaneousSymbolsandArrows}</code> </td><td>U+2B00 to U+2BFF </td></tr>
 <tr>
-<td><code>\p{IsLatinExtended-C}</code> </td><td>U+2C60 to U+2C7F </td></tr>
+<td><code>\p{Glagolitic}</code> </td><td>U+2C00 to U+2C5F </td></tr>
 <tr>
-<td><code>\p{IsCoptic}</code> </td><td>U+2C80 to U+2CFF </td></tr>
+<td><code>\p{LatinExtended-C}</code> </td><td>U+2C60 to U+2C7F </td></tr>
 <tr>
-<td><code>\p{IsGeorgianSupplement}</code> </td><td>U+2D00 to U+2D2F </td></tr>
+<td><code>\p{Coptic}</code> </td><td>U+2C80 to U+2CFF </td></tr>
 <tr>
-<td><code>\p{IsTifinagh}</code> </td><td>U+2D30 to U+2D7F </td></tr>
+<td><code>\p{GeorgianSupplement}</code> </td><td>U+2D00 to U+2D2F </td></tr>
 <tr>
-<td><code>\p{IsEthiopicExtended}</code> </td><td>U+2D80 to U+2DDF </td></tr>
+<td><code>\p{Tifinagh}</code> </td><td>U+2D30 to U+2D7F </td></tr>
 <tr>
-<td><code>\p{IsCyrillicExtended-A}</code> </td><td>U+2DE0 to U+2DFF </td></tr>
+<td><code>\p{EthiopicExtended}</code> </td><td>U+2D80 to U+2DDF </td></tr>
 <tr>
-<td><code>\p{IsSupplementalPunctuation}</code> </td><td>U+2E00 to U+2E7F </td></tr>
+<td><code>\p{CyrillicExtended-A}</code> </td><td>U+2DE0 to U+2DFF </td></tr>
 <tr>
-<td><code>\p{IsCJKRadicalsSupplement}</code> </td><td>U+2E80 to U+2EFF </td></tr>
+<td><code>\p{SupplementalPunctuation}</code> </td><td>U+2E00 to U+2E7F </td></tr>
 <tr>
-<td><code>\p{IsKangxiRadicals}</code> </td><td>U+2F00 to U+2FDF </td></tr>
+<td><code>\p{CJKRadicalsSupplement}</code> </td><td>U+2E80 to U+2EFF </td></tr>
 <tr>
-<td><code>\p{IsIdeographicDescriptionCharacters}</code> </td><td>U+2FF0 to U+2FFF </td></tr>
+<td><code>\p{KangxiRadicals}</code> </td><td>U+2F00 to U+2FDF </td></tr>
 <tr>
-<td><code>\p{IsCJKSymbolsandPunctuation}</code> </td><td>U+3000 to U+303F </td></tr>
+<td><code>\p{IdeographicDescriptionCharacters}</code> </td><td>U+2FF0 to U+2FFF </td></tr>
 <tr>
-<td><code>\p{IsHiragana}</code> </td><td>U+3040 to U+309F </td></tr>
+<td><code>\p{CJKSymbolsandPunctuation}</code> </td><td>U+3000 to U+303F </td></tr>
 <tr>
-<td><code>\p{IsKatakana}</code> </td><td>U+30A0 to U+30FF </td></tr>
+<td><code>\p{Hiragana}</code> </td><td>U+3040 to U+309F </td></tr>
 <tr>
-<td><code>\p{IsBopomofo}</code> </td><td>U+3100 to U+312F </td></tr>
+<td><code>\p{Katakana}</code> </td><td>U+30A0 to U+30FF </td></tr>
 <tr>
-<td><code>\p{IsHangulCompatibilityJamo}</code> </td><td>U+3130 to U+318F </td></tr>
+<td><code>\p{Bopomofo}</code> </td><td>U+3100 to U+312F </td></tr>
 <tr>
-<td><code>\p{IsKanbun}</code> </td><td>U+3190 to U+319F </td></tr>
+<td><code>\p{HangulCompatibilityJamo}</code> </td><td>U+3130 to U+318F </td></tr>
 <tr>
-<td><code>\p{IsBopomofoExtended}</code> </td><td>U+31A0 to U+31BF </td></tr>
+<td><code>\p{Kanbun}</code> </td><td>U+3190 to U+319F </td></tr>
 <tr>
-<td><code>\p{IsCJKStrokes}</code> </td><td>U+31C0 to U+31EF </td></tr>
+<td><code>\p{BopomofoExtended}</code> </td><td>U+31A0 to U+31BF </td></tr>
 <tr>
-<td><code>\p{IsKatakanaPhoneticExtensions}</code> </td><td>U+31F0 to U+31FF </td></tr>
+<td><code>\p{CJKStrokes}</code> </td><td>U+31C0 to U+31EF </td></tr>
 <tr>
-<td><code>\p{IsEnclosedCJKLettersandMonths}</code> </td><td>U+3200 to U+32FF </td></tr>
+<td><code>\p{KatakanaPhoneticExtensions}</code> </td><td>U+31F0 to U+31FF </td></tr>
 <tr>
-<td><code>\p{IsCJKCompatibility}</code> </td><td>U+3300 to U+33FF </td></tr>
+<td><code>\p{EnclosedCJKLettersandMonths}</code> </td><td>U+3200 to U+32FF </td></tr>
 <tr>
-<td><code>\p{IsCJKUnifiedIdeographsExtensionA}</code> </td><td>U+3400 to U+4DBF </td></tr>
+<td><code>\p{CJKCompatibility}</code> </td><td>U+3300 to U+33FF </td></tr>
 <tr>
-<td><code>\p{IsYijingHexagramSymbols}</code> </td><td>U+4DC0 to U+4DFF </td></tr>
+<td><code>\p{CJKUnifiedIdeographsExtensionA}</code> </td><td>U+3400 to U+4DBF </td></tr>
 <tr>
-<td><code>\p{IsCJKUnifiedIdeographs}</code> </td><td>U+4E00 to U+9FFF </td></tr>
+<td><code>\p{YijingHexagramSymbols}</code> </td><td>U+4DC0 to U+4DFF </td></tr>
 <tr>
-<td><code>\p{IsYiSyllables}</code> </td><td>U+A000 to U+A48F </td></tr>
+<td><code>\p{CJKUnifiedIdeographs}</code> </td><td>U+4E00 to U+9FFF </td></tr>
 <tr>
-<td><code>\p{IsYiRadicals}</code> </td><td>U+A490 to U+A4CF </td></tr>
+<td><code>\p{YiSyllables}</code> </td><td>U+A000 to U+A48F </td></tr>
 <tr>
-<td><code>\p{IsLisu}</code> </td><td>U+A4D0 to U+A4FF </td></tr>
+<td><code>\p{YiRadicals}</code> </td><td>U+A490 to U+A4CF </td></tr>
 <tr>
-<td><code>\p{IsVai}</code> </td><td>U+A500 to U+A63F </td></tr>
+<td><code>\p{Lisu}</code> </td><td>U+A4D0 to U+A4FF </td></tr>
 <tr>
-<td><code>\p{IsCyrillicExtended-B}</code> </td><td>U+A640 to U+A69F </td></tr>
+<td><code>\p{Vai}</code> </td><td>U+A500 to U+A63F </td></tr>
 <tr>
-<td><code>\p{IsBamum}</code> </td><td>U+A6A0 to U+A6FF </td></tr>
+<td><code>\p{CyrillicExtended-B}</code> </td><td>U+A640 to U+A69F </td></tr>
 <tr>
-<td><code>\p{IsModifierToneLetters}</code> </td><td>U+A700 to U+A71F </td></tr>
+<td><code>\p{Bamum}</code> </td><td>U+A6A0 to U+A6FF </td></tr>
 <tr>
-<td><code>\p{IsLatinExtended-D}</code> </td><td>U+A720 to U+A7FF </td></tr>
+<td><code>\p{ModifierToneLetters}</code> </td><td>U+A700 to U+A71F </td></tr>
 <tr>
-<td><code>\p{IsSylotiNagri}</code> </td><td>U+A800 to U+A82F </td></tr>
+<td><code>\p{LatinExtended-D}</code> </td><td>U+A720 to U+A7FF </td></tr>
 <tr>
-<td><code>\p{IsCommonIndicNumberForms}</code> </td><td>U+A830 to U+A83F </td></tr>
+<td><code>\p{SylotiNagri}</code> </td><td>U+A800 to U+A82F </td></tr>
 <tr>
-<td><code>\p{IsPhags-pa}</code> </td><td>U+A840 to U+A87F </td></tr>
+<td><code>\p{CommonIndicNumberForms}</code> </td><td>U+A830 to U+A83F </td></tr>
 <tr>
-<td><code>\p{IsSaurashtra}</code> </td><td>U+A880 to U+A8DF </td></tr>
+<td><code>\p{Phags-pa}</code> </td><td>U+A840 to U+A87F </td></tr>
 <tr>
-<td><code>\p{IsDevanagariExtended}</code> </td><td>U+A8E0 to U+A8FF </td></tr>
+<td><code>\p{Saurashtra}</code> </td><td>U+A880 to U+A8DF </td></tr>
 <tr>
-<td><code>\p{IsKayahLi}</code> </td><td>U+A900 to U+A92F </td></tr>
+<td><code>\p{DevanagariExtended}</code> </td><td>U+A8E0 to U+A8FF </td></tr>
 <tr>
-<td><code>\p{IsRejang}</code> </td><td>U+A930 to U+A95F </td></tr>
+<td><code>\p{KayahLi}</code> </td><td>U+A900 to U+A92F </td></tr>
 <tr>
-<td><code>\p{IsHangulJamoExtended-A}</code> </td><td>U+A960 to U+A97F </td></tr>
+<td><code>\p{Rejang}</code> </td><td>U+A930 to U+A95F </td></tr>
 <tr>
-<td><code>\p{IsJavanese}</code> </td><td>U+A980 to U+A9DF </td></tr>
+<td><code>\p{HangulJamoExtended-A}</code> </td><td>U+A960 to U+A97F </td></tr>
 <tr>
-<td><code>\p{IsMyanmarExtended-B}</code> </td><td>U+A9E0 to U+A9FF </td></tr>
+<td><code>\p{Javanese}</code> </td><td>U+A980 to U+A9DF </td></tr>
 <tr>
-<td><code>\p{IsCham}</code> </td><td>U+AA00 to U+AA5F </td></tr>
+<td><code>\p{MyanmarExtended-B}</code> </td><td>U+A9E0 to U+A9FF </td></tr>
 <tr>
-<td><code>\p{IsMyanmarExtended-A}</code> </td><td>U+AA60 to U+AA7F </td></tr>
+<td><code>\p{Cham}</code> </td><td>U+AA00 to U+AA5F </td></tr>
 <tr>
-<td><code>\p{IsTaiViet}</code> </td><td>U+AA80 to U+AADF </td></tr>
+<td><code>\p{MyanmarExtended-A}</code> </td><td>U+AA60 to U+AA7F </td></tr>
 <tr>
-<td><code>\p{IsMeeteiMayekExtensions}</code> </td><td>U+AAE0 to U+AAFF </td></tr>
+<td><code>\p{TaiViet}</code> </td><td>U+AA80 to U+AADF </td></tr>
 <tr>
-<td><code>\p{IsEthiopicExtended-A}</code> </td><td>U+AB00 to U+AB2F </td></tr>
+<td><code>\p{MeeteiMayekExtensions}</code> </td><td>U+AAE0 to U+AAFF </td></tr>
 <tr>
-<td><code>\p{IsLatinExtended-E}</code> </td><td>U+AB30 to U+AB6F </td></tr>
+<td><code>\p{EthiopicExtended-A}</code> </td><td>U+AB00 to U+AB2F </td></tr>
 <tr>
-<td><code>\p{IsCherokeeSupplement}</code> </td><td>U+AB70 to U+ABBF </td></tr>
+<td><code>\p{LatinExtended-E}</code> </td><td>U+AB30 to U+AB6F </td></tr>
 <tr>
-<td><code>\p{IsMeeteiMayek}</code> </td><td>U+ABC0 to U+ABFF </td></tr>
+<td><code>\p{CherokeeSupplement}</code> </td><td>U+AB70 to U+ABBF </td></tr>
 <tr>
-<td><code>\p{IsHangulSyllables}</code> </td><td>U+AC00 to U+D7AF </td></tr>
+<td><code>\p{MeeteiMayek}</code> </td><td>U+ABC0 to U+ABFF </td></tr>
 <tr>
-<td><code>\p{IsHangulJamoExtended-B}</code> </td><td>U+D7B0 to U+D7FF </td></tr>
+<td><code>\p{HangulSyllables}</code> </td><td>U+AC00 to U+D7AF </td></tr>
 <tr>
-<td><code>\p{IsHighSurrogates}</code> </td><td>U+D800 to U+DB7F </td></tr>
+<td><code>\p{HangulJamoExtended-B}</code> </td><td>U+D7B0 to U+D7FF </td></tr>
 <tr>
-<td><code>\p{IsHighPrivateUseSurrogates}</code> </td><td>U+DB80 to U+DBFF </td></tr>
+<td><code>\p{HighSurrogates}</code> </td><td>U+D800 to U+DB7F </td></tr>
 <tr>
-<td><code>\p{IsLowSurrogates}</code> </td><td>U+DC00 to U+DFFF </td></tr>
+<td><code>\p{HighPrivateUseSurrogates}</code> </td><td>U+DB80 to U+DBFF </td></tr>
 <tr>
-<td><code>\p{IsPrivateUseArea}</code> </td><td>U+E000 to U+F8FF </td></tr>
+<td><code>\p{LowSurrogates}</code> </td><td>U+DC00 to U+DFFF </td></tr>
 <tr>
-<td><code>\p{IsCJKCompatibilityIdeographs}</code> </td><td>U+F900 to U+FAFF </td></tr>
+<td><code>\p{PrivateUseArea}</code> </td><td>U+E000 to U+F8FF </td></tr>
 <tr>
-<td><code>\p{IsAlphabeticPresentationForms}</code> </td><td>U+FB00 to U+FB4F </td></tr>
+<td><code>\p{CJKCompatibilityIdeographs}</code> </td><td>U+F900 to U+FAFF </td></tr>
 <tr>
-<td><code>\p{IsArabicPresentationForms-A}</code> </td><td>U+FB50 to U+FDFF </td></tr>
+<td><code>\p{AlphabeticPresentationForms}</code> </td><td>U+FB00 to U+FB4F </td></tr>
 <tr>
-<td><code>\p{IsVariationSelectors}</code> </td><td>U+FE00 to U+FE0F </td></tr>
+<td><code>\p{ArabicPresentationForms-A}</code> </td><td>U+FB50 to U+FDFF </td></tr>
 <tr>
-<td><code>\p{IsVerticalForms}</code> </td><td>U+FE10 to U+FE1F </td></tr>
+<td><code>\p{VariationSelectors}</code> </td><td>U+FE00 to U+FE0F </td></tr>
 <tr>
-<td><code>\p{IsCombiningHalfMarks}</code> </td><td>U+FE20 to U+FE2F </td></tr>
+<td><code>\p{VerticalForms}</code> </td><td>U+FE10 to U+FE1F </td></tr>
 <tr>
-<td><code>\p{IsCJKCompatibilityForms}</code> </td><td>U+FE30 to U+FE4F </td></tr>
+<td><code>\p{CombiningHalfMarks}</code> </td><td>U+FE20 to U+FE2F </td></tr>
 <tr>
-<td><code>\p{IsSmallFormVariants}</code> </td><td>U+FE50 to U+FE6F </td></tr>
+<td><code>\p{CJKCompatibilityForms}</code> </td><td>U+FE30 to U+FE4F </td></tr>
 <tr>
-<td><code>\p{IsArabicPresentationForms-B}</code> </td><td>U+FE70 to U+FEFF </td></tr>
+<td><code>\p{SmallFormVariants}</code> </td><td>U+FE50 to U+FE6F </td></tr>
 <tr>
-<td><code>\p{IsHalfwidthandFullwidthForms}</code> </td><td>U+FF00 to U+FFEF </td></tr>
+<td><code>\p{ArabicPresentationForms-B}</code> </td><td>U+FE70 to U+FEFF </td></tr>
 <tr>
-<td><code>\p{IsSpecials}</code> </td><td>U+FFF0 to U+FFFF </td></tr>
+<td><code>\p{HalfwidthandFullwidthForms}</code> </td><td>U+FF00 to U+FFEF </td></tr>
+<tr>
+<td><code>\p{Specials}</code> </td><td>U+FFF0 to U+FFFF </td></tr>
+<tr>
+<td><code>\p{LinearBSyllabary}</code> </td><td>U+10000 to U+1007F </td></tr>
+<tr>
+<td><code>\p{LinearBIdeograms}</code> </td><td>U+10080 to U+100FF </td></tr>
+<tr>
+<td><code>\p{AegeanNumbers}</code> </td><td>U+10100 to U+1013F </td></tr>
+<tr>
+<td><code>\p{AncientGreekNumbers}</code> </td><td>U+10140 to U+1018F </td></tr>
+<tr>
+<td><code>\p{AncientSymbols}</code> </td><td>U+10190 to U+101CF </td></tr>
+<tr>
+<td><code>\p{PhaistosDisc}</code> </td><td>U+101D0 to U+101FF </td></tr>
+<tr>
+<td><code>\p{Lycian}</code> </td><td>U+10280 to U+1029F </td></tr>
+<tr>
+<td><code>\p{Carian}</code> </td><td>U+102A0 to U+102DF </td></tr>
+<tr>
+<td><code>\p{CopticEpactNumbers}</code> </td><td>U+102E0 to U+102FF </td></tr>
+<tr>
+<td><code>\p{OldItalic}</code> </td><td>U+10300 to U+1032F </td></tr>
+<tr>
+<td><code>\p{Gothic}</code> </td><td>U+10330 to U+1034F </td></tr>
+<tr>
+<td><code>\p{OldPermic}</code> </td><td>U+10350 to U+1037F </td></tr>
+<tr>
+<td><code>\p{Ugaritic}</code> </td><td>U+10380 to U+1039F </td></tr>
+<tr>
+<td><code>\p{OldPersian}</code> </td><td>U+103A0 to U+103DF </td></tr>
+<tr>
+<td><code>\p{Deseret}</code> </td><td>U+10400 to U+1044F </td></tr>
+<tr>
+<td><code>\p{Shavian}</code> </td><td>U+10450 to U+1047F </td></tr>
+<tr>
+<td><code>\p{Osmanya}</code> </td><td>U+10480 to U+104AF </td></tr>
+<tr>
+<td><code>\p{Osage}</code> </td><td>U+104B0 to U+104FF </td></tr>
+<tr>
+<td><code>\p{Elbasan}</code> </td><td>U+10500 to U+1052F </td></tr>
+<tr>
+<td><code>\p{CaucasianAlbanian}</code> </td><td>U+10530 to U+1056F </td></tr>
+<tr>
+<td><code>\p{Vithkuqi}</code> </td><td>U+10570 to U+105BF </td></tr>
+<tr>
+<td><code>\p{LinearA}</code> </td><td>U+10600 to U+1077F </td></tr>
+<tr>
+<td><code>\p{LatinExtended-F}</code> </td><td>U+10780 to U+107BF </td></tr>
+<tr>
+<td><code>\p{CypriotSyllabary}</code> </td><td>U+10800 to U+1083F </td></tr>
+<tr>
+<td><code>\p{ImperialAramaic}</code> </td><td>U+10840 to U+1085F </td></tr>
+<tr>
+<td><code>\p{Palmyrene}</code> </td><td>U+10860 to U+1087F </td></tr>
+<tr>
+<td><code>\p{Nabataean}</code> </td><td>U+10880 to U+108AF </td></tr>
+<tr>
+<td><code>\p{Hatran}</code> </td><td>U+108E0 to U+108FF </td></tr>
+<tr>
+<td><code>\p{Phoenician}</code> </td><td>U+10900 to U+1091F </td></tr>
+<tr>
+<td><code>\p{Lydian}</code> </td><td>U+10920 to U+1093F </td></tr>
+<tr>
+<td><code>\p{MeroiticHieroglyphs}</code> </td><td>U+10980 to U+1099F </td></tr>
+<tr>
+<td><code>\p{MeroiticCursive}</code> </td><td>U+109A0 to U+109FF </td></tr>
+<tr>
+<td><code>\p{Kharoshthi}</code> </td><td>U+10A00 to U+10A5F </td></tr>
+<tr>
+<td><code>\p{OldSouthArabian}</code> </td><td>U+10A60 to U+10A7F </td></tr>
+<tr>
+<td><code>\p{OldNorthArabian}</code> </td><td>U+10A80 to U+10A9F </td></tr>
+<tr>
+<td><code>\p{Manichaean}</code> </td><td>U+10AC0 to U+10AFF </td></tr>
+<tr>
+<td><code>\p{Avestan}</code> </td><td>U+10B00 to U+10B3F </td></tr>
+<tr>
+<td><code>\p{InscriptionalParthian}</code> </td><td>U+10B40 to U+10B5F </td></tr>
+<tr>
+<td><code>\p{InscriptionalPahlavi}</code> </td><td>U+10B60 to U+10B7F </td></tr>
+<tr>
+<td><code>\p{PsalterPahlavi}</code> </td><td>U+10B80 to U+10BAF </td></tr>
+<tr>
+<td><code>\p{OldTurkic}</code> </td><td>U+10C00 to U+10C4F </td></tr>
+<tr>
+<td><code>\p{OldHungarian}</code> </td><td>U+10C80 to U+10CFF </td></tr>
+<tr>
+<td><code>\p{HanifiRohingya}</code> </td><td>U+10D00 to U+10D3F </td></tr>
+<tr>
+<td><code>\p{RumiNumeralSymbols}</code> </td><td>U+10E60 to U+10E7F </td></tr>
+<tr>
+<td><code>\p{Yezidi}</code> </td><td>U+10E80 to U+10EBF </td></tr>
+<tr>
+<td><code>\p{OldSogdian}</code> </td><td>U+10F00 to U+10F2F </td></tr>
+<tr>
+<td><code>\p{Sogdian}</code> </td><td>U+10F30 to U+10F6F </td></tr>
+<tr>
+<td><code>\p{OldUyghur}</code> </td><td>U+10F70 to U+10FAF </td></tr>
+<tr>
+<td><code>\p{Chorasmian}</code> </td><td>U+10FB0 to U+10FDF </td></tr>
+<tr>
+<td><code>\p{Elymaic}</code> </td><td>U+10FE0 to U+10FFF </td></tr>
+<tr>
+<td><code>\p{Brahmi}</code> </td><td>U+11000 to U+1107F </td></tr>
+<tr>
+<td><code>\p{Kaithi}</code> </td><td>U+11080 to U+110CF </td></tr>
+<tr>
+<td><code>\p{SoraSompeng}</code> </td><td>U+110D0 to U+110FF </td></tr>
+<tr>
+<td><code>\p{Chakma}</code> </td><td>U+11100 to U+1114F </td></tr>
+<tr>
+<td><code>\p{Mahajani}</code> </td><td>U+11150 to U+1117F </td></tr>
+<tr>
+<td><code>\p{Sharada}</code> </td><td>U+11180 to U+111DF </td></tr>
+<tr>
+<td><code>\p{SinhalaArchaicNumbers}</code> </td><td>U+111E0 to U+111FF </td></tr>
+<tr>
+<td><code>\p{Khojki}</code> </td><td>U+11200 to U+1124F </td></tr>
+<tr>
+<td><code>\p{Multani}</code> </td><td>U+11280 to U+112AF </td></tr>
+<tr>
+<td><code>\p{Khudawadi}</code> </td><td>U+112B0 to U+112FF </td></tr>
+<tr>
+<td><code>\p{Grantha}</code> </td><td>U+11300 to U+1137F </td></tr>
+<tr>
+<td><code>\p{Newa}</code> </td><td>U+11400 to U+1147F </td></tr>
+<tr>
+<td><code>\p{Tirhuta}</code> </td><td>U+11480 to U+114DF </td></tr>
+<tr>
+<td><code>\p{Siddham}</code> </td><td>U+11580 to U+115FF </td></tr>
+<tr>
+<td><code>\p{Modi}</code> </td><td>U+11600 to U+1165F </td></tr>
+<tr>
+<td><code>\p{MongolianSupplement}</code> </td><td>U+11660 to U+1167F </td></tr>
+<tr>
+<td><code>\p{Takri}</code> </td><td>U+11680 to U+116CF </td></tr>
+<tr>
+<td><code>\p{Ahom}</code> </td><td>U+11700 to U+1174F </td></tr>
+<tr>
+<td><code>\p{Dogra}</code> </td><td>U+11800 to U+1184F </td></tr>
+<tr>
+<td><code>\p{WarangCiti}</code> </td><td>U+118A0 to U+118FF </td></tr>
+<tr>
+<td><code>\p{DivesAkuru}</code> </td><td>U+11900 to U+1195F </td></tr>
+<tr>
+<td><code>\p{Nandinagari}</code> </td><td>U+119A0 to U+119FF </td></tr>
+<tr>
+<td><code>\p{ZanabazarSquare}</code> </td><td>U+11A00 to U+11A4F </td></tr>
+<tr>
+<td><code>\p{Soyombo}</code> </td><td>U+11A50 to U+11AAF </td></tr>
+<tr>
+<td><code>\p{UnifiedCanadianAboriginalSyllabicsExtended-A}</code> </td><td>U+11AB0 to U+11ABF </td></tr>
+<tr>
+<td><code>\p{PauCinHau}</code> </td><td>U+11AC0 to U+11AFF </td></tr>
+<tr>
+<td><code>\p{Bhaiksuki}</code> </td><td>U+11C00 to U+11C6F </td></tr>
+<tr>
+<td><code>\p{Marchen}</code> </td><td>U+11C70 to U+11CBF </td></tr>
+<tr>
+<td><code>\p{MasaramGondi}</code> </td><td>U+11D00 to U+11D5F </td></tr>
+<tr>
+<td><code>\p{GunjalaGondi}</code> </td><td>U+11D60 to U+11DAF </td></tr>
+<tr>
+<td><code>\p{Makasar}</code> </td><td>U+11EE0 to U+11EFF </td></tr>
+<tr>
+<td><code>\p{LisuSupplement}</code> </td><td>U+11FB0 to U+11FBF </td></tr>
+<tr>
+<td><code>\p{TamilSupplement}</code> </td><td>U+11FC0 to U+11FFF </td></tr>
+<tr>
+<td><code>\p{Cuneiform}</code> </td><td>U+12000 to U+123FF </td></tr>
+<tr>
+<td><code>\p{CuneiformNumbersandPunctuation}</code> </td><td>U+12400 to U+1247F </td></tr>
+<tr>
+<td><code>\p{EarlyDynasticCuneiform}</code> </td><td>U+12480 to U+1254F </td></tr>
+<tr>
+<td><code>\p{Cypro-Minoan}</code> </td><td>U+12F90 to U+12FFF </td></tr>
+<tr>
+<td><code>\p{EgyptianHieroglyphs}</code> </td><td>U+13000 to U+1342F </td></tr>
+<tr>
+<td><code>\p{EgyptianHieroglyphFormatControls}</code> </td><td>U+13430 to U+1343F </td></tr>
+<tr>
+<td><code>\p{AnatolianHieroglyphs}</code> </td><td>U+14400 to U+1467F </td></tr>
+<tr>
+<td><code>\p{BamumSupplement}</code> </td><td>U+16800 to U+16A3F </td></tr>
+<tr>
+<td><code>\p{Mro}</code> </td><td>U+16A40 to U+16A6F </td></tr>
+<tr>
+<td><code>\p{Tangsa}</code> </td><td>U+16A70 to U+16ACF </td></tr>
+<tr>
+<td><code>\p{BassaVah}</code> </td><td>U+16AD0 to U+16AFF </td></tr>
+<tr>
+<td><code>\p{PahawhHmong}</code> </td><td>U+16B00 to U+16B8F </td></tr>
+<tr>
+<td><code>\p{Medefaidrin}</code> </td><td>U+16E40 to U+16E9F </td></tr>
+<tr>
+<td><code>\p{Miao}</code> </td><td>U+16F00 to U+16F9F </td></tr>
+<tr>
+<td><code>\p{IdeographicSymbolsandPunctuation}</code> </td><td>U+16FE0 to U+16FFF </td></tr>
+<tr>
+<td><code>\p{Tangut}</code> </td><td>U+17000 to U+187FF </td></tr>
+<tr>
+<td><code>\p{TangutComponents}</code> </td><td>U+18800 to U+18AFF </td></tr>
+<tr>
+<td><code>\p{KhitanSmallScript}</code> </td><td>U+18B00 to U+18CFF </td></tr>
+<tr>
+<td><code>\p{TangutSupplement}</code> </td><td>U+18D00 to U+18D7F </td></tr>
+<tr>
+<td><code>\p{KanaExtended-B}</code> </td><td>U+1AFF0 to U+1AFFF </td></tr>
+<tr>
+<td><code>\p{KanaSupplement}</code> </td><td>U+1B000 to U+1B0FF </td></tr>
+<tr>
+<td><code>\p{KanaExtended-A}</code> </td><td>U+1B100 to U+1B12F </td></tr>
+<tr>
+<td><code>\p{SmallKanaExtension}</code> </td><td>U+1B130 to U+1B16F </td></tr>
+<tr>
+<td><code>\p{Nushu}</code> </td><td>U+1B170 to U+1B2FF </td></tr>
+<tr>
+<td><code>\p{Duployan}</code> </td><td>U+1BC00 to U+1BC9F </td></tr>
+<tr>
+<td><code>\p{ShorthandFormatControls}</code> </td><td>U+1BCA0 to U+1BCAF </td></tr>
+<tr>
+<td><code>\p{ZnamennyMusicalNotation}</code> </td><td>U+1CF00 to U+1CFCF </td></tr>
+<tr>
+<td><code>\p{ByzantineMusicalSymbols}</code> </td><td>U+1D000 to U+1D0FF </td></tr>
+<tr>
+<td><code>\p{MusicalSymbols}</code> </td><td>U+1D100 to U+1D1FF </td></tr>
+<tr>
+<td><code>\p{AncientGreekMusicalNotation}</code> </td><td>U+1D200 to U+1D24F </td></tr>
+<tr>
+<td><code>\p{MayanNumerals}</code> </td><td>U+1D2E0 to U+1D2FF </td></tr>
+<tr>
+<td><code>\p{TaiXuanJingSymbols}</code> </td><td>U+1D300 to U+1D35F </td></tr>
+<tr>
+<td><code>\p{CountingRodNumerals}</code> </td><td>U+1D360 to U+1D37F </td></tr>
+<tr>
+<td><code>\p{MathematicalAlphanumericSymbols}</code> </td><td>U+1D400 to U+1D7FF </td></tr>
+<tr>
+<td><code>\p{SuttonSignWriting}</code> </td><td>U+1D800 to U+1DAAF </td></tr>
+<tr>
+<td><code>\p{LatinExtended-G}</code> </td><td>U+1DF00 to U+1DFFF </td></tr>
+<tr>
+<td><code>\p{GlagoliticSupplement}</code> </td><td>U+1E000 to U+1E02F </td></tr>
+<tr>
+<td><code>\p{NyiakengPuachueHmong}</code> </td><td>U+1E100 to U+1E14F </td></tr>
+<tr>
+<td><code>\p{Toto}</code> </td><td>U+1E290 to U+1E2BF </td></tr>
+<tr>
+<td><code>\p{Wancho}</code> </td><td>U+1E2C0 to U+1E2FF </td></tr>
+<tr>
+<td><code>\p{EthiopicExtended-B}</code> </td><td>U+1E7E0 to U+1E7FF </td></tr>
+<tr>
+<td><code>\p{MendeKikakui}</code> </td><td>U+1E800 to U+1E8DF </td></tr>
+<tr>
+<td><code>\p{Adlam}</code> </td><td>U+1E900 to U+1E95F </td></tr>
+<tr>
+<td><code>\p{IndicSiyaqNumbers}</code> </td><td>U+1EC70 to U+1ECBF </td></tr>
+<tr>
+<td><code>\p{OttomanSiyaqNumbers}</code> </td><td>U+1ED00 to U+1ED4F </td></tr>
+<tr>
+<td><code>\p{ArabicMathematicalAlphabeticSymbols}</code> </td><td>U+1EE00 to U+1EEFF </td></tr>
+<tr>
+<td><code>\p{MahjongTiles}</code> </td><td>U+1F000 to U+1F02F </td></tr>
+<tr>
+<td><code>\p{DominoTiles}</code> </td><td>U+1F030 to U+1F09F </td></tr>
+<tr>
+<td><code>\p{PlayingCards}</code> </td><td>U+1F0A0 to U+1F0FF </td></tr>
+<tr>
+<td><code>\p{EnclosedAlphanumericSupplement}</code> </td><td>U+1F100 to U+1F1FF </td></tr>
+<tr>
+<td><code>\p{EnclosedIdeographicSupplement}</code> </td><td>U+1F200 to U+1F2FF </td></tr>
+<tr>
+<td><code>\p{MiscellaneousSymbolsandPictographs}</code> </td><td>U+1F300 to U+1F5FF </td></tr>
+<tr>
+<td><code>\p{Emoticons}</code> </td><td>U+1F600 to U+1F64F </td></tr>
+<tr>
+<td><code>\p{OrnamentalDingbats}</code> </td><td>U+1F650 to U+1F67F </td></tr>
+<tr>
+<td><code>\p{TransportandMapSymbols}</code> </td><td>U+1F680 to U+1F6FF </td></tr>
+<tr>
+<td><code>\p{AlchemicalSymbols}</code> </td><td>U+1F700 to U+1F77F </td></tr>
+<tr>
+<td><code>\p{GeometricShapesExtended}</code> </td><td>U+1F780 to U+1F7FF </td></tr>
+<tr>
+<td><code>\p{SupplementalArrows-C}</code> </td><td>U+1F800 to U+1F8FF </td></tr>
+<tr>
+<td><code>\p{SupplementalSymbolsandPictographs}</code> </td><td>U+1F900 to U+1F9FF </td></tr>
+<tr>
+<td><code>\p{ChessSymbols}</code> </td><td>U+1FA00 to U+1FA6F </td></tr>
+<tr>
+<td><code>\p{SymbolsandPictographsExtended-A}</code> </td><td>U+1FA70 to U+1FAFF </td></tr>
+<tr>
+<td><code>\p{SymbolsforLegacyComputing}</code> </td><td>U+1FB00 to U+1FBFF </td></tr>
+<tr>
+<td><code>\p{CJKUnifiedIdeographsExtensionB}</code> </td><td>U+20000 to U+2A6DF </td></tr>
+<tr>
+<td><code>\p{CJKUnifiedIdeographsExtensionC}</code> </td><td>U+2A700 to U+2B73F </td></tr>
+<tr>
+<td><code>\p{CJKUnifiedIdeographsExtensionD}</code> </td><td>U+2B740 to U+2B81F </td></tr>
+<tr>
+<td><code>\p{CJKUnifiedIdeographsExtensionE}</code> </td><td>U+2B820 to U+2CEAF </td></tr>
+<tr>
+<td><code>\p{CJKUnifiedIdeographsExtensionF}</code> </td><td>U+2CEB0 to U+2EBEF </td></tr>
+<tr>
+<td><code>\p{CJKCompatibilityIdeographsSupplement}</code> </td><td>U+2F800 to U+2FA1F </td></tr>
+<tr>
+<td><code>\p{CJKUnifiedIdeographsExtensionG}</code> </td><td>U+30000 to U+3134F </td></tr>
+<tr>
+<td><code>\p{Tags}</code> </td><td>U+E0000 to U+E007F </td></tr>
+<tr>
+<td><code>\p{VariationSelectorsSupplement}</code> </td><td>U+E0100 to U+E01EF </td></tr>
+<tr>
+<td><code>\p{SupplementaryPrivateUseArea-A}</code> </td><td>U+F0000 to U+FFFFF </td></tr>
+<tr>
+<td><code>\p{SupplementaryPrivateUseArea-B}</code> </td><td>U+100000 to U+10FFFF </td></tr>
 </table>
 <p>In addition, the <code>−−unicode</code> option enables standard Unicode language scripts:</p>
-<p><code>\p{Adlam}</code>, <code>\p{Ahom}</code>, <code>\p{Anatolian_Hieroglyphs}</code>, <code>\p{Arabic}</code>, <code>\p{Armenian}</code>, <code>\p{Avestan}</code>, <code>\p{Balinese}</code>, <code>\p{Bamum}</code>, <code>\p{Bassa_Vah}</code>, <code>\p{Batak}</code>, <code>\p{Bengali}</code>, <code>\p{Bhaiksuki}</code>, <code>\p{Bopomofo}</code>, <code>\p{Brahmi}</code>, <code>\p{Braille}</code>, <code>\p{Buginese}</code>, <code>\p{Buhid}</code>, <code>\p{Canadian_Aboriginal}</code>, <code>\p{Carian}</code>, <code>\p{Caucasian_Albanian}</code>, <code>\p{Chakma}</code>, <code>\p{Cham}</code>, <code>\p{Cherokee}</code>, <code>\p{Chorasmian}</code>, <code>\p{Common}</code>, <code>\p{Coptic}</code>, <code>\p{Cuneiform}</code>, <code>\p{Cypriot}</code>, <code>\p{Cyrillic}</code>, <code>\p{Deseret}</code>, <code>\p{Devanagari}</code>, <code>\p{Dives_Akuru}</code>, <code>\p{Dogra}</code>, <code>\p{Duployan}</code>, <code>\p{Egyptian_Hieroglyphs}</code>, <code>\p{Elbasan}</code>, <code>\p{Elymaic}</code>, <code>\p{Ethiopic}</code>, <code>\p{Georgian}</code>, <code>\p{Glagolitic}</code>, <code>\p{Gothic}</code>, <code>\p{Grantha}</code>, <code>\p{Greek}</code>, <code>\p{Gujarati}</code>, <code>\p{Gunjala_Gondi}</code>, <code>\p{Gurmukhi}</code>, <code>\p{Han}</code>, <code>\p{Hangul}</code>, <code>\p{Hanifi_Rohingya}</code>, <code>\p{Hanunoo}</code>, <code>\p{Hatran}</code>, <code>\p{Hebrew}</code>, <code>\p{Hiragana}</code>, <code>\p{Imperial_Aramaic}</code>, <code>\p{Inscriptional_Pahlavi}</code>, <code>\p{Inscriptional_Parthian}</code>, <code>\p{Javanese}</code>, <code>\p{Kaithi}</code>, <code>\p{Kannada}</code>, <code>\p{Katakana}</code>, <code>\p{Kayah_Li}</code>, <code>\p{Kharoshthi}</code>, <code>\p{Khitan_Small_Script}</code>, <code>\p{Khmer}</code>, <code>\p{Khojki}</code>, <code>\p{Khudawadi}</code>, <code>\p{Lao}</code>, <code>\p{Latin}</code>, <code>\p{Lepcha}</code>, <code>\p{Limbu}</code>, <code>\p{Linear_A}</code>, <code>\p{Linear_B}</code>, <code>\p{Lisu}</code>, <code>\p{Lycian}</code>, <code>\p{Lydian}</code>, <code>\p{Mahajani}</code>, <code>\p{Makasar}</code>, <code>\p{Malayalam}</code>, <code>\p{Mandaic}</code>, <code>\p{Manichaean}</code>, <code>\p{Marchen}</code>, <code>\p{Masaram_Gondi}</code>, <code>\p{Medefaidrin}</code>, <code>\p{Meetei_Mayek}</code>, <code>\p{Mende_Kikakui}</code>, <code>\p{Meroitic_Cursive}</code>, <code>\p{Meroitic_Hieroglyphs}</code>, <code>\p{Miao}</code>, <code>\p{Modi}</code>, <code>\p{Mongolian}</code>, <code>\p{Mro}</code>, <code>\p{Multani}</code>, <code>\p{Myanmar}</code>, <code>\p{Nabataean}</code>, <code>\p{Nandinagari}</code>, <code>\p{New_Tai_Lue}</code>, <code>\p{Newa}</code>, <code>\p{Nko}</code>, <code>\p{Nushu}</code>, <code>\p{Nyiakeng_Puachue_Hmong}</code>, <code>\p{Ogham}</code>, <code>\p{Ol_Chiki}</code>, <code>\p{Old_Hungarian}</code>, <code>\p{Old_Italic}</code>, <code>\p{Old_North_Arabian}</code>, <code>\p{Old_Permic}</code>, <code>\p{Old_Persian}</code>, <code>\p{Old_Sogdian}</code>, <code>\p{Old_South_Arabian}</code>, <code>\p{Old_Turkic}</code>, <code>\p{Oriya}</code>, <code>\p{Osage}</code>, <code>\p{Osmanya}</code>, <code>\p{Pahawh_Hmong}</code>, <code>\p{Palmyrene}</code>, <code>\p{Pau_Cin_Hau}</code>, <code>\p{Phags_Pa}</code>, <code>\p{Phoenician}</code>, <code>\p{Psalter_Pahlavi}</code>, <code>\p{Rejang}</code>, <code>\p{Runic}</code>, <code>\p{Samaritan}</code>, <code>\p{Saurashtra}</code>, <code>\p{Sharada}</code>, <code>\p{Shavian}</code>, <code>\p{Siddham}</code>, <code>\p{SignWriting}</code>, <code>\p{Sinhala}</code>, <code>\p{Sogdian}</code>, <code>\p{Sora_Sompeng}</code>, <code>\p{Soyombo}</code>, <code>\p{Sundanese}</code>, <code>\p{Syloti_Nagri}</code>, <code>\p{Syriac}</code>, <code>\p{Tagalog}</code>, <code>\p{Tagbanwa}</code>, <code>\p{Tai_Le}</code>, <code>\p{Tai_Tham}</code>, <code>\p{Tai_Viet}</code>, <code>\p{Takri}</code>, <code>\p{Tamil}</code>, <code>\p{Tangut}</code>, <code>\p{Telugu}</code>, <code>\p{Thaana}</code>, <code>\p{Thai}</code>, <code>\p{Tibetan}</code>, <code>\p{Tifinagh}</code>, <code>\p{Tirhuta}</code>, <code>\p{Ugaritic}</code>, <code>\p{Vai}</code>, <code>\p{Wancho}</code>, <code>\p{Warang_Citi}</code>, <code>\p{Yezidi}</code>, <code>\p{Yi}</code>, <code>\p{Zanabazar_Square}</code>,</p>
+<p><code>\p{Adlam}</code>, <code>\p{Ahom}</code>, <code>\p{Anatolian_Hieroglyphs}</code>, <code>\p{Arabic}</code>, <code>\p{Armenian}</code>, <code>\p{Avestan}</code>, <code>\p{Balinese}</code>, <code>\p{Bamum}</code>, <code>\p{Bassa_Vah}</code>, <code>\p{Batak}</code>, <code>\p{Bengali}</code>, <code>\p{Bhaiksuki}</code>, <code>\p{Bopomofo}</code>, <code>\p{Brahmi}</code>, <code>\p{Braille}</code>, <code>\p{Buginese}</code>, <code>\p{Buhid}</code>, <code>\p{Canadian_Aboriginal}</code>, <code>\p{Carian}</code>, <code>\p{Caucasian_Albanian}</code>, <code>\p{Chakma}</code>, <code>\p{Cham}</code>, <code>\p{Cherokee}</code>, <code>\p{Chorasmian}</code>, <code>\p{Common}</code>, <code>\p{Coptic}</code>, <code>\p{Cuneiform}</code>, <code>\p{Cypriot}</code>, <code>\p{Cypro_Minoan}</code>, <code>\p{Cyrillic}</code>, <code>\p{Deseret}</code>, <code>\p{Devanagari}</code>, <code>\p{Dives_Akuru}</code>, <code>\p{Dogra}</code>, <code>\p{Duployan}</code>, <code>\p{Egyptian_Hieroglyphs}</code>, <code>\p{Elbasan}</code>, <code>\p{Elymaic}</code>, <code>\p{Ethiopic}</code>, <code>\p{Georgian}</code>, <code>\p{Glagolitic}</code>, <code>\p{Gothic}</code>, <code>\p{Grantha}</code>, <code>\p{Greek}</code>, <code>\p{Gujarati}</code>, <code>\p{Gunjala_Gondi}</code>, <code>\p{Gurmukhi}</code>, <code>\p{Han}</code>, <code>\p{Hangul}</code>, <code>\p{Hanifi_Rohingya}</code>, <code>\p{Hanunoo}</code>, <code>\p{Hatran}</code>, <code>\p{Hebrew}</code>, <code>\p{Hiragana}</code>, <code>\p{Imperial_Aramaic}</code>, <code>\p{Inscriptional_Pahlavi}</code>, <code>\p{Inscriptional_Parthian}</code>, <code>\p{Javanese}</code>, <code>\p{Kaithi}</code>, <code>\p{Kannada}</code>, <code>\p{Katakana}</code>, <code>\p{Kayah_Li}</code>, <code>\p{Kharoshthi}</code>, <code>\p{Khitan_Small_Script}</code>, <code>\p{Khmer}</code>, <code>\p{Khojki}</code>, <code>\p{Khudawadi}</code>, <code>\p{Lao}</code>, <code>\p{Latin}</code>, <code>\p{Lepcha}</code>, <code>\p{Limbu}</code>, <code>\p{Linear_A}</code>, <code>\p{Linear_B}</code>, <code>\p{Lisu}</code>, <code>\p{Lycian}</code>, <code>\p{Lydian}</code>, <code>\p{Mahajani}</code>, <code>\p{Makasar}</code>, <code>\p{Malayalam}</code>, <code>\p{Mandaic}</code>, <code>\p{Manichaean}</code>, <code>\p{Marchen}</code>, <code>\p{Masaram_Gondi}</code>, <code>\p{Medefaidrin}</code>, <code>\p{Meetei_Mayek}</code>, <code>\p{Mende_Kikakui}</code>, <code>\p{Meroitic_Cursive}</code>, <code>\p{Meroitic_Hieroglyphs}</code>, <code>\p{Miao}</code>, <code>\p{Modi}</code>, <code>\p{Mongolian}</code>, <code>\p{Mro}</code>, <code>\p{Multani}</code>, <code>\p{Myanmar}</code>, <code>\p{Nabataean}</code>, <code>\p{Nandinagari}</code>, <code>\p{New_Tai_Lue}</code>, <code>\p{Newa}</code>, <code>\p{Nko}</code>, <code>\p{Nushu}</code>, <code>\p{Nyiakeng_Puachue_Hmong}</code>, <code>\p{Ogham}</code>, <code>\p{Old_Uyghur}</code>, <code>\p{Ol_Chiki}</code>, <code>\p{Old_Hungarian}</code>, <code>\p{Old_Italic}</code>, <code>\p{Old_North_Arabian}</code>, <code>\p{Old_Permic}</code>, <code>\p{Old_Persian}</code>, <code>\p{Old_Sogdian}</code>, <code>\p{Old_South_Arabian}</code>, <code>\p{Old_Turkic}</code>, <code>\p{Oriya}</code>, <code>\p{Osage}</code>, <code>\p{Osmanya}</code>, <code>\p{Pahawh_Hmong}</code>, <code>\p{Palmyrene}</code>, <code>\p{Pau_Cin_Hau}</code>, <code>\p{Phags_Pa}</code>, <code>\p{Phoenician}</code>, <code>\p{Psalter_Pahlavi}</code>, <code>\p{Rejang}</code>, <code>\p{Runic}</code>, <code>\p{Samaritan}</code>, <code>\p{Saurashtra}</code>, <code>\p{Sharada}</code>, <code>\p{Shavian}</code>, <code>\p{Siddham}</code>, <code>\p{SignWriting}</code>, <code>\p{Sinhala}</code>, <code>\p{Sogdian}</code>, <code>\p{Sora_Sompeng}</code>, <code>\p{Soyombo}</code>, <code>\p{Sundanese}</code>, <code>\p{Syloti_Nagri}</code>, <code>\p{Syriac}</code>, <code>\p{Tagalog}</code>, <code>\p{Tagbanwa}</code>, <code>\p{Tai_Le}</code>, <code>\p{Tai_Tham}</code>, <code>\p{Tai_Viet}</code>, <code>\p{Takri}</code>, <code>\p{Tamil}</code>, <code>\p{Tangut}</code>, <code>\p{Tangsa}</code>, <code>\p{Telugu}</code>, <code>\p{Thaana}</code>, <code>\p{Thai}</code>, <code>\p{Tibetan}</code>, <code>\p{Tifinagh}</code>, <code>\p{Tirhuta}</code>, <code>\p{Toto}</code>, <code>\p{Ugaritic}</code>, <code>\p{Vai}</code>, <code>\p{Vithkuqi}</code>, <code>\p{Wancho}</code>, <code>\p{Warang_Citi}</code>, <code>\p{Yezidi}</code>, <code>\p{Yi}</code>, <code>\p{Zanabazar_Square}</code>,</p>
 <dl class="section note"><dt>Note</dt><dd>Unicode language script character classes differ from the Unicode blocks that have a similar name. For example, the <code>\p{Greek}</code> class represents Greek and Coptic letters and differs from the Unicode block <code>\p{IsGreek}</code> that spans a specific Unicode block of Greek and Coptic characters only, which also includes unassigned characters.</dd></dl>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-pattern-anchor"></a>
@@ -1948,9 +2262,9 @@ The Lexer/yyFlexLexer class                                     </h2>
 <p>To customize the Lexer class use these options and code injection.</p>
 <p>You can declare multiple nested namespace names by <code>namespace=NAME1::NAME2::NAME3</code>, or by separating the names with a dot such as <code>namespace=NAME1.NAME2.NAME3</code>, to declare the lexer in <code>NAME1::NAME2::NAME3</code>.</p>
 <p>To understand the impact of these options, consider the following lex specification template:</p>
-<div class="alt"> <div class="fragment"><div class="line">%option <span class="keyword">namespace</span>=NAMESPACE</div><div class="line">%option lexer=LEXER</div><div class="line">%option <a class="code" href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805">lex</a>=LEX</div><div class="line">%option params=PARAMS</div><div class="line"></div><div class="line">%<span class="keyword">class</span>{</div><div class="line">  MEMBERS</div><div class="line">}</div><div class="line"></div><div class="line">%option ctorarg=<span class="stringliteral">&quot;CTORARGS&quot;</span></div><div class="line">%init{</div><div class="line">  INIT</div><div class="line">}</div><div class="line"></div><div class="line">%%</div><div class="line"></div><div class="line">%{</div><div class="line">  CODE</div><div class="line">%}</div><div class="line"></div><div class="line">REGEX ACTION</div><div class="line"></div><div class="line">%%</div></div><!-- fragment --> </div><p>This produces the following Lexer class with the template parts filled in:</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="abslexer_8h.html">reflex/abslexer.h</a>&gt;</span></div><div class="line"><span class="keyword">namespace </span>NAMESPACE {</div><div class="line">  <span class="keyword">class </span>LEXER : <span class="keyword">public</span> <a class="code" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt;reflex::Matcher&gt; {</div><div class="line">    MEMBERS</div><div class="line">   <span class="keyword">public</span>:</div><div class="line">    LEXER(</div><div class="line">        CTORARGS,</div><div class="line">        <span class="keyword">const</span> <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>&amp; input = <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>(),</div><div class="line">        std::ostream&amp;        os    = std::cout)</div><div class="line">      :</div><div class="line">        AbstractLexer(input, os)</div><div class="line">    {</div><div class="line">      INIT</div><div class="line">    }</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> INITIAL = 0;</div><div class="line">    <span class="keyword">virtual</span> <span class="keywordtype">int</span> LEX(PARAMS);</div><div class="line">    <span class="keywordtype">int</span> LEX(</div><div class="line">        <span class="keyword">const</span> <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>&amp; input,</div><div class="line">        std::ostream        *os = NULL,</div><div class="line">        PARAMS)</div><div class="line">    {</div><div class="line">      in(input);</div><div class="line">      <span class="keywordflow">if</span> (os)</div><div class="line">        out(*os);</div><div class="line">      <span class="keywordflow">return</span> LEX(PARAMS);</div><div class="line">    }</div><div class="line">  };</div><div class="line">  <span class="keywordtype">int</span> NAMESPACE::LEXER::LEX(PARAMS)</div><div class="line">  {</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> PATTERN_INITIAL(<span class="stringliteral">&quot;(?m)(REGEX)&quot;</span>);</div><div class="line">    <span class="keywordflow">if</span> (!has_matcher())</div><div class="line">    {</div><div class="line">      matcher(<span class="keyword">new</span> Matcher(PATTERN_INITIAL, stdinit(), <span class="keyword">this</span>));</div><div class="line">    }</div><div class="line">    CODE</div><div class="line">    <span class="keywordflow">while</span> (<span class="keyword">true</span>)</div><div class="line">    {</div><div class="line">      <span class="keywordflow">switch</span> (matcher().scan())</div><div class="line">      {</div><div class="line">        <span class="keywordflow">case</span> 0:</div><div class="line">          <span class="keywordflow">if</span> (matcher().at_end())</div><div class="line">          {</div><div class="line">            <span class="keywordflow">return</span> 0;</div><div class="line">          }</div><div class="line">          <span class="keywordflow">else</span></div><div class="line">          {</div><div class="line">            out().put(matcher().input());</div><div class="line">          }</div><div class="line">          <span class="keywordflow">break</span>;</div><div class="line">        <span class="keywordflow">case</span> 1:</div><div class="line">          ACTION</div><div class="line">          <span class="keywordflow">break</span>;</div><div class="line">      }</div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><p>The Lexer class produced with option <code>−−flex</code> is compatible with Flex (assuming Flex with option <code>-+</code> for C++):</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="flexlexer_8h.html">reflex/flexlexer.h</a>&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">namespace </span>NAMESPACE {</div><div class="line"></div><div class="line">  <span class="keyword">typedef</span> <a class="code" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer&lt;reflex::Matcher&gt;</a> FlexLexer;</div><div class="line"></div><div class="line">  <span class="keyword">class </span>LEXER : <span class="keyword">public</span> FlexLexer {</div><div class="line">    MEMBERS</div><div class="line">   <span class="keyword">public</span>:</div><div class="line">    LEXER(</div><div class="line">        CTORARGS,</div><div class="line">        <span class="keyword">const</span> <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>&amp; input = <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>(),</div><div class="line">        std::ostream        *os    = NULL)</div><div class="line">      :</div><div class="line">        FlexLexer(input, os)</div><div class="line">    {</div><div class="line">      INIT</div><div class="line">    }</div><div class="line">    <span class="keyword">virtual</span> <span class="keywordtype">int</span> LEX(PARAMS);</div><div class="line">    <span class="keywordtype">int</span> LEX(</div><div class="line">        <span class="keyword">const</span> <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>&amp; input,</div><div class="line">        std::ostream        *os = NULL,</div><div class="line">        PARAMS)</div><div class="line">    {</div><div class="line">      in(input);</div><div class="line">      <span class="keywordflow">if</span> (os)</div><div class="line">        out(*os);</div><div class="line">      <span class="keywordflow">return</span> LEX(PARAMS);</div><div class="line">    }</div><div class="line">  };</div><div class="line"></div><div class="line">  <span class="keywordtype">int</span> NAMESPACE::LEXER::LEX(PARAMS)</div><div class="line">  {</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> PATTERN_INITIAL(<span class="stringliteral">&quot;(?m)(REGEX)&quot;</span>);</div><div class="line">    <span class="keywordflow">if</span> (!has_matcher())</div><div class="line">    {</div><div class="line">      matcher(<span class="keyword">new</span> Matcher(PATTERN_INITIAL, stdinit(), <span class="keyword">this</span>));</div><div class="line">      <a class="code" href="flexlexer_8h.html#a231e56d8de12d0283bd71ed4e7592171">YY_USER_INIT</a></div><div class="line">    }</div><div class="line">    CODE</div><div class="line">    <span class="keywordflow">while</span> (<span class="keyword">true</span>)</div><div class="line">    {</div><div class="line">      <span class="keywordflow">switch</span> (matcher().scan())</div><div class="line">      {</div><div class="line">        <span class="keywordflow">case</span> 0:</div><div class="line">          <span class="keywordflow">if</span> (matcher().at_end())</div><div class="line">          {</div><div class="line">            <span class="keywordflow">return</span> 0;</div><div class="line">          }</div><div class="line">          <span class="keywordflow">else</span></div><div class="line">          {</div><div class="line">            output(matcher().input());</div><div class="line">          }</div><div class="line">          <a class="code" href="flexlexer_8h.html#a3cc40a460ad7df816678bcc05241e84c">YY_BREAK</a></div><div class="line">        <span class="keywordflow">case</span> 1:</div><div class="line">          <a class="code" href="flexlexer_8h.html#a6198b2fcf96178b24ad4efff2a3debb0">YY_USER_ACTION</a></div><div class="line">          ACTION</div><div class="line">          <a class="code" href="flexlexer_8h.html#a3cc40a460ad7df816678bcc05241e84c">YY_BREAK</a></div><div class="line">      }</div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><p>To use a custom lexer class that inherits the generated base Lexer class, use option <code>−−class=NAME</code> to declare the name of your custom lexer class (or option <code>−−yyclass=NAME</code> to also enable <code>−−flex</code> compatibility with the <code>yyFlexLexer</code> class). For details, see <a class="el" href="index.html#reflex-inherit">Inheriting Lexer/yyFlexLexer </a>.</p>
+<div class="alt"> <div class="fragment"><div class="line">%option <span class="keyword">namespace</span>=NAMESPACE</div><div class="line">%option lexer=LEXER</div><div class="line">%option <a class="code" href="namespacereflex_1_1convert__flag.html#a7222821c0cc6579424c71c261e9b8805">lex</a>=LEX</div><div class="line">%option params=PARAMS</div><div class="line"></div><div class="line">%<span class="keyword">class</span>{</div><div class="line">  MEMBERS</div><div class="line">}</div><div class="line"></div><div class="line">%option ctorarg=<span class="stringliteral">&quot;CTORARG1, CTORARG2, ...&quot;</span></div><div class="line">%option ctorinit=<span class="stringliteral">&quot;CTORINIT1, CTORINIT2, ...&quot;</span></div><div class="line">%init{</div><div class="line">  INIT</div><div class="line">}</div><div class="line"></div><div class="line">%%</div><div class="line"></div><div class="line">%{</div><div class="line">  CODE</div><div class="line">%}</div><div class="line"></div><div class="line">REGEX ACTION</div><div class="line"></div><div class="line">%%</div></div><!-- fragment --> </div><p>This produces the following Lexer class with the template parts filled in:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="abslexer_8h.html">reflex/abslexer.h</a>&gt;</span></div><div class="line"><span class="keyword">namespace </span>NAMESPACE {</div><div class="line">  <span class="keyword">class </span>LEXER : <span class="keyword">public</span> <a class="code" href="classreflex_1_1_abstract_lexer.html">reflex::AbstractLexer</a>&lt;reflex::Matcher&gt; {</div><div class="line">    MEMBERS</div><div class="line">   <span class="keyword">public</span>:</div><div class="line">    LEXER(</div><div class="line">        CTORARG1, CTORARG2, ...,</div><div class="line">        <span class="keyword">const</span> <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>&amp; input = <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>(),</div><div class="line">        std::ostream&amp;        os    = std::cout)</div><div class="line">      :</div><div class="line">        AbstractLexer(input, os),</div><div class="line">        CTORINIT1, CTORINIT2, ...</div><div class="line">    {</div><div class="line">      INIT</div><div class="line">    }</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> INITIAL = 0;</div><div class="line">    <span class="keyword">virtual</span> <span class="keywordtype">int</span> LEX(PARAMS);</div><div class="line">    <span class="keywordtype">int</span> LEX(</div><div class="line">        <span class="keyword">const</span> <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>&amp; input,</div><div class="line">        std::ostream        *os = NULL,</div><div class="line">        PARAMS)</div><div class="line">    {</div><div class="line">      in(input);</div><div class="line">      <span class="keywordflow">if</span> (os)</div><div class="line">        out(*os);</div><div class="line">      <span class="keywordflow">return</span> LEX(PARAMS);</div><div class="line">    }</div><div class="line">  };</div><div class="line">  <span class="keywordtype">int</span> NAMESPACE::LEXER::LEX(PARAMS)</div><div class="line">  {</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> PATTERN_INITIAL(<span class="stringliteral">&quot;(?m)(REGEX)&quot;</span>);</div><div class="line">    <span class="keywordflow">if</span> (!has_matcher())</div><div class="line">    {</div><div class="line">      matcher(<span class="keyword">new</span> Matcher(PATTERN_INITIAL, stdinit(), <span class="keyword">this</span>));</div><div class="line">    }</div><div class="line">    CODE</div><div class="line">    <span class="keywordflow">while</span> (<span class="keyword">true</span>)</div><div class="line">    {</div><div class="line">      <span class="keywordflow">switch</span> (matcher().scan())</div><div class="line">      {</div><div class="line">        <span class="keywordflow">case</span> 0:</div><div class="line">          <span class="keywordflow">if</span> (matcher().at_end())</div><div class="line">          {</div><div class="line">            <span class="keywordflow">return</span> 0;</div><div class="line">          }</div><div class="line">          <span class="keywordflow">else</span></div><div class="line">          {</div><div class="line">            out().put(matcher().input());</div><div class="line">          }</div><div class="line">          <span class="keywordflow">break</span>;</div><div class="line">        <span class="keywordflow">case</span> 1:</div><div class="line">          ACTION</div><div class="line">          <span class="keywordflow">break</span>;</div><div class="line">      }</div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><p>The Lexer class produced with option <code>−−flex</code> is compatible with Flex (assuming Flex with option <code>-+</code> for C++):</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="flexlexer_8h.html">reflex/flexlexer.h</a>&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">namespace </span>NAMESPACE {</div><div class="line"></div><div class="line">  <span class="keyword">typedef</span> <a class="code" href="classreflex_1_1_flex_lexer.html">reflex::FlexLexer&lt;reflex::Matcher&gt;</a> FlexLexer;</div><div class="line"></div><div class="line">  <span class="keyword">class </span>LEXER : <span class="keyword">public</span> FlexLexer {</div><div class="line">    MEMBERS</div><div class="line">   <span class="keyword">public</span>:</div><div class="line">    LEXER(</div><div class="line">        CTORARG1, CTORARG2, ...,</div><div class="line">        <span class="keyword">const</span> <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>&amp; input = <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>(),</div><div class="line">        std::ostream        *os    = NULL)</div><div class="line">      :</div><div class="line">        FlexLexer(input, os),</div><div class="line">        CTORINIT1, CTORINIT2, ...</div><div class="line">    {</div><div class="line">      INIT</div><div class="line">    }</div><div class="line">    <span class="keyword">virtual</span> <span class="keywordtype">int</span> LEX(PARAMS);</div><div class="line">    <span class="keywordtype">int</span> LEX(</div><div class="line">        <span class="keyword">const</span> <a class="code" href="classreflex_1_1_input.html">reflex::Input</a>&amp; input,</div><div class="line">        std::ostream        *os = NULL,</div><div class="line">        PARAMS)</div><div class="line">    {</div><div class="line">      in(input);</div><div class="line">      <span class="keywordflow">if</span> (os)</div><div class="line">        out(*os);</div><div class="line">      <span class="keywordflow">return</span> LEX(PARAMS);</div><div class="line">    }</div><div class="line">  };</div><div class="line"></div><div class="line">  <span class="keywordtype">int</span> NAMESPACE::LEXER::LEX(PARAMS)</div><div class="line">  {</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classreflex_1_1_pattern.html">reflex::Pattern</a> PATTERN_INITIAL(<span class="stringliteral">&quot;(?m)(REGEX)&quot;</span>);</div><div class="line">    <span class="keywordflow">if</span> (!has_matcher())</div><div class="line">    {</div><div class="line">      matcher(<span class="keyword">new</span> Matcher(PATTERN_INITIAL, stdinit(), <span class="keyword">this</span>));</div><div class="line">      <a class="code" href="flexlexer_8h.html#a231e56d8de12d0283bd71ed4e7592171">YY_USER_INIT</a></div><div class="line">    }</div><div class="line">    CODE</div><div class="line">    <span class="keywordflow">while</span> (<span class="keyword">true</span>)</div><div class="line">    {</div><div class="line">      <span class="keywordflow">switch</span> (matcher().scan())</div><div class="line">      {</div><div class="line">        <span class="keywordflow">case</span> 0:</div><div class="line">          <span class="keywordflow">if</span> (matcher().at_end())</div><div class="line">          {</div><div class="line">            <span class="keywordflow">return</span> 0;</div><div class="line">          }</div><div class="line">          <span class="keywordflow">else</span></div><div class="line">          {</div><div class="line">            output(matcher().input());</div><div class="line">          }</div><div class="line">          <a class="code" href="flexlexer_8h.html#a3cc40a460ad7df816678bcc05241e84c">YY_BREAK</a></div><div class="line">        <span class="keywordflow">case</span> 1:</div><div class="line">          <a class="code" href="flexlexer_8h.html#a6198b2fcf96178b24ad4efff2a3debb0">YY_USER_ACTION</a></div><div class="line">          ACTION</div><div class="line">          <a class="code" href="flexlexer_8h.html#a3cc40a460ad7df816678bcc05241e84c">YY_BREAK</a></div><div class="line">      }</div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><p>To use a custom lexer class that inherits the generated base Lexer class, use option <code>−−class=NAME</code> to declare the name of your custom lexer class (or option <code>−−yyclass=NAME</code> to also enable <code>−−flex</code> compatibility with the <code>yyFlexLexer</code> class). For details, see <a class="el" href="index.html#reflex-inherit">Inheriting Lexer/yyFlexLexer </a>.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="reflex-inherit"></a>
 Inheriting Lexer/yyFlexLexer                                  </h2>
@@ -2872,7 +3186,7 @@ Properties of a match</h3>
 <p>The <code>rest()</code> method returns the rest of the input character sequence as a 0-terminated <code>char*</code> string. This method buffers all remaining input to return the string.</p>
 <p>The <code>span()</code> method enlarges the text matched to span the entire line and returns the matching line as a 0-terminated <code>char*</code> string without the <code>\n</code>.</p>
 <p>The <code>line()</code> and <code>wline()</code> methods return the entire line as a (wide) string with the matched text as a substring. These methods can be used to obtain the context of a match.</p>
-<dl class="section warning"><dt>Warning</dt><dd>The methods <code>span()</code>, <code>line()</code>, and <code>wline()</code> invalidate the previous <code>text()</code>, <code>begin()</code>, and <code>end()</code> string pointers. Call these methods again to retrieve the updated pointer or call <code>str()</code> or <code>wstr()</code> to obtain a string copy of the match: <div class="fragment"><div class="line"><span class="comment">// INCORRECT, because t is invalid after line():</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *t = text();</div><div class="line">std::string s = line();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div><div class="line"><span class="comment">// OK with line():</span></div><div class="line">std::string s = line();</div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *t = text();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div><div class="line"><span class="comment">// OK with span():</span></div><div class="line">std::string t = str();</div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *s = span();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div></div><!-- fragment --> The start of a line is truncated when the line is too long. The length of the line's contents before the pattern match on the line is restricted to 8KB, which is the size specified by <code><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer size and growth, buffer is initially 2*BLOCK size, at least 4096 bytes ">reflex::AbstractMatcher::Const::BLOCK</a></code>. When this length is exceeded, the line's length before the match is truncated to 8KB. This ensures that pattern matching binary files or files with very long lines cannot cause memory allocation exceptions.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The methods <code>span()</code>, <code>line()</code>, and <code>wline()</code> invalidate the previous <code>text()</code>, <code>begin()</code>, and <code>end()</code> string pointers. Call these methods again to retrieve the updated pointer or call <code>str()</code> or <code>wstr()</code> to obtain a string copy of the match: <div class="fragment"><div class="line"><span class="comment">// INCORRECT, because t is invalid after line():</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *t = text();</div><div class="line">std::string s = line();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div><div class="line"><span class="comment">// OK with line():</span></div><div class="line">std::string s = line();</div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *t = text();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div><div class="line"><span class="comment">// OK with span():</span></div><div class="line">std::string t = str();</div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *s = span();</div><div class="line">std::cout &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div></div><!-- fragment --> The start of a line is truncated when the line is too long. The length of the line's contents before the pattern match on the line is restricted to 8KB, which is the size specified by <code><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="minimum remaining unused space in the buffer, to prevent excessive shifting ">reflex::AbstractMatcher::Const::BLOCK</a></code>. When this length is exceeded, the line's length before the match is truncated to 8KB. This ensures that pattern matching binary files or files with very long lines cannot cause memory allocation exceptions.</dd></dl>
 <p>The <code>matcher().more()</code> method is used to create longer matches by stringing together consecutive matches in the input after scanning the input with the <code>scan()</code> method. When this method is invoked, the next match with <code>scan()</code> has its matched text prepended to it. The <code>matcher().more()</code> operation is often used in lexers and was introduced in Lex.</p>
 <p>The <code>less(n)</code> method reduces the size of the matched text to <code>n</code> bytes. This method has no effect if <code>n</code> is larger than <code>size()</code>. The value of <code>n</code> should not be <code>0</code>. The <code>less(n)</code> operation is often used in lexers and was introduced in Lex.</p>
 <p>The <code>first()</code> and <code>last()</code> methods return the position in the input stream of the match, counting in bytes from the start of the input at position 0. If the input stream is a wide character sequence, the UTF-8 positions are returned as a result of the internally-converted UTF-8 wide character input.</p>
@@ -3375,9 +3689,9 @@ How to minimize runtime memory usage                                </h2>
 <p>Runtime memory usage is determined by two entities, the pattern DFA and the input buffer:</p>
 <ul>
 <li>Use <b><code>reflex</code></b> option <code>−−full</code> to create a statically-allocated table DFA for the scanner's regular expression patterns or option <code>−−fast</code> to generate a direct-coded DFA. Without one of these options, by default a DFA is created at runtime and stored in heap space.</li>
-<li>Compile the generated source code with <code>-DREFLEX_BLOCK_SIZE=4096</code> to override the internal buffer <code><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer size and growth, buffer is initially 2*BLOCK size, at least 4096 bytes ">reflex::AbstractMatcher::Const::BLOCK</a></code> size. By default, the <code><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="buffer size and growth, buffer is initially 2*BLOCK size, at least 4096 bytes ">reflex::AbstractMatcher::Const::BLOCK</a></code> size is 256K for a large 512K buffer optimized for high-performance file searching and tokenization. The buffer is a sliding window over the input, i.e. input files may be much larger than the buffer size. A reasonably small <code>REFLEX_BLOCK_SIZE</code> is 8192 for a 16K buffer that grows in increments of 8192 bytes to fit pattern matches that exceed 16K. A small buffer automatically expands to accommodate larger pattern matches. However, when using the <code>line()</code> and <code>wline()</code> methods, very long lines may not fit and the return string values of <code>line()</code> and <code>wline()</code> may be truncated as a result. Furtheremore, a small buffer increase processing time, i.e. to frequently move the buffered window along a file and increases the cost to decode UTF-16/32 into UTF-8 multibyte sequences.</li>
+<li>Compile the generated source code with <code>-DREFLEX_BUFSZ=16384</code> to override the internal buffer <code><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a79db8b02dc5dce0da626fa2900273d87" title="initial buffer size, at least 4096 bytes ">reflex::AbstractMatcher::Const::BUFSZ</a></code> size. By default, the <code><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6f7de58d1118b6f74f117a6b259359be" title="minimum remaining unused space in the buffer, to prevent excessive shifting ">reflex::AbstractMatcher::Const::BLOCK</a></code> size is 64K, which is reasonably optimal for high-performance file searching and tokenization. The buffer is a sliding window over the input, i.e. input files may be much larger than the buffer size. A reasonably small <code>REFLEX_BUFSZ</code> is 16384 for a 16K buffer. A small buffer automatically expands to accommodate larger pattern matches. However, when using the <code>line()</code> and <code>wline()</code> methods, very long lines may not fit and the return string values of <code>line()</code> and <code>wline()</code> may be truncated as a result. Furtheremore, a small buffer increase processing time, i.e. to frequently move the buffered window along a file and increases the cost to decode UTF-16/32 into UTF-8 multibyte sequences.</li>
 </ul>
-<dl class="section warning"><dt>Warning</dt><dd>The value of <code>REFLEX_BLOCK_SIZE</code> should not be less than 4096.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The value of <code>REFLEX_BUFSZ</code> should not be less than 8192.</dd></dl>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="msvc"></a>
 MSVC++ compiler bug                                                     </h2>
@@ -3410,7 +3724,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Sep 14 2021 14:28:20 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Feb 20 2022 09:57:42 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

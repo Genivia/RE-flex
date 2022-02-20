@@ -30,7 +30,7 @@
 @file      absmatcher.h
 @brief     RE/flex abstract matcher base class and pattern matcher class
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2016-2020, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2016-2022, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -107,6 +107,11 @@ class AbstractMatcher {
 #else
     static const size_t BUFSZ = REFLEX_BUFSZ;
 #endif
+#ifndef REFLEX_BOLSZ
+    static const size_t BOLSZ = (256*1024); ///< max begin of line size till match to retain in memory by growing the buffer
+#else
+    static const size_t BOLSZ = REFLEX_BOLSZ;
+#endif
     static const size_t BLOCK = 4096;       ///< minimum remaining unused space in the buffer, to prevent excessive shifting
     static const size_t REDO  = 0x7FFFFFFF; ///< reflex::Matcher::accept() returns "redo" with reflex::Matcher option "A"
     static const size_t EMPTY = 0xFFFFFFFF; ///< accept() returns "empty" last split at end of input
@@ -131,8 +136,8 @@ class AbstractMatcher {
   };
   /// Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched.
   struct Handler {
-      virtual void operator()(AbstractMatcher&, const char*, size_t, size_t) = 0;
-      virtual ~Handler() {};
+    virtual void operator()(AbstractMatcher&, const char*, size_t, size_t) = 0;
+    virtual ~Handler() { };
   };
  protected:
   /// AbstractMatcher::Options for matcher engines.
@@ -629,15 +634,15 @@ class AbstractMatcher {
       const char *t = txt_;
       size_t n = 0;
 #if defined(HAVE_AVX512BW) && (!defined(_MSC_VER) || defined(_WIN64))
-      if (s + 63 > t && have_HW_AVX512BW())
+      if (have_HW_AVX512BW())
       {
         n += simd_nlcount_avx512bw(s, t);
       }
-      else if (s + 31 > t && have_HW_AVX2())
+      else if (have_HW_AVX2())
       {
         n += simd_nlcount_avx2(s, t);
       }
-      else if (have_HW_SSE2())
+      else
       {
         __m128i vlcn = _mm_set1_epi8('\n');
         while (s + 15 <= t)
@@ -650,11 +655,11 @@ class AbstractMatcher {
         }
       }
 #elif defined(HAVE_AVX2)
-      if (s + 31 > t && have_HW_AVX2())
+      if (have_HW_AVX2())
       {
         n += simd_nlcount_avx2(s, t);
       }
-      else if (have_HW_SSE2())
+      else
       {
         __m128i vlcn = _mm_set1_epi8('\n');
         while (s + 15 <= t)
@@ -667,17 +672,14 @@ class AbstractMatcher {
         }
       }
 #elif defined(HAVE_SSE2)
-      if (have_HW_SSE2())
+      __m128i vlcn = _mm_set1_epi8('\n');
+      while (s + 15 <= t)
       {
-        __m128i vlcn = _mm_set1_epi8('\n');
-        while (s + 15 <= t)
-        {
-          __m128i vlcm = _mm_loadu_si128(reinterpret_cast<const __m128i*>(s));
-          __m128i vlceq = _mm_cmpeq_epi8(vlcm, vlcn);
-          uint32_t mask = _mm_movemask_epi8(vlceq);
-          n += popcount(mask);
-          s += 16;
-        }
+        __m128i vlcm = _mm_loadu_si128(reinterpret_cast<const __m128i*>(s));
+        __m128i vlceq = _mm_cmpeq_epi8(vlcm, vlcn);
+        uint32_t mask = _mm_movemask_epi8(vlceq);
+        n += popcount(mask);
+        s += 16;
       }
 #elif defined(HAVE_NEON)
       {
@@ -1074,7 +1076,7 @@ class AbstractMatcher {
     return bol_;
   }
   /// Returns pointer to the end of the line (last char + 1) in the buffer containing the matched text, DANGER: invalidates previous bol() and text() pointers, use eol() before bol(), text(), begin(), and end() when those are used.
-  inline const char *eol(bool inclusive = false) ///< true if inclusive, i.e. point after \n
+  inline const char *eol(bool inclusive = false) ///< true if inclusive, i.e. point after \n instead of at \n
     /// @returns pointer to the end of line
   {
     if (chr_ == '\n' || (txt_ + len_ < buf_ + end_ && txt_[len_] == '\n'))
@@ -1388,7 +1390,7 @@ class AbstractMatcher {
 #if defined(WITH_SPAN)
     (void)lineno();
     cno_ = 0;
-    if (bol_ + Const::BUFSZ - buf_ < txt_ - bol_ && evh_ == NULL)
+    if (bol_ + Const::BOLSZ - buf_ < txt_ - bol_ && evh_ == NULL)
     {
       // this line is very long, so shift all the way to the match instead of to the begin of the last line
       DBGLOG("Line in buffer is too long to shift, moving bol position to text match position");

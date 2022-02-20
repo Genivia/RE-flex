@@ -554,6 +554,7 @@ Changelog
 - Sep 14, 2021: 3.0.11 minor change to apply `--prefix` to the generated `REFLEX_code_[PREFIX]STATE` code.
 - Oct 11, 2021: 3.0.12 updated to Unicode 14; fixed a compilation issue with `--params` when used with `--flex`.
 - Dec 10, 2021: 3.1.0 improved buffering mechanism with reduced buffer sizes; faster `columno()` for long lines; fix CP-1251 table typo.
+- Feb 20, 2022: 3.2.0 new `%option ctorinit`; faster compilation of regular expressions to tables and direct code DFAs; refactored SIMD source code to enable AVX2 and AVX512BW optimizations in multi-version matcher code; updated Windows binary file opening.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

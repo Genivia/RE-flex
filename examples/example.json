@@ -31,6 +31,9 @@
     "bicycle": {
       "color": "red",
       "price": 19.95
-    }
+    },
+    "system": null,
+    "brick": true,
+    "online": false
   }
 }

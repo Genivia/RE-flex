@@ -317,8 +317,8 @@ class Input {
   };
   /// FILE* handler functor base class to handle FILE* errors and non-blocking FILE* reads
   struct Handler {
-      virtual int operator()() = 0;
-      virtual ~Handler() {};
+    virtual int operator()() = 0;
+    virtual ~Handler() { };
   };
   /// Stream buffer for reflex::Input, derived from std::streambuf.
   class streambuf;
@@ -453,7 +453,7 @@ class Input {
       istream_(NULL),
       size_(0)
   {
-    init(enc);
+    init();
     if (file_encoding() == file_encoding::plain)
       file_encoding(enc, page);
   }
@@ -734,7 +734,7 @@ class Input {
     return utfx_;
   }
   /// Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the file size is known.
-  void init(file_encoding_type enc = file_encoding::plain)
+  void init()
   {
     std::memset(utf8_, 0, sizeof(utf8_));
     uidx_ = 0;
@@ -743,10 +743,10 @@ class Input {
     page_ = NULL;
     handler_ = NULL;
     if (file_ != NULL)
-      file_init(enc);
+      file_init();
   }
   /// Called by init() for a FILE*.
-  void file_init(file_encoding_type enc);
+  void file_init();
   /// Called by size() for a wstring.
   void wstring_size();
   /// Called by size() for a FILE*.

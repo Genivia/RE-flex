@@ -7,6 +7,9 @@
 #include <reflex/stdmatcher.h>
 #include <sstream>
 
+// ALL or RE/flex only
+#define ALL
+
 int main(int argc, char **argv)
 {
   if (argc > 1)
@@ -16,6 +19,7 @@ int main(int argc, char **argv)
       opts = argv[4];
     else
       opts = "";
+#ifdef ALL
     if (argc > 2)
     {
       const char *text = argv[2];
@@ -189,11 +193,13 @@ int main(int argc, char **argv)
         std::cerr << e.what();
       }
     }
+#endif
     try
     {
       std::string regex = reflex::Matcher::convert(argv[1], reflex::convert_flag::unicode);
-      printf("\n** RE/flex converted regex = %s\n\n", regex.c_str());
+      printf("\n** RE/flex converted regex = %s\n", regex.c_str());
       reflex::Pattern reflex_pattern(regex, "mr;o;f=dump.gv,dump.cpp");
+      printf("\nDFA parse=%zu(%g) nodes=%zu(%g) edges=%zu(%g) words=%zu(%g)\n", regex.size(), reflex_pattern.parse_time(), reflex_pattern.nodes(), reflex_pattern.nodes_time(), reflex_pattern.edges(), reflex_pattern.edges_time(), reflex_pattern.words(), reflex_pattern.words_time());
       if (argc > 2)
       {
         const char *text = argv[2];

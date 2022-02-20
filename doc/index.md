@@ -1470,7 +1470,8 @@ default name `Lexer` (and replaces `yyFlexLexer` when option `−−flex` is
 specified).  The scanner class members may be declared within a
 <i>`%%class{ }`</i> block.  The scanner class constructor code may be defined
 within a <i>`%%init{ }`</i> block.  Additional constructor arguments may be
-declared with <i>`%%option ctorarg="argument, argument, ...`</i>.
+declared with <i>`%%option ctorarg="argument, argument, ..."`</i> and
+initializers with <i>`%%option ctorinit="initializer, initializer, ..."`</i>.
 
 #### `−−lex=NAME`
 
@@ -1893,7 +1894,9 @@ Likewise, to inject Lexer class constructor code, for example to initialize
 members, place the code within <i>`%%init{ }`</i> block.  The <i>`%%init{`</i>
 and the matching <i>`}`</i> should each be placed at the start of a new line.
 Option <i>`%%option ctorarg="argument, argument, ..."`</i> may be used to
-declare the constructor arguments of the Lexer class constructor.
+declare the constructor arguments of the Lexer class constructor.  Option
+<i>`%%option ctorinit="initializer, initializer, ..."`</i> specifies constructor
+initializers.  See also \ref reflex-lexer.
 
 Additional constructors and/or a destructor may be placed in a 
 <i>`%%class{ }`</i> block, for class `Lexer` (or `yyFlexLexer` with option
@@ -3605,7 +3608,8 @@ specification template:
       MEMBERS
     }
 
-    %option ctorarg="CTORARGS"
+    %option ctorarg="CTORARG1, CTORARG2, ..."
+    %option ctorinit="CTORINIT1, CTORINIT2, ..."
     %init{
       INIT
     }
@@ -3631,11 +3635,12 @@ This produces the following Lexer class with the template parts filled in:
         MEMBERS
        public:
         LEXER(
-            CTORARGS,
+            CTORARG1, CTORARG2, ...,
             const reflex::Input& input = reflex::Input(),
             std::ostream&        os    = std::cout)
           :
-            AbstractLexer(input, os)
+            AbstractLexer(input, os),
+            CTORINIT1, CTORINIT2, ...
         {
           INIT
         }
@@ -3697,11 +3702,12 @@ Flex with option `-+` for C++):
         MEMBERS
        public:
         LEXER(
-            CTORARGS,
+            CTORARG1, CTORARG2, ...,
             const reflex::Input& input = reflex::Input(),
             std::ostream        *os    = NULL)
           :
-            FlexLexer(input, os)
+            FlexLexer(input, os),
+            CTORINIT1, CTORINIT2, ...
         {
           INIT
         }

@@ -4,6 +4,7 @@
 #include <reflex/stdmatcher.h>
 #include <reflex/timer.h>
 #include <fstream>
+#include <sstream>
 
 #ifndef DEBUG
 #define RUNS 100

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">setop.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Sep 14 2021 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Feb 20 2022 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -110,10 +110,18 @@ Functions</h2></td></tr>
 <tr class="memitem:ae6f035f9bac92cfcc709fd34844805d4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ae6f035f9bac92cfcc709fd34844805d4">reflex::set_insert</a> (S1 &amp;s1, const S2 &amp;s2)</td></tr>
 <tr class="memdesc:ae6f035f9bac92cfcc709fd34844805d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert set <code>s2</code> into set <code>s1</code>.  <a href="namespacereflex.html#ae6f035f9bac92cfcc709fd34844805d4">More...</a><br /></td></tr>
 <tr class="separator:ae6f035f9bac92cfcc709fd34844805d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab88de06cf5dcc21d8bace132a66d0753"><td class="memTemplParams" colspan="2">template&lt;typename S , typename E &gt; </td></tr>
+<tr class="memitem:ab88de06cf5dcc21d8bace132a66d0753"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ab88de06cf5dcc21d8bace132a66d0753">reflex::set_add</a> (S &amp;s, const E &amp;e)</td></tr>
+<tr class="memdesc:ab88de06cf5dcc21d8bace132a66d0753"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert element <code>e</code> into set <code>s</code>.  <a href="namespacereflex.html#ab88de06cf5dcc21d8bace132a66d0753">More...</a><br /></td></tr>
+<tr class="separator:ab88de06cf5dcc21d8bace132a66d0753"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a677294e5ecf35a97b41e72370672f3bc"><td class="memTemplParams" colspan="2">template&lt;typename S1 , typename S2 &gt; </td></tr>
 <tr class="memitem:a677294e5ecf35a97b41e72370672f3bc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a677294e5ecf35a97b41e72370672f3bc">reflex::set_delete</a> (S1 &amp;s1, const S2 &amp;s2)</td></tr>
 <tr class="memdesc:a677294e5ecf35a97b41e72370672f3bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete elements of set <code>s2</code> from set <code>s1</code>.  <a href="namespacereflex.html#a677294e5ecf35a97b41e72370672f3bc">More...</a><br /></td></tr>
 <tr class="separator:a677294e5ecf35a97b41e72370672f3bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab818b62aa222cc288dfdd6b72198b0e4"><td class="memTemplParams" colspan="2">template&lt;typename S , typename E &gt; </td></tr>
+<tr class="memitem:ab818b62aa222cc288dfdd6b72198b0e4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ab818b62aa222cc288dfdd6b72198b0e4">reflex::set_erase</a> (S &amp;s, const E &amp;e)</td></tr>
+<tr class="memdesc:ab818b62aa222cc288dfdd6b72198b0e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove element <code>e</code> from set <code>s</code> when present.  <a href="namespacereflex.html#ab818b62aa222cc288dfdd6b72198b0e4">More...</a><br /></td></tr>
+<tr class="separator:ab818b62aa222cc288dfdd6b72198b0e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex operations on STL containers and sets. </p>
@@ -134,7 +142,7 @@ Functions</h2></td></tr>
 <div class="fragment"><div class="line">std::set&lt;int&gt; s1;</div><div class="line">s1.insert(1);</div><div class="line">assert(<a class="code" href="namespacereflex.html#a53a990336f7c3c72595d034bd685ee5c">reflex::is_in_set</a>(1, s1) == <span class="keyword">true</span>);</div><div class="line">std::set&lt;int&gt; s2;</div><div class="line">s2.insert(1);</div><div class="line">s2.insert(2);</div><div class="line">assert(<a class="code" href="namespacereflex.html#a3deed9d6b147d91074913f47c330d232">reflex::is_disjoint</a>(s1, s2) == <span class="keyword">false</span>);</div><div class="line">assert(<a class="code" href="namespacereflex.html#a088abc7ab84436832139b9c106cad426">reflex::is_subset</a>(s1, s2) == <span class="keyword">true</span>);</div><div class="line"><a class="code" href="structreflex_1_1lazy__union.html">reflex::lazy_union&lt; std::set&lt;int&gt;</a>,std::set&lt;int&gt; &gt; U(s1, s2);</div><div class="line"><span class="keywordflow">for</span> (<a class="code" href="structreflex_1_1lazy__union.html">reflex::lazy_union</a>&lt; std::set&lt;int&gt;,std::set&lt;int&gt; &gt;::iterator i = U.<a class="code" href="structreflex_1_1lazy__union.html#a47a05bc28ed049cf43b62df4e14e5f53">begin</a>(); i != U.end(); ++i)</div><div class="line">  std::cout &lt;&lt; *i &lt;&lt; std::endl; <span class="comment">// prints 1 and 2</span></div><div class="line"><a class="code" href="structreflex_1_1lazy__intersection.html">reflex::lazy_intersection&lt; std::set&lt;int&gt;</a>,std::set&lt;int&gt; &gt; I(s1, s2);</div><div class="line"><span class="keywordflow">for</span> (<a class="code" href="structreflex_1_1lazy__intersection.html">reflex::lazy_intersection</a>&lt; std::set&lt;int&gt;,std::set&lt;int&gt; &gt;::iterator i = I.<a class="code" href="structreflex_1_1lazy__intersection.html#a2473f5847b4ddb1a785d42b117f99910">begin</a>(); i != I.end(); ++i)</div><div class="line">  std::cout &lt;&lt; *i &lt;&lt; std::endl; <span class="comment">// prints 1</span></div></div><!-- fragment --> </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Sep 14 2021 14:28:16 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Feb 20 2022 09:57:39 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

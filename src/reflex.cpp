@@ -67,6 +67,7 @@ static const char *options_table[] = {
   "case_insensitive",
   "class",
   "ctorarg",
+  "ctorinit",
   "debug",
   "default",
   "dotall",
@@ -2141,7 +2142,10 @@ void Reflex::write_class()
       "      const reflex::Input& input = reflex::Input(),\n"
       "      std::ostream        *os    = NULL)\n"
       "    :\n"
-      "      " << base << "(input, os)\n";
+      "      " << base << "(input, os)";
+    if (!options["ctorinit"].empty())
+      *out << ",\n      " << options["ctorinit"];
+    *out << '\n';
     write_section_init();
     if (!options["bison_complete"].empty())
     {
@@ -2170,7 +2174,7 @@ void Reflex::write_class()
         *out <<
           "  virtual " << token_type << " yylex(void)\n"
           "  {\n"
-          "    LexerError(\"" << lexer << "::yylex invoked but %option params=\"" << params << "\" is used\");\n"
+          "    LexerError(\"" << lexer << "::yylex invoked but %option params=\\\"" << params << "\\\" is used\");\n"
           "    yyterminate();\n"
           "  }\n";
       *out <<
@@ -2250,7 +2254,7 @@ void Reflex::write_class()
         *out <<
           "  virtual " << token_type << " yylex(void)\n"
           "  {\n"
-          "    LexerError(\"" << lexer << "::yylex invoked but %option params=\"" << params << "\" is used\");\n"
+          "    LexerError(\"" << lexer << "::yylex invoked but %option params=\\\"" << params << "\\\" is used\");\n"
           "    yyterminate();\n"
           "  }\n";
       *out <<
@@ -2279,7 +2283,10 @@ void Reflex::write_class()
       "      const reflex::Input& input = reflex::Input(),\n"
       "      std::ostream&        os    = std::cout)\n"
       "    :\n"
-      "      AbstractBaseLexer(input, os)\n";
+      "      AbstractBaseLexer(input, os)";
+    if (!options["ctorinit"].empty())
+      *out << ",\n      " << options["ctorinit"];
+    *out << '\n';
     write_section_init();
     for (Start start = 0; start < conditions.size(); ++start)
       *out <<
@@ -3298,7 +3305,7 @@ void Reflex::stats()
       else if (!options["tables_file"].empty())
         option.append(";f=").append(start > 0 ? "+" : "").append(file_ext(options["tables_file"], "cpp"));
       if ((!options["full"].empty() || !options["fast"].empty()) && options["tables_file"].empty() && options["stdout"].empty())
-        option.append(";f=+").append(escape_bs(options["outfile"]));      
+        option.append(";f=+").append(options["outfile"]);      
       try
       {
         reflex::Pattern pattern(patterns[start], option);

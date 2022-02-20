@@ -28,11 +28,9 @@
   void process_row();
 }
 
-// CSV lexer class initialization at construction with constructor argument
+// CSV lexer class initialization at construction with constructor argument and initializer
 %ctorarg="int ch"
-%init{
-  delim = ch;
-}
+%ctorinit="delim(ch)"
 
 // choice of possible delimiters: tab, space, comma, semicolon, and pipe
 delim   [\t ,;|]
