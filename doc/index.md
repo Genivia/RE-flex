@@ -3574,6 +3574,32 @@ are enabled and the mode modifiers after the dash are disabled.
 
 🔝 [Back to table of contents](#)
 
+### Group captures                                   {#reflex-pattern-captures}
+
+The PCRE and Boost regex libraries support group captures.  This feature can be
+used with RE/flex using named captures.  Only named captures can be used and
+the names must be unique among all lexer patterns, because a single regex
+pattern is compiled that combines all lexer rules (numeric group captures
+would apply globally across all rules, which is confusing.)  For PCRE, Perl
+matching is required since PCRE POSIX matching does not support group captures.
+A named group is defined with `(?<name>pattern)` and back-referenced with
+`\g{name}`.  The subpattern matched by a name can be retrieved in a lexer rule
+as follows:
+
+~~~{.cpp}
+    const char *name = "name"; // the group name
+    std::pair<const char*,size_t> subpattern; // the subpattern in the input with its size
+    std::pair<size_t,const char*> id = matcher().group_id();
+    while (id.first != 0 && (id.second == NULL || strcmp(id.second, name) != 0))
+      id = matcher().group_next_id();
+    if (id.first != 0)
+      subpattern = matcher()[id.first]; // found (the name was matched)
+~~~
+
+See also \ref reflex-posix-perl.
+
+🔝 [Back to table of contents](#)
+
 
 The Lexer/yyFlexLexer class                                     {#reflex-lexer}
 ---------------------------

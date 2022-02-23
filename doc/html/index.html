@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Feb 20 2022 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Feb 23 2022 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -76,6 +76,7 @@
 <li class="level3"><a href="#reflex-pattern-dotall">Dotall mode</a></li>
 <li class="level3"><a href="#reflex-pattern-anycase">Case-insensitive mode</a></li>
 <li class="level3"><a href="#reflex-pattern-modifiers">Multiple mode modifiers</a></li>
+<li class="level3"><a href="#reflex-pattern-captures">Group captures</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#reflex-lexer">The Lexer/yyFlexLexer class                                     </a></li>
@@ -2246,6 +2247,11 @@ Case-insensitive mode</h3>
 Multiple mode modifiers</h3>
 <p>Multiple <code>(?i:φ)</code> <a class="el" href="index.html#reflex-pattern-anycase">Case-insensitive mode</a>, <code>(?m:φ)</code> <a class="el" href="index.html#reflex-pattern-multiline">Multi-line mode</a>, <code>(?s:φ)</code> <a class="el" href="index.html#reflex-pattern-dotall">Dotall mode</a>, <code>(?u:φ)</code> <a class="el" href="index.html#reflex-pattern-unicode">Unicode mode</a>, and <code>(?x:φ)</code> <a class="el" href="index.html#reflex-pattern-freespace">Free space mode</a> modifiers may be applied to the same pattern <code>φ</code> by combining them in one inline modifier <code>(?imsux-imsux:φ)</code>, where the mode modifiers before the dash are enabled and the mode modifiers after the dash are disabled.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
+<h3><a class="anchor" id="reflex-pattern-captures"></a>
+Group captures</h3>
+<p>The PCRE and Boost regex libraries support group captures. This feature can be used with RE/flex using named captures. Only named captures can be used and the names must be unique among all lexer patterns, because a single regex pattern is compiled that combines all lexer rules (numeric group captures would apply globally across all rules, which is confusing.) For PCRE, Perl matching is required since PCRE POSIX matching does not support group captures. A named group is defined with <code>(?&lt;name&gt;pattern)</code> and back-referenced with <code>\g{name}</code>. The subpattern matched by a name can be retrieved in a lexer rule as follows:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> *name = <span class="stringliteral">&quot;name&quot;</span>; <span class="comment">// the group name</span></div><div class="line">std::pair&lt;const char*,size_t&gt; subpattern; <span class="comment">// the subpattern in the input with its size</span></div><div class="line">std::pair&lt;size_t,const char*&gt; <span class="keywordtype">id</span> = matcher().group_id();</div><div class="line"><span class="keywordflow">while</span> (<span class="keywordtype">id</span>.first != 0 &amp;&amp; (<span class="keywordtype">id</span>.second == NULL || strcmp(<span class="keywordtype">id</span>.second, name) != 0))</div><div class="line">  <span class="keywordtype">id</span> = matcher().group_next_id();</div><div class="line"><span class="keywordflow">if</span> (<span class="keywordtype">id</span>.first != 0)</div><div class="line">  subpattern = matcher()[<span class="keywordtype">id</span>.first]; <span class="comment">// found (the name was matched)</span></div></div><!-- fragment --><p>See also <a class="el" href="index.html#reflex-posix-perl">POSIX versus Perl matching </a>.</p>
+<p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="reflex-lexer"></a>
 The Lexer/yyFlexLexer class                                     </h2>
 <p>By default, <b><code>reflex</code></b> produces a Lexer class with a virtual lex scanner function. The name of this function as well as the Lexer class name and the namespace can be set with options:</p>
@@ -3724,7 +3730,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Feb 20 2022 09:57:42 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Feb 23 2022 12:51:04 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
