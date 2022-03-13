@@ -1159,7 +1159,10 @@ std::string Reflex::get_code(size_t& pos)
     while (pos >= linelen)
     {
       if (!get_line())
-        error("EOF encountered inside an action", NULL, at_lineno);
+      {
+        line = "%%"; // end of input: pretend we're at the end of the section
+        linelen = 2;
+      }
       pos = 0;
       if (tok == CODE)
       {

@@ -683,8 +683,8 @@ This method and other methods may be used to obtain the details of a match:
   `text()`        | returns `const char*` to 0-terminated match (ends in `\0`)
   `str()`         | returns `std::string` text match (preserves `\0`s)
   `wstr()`        | returns `std::wstring` wide text match (converted from UTF-8)
-  `chr()`         | returns first 8-bit character of the text match (`str()[0]`)
-  `wchr()`        | returns first wide character of the text match (`wstr()[0]`)
+  `chr()`         | returns first 8-bit char of the text match (`str()[0]` as int)
+  `wchr()`        | returns first wide char of the text match (`wstr()[0]` as int)
   `pair()`        | returns `std::pair<size_t,std::string>(accept(),str())`
   `wpair()`       | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`        | returns the length of the text match in bytes
@@ -7294,8 +7294,8 @@ To obtain properties of a match, use the following methods:
   `text()`        | returns `const char*` to 0-terminated text match (ends in `\0`)
   `str()`         | returns `std::string` text match (preserves `\0`s)
   `wstr()`        | returns `std::wstring` wide text match (converted from UTF-8)
-  `chr()`         | returns first 8-bit character of the text match (`str()[0]`)
-  `wchr()`        | returns first wide character of the text match (`wstr()[0]`)
+  `chr()`         | returns first 8-bit char of the text match (`str()[0]` as int)
+  `wchr()`        | returns first wide char of the text match (`wstr()[0]` as int)
   `pair()`        | returns `std::pair<size_t,std::string>(accept(),str())`
   `wpair()`       | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`        | returns the length of the text match in bytes
