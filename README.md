@@ -557,6 +557,7 @@ Changelog
 - Feb 20, 2022: 3.2.0 new `%option ctorinit`; faster compilation of regular expressions to tables and direct code DFAs; refactored SIMD source code to enable AVX2 and AVX512BW optimizations in multi-version matcher code; updated Windows binary file opening.
 - Feb 23, 2022: 3.2.1 regression bug fix.
 - Mar 13, 2022: 3.2.2 minor improvements.
+- Apr  2, 2022: 3.2.3 fixed C++17 compliance and dso build.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

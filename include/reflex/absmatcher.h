@@ -156,11 +156,25 @@ class AbstractMatcher {
   };
   /// AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences.
   template<typename T> /// @tparam <T> AbstractMatcher or const AbstractMatcher
-  class Iterator : public std::iterator<std::input_iterator_tag,T> {
+  class Iterator {
     friend class AbstractMatcher;
     friend class Iterator<typename reflex::TypeOp<T>::ConstType>;
     friend class Iterator<typename reflex::TypeOp<T>::NonConstType>;
    public:
+    /// Non-const AbstractMatcher type
+    typedef typename reflex::TypeOp<T>::NonConstType NonConstT;
+    /// Const AbstractMatcher type
+    typedef typename reflex::TypeOp<T>::ConstType ConstT;
+    /// Iterator iterator_category trait.
+    typedef std::input_iterator_tag iterator_category;
+    /// Iterator value_type trait.
+    typedef T value_type;
+    /// Iterator difference_type trait.
+    typedef std::ptrdiff_t difference_type;
+    /// Iterator pointer trait.
+    typedef T* pointer;
+    /// Iterator reference trait.
+    typedef T& reference;
     /// Construct an AbstractMatcher::Iterator such that Iterator() == AbstractMatcher::Operation(*this, method).end().
     Iterator()
       :
@@ -168,7 +182,7 @@ class AbstractMatcher {
         method_()
     { }
     /// Copy constructor.
-    Iterator(const Iterator<typename reflex::TypeOp<T>::NonConstType>& it)
+    Iterator(const Iterator<NonConstT>& it)
       :
         matcher_(it.matcher_),
         method_(it.method_)
@@ -186,13 +200,13 @@ class AbstractMatcher {
       return matcher_;
     }
     /// AbstractMatcher::Iterator equality.
-    bool operator==(const Iterator<typename reflex::TypeOp<T>::ConstType>& rhs) const
+    bool operator==(const Iterator<ConstT>& rhs) const
       /// @returns true if iterator equals RHS
     {
       return matcher_ == rhs.matcher_;
     }
     /// AbstractMatcher::Iterator inequality.
-    bool operator!=(const Iterator<typename reflex::TypeOp<T>::ConstType>& rhs) const
+    bool operator!=(const Iterator<ConstT>& rhs) const
       /// @returns true if iterator does not equal RHS
     {
       return matcher_ != rhs.matcher_;
@@ -215,8 +229,8 @@ class AbstractMatcher {
     }
     /// Construct an AbstractMatcher::Iterator to scan, search, or split an input character sequence.
     Iterator(
-        AbstractMatcher *matcher, ///< iterate over pattern matches with this matcher
-        Method           method)  ///< match using method Const::SCAN, Const::FIND, or Const::SPLIT
+        NonConstT *matcher, ///< iterate over pattern matches with this matcher
+        Method     method)  ///< match using method Const::SCAN, Const::FIND, or Const::SPLIT
       :
         matcher_(matcher),
         method_(method)
@@ -225,8 +239,8 @@ class AbstractMatcher {
         matcher_ = NULL;
     }
    private:
-    AbstractMatcher *matcher_; ///< the matcher used by this iterator
-    Method           method_;  ///< the method for pattern matching by this iterator's matcher
+    NonConstT *matcher_; ///< the matcher used by this iterator
+    Method     method_;  ///< the method for pattern matching by this iterator's matcher
   };
  public:
   typedef AbstractMatcher::Iterator<AbstractMatcher>       iterator;       ///< std::input_iterator for scanning, searching, and splitting input character sequences
