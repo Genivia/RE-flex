@@ -570,7 +570,7 @@ Changelog
 [boost-url]: http://www.boost.org
 [pcre-url]: http://www.pcre.org
 [travis-image]: https://travis-ci.com/Genivia/RE-flex.svg?branch=master
-[travis-url]: https://travis-ci.com/Genivia/RE-flex
+[travis-url]: https://app.travis-ci.com/Genivia/RE-flex
 [lgtm-image]: https://img.shields.io/lgtm/grade/cpp/g/Genivia/RE-flex.svg?logo=lgtm&logoWidth=18
 [lgtm-url]: https://lgtm.com/projects/g/Genivia/RE-flex/context:cpp
 [bsd-3-image]: https://img.shields.io/badge/license-BSD%203--Clause-blue.svg
