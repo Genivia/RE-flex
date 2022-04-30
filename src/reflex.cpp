@@ -2946,6 +2946,9 @@ void Reflex::write_lexer()
   if (!options["interactive"].empty() || !options["always_interactive"].empty())
     *out <<
       "    matcher().interactive();\n";
+  else if (options["batch"] == "true")
+    *out <<
+      "    matcher().buffer();\n";
   else if (!options["batch"].empty())
     *out <<
       "    matcher().buffer(" << options["batch"] << ");\n";

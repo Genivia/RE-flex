@@ -558,7 +558,8 @@ Changelog
 - Feb 23, 2022: 3.2.1 regression bug fix.
 - Mar 13, 2022: 3.2.2 minor improvements.
 - Apr  2, 2022: 3.2.3 fixed C++17 compliance and dso build.
-- Apr 30, 2022: 3.2.4 new `%begin` directive; new `--batch=SIZE` option argument.
+- Apr 29, 2022: 3.2.4 new `%begin` directive; new `--batch=SIZE` option argument.
+- Apr 30, 2022: 3.2.5 minor correction
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
