@@ -66,7 +66,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "3.2.3"
+#define REFLEX_VERSION "3.2.4"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -151,6 +151,7 @@ class Reflex
   void        write_section_top();
   void        write_section_class();
   void        write_section_init();
+  void        write_section_begin();
   void        write_perf_report();
   void        write_section_1();
   void        write_section_3();
@@ -174,9 +175,10 @@ class Reflex
   bool        eq(size_t& pos);
   bool        nl(size_t& pos);
   bool        is_code();
-  bool        is_topcode();
-  bool        is_classcode();
-  bool        is_initcode();
+  bool        is_top_code();
+  bool        is_class_code();
+  bool        is_init_code();
+  bool        is_begin_code();
   std::string get_name(size_t& pos);
   std::string get_option(size_t& pos);
   std::string get_start(size_t& pos);
@@ -205,6 +207,7 @@ class Reflex
   Codes                 section_top;   ///< %top{ user code %} in section 1 container
   Codes                 section_class; ///< %class{ class code %} in section 1 container
   Codes                 section_init;  ///< %init{ init code %} in section 1 container
+  Codes                 section_begin; ///< %begin{ begin scanning code %} in section 1 container
   Codes                 section_1;     ///< %{ user code %} in section 1 container
   CodesMap              section_2;     ///< lexer user code in section 2 container
   Codes                 section_3;     ///< main user code in section 3 container

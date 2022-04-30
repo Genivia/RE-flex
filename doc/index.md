@@ -1250,7 +1250,9 @@ single character except a newline (`\n` ASCII 0x0A).
 
 This option generates a batch input scanner that reads the entire input all at
 once when possible.  This scanner is fast, but consumes more memory depending
-on the input data size.
+on the input data size.  An option argument may be specified to initialize
+the buffer size to support incremental scanning by reading chunks of input, for
+example `−−batch=1024` reads the input in 1024 byte chunks.
 
 #### `-f`, `−−full`
 
@@ -1283,8 +1285,9 @@ letters in the ASCII range only.
 #### `-I`, `−−interactive`, `−−always-interactive`
 
 This option generates an interactive scanner and permits console input by
-sacrificing speed.  By contrast, the default buffered input strategy is more
-efficient.
+sacrificing speed.  This optiong is essentially the same as `−−batch=1` to
+consume one character at a time.  By contrast, the default buffered input
+strategy is more efficient.
 
 #### `−−indent` and `−−noindent`
 
@@ -2022,6 +2025,7 @@ are the classic Flex actions shown in the second column of this table:
   `columns()`              | *n/a*                | number of columns matched (>=0)
   `lineno(n)`              | `yylineno = n`       | set line number of the match to `n`
   `lineno()`               | `yylineno`           | line number of the match (>=1)
+  `columno(n)`             | *n/a*                | set column number of the match to `n`
   `columno()`              | *n/a*                | column number of match (>=0)
   `lineno_end()`           | *n/a*                | ending line number of match (>=1)
   `columno_end()`          | *n/a*                | ending column number of match (>=0)
@@ -2051,6 +2055,7 @@ are the classic Flex actions shown in the second column of this table:
   `matcher().columns()`    | *n/a*                | same as `columns()`
   `matcher().lineno(n)`    | `yylineno = n`       | same as `lineno(n)`
   `matcher().lineno()`     | `yylineno`           | same as `lineno()`
+  `matcher().columno(n)`   | */na*                | same as `columno(n)`
   `matcher().columno()`    | *n/a*                | same as `columno()`
   `matcher().lineno_end()` | `yylineno`           | same as `lineno_end()`
   `matcher().columno_end()`| *n/a*                | same as `columno_end()`
@@ -3621,7 +3626,8 @@ You can declare multiple nested namespace names by
 `namespace=NAME1.NAME2.NAME3`, to declare the lexer in `NAME1::NAME2::NAME3`.
 
 To understand the impact of these options, consider the following lex
-specification template:
+specification template with upper case names represening the parts specified by
+the user:
 
 <div class="alt">
 ~~~{.cpp}
@@ -3640,13 +3646,17 @@ specification template:
       INIT
     }
 
+    %begin{
+      BEGIN
+    }
+
     %%
 
     %{
       CODE
     %}
 
-    REGEX ACTION
+    REGEX  ACTION
 
     %%
 ~~~
@@ -3689,6 +3699,7 @@ This produces the following Lexer class with the template parts filled in:
         if (!has_matcher())
         {
           matcher(new Matcher(PATTERN_INITIAL, stdinit(), this));
+          BEGIN
         }
         CODE
         while (true)
@@ -3757,6 +3768,7 @@ Flex with option `-+` for C++):
         {
           matcher(new Matcher(PATTERN_INITIAL, stdinit(), this));
           YY_USER_INIT
+          BEGIN
         }
         CODE
         while (true)
@@ -5628,6 +5640,7 @@ when the function is used outside the scope of a lexer method:
   `yyget_leng(s)`             | size of the match in bytes
   `yyget_lineno(s)`           | line number of the match (>=1)
   `yyset_lineno(n, s)`        | set line number of the match to `n`
+  `yyset_columno(n, s)`       | set column number of the match to `n`
   `yyget_in(s)`               | get `reflex::Input` object
   `yyset_in(i, s)`            | set `reflex::Input` object
   `yyget_out(s)`              | get `std::ostream` object

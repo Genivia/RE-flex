@@ -1,16 +1,16 @@
 <map id="Reflex" name="Reflex">
-<area shape="rect" id="node2" href="$classreflex_1_1_buffered_input.html" title="Buffered input. " alt="" coords="1303,124,1446,151"/>
-<area shape="rect" id="node3" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="979,124,1071,151"/>
-<area shape="rect" id="node4" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="599,124,744,151"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="626,175,717,201"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="361,154,490,195"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="155,133,309,160"/>
-<area shape="rect" id="node22" title="STL class. " alt="" coords="359,71,492,113"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="5,133,105,160"/>
-<area shape="rect" id="node9" href="$struct_reflex_1_1_library.html" title="A library entry to describe regex library properties. " alt="" coords="971,189,1079,216"/>
-<area shape="rect" id="node11" title="STL class. " alt="" coords="968,656,1083,683"/>
-<area shape="rect" id="node13" title="STL class. " alt="" coords="385,372,465,399"/>
-<area shape="rect" id="node17" href="$struct_reflex_1_1_code.html" title="Line of code fragment in lex specifications. " alt="" coords="622,428,721,455"/>
-<area shape="rect" id="node14" title="STL class. " alt="" coords="169,365,295,406"/>
-<area shape="rect" id="node21" title="STL class. " alt="" coords="802,73,898,100"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_buffered_input.html" title="Buffered input. " alt="" coords="1253,83,1395,109"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="979,83,1071,109"/>
+<area shape="rect" id="node4" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="599,72,744,99"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="626,123,717,149"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="361,102,490,143"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="155,81,309,108"/>
+<area shape="rect" id="node22" title="STL class. " alt="" coords="359,19,492,61"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="5,81,105,108"/>
+<area shape="rect" id="node9" href="$struct_reflex_1_1_library.html" title="A library entry to describe regex library properties. " alt="" coords="971,148,1079,175"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="968,603,1083,629"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="385,331,465,357"/>
+<area shape="rect" id="node17" href="$struct_reflex_1_1_code.html" title="Line of code fragment in lex specifications. " alt="" coords="622,385,721,412"/>
+<area shape="rect" id="node14" title="STL class. " alt="" coords="169,323,295,365"/>
+<area shape="rect" id="node21" title="STL class. " alt="" coords="1119,21,1215,48"/>
 </map>

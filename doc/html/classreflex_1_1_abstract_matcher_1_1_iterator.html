@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher::Iterator&lt; T &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Mar 13 2022 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Fri Apr 29 2022 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -51,6 +51,7 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
@@ -64,64 +65,66 @@
  <a href="classreflex_1_1_abstract_matcher_1_1_iterator.html#details">More...</a></p>
 
 <p><code>#include &lt;absmatcher.h&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for reflex::AbstractMatcher::Iterator&lt; T &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="classreflex_1_1_abstract_matcher_1_1_iterator__inherit__graph.png" border="0" usemap="#reflex_1_1_abstract_matcher_1_1_iterator_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for reflex::AbstractMatcher::Iterator&lt; T &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="classreflex_1_1_abstract_matcher_1_1_iterator__coll__graph.png" border="0" usemap="#reflex_1_1_abstract_matcher_1_1_iterator_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="reflex_1_1_abstract_matcher_1_1_iterator_3_01_t_01_4_coll__map" id="reflex_1_1_abstract_matcher_1_1_iterator_3_01_t_01_4_coll__map">
-<area shape="rect" id="node3" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="1027,93,1186,119"/>
-<area shape="rect" id="node6" href="classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1295,115,1453,156"/>
-<area shape="rect" id="node4" href="structreflex_1_1_abstract_matcher_1_1_handler.html" title="Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched. " alt="" coords="787,20,945,61"/>
-<area shape="rect" id="node5" href="structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="787,85,945,127"/>
-<area shape="rect" id="node7" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="820,151,912,178"/>
-<area shape="rect" id="node8" href="structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="537,126,683,153"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="565,177,655,203"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="359,169,488,211"/>
-<area shape="rect" id="node11" title="STL class. " alt="" coords="155,177,309,203"/>
-<area shape="rect" id="node12" title="STL class. " alt="" coords="5,177,105,203"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a01a44e7a12cbf29141b60536b560bd42"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="structreflex_1_1_type_op.html">reflex::TypeOp</a>&lt; T &gt;::NonConstType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a01a44e7a12cbf29141b60536b560bd42">NonConstT</a></td></tr>
+<tr class="memdesc:a01a44e7a12cbf29141b60536b560bd42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-const <a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">AbstractMatcher</a> type.  <a href="#a01a44e7a12cbf29141b60536b560bd42">More...</a><br /></td></tr>
+<tr class="separator:a01a44e7a12cbf29141b60536b560bd42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a915d4cd914c83c53165b4bf704121382"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="structreflex_1_1_type_op.html">reflex::TypeOp</a>&lt; T &gt;::ConstType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a915d4cd914c83c53165b4bf704121382">ConstT</a></td></tr>
+<tr class="memdesc:a915d4cd914c83c53165b4bf704121382"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html" title="AbstractMatcher::Const common constants. ">Const</a> <a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">AbstractMatcher</a> type.  <a href="#a915d4cd914c83c53165b4bf704121382">More...</a><br /></td></tr>
+<tr class="separator:a915d4cd914c83c53165b4bf704121382"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a898d586f4c46f14fd9b895848086eced"><td class="memItemLeft" align="right" valign="top">typedef std::input_iterator_tag&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a898d586f4c46f14fd9b895848086eced">iterator_category</a></td></tr>
+<tr class="memdesc:a898d586f4c46f14fd9b895848086eced"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">Iterator</a> iterator_category trait.  <a href="#a898d586f4c46f14fd9b895848086eced">More...</a><br /></td></tr>
+<tr class="separator:a898d586f4c46f14fd9b895848086eced"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77b1f092199f33964be02cd46d461112"><td class="memItemLeft" align="right" valign="top">typedef T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a77b1f092199f33964be02cd46d461112">value_type</a></td></tr>
+<tr class="memdesc:a77b1f092199f33964be02cd46d461112"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">Iterator</a> value_type trait.  <a href="#a77b1f092199f33964be02cd46d461112">More...</a><br /></td></tr>
+<tr class="separator:a77b1f092199f33964be02cd46d461112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d8d31cd6a91047292713e76dd404e5f"><td class="memItemLeft" align="right" valign="top">typedef std::ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a4d8d31cd6a91047292713e76dd404e5f">difference_type</a></td></tr>
+<tr class="memdesc:a4d8d31cd6a91047292713e76dd404e5f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">Iterator</a> difference_type trait.  <a href="#a4d8d31cd6a91047292713e76dd404e5f">More...</a><br /></td></tr>
+<tr class="separator:a4d8d31cd6a91047292713e76dd404e5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74398bc56aa2994f19425f6f43070585"><td class="memItemLeft" align="right" valign="top">typedef T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a74398bc56aa2994f19425f6f43070585">pointer</a></td></tr>
+<tr class="memdesc:a74398bc56aa2994f19425f6f43070585"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">Iterator</a> pointer trait.  <a href="#a74398bc56aa2994f19425f6f43070585">More...</a><br /></td></tr>
+<tr class="separator:a74398bc56aa2994f19425f6f43070585"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a430ece280acfe203ecc46a589b286053"><td class="memItemLeft" align="right" valign="top">typedef T &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a430ece280acfe203ecc46a589b286053">reference</a></td></tr>
+<tr class="memdesc:a430ece280acfe203ecc46a589b286053"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">Iterator</a> reference trait.  <a href="#a430ece280acfe203ecc46a589b286053">More...</a><br /></td></tr>
+<tr class="separator:a430ece280acfe203ecc46a589b286053"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a687a20a3038d3aeb7efa2585298fec69"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a687a20a3038d3aeb7efa2585298fec69">Iterator</a> ()</td></tr>
 <tr class="memdesc:a687a20a3038d3aeb7efa2585298fec69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> such that <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a687a20a3038d3aeb7efa2585298fec69" title="Construct an AbstractMatcher::Iterator such that Iterator() == AbstractMatcher::Operation(*this, method).end(). ">Iterator()</a> == AbstractMatcher::Operation(*this, method).<a class="el" href="classreflex_1_1_abstract_matcher.html#aaf1c25cf25951b7eeda7aa50d4736fd4" title="Returns pointer to the exclusive end of the matched text, a constant-time operation. ">end()</a>.  <a href="#a687a20a3038d3aeb7efa2585298fec69">More...</a><br /></td></tr>
 <tr class="separator:a687a20a3038d3aeb7efa2585298fec69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47aa8cbb98fb36e94c2abc627cdee4e2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a47aa8cbb98fb36e94c2abc627cdee4e2">Iterator</a> (const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; typename <a class="el" href="structreflex_1_1_type_op.html">reflex::TypeOp</a>&lt; T &gt;::NonConstType &gt; &amp;it)</td></tr>
-<tr class="memdesc:a47aa8cbb98fb36e94c2abc627cdee4e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor.  <a href="#a47aa8cbb98fb36e94c2abc627cdee4e2">More...</a><br /></td></tr>
-<tr class="separator:a47aa8cbb98fb36e94c2abc627cdee4e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a121d44618740fe03e84d4e4bb1e68c13"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a121d44618740fe03e84d4e4bb1e68c13">Iterator</a> (const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a01a44e7a12cbf29141b60536b560bd42">NonConstT</a> &gt; &amp;it)</td></tr>
+<tr class="memdesc:a121d44618740fe03e84d4e4bb1e68c13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor.  <a href="#a121d44618740fe03e84d4e4bb1e68c13">More...</a><br /></td></tr>
+<tr class="separator:a121d44618740fe03e84d4e4bb1e68c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95d6cc7f0e062387a7112ac8dbf85940"><td class="memItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a95d6cc7f0e062387a7112ac8dbf85940">operator*</a> () const </td></tr>
 <tr class="memdesc:a95d6cc7f0e062387a7112ac8dbf85940"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> dereference.  <a href="#a95d6cc7f0e062387a7112ac8dbf85940">More...</a><br /></td></tr>
 <tr class="separator:a95d6cc7f0e062387a7112ac8dbf85940"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01a4e7a1eddbedc7a0945561eaeba197"><td class="memItemLeft" align="right" valign="top">T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a01a4e7a1eddbedc7a0945561eaeba197">operator-&gt;</a> () const </td></tr>
 <tr class="memdesc:a01a4e7a1eddbedc7a0945561eaeba197"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> pointer.  <a href="#a01a4e7a1eddbedc7a0945561eaeba197">More...</a><br /></td></tr>
 <tr class="separator:a01a4e7a1eddbedc7a0945561eaeba197"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d7c6df7433c5c81a827ffd6efe92dae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a2d7c6df7433c5c81a827ffd6efe92dae">operator==</a> (const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; typename <a class="el" href="structreflex_1_1_type_op.html">reflex::TypeOp</a>&lt; T &gt;::ConstType &gt; &amp;rhs) const </td></tr>
-<tr class="memdesc:a2d7c6df7433c5c81a827ffd6efe92dae"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> equality.  <a href="#a2d7c6df7433c5c81a827ffd6efe92dae">More...</a><br /></td></tr>
-<tr class="separator:a2d7c6df7433c5c81a827ffd6efe92dae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c2b0f0604bdc1ea7d8357cc07cd3c68"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a2c2b0f0604bdc1ea7d8357cc07cd3c68">operator!=</a> (const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; typename <a class="el" href="structreflex_1_1_type_op.html">reflex::TypeOp</a>&lt; T &gt;::ConstType &gt; &amp;rhs) const </td></tr>
-<tr class="memdesc:a2c2b0f0604bdc1ea7d8357cc07cd3c68"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> inequality.  <a href="#a2c2b0f0604bdc1ea7d8357cc07cd3c68">More...</a><br /></td></tr>
-<tr class="separator:a2c2b0f0604bdc1ea7d8357cc07cd3c68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb739c3a3f58ce8b1dfa4327f7a79d0e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#aeb739c3a3f58ce8b1dfa4327f7a79d0e">operator==</a> (const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a915d4cd914c83c53165b4bf704121382">ConstT</a> &gt; &amp;rhs) const </td></tr>
+<tr class="memdesc:aeb739c3a3f58ce8b1dfa4327f7a79d0e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> equality.  <a href="#aeb739c3a3f58ce8b1dfa4327f7a79d0e">More...</a><br /></td></tr>
+<tr class="separator:aeb739c3a3f58ce8b1dfa4327f7a79d0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9528a626c1aebac7c046ce40392d174"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#ac9528a626c1aebac7c046ce40392d174">operator!=</a> (const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a915d4cd914c83c53165b4bf704121382">ConstT</a> &gt; &amp;rhs) const </td></tr>
+<tr class="memdesc:ac9528a626c1aebac7c046ce40392d174"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> inequality.  <a href="#ac9528a626c1aebac7c046ce40392d174">More...</a><br /></td></tr>
+<tr class="separator:ac9528a626c1aebac7c046ce40392d174"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8418428ce1d67d765cd306a6cfc18e5d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a8418428ce1d67d765cd306a6cfc18e5d">operator++</a> ()</td></tr>
 <tr class="memdesc:a8418428ce1d67d765cd306a6cfc18e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> preincrement.  <a href="#a8418428ce1d67d765cd306a6cfc18e5d">More...</a><br /></td></tr>
 <tr class="separator:a8418428ce1d67d765cd306a6cfc18e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e7cfe7d4eea416c0487ff2b9dc300cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a6e7cfe7d4eea416c0487ff2b9dc300cf">operator++</a> (int)</td></tr>
 <tr class="memdesc:a6e7cfe7d4eea416c0487ff2b9dc300cf"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> postincrement.  <a href="#a6e7cfe7d4eea416c0487ff2b9dc300cf">More...</a><br /></td></tr>
 <tr class="separator:a6e7cfe7d4eea416c0487ff2b9dc300cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a542f03189190e6ae05a26da0537ad5c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a542f03189190e6ae05a26da0537ad5c4">Iterator</a> (<a class="el" href="classreflex_1_1_abstract_matcher.html">AbstractMatcher</a> *matcher, <a class="el" href="classreflex_1_1_abstract_matcher.html#a82ed7b2c125bd897dea73443d2650ac6">Method</a> method)</td></tr>
-<tr class="memdesc:a542f03189190e6ae05a26da0537ad5c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> to scan, search, or split an input character sequence.  <a href="#a542f03189190e6ae05a26da0537ad5c4">More...</a><br /></td></tr>
-<tr class="separator:a542f03189190e6ae05a26da0537ad5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab05fc33843fa008029609a7c7c173ec1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#ab05fc33843fa008029609a7c7c173ec1">Iterator</a> (<a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a01a44e7a12cbf29141b60536b560bd42">NonConstT</a> *matcher, <a class="el" href="classreflex_1_1_abstract_matcher.html#a82ed7b2c125bd897dea73443d2650ac6">Method</a> method)</td></tr>
+<tr class="memdesc:ab05fc33843fa008029609a7c7c173ec1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">AbstractMatcher::Iterator</a> to scan, search, or split an input character sequence.  <a href="#ab05fc33843fa008029609a7c7c173ec1">More...</a><br /></td></tr>
+<tr class="separator:ab05fc33843fa008029609a7c7c173ec1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:aed7db06621a0e93d4e131229f3ba5192"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_matcher.html">AbstractMatcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#aed7db06621a0e93d4e131229f3ba5192">matcher_</a></td></tr>
-<tr class="memdesc:aed7db06621a0e93d4e131229f3ba5192"><td class="mdescLeft">&#160;</td><td class="mdescRight">the matcher used by this iterator  <a href="#aed7db06621a0e93d4e131229f3ba5192">More...</a><br /></td></tr>
-<tr class="separator:aed7db06621a0e93d4e131229f3ba5192"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2a94432cbf56d453a505a97d5c5a3dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a01a44e7a12cbf29141b60536b560bd42">NonConstT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#ae2a94432cbf56d453a505a97d5c5a3dd">matcher_</a></td></tr>
+<tr class="memdesc:ae2a94432cbf56d453a505a97d5c5a3dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">the matcher used by this iterator  <a href="#ae2a94432cbf56d453a505a97d5c5a3dd">More...</a><br /></td></tr>
+<tr class="separator:ae2a94432cbf56d453a505a97d5c5a3dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30d1686036fe98024e26d57f936fb00e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_abstract_matcher.html#a82ed7b2c125bd897dea73443d2650ac6">Method</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a30d1686036fe98024e26d57f936fb00e">method_</a></td></tr>
 <tr class="memdesc:a30d1686036fe98024e26d57f936fb00e"><td class="mdescLeft">&#160;</td><td class="mdescRight">the method for pattern matching by this iterator's matcher  <a href="#a30d1686036fe98024e26d57f936fb00e">More...</a><br /></td></tr>
 <tr class="separator:a30d1686036fe98024e26d57f936fb00e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,7 +149,120 @@ class reflex::AbstractMatcher::Iterator&lt; T &gt;</h3>
   </table>
   </dd>
 </dl>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a class="anchor" id="a915d4cd914c83c53165b4bf704121382"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="structreflex_1_1_type_op.html">reflex::TypeOp</a>&lt;T&gt;::ConstType <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::<a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a915d4cd914c83c53165b4bf704121382">ConstT</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html" title="AbstractMatcher::Const common constants. ">Const</a> <a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">AbstractMatcher</a> type. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4d8d31cd6a91047292713e76dd404e5f"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::ptrdiff_t <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::<a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a4d8d31cd6a91047292713e76dd404e5f">difference_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">Iterator</a> difference_type trait. </p>
+
+</div>
+</div>
+<a class="anchor" id="a898d586f4c46f14fd9b895848086eced"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::input_iterator_tag <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::<a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a898d586f4c46f14fd9b895848086eced">iterator_category</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">Iterator</a> iterator_category trait. </p>
+
+</div>
+</div>
+<a class="anchor" id="a01a44e7a12cbf29141b60536b560bd42"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="structreflex_1_1_type_op.html">reflex::TypeOp</a>&lt;T&gt;::NonConstType <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::<a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a01a44e7a12cbf29141b60536b560bd42">NonConstT</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Non-const <a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">AbstractMatcher</a> type. </p>
+
+</div>
+</div>
+<a class="anchor" id="a74398bc56aa2994f19425f6f43070585"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef T* <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::<a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a74398bc56aa2994f19425f6f43070585">pointer</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">Iterator</a> pointer trait. </p>
+
+</div>
+</div>
+<a class="anchor" id="a430ece280acfe203ecc46a589b286053"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef T&amp; <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::<a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a430ece280acfe203ecc46a589b286053">reference</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">Iterator</a> reference trait. </p>
+
+</div>
+</div>
+<a class="anchor" id="a77b1f092199f33964be02cd46d461112"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef T <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::<a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a77b1f092199f33964be02cd46d461112">value_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html" title="AbstractMatcher::Iterator class for scanning, searching, and splitting input character sequences...">Iterator</a> value_type trait. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a687a20a3038d3aeb7efa2585298fec69"></a>
 <div class="memitem">
 <div class="memproto">
@@ -174,7 +290,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a47aa8cbb98fb36e94c2abc627cdee4e2"></a>
+<a class="anchor" id="a121d44618740fe03e84d4e4bb1e68c13"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -186,7 +302,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::<a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; typename <a class="el" href="structreflex_1_1_type_op.html">reflex::TypeOp</a>&lt; T &gt;::NonConstType &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a01a44e7a12cbf29141b60536b560bd42">NonConstT</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>it</em></td><td>)</td>
           <td></td>
         </tr>
@@ -202,7 +318,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a542f03189190e6ae05a26da0537ad5c4"></a>
+<a class="anchor" id="ab05fc33843fa008029609a7c7c173ec1"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -214,7 +330,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::<a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classreflex_1_1_abstract_matcher.html">AbstractMatcher</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a01a44e7a12cbf29141b60536b560bd42">NonConstT</a> *&#160;</td>
           <td class="paramname"><em>matcher</em>, </td>
         </tr>
         <tr>
@@ -248,7 +364,7 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a2c2b0f0604bdc1ea7d8357cc07cd3c68"></a>
+<a class="anchor" id="ac9528a626c1aebac7c046ce40392d174"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -260,7 +376,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::operator!= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; typename <a class="el" href="structreflex_1_1_type_op.html">reflex::TypeOp</a>&lt; T &gt;::ConstType &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a915d4cd914c83c53165b4bf704121382">ConstT</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>rhs</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -390,7 +506,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a2d7c6df7433c5c81a827ffd6efe92dae"></a>
+<a class="anchor" id="aeb739c3a3f58ce8b1dfa4327f7a79d0e"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -402,7 +518,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::operator== </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; typename <a class="el" href="structreflex_1_1_type_op.html">reflex::TypeOp</a>&lt; T &gt;::ConstType &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">Iterator</a>&lt; <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a915d4cd914c83c53165b4bf704121382">ConstT</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>rhs</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -487,7 +603,7 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="aed7db06621a0e93d4e131229f3ba5192"></a>
+<a class="anchor" id="ae2a94432cbf56d453a505a97d5c5a3dd"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -497,7 +613,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classreflex_1_1_abstract_matcher.html">AbstractMatcher</a>* <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::matcher_</td>
+          <td class="memname"><a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html#a01a44e7a12cbf29141b60536b560bd42">NonConstT</a>* <a class="el" href="classreflex_1_1_abstract_matcher_1_1_iterator.html">reflex::AbstractMatcher::Iterator</a>&lt; T &gt;::matcher_</td>
         </tr>
       </table>
   </td>
@@ -541,7 +657,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Mar 13 2022 15:58:09 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Fri Apr 29 2022 22:15:56 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

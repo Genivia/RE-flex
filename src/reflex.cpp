@@ -903,21 +903,27 @@ bool Reflex::is_code()
 }
 
 /// Check if current line starts a block of %top code
-bool Reflex::is_topcode()
+bool Reflex::is_top_code()
 {
   return br(0, "%top");
 }
 
 /// Check if current line starts a block of %class code
-bool Reflex::is_classcode()
+bool Reflex::is_class_code()
 {
   return br(0, "%class");
 }
 
 /// Check if current line starts a block of %init code
-bool Reflex::is_initcode()
+bool Reflex::is_init_code()
 {
   return br(0, "%init");
+}
+
+/// Check if current line starts a block of %begin code
+bool Reflex::is_begin_code()
+{
+  return br(0, "%begin");
 }
 
 /// Advance pos over name (letters, digits, ., -, _ or any non-ASCII character > U+007F), return name
@@ -1135,15 +1141,15 @@ bool Reflex::get_pattern(size_t& pos, std::string& pattern, std::string& regex)
   return !regex.empty();
 }
 
-/// Get line(s) of code, %{ %}, %%top, %%class, and %%init
+/// Get line(s) of code, %{ %}, %%top, %%class, %%init, and %%begin
 std::string Reflex::get_code(size_t& pos)
 {
   std::string code;
   size_t at_lineno = lineno;
   size_t blk = 0, lev = 0;
   enum { CODE, STRING, CHAR, COMMENT } tok = CODE;
-  bool is_usercode = pos == 0 && is("%{");
-  if (pos == 0 && (is_usercode || is_topcode() || is_classcode() || is_initcode()))
+  bool is_user_code = pos == 0 && is("%{");
+  if (pos == 0 && (is_user_code || is_top_code() || is_class_code() || is_init_code() || is_begin_code()))
   {
     ++blk;
     pos = linelen;
@@ -1168,7 +1174,7 @@ std::string Reflex::get_code(size_t& pos)
       {
         if (is("%%"))
         {
-          if (lev > 0 || (!is_usercode && blk > 0))
+          if (lev > 0 || (!is_user_code && blk > 0))
             error("%% section ending encountered inside an action where } is expected", NULL, at_lineno);
           else if (blk > 0)
             error("%% section ending encountered inside an action where %} is expected", NULL, at_lineno);
@@ -1178,13 +1184,13 @@ std::string Reflex::get_code(size_t& pos)
           if (blk == 0)
           {
             at_lineno = lineno;
-            is_usercode = true;
+            is_user_code = true;
           }
           code.push_back('\n');
           ++blk;
           pos = linelen;
         }
-        else if (is("%}") || (!is_usercode && is("}") && blk == 1 && lev == 0))
+        else if (is("%}") || (!is_user_code && is("}") && blk == 1 && lev == 0))
         {
           code.push_back('\n');
           if (blk > 0)
@@ -1432,26 +1438,33 @@ void Reflex::parse_section_1()
         std::string code = get_code(pos);
         section_1.push_back(Code(code, infile, this_lineno));
       }
-      else if (is_topcode())
+      else if (is_top_code())
       {
         size_t pos = 0;
         size_t this_lineno = lineno;
         std::string code = get_code(pos);
         section_top.push_back(Code(code, infile, this_lineno));
       }
-      else if (is_classcode())
+      else if (is_class_code())
       {
         size_t pos = 0;
         size_t this_lineno = lineno;
         std::string code = get_code(pos);
         section_class.push_back(Code(code, infile, this_lineno));
       }
-      else if (is_initcode())
+      else if (is_init_code())
       {
         size_t pos = 0;
         size_t this_lineno = lineno;
         std::string code = get_code(pos);
         section_init.push_back(Code(code, infile, this_lineno));
+      }
+      else if (is_begin_code())
+      {
+        size_t pos = 0;
+        size_t this_lineno = lineno;
+        std::string code = get_code(pos);
+        section_begin.push_back(Code(code, infile, this_lineno));
       }
       else
       {
@@ -2432,6 +2445,16 @@ void Reflex::write_section_init()
   *out << "  }\n";
 }
 
+/// Write %%begin code to lex.yy.cpp
+void Reflex::write_section_begin()
+{
+  if (!options["flex"].empty())
+    *out <<
+      "    YY_USER_INIT\n";
+  if (!section_begin.empty())
+    write_code(section_begin);
+}
+
 /// Write perf_report code to lex.yy.cpp
 void Reflex::write_perf_report()
 {
@@ -2925,10 +2948,8 @@ void Reflex::write_lexer()
       "    matcher().interactive();\n";
   else if (!options["batch"].empty())
     *out <<
-      "    matcher().buffer();\n";
-  if (!options["flex"].empty())
-    *out <<
-      "    YY_USER_INIT\n";
+      "    matcher().buffer(" << options["batch"] << ");\n";
+  write_section_begin();
   *out <<
     "  }\n";
   if (conditions.size() == 1)
