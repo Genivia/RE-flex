@@ -113,6 +113,7 @@ The `MAX` parameter may be combined with one or more of the following flags:
 - `reflex::FuzzyMatcher::INS` allow character insertions (extra characters)
 - `reflex::FuzzyMatcher::DEL` allow character deletions (missing characters)
 - `reflex::FuzzyMatcher::SUB` character substitutions count as one edit
+- `reflex::FuzzyMatcher::BIN` ASCII/binary fuzzy matching (default is Unicode with Unicode pattern converter, see below)
 
 For example, to allow approximate pattern matches to include up to three
 character insertions, but no deletions or substitutions (this is actually the
