@@ -199,6 +199,16 @@ int main(int argc, char **argv)
       "aβcd", "axcd",
       "aβcd", "acd",
 
+      ".bcd", "abβcd",
+      ".bcd", "aωcd",
+      ".bcd", "abcdδ",
+      ".bcd", "abcω",
+      ".bcd", "aαbcd",
+      ".βcd", "aβbcd",
+      ".βcd", "abβcd",
+      ".βcd", "axcd",
+      ".βcd", "acd",
+
       NULL, NULL };
     int it = 0;
     int hits = 0;

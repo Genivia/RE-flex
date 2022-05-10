@@ -3,6 +3,7 @@
 // Written by Robert van Engelen
 
 %top{
+  #include <cstring>
   #include <vector>
 }
 

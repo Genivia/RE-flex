@@ -15,6 +15,7 @@
 
 %{
 #include <reflex/utf8.h>
+#include <cstring>
 #include <stdio.h>
 static bool is_keyword(const char *);
 %}
