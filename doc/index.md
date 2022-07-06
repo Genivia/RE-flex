@@ -5813,9 +5813,9 @@ rules that are intended to match keywords and identifiers in some input text:
 ~~~{.cpp}
     %%
 
-    int                     out() << "=> int keyword\n;
-    interface               out() << "=> interface keyword\n;
-    float                   out() << "=> float keyword\n;
+    int                     out() << "=> int keyword\n";
+    interface               out() << "=> interface keyword\n";
+    float                   out() << "=> float keyword\n";
     [A-Za-z][A-Za-z0-9]*    out() << "=> identifier\n";
 
     %%
@@ -5860,9 +5860,9 @@ Switching the rules for `int` and `interface` fixes that specific problem.
 ~~~{.cpp}
     %%
 
-    interface               out() << "=> interface keyword\n;
-    int                     out() << "=> int keyword\n;
-    float                   out() << "=> float keyword\n;
+    interface               out() << "=> interface keyword\n";
+    int                     out() << "=> int keyword\n";
+    float                   out() << "=> float keyword\n";
     [A-Za-z][A-Za-z0-9]*    out() << "=> identifier\n";
 
     %%
@@ -5883,9 +5883,9 @@ longer!
     %%
 
     [A-Za-z][A-Za-z0-9]*    out() << "=> identifier\n";
-    interface               out() << "=> interface keyword\n;
-    int                     out() << "=> int keyword\n;
-    float                   out() << "=> float keyword\n;
+    interface               out() << "=> interface keyword\n";
+    int                     out() << "=> int keyword\n";
+    float                   out() << "=> float keyword\n";
 
     %%
 ~~~
