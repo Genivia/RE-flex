@@ -1166,6 +1166,12 @@ std::string Reflex::get_code(size_t& pos)
     {
       if (!get_line())
       {
+        if (tok == STRING)
+          error("EOF encountered inside an action where a closing \" is expected", NULL, at_lineno);
+        if (tok == CHAR)
+          error("EOF encountered inside an action where a closing ' is expected", NULL, at_lineno);
+        if (tok == COMMENT)
+          error("EOF encountered inside an action where a closing */ is expected", NULL, at_lineno);
         line = "%%"; // end of input: pretend we're at the end of the section
         linelen = 2;
       }
@@ -1175,9 +1181,9 @@ std::string Reflex::get_code(size_t& pos)
         if (is("%%"))
         {
           if (lev > 0 || (!is_user_code && blk > 0))
-            error("%% section ending encountered inside an action where } is expected", NULL, at_lineno);
+            error("%% section ending encountered inside an action where a closing } is expected", NULL, at_lineno);
           else if (blk > 0)
-            error("%% section ending encountered inside an action where %} is expected", NULL, at_lineno);
+            error("%% section ending encountered inside an action where a closing %} is expected", NULL, at_lineno);
         }
         if (is("%{"))
         {
@@ -1198,7 +1204,7 @@ std::string Reflex::get_code(size_t& pos)
           if (blk == 0)
           {
             if (lev > 0)
-              error("%} encountered where } is expected");
+              error("%} encountered where a closing } is expected");
             if (!get_line())
               error("EOF encountered where %% is expected");
             return code;
@@ -2155,8 +2161,10 @@ void Reflex::write_class()
     if (!options["ctorarg"].empty())
       *out << "      " << options["ctorarg"] << ",\n";
     *out <<
+      "      // a persistent source of input, empty by default\n"
       "      const reflex::Input& input = reflex::Input(),\n"
-      "      std::ostream        *os    = NULL)\n"
+      "      // optional output stream, NULL means std::cout by default\n"
+      "      std::ostream *os = NULL)\n"
       "    :\n"
       "      " << base << "(input, os)";
     if (!options["ctorinit"].empty())
@@ -2168,6 +2176,7 @@ void Reflex::write_class()
       if (!options["bison_locations"].empty())
         *out <<
           "  std::string filename;\n"
+          "  // bison-complete bison-locations: location() returns lexeme location\n"
           "  virtual " << yyltype << " location(void)\n"
           "  {\n"
           "    " << yyltype << " yylloc;\n"
@@ -2194,12 +2203,14 @@ void Reflex::write_class()
           "    yyterminate();\n"
           "  }\n";
       *out <<
+        "  // the flex bison-complete lexer function defined by SECTION 2\n"
         "  virtual " << token_type << " " << lex << "(" << params << ")";
     }
     else if (!options["bison_cc"].empty())
     {
       if (!options["bison_locations"].empty())
         *out <<
+          "  // bison-cc bison-locations: yylloc_update() tracks lexeme locations\n"
           "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
           "  {\n"
           "    yylloc.begin.line = static_cast<unsigned int>(matcher().lineno());\n"
@@ -2216,6 +2227,7 @@ void Reflex::write_class()
           "  {\n"
           "    return " << lex << "(*lvalp, *llocp" << comma_args << ");\n"
           "  }\n"
+          "  // the flex bison-cc bison-locations lexer function defined by SECTION 2\n"
           "  virtual " << token_type << " " << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc" << comma_params << ")";
       else
         *out <<
@@ -2228,11 +2240,13 @@ void Reflex::write_class()
           "  {\n"
           "    return yylex(*lvalp" << comma_args << ");\n"
           "  }\n"
+          "  // the flex bison-cc lexer function defined by SECTION 2\n"
           "  virtual " << token_type << " " << lex << "(" << yystype << "& yylval" << comma_params << ")";
     }
     else if (!options["bison_locations"].empty())
     {
       *out <<
+        "  // bison-locations: yylloc_update() tracks lexeme locations\n"
         "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
         "  {\n"
         "    yylloc.first_line = static_cast<unsigned int>(matcher().lineno());\n"
@@ -2245,6 +2259,7 @@ void Reflex::write_class()
         "    LexerError(\"" << lexer << "::yylex invoked but %option bison-bridge and/or bison-locations is used\");\n"
         "    yyterminate();\n"
         "  }\n"
+        "  // the flex bison-locations lexer function defined by SECTION 2\n"
         "  virtual " << token_type << " " << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc" << comma_params << ")";
     }
     else if (!options["bison_bridge"].empty())
@@ -2255,6 +2270,7 @@ void Reflex::write_class()
         "    LexerError(\"" << lexer << "::yylex invoked but %option bison-bridge and/or bison-locations is used\");\n"
         "    yyterminate();\n"
         "  }\n"
+        "  // the flex bison-bridge lexer function defined by SECTION 2\n"
         "  virtual " << token_type << " " << lex << "(" << yystype << "& yylval" << comma_params << ")";
     }
     else
@@ -2274,6 +2290,7 @@ void Reflex::write_class()
           "    yyterminate();\n"
           "  }\n";
       *out <<
+        "  // the flex lexer function defined by SECTION 2\n"
         "  virtual " << token_type << " " << lex << "(" << params << ")";
     }
     if (options["yyclass"].empty())
@@ -2296,8 +2313,10 @@ void Reflex::write_class()
     if (!options["ctorarg"].empty())
       *out << "      " << options["ctorarg"] << ",\n";
     *out <<
+      "      // a persistent source of input, empty by default\n"
       "      const reflex::Input& input = reflex::Input(),\n"
-      "      std::ostream&        os    = std::cout)\n"
+      "      // optional output stream, std::cout by default\n"
+      "      std::ostream& os = std::cout)\n"
       "    :\n"
       "      AbstractBaseLexer(input, os)";
     if (!options["ctorinit"].empty())
@@ -2312,6 +2331,7 @@ void Reflex::write_class()
       if (!options["bison_locations"].empty())
         *out <<
           "  std::string filename;\n"
+          "  // bison-complete bison-locations: location() returns lexeme location\n"
           "  virtual " << yyltype << " location(void)\n"
           "  {\n"
           "    " << yyltype << " yylloc;\n"
@@ -2324,12 +2344,14 @@ void Reflex::write_class()
           "    return yylloc;\n"
           "  }\n";
       *out <<
+        "  // the bison-complete lexer function defined by SECTION 2\n"
         "  virtual " << token_type << " " << lex << "(" << params << ")";
     }
     else if (!options["bison_cc"].empty())
     {
       if (!options["bison_locations"].empty())
         *out <<
+          "  // bison-cc bison-locations: yylloc_update() tracks lexeme locations\n"
           "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
           "  {\n"
           "    yylloc.begin.line = static_cast<unsigned int>(matcher().lineno());\n"
@@ -2341,6 +2363,7 @@ void Reflex::write_class()
           "  {\n"
           "    return " << lex << "(*lvalp, *llocp" << comma_args << ");\n"
           "  }\n"
+          "  // the bison-cc bison-locations lexer function defined by SECTION 2\n"
           "  virtual " << token_type << " " << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc" << comma_params << ")";
       else
         *out <<
@@ -2348,11 +2371,13 @@ void Reflex::write_class()
           "  {\n"
           "    return " << lex << "(*lvalp" << comma_args << ");\n"
           "  }\n"
+          "  // the bison-cc lexer function defined by SECTION 2\n"
           "  virtual " << token_type << " " << lex << "(" << yystype << "& yylval" << comma_params << ")";
     }
     else if (!options["bison_locations"].empty())
     {
       *out <<
+        "  // bison-locations: yylloc_update() tracks lexeme locations\n"
         "  virtual void yylloc_update(" << yyltype << "& yylloc)\n"
         "  {\n"
         "    yylloc.first_line = static_cast<unsigned int>(matcher().lineno());\n"
@@ -2360,16 +2385,19 @@ void Reflex::write_class()
         "    yylloc.last_line = static_cast<unsigned int>(matcher().lineno_end());\n"
         "    yylloc.last_column = static_cast<unsigned int>(matcher().columno_end());\n"
         "  }\n"
+        "  // the bison-locations lexer function defined by SECTION 2\n"
         "  virtual " << token_type << " " << lex << "(" << yystype << "& yylval, " << yyltype << "& yylloc" << comma_params << ")";
     }
     else if (!options["bison_bridge"].empty())
     {
       *out <<
+        "  // the bison-bridge lexer function defined by SECTION 2\n"
         "  virtual " << token_type << " " << lex << "(" << yystype << "& yylval" << comma_params << ")";
     }
     else
     {
       *out <<
+        "  // the lexer function defined by SECTION 2\n"
         "  virtual " << token_type << " " << lex << "(" << params << ")";
     }
     if (options["class"].empty())
@@ -2382,8 +2410,10 @@ void Reflex::write_class()
     if (params.empty())
       *out <<
         "  " << token_type << " " << lex << "(\n"
+        "      // a persistent source of input\n"
         "      const reflex::Input& input,\n"
-        "      std::ostream        *os = NULL)\n"
+        "      // optional output stream, NULL means std::cout by default\n"
+        "      std::ostream *os = NULL)\n"
         "  {\n"
         "    in(input);\n"
         "    if (os)\n"
@@ -2392,6 +2422,7 @@ void Reflex::write_class()
         "  }\n";
     else
       *out <<
+        "  // lexer functions accepting new input to scan\n"
         "  " << token_type << " " << lex << "(const reflex::Input& input" << comma_params << ")\n"
         "  {\n"
         "    in(input);\n"

@@ -21,7 +21,12 @@ more efficiently.  RE/flex includes a smart input class to normalize input from
 files, streams, strings, and memory.  RE/flex is compatible with Bison/Yacc and
 accepts Flex lexer specifications.
 
-Features:
+RE/flex does some heavy-lifting for you to make it easier to integrate advanced
+tokenizers with Bison in C++.  The RE/flex code generation tool accepts options
+to fascilitate seamless integration with Bison by generating the necessary
+gluing code, such as the C++ source code expected by "Bison complete parsers".
+
+A summary of features:
 
 - faster than Flex++ for typical applications such as tokenization;
 - accepts Flex/Lex lexer specifications, extended to support Unicode;
@@ -42,7 +47,7 @@ Features:
 - other regex engines to choose from, such as PCRE2 and Boost.Regex;
 - released under a permissive open source license (BSD-3).
 
-RE/flex offers lots of other practical improvements over Flex++, such as:
+RE/flex offers many other practical improvements over Flex++, such as:
 
 - no input buffer length limit (Flex has a 16KB limit);
 - `yypush_buffer_state` saves the scanner state (line, column, and indentation
@@ -2245,7 +2250,6 @@ actions are also supported:
   `matcher().buffer(n)`     | *n/a*                   | set buffer size to `n`
   `matcher().interactive()` | `yy_set_interactive(1)` | set interactive input
   `matcher().flush()`       | `YY_FLUSH_BUFFER`       | flush input buffer
-  `matcher().get(s, n)`     | `LexerInput(s, n)`      | read `s[0..n-1]`
   `matcher().set_bol(b)`    | `yy_set_bol(b)`         | (re)set begin of line
   `matcher().set_bob(b)`    | *n/a*                   | (re)set begin of input
   `matcher().set_end(b)`    | *n/a*                   | (re)set end of input
@@ -3909,6 +3913,13 @@ where `input` is a `reflex::Input` object.  The `reflex::Input` constructor
 takes a `FILE*` descriptor, `std::istream`, a string `std::string` or
 `const char*`, or a wide string `std::wstring` or `const wchar_t*`.
 
+@note The source of input specified to a lexer must remain readable while
+scanning.  Do not pass temporary objects as input to the lexer constructor,
+such as temporary `std::string` and `char*` strings.  The lexer reads the
+specified input while scanning the input with subsequent `lex()` (and `yylex()`
+etc.) calls.  The input source is copied in chunks of bytes to an internal
+buffer, depending on the buffering mode.
+
 The following methods are available to specify an input source:
 
   RE/flex action      | Flex action              | Result
@@ -4124,6 +4135,7 @@ restores the old input source:
 ~~~{.cpp}
     ... // scanning etc.
     Matcher *oldmatcher = matcher();
+    reflex::Input input(...);
     Matcher *newmatcher = new_matcher(input);
     matcher(newmatcher);
     ... // scan the new input
@@ -4137,10 +4149,12 @@ the same with the `−−flex` option becomes:
 ~~~{.cpp}
     ... // scanning etc.
     YY_BUFFER_STATE oldbuf = YY_CURRENT_BUFFER;
+    reflex::Input input(...);
     YY_BUFFER_STATE newbuf = yy_create_buffer(input, YY_BUF_SIZE);
     yy_switch_to_buffer(newbuf);
     ... // scan the new input
     yy_delete_buffer(newbuf);
+    ... // the specified input is no longer needed here
     yy_switch_to_buffer(oldbuf);
     ... // continue scanning the old input
 ~~~
@@ -4293,11 +4307,10 @@ Return zero upon EOF.  Use <b>`reflex`</b> options `−−matcher=NAME` and
 `−−pattern=reflex::Pattern` to use your new matcher class `NAME` (or leave out
 `−−pattern` for Boost.Regex derived matchers).
 
-The `FlexLexer` lexer class that is the base class of the `yyFlexLexer` lexer
-class generated with <b>`reflex`</b> option `−−flex` defines a virtual `size_t
-LexerInput(char*, size_t)` method.  This approach is compatible with Flex.  The
-virtual method can be redefined in the generated `yyFlexLexer` lexer to consume
-input from some source of text:
+The `FlexLexer` lexer class is the base class of the `yyFlexLexer` lexer class
+generated with <b>`reflex`</b> option `−−flex`, which defines a virtual `size_t
+LexerInput(char*, size_t)` method.  This virtual method can be redefined in the
+generated `yyFlexLexer` lexer to consume input from some source of text:
 
 <div class="alt">
 ~~~{.cpp}
@@ -4312,9 +4325,9 @@ input from some source of text:
 ~~~
 </div>
 
-The `LexerInput` method may be invoked multiple times by the matcher engine
-and should eventually return zero to indicate the end of input is reached (e.g.
-when at EOF).
+This approach is compatible with Flex.  The `LexerInput` method may be invoked
+multiple times by the matcher engine and should eventually return zero to
+indicate the end of input is reached (e.g. when at EOF).
 
 To prevent the scanner from initializing the input to `stdin` before reading
 input with `LexerInput()`, use option `−−nostdinit`.
@@ -5731,7 +5744,7 @@ Searching versus scanning                                      {#reflex-search}
 
 RE/flex generates an efficient search engine with option `-S` (or `−−find`).
 The generated search engine finds all matches while ignoring unmatched input
-silently, which is different from scanning, which matches all input piece-wise.
+silently, which is different from scanning that matches all input piece-wise.
 
 Searching with this option is more efficient than scanning with a "catch all
 else" dot-rule to ignore unmatched input, as in:
@@ -5743,7 +5756,7 @@ else" dot-rule to ignore unmatched input, as in:
 </div>
 
 The problem with this rule is that it is invoked for every single unmatched
-character on the input, which is inefficient and slows down searching for
+character in the input, which is inefficient and slows down searching for
 matching patterns significantly when more than a few unmatched characters are
 encountered in the input.  Note that we cannot use `.+` to match longer
 patterns because this overlaps with other patterns and is also likely longer
@@ -5755,7 +5768,7 @@ significantly.  This option applies the following optimizations to the RE/flex
 FSM matcher:
 
 - Hashing is used to match multiple strings, which is faster than multi-string
-  matching with Aho-Corasick, Commentz-Walter, Wu-Manber, and other.
+  matching with Aho-Corasick, Commentz-Walter, Wu-Manber, and other methods.
 
 - Single short strings are searched with `memchr()`.  Single long strings are
   searched with Boyer-Moore-Horspool.  Also regex patterns with common prefixes

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue May 10 2022 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Wed Jul 6 2022 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -268,6 +268,7 @@ Protected Attributes</h2></td></tr>
 <p>The <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> class unifies access to a source of input text that constitutes a sequence of characters:</p>
 <ul>
 <li>An <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">Input</a> object is instantiated and (re)assigned a (new) source input: either a <code>char*</code> string, a <code>wchar_t*</code> wide string, a <code>std::string</code>, a <code>std::wstring</code>, a <code>FILE*</code> descriptor, or a <code>std::istream</code> object.</li>
+<li>Strings specified as input must be persistent and cannot be temporary. The input string contents are incrementally extracted and converted as necessary, when specified with an encoding format <code><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">reflex::Input::file_encoding</a></code>.</li>
 <li>When assigned a wide string source as input, the wide character content is automatically converted to an UTF-8 character sequence when reading with <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a>. Wide strings are UCS-2/UCS-4 and may contain UTF-16 surrogate pairs.</li>
 <li>When assigned a <code>FILE*</code> source as input, the file is checked for the presence of a UTF-8 or a UTF-16 BOM (Byte Order Mark). A UTF-8 BOM is ignored and will not appear on the input character stream (and size is adjusted by 3 bytes). A UTF-16 BOM is intepreted, resulting in the conversion of the file content automatically to an UTF-8 character sequence when reading the file with <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a>. Also, <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> gives the content size in the number of UTF-8 bytes.</li>
 <li>An input object can be reassigned a new source of input for reading at any time.</li>
@@ -1673,7 +1674,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue May 10 2022 15:42:22 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Wed Jul 6 2022 10:30:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
