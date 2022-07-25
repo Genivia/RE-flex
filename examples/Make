@@ -32,7 +32,7 @@ INCPCRE2  = /opt/local/include
 LIBPCRE2  = -L/opt/local/lib -lpcre2-8
 
 INCBOOST  = /opt/local/include
-LIBBOOST  = -L/opt/local/lib -lboost_regex-mt
+LIBBOOST  = -L/opt/local/lib -lboost_regex
 
 CXXOFLAGS = -O2
 CXXWFLAGS = -Wall -Wunused -Wextra
