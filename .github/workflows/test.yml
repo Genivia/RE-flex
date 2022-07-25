@@ -21,7 +21,7 @@ jobs:
       run:  autoreconf -fi
     - name: build
       run: ./build.sh
-    - name: tests_directory
-      run: pushd tests
     - name: run_tests
-      run: make -f Make test
+      run: |
+       cd tests
+       make -f Make test
