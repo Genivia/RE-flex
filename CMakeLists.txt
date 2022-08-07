@@ -25,6 +25,8 @@ set(lib_sources
   lib/simd_avx512bw.cpp
   lib/unicode.cpp
   lib/utf8.cpp
+  lib/matcher_avx2.cpp
+  lib/matcher_avx512bw.cpp
 
   unicode/block_scripts.cpp
   unicode/language_scripts.cpp
@@ -67,9 +69,9 @@ target_compile_definitions(Reflex PRIVATE ${simd_definitions})
 target_compile_options(Reflex PRIVATE ${simd_flags})
 
 # Don't user target name as filename instead use lowercase name for backwards compatibility
-set_target_properties(ReflexLibStatic ReflexLib Reflex
-  PROPERTIES OUTPUT_NAME reflex
-)
+set_target_properties(ReflexLibStatic PROPERTIES OUTPUT_NAME reflex_static_lib)
+set_target_properties(ReflexLib PROPERTIES OUTPUT_NAME reflex_shared_lib)
+set_target_properties(Reflex PROPERTIES OUTPUT_NAME reflex)
 
 #
 # Exporting targets section
