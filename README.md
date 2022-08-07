@@ -1,7 +1,7 @@
 
 [![logo][logo-url]][reflex-url]
 
-[![build status][travis-image]][travis-url] ![Ubuntu](https://github.com/bkmgit/RE-flex/actions/workflows/test.yml/badge.svg?branch=ci) [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url] [![CodeProject][codeproject-image]][codeproject-url]
+[![build status][travis-image]][travis-url] ![Builf](https://github.com/bkmgit/RE-flex/actions/workflows/test.yml/badge.svg?branch=ci) [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url] [![CodeProject][codeproject-image]][codeproject-url]
 
 The regex-centric, fast lexical analyzer generator for C++ with full Unicode
 support.
