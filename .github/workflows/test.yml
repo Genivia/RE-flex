@@ -1,4 +1,4 @@
-name: Ubuntu
+name: Build then test
 
 on:
   push:
@@ -7,14 +7,31 @@ on:
     branches: [ "ci" ]
 
 jobs:
-  build:
-
+  build-then-test-ubuntu:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Install boost-regex
       run: sudo apt-get install -y libboost-regex-dev libpcre2-dev
+    - name: clean
+      run: ./clean.sh
+    - name: setup
+      run:  autoreconf -fi
+    - name: build
+      run: ./build.sh
+    - name: run_tests
+      run: |
+       cd tests
+       make -f Make test
+       
+  build-then-test-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install boost-regex
+      run: brew install boost
+    - name: Install pcre2
+      run: brew install pcre2
     - name: clean
       run: ./clean.sh
     - name: setup
