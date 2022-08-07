@@ -32,6 +32,8 @@ jobs:
       run: brew install boost
     - name: Install pcre2
       run: brew install pcre2
+    - name: Install aclocal
+      run: brew install automake
     - name: clean
       run: ./clean.sh
     - name: setup
