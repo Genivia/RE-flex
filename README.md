@@ -563,6 +563,7 @@ Changelog
 - May  6, 2022: 3.2.6 improved fuzzy matcher.
 - May 10, 2022: 3.2.7 improved fuzzy matcher, see also <https://github.com/Genivia/FuzzyMatcher>.
 - Jul  6, 2022: 3.2.8 minor update to correct a lexer file parsing issue in the reflex code generator tool.
+- Aug 12, 2022: 3.2.9 add cmake rules for Windows builds.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

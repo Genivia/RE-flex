@@ -1049,8 +1049,8 @@ The RE/flex scanner generator <b>`reflex`</b> takes a lexer specification and
 generates a regex-based C++ lexer class that is saved to <i>`lex.yy.cpp`</i>,
 or saved to the file we specified by the `-o` command-line option.  This file
 is then compiled and linked with option `-lreflex` (and optionally
-`-lboost_regex` (or `-lboost_regex-mt`) if we use Boost.Regex for matching or
-`-lpcre2-8` if we use PCRE2 for matching) to produce a scanner:
+`-lboost_regex` if we use Boost.Regex for matching or `-lpcre2-8` if we use
+PCRE2 for matching) to produce a scanner:
 
     reflex lexerspec.l
     c++ lex.yy.cpp -lreflex
@@ -6452,8 +6452,8 @@ compile, link your application against the `libreflex` library:
 
     c++ myapp.cpp -lreflex
 
-And optionally `-lboost_regex` (or `-lboost_regex-mt` depending on your Boost
-installation) if you use Boost.Regex for matching:
+And optionally `-lboost_regex` depending on your Boost installation) if you use
+Boost.Regex for matching:
 
     c++ myapp.cpp -lreflex -lboost_regex
 
@@ -6555,8 +6555,7 @@ The converter throws a `reflex::regex_error` exception if conversion fails,
 for example when the regex syntax is invalid.
 
 To compile your application, link your application against the `libreflex`
-library and `-lboost_regex` (or `-lboost_regex-mt` depending on your Boost
-installation):
+library and `-lboost_regex` depending on your Boost installation):
 
     c++ myapp.cpp -lreflex -lboost_regex
 
@@ -9355,9 +9354,7 @@ RE/flex applications:
   <i>`reflex/unicode`</i> directories of the RE/flex download package.  The
   header files are located in the <i>`reflex/include/reflex`</i> directory.
 
-- When Boost.Regex is used as a matcher engine, also link `libboost_regex`
-  (or a variant, e.g. `libboost_regex-mt`, depending on your Boost
-  installation configuration):
+- When Boost.Regex is used as a matcher engine, also link `libboost_regex`:
 
       c++ ... -lreflex -lboost_regex
 

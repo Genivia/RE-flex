@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Jul 6 2022 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Fri Aug 12 2022 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -563,7 +563,7 @@ The <code>operator[]</code> method returns a pair with the match info of the n't
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h1><a class="anchor" id="reflex"></a>
 The RE/flex scanner generator                                         </h1>
-<p>The RE/flex scanner generator <b><code>reflex</code></b> takes a lexer specification and generates a regex-based C++ lexer class that is saved to <em><code>lex.yy.cpp</code></em>, or saved to the file we specified by the <code>-o</code> command-line option. This file is then compiled and linked with option <code>-lreflex</code> (and optionally <code>-lboost_regex</code> (or <code>-lboost_regex-mt</code>) if we use Boost.Regex for matching or <code>-lpcre2-8</code> if we use PCRE2 for matching) to produce a scanner: </p><pre class="fragment">reflex lexerspec.l
+<p>The RE/flex scanner generator <b><code>reflex</code></b> takes a lexer specification and generates a regex-based C++ lexer class that is saved to <em><code>lex.yy.cpp</code></em>, or saved to the file we specified by the <code>-o</code> command-line option. This file is then compiled and linked with option <code>-lreflex</code> (and optionally <code>-lboost_regex</code> if we use Boost.Regex for matching or <code>-lpcre2-8</code> if we use PCRE2 for matching) to produce a scanner: </p><pre class="fragment">reflex lexerspec.l
 c++ lex.yy.cpp -lreflex
 </pre><p>We use option <code>−−header-file</code> to generate <em><code>lex.yy.h</code></em> to include in the source code of your lexer application: </p><pre class="fragment">reflex −−header-file lexerspec.l
 c++ mylexer.cpp lex.yy.cpp -lreflex
@@ -2804,7 +2804,7 @@ The RE/flex regex library                                              </h1>
 <p>The RE/flex regex library consists of a set of C++ templates and classes that encapsulate regex engines in a standard API for scanning, tokenizing, searching, and splitting of strings, wide strings, files, and streams.</p>
 <p>The RE/flex regex library is a class hierarchy that has at the root an abstract class <code><a class="el" href="classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines...">reflex::AbstractMatcher</a></code>. Pattern types may differ between for matchers so the <code><a class="el" href="classreflex_1_1_pattern_matcher.html" title="The pattern matcher class template extends abstract matcher base class. ">reflex::PatternMatcher</a></code> template class takes a pattern type and creates a class that is complete except for the implementation of the <code>reflex::match()</code> virtual method that requires a regex engine, such as Boost.Regex, PCRE2, or the RE/flex engine.</p>
 <p>To compile your application, simply include the applicable regex matcher of your choice in your source code as we will explain in the next sections. To compile, link your application against the <code>libreflex</code> library: </p><pre class="fragment">c++ myapp.cpp -lreflex
-</pre><p>And optionally <code>-lboost_regex</code> (or <code>-lboost_regex-mt</code> depending on your Boost installation) if you use Boost.Regex for matching: </p><pre class="fragment">c++ myapp.cpp -lreflex -lboost_regex
+</pre><p>And optionally <code>-lboost_regex</code> depending on your Boost installation) if you use Boost.Regex for matching: </p><pre class="fragment">c++ myapp.cpp -lreflex -lboost_regex
 </pre><p>or <code>-lpcre2-8</code> if you use PCRE2 for matching: </p><pre class="fragment">c++ myapp.cpp -lreflex -lpcre2-8
 </pre><p>If <code>libreflex</code> was not installed then linking with <code>-lreflex</code> fails. See <a class="el" href="index.html#link-errors">Undefined symbols and link errors </a> on how to resolve this.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
@@ -2829,7 +2829,7 @@ Boost.Regex <code>Boost.IOStreams</code> with <code>regex_filter</code> loads th
 <p>You can convert an expressive regex of the form defined in <a class="el" href="index.html#reflex-patterns">Patterns </a> to a regex that the boost::regex engine can handle:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="boostmatcher_8h.html">reflex/boostmatcher.h</a>&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> std::string regex = <a class="code" href="classreflex_1_1_boost_matcher.html#ad1827615da2d51f4896e9c802b6463fc">reflex::BoostMatcher::convert</a>( <span class="keywordtype">string</span>, [ flags ]);</div><div class="line"></div><div class="line"><a class="code" href="classreflex_1_1_boost_matcher.html">reflex::BoostMatcher</a> matcher( regex, <a class="code" href="classreflex_1_1_input.html">reflex::Input</a> [, <span class="stringliteral">&quot;options&quot;</span>] )</div></div><!-- fragment --><p>The converter is specific to the matcher selected, i.e. <code><a class="el" href="classreflex_1_1_boost_matcher.html#ad1827615da2d51f4896e9c802b6463fc" title="Convert a regex to an acceptable form, given the specified regex library signature &quot;[decls:]escapes[...">reflex::BoostMatcher::convert</a></code>, <code><a class="el" href="classreflex_1_1_boost_matcher.html#ad1827615da2d51f4896e9c802b6463fc" title="Convert a regex to an acceptable form, given the specified regex library signature &quot;[decls:]escapes[...">reflex::BoostPerlMatcher::convert</a></code>, and <code><a class="el" href="classreflex_1_1_boost_posix_matcher.html#a51f86b84e5bd4914ef37495c6847eb2a" title="Convert a regex to an acceptable form, given the specified regex library signature &quot;[decls:]escapes[...">reflex::BoostPosixMatcher::convert</a></code>. The converters also translates Unicode <code>\p</code> character classes to UTF-8 patterns, converts bracket character classes containing Unicode, and groups UTF-8 multi-byte sequences in the regex string.</p>
 <p>The converter throws a <code><a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">reflex::regex_error</a></code> exception if conversion fails, for example when the regex syntax is invalid.</p>
-<p>To compile your application, link your application against the <code>libreflex</code> library and <code>-lboost_regex</code> (or <code>-lboost_regex-mt</code> depending on your Boost installation): </p><pre class="fragment">c++ myapp.cpp -lreflex -lboost_regex
+<p>To compile your application, link your application against the <code>libreflex</code> library and <code>-lboost_regex</code> depending on your Boost installation): </p><pre class="fragment">c++ myapp.cpp -lreflex -lboost_regex
 </pre><p>See <a class="el" href="index.html#reflex-patterns">Patterns </a> for more details on regex patterns.</p>
 <p>See <a class="el" href="index.html#regex-input">The Input class </a> for more details on the <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> class.</p>
 <p>See <a class="el" href="index.html#regex-methods">Methods and iterators </a> for more details on pattern matching methods.</p>
@@ -3679,7 +3679,7 @@ Undefined symbols and link errors                                </h2>
 </pre><p class="startli">where <code>&lt;path&gt;</code> is the directory path to the top directory of the downloaded RE/flex package.</p>
 </li>
 <li>When using an IDE such as Visual Studio C++, compile all of the <em>.cpp</em> source code files located in the <em><code>reflex/lib</code></em> and the <em><code>reflex/unicode</code></em> directories of the RE/flex download package. The header files are located in the <em><code>reflex/include/reflex</code></em> directory.</li>
-<li>When Boost.Regex is used as a matcher engine, also link <code>libboost_regex</code> (or a variant, e.g. <code>libboost_regex-mt</code>, depending on your Boost installation configuration): <pre class="fragment">c++ ... -lreflex -lboost_regex
+<li>When Boost.Regex is used as a matcher engine, also link <code>libboost_regex</code>: <pre class="fragment">c++ ... -lreflex -lboost_regex
 </pre></li>
 <li>When PCRE2 is used as a matcher engine, also link <code>libpcre2-8</code>: <pre class="fragment">c++ ... -lreflex -lpcre2-8
 </pre></li>
@@ -3736,7 +3736,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Jul 6 2022 10:30:18 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Fri Aug 12 2022 13:29:27 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

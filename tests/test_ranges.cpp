@@ -265,7 +265,7 @@ Set of 1 open-ended ranges:
     len2 = ints2.size();
   }
   dt = timer_elapsed(t);
-  fprintf(stderr, "%d+%d ranges, elapsed real time = %g ms\n", len1, len2, dt);
+  fprintf(stderr, "%d+%d ranges sum=%d, elapsed real time = %g ms\n", len1, len2, sum, dt);
 
   std::cerr << "Raw 0..255 range insertion timings" << std::endl;
   timer_start(t);
