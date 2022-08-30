@@ -1,0 +1,199 @@
+Lua 5.3 grammar for Bison 3.2 with reduce/reduce conflict eliminated by expanding prefixexp - Dr. Robert A. van Engelen
+
+%token
+  AND      "and"
+  BREAK    "break"
+  DO       "do"
+  ELSE     "else"
+  ELSEIF   "elseif"
+  END      "end"
+  FALSE    "false"
+  FOR      "for"
+  FUNCTION "function"
+  IF       "if"
+  IN       "in"
+  LOCAL    "local"
+  NIL      "nil"
+  NOT      "not"
+  OR       "or"
+  REPEAT   "repeat"
+  RETURN   "return"
+  THEN     "then"
+  TRUE     "true"
+  UNTIL    "until"
+  WHILE    "while"
+  EQU      "=="
+  NEQ      "~="
+  LTE      "<="
+  GTE      ">="
+  CAT      ".."
+  SHL      "<<"
+  SHR      ">>"
+  DIV      "//"
+  DOTS     "..."
+;
+
+%token '#' '%' '&' '(' ')' '*' '+' ',' '-' '.' '/' ':' ';' '<' '=' '>' '[' ']' '^' '{' '|' '}' '~'
+
+%left      OR
+%left      AND
+%left      EQU NEQ LTE '<' GTE '>'
+%right     CAT
+%left      '|'
+%left      '~'
+%left      '&'
+%left      SHL SHR
+%left      '+' '-'
+%left      '*' '/' '%' DIV
+%right     NOT '#'
+%right     '^'
+
+// we expect four shift-reduce conflicts due to Lua's optional semicolon, must always shift on '('
+%expect 4
+
+%%
+
+chunk       : block
+
+semi        : ';'
+            |
+
+block       : scope statlist
+            | scope statlist laststat semi
+
+ublock      : block UNTIL exp
+
+scope       :
+            | scope statlist binding semi
+            
+statlist    :
+            | statlist stat semi
+
+stat        : DO block END
+            | WHILE exp DO block END
+            | repetition DO block END
+            | REPEAT ublock
+            | IF conds END
+            | FUNCTION funcname funcbody
+            | setlist '=' explist1
+            | funccall
+
+repetition  : FOR NAME '=' explist23
+            | FOR namelist IN explist1
+            
+conds       : condlist
+            | condlist ELSE block
+
+condlist    : cond
+            | condlist ELSEIF cond
+
+cond        : exp THEN block
+            
+laststat    : BREAK
+            | RETURN
+            | RETURN explist1
+
+binding     : LOCAL namelist
+            | LOCAL namelist '=' explist1
+            | LOCAL FUNCTION NAME funcbody
+
+funcname    : dottedname
+            | dottedname ':' NAME
+
+dottedname  : NAME
+            | dottedname '.' NAME
+
+namelist    : NAME
+            | namelist ',' NAME
+
+explist1    : exp
+            | explist1 ',' exp
+
+explist23   : exp ',' exp
+            | exp ',' exp ',' exp
+
+exp         : NIL
+            | TRUE
+            | FALSE
+            | NUMBER
+            | STRING
+            | DOTS
+            | function
+            | var
+            | funccall
+            | tableconstr
+            | NOT exp
+            | '#' exp
+            | '-' exp %prec NOT
+            | '~' exp %prec NOT
+            | exp OR exp
+            | exp AND exp
+            | exp '<' exp
+            | exp LTE exp
+            | exp '>' exp
+            | exp GTE exp
+            | exp EQU exp
+            | exp NEQ exp
+            | exp '|' exp
+            | exp '~' exp
+            | exp '&' exp
+            | exp SHL exp
+            | exp SHR exp
+            | exp CAT exp
+            | exp '+' exp
+            | exp '-' exp
+            | exp '*' exp
+            | exp '/' exp
+            | exp DIV exp
+            | exp '%' exp
+            | exp '^' exp
+            | '(' exp ')'
+            
+setlist     : var
+            | setlist ',' var
+
+var         : NAME
+            | var '[' exp ']'
+            | var '.' NAME
+            | funccall '[' exp ']'
+            | funccall '.' NAME
+            | '(' exp ')' '[' exp ']'
+            | '(' exp ')' '.' NAME
+
+funccall    : var args
+            | var ':' NAME args
+            | funccall args
+            | funccall ':' NAME args
+            | '(' exp ')' args
+            | '(' exp ')' ':' NAME args
+
+args        : '(' ')'
+            | '(' explist1 ')'
+            | tableconstr
+            | STRING
+
+function    : FUNCTION funcbody
+
+funcbody    : params block END
+
+params      : '(' parlist ')'
+
+parlist     :
+            | namelist
+            | DOTS
+            | namelist ',' DOTS
+
+tableconstr : '{' '}'
+            | '{' fieldlist '}'
+            | '{' fieldlist ',' '}'
+            | '{' fieldlist ';' '}'
+
+fieldlist   : field
+            | fieldlist ',' field
+            | fieldlist ';' field
+             
+field       : exp
+            | NAME '=' exp
+            | '[' exp ']' '=' exp
+
+%%

@@ -565,6 +565,7 @@ Changelog
 - Jul  6, 2022: 3.2.8 minor update to correct a lexer file parsing issue in the reflex code generator tool.
 - Aug 12, 2022: 3.2.9 add cmake rules for Windows builds.
 - Aug 21, 2022: 3.2.10 bug fix in regular expression converter.
+- Aug 29, 2022: 3.2.11 new lua2lisp transpiler example with Bison complete symbols and locations.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

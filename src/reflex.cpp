@@ -346,7 +346,7 @@ void Reflex::init(int argc, char **argv)
     const char *arg = argv[i];
     if (*arg == '-'
      || (arg[0] == '\xE2' && arg[1] == '\x88' && arg[2] == '\x92') // UTF-8 Unicode minus sign U+2212
-#ifdef OS_WIN
+#if defined(OS_WIN) && !defined(__CYGWIN__) && !defined(__MINGW32__) && !defined(__MINGW64__)
      || *arg == '/'
 #endif
      )

@@ -136,7 +136,7 @@
   // return token of matched text() matching {integer}
   Parser::symbol_type U8()
   {
-    return Parser::make_U8(strtoul(text(), NULL, 10), location());
+    return Parser::make_U8(strtoul(text(), NULL, 0), location());
   }
 
   // return token of matched text() matching {float}
@@ -217,7 +217,7 @@ digit                           [0-9]
 alpha                           [a-zA-Z_]
 identifier                      {alpha} ( {alpha} | {digit} )*
 integer                         {digit}+ | 0 [xX] [0-9a-fA-F]+
-exp     	                [eE] [-+]? {digit}+
+exp                             [eE] [-+]? {digit}+
 float                           {digit}+ \. {digit}* {exp}?
 character                       \' ( \\. | [^\\'\n] )* \'
 string                          \" ( \\. | [^\\"\n] )* \"

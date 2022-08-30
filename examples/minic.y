@@ -37,7 +37,7 @@
 %locations
 %define api.location.file "location.hpp"
 
-// pass Scanner and Compiler objects to yy::Parser::parse(), to use lexer and comp in semantic actions
+// pass Scanner lexer, Compiler comp, and error objects to yy::Parser::parse(), to use in semantic actions
 %parse-param {yy::Scanner& lexer}
 %parse-param {Compiler& comp}
 %parse-param {size_t& errors}
@@ -1050,7 +1050,7 @@ int main(int argc, char **argv)
   // keep track of the number of errors reported with yy:Parser::error()
   size_t errors = 0;
 
-  // construct a parser, needs the lexer for tokens and compiler for semantic actions
+  // construct a parser, pass the lexer, compiler and errors to use in the semantic actions
   yy::Parser parser(lexer, comp, errors);
 
   // parse and compile the source into a JVM class file

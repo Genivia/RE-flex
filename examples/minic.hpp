@@ -266,7 +266,7 @@ const AF ACC_ABSTRACT  = 0x0400; // declared abstract; may not be instantiated
 const AF ACC_STRICT    = 0x0800; // declared strictfp; floating-point mode is FP-strict
 const AF ACC_SYNTHETIC = 0x1000; // declared synthetic; not present in the source code
 
-// identifiers are efficienty compared for equality by their pointer to a string stored in the Scanner::symbols set
+// identifiers are efficiently compared for equality by their pointer to a string stored in the Scanner::symbols set
 typedef const std::string *ID;
 
 // JVM type descriptor, as a special case we use NULL to denote short-circuit boolean resolved via backpatching, without a value on the stack
