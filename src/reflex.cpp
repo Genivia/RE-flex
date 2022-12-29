@@ -2337,10 +2337,10 @@ void Reflex::write_class()
           "    " << yyltype << " yylloc;\n"
           "    yylloc.begin.filename = &filename;\n"
           "    yylloc.begin.line = static_cast<unsigned int>(matcher().lineno());\n"
-          "    yylloc.begin.column = static_cast<unsigned int>(matcher().columno());\n"
+          "    yylloc.begin.column = static_cast<unsigned int>(matcher().columno() + 1);\n"
           "    yylloc.end.filename = &filename;\n"
           "    yylloc.end.line = static_cast<unsigned int>(matcher().lineno_end());\n"
-          "    yylloc.end.column = static_cast<unsigned int>(matcher().columno_end());\n"
+          "    yylloc.end.column = static_cast<unsigned int>(matcher().columno_end() + 2);\n"
           "    return yylloc;\n"
           "  }\n";
       *out <<
