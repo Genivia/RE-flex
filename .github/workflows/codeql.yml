@@ -40,3 +40,17 @@ jobs:
         uses: github/codeql-action/analyze@v2
         with:
           category: "/language:${{ matrix.language }}"
+
+      - name: filter-sarif
+        uses: zbazztian/filter-sarif@master
+        with:
+          # filter out documentation, all test files, examples, debugging, and automake checking files
+          patterns: |
+            -**/doc/**
+            -**/tests/**
+            -**/examples/**
+            -**/lib/debug.cpp
+            -**/conftest.c
+            -**/conftest.cpp
+          input: sarif-results/${{ matrix.language }}.sarif
+          output: sarif-results/${{ matrix.language }}.sarif
