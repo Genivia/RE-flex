@@ -48,9 +48,9 @@ jobs:
         with:
           # filter out documentation, all test files, examples, debugging, and automake checking files
           patterns: |
-            -**/doc/**
-            -**/tests/**
-            -**/examples/**
+            -**/doc
+            -**/tests
+            -**/examples
             -**/lib/debug.cpp
             -**/conftest.c
             -**/conftest.cpp
