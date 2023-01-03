@@ -45,7 +45,7 @@ jobs:
       - name: filter-sarif
         uses: zbazztian/filter-sarif@master
         with:
-          # filter out documentation, all test files, examples, debugging, and automake checking files
+          # filter out documentation, all test files, examples, debugging, and autoconf checking files
           patterns: |
             -**/doc
             -**/tests

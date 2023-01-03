@@ -615,6 +615,7 @@ class YAMLParser : public Lexer {
   {
     next();
     YAML val1;
+    size_t level = 0;
     if (token == ';' || token == '=')
     {
       next();
@@ -636,6 +637,11 @@ class YAMLParser : public Lexer {
       YAML key, val;
       if (token == ';' || token == '=')
         next();
+      if (token == '>')
+      {
+        next();
+        ++level;
+      }
       if (token == '$')
       {
         parse_str(key);
@@ -647,7 +653,7 @@ class YAMLParser : public Lexer {
         {
           next();
           if (token == '-')
-            parse_seq(val);
+            parse_seq(key);
           else if (token == '>')
             parse_ind(key);
         }
@@ -662,6 +668,11 @@ class YAMLParser : public Lexer {
       if (token == ':')
       {
         next();
+        if (token == '&' || token == '*')
+        {
+          data.ref = string;
+          next();
+        }
         if (token == ';' || token == '=')
         {
           next();
@@ -675,7 +686,14 @@ class YAMLParser : public Lexer {
           matcher().insert_stop(matcher().columno());
           parse(val);
           if (token == '<')
+          {
             next();
+            while (token == '<' && level > 0)
+            {
+              next();
+              --level;
+            }
+          }
         }
       }
       else
