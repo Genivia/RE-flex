@@ -7,7 +7,8 @@ choose:
 correct: a
 rules:
 - may choose only one
-- "two choices, a or b"
+-
+  "two choices, a or b"
 - 'may not
   choose
   two or
@@ -15,4 +16,9 @@ rules:
 - >-
   or
   none
+inventory:
+- SKU: A4786
+  description: Widgets Galore
+  price: 1.47
+  quantity: 4
 ...

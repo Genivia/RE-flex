@@ -205,6 +205,7 @@ Test tests[] = {
   // Lookahead
 #if 0 // std::regex does not support lookaheads in POSIX mode
   { "a(?=bc)|ab(?=d)|bc|d", "", "", "abcdabd", { 1, 3, 4, 2, 4 } },
+  { "ab|a(?=[ab])", "", "", "abaab", { 1, 2, 1 } },
   // { "[ab]+(?=ab)|-|ab", "", "", "aaab-bbab", { 1, 3, 2, 1, 3 } }, // has trailing context (undefined as per POSIX)
   { "a(?=b?)|bc", "m", "", "aabc", { 1, 1, 2 } },
   { "(?m)a(?=\\nb)|a|^b|\\n", "m", "", "aa\nb\n", { 2, 1, 4, 3, 4 } },

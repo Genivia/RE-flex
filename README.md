@@ -1,7 +1,7 @@
 
 [![logo][logo-url]][reflex-url]
 
-[![build status][travis-image]][travis-url] [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url] [![CodeProject][codeproject-image]][codeproject-url]
+[![build status][travis-image]][travis-url] [![license][bsd-3-image]][bsd-3-url] [![CodeProject][codeproject-image]][codeproject-url]
 
 The regex-centric, fast lexical analyzer generator for C++ with full Unicode
 support.
@@ -555,7 +555,7 @@ Changelog
 - Oct 11, 2021: 3.0.12 updated to Unicode 14; fixed a compilation issue with `--params` when used with `--flex`.
 - Dec 10, 2021: 3.1.0 improved buffering mechanism with reduced buffer sizes; faster `columno()` for long lines; fix CP-1251 table typo.
 - Feb 20, 2022: 3.2.0 new `%option ctorinit`; faster compilation of regular expressions to tables and direct code DFAs; refactored SIMD source code to enable AVX2 and AVX512BW optimizations in multi-version matcher code; updated Windows binary file opening.
-- Feb 23, 2022: 3.2.1 regression bug fix.
+- Feb 23, 2022: 3.2.1 regression bug in 3.2.0 fix.
 - Mar 13, 2022: 3.2.2 minor improvements.
 - Apr  2, 2022: 3.2.3 fixed C++17 compliance and dso build.
 - Apr 29, 2022: 3.2.4 new `%begin` directive; new `--batch=SIZE` option argument.
@@ -566,6 +566,7 @@ Changelog
 - Aug 12, 2022: 3.2.9 add cmake rules for Windows builds.
 - Aug 21, 2022: 3.2.10 bug fix in regular expression converter.
 - Aug 29, 2022: 3.2.11 new lua2lisp transpiler example with Bison complete symbols and locations.
+- Jan  6, 2023: 3.2.12 regression bug fix in trailing context pattern matching, e.g. `xy` and `x/x` patterns collided when they should not; updated yaml parser example.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
@@ -579,8 +580,6 @@ Changelog
 [pcre-url]: http://www.pcre.org
 [travis-image]: https://travis-ci.com/Genivia/RE-flex.svg?branch=master
 [travis-url]: https://app.travis-ci.com/Genivia/RE-flex
-[lgtm-image]: https://img.shields.io/lgtm/grade/cpp/g/Genivia/RE-flex.svg?logo=lgtm&logoWidth=18
-[lgtm-url]: https://lgtm.com/projects/g/Genivia/RE-flex/context:cpp
 [bsd-3-image]: https://img.shields.io/badge/license-BSD%203--Clause-blue.svg
 [bsd-3-url]: https://opensource.org/licenses/BSD-3-Clause
 [codeproject-image]: https://img.shields.io/badge/CodeProject-★★★★★-orange.svg

@@ -211,6 +211,7 @@ Test tests[] = {
   { "[][]", "", "", "[]", { 1, 1 } },
   // Lookahead
   { "a(?=bc)|ab(?=d)|bc|d", "", "", "abcdabd", { 1, 3, 4, 2, 4 } },
+  { "ab|a(?=[ab])", "", "", "abaab", { 1, 2, 1 } },
   { "a(a|b)?(?=a)|a", "", "", "aba", { 1, 2 } }, // Ambiguous, undefined in POSIX
   { "zx*(?=xy*)|x?y*", "", "", "zxxy", { 1, 2 } }, // Ambiguous, undefined in POSIX
   // { "[ab]+(?=ab)|-|ab", "", "", "aaab-bbab", { 1, 3, 2, 1, 3 } }, // Ambiguous, undefined in POSIX
