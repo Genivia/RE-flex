@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Jan 6 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Jan 24 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -565,7 +565,7 @@ The <code>operator[]</code> method returns a pair with the match info of the n't
 The RE/flex scanner generator                                         </h1>
 <p>The RE/flex scanner generator <b><code>reflex</code></b> takes a lexer specification and generates a regex-based C++ lexer class that is saved to <em><code>lex.yy.cpp</code></em>, or saved to the file we specified by the <code>-o</code> command-line option. This file is then compiled and linked with option <code>-lreflex</code> (and optionally <code>-lboost_regex</code> if we use Boost.Regex for matching or <code>-lpcre2-8</code> if we use PCRE2 for matching) to produce a scanner: </p><pre class="fragment">reflex lexerspec.l
 c++ lex.yy.cpp -lreflex
-</pre><p>We use option <code>−−header-file</code> to generate <em><code>lex.yy.h</code></em> to include in the source code of your lexer application: </p><pre class="fragment">reflex −−header-file lexerspec.l
+</pre><p>We use option <code>−−header-file</code> to generate <em><code>lex.yy.h</code></em> to include in the source code of your lexer application: </p><pre class="fragment">reflex −−header-file=lexerspec.l
 c++ mylexer.cpp lex.yy.cpp -lreflex
 </pre><p>If <code>libreflex</code> was not installed then linking with <code>-lreflex</code> fails. See <a class="el" href="index.html#link-errors">Undefined symbols and link errors </a> on how to resolve this.</p>
 <p>The scanner can be a stand-alone application based on <em><code>lex.yy.cpp</code></em> alone, or be part of a larger program, such as a compiler:</p>
@@ -586,7 +586,7 @@ c++ mylexer.cpp lex.yy.cpp -lreflex
 The reflex command line tool                                  </h2>
 <p>The <b><code>reflex</code></b> command takes a lexer specification from standard input or from the specified file (usually with extension <em><code>.l</code></em>, <em><code>.ll</code></em>, <em><code>.l++</code></em>, <em><code>.lxx</code></em>, or <em><code>.lpp</code></em>) and generates a C++ scanner class that is saved to the <em><code>lex.yy.cpp</code></em> source code file.</p>
 <p>The <em><code>lex.yy.cpp</code></em> source code output is structured in sections that are clean, readable, and reusable.</p>
-<p>Use <b><code>reflex</code></b> option <code>−−header-file</code> to generate <em><code>lex.yy.h</code></em> to include in the source code of your application: </p><pre class="fragment">reflex −−header-file lexerspec.l
+<p>Use <b><code>reflex</code></b> option <code>−−header-file</code> to generate <em><code>lex.yy.h</code></em> to include in the source code of your application: </p><pre class="fragment">reflex −−header-file=lexerspec.l
 </pre><p>The <b><code>reflex</code></b> command accepts <code>−−flex</code> and <code>−−bison</code> options for compatibility with Flex and Bison/Yacc, respectively. These options allow <b><code>reflex</code></b> to be used as a replacement of the classic Flex and Lex tools: </p><pre class="fragment">reflex −−flex −−bison lexerspec.l
 </pre><p>The first option <code>−−flex</code> specifies that <em><code>lexerspec.l</code></em> is a classic Flex/Lex specification with <code>yytext</code> or <code>YYText()</code> and the usual "yy" variables and functions.</p>
 <p>The second option <code>−−bison</code> generates a scanner class and the usual global "yy" variables and functions such as <code>yytext</code>, <code>yyleng</code>, <code>yylineno</code>, and <code>yylex()</code> for compatibility with non-reentrant <a href="dinosaur.compilertools.net/#bison">Bison</a> parsers. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison/Yacc </a> for more details on Bison parsers that are reentrant and/or use bison-bridge and bison-locations options. For Bison 3.0 C++ parsers, use <code>−−bison-cc</code> and optionally <code>−−bison-locations</code>.</p>
@@ -648,7 +648,7 @@ Output files options</h3>
 <p>This option saves the scanner to <code>FILE</code> instead of <em><code>lex.yy.cpp</code></em>.</p>
 <h4><code>-t</code>, <code>−−stdout</code></h4>
 <p>This option writes the scanner to stdout instead of to <em><code>lex.yy.cpp</code></em>.</p>
-<h4><code>−−graphs-file[=FILE]</code></h4>
+<h4><code>−−graphs-file[=FILE[.gv]]</code></h4>
 <p>(RE/flex matcher only). This option generates a Graphviz file <em><code>FILE.gv</code></em>, where <code>FILE</code> is optional. When <code>FILE</code> is omitted the <b><code>reflex</code></b> command generates the file <em><code>reflex.S.gv</code></em> for each start condition state <em><code>S</code></em> defined in the lexer specification. This includes <em><code>reflex.INITIAL.gv</code></em> for the <em><code>INITIAL</code></em> start condition state. This option can be used to visualize the RE/flex matcher's finite state machine with the <a href="http://www.graphviz.org">Graphviz dot</a> tool. For example:</p>
 <div align="center">
 <img src="dot_inline_dotgraph_4.png" alt="dot_inline_dotgraph_4.png" border="0" usemap="#dot_inline_dotgraph_4.map"/>
@@ -656,10 +656,10 @@ Output files options</h3>
 </div>
 <p>In case you are curious: the specification for this FSM digraph has two patterns: [1] a pattern to match dollar amounts with the regex <code>\$\d+(\.\d{2})?</code> and [2] the regex <code>.|\n</code> to skip a character and advance to the next match.</p>
 <h4><code>−−header-file[=FILE]</code></h4>
-<p>This option generates a C++ header file <em><code>FILE.h</code></em> that declares the lexer class, in addition to the generated lexer class code, where <code>FILE</code> is optional. When <code>FILE</code> is omitted the <b><code>reflex</code></b> command generates <em><code>lex.yy.h</code></em>.</p>
-<h4><code>−−regexp-file[=FILE]</code></h4>
+<p>This option generates a C++ header file <em><code>FILE</code></em> that declares the lexer class, in addition to the generated lexer class code, where <code>FILE</code> is optional. When <code>FILE</code> is omitted the <b><code>reflex</code></b> command generates <em><code>lex.yy.h</code></em>.</p>
+<h4><code>−−regexp-file[=FILE[.txt]]</code></h4>
 <p>This option generates a text file <em><code>FILE.txt</code></em> that contains the scanner's regular expression patterns, where <code>FILE</code> is optional. When <code>FILE</code> is omitted the <b><code>reflex</code></b> command generates <em><code>reflex.S.txt</code></em> for each start condition state <em><code>S</code></em>. The regular expression patterns are converted from the lexer specification and translated into valid C++ strings that can be used with a regex library for pattern matching.</p>
-<h4><code>−−tables-file[=FILE]</code></h4>
+<h4><code>−−tables-file[=FILE[.cpp]]</code></h4>
 <p>(RE/flex matcher only). This option generates a C++ file <em><code>FILE.cpp</code></em> with the finite state machine in source code form, where <code>FILE</code> is optional. When <code>FILE</code> is omitted the <b><code>reflex</code></b> command generates <em><code>reflex.S.cpp</code></em> for each start condition state <em><code>S</code></em>. This includes the file <em><code>reflex.INITIAL.cpp</code></em> for the <em><code>INITIAL</code></em> start condition state. When this option is specified in combination with <code>−−full</code> or <code>−−fast</code>, the <code><a class="el" href="classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher...">reflex::Pattern</a></code> is instantiated with the code table defined in this file. Therefore, when we combine this option with <code>−−full</code> or <code>−−fast</code> then you should compile the generated table file with the scanner. Options <code>−−full</code> and <code>−−fast</code> eliminate the FSM construction overhead when the scanner is initialized.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-options-code"></a>
@@ -3736,7 +3736,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Jan 6 2023 12:12:34 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Jan 24 2023 20:13:54 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

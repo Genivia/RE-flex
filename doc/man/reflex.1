@@ -1,4 +1,4 @@
-.TH REFLEX "1" "January 06, 2023" "reflex 3.2.12" "User Commands"
+.TH REFLEX "1" "January 24, 2023" "reflex 3.3.0" "User Commands"
 .SH NAME
 \fBreflex\fR -- regex\-centric, fast and flexible lexical analyzer generator
 .SH SYNOPSIS
@@ -62,16 +62,16 @@ specify output FILE instead of lex.yy.cpp
   \fB\-t\fR, \fB\-\-stdout\fR
 write scanner on stdout instead of lex.yy.cpp
 .TP
-  \fB\-\-graphs\-file\fR[=\fI\fR\fIFILE\fR]
+  \fB\-\-graphs\-file\fR[=\fIFILE\fR[.gv]]
 write the scanner's DFA in Graphviz format to FILE.gv
 .TP
   \fB\-\-header\-file\fR[=\fI\fR\fIFILE\fR]
-write a C++ header FILE.h in addition to the scanner
+write a C++ header FILE in addition to the scanner
 .TP
-  \fB\-\-regexp\-file\fR[=\fI\fR\fIFILE\fR]
+  \fB\-\-regexp\-file\fR[=\fIFILE\fR[.txt]]
 write the scanner's regular expression patterns to FILE.txt
 .TP
-  \fB\-\-tables\-file\fR[=\fI\fR\fIFILE\fR]
+  \fB\-\-tables\-file\fR[=\fIFILE\fR[.cpp]]
 write the scanner's FSM opcode tables or FSM code to FILE.cpp
 .PP
 .B Generated code:

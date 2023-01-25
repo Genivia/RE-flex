@@ -577,13 +577,13 @@ void Reflex::help(const char *message, const char *arg)
                 specify output FILE instead of lex.yy.cpp\n\
         -t, --stdout\n\
                 write scanner on stdout instead of lex.yy.cpp\n\
-        --graphs-file[=FILE]\n\
+        --graphs-file[=FILE[.gv]]\n\
                 write the scanner's DFA in Graphviz format to FILE.gv\n\
         --header-file[=FILE]\n\
-                write a C++ header FILE.h in addition to the scanner\n\
-        --regexp-file[=FILE]\n\
+                write a C++ header FILE in addition to the scanner\n\
+        --regexp-file[=FILE[.txt]]\n\
                 write the scanner's regular expression patterns to FILE.txt\n\
-        --tables-file[=FILE]\n\
+        --tables-file[=FILE[.cpp]]\n\
                 write the scanner's FSM opcode tables or FSM code to FILE.cpp\n\
 \n\
     Generated code:\n\
@@ -1764,6 +1764,12 @@ void Reflex::write()
     else
       options["header_file"] = std::string("lex.").append(options["prefix"]).append(".h");
   }
+  if (!options["graphs_file"].empty() && options["graphs_file"] != "true")
+    file_ext(options["graphs_file"], "gv");
+  if (!options["regexp_file"].empty() && options["regexp_file"] != "true")
+    file_ext(options["regexp_file"], "txt");
+  if (!options["tables_file"].empty() && options["tables_file"] != "true")
+    file_ext(options["tables_file"], "cpp");
   if (!options["bison_complete"].empty())
     options["bison_cc"] = "true";
   if (!options["namespace"].empty())
@@ -1837,7 +1843,7 @@ void Reflex::write()
         }
         else
         {
-          filename = file_ext(options["regexp_file"], "txt");
+          filename = options["regexp_file"];
           append = true;
         }
         if (filename.compare(0, 7, "stdout.") == 0)
@@ -3353,7 +3359,7 @@ void Reflex::stats()
       if (options["graphs_file"] == "true")
         option.append(";f=reflex.").append(conditions[start]).append(".gv");
       else if (!options["graphs_file"].empty())
-        option.append(";f=").append(start > 0 ? "+" : "").append(file_ext(options["graphs_file"], "gv"));
+        option.append(";f=").append(start > 0 ? "+" : "").append(options["graphs_file"]);
       if (!options["fast"].empty())
         option.append(";o");
       if (!options["find"].empty())
@@ -3361,7 +3367,7 @@ void Reflex::stats()
       if (options["tables_file"] == "true")
         option.append(";f=reflex.").append(conditions[start]).append(".cpp");
       else if (!options["tables_file"].empty())
-        option.append(";f=").append(start > 0 ? "+" : "").append(file_ext(options["tables_file"], "cpp"));
+        option.append(";f=").append(start > 0 ? "+" : "").append(options["tables_file"]);
       if ((!options["full"].empty() || !options["fast"].empty()) && options["tables_file"].empty() && options["stdout"].empty())
         option.append(";f=+").append(options["outfile"]);      
       try

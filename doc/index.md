@@ -1058,7 +1058,7 @@ PCRE2 for matching) to produce a scanner:
 We use option `−−header-file` to generate <i>`lex.yy.h`</i> to include in the
 source code of your lexer application:
 
-    reflex −−header-file lexerspec.l
+    reflex −−header-file=lexerspec.l
     c++ mylexer.cpp lex.yy.cpp -lreflex
 
 If `libreflex` was not installed then linking with `-lreflex` fails.  See
@@ -1136,7 +1136,7 @@ clean, readable, and reusable.
 Use <b>`reflex`</b> option `−−header-file` to generate <i>`lex.yy.h`</i> to
 include in the source code of your application:
 
-    reflex −−header-file lexerspec.l
+    reflex −−header-file=lexerspec.l
 
 The <b>`reflex`</b> command accepts `−−flex` and `−−bison` options for
 compatibility with Flex and Bison/Yacc, respectively.  These options allow
@@ -1381,7 +1381,7 @@ This option saves the scanner to `FILE` instead of <i>`lex.yy.cpp`</i>.
 
 This option writes the scanner to stdout instead of to <i>`lex.yy.cpp`</i>.
 
-#### `−−graphs-file[=FILE]`
+#### `−−graphs-file[=FILE[.gv]]`
 
 (RE/flex matcher only).  This option generates a Graphviz file
 <i>`FILE.gv`</i>, where `FILE` is optional.  When `FILE` is omitted the
@@ -1433,11 +1433,11 @@ the next match.
 
 #### `−−header-file[=FILE]`
 
-This option generates a C++ header file <i>`FILE.h`</i> that declares the lexer
+This option generates a C++ header file <i>`FILE`</i> that declares the lexer
 class, in addition to the generated lexer class code, where `FILE` is optional.
 When `FILE` is omitted the <b>`reflex`</b> command generates <i>`lex.yy.h`</i>.
 
-#### `−−regexp-file[=FILE]`
+#### `−−regexp-file[=FILE[.txt]]`
 
 This option generates a text file <i>`FILE.txt`</i> that contains the scanner's
 regular expression patterns, where `FILE` is optional.  When `FILE` is omitted
@@ -1446,7 +1446,7 @@ condition state <i>`S`</i>.  The regular expression patterns are converted from
 the lexer specification and translated into valid C++ strings that can be used
 with a regex library for pattern matching.
 
-#### `−−tables-file[=FILE]`
+#### `−−tables-file[=FILE[.cpp]]`
 
 (RE/flex matcher only).  This option generates a C++ file <i>`FILE.cpp`</i>
 with the finite state machine in source code form, where `FILE` is optional.
