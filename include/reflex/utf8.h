@@ -77,6 +77,12 @@ inline size_t utf8(
     char *s) ///< points to the buffer to populate with UTF-8 (1 to 6 bytes) not NUL-terminated
   /// @returns length (in bytes) of UTF-8 character sequence stored in s
 {
+  if (c < 0)
+  {
+    static const size_t n = sizeof(REFLEX_NONCHAR_UTF8) - 1;
+    std::memcpy(s, REFLEX_NONCHAR_UTF8, n);
+    return n;
+  }
   if (c < 0x80)
   {
     *s++ = static_cast<char>(c);
