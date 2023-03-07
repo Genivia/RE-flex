@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Jan 24 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Mar 6 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -1210,7 +1210,7 @@ Character classes</h3>
 <p>Character class operations can be chained together in a bracket list. The union <code>||</code>, intersection <code>&amp;&amp;</code>, and subtraction <code>--</code> operations are left associative and have the same operator precedence. For example, <code>[a-z||[A-Z]--[aeiou]--[AEIOU]]</code>, <code>[a-z--[aeiou]||[A-Z]--[AEIUO]]</code>, <code>[a-z&amp;&amp;[^aeiou]||[A-Z]&amp;&amp;[^AEIOU]]</code>, and <code>[B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]</code> are the same character classes.</p>
 <p>Character class operations may be nested. For example, <code>[a-z||[A-Z||[0-9]]]</code> is the same as <code>[a-zA-Z0-9]</code>.</p>
 <p>Character class negation, when specified, is applied to the resulting character class after the character class operations are applied. For example, <code>[^a-z||[A-Z]]</code> is the same as <code>[^||[a-z]||[A-Z]]</code>, which is the class <code>[^a-zA-Z]</code>.</p>
-<p>Note that negated character classes such as <code>[^a-zA-Z]</code> match newlines when <code>\n</code> is not included in the class. Include <code>\n</code> in the negated character class to prevent matching newlines. The <code><a class="el" href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9" title="inverted character classes and  do not match newline \n ">reflex::convert_flag::notnewline</a></code> removes newlines from negated character classes when used with <a class="el" href="index.html#regex-convert">Regex converters </a>.</p>
+<p>Note that negated character classes such as <code>[^a-zA-Z]</code> match newlines when <code>\n</code> is not included in the class. Include <code>\n</code> in the negated character class to prevent matching newlines. The <code><a class="el" href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9" title="inverted character classes and \s do not match newline \n ">reflex::convert_flag::notnewline</a></code> removes newlines from negated character classes when used with <a class="el" href="index.html#regex-convert">Regex converters </a>.</p>
 <p>A lexer specification may use a defined name in place of the second operand of a character class operation. A defined name when used as an operand should expand into a POSIX character class containing ASCII characters only. For example:</p>
 <div class="alt"> <div class="fragment"><div class="line"><a class="code" href="reflex_8cpp.html#afd21dbba9aaf2944d477caa4caddd963">lower</a>     [a-z]</div><div class="line">upper     [A-Z]</div><div class="line">letter    [||{<a class="code" href="reflex_8cpp.html#afd21dbba9aaf2944d477caa4caddd963">lower</a>}||{upper}]</div><div class="line">alnum     [0-9||{letter}]</div><div class="line">name      {letter}{alnum}*</div><div class="line">%%</div><div class="line">{name}    std::cout &lt;&lt; <span class="stringliteral">&quot;name: &quot;</span> &lt;&lt; text() &lt;&lt; std::endl;</div><div class="line">.|\n      <span class="comment">// skip everything else</span></div><div class="line">%%</div></div><!-- fragment --> </div><dl class="section warning"><dt>Warning</dt><dd>Defined names may only occur immediately after a <code>||</code>, <code>&amp;&amp;</code>, and a <code>--</code> operator in a bracket list. Do not place a defined name as the first operand to a union, intersection, and subtraction operation, because the definition is not expanded. For example, <code>[{lower}||{upper}]</code> contains <code>[A-Zelorw{}]</code>. The name and the <code>{</code>, <code>}</code> characters are literally included in the resulting character class. Instead, this bracket list should be written as <code>[||{lower}||{upper}]</code>. Likewise, <code>[^{lower}||{upper}]</code> should be written as <code>[^||{lower}||{upper}]</code>.</dd></dl>
 <p>Alternatively, unions may be written as alternations. That is, <code>[||{name1}||{name2}||{name3}||...]</code> can be written as <code>({name1}|{name2}|{name3}|...)</code>, where the latter form supports full Unicode not restricted to ASCII.</p>
@@ -1298,7 +1298,7 @@ Character categories</h3>
 <tr>
 <td><code>\R</code> </td><td>matches a Unicode line break </td></tr>
 <tr>
-<td><code>\s</code> </td><td>matches a white space character <code>[ \t\v\f\r\x85\p{Z}]</code> excluding <code>\n</code> </td></tr>
+<td><code>\s</code> </td><td>matches a white space character <code>[ \t\n\v\f\r\x85\p{Z}]</code> (excludes <code>\n</code> with <code><a class="el" href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9" title="inverted character classes and \s do not match newline \n ">reflex::convert_flag::notnewline</a></code>) </td></tr>
 <tr>
 <td><code>\S</code> </td><td>matches a non-white space character </td></tr>
 <tr>
@@ -1417,645 +1417,645 @@ Character categories</h3>
 <tr>
 <th>IsBlockName </th><th>Unicode character range  </th></tr>
 <tr>
-<td><code>\p{BasicLatin}</code> </td><td>U+0000 to U+007F </td></tr>
+<td><code>\p{IsBasicLatin}</code> </td><td>U+0000 to U+007F </td></tr>
 <tr>
-<td><code>\p{Latin-1Supplement}</code> </td><td>U+0080 to U+00FF </td></tr>
+<td><code>\p{IsLatin-1Supplement}</code> </td><td>U+0080 to U+00FF </td></tr>
 <tr>
-<td><code>\p{LatinExtended-A}</code> </td><td>U+0100 to U+017F </td></tr>
+<td><code>\p{IsLatinExtended-A}</code> </td><td>U+0100 to U+017F </td></tr>
 <tr>
-<td><code>\p{LatinExtended-B}</code> </td><td>U+0180 to U+024F </td></tr>
+<td><code>\p{IsLatinExtended-B}</code> </td><td>U+0180 to U+024F </td></tr>
 <tr>
-<td><code>\p{IPAExtensions}</code> </td><td>U+0250 to U+02AF </td></tr>
+<td><code>\p{IsIPAExtensions}</code> </td><td>U+0250 to U+02AF </td></tr>
 <tr>
-<td><code>\p{SpacingModifierLetters}</code> </td><td>U+02B0 to U+02FF </td></tr>
+<td><code>\p{IsSpacingModifierLetters}</code> </td><td>U+02B0 to U+02FF </td></tr>
 <tr>
-<td><code>\p{CombiningDiacriticalMarks}</code> </td><td>U+0300 to U+036F </td></tr>
+<td><code>\p{IsCombiningDiacriticalMarks}</code> </td><td>U+0300 to U+036F </td></tr>
 <tr>
-<td><code>\p{GreekandCoptic}</code> </td><td>U+0370 to U+03FF </td></tr>
+<td><code>\p{IsGreekandCoptic}</code> </td><td>U+0370 to U+03FF </td></tr>
 <tr>
-<td><code>\p{Cyrillic}</code> </td><td>U+0400 to U+04FF </td></tr>
+<td><code>\p{IsCyrillic}</code> </td><td>U+0400 to U+04FF </td></tr>
 <tr>
-<td><code>\p{CyrillicSupplement}</code> </td><td>U+0500 to U+052F </td></tr>
+<td><code>\p{IsCyrillicSupplement}</code> </td><td>U+0500 to U+052F </td></tr>
 <tr>
-<td><code>\p{Armenian}</code> </td><td>U+0530 to U+058F </td></tr>
+<td><code>\p{IsArmenian}</code> </td><td>U+0530 to U+058F </td></tr>
 <tr>
-<td><code>\p{Hebrew}</code> </td><td>U+0590 to U+05FF </td></tr>
+<td><code>\p{IsHebrew}</code> </td><td>U+0590 to U+05FF </td></tr>
 <tr>
-<td><code>\p{Arabic}</code> </td><td>U+0600 to U+06FF </td></tr>
+<td><code>\p{IsArabic}</code> </td><td>U+0600 to U+06FF </td></tr>
 <tr>
-<td><code>\p{Syriac}</code> </td><td>U+0700 to U+074F </td></tr>
+<td><code>\p{IsSyriac}</code> </td><td>U+0700 to U+074F </td></tr>
 <tr>
-<td><code>\p{ArabicSupplement}</code> </td><td>U+0750 to U+077F </td></tr>
+<td><code>\p{IsArabicSupplement}</code> </td><td>U+0750 to U+077F </td></tr>
 <tr>
-<td><code>\p{Thaana}</code> </td><td>U+0780 to U+07BF </td></tr>
+<td><code>\p{IsThaana}</code> </td><td>U+0780 to U+07BF </td></tr>
 <tr>
-<td><code>\p{NKo}</code> </td><td>U+07C0 to U+07FF </td></tr>
+<td><code>\p{IsNKo}</code> </td><td>U+07C0 to U+07FF </td></tr>
 <tr>
-<td><code>\p{Samaritan}</code> </td><td>U+0800 to U+083F </td></tr>
+<td><code>\p{IsSamaritan}</code> </td><td>U+0800 to U+083F </td></tr>
 <tr>
-<td><code>\p{Mandaic}</code> </td><td>U+0840 to U+085F </td></tr>
+<td><code>\p{IsMandaic}</code> </td><td>U+0840 to U+085F </td></tr>
 <tr>
-<td><code>\p{SyriacSupplement}</code> </td><td>U+0860 to U+086F </td></tr>
+<td><code>\p{IsSyriacSupplement}</code> </td><td>U+0860 to U+086F </td></tr>
 <tr>
-<td><code>\p{ArabicExtended-B}</code> </td><td>U+0870 to U+089F </td></tr>
+<td><code>\p{IsArabicExtended-B}</code> </td><td>U+0870 to U+089F </td></tr>
 <tr>
-<td><code>\p{ArabicExtended-A}</code> </td><td>U+08A0 to U+08FF </td></tr>
+<td><code>\p{IsArabicExtended-A}</code> </td><td>U+08A0 to U+08FF </td></tr>
 <tr>
-<td><code>\p{Devanagari}</code> </td><td>U+0900 to U+097F </td></tr>
+<td><code>\p{IsDevanagari}</code> </td><td>U+0900 to U+097F </td></tr>
 <tr>
-<td><code>\p{Bengali}</code> </td><td>U+0980 to U+09FF </td></tr>
+<td><code>\p{IsBengali}</code> </td><td>U+0980 to U+09FF </td></tr>
 <tr>
-<td><code>\p{Gurmukhi}</code> </td><td>U+0A00 to U+0A7F </td></tr>
+<td><code>\p{IsGurmukhi}</code> </td><td>U+0A00 to U+0A7F </td></tr>
 <tr>
-<td><code>\p{Gujarati}</code> </td><td>U+0A80 to U+0AFF </td></tr>
+<td><code>\p{IsGujarati}</code> </td><td>U+0A80 to U+0AFF </td></tr>
 <tr>
-<td><code>\p{Oriya}</code> </td><td>U+0B00 to U+0B7F </td></tr>
+<td><code>\p{IsOriya}</code> </td><td>U+0B00 to U+0B7F </td></tr>
 <tr>
-<td><code>\p{Tamil}</code> </td><td>U+0B80 to U+0BFF </td></tr>
+<td><code>\p{IsTamil}</code> </td><td>U+0B80 to U+0BFF </td></tr>
 <tr>
-<td><code>\p{Telugu}</code> </td><td>U+0C00 to U+0C7F </td></tr>
+<td><code>\p{IsTelugu}</code> </td><td>U+0C00 to U+0C7F </td></tr>
 <tr>
-<td><code>\p{Kannada}</code> </td><td>U+0C80 to U+0CFF </td></tr>
+<td><code>\p{IsKannada}</code> </td><td>U+0C80 to U+0CFF </td></tr>
 <tr>
-<td><code>\p{Malayalam}</code> </td><td>U+0D00 to U+0D7F </td></tr>
+<td><code>\p{IsMalayalam}</code> </td><td>U+0D00 to U+0D7F </td></tr>
 <tr>
-<td><code>\p{Sinhala}</code> </td><td>U+0D80 to U+0DFF </td></tr>
+<td><code>\p{IsSinhala}</code> </td><td>U+0D80 to U+0DFF </td></tr>
 <tr>
-<td><code>\p{Thai}</code> </td><td>U+0E00 to U+0E7F </td></tr>
+<td><code>\p{IsThai}</code> </td><td>U+0E00 to U+0E7F </td></tr>
 <tr>
-<td><code>\p{Lao}</code> </td><td>U+0E80 to U+0EFF </td></tr>
+<td><code>\p{IsLao}</code> </td><td>U+0E80 to U+0EFF </td></tr>
 <tr>
-<td><code>\p{Tibetan}</code> </td><td>U+0F00 to U+0FFF </td></tr>
+<td><code>\p{IsTibetan}</code> </td><td>U+0F00 to U+0FFF </td></tr>
 <tr>
-<td><code>\p{Myanmar}</code> </td><td>U+1000 to U+109F </td></tr>
+<td><code>\p{IsMyanmar}</code> </td><td>U+1000 to U+109F </td></tr>
 <tr>
-<td><code>\p{Georgian}</code> </td><td>U+10A0 to U+10FF </td></tr>
+<td><code>\p{IsGeorgian}</code> </td><td>U+10A0 to U+10FF </td></tr>
 <tr>
-<td><code>\p{HangulJamo}</code> </td><td>U+1100 to U+11FF </td></tr>
+<td><code>\p{IsHangulJamo}</code> </td><td>U+1100 to U+11FF </td></tr>
 <tr>
-<td><code>\p{Ethiopic}</code> </td><td>U+1200 to U+137F </td></tr>
+<td><code>\p{IsEthiopic}</code> </td><td>U+1200 to U+137F </td></tr>
 <tr>
-<td><code>\p{EthiopicSupplement}</code> </td><td>U+1380 to U+139F </td></tr>
+<td><code>\p{IsEthiopicSupplement}</code> </td><td>U+1380 to U+139F </td></tr>
 <tr>
-<td><code>\p{Cherokee}</code> </td><td>U+13A0 to U+13FF </td></tr>
+<td><code>\p{IsCherokee}</code> </td><td>U+13A0 to U+13FF </td></tr>
 <tr>
-<td><code>\p{UnifiedCanadianAboriginalSyllabics}</code> </td><td>U+1400 to U+167F </td></tr>
+<td><code>\p{IsUnifiedCanadianAboriginalSyllabics}</code> </td><td>U+1400 to U+167F </td></tr>
 <tr>
-<td><code>\p{Ogham}</code> </td><td>U+1680 to U+169F </td></tr>
+<td><code>\p{IsOgham}</code> </td><td>U+1680 to U+169F </td></tr>
 <tr>
-<td><code>\p{Runic}</code> </td><td>U+16A0 to U+16FF </td></tr>
+<td><code>\p{IsRunic}</code> </td><td>U+16A0 to U+16FF </td></tr>
 <tr>
-<td><code>\p{Tagalog}</code> </td><td>U+1700 to U+171F </td></tr>
+<td><code>\p{IsTagalog}</code> </td><td>U+1700 to U+171F </td></tr>
 <tr>
-<td><code>\p{Hanunoo}</code> </td><td>U+1720 to U+173F </td></tr>
+<td><code>\p{IsHanunoo}</code> </td><td>U+1720 to U+173F </td></tr>
 <tr>
-<td><code>\p{Buhid}</code> </td><td>U+1740 to U+175F </td></tr>
+<td><code>\p{IsBuhid}</code> </td><td>U+1740 to U+175F </td></tr>
 <tr>
-<td><code>\p{Tagbanwa}</code> </td><td>U+1760 to U+177F </td></tr>
+<td><code>\p{IsTagbanwa}</code> </td><td>U+1760 to U+177F </td></tr>
 <tr>
-<td><code>\p{Khmer}</code> </td><td>U+1780 to U+17FF </td></tr>
+<td><code>\p{IsKhmer}</code> </td><td>U+1780 to U+17FF </td></tr>
 <tr>
-<td><code>\p{Mongolian}</code> </td><td>U+1800 to U+18AF </td></tr>
+<td><code>\p{IsMongolian}</code> </td><td>U+1800 to U+18AF </td></tr>
 <tr>
-<td><code>\p{UnifiedCanadianAboriginalSyllabicsExtended}</code> </td><td>U+18B0 to U+18FF </td></tr>
+<td><code>\p{IsUnifiedCanadianAboriginalSyllabicsExtended}</code> </td><td>U+18B0 to U+18FF </td></tr>
 <tr>
-<td><code>\p{Limbu}</code> </td><td>U+1900 to U+194F </td></tr>
+<td><code>\p{IsLimbu}</code> </td><td>U+1900 to U+194F </td></tr>
 <tr>
-<td><code>\p{TaiLe}</code> </td><td>U+1950 to U+197F </td></tr>
+<td><code>\p{IsTaiLe}</code> </td><td>U+1950 to U+197F </td></tr>
 <tr>
-<td><code>\p{NewTaiLue}</code> </td><td>U+1980 to U+19DF </td></tr>
+<td><code>\p{IsNewTaiLue}</code> </td><td>U+1980 to U+19DF </td></tr>
 <tr>
-<td><code>\p{KhmerSymbols}</code> </td><td>U+19E0 to U+19FF </td></tr>
+<td><code>\p{IsKhmerSymbols}</code> </td><td>U+19E0 to U+19FF </td></tr>
 <tr>
-<td><code>\p{Buginese}</code> </td><td>U+1A00 to U+1A1F </td></tr>
+<td><code>\p{IsBuginese}</code> </td><td>U+1A00 to U+1A1F </td></tr>
 <tr>
-<td><code>\p{TaiTham}</code> </td><td>U+1A20 to U+1AAF </td></tr>
+<td><code>\p{IsTaiTham}</code> </td><td>U+1A20 to U+1AAF </td></tr>
 <tr>
-<td><code>\p{CombiningDiacriticalMarksExtended}</code> </td><td>U+1AB0 to U+1AFF </td></tr>
+<td><code>\p{IsCombiningDiacriticalMarksExtended}</code> </td><td>U+1AB0 to U+1AFF </td></tr>
 <tr>
-<td><code>\p{Balinese}</code> </td><td>U+1B00 to U+1B7F </td></tr>
+<td><code>\p{IsBalinese}</code> </td><td>U+1B00 to U+1B7F </td></tr>
 <tr>
-<td><code>\p{Sundanese}</code> </td><td>U+1B80 to U+1BBF </td></tr>
+<td><code>\p{IsSundanese}</code> </td><td>U+1B80 to U+1BBF </td></tr>
 <tr>
-<td><code>\p{Batak}</code> </td><td>U+1BC0 to U+1BFF </td></tr>
+<td><code>\p{IsBatak}</code> </td><td>U+1BC0 to U+1BFF </td></tr>
 <tr>
-<td><code>\p{Lepcha}</code> </td><td>U+1C00 to U+1C4F </td></tr>
+<td><code>\p{IsLepcha}</code> </td><td>U+1C00 to U+1C4F </td></tr>
 <tr>
-<td><code>\p{OlChiki}</code> </td><td>U+1C50 to U+1C7F </td></tr>
+<td><code>\p{IsOlChiki}</code> </td><td>U+1C50 to U+1C7F </td></tr>
 <tr>
-<td><code>\p{CyrillicExtended-C}</code> </td><td>U+1C80 to U+1C8F </td></tr>
+<td><code>\p{IsCyrillicExtended-C}</code> </td><td>U+1C80 to U+1C8F </td></tr>
 <tr>
-<td><code>\p{GeorgianExtended}</code> </td><td>U+1C90 to U+1CBF </td></tr>
+<td><code>\p{IsGeorgianExtended}</code> </td><td>U+1C90 to U+1CBF </td></tr>
 <tr>
-<td><code>\p{SundaneseSupplement}</code> </td><td>U+1CC0 to U+1CCF </td></tr>
+<td><code>\p{IsSundaneseSupplement}</code> </td><td>U+1CC0 to U+1CCF </td></tr>
 <tr>
-<td><code>\p{VedicExtensions}</code> </td><td>U+1CD0 to U+1CFF </td></tr>
+<td><code>\p{IsVedicExtensions}</code> </td><td>U+1CD0 to U+1CFF </td></tr>
 <tr>
-<td><code>\p{PhoneticExtensions}</code> </td><td>U+1D00 to U+1D7F </td></tr>
+<td><code>\p{IsPhoneticExtensions}</code> </td><td>U+1D00 to U+1D7F </td></tr>
 <tr>
-<td><code>\p{PhoneticExtensionsSupplement}</code> </td><td>U+1D80 to U+1DBF </td></tr>
+<td><code>\p{IsPhoneticExtensionsSupplement}</code> </td><td>U+1D80 to U+1DBF </td></tr>
 <tr>
-<td><code>\p{CombiningDiacriticalMarksSupplement}</code> </td><td>U+1DC0 to U+1DFF </td></tr>
+<td><code>\p{IsCombiningDiacriticalMarksSupplement}</code> </td><td>U+1DC0 to U+1DFF </td></tr>
 <tr>
-<td><code>\p{LatinExtendedAdditional}</code> </td><td>U+1E00 to U+1EFF </td></tr>
+<td><code>\p{IsLatinExtendedAdditional}</code> </td><td>U+1E00 to U+1EFF </td></tr>
 <tr>
-<td><code>\p{GreekExtended}</code> </td><td>U+1F00 to U+1FFF </td></tr>
+<td><code>\p{IsGreekExtended}</code> </td><td>U+1F00 to U+1FFF </td></tr>
 <tr>
-<td><code>\p{GeneralPunctuation}</code> </td><td>U+2000 to U+206F </td></tr>
+<td><code>\p{IsGeneralPunctuation}</code> </td><td>U+2000 to U+206F </td></tr>
 <tr>
-<td><code>\p{SuperscriptsandSubscripts}</code> </td><td>U+2070 to U+209F </td></tr>
+<td><code>\p{IsSuperscriptsandSubscripts}</code> </td><td>U+2070 to U+209F </td></tr>
 <tr>
-<td><code>\p{CurrencySymbols}</code> </td><td>U+20A0 to U+20CF </td></tr>
+<td><code>\p{IsCurrencySymbols}</code> </td><td>U+20A0 to U+20CF </td></tr>
 <tr>
-<td><code>\p{CombiningDiacriticalMarksforSymbols}</code> </td><td>U+20D0 to U+20FF </td></tr>
+<td><code>\p{IsCombiningDiacriticalMarksforSymbols}</code> </td><td>U+20D0 to U+20FF </td></tr>
 <tr>
-<td><code>\p{LetterlikeSymbols}</code> </td><td>U+2100 to U+214F </td></tr>
+<td><code>\p{IsLetterlikeSymbols}</code> </td><td>U+2100 to U+214F </td></tr>
 <tr>
-<td><code>\p{NumberForms}</code> </td><td>U+2150 to U+218F </td></tr>
+<td><code>\p{IsNumberForms}</code> </td><td>U+2150 to U+218F </td></tr>
 <tr>
-<td><code>\p{Arrows}</code> </td><td>U+2190 to U+21FF </td></tr>
+<td><code>\p{IsArrows}</code> </td><td>U+2190 to U+21FF </td></tr>
 <tr>
-<td><code>\p{MathematicalOperators}</code> </td><td>U+2200 to U+22FF </td></tr>
+<td><code>\p{IsMathematicalOperators}</code> </td><td>U+2200 to U+22FF </td></tr>
 <tr>
-<td><code>\p{MiscellaneousTechnical}</code> </td><td>U+2300 to U+23FF </td></tr>
+<td><code>\p{IsMiscellaneousTechnical}</code> </td><td>U+2300 to U+23FF </td></tr>
 <tr>
-<td><code>\p{ControlPictures}</code> </td><td>U+2400 to U+243F </td></tr>
+<td><code>\p{IsControlPictures}</code> </td><td>U+2400 to U+243F </td></tr>
 <tr>
-<td><code>\p{OpticalCharacterRecognition}</code> </td><td>U+2440 to U+245F </td></tr>
+<td><code>\p{IsOpticalCharacterRecognition}</code> </td><td>U+2440 to U+245F </td></tr>
 <tr>
-<td><code>\p{EnclosedAlphanumerics}</code> </td><td>U+2460 to U+24FF </td></tr>
+<td><code>\p{IsEnclosedAlphanumerics}</code> </td><td>U+2460 to U+24FF </td></tr>
 <tr>
-<td><code>\p{BoxDrawing}</code> </td><td>U+2500 to U+257F </td></tr>
+<td><code>\p{IsBoxDrawing}</code> </td><td>U+2500 to U+257F </td></tr>
 <tr>
-<td><code>\p{BlockElements}</code> </td><td>U+2580 to U+259F </td></tr>
+<td><code>\p{IsBlockElements}</code> </td><td>U+2580 to U+259F </td></tr>
 <tr>
-<td><code>\p{GeometricShapes}</code> </td><td>U+25A0 to U+25FF </td></tr>
+<td><code>\p{IsGeometricShapes}</code> </td><td>U+25A0 to U+25FF </td></tr>
 <tr>
-<td><code>\p{MiscellaneousSymbols}</code> </td><td>U+2600 to U+26FF </td></tr>
+<td><code>\p{IsMiscellaneousSymbols}</code> </td><td>U+2600 to U+26FF </td></tr>
 <tr>
-<td><code>\p{Dingbats}</code> </td><td>U+2700 to U+27BF </td></tr>
+<td><code>\p{IsDingbats}</code> </td><td>U+2700 to U+27BF </td></tr>
 <tr>
-<td><code>\p{MiscellaneousMathematicalSymbols-A}</code> </td><td>U+27C0 to U+27EF </td></tr>
+<td><code>\p{IsMiscellaneousMathematicalSymbols-A}</code> </td><td>U+27C0 to U+27EF </td></tr>
 <tr>
-<td><code>\p{SupplementalArrows-A}</code> </td><td>U+27F0 to U+27FF </td></tr>
+<td><code>\p{IsSupplementalArrows-A}</code> </td><td>U+27F0 to U+27FF </td></tr>
 <tr>
-<td><code>\p{BraillePatterns}</code> </td><td>U+2800 to U+28FF </td></tr>
+<td><code>\p{IsBraillePatterns}</code> </td><td>U+2800 to U+28FF </td></tr>
 <tr>
-<td><code>\p{SupplementalArrows-B}</code> </td><td>U+2900 to U+297F </td></tr>
+<td><code>\p{IsSupplementalArrows-B}</code> </td><td>U+2900 to U+297F </td></tr>
 <tr>
-<td><code>\p{MiscellaneousMathematicalSymbols-B}</code> </td><td>U+2980 to U+29FF </td></tr>
+<td><code>\p{IsMiscellaneousMathematicalSymbols-B}</code> </td><td>U+2980 to U+29FF </td></tr>
 <tr>
-<td><code>\p{SupplementalMathematicalOperators}</code> </td><td>U+2A00 to U+2AFF </td></tr>
+<td><code>\p{IsSupplementalMathematicalOperators}</code> </td><td>U+2A00 to U+2AFF </td></tr>
 <tr>
-<td><code>\p{MiscellaneousSymbolsandArrows}</code> </td><td>U+2B00 to U+2BFF </td></tr>
+<td><code>\p{IsMiscellaneousSymbolsandArrows}</code> </td><td>U+2B00 to U+2BFF </td></tr>
 <tr>
-<td><code>\p{Glagolitic}</code> </td><td>U+2C00 to U+2C5F </td></tr>
+<td><code>\p{IsGlagolitic}</code> </td><td>U+2C00 to U+2C5F </td></tr>
 <tr>
-<td><code>\p{LatinExtended-C}</code> </td><td>U+2C60 to U+2C7F </td></tr>
+<td><code>\p{IsLatinExtended-C}</code> </td><td>U+2C60 to U+2C7F </td></tr>
 <tr>
-<td><code>\p{Coptic}</code> </td><td>U+2C80 to U+2CFF </td></tr>
+<td><code>\p{IsCoptic}</code> </td><td>U+2C80 to U+2CFF </td></tr>
 <tr>
-<td><code>\p{GeorgianSupplement}</code> </td><td>U+2D00 to U+2D2F </td></tr>
+<td><code>\p{IsGeorgianSupplement}</code> </td><td>U+2D00 to U+2D2F </td></tr>
 <tr>
-<td><code>\p{Tifinagh}</code> </td><td>U+2D30 to U+2D7F </td></tr>
+<td><code>\p{IsTifinagh}</code> </td><td>U+2D30 to U+2D7F </td></tr>
 <tr>
-<td><code>\p{EthiopicExtended}</code> </td><td>U+2D80 to U+2DDF </td></tr>
+<td><code>\p{IsEthiopicExtended}</code> </td><td>U+2D80 to U+2DDF </td></tr>
 <tr>
-<td><code>\p{CyrillicExtended-A}</code> </td><td>U+2DE0 to U+2DFF </td></tr>
+<td><code>\p{IsCyrillicExtended-A}</code> </td><td>U+2DE0 to U+2DFF </td></tr>
 <tr>
-<td><code>\p{SupplementalPunctuation}</code> </td><td>U+2E00 to U+2E7F </td></tr>
+<td><code>\p{IsSupplementalPunctuation}</code> </td><td>U+2E00 to U+2E7F </td></tr>
 <tr>
-<td><code>\p{CJKRadicalsSupplement}</code> </td><td>U+2E80 to U+2EFF </td></tr>
+<td><code>\p{IsCJKRadicalsSupplement}</code> </td><td>U+2E80 to U+2EFF </td></tr>
 <tr>
-<td><code>\p{KangxiRadicals}</code> </td><td>U+2F00 to U+2FDF </td></tr>
+<td><code>\p{IsKangxiRadicals}</code> </td><td>U+2F00 to U+2FDF </td></tr>
 <tr>
-<td><code>\p{IdeographicDescriptionCharacters}</code> </td><td>U+2FF0 to U+2FFF </td></tr>
+<td><code>\p{IsIdeographicDescriptionCharacters}</code> </td><td>U+2FF0 to U+2FFF </td></tr>
 <tr>
-<td><code>\p{CJKSymbolsandPunctuation}</code> </td><td>U+3000 to U+303F </td></tr>
+<td><code>\p{IsCJKSymbolsandPunctuation}</code> </td><td>U+3000 to U+303F </td></tr>
 <tr>
-<td><code>\p{Hiragana}</code> </td><td>U+3040 to U+309F </td></tr>
+<td><code>\p{IsHiragana}</code> </td><td>U+3040 to U+309F </td></tr>
 <tr>
-<td><code>\p{Katakana}</code> </td><td>U+30A0 to U+30FF </td></tr>
+<td><code>\p{IsKatakana}</code> </td><td>U+30A0 to U+30FF </td></tr>
 <tr>
-<td><code>\p{Bopomofo}</code> </td><td>U+3100 to U+312F </td></tr>
+<td><code>\p{IsBopomofo}</code> </td><td>U+3100 to U+312F </td></tr>
 <tr>
-<td><code>\p{HangulCompatibilityJamo}</code> </td><td>U+3130 to U+318F </td></tr>
+<td><code>\p{IsHangulCompatibilityJamo}</code> </td><td>U+3130 to U+318F </td></tr>
 <tr>
-<td><code>\p{Kanbun}</code> </td><td>U+3190 to U+319F </td></tr>
+<td><code>\p{IsKanbun}</code> </td><td>U+3190 to U+319F </td></tr>
 <tr>
-<td><code>\p{BopomofoExtended}</code> </td><td>U+31A0 to U+31BF </td></tr>
+<td><code>\p{IsBopomofoExtended}</code> </td><td>U+31A0 to U+31BF </td></tr>
 <tr>
-<td><code>\p{CJKStrokes}</code> </td><td>U+31C0 to U+31EF </td></tr>
+<td><code>\p{IsCJKStrokes}</code> </td><td>U+31C0 to U+31EF </td></tr>
 <tr>
-<td><code>\p{KatakanaPhoneticExtensions}</code> </td><td>U+31F0 to U+31FF </td></tr>
+<td><code>\p{IsKatakanaPhoneticExtensions}</code> </td><td>U+31F0 to U+31FF </td></tr>
 <tr>
-<td><code>\p{EnclosedCJKLettersandMonths}</code> </td><td>U+3200 to U+32FF </td></tr>
+<td><code>\p{IsEnclosedCJKLettersandMonths}</code> </td><td>U+3200 to U+32FF </td></tr>
 <tr>
-<td><code>\p{CJKCompatibility}</code> </td><td>U+3300 to U+33FF </td></tr>
+<td><code>\p{IsCJKCompatibility}</code> </td><td>U+3300 to U+33FF </td></tr>
 <tr>
-<td><code>\p{CJKUnifiedIdeographsExtensionA}</code> </td><td>U+3400 to U+4DBF </td></tr>
+<td><code>\p{IsCJKUnifiedIdeographsExtensionA}</code> </td><td>U+3400 to U+4DBF </td></tr>
 <tr>
-<td><code>\p{YijingHexagramSymbols}</code> </td><td>U+4DC0 to U+4DFF </td></tr>
+<td><code>\p{IsYijingHexagramSymbols}</code> </td><td>U+4DC0 to U+4DFF </td></tr>
 <tr>
-<td><code>\p{CJKUnifiedIdeographs}</code> </td><td>U+4E00 to U+9FFF </td></tr>
+<td><code>\p{IsCJKUnifiedIdeographs}</code> </td><td>U+4E00 to U+9FFF </td></tr>
 <tr>
-<td><code>\p{YiSyllables}</code> </td><td>U+A000 to U+A48F </td></tr>
+<td><code>\p{IsYiSyllables}</code> </td><td>U+A000 to U+A48F </td></tr>
 <tr>
-<td><code>\p{YiRadicals}</code> </td><td>U+A490 to U+A4CF </td></tr>
+<td><code>\p{IsYiRadicals}</code> </td><td>U+A490 to U+A4CF </td></tr>
 <tr>
-<td><code>\p{Lisu}</code> </td><td>U+A4D0 to U+A4FF </td></tr>
+<td><code>\p{IsLisu}</code> </td><td>U+A4D0 to U+A4FF </td></tr>
 <tr>
-<td><code>\p{Vai}</code> </td><td>U+A500 to U+A63F </td></tr>
+<td><code>\p{IsVai}</code> </td><td>U+A500 to U+A63F </td></tr>
 <tr>
-<td><code>\p{CyrillicExtended-B}</code> </td><td>U+A640 to U+A69F </td></tr>
+<td><code>\p{IsCyrillicExtended-B}</code> </td><td>U+A640 to U+A69F </td></tr>
 <tr>
-<td><code>\p{Bamum}</code> </td><td>U+A6A0 to U+A6FF </td></tr>
+<td><code>\p{IsBamum}</code> </td><td>U+A6A0 to U+A6FF </td></tr>
 <tr>
-<td><code>\p{ModifierToneLetters}</code> </td><td>U+A700 to U+A71F </td></tr>
+<td><code>\p{IsModifierToneLetters}</code> </td><td>U+A700 to U+A71F </td></tr>
 <tr>
-<td><code>\p{LatinExtended-D}</code> </td><td>U+A720 to U+A7FF </td></tr>
+<td><code>\p{IsLatinExtended-D}</code> </td><td>U+A720 to U+A7FF </td></tr>
 <tr>
-<td><code>\p{SylotiNagri}</code> </td><td>U+A800 to U+A82F </td></tr>
+<td><code>\p{IsSylotiNagri}</code> </td><td>U+A800 to U+A82F </td></tr>
 <tr>
-<td><code>\p{CommonIndicNumberForms}</code> </td><td>U+A830 to U+A83F </td></tr>
+<td><code>\p{IsCommonIndicNumberForms}</code> </td><td>U+A830 to U+A83F </td></tr>
 <tr>
-<td><code>\p{Phags-pa}</code> </td><td>U+A840 to U+A87F </td></tr>
+<td><code>\p{IsPhags-pa}</code> </td><td>U+A840 to U+A87F </td></tr>
 <tr>
-<td><code>\p{Saurashtra}</code> </td><td>U+A880 to U+A8DF </td></tr>
+<td><code>\p{IsSaurashtra}</code> </td><td>U+A880 to U+A8DF </td></tr>
 <tr>
-<td><code>\p{DevanagariExtended}</code> </td><td>U+A8E0 to U+A8FF </td></tr>
+<td><code>\p{IsDevanagariExtended}</code> </td><td>U+A8E0 to U+A8FF </td></tr>
 <tr>
-<td><code>\p{KayahLi}</code> </td><td>U+A900 to U+A92F </td></tr>
+<td><code>\p{IsKayahLi}</code> </td><td>U+A900 to U+A92F </td></tr>
 <tr>
-<td><code>\p{Rejang}</code> </td><td>U+A930 to U+A95F </td></tr>
+<td><code>\p{IsRejang}</code> </td><td>U+A930 to U+A95F </td></tr>
 <tr>
-<td><code>\p{HangulJamoExtended-A}</code> </td><td>U+A960 to U+A97F </td></tr>
+<td><code>\p{IsHangulJamoExtended-A}</code> </td><td>U+A960 to U+A97F </td></tr>
 <tr>
-<td><code>\p{Javanese}</code> </td><td>U+A980 to U+A9DF </td></tr>
+<td><code>\p{IsJavanese}</code> </td><td>U+A980 to U+A9DF </td></tr>
 <tr>
-<td><code>\p{MyanmarExtended-B}</code> </td><td>U+A9E0 to U+A9FF </td></tr>
+<td><code>\p{IsMyanmarExtended-B}</code> </td><td>U+A9E0 to U+A9FF </td></tr>
 <tr>
-<td><code>\p{Cham}</code> </td><td>U+AA00 to U+AA5F </td></tr>
+<td><code>\p{IsCham}</code> </td><td>U+AA00 to U+AA5F </td></tr>
 <tr>
-<td><code>\p{MyanmarExtended-A}</code> </td><td>U+AA60 to U+AA7F </td></tr>
+<td><code>\p{IsMyanmarExtended-A}</code> </td><td>U+AA60 to U+AA7F </td></tr>
 <tr>
-<td><code>\p{TaiViet}</code> </td><td>U+AA80 to U+AADF </td></tr>
+<td><code>\p{IsTaiViet}</code> </td><td>U+AA80 to U+AADF </td></tr>
 <tr>
-<td><code>\p{MeeteiMayekExtensions}</code> </td><td>U+AAE0 to U+AAFF </td></tr>
+<td><code>\p{IsMeeteiMayekExtensions}</code> </td><td>U+AAE0 to U+AAFF </td></tr>
 <tr>
-<td><code>\p{EthiopicExtended-A}</code> </td><td>U+AB00 to U+AB2F </td></tr>
+<td><code>\p{IsEthiopicExtended-A}</code> </td><td>U+AB00 to U+AB2F </td></tr>
 <tr>
-<td><code>\p{LatinExtended-E}</code> </td><td>U+AB30 to U+AB6F </td></tr>
+<td><code>\p{IsLatinExtended-E}</code> </td><td>U+AB30 to U+AB6F </td></tr>
 <tr>
-<td><code>\p{CherokeeSupplement}</code> </td><td>U+AB70 to U+ABBF </td></tr>
+<td><code>\p{IsCherokeeSupplement}</code> </td><td>U+AB70 to U+ABBF </td></tr>
 <tr>
-<td><code>\p{MeeteiMayek}</code> </td><td>U+ABC0 to U+ABFF </td></tr>
+<td><code>\p{IsMeeteiMayek}</code> </td><td>U+ABC0 to U+ABFF </td></tr>
 <tr>
-<td><code>\p{HangulSyllables}</code> </td><td>U+AC00 to U+D7AF </td></tr>
+<td><code>\p{IsHangulSyllables}</code> </td><td>U+AC00 to U+D7AF </td></tr>
 <tr>
-<td><code>\p{HangulJamoExtended-B}</code> </td><td>U+D7B0 to U+D7FF </td></tr>
+<td><code>\p{IsHangulJamoExtended-B}</code> </td><td>U+D7B0 to U+D7FF </td></tr>
 <tr>
-<td><code>\p{HighSurrogates}</code> </td><td>U+D800 to U+DB7F </td></tr>
+<td><code>\p{IsHighSurrogates}</code> </td><td>U+D800 to U+DB7F </td></tr>
 <tr>
-<td><code>\p{HighPrivateUseSurrogates}</code> </td><td>U+DB80 to U+DBFF </td></tr>
+<td><code>\p{IsHighPrivateUseSurrogates}</code> </td><td>U+DB80 to U+DBFF </td></tr>
 <tr>
-<td><code>\p{LowSurrogates}</code> </td><td>U+DC00 to U+DFFF </td></tr>
+<td><code>\p{IsLowSurrogates}</code> </td><td>U+DC00 to U+DFFF </td></tr>
 <tr>
-<td><code>\p{PrivateUseArea}</code> </td><td>U+E000 to U+F8FF </td></tr>
+<td><code>\p{IsPrivateUseArea}</code> </td><td>U+E000 to U+F8FF </td></tr>
 <tr>
-<td><code>\p{CJKCompatibilityIdeographs}</code> </td><td>U+F900 to U+FAFF </td></tr>
+<td><code>\p{IsCJKCompatibilityIdeographs}</code> </td><td>U+F900 to U+FAFF </td></tr>
 <tr>
-<td><code>\p{AlphabeticPresentationForms}</code> </td><td>U+FB00 to U+FB4F </td></tr>
+<td><code>\p{IsAlphabeticPresentationForms}</code> </td><td>U+FB00 to U+FB4F </td></tr>
 <tr>
-<td><code>\p{ArabicPresentationForms-A}</code> </td><td>U+FB50 to U+FDFF </td></tr>
+<td><code>\p{IsArabicPresentationForms-A}</code> </td><td>U+FB50 to U+FDFF </td></tr>
 <tr>
-<td><code>\p{VariationSelectors}</code> </td><td>U+FE00 to U+FE0F </td></tr>
+<td><code>\p{IsVariationSelectors}</code> </td><td>U+FE00 to U+FE0F </td></tr>
 <tr>
-<td><code>\p{VerticalForms}</code> </td><td>U+FE10 to U+FE1F </td></tr>
+<td><code>\p{IsVerticalForms}</code> </td><td>U+FE10 to U+FE1F </td></tr>
 <tr>
-<td><code>\p{CombiningHalfMarks}</code> </td><td>U+FE20 to U+FE2F </td></tr>
+<td><code>\p{IsCombiningHalfMarks}</code> </td><td>U+FE20 to U+FE2F </td></tr>
 <tr>
-<td><code>\p{CJKCompatibilityForms}</code> </td><td>U+FE30 to U+FE4F </td></tr>
+<td><code>\p{IsCJKCompatibilityForms}</code> </td><td>U+FE30 to U+FE4F </td></tr>
 <tr>
-<td><code>\p{SmallFormVariants}</code> </td><td>U+FE50 to U+FE6F </td></tr>
+<td><code>\p{IsSmallFormVariants}</code> </td><td>U+FE50 to U+FE6F </td></tr>
 <tr>
-<td><code>\p{ArabicPresentationForms-B}</code> </td><td>U+FE70 to U+FEFF </td></tr>
+<td><code>\p{IsArabicPresentationForms-B}</code> </td><td>U+FE70 to U+FEFF </td></tr>
 <tr>
-<td><code>\p{HalfwidthandFullwidthForms}</code> </td><td>U+FF00 to U+FFEF </td></tr>
+<td><code>\p{IsHalfwidthandFullwidthForms}</code> </td><td>U+FF00 to U+FFEF </td></tr>
 <tr>
-<td><code>\p{Specials}</code> </td><td>U+FFF0 to U+FFFF </td></tr>
+<td><code>\p{IsSpecials}</code> </td><td>U+FFF0 to U+FFFF </td></tr>
 <tr>
-<td><code>\p{LinearBSyllabary}</code> </td><td>U+10000 to U+1007F </td></tr>
+<td><code>\p{IsLinearBSyllabary}</code> </td><td>U+10000 to U+1007F </td></tr>
 <tr>
-<td><code>\p{LinearBIdeograms}</code> </td><td>U+10080 to U+100FF </td></tr>
+<td><code>\p{IsLinearBIdeograms}</code> </td><td>U+10080 to U+100FF </td></tr>
 <tr>
-<td><code>\p{AegeanNumbers}</code> </td><td>U+10100 to U+1013F </td></tr>
+<td><code>\p{IsAegeanNumbers}</code> </td><td>U+10100 to U+1013F </td></tr>
 <tr>
-<td><code>\p{AncientGreekNumbers}</code> </td><td>U+10140 to U+1018F </td></tr>
+<td><code>\p{IsAncientGreekNumbers}</code> </td><td>U+10140 to U+1018F </td></tr>
 <tr>
-<td><code>\p{AncientSymbols}</code> </td><td>U+10190 to U+101CF </td></tr>
+<td><code>\p{IsAncientSymbols}</code> </td><td>U+10190 to U+101CF </td></tr>
 <tr>
-<td><code>\p{PhaistosDisc}</code> </td><td>U+101D0 to U+101FF </td></tr>
+<td><code>\p{IsPhaistosDisc}</code> </td><td>U+101D0 to U+101FF </td></tr>
 <tr>
-<td><code>\p{Lycian}</code> </td><td>U+10280 to U+1029F </td></tr>
+<td><code>\p{IsLycian}</code> </td><td>U+10280 to U+1029F </td></tr>
 <tr>
-<td><code>\p{Carian}</code> </td><td>U+102A0 to U+102DF </td></tr>
+<td><code>\p{IsCarian}</code> </td><td>U+102A0 to U+102DF </td></tr>
 <tr>
-<td><code>\p{CopticEpactNumbers}</code> </td><td>U+102E0 to U+102FF </td></tr>
+<td><code>\p{IsCopticEpactNumbers}</code> </td><td>U+102E0 to U+102FF </td></tr>
 <tr>
-<td><code>\p{OldItalic}</code> </td><td>U+10300 to U+1032F </td></tr>
+<td><code>\p{IsOldItalic}</code> </td><td>U+10300 to U+1032F </td></tr>
 <tr>
-<td><code>\p{Gothic}</code> </td><td>U+10330 to U+1034F </td></tr>
+<td><code>\p{IsGothic}</code> </td><td>U+10330 to U+1034F </td></tr>
 <tr>
-<td><code>\p{OldPermic}</code> </td><td>U+10350 to U+1037F </td></tr>
+<td><code>\p{IsOldPermic}</code> </td><td>U+10350 to U+1037F </td></tr>
 <tr>
-<td><code>\p{Ugaritic}</code> </td><td>U+10380 to U+1039F </td></tr>
+<td><code>\p{IsUgaritic}</code> </td><td>U+10380 to U+1039F </td></tr>
 <tr>
-<td><code>\p{OldPersian}</code> </td><td>U+103A0 to U+103DF </td></tr>
+<td><code>\p{IsOldPersian}</code> </td><td>U+103A0 to U+103DF </td></tr>
 <tr>
-<td><code>\p{Deseret}</code> </td><td>U+10400 to U+1044F </td></tr>
+<td><code>\p{IsDeseret}</code> </td><td>U+10400 to U+1044F </td></tr>
 <tr>
-<td><code>\p{Shavian}</code> </td><td>U+10450 to U+1047F </td></tr>
+<td><code>\p{IsShavian}</code> </td><td>U+10450 to U+1047F </td></tr>
 <tr>
-<td><code>\p{Osmanya}</code> </td><td>U+10480 to U+104AF </td></tr>
+<td><code>\p{IsOsmanya}</code> </td><td>U+10480 to U+104AF </td></tr>
 <tr>
-<td><code>\p{Osage}</code> </td><td>U+104B0 to U+104FF </td></tr>
+<td><code>\p{IsOsage}</code> </td><td>U+104B0 to U+104FF </td></tr>
 <tr>
-<td><code>\p{Elbasan}</code> </td><td>U+10500 to U+1052F </td></tr>
+<td><code>\p{IsElbasan}</code> </td><td>U+10500 to U+1052F </td></tr>
 <tr>
-<td><code>\p{CaucasianAlbanian}</code> </td><td>U+10530 to U+1056F </td></tr>
+<td><code>\p{IsCaucasianAlbanian}</code> </td><td>U+10530 to U+1056F </td></tr>
 <tr>
-<td><code>\p{Vithkuqi}</code> </td><td>U+10570 to U+105BF </td></tr>
+<td><code>\p{IsVithkuqi}</code> </td><td>U+10570 to U+105BF </td></tr>
 <tr>
-<td><code>\p{LinearA}</code> </td><td>U+10600 to U+1077F </td></tr>
+<td><code>\p{IsLinearA}</code> </td><td>U+10600 to U+1077F </td></tr>
 <tr>
-<td><code>\p{LatinExtended-F}</code> </td><td>U+10780 to U+107BF </td></tr>
+<td><code>\p{IsLatinExtended-F}</code> </td><td>U+10780 to U+107BF </td></tr>
 <tr>
-<td><code>\p{CypriotSyllabary}</code> </td><td>U+10800 to U+1083F </td></tr>
+<td><code>\p{IsCypriotSyllabary}</code> </td><td>U+10800 to U+1083F </td></tr>
 <tr>
-<td><code>\p{ImperialAramaic}</code> </td><td>U+10840 to U+1085F </td></tr>
+<td><code>\p{IsImperialAramaic}</code> </td><td>U+10840 to U+1085F </td></tr>
 <tr>
-<td><code>\p{Palmyrene}</code> </td><td>U+10860 to U+1087F </td></tr>
+<td><code>\p{IsPalmyrene}</code> </td><td>U+10860 to U+1087F </td></tr>
 <tr>
-<td><code>\p{Nabataean}</code> </td><td>U+10880 to U+108AF </td></tr>
+<td><code>\p{IsNabataean}</code> </td><td>U+10880 to U+108AF </td></tr>
 <tr>
-<td><code>\p{Hatran}</code> </td><td>U+108E0 to U+108FF </td></tr>
+<td><code>\p{IsHatran}</code> </td><td>U+108E0 to U+108FF </td></tr>
 <tr>
-<td><code>\p{Phoenician}</code> </td><td>U+10900 to U+1091F </td></tr>
+<td><code>\p{IsPhoenician}</code> </td><td>U+10900 to U+1091F </td></tr>
 <tr>
-<td><code>\p{Lydian}</code> </td><td>U+10920 to U+1093F </td></tr>
+<td><code>\p{IsLydian}</code> </td><td>U+10920 to U+1093F </td></tr>
 <tr>
-<td><code>\p{MeroiticHieroglyphs}</code> </td><td>U+10980 to U+1099F </td></tr>
+<td><code>\p{IsMeroiticHieroglyphs}</code> </td><td>U+10980 to U+1099F </td></tr>
 <tr>
-<td><code>\p{MeroiticCursive}</code> </td><td>U+109A0 to U+109FF </td></tr>
+<td><code>\p{IsMeroiticCursive}</code> </td><td>U+109A0 to U+109FF </td></tr>
 <tr>
-<td><code>\p{Kharoshthi}</code> </td><td>U+10A00 to U+10A5F </td></tr>
+<td><code>\p{IsKharoshthi}</code> </td><td>U+10A00 to U+10A5F </td></tr>
 <tr>
-<td><code>\p{OldSouthArabian}</code> </td><td>U+10A60 to U+10A7F </td></tr>
+<td><code>\p{IsOldSouthArabian}</code> </td><td>U+10A60 to U+10A7F </td></tr>
 <tr>
-<td><code>\p{OldNorthArabian}</code> </td><td>U+10A80 to U+10A9F </td></tr>
+<td><code>\p{IsOldNorthArabian}</code> </td><td>U+10A80 to U+10A9F </td></tr>
 <tr>
-<td><code>\p{Manichaean}</code> </td><td>U+10AC0 to U+10AFF </td></tr>
+<td><code>\p{IsManichaean}</code> </td><td>U+10AC0 to U+10AFF </td></tr>
 <tr>
-<td><code>\p{Avestan}</code> </td><td>U+10B00 to U+10B3F </td></tr>
+<td><code>\p{IsAvestan}</code> </td><td>U+10B00 to U+10B3F </td></tr>
 <tr>
-<td><code>\p{InscriptionalParthian}</code> </td><td>U+10B40 to U+10B5F </td></tr>
+<td><code>\p{IsInscriptionalParthian}</code> </td><td>U+10B40 to U+10B5F </td></tr>
 <tr>
-<td><code>\p{InscriptionalPahlavi}</code> </td><td>U+10B60 to U+10B7F </td></tr>
+<td><code>\p{IsInscriptionalPahlavi}</code> </td><td>U+10B60 to U+10B7F </td></tr>
 <tr>
-<td><code>\p{PsalterPahlavi}</code> </td><td>U+10B80 to U+10BAF </td></tr>
+<td><code>\p{IsPsalterPahlavi}</code> </td><td>U+10B80 to U+10BAF </td></tr>
 <tr>
-<td><code>\p{OldTurkic}</code> </td><td>U+10C00 to U+10C4F </td></tr>
+<td><code>\p{IsOldTurkic}</code> </td><td>U+10C00 to U+10C4F </td></tr>
 <tr>
-<td><code>\p{OldHungarian}</code> </td><td>U+10C80 to U+10CFF </td></tr>
+<td><code>\p{IsOldHungarian}</code> </td><td>U+10C80 to U+10CFF </td></tr>
 <tr>
-<td><code>\p{HanifiRohingya}</code> </td><td>U+10D00 to U+10D3F </td></tr>
+<td><code>\p{IsHanifiRohingya}</code> </td><td>U+10D00 to U+10D3F </td></tr>
 <tr>
-<td><code>\p{RumiNumeralSymbols}</code> </td><td>U+10E60 to U+10E7F </td></tr>
+<td><code>\p{IsRumiNumeralSymbols}</code> </td><td>U+10E60 to U+10E7F </td></tr>
 <tr>
-<td><code>\p{Yezidi}</code> </td><td>U+10E80 to U+10EBF </td></tr>
+<td><code>\p{IsYezidi}</code> </td><td>U+10E80 to U+10EBF </td></tr>
 <tr>
-<td><code>\p{OldSogdian}</code> </td><td>U+10F00 to U+10F2F </td></tr>
+<td><code>\p{IsOldSogdian}</code> </td><td>U+10F00 to U+10F2F </td></tr>
 <tr>
-<td><code>\p{Sogdian}</code> </td><td>U+10F30 to U+10F6F </td></tr>
+<td><code>\p{IsSogdian}</code> </td><td>U+10F30 to U+10F6F </td></tr>
 <tr>
-<td><code>\p{OldUyghur}</code> </td><td>U+10F70 to U+10FAF </td></tr>
+<td><code>\p{IsOldUyghur}</code> </td><td>U+10F70 to U+10FAF </td></tr>
 <tr>
-<td><code>\p{Chorasmian}</code> </td><td>U+10FB0 to U+10FDF </td></tr>
+<td><code>\p{IsChorasmian}</code> </td><td>U+10FB0 to U+10FDF </td></tr>
 <tr>
-<td><code>\p{Elymaic}</code> </td><td>U+10FE0 to U+10FFF </td></tr>
+<td><code>\p{IsElymaic}</code> </td><td>U+10FE0 to U+10FFF </td></tr>
 <tr>
-<td><code>\p{Brahmi}</code> </td><td>U+11000 to U+1107F </td></tr>
+<td><code>\p{IsBrahmi}</code> </td><td>U+11000 to U+1107F </td></tr>
 <tr>
-<td><code>\p{Kaithi}</code> </td><td>U+11080 to U+110CF </td></tr>
+<td><code>\p{IsKaithi}</code> </td><td>U+11080 to U+110CF </td></tr>
 <tr>
-<td><code>\p{SoraSompeng}</code> </td><td>U+110D0 to U+110FF </td></tr>
+<td><code>\p{IsSoraSompeng}</code> </td><td>U+110D0 to U+110FF </td></tr>
 <tr>
-<td><code>\p{Chakma}</code> </td><td>U+11100 to U+1114F </td></tr>
+<td><code>\p{IsChakma}</code> </td><td>U+11100 to U+1114F </td></tr>
 <tr>
-<td><code>\p{Mahajani}</code> </td><td>U+11150 to U+1117F </td></tr>
+<td><code>\p{IsMahajani}</code> </td><td>U+11150 to U+1117F </td></tr>
 <tr>
-<td><code>\p{Sharada}</code> </td><td>U+11180 to U+111DF </td></tr>
+<td><code>\p{IsSharada}</code> </td><td>U+11180 to U+111DF </td></tr>
 <tr>
-<td><code>\p{SinhalaArchaicNumbers}</code> </td><td>U+111E0 to U+111FF </td></tr>
+<td><code>\p{IsSinhalaArchaicNumbers}</code> </td><td>U+111E0 to U+111FF </td></tr>
 <tr>
-<td><code>\p{Khojki}</code> </td><td>U+11200 to U+1124F </td></tr>
+<td><code>\p{IsKhojki}</code> </td><td>U+11200 to U+1124F </td></tr>
 <tr>
-<td><code>\p{Multani}</code> </td><td>U+11280 to U+112AF </td></tr>
+<td><code>\p{IsMultani}</code> </td><td>U+11280 to U+112AF </td></tr>
 <tr>
-<td><code>\p{Khudawadi}</code> </td><td>U+112B0 to U+112FF </td></tr>
+<td><code>\p{IsKhudawadi}</code> </td><td>U+112B0 to U+112FF </td></tr>
 <tr>
-<td><code>\p{Grantha}</code> </td><td>U+11300 to U+1137F </td></tr>
+<td><code>\p{IsGrantha}</code> </td><td>U+11300 to U+1137F </td></tr>
 <tr>
-<td><code>\p{Newa}</code> </td><td>U+11400 to U+1147F </td></tr>
+<td><code>\p{IsNewa}</code> </td><td>U+11400 to U+1147F </td></tr>
 <tr>
-<td><code>\p{Tirhuta}</code> </td><td>U+11480 to U+114DF </td></tr>
+<td><code>\p{IsTirhuta}</code> </td><td>U+11480 to U+114DF </td></tr>
 <tr>
-<td><code>\p{Siddham}</code> </td><td>U+11580 to U+115FF </td></tr>
+<td><code>\p{IsSiddham}</code> </td><td>U+11580 to U+115FF </td></tr>
 <tr>
-<td><code>\p{Modi}</code> </td><td>U+11600 to U+1165F </td></tr>
+<td><code>\p{IsModi}</code> </td><td>U+11600 to U+1165F </td></tr>
 <tr>
-<td><code>\p{MongolianSupplement}</code> </td><td>U+11660 to U+1167F </td></tr>
+<td><code>\p{IsMongolianSupplement}</code> </td><td>U+11660 to U+1167F </td></tr>
 <tr>
-<td><code>\p{Takri}</code> </td><td>U+11680 to U+116CF </td></tr>
+<td><code>\p{IsTakri}</code> </td><td>U+11680 to U+116CF </td></tr>
 <tr>
-<td><code>\p{Ahom}</code> </td><td>U+11700 to U+1174F </td></tr>
+<td><code>\p{IsAhom}</code> </td><td>U+11700 to U+1174F </td></tr>
 <tr>
-<td><code>\p{Dogra}</code> </td><td>U+11800 to U+1184F </td></tr>
+<td><code>\p{IsDogra}</code> </td><td>U+11800 to U+1184F </td></tr>
 <tr>
-<td><code>\p{WarangCiti}</code> </td><td>U+118A0 to U+118FF </td></tr>
+<td><code>\p{IsWarangCiti}</code> </td><td>U+118A0 to U+118FF </td></tr>
 <tr>
-<td><code>\p{DivesAkuru}</code> </td><td>U+11900 to U+1195F </td></tr>
+<td><code>\p{IsDivesAkuru}</code> </td><td>U+11900 to U+1195F </td></tr>
 <tr>
-<td><code>\p{Nandinagari}</code> </td><td>U+119A0 to U+119FF </td></tr>
+<td><code>\p{IsNandinagari}</code> </td><td>U+119A0 to U+119FF </td></tr>
 <tr>
-<td><code>\p{ZanabazarSquare}</code> </td><td>U+11A00 to U+11A4F </td></tr>
+<td><code>\p{IsZanabazarSquare}</code> </td><td>U+11A00 to U+11A4F </td></tr>
 <tr>
-<td><code>\p{Soyombo}</code> </td><td>U+11A50 to U+11AAF </td></tr>
+<td><code>\p{IsSoyombo}</code> </td><td>U+11A50 to U+11AAF </td></tr>
 <tr>
-<td><code>\p{UnifiedCanadianAboriginalSyllabicsExtended-A}</code> </td><td>U+11AB0 to U+11ABF </td></tr>
+<td><code>\p{IsUnifiedCanadianAboriginalSyllabicsExtended-A}</code></td><td>U+11AB0 to U+11ABF </td></tr>
 <tr>
-<td><code>\p{PauCinHau}</code> </td><td>U+11AC0 to U+11AFF </td></tr>
+<td><code>\p{IsPauCinHau}</code> </td><td>U+11AC0 to U+11AFF </td></tr>
 <tr>
-<td><code>\p{Bhaiksuki}</code> </td><td>U+11C00 to U+11C6F </td></tr>
+<td><code>\p{IsBhaiksuki}</code> </td><td>U+11C00 to U+11C6F </td></tr>
 <tr>
-<td><code>\p{Marchen}</code> </td><td>U+11C70 to U+11CBF </td></tr>
+<td><code>\p{IsMarchen}</code> </td><td>U+11C70 to U+11CBF </td></tr>
 <tr>
-<td><code>\p{MasaramGondi}</code> </td><td>U+11D00 to U+11D5F </td></tr>
+<td><code>\p{IsMasaramGondi}</code> </td><td>U+11D00 to U+11D5F </td></tr>
 <tr>
-<td><code>\p{GunjalaGondi}</code> </td><td>U+11D60 to U+11DAF </td></tr>
+<td><code>\p{IsGunjalaGondi}</code> </td><td>U+11D60 to U+11DAF </td></tr>
 <tr>
-<td><code>\p{Makasar}</code> </td><td>U+11EE0 to U+11EFF </td></tr>
+<td><code>\p{IsMakasar}</code> </td><td>U+11EE0 to U+11EFF </td></tr>
 <tr>
-<td><code>\p{LisuSupplement}</code> </td><td>U+11FB0 to U+11FBF </td></tr>
+<td><code>\p{IsLisuSupplement}</code> </td><td>U+11FB0 to U+11FBF </td></tr>
 <tr>
-<td><code>\p{TamilSupplement}</code> </td><td>U+11FC0 to U+11FFF </td></tr>
+<td><code>\p{IsTamilSupplement}</code> </td><td>U+11FC0 to U+11FFF </td></tr>
 <tr>
-<td><code>\p{Cuneiform}</code> </td><td>U+12000 to U+123FF </td></tr>
+<td><code>\p{IsCuneiform}</code> </td><td>U+12000 to U+123FF </td></tr>
 <tr>
-<td><code>\p{CuneiformNumbersandPunctuation}</code> </td><td>U+12400 to U+1247F </td></tr>
+<td><code>\p{IsCuneiformNumbersandPunctuation}</code> </td><td>U+12400 to U+1247F </td></tr>
 <tr>
-<td><code>\p{EarlyDynasticCuneiform}</code> </td><td>U+12480 to U+1254F </td></tr>
+<td><code>\p{IsEarlyDynasticCuneiform}</code> </td><td>U+12480 to U+1254F </td></tr>
 <tr>
-<td><code>\p{Cypro-Minoan}</code> </td><td>U+12F90 to U+12FFF </td></tr>
+<td><code>\p{IsCypro-Minoan}</code> </td><td>U+12F90 to U+12FFF </td></tr>
 <tr>
-<td><code>\p{EgyptianHieroglyphs}</code> </td><td>U+13000 to U+1342F </td></tr>
+<td><code>\p{IsEgyptianHieroglyphs}</code> </td><td>U+13000 to U+1342F </td></tr>
 <tr>
-<td><code>\p{EgyptianHieroglyphFormatControls}</code> </td><td>U+13430 to U+1343F </td></tr>
+<td><code>\p{IsEgyptianHieroglyphFormatControls}</code> </td><td>U+13430 to U+1343F </td></tr>
 <tr>
-<td><code>\p{AnatolianHieroglyphs}</code> </td><td>U+14400 to U+1467F </td></tr>
+<td><code>\p{IsAnatolianHieroglyphs}</code> </td><td>U+14400 to U+1467F </td></tr>
 <tr>
-<td><code>\p{BamumSupplement}</code> </td><td>U+16800 to U+16A3F </td></tr>
+<td><code>\p{IsBamumSupplement}</code> </td><td>U+16800 to U+16A3F </td></tr>
 <tr>
-<td><code>\p{Mro}</code> </td><td>U+16A40 to U+16A6F </td></tr>
+<td><code>\p{IsMro}</code> </td><td>U+16A40 to U+16A6F </td></tr>
 <tr>
-<td><code>\p{Tangsa}</code> </td><td>U+16A70 to U+16ACF </td></tr>
+<td><code>\p{IsTangsa}</code> </td><td>U+16A70 to U+16ACF </td></tr>
 <tr>
-<td><code>\p{BassaVah}</code> </td><td>U+16AD0 to U+16AFF </td></tr>
+<td><code>\p{IsBassaVah}</code> </td><td>U+16AD0 to U+16AFF </td></tr>
 <tr>
-<td><code>\p{PahawhHmong}</code> </td><td>U+16B00 to U+16B8F </td></tr>
+<td><code>\p{IsPahawhHmong}</code> </td><td>U+16B00 to U+16B8F </td></tr>
 <tr>
-<td><code>\p{Medefaidrin}</code> </td><td>U+16E40 to U+16E9F </td></tr>
+<td><code>\p{IsMedefaidrin}</code> </td><td>U+16E40 to U+16E9F </td></tr>
 <tr>
-<td><code>\p{Miao}</code> </td><td>U+16F00 to U+16F9F </td></tr>
+<td><code>\p{IsMiao}</code> </td><td>U+16F00 to U+16F9F </td></tr>
 <tr>
-<td><code>\p{IdeographicSymbolsandPunctuation}</code> </td><td>U+16FE0 to U+16FFF </td></tr>
+<td><code>\p{IsIdeographicSymbolsandPunctuation}</code> </td><td>U+16FE0 to U+16FFF </td></tr>
 <tr>
-<td><code>\p{Tangut}</code> </td><td>U+17000 to U+187FF </td></tr>
+<td><code>\p{IsTangut}</code> </td><td>U+17000 to U+187FF </td></tr>
 <tr>
-<td><code>\p{TangutComponents}</code> </td><td>U+18800 to U+18AFF </td></tr>
+<td><code>\p{IsTangutComponents}</code> </td><td>U+18800 to U+18AFF </td></tr>
 <tr>
-<td><code>\p{KhitanSmallScript}</code> </td><td>U+18B00 to U+18CFF </td></tr>
+<td><code>\p{IsKhitanSmallScript}</code> </td><td>U+18B00 to U+18CFF </td></tr>
 <tr>
-<td><code>\p{TangutSupplement}</code> </td><td>U+18D00 to U+18D7F </td></tr>
+<td><code>\p{IsTangutSupplement}</code> </td><td>U+18D00 to U+18D7F </td></tr>
 <tr>
-<td><code>\p{KanaExtended-B}</code> </td><td>U+1AFF0 to U+1AFFF </td></tr>
+<td><code>\p{IsKanaExtended-B}</code> </td><td>U+1AFF0 to U+1AFFF </td></tr>
 <tr>
-<td><code>\p{KanaSupplement}</code> </td><td>U+1B000 to U+1B0FF </td></tr>
+<td><code>\p{IsKanaSupplement}</code> </td><td>U+1B000 to U+1B0FF </td></tr>
 <tr>
-<td><code>\p{KanaExtended-A}</code> </td><td>U+1B100 to U+1B12F </td></tr>
+<td><code>\p{IsKanaExtended-A}</code> </td><td>U+1B100 to U+1B12F </td></tr>
 <tr>
-<td><code>\p{SmallKanaExtension}</code> </td><td>U+1B130 to U+1B16F </td></tr>
+<td><code>\p{IsSmallKanaExtension}</code> </td><td>U+1B130 to U+1B16F </td></tr>
 <tr>
-<td><code>\p{Nushu}</code> </td><td>U+1B170 to U+1B2FF </td></tr>
+<td><code>\p{IsNushu}</code> </td><td>U+1B170 to U+1B2FF </td></tr>
 <tr>
-<td><code>\p{Duployan}</code> </td><td>U+1BC00 to U+1BC9F </td></tr>
+<td><code>\p{IsDuployan}</code> </td><td>U+1BC00 to U+1BC9F </td></tr>
 <tr>
-<td><code>\p{ShorthandFormatControls}</code> </td><td>U+1BCA0 to U+1BCAF </td></tr>
+<td><code>\p{IsShorthandFormatControls}</code> </td><td>U+1BCA0 to U+1BCAF </td></tr>
 <tr>
-<td><code>\p{ZnamennyMusicalNotation}</code> </td><td>U+1CF00 to U+1CFCF </td></tr>
+<td><code>\p{IsZnamennyMusicalNotation}</code> </td><td>U+1CF00 to U+1CFCF </td></tr>
 <tr>
-<td><code>\p{ByzantineMusicalSymbols}</code> </td><td>U+1D000 to U+1D0FF </td></tr>
+<td><code>\p{IsByzantineMusicalSymbols}</code> </td><td>U+1D000 to U+1D0FF </td></tr>
 <tr>
-<td><code>\p{MusicalSymbols}</code> </td><td>U+1D100 to U+1D1FF </td></tr>
+<td><code>\p{IsMusicalSymbols}</code> </td><td>U+1D100 to U+1D1FF </td></tr>
 <tr>
-<td><code>\p{AncientGreekMusicalNotation}</code> </td><td>U+1D200 to U+1D24F </td></tr>
+<td><code>\p{IsAncientGreekMusicalNotation}</code> </td><td>U+1D200 to U+1D24F </td></tr>
 <tr>
-<td><code>\p{MayanNumerals}</code> </td><td>U+1D2E0 to U+1D2FF </td></tr>
+<td><code>\p{IsMayanNumerals}</code> </td><td>U+1D2E0 to U+1D2FF </td></tr>
 <tr>
-<td><code>\p{TaiXuanJingSymbols}</code> </td><td>U+1D300 to U+1D35F </td></tr>
+<td><code>\p{IsTaiXuanJingSymbols}</code> </td><td>U+1D300 to U+1D35F </td></tr>
 <tr>
-<td><code>\p{CountingRodNumerals}</code> </td><td>U+1D360 to U+1D37F </td></tr>
+<td><code>\p{IsCountingRodNumerals}</code> </td><td>U+1D360 to U+1D37F </td></tr>
 <tr>
-<td><code>\p{MathematicalAlphanumericSymbols}</code> </td><td>U+1D400 to U+1D7FF </td></tr>
+<td><code>\p{IsMathematicalAlphanumericSymbols}</code> </td><td>U+1D400 to U+1D7FF </td></tr>
 <tr>
-<td><code>\p{SuttonSignWriting}</code> </td><td>U+1D800 to U+1DAAF </td></tr>
+<td><code>\p{IsSuttonSignWriting}</code> </td><td>U+1D800 to U+1DAAF </td></tr>
 <tr>
-<td><code>\p{LatinExtended-G}</code> </td><td>U+1DF00 to U+1DFFF </td></tr>
+<td><code>\p{IsLatinExtended-G}</code> </td><td>U+1DF00 to U+1DFFF </td></tr>
 <tr>
-<td><code>\p{GlagoliticSupplement}</code> </td><td>U+1E000 to U+1E02F </td></tr>
+<td><code>\p{IsGlagoliticSupplement}</code> </td><td>U+1E000 to U+1E02F </td></tr>
 <tr>
-<td><code>\p{NyiakengPuachueHmong}</code> </td><td>U+1E100 to U+1E14F </td></tr>
+<td><code>\p{IsNyiakengPuachueHmong}</code> </td><td>U+1E100 to U+1E14F </td></tr>
 <tr>
-<td><code>\p{Toto}</code> </td><td>U+1E290 to U+1E2BF </td></tr>
+<td><code>\p{IsToto}</code> </td><td>U+1E290 to U+1E2BF </td></tr>
 <tr>
-<td><code>\p{Wancho}</code> </td><td>U+1E2C0 to U+1E2FF </td></tr>
+<td><code>\p{IsWancho}</code> </td><td>U+1E2C0 to U+1E2FF </td></tr>
 <tr>
-<td><code>\p{EthiopicExtended-B}</code> </td><td>U+1E7E0 to U+1E7FF </td></tr>
+<td><code>\p{IsEthiopicExtended-B}</code> </td><td>U+1E7E0 to U+1E7FF </td></tr>
 <tr>
-<td><code>\p{MendeKikakui}</code> </td><td>U+1E800 to U+1E8DF </td></tr>
+<td><code>\p{IsMendeKikakui}</code> </td><td>U+1E800 to U+1E8DF </td></tr>
 <tr>
-<td><code>\p{Adlam}</code> </td><td>U+1E900 to U+1E95F </td></tr>
+<td><code>\p{IsAdlam}</code> </td><td>U+1E900 to U+1E95F </td></tr>
 <tr>
-<td><code>\p{IndicSiyaqNumbers}</code> </td><td>U+1EC70 to U+1ECBF </td></tr>
+<td><code>\p{IsIndicSiyaqNumbers}</code> </td><td>U+1EC70 to U+1ECBF </td></tr>
 <tr>
-<td><code>\p{OttomanSiyaqNumbers}</code> </td><td>U+1ED00 to U+1ED4F </td></tr>
+<td><code>\p{IsOttomanSiyaqNumbers}</code> </td><td>U+1ED00 to U+1ED4F </td></tr>
 <tr>
-<td><code>\p{ArabicMathematicalAlphabeticSymbols}</code> </td><td>U+1EE00 to U+1EEFF </td></tr>
+<td><code>\p{IsArabicMathematicalAlphabeticSymbols}</code> </td><td>U+1EE00 to U+1EEFF </td></tr>
 <tr>
-<td><code>\p{MahjongTiles}</code> </td><td>U+1F000 to U+1F02F </td></tr>
+<td><code>\p{IsMahjongTiles}</code> </td><td>U+1F000 to U+1F02F </td></tr>
 <tr>
-<td><code>\p{DominoTiles}</code> </td><td>U+1F030 to U+1F09F </td></tr>
+<td><code>\p{IsDominoTiles}</code> </td><td>U+1F030 to U+1F09F </td></tr>
 <tr>
-<td><code>\p{PlayingCards}</code> </td><td>U+1F0A0 to U+1F0FF </td></tr>
+<td><code>\p{IsPlayingCards}</code> </td><td>U+1F0A0 to U+1F0FF </td></tr>
 <tr>
-<td><code>\p{EnclosedAlphanumericSupplement}</code> </td><td>U+1F100 to U+1F1FF </td></tr>
+<td><code>\p{IsEnclosedAlphanumericSupplement}</code> </td><td>U+1F100 to U+1F1FF </td></tr>
 <tr>
-<td><code>\p{EnclosedIdeographicSupplement}</code> </td><td>U+1F200 to U+1F2FF </td></tr>
+<td><code>\p{IsEnclosedIdeographicSupplement}</code> </td><td>U+1F200 to U+1F2FF </td></tr>
 <tr>
-<td><code>\p{MiscellaneousSymbolsandPictographs}</code> </td><td>U+1F300 to U+1F5FF </td></tr>
+<td><code>\p{IsMiscellaneousSymbolsandPictographs}</code> </td><td>U+1F300 to U+1F5FF </td></tr>
 <tr>
-<td><code>\p{Emoticons}</code> </td><td>U+1F600 to U+1F64F </td></tr>
+<td><code>\p{IsEmoticons}</code> </td><td>U+1F600 to U+1F64F </td></tr>
 <tr>
-<td><code>\p{OrnamentalDingbats}</code> </td><td>U+1F650 to U+1F67F </td></tr>
+<td><code>\p{IsOrnamentalDingbats}</code> </td><td>U+1F650 to U+1F67F </td></tr>
 <tr>
-<td><code>\p{TransportandMapSymbols}</code> </td><td>U+1F680 to U+1F6FF </td></tr>
+<td><code>\p{IsTransportandMapSymbols}</code> </td><td>U+1F680 to U+1F6FF </td></tr>
 <tr>
-<td><code>\p{AlchemicalSymbols}</code> </td><td>U+1F700 to U+1F77F </td></tr>
+<td><code>\p{IsAlchemicalSymbols}</code> </td><td>U+1F700 to U+1F77F </td></tr>
 <tr>
-<td><code>\p{GeometricShapesExtended}</code> </td><td>U+1F780 to U+1F7FF </td></tr>
+<td><code>\p{IsGeometricShapesExtended}</code> </td><td>U+1F780 to U+1F7FF </td></tr>
 <tr>
-<td><code>\p{SupplementalArrows-C}</code> </td><td>U+1F800 to U+1F8FF </td></tr>
+<td><code>\p{IsSupplementalArrows-C}</code> </td><td>U+1F800 to U+1F8FF </td></tr>
 <tr>
-<td><code>\p{SupplementalSymbolsandPictographs}</code> </td><td>U+1F900 to U+1F9FF </td></tr>
+<td><code>\p{IsSupplementalSymbolsandPictographs}</code> </td><td>U+1F900 to U+1F9FF </td></tr>
 <tr>
-<td><code>\p{ChessSymbols}</code> </td><td>U+1FA00 to U+1FA6F </td></tr>
+<td><code>\p{IsChessSymbols}</code> </td><td>U+1FA00 to U+1FA6F </td></tr>
 <tr>
-<td><code>\p{SymbolsandPictographsExtended-A}</code> </td><td>U+1FA70 to U+1FAFF </td></tr>
+<td><code>\p{IsSymbolsandPictographsExtended-A}</code> </td><td>U+1FA70 to U+1FAFF </td></tr>
 <tr>
-<td><code>\p{SymbolsforLegacyComputing}</code> </td><td>U+1FB00 to U+1FBFF </td></tr>
+<td><code>\p{IsSymbolsforLegacyComputing}</code> </td><td>U+1FB00 to U+1FBFF </td></tr>
 <tr>
-<td><code>\p{CJKUnifiedIdeographsExtensionB}</code> </td><td>U+20000 to U+2A6DF </td></tr>
+<td><code>\p{IsCJKUnifiedIdeographsExtensionB}</code> </td><td>U+20000 to U+2A6DF </td></tr>
 <tr>
-<td><code>\p{CJKUnifiedIdeographsExtensionC}</code> </td><td>U+2A700 to U+2B73F </td></tr>
+<td><code>\p{IsCJKUnifiedIdeographsExtensionC}</code> </td><td>U+2A700 to U+2B73F </td></tr>
 <tr>
-<td><code>\p{CJKUnifiedIdeographsExtensionD}</code> </td><td>U+2B740 to U+2B81F </td></tr>
+<td><code>\p{IsCJKUnifiedIdeographsExtensionD}</code> </td><td>U+2B740 to U+2B81F </td></tr>
 <tr>
-<td><code>\p{CJKUnifiedIdeographsExtensionE}</code> </td><td>U+2B820 to U+2CEAF </td></tr>
+<td><code>\p{IsCJKUnifiedIdeographsExtensionE}</code> </td><td>U+2B820 to U+2CEAF </td></tr>
 <tr>
-<td><code>\p{CJKUnifiedIdeographsExtensionF}</code> </td><td>U+2CEB0 to U+2EBEF </td></tr>
+<td><code>\p{IsCJKUnifiedIdeographsExtensionF}</code> </td><td>U+2CEB0 to U+2EBEF </td></tr>
 <tr>
-<td><code>\p{CJKCompatibilityIdeographsSupplement}</code> </td><td>U+2F800 to U+2FA1F </td></tr>
+<td><code>\p{IsCJKCompatibilityIdeographsSupplement}</code> </td><td>U+2F800 to U+2FA1F </td></tr>
 <tr>
-<td><code>\p{CJKUnifiedIdeographsExtensionG}</code> </td><td>U+30000 to U+3134F </td></tr>
+<td><code>\p{IsCJKUnifiedIdeographsExtensionG}</code> </td><td>U+30000 to U+3134F </td></tr>
 <tr>
-<td><code>\p{Tags}</code> </td><td>U+E0000 to U+E007F </td></tr>
+<td><code>\p{IsTags}</code> </td><td>U+E0000 to U+E007F </td></tr>
 <tr>
-<td><code>\p{VariationSelectorsSupplement}</code> </td><td>U+E0100 to U+E01EF </td></tr>
+<td><code>\p{IsVariationSelectorsSupplement}</code> </td><td>U+E0100 to U+E01EF </td></tr>
 <tr>
-<td><code>\p{SupplementaryPrivateUseArea-A}</code> </td><td>U+F0000 to U+FFFFF </td></tr>
+<td><code>\p{IsSupplementaryPrivateUseArea-A}</code> </td><td>U+F0000 to U+FFFFF </td></tr>
 <tr>
-<td><code>\p{SupplementaryPrivateUseArea-B}</code> </td><td>U+100000 to U+10FFFF </td></tr>
+<td><code>\p{IsSupplementaryPrivateUseArea-B}</code> </td><td>U+100000 to U+10FFFF </td></tr>
 </table>
 <p>In addition, the <code>−−unicode</code> option enables standard Unicode language scripts:</p>
 <p><code>\p{Adlam}</code>, <code>\p{Ahom}</code>, <code>\p{Anatolian_Hieroglyphs}</code>, <code>\p{Arabic}</code>, <code>\p{Armenian}</code>, <code>\p{Avestan}</code>, <code>\p{Balinese}</code>, <code>\p{Bamum}</code>, <code>\p{Bassa_Vah}</code>, <code>\p{Batak}</code>, <code>\p{Bengali}</code>, <code>\p{Bhaiksuki}</code>, <code>\p{Bopomofo}</code>, <code>\p{Brahmi}</code>, <code>\p{Braille}</code>, <code>\p{Buginese}</code>, <code>\p{Buhid}</code>, <code>\p{Canadian_Aboriginal}</code>, <code>\p{Carian}</code>, <code>\p{Caucasian_Albanian}</code>, <code>\p{Chakma}</code>, <code>\p{Cham}</code>, <code>\p{Cherokee}</code>, <code>\p{Chorasmian}</code>, <code>\p{Common}</code>, <code>\p{Coptic}</code>, <code>\p{Cuneiform}</code>, <code>\p{Cypriot}</code>, <code>\p{Cypro_Minoan}</code>, <code>\p{Cyrillic}</code>, <code>\p{Deseret}</code>, <code>\p{Devanagari}</code>, <code>\p{Dives_Akuru}</code>, <code>\p{Dogra}</code>, <code>\p{Duployan}</code>, <code>\p{Egyptian_Hieroglyphs}</code>, <code>\p{Elbasan}</code>, <code>\p{Elymaic}</code>, <code>\p{Ethiopic}</code>, <code>\p{Georgian}</code>, <code>\p{Glagolitic}</code>, <code>\p{Gothic}</code>, <code>\p{Grantha}</code>, <code>\p{Greek}</code>, <code>\p{Gujarati}</code>, <code>\p{Gunjala_Gondi}</code>, <code>\p{Gurmukhi}</code>, <code>\p{Han}</code>, <code>\p{Hangul}</code>, <code>\p{Hanifi_Rohingya}</code>, <code>\p{Hanunoo}</code>, <code>\p{Hatran}</code>, <code>\p{Hebrew}</code>, <code>\p{Hiragana}</code>, <code>\p{Imperial_Aramaic}</code>, <code>\p{Inscriptional_Pahlavi}</code>, <code>\p{Inscriptional_Parthian}</code>, <code>\p{Javanese}</code>, <code>\p{Kaithi}</code>, <code>\p{Kannada}</code>, <code>\p{Katakana}</code>, <code>\p{Kayah_Li}</code>, <code>\p{Kharoshthi}</code>, <code>\p{Khitan_Small_Script}</code>, <code>\p{Khmer}</code>, <code>\p{Khojki}</code>, <code>\p{Khudawadi}</code>, <code>\p{Lao}</code>, <code>\p{Latin}</code>, <code>\p{Lepcha}</code>, <code>\p{Limbu}</code>, <code>\p{Linear_A}</code>, <code>\p{Linear_B}</code>, <code>\p{Lisu}</code>, <code>\p{Lycian}</code>, <code>\p{Lydian}</code>, <code>\p{Mahajani}</code>, <code>\p{Makasar}</code>, <code>\p{Malayalam}</code>, <code>\p{Mandaic}</code>, <code>\p{Manichaean}</code>, <code>\p{Marchen}</code>, <code>\p{Masaram_Gondi}</code>, <code>\p{Medefaidrin}</code>, <code>\p{Meetei_Mayek}</code>, <code>\p{Mende_Kikakui}</code>, <code>\p{Meroitic_Cursive}</code>, <code>\p{Meroitic_Hieroglyphs}</code>, <code>\p{Miao}</code>, <code>\p{Modi}</code>, <code>\p{Mongolian}</code>, <code>\p{Mro}</code>, <code>\p{Multani}</code>, <code>\p{Myanmar}</code>, <code>\p{Nabataean}</code>, <code>\p{Nandinagari}</code>, <code>\p{New_Tai_Lue}</code>, <code>\p{Newa}</code>, <code>\p{Nko}</code>, <code>\p{Nushu}</code>, <code>\p{Nyiakeng_Puachue_Hmong}</code>, <code>\p{Ogham}</code>, <code>\p{Old_Uyghur}</code>, <code>\p{Ol_Chiki}</code>, <code>\p{Old_Hungarian}</code>, <code>\p{Old_Italic}</code>, <code>\p{Old_North_Arabian}</code>, <code>\p{Old_Permic}</code>, <code>\p{Old_Persian}</code>, <code>\p{Old_Sogdian}</code>, <code>\p{Old_South_Arabian}</code>, <code>\p{Old_Turkic}</code>, <code>\p{Oriya}</code>, <code>\p{Osage}</code>, <code>\p{Osmanya}</code>, <code>\p{Pahawh_Hmong}</code>, <code>\p{Palmyrene}</code>, <code>\p{Pau_Cin_Hau}</code>, <code>\p{Phags_Pa}</code>, <code>\p{Phoenician}</code>, <code>\p{Psalter_Pahlavi}</code>, <code>\p{Rejang}</code>, <code>\p{Runic}</code>, <code>\p{Samaritan}</code>, <code>\p{Saurashtra}</code>, <code>\p{Sharada}</code>, <code>\p{Shavian}</code>, <code>\p{Siddham}</code>, <code>\p{SignWriting}</code>, <code>\p{Sinhala}</code>, <code>\p{Sogdian}</code>, <code>\p{Sora_Sompeng}</code>, <code>\p{Soyombo}</code>, <code>\p{Sundanese}</code>, <code>\p{Syloti_Nagri}</code>, <code>\p{Syriac}</code>, <code>\p{Tagalog}</code>, <code>\p{Tagbanwa}</code>, <code>\p{Tai_Le}</code>, <code>\p{Tai_Tham}</code>, <code>\p{Tai_Viet}</code>, <code>\p{Takri}</code>, <code>\p{Tamil}</code>, <code>\p{Tangut}</code>, <code>\p{Tangsa}</code>, <code>\p{Telugu}</code>, <code>\p{Thaana}</code>, <code>\p{Thai}</code>, <code>\p{Tibetan}</code>, <code>\p{Tifinagh}</code>, <code>\p{Tirhuta}</code>, <code>\p{Toto}</code>, <code>\p{Ugaritic}</code>, <code>\p{Vai}</code>, <code>\p{Vithkuqi}</code>, <code>\p{Wancho}</code>, <code>\p{Warang_Citi}</code>, <code>\p{Yezidi}</code>, <code>\p{Yi}</code>, <code>\p{Zanabazar_Square}</code>,</p>
@@ -2289,7 +2289,7 @@ Inheriting Lexer/yyFlexLexer                                  </h2>
 Combining multiple lexers                                    </h2>
 <p>To rename a lexer class to combine multiple lexers in one application, use the <code>−−lexer=NAME</code> option. This option renames the generated lexer class to avoid lexer class name clashes. Use this option in combination with option <code>−−header-file</code> to output a header file with the lexer class declaration to include in your application source code.</p>
 <p>In addition, use option <code>−−prefix=NAME</code> to output the generated code in file <em><code>lex.NAME.cpp</code></em> instead of the standard <em><code>lex.yy.cpp</code></em> to avoid name clashes. This option also affect the <code>−−flex</code> option by generating <code>xxFlexLexer</code> with a <code>xxlex()</code> method when option <code>−−prefix=xx</code> is specified. The generated <code>#define</code> names (some of which are added to support option <code>−−flex</code>) are prefixed to avoid macro name clashes.</p>
-<p>Alternatively to <code>−−lexer=NAME</code> and <code>−−prefix=NAME</code>, you can use <code>−−namespace=NAME</code> to place the generated lexer class in a C++ namespace to avoid lexer class name clashes.</p>
+<p>Alternatively to <code>−−lexer=NAME</code> and <code>−−prefix=NAME</code>, you can use <code>−−namespace=NAME</code> to place the generated lexer class in a C++ namespace to avoid lexer class name clashes. Note that unlike the <code>−−prefix=NAME</code> option, the generated file names are not renamed by including <code>NAME</code> in the filename. Generate the files in a separate subdirectory for each C++ namespace specified with <code>−−namespace=NAME</code>. Or you can explicitly specify the lex filename with <code>−−outfile=NAME</code> and also <code>−−header-file=NAME</code> and `<code>−−tables-file=NAME</code> when header files and table files are used.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="reflex-input"></a>
 Switching input sources                                         </h2>
@@ -3006,7 +3006,7 @@ Regex converters                                               </h2>
 <tr>
 <td><code><a class="el" href="namespacereflex_1_1convert__flag.html#a1e3e66422498b8e4c6fd7770393ea988" title="convert \uXXXX and UTF-16 surrogate pairs ">reflex::convert_flag::u4</a></code> </td><td>convert <code>\uXXXX</code> (shorthand for <code>\u{XXXX}</code>), may conflict with <code>\u</code> (upper case letter). </td></tr>
 <tr>
-<td><code><a class="el" href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9" title="inverted character classes and  do not match newline \n ">reflex::convert_flag::notnewline</a></code> </td><td>inverted character classes do not match newline <code>\n</code>, e.g. <code>[^a-z]</code> does not match <code>\n</code> </td></tr>
+<td><code><a class="el" href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9" title="inverted character classes and \s do not match newline \n ">reflex::convert_flag::notnewline</a></code> </td><td>inverted character classes and <code>\s</code> do not match newline <code>\n</code>, e.g. <code>[^a-z]</code> does not match <code>\n</code> </td></tr>
 <tr>
 <td><code><a class="el" href="namespacereflex_1_1convert__flag.html#a2fcbe121a0a80ba46baa1a4b67b045df" title="convert Unicode to compact UTF-8 patterns and DFA, permits some invalid UTF-8 sequences ...">reflex::convert_flag::permissive</a></code> </td><td>when used with <code>unicode</code>, produces a more compact FSM that tolerates some invalid UTF-8 sequences </td></tr>
 </table>
@@ -3736,7 +3736,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Jan 24 2023 20:13:54 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Mar 6 2023 19:52:33 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

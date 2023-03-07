@@ -567,6 +567,8 @@ Changelog
 - Aug 21, 2022: 3.2.10 bug fix in regular expression converter.
 - Aug 29, 2022: 3.2.11 new lua2lisp transpiler example with Bison complete symbols and locations.
 - Jan  6, 2023: 3.2.12 regression bug fix in trailing context pattern matching, e.g. `xy` and `x/x` patterns collided when they should not; updated yaml parser example.
+- Jan 24, 2023: 3.3.0 overall update; corrected a problem with Unicode characters in regex patterns adjacent to curly braces; permit cxx extension in FSM filename output.
+- Mar  6, 2023: 3.3.1 for consistency include NAME in default header file name, tables file name, and graphs file name when option `--prefix` is specified.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

@@ -66,7 +66,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "3.3.0"
+#define REFLEX_VERSION "3.3.1"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -164,7 +164,9 @@ class Reflex
   void        write_namespace_close();
   void        write_namespace_scope();
   void        undot_namespace(std::string& s);
-  void        stats();
+  void        write_final();
+  void        write_regexp_file();
+  void        write_header_file();
   bool        get_line();
   bool        skip_comment(size_t& pos);
   bool        is(const char *s);
