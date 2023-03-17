@@ -220,6 +220,25 @@ void Pattern::init(const char *options, const uint8_t *pred)
     {
       // all patterns are strings, do not construct a DFA with subset construction
       start = tfa_.root();
+      if (opt_.i)
+      {
+        // convert edges to case-insensitive by adding upper case transitions for alphas normalized to lower case
+        timer_type et;
+        timer_start(et);
+        for (DFA::State *state = start; state; state = state->next)
+        {
+          for (DFA::State::Edges::iterator t = state->edges.begin(); t != state->edges.end(); ++t)
+          {
+            Char c = t->first;
+            if (c >= 'a' && c <= 'z')
+            {
+              state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), t->second.second);
+              ++eno_;
+            }
+          }
+        }
+        ems_ += timer_elapsed(et);
+      }
     }
     else
     {
@@ -462,27 +481,21 @@ void Pattern::parse(
           c = lowercase(c);
         }
 #ifdef WITH_TREE_DFA
-        DFA::State *target_state;
         DFA::State::Edges::iterator i = t->edges.find(c);
         if (i == t->edges.end())
         {
           if (last_state == NULL)
             last_state = t; // t points to the tree DFA start state
-          target_state = last_state = last_state->next = tfa_.state();
+          DFA::State *target_state = last_state = last_state->next = tfa_.state();
           t->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
-          if (c >= 'a' && c <= 'z' && opt_.i)
-          {
-            t->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
-            ++eno_;
-          }
+          t = target_state;
           ++eno_;
           ++vno_;
         }
         else
         {
-          target_state = i->second.second;
+          t = i->second.second;
         }
-        t = target_state;
 #else
         t = tfa_.edge(t, c);
 #endif
@@ -545,11 +558,11 @@ void Pattern::parse(
   else if (at(loc) != 0)
     error(regex_error::invalid_syntax, loc);
   if (opt_.i)
-    update_modified(ModConst::i, modifiers, 0, len - 1);
+    update_modified(ModConst::i, modifiers, 0, len);
   if (opt_.m)
-    update_modified(ModConst::m, modifiers, 0, len - 1);
+    update_modified(ModConst::m, modifiers, 0, len);
   if (opt_.s)
-    update_modified(ModConst::s, modifiers, 0, len - 1);
+    update_modified(ModConst::s, modifiers, 0, len);
   pms_ = timer_elapsed(t);
 #ifdef DEBUG
   DBGLOGN("startpos = {");
@@ -1389,15 +1402,28 @@ void Pattern::compile(
       if (moves.empty())
       {
         // no DFA transitions: the final DFA transitions are the tree DFA transitions to target states
-        for (DFA::State::Edges::iterator t = state->tnode->edges.begin(); t != state->tnode->edges.end(); ++t)
+        if (opt_.i)
         {
-          Char c = t->first;
-          DFA::State *target_state = last_state = last_state->next = dfa_.state(t->second.second);
-          state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
-          ++eno_;
-          if (opt_.i && c >= 'a' && c <= 'z')
+          for (DFA::State::Edges::iterator t = state->tnode->edges.begin(); t != state->tnode->edges.end(); ++t)
           {
-            state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+            Char c = t->first;
+            DFA::State *target_state = last_state = last_state->next = dfa_.state(t->second.second);
+            state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+            if (c >= 'a' && c <= 'z')
+            {
+              state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+              ++eno_;
+            }
+            ++eno_;
+          }
+        }
+        else
+        {
+          for (DFA::State::Edges::iterator t = state->tnode->edges.begin(); t != state->tnode->edges.end(); ++t)
+          {
+            Char c = t->first;
+            DFA::State *target_state = last_state = last_state->next = dfa_.state(t->second.second);
+            state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
             ++eno_;
           }
         }
@@ -1490,19 +1516,34 @@ void Pattern::compile(
         {
           Char lo = chars.lo();
           Char hi = chars.hi();
-          for (Char c = lo; c <= hi; ++c)
+          if (opt_.i)
           {
-            if (chars.contains(c))
+            for (Char c = lo; c <= hi; ++c)
             {
-              DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edges[c].second);
-              if (opt_.i && std::isalpha(c))
+              if (chars.contains(c))
               {
-                state->edges[lowercase(c)] = std::pair<Char,DFA::State*>(lowercase(c), target_state);
-                state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
-                eno_ += 2;
+                DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edges[c].second);
+                if (std::isalpha(c))
+                {
+                  state->edges[lowercase(c)] = std::pair<Char,DFA::State*>(lowercase(c), target_state);
+                  state->edges[uppercase(c)] = std::pair<Char,DFA::State*>(uppercase(c), target_state);
+                  eno_ += 2;
+                }
+                else
+                {
+                  state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
+                  ++eno_;
+                }
               }
-              else
+            }
+          }
+          else
+          {
+            for (Char c = lo; c <= hi; ++c)
+            {
+              if (chars.contains(c))
               {
+                DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edges[c].second);
                 state->edges[c] = std::pair<Char,DFA::State*>(c, target_state);
                 ++eno_;
               }
