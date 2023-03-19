@@ -1,7 +1,7 @@
 
 [![logo][logo-url]][reflex-url]
 
-[![build status][travis-image]][travis-url] [![license][bsd-3-image]][bsd-3-url] [![CodeProject][codeproject-image]][codeproject-url]
+[![build status][ci-image]][ci-url] [![license][bsd-3-image]][bsd-3-url] [![CodeProject][codeproject-image]][codeproject-url]
 
 The regex-centric, fast lexical analyzer generator for C++ with full Unicode
 support.
@@ -581,8 +581,8 @@ Changelog
 [FSM-url]: https://www.genivia.com/images/reflex-FSM.png
 [boost-url]: http://www.boost.org
 [pcre-url]: http://www.pcre.org
-[travis-image]: https://travis-ci.com/Genivia/RE-flex.svg?branch=master
-[travis-url]: https://app.travis-ci.com/Genivia/RE-flex
+[ci-image]: https://github.com/Genivia/RE-flex/actions/workflows/c-cpp.yml/badge.svg
+[ci-url]: https://github.com/Genivia/RE-flex/actions/workflows/c-cpp.yml
 [bsd-3-image]: https://img.shields.io/badge/license-BSD%203--Clause-blue.svg
 [bsd-3-url]: https://opensource.org/licenses/BSD-3-Clause
 [codeproject-image]: https://img.shields.io/badge/CodeProject-★★★★★-orange.svg
