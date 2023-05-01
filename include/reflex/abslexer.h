@@ -130,7 +130,7 @@ class AbstractLexer {
   {
     in_ = input;
     if (has_matcher())
-      matcher().input(input); // reset and assign new input
+      matcher().input(in_); // reset and assign new input
     return *this;
   }
   /// Reset the matcher and start scanning from the given byte sequence.
