@@ -570,6 +570,7 @@ Changelog
 - Jan 24, 2023: 3.3.0 overall update; corrected a problem with Unicode characters in regex patterns adjacent to curly braces; permit cxx extension in FSM filename output.
 - Mar  6, 2023: 3.3.1 for consistency include NAME in default header file name, tables file name, and graphs file name when option `--prefix` is specified.
 - Mar 17, 2023: 3.3.2 fix a performance issue with case-insensitive pattern construction.
+- May 28, 2023: 3.3.3 fix `yyrestart` dropping the first character; faster `find()`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

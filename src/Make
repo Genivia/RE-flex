@@ -21,7 +21,7 @@ reflex_objects=		reflex.o $(LIBS)
 .PHONY:			release install clean distclean
 
 release:
-			-rm ../bin/reflex
+			-rm -f ../bin/reflex
 			cd ../lib; $(MAKE) -f Make libreflex.a
 			$(MAKE) -f Make reflex
 			-cp -f reflex ../bin

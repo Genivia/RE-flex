@@ -82,7 +82,7 @@ that Perl introduced.  Both concepts are applicable to RE/flex patterns.
 
 In summary, RE/flex is really several things combined into one package:
 
-- a faster, feature-rich replacement of [Flex++ and Flex](dinosaur.compilertools.net/#flex);
+- a faster, feature-rich replacement of Flex++ and Flex;
 
 - a stand-alone regex library for fast regex matching in C++;
 
@@ -255,13 +255,12 @@ In summary:
 - RE/flex specifications and use are compatible with Lex/Flex and Bison/Yacc.
 
 - The RE/flex scanner generator accepts specifications that are compatible with
-  [Flex](dinosaur.compilertools.net/#flex), with additional options to select a
-  matcher engine and to specify names and options for C++ class generation.
+  Flex, with additional options to select a matcher engine and to specify names
+  and options for C++ class generation.
   
 - The RE/flex scanner generator option `−−bison` generates a scanner compatible
-  with [Bison](dinosaur.compilertools.net/#bison).  RE/flex also offers options
-  to integrate Bison bridge, Bison locations, Bison complete, and reentrant
-  parsers.
+  with Bison.  RE/flex also offers options to integrate Bison bridge, Bison
+  locations, Bison complete, and reentrant parsers.
 
 - The regular expression syntax in Flex and Lex specifications is restricted to
   POSIX ERE.  By contrast, the RE/flex specification syntax is regex-centric by
@@ -1150,10 +1149,10 @@ and functions.
 
 The second option `−−bison` generates a scanner class and the usual global "yy"
 variables and functions such as `yytext`, `yyleng`, `yylineno`, and `yylex()`
-for compatibility with non-reentrant [Bison](dinosaur.compilertools.net/#bison)
-parsers.  See \ref reflex-bison for more details on Bison parsers that are
-reentrant and/or use bison-bridge and bison-locations options.  For Bison 3.0
-C++ parsers, use `−−bison-cc` and optionally `−−bison-locations`.
+for compatibility with non-reentrant Bison parsers.  See \ref reflex-bison for
+more details on Bison parsers that are reentrant and/or use bison-bridge and
+bison-locations options.  For Bison 3.0 C++ parsers, use `−−bison-cc` and
+optionally `−−bison-locations`.
 
 Option `−−yy` enables both `−−flex` and `−−bison` and maximizes compatibility
 with Lex/Flex by generating the global `yyin` and `yyout` variables and global
@@ -4756,9 +4755,8 @@ rules are matched.  For example:
 Interfacing with Bison/Yacc                                     {#reflex-bison}
 ---------------------------
 
-The [Bison](dinosaur.compilertools.net/#bison) tools generate parsers that
-invoke the global C function `yylex()` to get the next token.  Tokens are
-integer values returned by `yylex()`.
+The Bison tools generate parsers that invoke the global C function `yylex()` to
+get the next token.  Tokens are integer values returned by `yylex()`.
 
 To support Bison parsers use <b>`reflex`</b> option `−−bison`.  This option
 generates a scanner with a global lexer object `YY_SCANNER` and a global

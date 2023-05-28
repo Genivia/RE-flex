@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Mar 17 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun May 28 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -198,7 +198,7 @@ What is RE/flex?                                                       </h1>
 <p>In this document we refer to a <em>regex</em> as a shorthand for <em>regular expression</em>, However, a "regular expression" refers to the formal concept of <em>regular languages</em>, wheras <em>regex</em> often refers to backtracking-based regex matching that Perl introduced. Both concepts are applicable to RE/flex patterns.</p>
 <p>In summary, RE/flex is really several things combined into one package:</p>
 <ul>
-<li>a faster, feature-rich replacement of <a href="dinosaur.compilertools.net/#flex">Flex++ and Flex</a>;</li>
+<li>a faster, feature-rich replacement of Flex++ and Flex;</li>
 <li>a stand-alone regex library for fast regex matching in C++;</li>
 <li>a C++ regex API enhancement of the <a href="www.boost.org/libs/regex">Boost.Regex</a> and <a href="www.pcre.org">PCRE2</a> libraries for matching, seaching, splitting and scanning of input, with input from (wide) strings, files, and streams of potentially unlimited length.</li>
 </ul>
@@ -234,8 +234,8 @@ Yet another scanner generator                                         </h2>
 <p>In summary:</p>
 <ul>
 <li>RE/flex specifications and use are compatible with Lex/Flex and Bison/Yacc.</li>
-<li>The RE/flex scanner generator accepts specifications that are compatible with <a href="dinosaur.compilertools.net/#flex">Flex</a>, with additional options to select a matcher engine and to specify names and options for C++ class generation.</li>
-<li>The RE/flex scanner generator option <code>−−bison</code> generates a scanner compatible with <a href="dinosaur.compilertools.net/#bison">Bison</a>. RE/flex also offers options to integrate Bison bridge, Bison locations, Bison complete, and reentrant parsers.</li>
+<li>The RE/flex scanner generator accepts specifications that are compatible with Flex, with additional options to select a matcher engine and to specify names and options for C++ class generation.</li>
+<li>The RE/flex scanner generator option <code>−−bison</code> generates a scanner compatible with Bison. RE/flex also offers options to integrate Bison bridge, Bison locations, Bison complete, and reentrant parsers.</li>
 <li>The regular expression syntax in Flex and Lex specifications is restricted to POSIX ERE. By contrast, the RE/flex specification syntax is regex-centric by design and offers a much richer pattern syntax, including lazy quantifiers.</li>
 <li>A matcher engine for a lexer class has a common interface API declared by the abstract base matcher class template.</li>
 <li>RE/flex scanners are not implemented as a set of global functions and tables. RE/flex scanners are instances of generated lexer classes, which ensures that scanners are thread-safe (by contrast, Flex and Flex++ are not thread-safe). A lexer class is derived from an abstract base lexer class template and it is instantiated with a regex matcher engine class that is provided as a template parameter.</li>
@@ -589,7 +589,7 @@ The reflex command line tool                                  </h2>
 <p>Use <b><code>reflex</code></b> option <code>−−header-file</code> to generate <em><code>lex.yy.h</code></em> to include in the source code of your application: </p><pre class="fragment">reflex −−header-file=lexerspec.l
 </pre><p>The <b><code>reflex</code></b> command accepts <code>−−flex</code> and <code>−−bison</code> options for compatibility with Flex and Bison/Yacc, respectively. These options allow <b><code>reflex</code></b> to be used as a replacement of the classic Flex and Lex tools: </p><pre class="fragment">reflex −−flex −−bison lexerspec.l
 </pre><p>The first option <code>−−flex</code> specifies that <em><code>lexerspec.l</code></em> is a classic Flex/Lex specification with <code>yytext</code> or <code>YYText()</code> and the usual "yy" variables and functions.</p>
-<p>The second option <code>−−bison</code> generates a scanner class and the usual global "yy" variables and functions such as <code>yytext</code>, <code>yyleng</code>, <code>yylineno</code>, and <code>yylex()</code> for compatibility with non-reentrant <a href="dinosaur.compilertools.net/#bison">Bison</a> parsers. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison/Yacc </a> for more details on Bison parsers that are reentrant and/or use bison-bridge and bison-locations options. For Bison 3.0 C++ parsers, use <code>−−bison-cc</code> and optionally <code>−−bison-locations</code>.</p>
+<p>The second option <code>−−bison</code> generates a scanner class and the usual global "yy" variables and functions such as <code>yytext</code>, <code>yyleng</code>, <code>yylineno</code>, and <code>yylex()</code> for compatibility with non-reentrant Bison parsers. See <a class="el" href="index.html#reflex-bison">Interfacing with Bison/Yacc </a> for more details on Bison parsers that are reentrant and/or use bison-bridge and bison-locations options. For Bison 3.0 C++ parsers, use <code>−−bison-cc</code> and optionally <code>−−bison-locations</code>.</p>
 <p>Option <code>−−yy</code> enables both <code>−−flex</code> and <code>−−bison</code> and maximizes compatibility with Lex/Flex by generating the global <code>yyin</code> and <code>yyout</code> variables and global <code>yy</code> functions. Otherwise, <code>yyin</code> points to a <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> object for advanced input handling, which is more powerful than the traditional <code>FILE*</code> type <code>yyin</code>.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="reflex-options"></a>
@@ -2415,7 +2415,7 @@ Initial code blocks                                       </h2>
 <div class="alt"> <div class="fragment"><div class="line">%<span class="keyword">class</span>{</div><div class="line">  <span class="keywordtype">bool</span> init_matcher;</div><div class="line">}</div><div class="line"></div><div class="line">%init{</div><div class="line">  init_matcher = <span class="keyword">true</span>;</div><div class="line">}</div><div class="line"></div><div class="line">%%</div><div class="line"></div><div class="line">%{</div><div class="line">  <span class="keywordflow">if</span> (init_matcher)            <span class="comment">// init the new matcher?</span></div><div class="line">  {</div><div class="line">    init_matcher = <span class="keyword">false</span>;      <span class="comment">// init only once</span></div><div class="line">    <span class="keywordflow">if</span> (BUFFER_ALL)            <span class="comment">// buffer all input at once?</span></div><div class="line">      matcher().buffer();      <span class="comment">// same as %option batch</span></div><div class="line">    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (INTERACTIVE)      <span class="comment">// console-based (TTY) &quot;interactive&quot; input?</span></div><div class="line">      matcher().interactive(); <span class="comment">// same as %option interactive   </span></div><div class="line">    matcher().tabs(4);         <span class="comment">// same as %option tabs=4</span></div><div class="line">  }</div><div class="line">%}</div></div><!-- fragment --> </div><p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="reflex-bison"></a>
 Interfacing with Bison/Yacc                                     </h2>
-<p>The <a href="dinosaur.compilertools.net/#bison">Bison</a> tools generate parsers that invoke the global C function <code>yylex()</code> to get the next token. Tokens are integer values returned by <code>yylex()</code>.</p>
+<p>The Bison tools generate parsers that invoke the global C function <code>yylex()</code> to get the next token. Tokens are integer values returned by <code>yylex()</code>.</p>
 <p>To support Bison parsers use <b><code>reflex</code></b> option <code>−−bison</code>. This option generates a scanner with a global lexer object <code>YY_SCANNER</code> and a global <code>YY_EXTERN_C int yylex()</code> function. When the Bison parser is compiled in C and the scanner is compiled in C++, you must set <code>YY_EXTERN_C</code> in the lex specification to <code>extern "C"</code> to enable C linkage rules:</p>
 <div class="alt"> <div class="fragment"><div class="line">%top{</div><div class="line"><span class="preprocessor">  #include &quot;y.tab.h&quot;</span>               <span class="comment">/* include y.tab.h generated by bison */</span></div><div class="line"><span class="preprocessor">  #define YY_EXTERN_C extern &quot;C&quot;   </span><span class="comment">/* yylex() must use C linkage rules */</span><span class="preprocessor"></span></div><div class="line">}</div><div class="line"></div><div class="line">%option noyywrap bison</div><div class="line"></div><div class="line">%%</div><div class="line"></div><div class="line">[0-9]+               yylval.num = strtol(text(), NULL, 10);</div><div class="line">                     <span class="keywordflow">return</span> CONST_NUMBER;</div><div class="line">\<span class="stringliteral">&quot;([^\\&quot;</span>]|\\<span class="stringliteral">&quot;)*\&quot;    yylval.str = text();</span></div><div class="line"><span class="stringliteral">                     return CONST_STRING;</span></div><div class="line"><span class="stringliteral"></span></div><div class="line"><span class="stringliteral">%%</span></div></div><!-- fragment --> </div><p>Note that <code>−−noyywrap</code> may be specified to remove the dependency on the global <code>yywrap()</code> function that is not defined.</p>
 <p>This example sets the global <code>yylval.num</code> to the integer scanned or <code>yylval.str</code> to the string scanned. It assumes that the Bison/Yacc grammar file defines the tokens <code>CONST_NUMBER</code> and <code>CONST_STRING</code> and the type <code>YYSTYPE</code> of <code>yylval</code>. For example:</p>
@@ -3736,7 +3736,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Mar 17 2023 15:58:36 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun May 28 2023 16:00:50 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -23,7 +23,7 @@ libreflexmin_a-simd_avx2.$(OBJEXT)     : CXXFLAGS += $(SIMD_AVX2_FLAGS)
 libreflexmin_a-simd_avx512bw.$(OBJEXT) : CXXFLAGS += $(SIMD_AVX512BW_FLAGS)
 
 # removed to avoid Max OS X libtool issues, alas...
-# lib_LTLIBRARIES       = libreflex.la libreflexmin.a
+# lib_LTLIBRARIES       = libreflex.la libreflexmin.la
 #
 # libreflex_la_CPPFLAGS = -I$(top_srcdir)/include $(SIMD_FLAGS)
 # libreflex_la_SOURCES  = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp pattern.cpp posix.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp

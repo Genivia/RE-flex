@@ -640,116 +640,119 @@ bool Matcher::advance()
       if (loc + min > end_)
         return false;
     }
-    if (min >= 4)
-    {
-      const Pattern::Pred *bit = pat_->bit_;
-      Pattern::Pred state = ~0;
-      Pattern::Pred mask = (1 << (min - 1));
-      while (true)
-      {
-        const char *s = buf_ + loc;
-        const char *e = buf_ + end_;
-        while (s < e)
-        {
-          state = (state << 1) | bit[static_cast<uint8_t>(*s)];
-          if ((state & mask) == 0)
-            break;
-          ++s;
-        }
-        if (s < e)
-        {
-          s -= min - 1;
-          loc = s - buf_;
-          if (Pattern::predict_match(pat_->pmh_, s, min))
-          {
-            set_current(loc);
-            return true;
-          }
-          loc += min;
-        }
-        else
-        {
-          loc = s - buf_;
-          set_current_match(loc - min);
-          (void)peek_more();
-          loc = cur_ + min;
-          if (loc >= end_)
-            return false;
-        }
-      }
-    }
     const Pattern::Pred *pma = pat_->pma_;
-    if (min == 3)
+    if (min >= 2 && pat_->npy_ < 16)
     {
-      const Pattern::Pred *bit = pat_->bit_;
-      Pattern::Pred state = ~0;
-      while (true)
+      if (min >= 4)
       {
-        const char *s = buf_ + loc;
-        const char *e = buf_ + end_;
-        while (s < e)
+        const Pattern::Pred *bit = pat_->bit_;
+        Pattern::Pred state = ~0;
+        Pattern::Pred mask = (1 << (min - 1));
+        while (true)
         {
-          state = (state << 1) | bit[static_cast<uint8_t>(*s)];
-          if ((state & 4) == 0)
-            break;
-          ++s;
-        }
-        if (s < e)
-        {
-          s -= 2;
-          loc = s - buf_;
-          if (s + 4 > e || Pattern::predict_match(pma, s) == 0)
+          const char *s = buf_ + loc;
+          const char *e = buf_ + end_;
+          while (s < e)
           {
-            set_current(loc);
-            return true;
+            state = (state << 1) | bit[static_cast<uint8_t>(*s)];
+            if ((state & mask) == 0)
+              break;
+            ++s;
           }
-          loc += 3;
-        }
-        else
-        {
-          loc = s - buf_;
-          set_current_match(loc - 3);
-          (void)peek_more();
-          loc = cur_ + 3;
-          if (loc >= end_)
-            return false;
+          if (s < e)
+          {
+            s -= min - 1;
+            loc = s - buf_;
+            if (Pattern::predict_match(pat_->pmh_, s, min))
+            {
+              set_current(loc);
+              return true;
+            }
+            loc += min;
+          }
+          else
+          {
+            loc = s - buf_;
+            set_current_match(loc - min);
+            (void)peek_more();
+            loc = cur_ + min;
+            if (loc >= end_)
+              return false;
+          }
         }
       }
-    }
-    if (min == 2)
-    {
-      const Pattern::Pred *bit = pat_->bit_;
-      Pattern::Pred state = ~0;
-      while (true)
+      if (min == 3)
       {
-        const char *s = buf_ + loc;
-        const char *e = buf_ + end_;
-        while (s < e)
+        const Pattern::Pred *bit = pat_->bit_;
+        Pattern::Pred state = ~0;
+        while (true)
         {
-          state = (state << 1) | bit[static_cast<uint8_t>(*s)];
-          if ((state & 2) == 0)
-            break;
-          ++s;
-        }
-        if (s < e)
-        {
-          s -= 1;
-          loc = s - buf_;
-          if (s + 4 > e || Pattern::predict_match(pma, s) == 0)
+          const char *s = buf_ + loc;
+          const char *e = buf_ + end_;
+          while (s < e)
           {
-            set_current(loc);
-            return true;
+            state = (state << 1) | bit[static_cast<uint8_t>(*s)];
+            if ((state & 4) == 0)
+              break;
+            ++s;
           }
-          loc += 2;
+          if (s < e)
+          {
+            s -= 2;
+            loc = s - buf_;
+            if (s + 4 > e || Pattern::predict_match(pma, s) == 0)
+            {
+              set_current(loc);
+              return true;
+            }
+            loc += 3;
+          }
+          else
+          {
+            loc = s - buf_;
+            set_current_match(loc - 3);
+            (void)peek_more();
+            loc = cur_ + 3;
+            if (loc >= end_)
+              return false;
+          }
         }
-        else
+      }
+      if (min == 2)
+      {
+        const Pattern::Pred *bit = pat_->bit_;
+        Pattern::Pred state = ~0;
+        while (true)
         {
-          loc = s - buf_;
-          set_current_match(loc - 2);
-          (void)peek_more();
-          loc = cur_ + 2;
-          if (loc >= end_)
-            return false;
+          const char *s = buf_ + loc;
+          const char *e = buf_ + end_;
+          while (s < e)
+          {
+            state = (state << 1) | bit[static_cast<uint8_t>(*s)];
+            if ((state & 2) == 0)
+              break;
+            ++s;
+          }
+          if (s < e)
+          {
+            s -= 1;
+            loc = s - buf_;
+            if (s + 4 > e || Pattern::predict_match(pma, s) == 0)
+            {
+              set_current(loc);
+              return true;
+            }
+            loc += 2;
+          }
+          else
+          {
+            loc = s - buf_;
+            set_current_match(loc - 2);
+            (void)peek_more();
+            loc = cur_ + 2;
+            if (loc >= end_)
+              return false;
+          }
         }
       }
     }
@@ -757,33 +760,20 @@ bool Matcher::advance()
     {
       const char *s = buf_ + loc;
       const char *e = buf_ + end_;
-      while (s < e && (pma[static_cast<uint8_t>(*s)] & 0xc0) == 0xc0)
+      while (s < e && Pattern::predict_match(pma, s))
         ++s;
       if (s < e)
       {
         loc = s - buf_;
-        if (s + 4 > e)
-        {
-          set_current(loc);
-          return true;
-        }
-        size_t k = Pattern::predict_match(pma, s);
-        if (k == 0)
-        {
-          set_current(loc);
-          return true;
-        }
-        loc += k;
+        set_current(loc);
+        return true;
       }
-      else
-      {
-        loc = s - buf_;
-        set_current_match(loc - 1);
-        (void)peek_more();
-        loc = cur_ + 1;
-        if (loc >= end_)
-          return false;
-      }
+      loc = s - buf_;
+      set_current_match(loc - 1);
+      (void)peek_more();
+      loc = cur_ + 1;
+      if (loc >= end_)
+        return false;
     }
   }
   const char *pre = pat_->pre_;

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Mar 17 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun May 28 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -244,7 +244,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3a7a5e5cf1770561627e59f6744b7e66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true when match is predicted, based on s[0..3..e-1] (e &gt;= s + 4).  <a href="#a3a7a5e5cf1770561627e59f6744b7e66">More...</a><br /></td></tr>
 <tr class="separator:a3a7a5e5cf1770561627e59f6744b7e66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa135ef8f7a0d90bc9f4c817055485ad"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#afa135ef8f7a0d90bc9f4c817055485ad">predict_match</a> (const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a> pma[], const char *s)</td></tr>
-<tr class="memdesc:afa135ef8f7a0d90bc9f4c817055485ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns zero when match is predicted or nonzero shift value, based on s[0..3].  <a href="#afa135ef8f7a0d90bc9f4c817055485ad">More...</a><br /></td></tr>
+<tr class="memdesc:afa135ef8f7a0d90bc9f4c817055485ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns zero when match is predicted (removed shift distance return code)  <a href="#afa135ef8f7a0d90bc9f4c817055485ad">More...</a><br /></td></tr>
 <tr class="separator:afa135ef8f7a0d90bc9f4c817055485ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
@@ -535,6 +535,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:ab9a63c8a4a9e95e57ee53f83b748b187"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab9a63c8a4a9e95e57ee53f83b748b187">wms_</a></td></tr>
 <tr class="memdesc:ab9a63c8a4a9e95e57ee53f83b748b187"><td class="mdescLeft">&#160;</td><td class="mdescRight">ms elapsed time to assemble code words  <a href="#ab9a63c8a4a9e95e57ee53f83b748b187">More...</a><br /></td></tr>
 <tr class="separator:ab9a63c8a4a9e95e57ee53f83b748b187"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e38500e4bd2092c65c92ce44df1783f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a2e38500e4bd2092c65c92ce44df1783f">npy_</a></td></tr>
+<tr class="memdesc:a2e38500e4bd2092c65c92ce44df1783f"><td class="mdescLeft">&#160;</td><td class="mdescRight">entropy derived from bitap array  <a href="#a2e38500e4bd2092c65c92ce44df1783f">More...</a><br /></td></tr>
+<tr class="separator:a2e38500e4bd2092c65c92ce44df1783f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a02fdf7c8b6b9a8871c14a778c7f0c3e4">one_</a></td></tr>
 <tr class="memdesc:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if matching one string in pre_[] without meta/anchors  <a href="#a02fdf7c8b6b9a8871c14a778c7f0c3e4">More...</a><br /></td></tr>
 <tr class="separator:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -4096,7 +4099,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns zero when match is predicted or nonzero shift value, based on s[0..3]. </p>
+<p>Returns zero when match is predicted (removed shift distance return code) </p>
 
 </div>
 </div>
@@ -4830,6 +4833,28 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a2e38500e4bd2092c65c92ce44df1783f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::Pattern::npy_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>entropy derived from bitap array </p>
+
+</div>
+</div>
 <a class="anchor" id="a02fdf7c8b6b9a8871c14a778c7f0c3e4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -5100,7 +5125,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Mar 17 2023 15:58:34 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun May 28 2023 16:00:48 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
