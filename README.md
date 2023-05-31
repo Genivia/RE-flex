@@ -57,14 +57,18 @@ reflex ran equally fast or slightly faster than the best times of Flex.*
 Features
 --------
 
+- Includes many examples, such as a mini C compiler to Java bytecode, a
+  tokenizer for C/C++ source code, a tokenizer for Python source code, a
+  tokenizer for Java source code, and much more.
+- Extensive documentation in the online [User Guide][manual-url].
 - Compatible with Flex and Bison to eliminate a learning curve, making a
   transition from Flex++ to RE/flex frustration-free.
-- IEEE POSIX P1003.2 standard compliant (like Lex and Flex).
-- Includes methods for lex/syntax error reporting and recovery.
-- Generates reusable source code that is easy to understand.
 - Integrates seamlessly with Bison and generates Reentrant, Bison-Bridge,
   Bison-Locations, Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison
   Complete Symbols.
+- IEEE POSIX P1003.2 standard compliant (like Lex and Flex).
+- Includes methods for lexical and syntax error reporting and recovery.
+- Generates reusable source code that is easy to understand.
 - Fully supports Unicode and Unicode properties `\p{C}`, including Unicode
   identifier matching for C++11, Java, C#, and Python source code.
 - Auto-detects UTF-8/16/32 input to match Unicode patterns.
@@ -72,10 +76,6 @@ Features
   CP 437, CP 850, CP 858, KOI8, MACROMAN, EBCDIC, and custom code pages.
 - Generates scanners for lexical analysis on files, C++ streams, (wide)
   strings, and memory such as mmap files.
-- Includes many examples, such as a mini C compiler to Java bytecode, a
-  tokenizer for C/C++ source code, a tokenizer for Python source code, a
-  tokenizer for Java source code, and more.
-- Extensive documentation in the online [User Guide][manual-url].
 - Indent/nodent/dedent anchors to match text with indentation, including
   custom `\t` (tab) widths.
 - Lazy quantifiers, no hacks are needed to work around greedy repetitions.
