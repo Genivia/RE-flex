@@ -759,10 +759,10 @@ bool Matcher::advance()
     while (true)
     {
       const char *s = buf_ + loc;
-      const char *e = buf_ + end_;
+      const char *e = buf_ + end_ - 3;
       while (s < e && Pattern::predict_match(pma, s))
         ++s;
-      if (s < e)
+      if (s < e + 3)
       {
         loc = s - buf_;
         set_current(loc);
@@ -789,19 +789,34 @@ bool Matcher::advance()
       {
         loc = s - buf_;
         set_current(loc);
-        return true;
+        if (min == 0)
+          return true;
+        if (min >= 4)
+        {
+          if (s + 1 + min > e || Pattern::predict_match(pat_->pmh_, s + 1, min))
+            return true;
+        }
+        else
+        {
+          if (s + 5 > e || Pattern::predict_match(pat_->pma_, s + 1) == 0)
+            return true;
+        }
+        ++loc;
       }
-      loc = e - buf_;
-      set_current_match(loc - 1);
-      (void)peek_more();
-      loc = cur_ + 1;
-      if (loc + len > end_)
-        return false;
+      else
+      {
+        loc = e - buf_;
+        set_current_match(loc - 1);
+        (void)peek_more();
+        loc = cur_ + 1;
+        if (loc + len > end_)
+          return false;
+      }
     }
   }
   if (bmd_ == 0)
   {
-    // Boyer-Moore preprocessing of the given pattern pat of length len, generates bmd_ > 0 and bms_[] shifts.
+    // Boyer-Moore preprocessing of the given string pattern pat of length len, generates bmd_ > 0 and bms_[] shifts.
     // updated relative frequency table of English letters (with upper/lower-case ratio = 0.0563), punctuation and UTF-8 bytes
     static unsigned char freq[256] =
       // x64 binary ugrep.exe frequencies combined with ASCII TAB/LF/CR control code frequencies
@@ -857,7 +872,7 @@ bool Matcher::advance()
       if (pre[j - 1] == pre[i])
         break;
     bmd_ = i - j + 1;
-#if defined(HAVE_AVX512BW) || defined(HAVE_AVX2) || defined(HAVE_SSE2) || defined(__SSE2__) || defined(__x86_64__) || _M_IX86_FP == 2 || defined(HAVE_NEON)
+#if defined(HAVE_AVX512BW) || defined(HAVE_AVX2) || defined(HAVE_SSE2) || defined(__SSE2__) || defined(__x86_64__) || _M_IX86_FP == 2 || !defined(HAVE_NEON)
     size_t score = 0;
     for (i = 0; i < n; ++i)
       score += bms_[static_cast<uint8_t>(pre[i])];
@@ -866,21 +881,18 @@ bool Matcher::advance()
 #if defined(HAVE_AVX512BW) || defined(HAVE_AVX2) || defined(HAVE_SSE2)
     if (!have_HW_SSE2() && !have_HW_AVX2() && !have_HW_AVX512BW())
     {
-      // if scoring is high and freq is high, then use our improved Boyer-Moore instead
-#if defined(__SSE2__) || defined(__x86_64__) || _M_IX86_FP == 2
-      // SSE2 is available, expect fast memchr()
-      if (score > 1 && fch > 35 && (score > 3 || fch > 50) && fch + score > 52)
-        lcs_ = 0xffff;
-#else
-      // no SSE2 available, expect slow memchr()
-      if (fch > 37 || (fch > 8 && score > 0))
-        lcs_ = 0xffff;
-#endif
+      // SSE2/AVX2 not available: if B-M scoring is high and freq is high, then use our improved Boyer-Moore
+      if (score > 1 && fch > 35 && (score > 4 || fch > 50) && fch + score > 52)
+        lcs_ = 0xffff; // force B-M
     }
-#elif defined(__SSE2__) || defined(__x86_64__) || _M_IX86_FP == 2 || defined(HAVE_NEON)
-    // SIMD is available, if scoring is high and freq is high, then use our improved Boyer-Moore
+#elif defined(__SSE2__) || defined(__x86_64__) || _M_IX86_FP == 2
+    // SSE2 is available: only if B-M scoring is high and freq is high, then use our improved Boyer-Moore
+    if (score > 1 && fch > 35 && (score > 4 || fch > 50) && fch + score > 52)
+      lcs_ = 0xffff; // force B-M
+#elif !defined(HAVE_NEON)
+    // no SIMD available: if B-M scoring is high and freq is high, then use our improved Boyer-Moore
     if (score > 1 && fch > 35 && (score > 3 || fch > 50) && fch + score > 52)
-      lcs_ = 0xffff;
+      lcs_ = 0xffff; // force B-M
 #endif
 #endif
   }
