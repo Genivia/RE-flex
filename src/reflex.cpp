@@ -1757,7 +1757,8 @@ void Reflex::write()
     options["lexer"] = options["prefix"] + (!options["flex"].empty() ? "FlexLexer" : "Lexer");
   if (options["lex"].empty())
     options["lex"] = options["prefix"] + "lex";
-  if (options["header_file"] == "true")
+  bool createHeader = (options["header_file"] == "true");
+  if (createHeader)
   {
     if (options["prefix"].empty())
       options["header_file"] = "lex.yy.h";
@@ -1807,7 +1808,20 @@ void Reflex::write()
   write_prelude();
   write_section_top();
   write_defines();
-  write_class();
+
+  // don't create a class definition in the cpp, just include the header
+  if(createHeader)
+  {
+    write_banner("LEXER CLASS INCLUDE");
+    *out << 
+    "#include " << "\"" << options["header_file"] << "\"" <<'\n';
+  }
+  else
+  {
+    // write the class in the cpp file, now that there isn't a header being created.
+    write_class();
+  }
+
   write_section_1();
   write_lexer();
   write_main();
