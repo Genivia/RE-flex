@@ -87,8 +87,8 @@ endif()
 
 if (${HAVE_NEON})
   list(APPEND simd_definitions HAVE_NEON)
-  if (WIN32 AND MSVC)
-    # MSVC runs NEON by default according to their docs
+  if ((${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm64|aarch64") OR (WIN32 AND MSVC))
+    # Arm64 compilers and MSVC runs NEON by default according to their docs
   else()
     list(APPEND simd_flags "-march=native" "-mfpu=neon")
   endif()
