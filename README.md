@@ -572,6 +572,7 @@ Changelog
 - Mar 17, 2023: 3.3.2 fix a performance issue with case-insensitive pattern construction.
 - May 28, 2023: 3.3.3 fix `yyrestart` dropping the first character; faster `find()`.
 - May 31, 2023: 3.3.4 fix `find()` initialization issue in 3.3.3.
+- Jun 12, 2023: 3.3.5 improve source code output of lexer class definitions.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

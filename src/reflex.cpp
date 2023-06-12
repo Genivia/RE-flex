@@ -30,7 +30,7 @@
 @file      reflex.cpp
 @brief     RE/flex scanner generator replacement for Flex/Lex
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2016-2023, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -326,8 +326,12 @@ void Reflex::main(int argc, char **argv)
 void Reflex::init(int argc, char **argv)
 {
 #ifdef OS_WIN
+  if (_isatty(0) != 0)
+    abort("no input file specified");
   color_term = false;
 #else
+  if (isatty(0) != 0)
+    abort("no input file specified");
   const char *term = getenv("TERM");
   color_term = term && (strstr(term, "ansi") || strstr(term, "xterm") || strstr(term, "color"));
 #endif
@@ -652,7 +656,7 @@ void Reflex::help(const char *message, const char *arg)
         -V, --version\n\
                 report reflex version and exit\n\
 \n\
-    Lex/Flex-like options that are enabled by default or have no effect:\n\
+    Lex/Flex options that are enabled by default or have no effect:\n\
         --c++                  default\n\
         --lex-compat           n/a\n\
         --never-interactive    default\n\
@@ -1757,8 +1761,7 @@ void Reflex::write()
     options["lexer"] = options["prefix"] + (!options["flex"].empty() ? "FlexLexer" : "Lexer");
   if (options["lex"].empty())
     options["lex"] = options["prefix"] + "lex";
-  bool createHeader = (options["header_file"] == "true");
-  if (createHeader)
+  if (options["header_file"] == "true")
   {
     if (options["prefix"].empty())
       options["header_file"] = "lex.yy.h";
@@ -1808,20 +1811,15 @@ void Reflex::write()
   write_prelude();
   write_section_top();
   write_defines();
-
-  // don't create a class definition in the cpp, just include the header
-  if(createHeader)
+  if (!options["header_file"].empty())
   {
     write_banner("LEXER CLASS INCLUDE");
-    *out << 
-    "#include " << "\"" << options["header_file"] << "\"" <<'\n';
+    *out << "#include \"" << options["header_file"] << "\"\n";
   }
   else
   {
-    // write the class in the cpp file, now that there isn't a header being created.
     write_class();
   }
-
   write_section_1();
   write_lexer();
   write_main();

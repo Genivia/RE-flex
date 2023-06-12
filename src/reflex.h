@@ -30,7 +30,7 @@
 @file      reflex.h
 @brief     RE/flex scanner generator replacement for Flex/Lex
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2015-2019, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2016-2023, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
@@ -57,6 +57,12 @@
 # define OS_WIN
 #endif
 
+#ifdef OS_WIN
+# include <io.h>
+#else
+# include <unistd.h>
+#endif
+
 #if !defined(PLATFORM)
 # if defined(OS_WIN)
 #  define PLATFORM "WIN"
@@ -66,7 +72,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "3.3.4"
+#define REFLEX_VERSION "3.3.5"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**

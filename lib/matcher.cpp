@@ -641,7 +641,7 @@ bool Matcher::advance()
         return false;
     }
     const Pattern::Pred *pma = pat_->pma_;
-    if (min >= 2 && pat_->npy_ < 16)
+    if (min >= 2 && pat_->npy_ <= 16)
     {
       if (min >= 4)
       {
