@@ -326,12 +326,8 @@ void Reflex::main(int argc, char **argv)
 void Reflex::init(int argc, char **argv)
 {
 #ifdef OS_WIN
-  if (_isatty(0) != 0)
-    abort("no input file specified");
   color_term = false;
 #else
-  if (isatty(0) != 0)
-    abort("no input file specified");
   const char *term = getenv("TERM");
   color_term = term && (strstr(term, "ansi") || strstr(term, "xterm") || strstr(term, "color"));
 #endif
@@ -519,6 +515,14 @@ void Reflex::init(int argc, char **argv)
       infile = argv[i];
     }
   }
+
+#ifdef OS_WIN
+  if (infile.empty() && _isatty(0) != 0)
+    abort("no input file specified");
+#else
+  if (infile.empty() && isatty(0) != 0)
+    abort("no input file specified");
+#endif
 
   set_library();
 }
