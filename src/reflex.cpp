@@ -1004,13 +1004,27 @@ std::string Reflex::get_string(size_t& pos)
   if (pos >= linelen || line.at(pos) != '"')
     return "";
   std::string string;
-  while (++pos < linelen && line.at(pos) != '"')
-  {
-    if (line.at(pos) == '\\' && (line.at(pos + 1) == '"' || line.at(pos + 1) == '\\'))
-      ++pos;
-    string.push_back(line.at(pos));
-  }
   ++pos;
+  while (pos < linelen && line.at(pos) != '"')
+  {
+    if (line.at(pos) == '\\')
+    {
+      if (pos + 1 < linelen && (line.at(pos + 1) == '"' || line.at(pos + 1) == '\\'))
+      {
+        ++pos;
+      }
+      else if (pos + 1 == linelen)
+      {
+        if (!get_line())
+          error("EOF encountered at line continuation");
+        pos = 0;
+        continue;
+      }
+    }
+    string.push_back(line.at(pos++));
+  }
+  if (pos < linelen)
+    ++pos;
   return string;
 }
 
