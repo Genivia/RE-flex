@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Jun 12 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Jul 11 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -244,8 +244,11 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3a7a5e5cf1770561627e59f6744b7e66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true when match is predicted, based on s[0..3..e-1] (e &gt;= s + 4).  <a href="#a3a7a5e5cf1770561627e59f6744b7e66">More...</a><br /></td></tr>
 <tr class="separator:a3a7a5e5cf1770561627e59f6744b7e66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa135ef8f7a0d90bc9f4c817055485ad"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#afa135ef8f7a0d90bc9f4c817055485ad">predict_match</a> (const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a> pma[], const char *s)</td></tr>
-<tr class="memdesc:afa135ef8f7a0d90bc9f4c817055485ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns zero when match is predicted (removed shift distance return code)  <a href="#afa135ef8f7a0d90bc9f4c817055485ad">More...</a><br /></td></tr>
+<tr class="memdesc:afa135ef8f7a0d90bc9f4c817055485ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns zero when match is predicted (removed shift distance return code).  <a href="#afa135ef8f7a0d90bc9f4c817055485ad">More...</a><br /></td></tr>
 <tr class="separator:afa135ef8f7a0d90bc9f4c817055485ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc44fad733f25d0945c7de2426941faf"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#afc44fad733f25d0945c7de2426941faf">frequency</a> (uint8_t c)</td></tr>
+<tr class="memdesc:afc44fad733f25d0945c7de2426941faf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Relative frequency of English letters with upper/lower-case ratio = 0.0563, punctuation and UTF-8 bytes.  <a href="#afc44fad733f25d0945c7de2426941faf">More...</a><br /></td></tr>
+<tr class="separator:afc44fad733f25d0945c7de2426941faf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -467,8 +470,6 @@ Static Private Member Functions</h2></td></tr>
 <tr class="separator:ab771b9c08b856e02a6c90282fe7c0af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cab6135b833c193e66dd0b6b086c458"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a3cab6135b833c193e66dd0b6b086c458">hash</a> (<a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a> h, uint8_t b)</td></tr>
 <tr class="separator:a3cab6135b833c193e66dd0b6b086c458"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf3c720b8a2ba442c88232873aa324f6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#abf3c720b8a2ba442c88232873aa324f6">hash</a> (<a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a> h)</td></tr>
-<tr class="separator:abf3c720b8a2ba442c88232873aa324f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -511,8 +512,14 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a17ba8adaa619f3c6d5ed10be5a1ea566"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a17ba8adaa619f3c6d5ed10be5a1ea566">min_</a></td></tr>
 <tr class="memdesc:a17ba8adaa619f3c6d5ed10be5a1ea566"><td class="mdescLeft">&#160;</td><td class="mdescRight">patterns after the prefix are at least this long but no more than 8  <a href="#a17ba8adaa619f3c6d5ed10be5a1ea566">More...</a><br /></td></tr>
 <tr class="separator:a17ba8adaa619f3c6d5ed10be5a1ea566"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17e567f4464a1caf947211fb3df63e68"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a17e567f4464a1caf947211fb3df63e68">pin_</a></td></tr>
+<tr class="memdesc:a17e567f4464a1caf947211fb3df63e68"><td class="mdescLeft">&#160;</td><td class="mdescRight">position of the needles in the pattern, if any, less then min_  <a href="#a17e567f4464a1caf947211fb3df63e68">More...</a><br /></td></tr>
+<tr class="separator:a17e567f4464a1caf947211fb3df63e68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43ceca6a0b95815fc08bc462fd264ee3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a43ceca6a0b95815fc08bc462fd264ee3">ndl_</a></td></tr>
+<tr class="memdesc:a43ceca6a0b95815fc08bc462fd264ee3"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of needles  <a href="#a43ceca6a0b95815fc08bc462fd264ee3">More...</a><br /></td></tr>
+<tr class="separator:a43ceca6a0b95815fc08bc462fd264ee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b7a0074dd7a97b96286f0ec37b510ed"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a2b7a0074dd7a97b96286f0ec37b510ed">pre_</a> [256]</td></tr>
-<tr class="memdesc:a2b7a0074dd7a97b96286f0ec37b510ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">pattern prefix, shorter or equal to 255 bytes  <a href="#a2b7a0074dd7a97b96286f0ec37b510ed">More...</a><br /></td></tr>
+<tr class="memdesc:a2b7a0074dd7a97b96286f0ec37b510ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">pattern prefix or needles, shorter or equal to 255 bytes  <a href="#a2b7a0074dd7a97b96286f0ec37b510ed">More...</a><br /></td></tr>
 <tr class="separator:a2b7a0074dd7a97b96286f0ec37b510ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4361e841b84f19cae9ebecd29198d18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab4361e841b84f19cae9ebecd29198d18">bit_</a> [256]</td></tr>
 <tr class="memdesc:ab4361e841b84f19cae9ebecd29198d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">bitap array  <a href="#ab4361e841b84f19cae9ebecd29198d18">More...</a><br /></td></tr>
@@ -2120,6 +2127,32 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afc44fad733f25d0945c7de2426941faf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint8_t reflex::Pattern::frequency </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Relative frequency of English letters with upper/lower-case ratio = 0.0563, punctuation and UTF-8 bytes. </p>
+
+</div>
+</div>
 <a class="anchor" id="a60000883005e2c0610ce055642e958ad"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2365,30 +2398,6 @@ Friends</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="abf3c720b8a2ba442c88232873aa324f6"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a> reflex::Pattern::hash </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a>&#160;</td>
-          <td class="paramname"><em>h</em></td><td>)</td>
-          <td></td>
         </tr>
       </table>
   </td>
@@ -4099,7 +4108,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns zero when match is predicted (removed shift distance return code) </p>
+<p>Returns zero when match is predicted (removed shift distance return code). </p>
 
 </div>
 </div>
@@ -4811,6 +4820,28 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a43ceca6a0b95815fc08bc462fd264ee3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::Pattern::ndl_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>number of needles </p>
+
+</div>
+</div>
 <a class="anchor" id="adb40e55f6d057d0b1bed8cadab7f8548"></a>
 <div class="memitem">
 <div class="memproto">
@@ -4921,6 +4952,28 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a17e567f4464a1caf947211fb3df63e68"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::Pattern::pin_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>position of the needles in the pattern, if any, less then min_ </p>
+
+</div>
+</div>
 <a class="anchor" id="aba8c5bf9348e6dd96454e7e5caee9b52"></a>
 <div class="memitem">
 <div class="memproto">
@@ -5005,7 +5058,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>pattern prefix, shorter or equal to 255 bytes </p>
+<p>pattern prefix or needles, shorter or equal to 255 bytes </p>
 
 </div>
 </div>
@@ -5125,7 +5178,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Jun 12 2023 11:52:42 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Jul 11 2023 13:32:47 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
