@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Tue Jul 11 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Jul 17 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -128,7 +128,7 @@ Public Types</h2></td></tr>
 <tr class="memdesc:a3739687ef42556a3700e046de2f1d33e"><td class="mdescLeft">&#160;</td><td class="mdescRight">hash value type, max value is <a class="el" href="structreflex_1_1_pattern_1_1_const.html#a1f1b9246eb17fb69412ebb845eb13abf" title="size of the predict match array ">Const::HASH</a>  <a href="#a3739687ef42556a3700e046de2f1d33e">More...</a><br /></td></tr>
 <tr class="separator:a3739687ef42556a3700e046de2f1d33e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a878042a0e46a089fd40b5f27bbf81ea3"><td class="memItemLeft" align="right" valign="top">typedef uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a></td></tr>
-<tr class="memdesc:a878042a0e46a089fd40b5f27bbf81ea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">index into opcodes array <a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1" title="points to the opcode table ">Pattern::opc_</a> and subpattern indexing  <a href="#a878042a0e46a089fd40b5f27bbf81ea3">More...</a><br /></td></tr>
+<tr class="memdesc:a878042a0e46a089fd40b5f27bbf81ea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">index into opcodes array <a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1" title="points to the table with compiled finite state machine opcodes ">Pattern::opc_</a> and subpattern indexing  <a href="#a878042a0e46a089fd40b5f27bbf81ea3">More...</a><br /></td></tr>
 <tr class="separator:a878042a0e46a089fd40b5f27bbf81ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f0e307c649ca5683b7d959b7e25f367"><td class="memItemLeft" align="right" valign="top">typedef uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a6f0e307c649ca5683b7d959b7e25f367">Accept</a></td></tr>
 <tr class="memdesc:a6f0e307c649ca5683b7d959b7e25f367"><td class="mdescLeft">&#160;</td><td class="mdescRight">group capture index  <a href="#a6f0e307c649ca5683b7d959b7e25f367">More...</a><br /></td></tr>
@@ -244,7 +244,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3a7a5e5cf1770561627e59f6744b7e66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true when match is predicted, based on s[0..3..e-1] (e &gt;= s + 4).  <a href="#a3a7a5e5cf1770561627e59f6744b7e66">More...</a><br /></td></tr>
 <tr class="separator:a3a7a5e5cf1770561627e59f6744b7e66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa135ef8f7a0d90bc9f4c817055485ad"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#afa135ef8f7a0d90bc9f4c817055485ad">predict_match</a> (const <a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a> pma[], const char *s)</td></tr>
-<tr class="memdesc:afa135ef8f7a0d90bc9f4c817055485ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns zero when match is predicted (removed shift distance return code).  <a href="#afa135ef8f7a0d90bc9f4c817055485ad">More...</a><br /></td></tr>
+<tr class="memdesc:afa135ef8f7a0d90bc9f4c817055485ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns zero when match is predicted (removed shift distance return, just 0 or 1).  <a href="#afa135ef8f7a0d90bc9f4c817055485ad">More...</a><br /></td></tr>
 <tr class="separator:afa135ef8f7a0d90bc9f4c817055485ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc44fad733f25d0945c7de2426941faf"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#afc44fad733f25d0945c7de2426941faf">frequency</a> (uint8_t c)</td></tr>
 <tr class="memdesc:afc44fad733f25d0945c7de2426941faf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Relative frequency of English letters with upper/lower-case ratio = 0.0563, punctuation and UTF-8 bytes.  <a href="#afc44fad733f25d0945c7de2426941faf">More...</a><br /></td></tr>
@@ -498,7 +498,7 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a53bcee00c584232a3d0991c5ead49bdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of finite state machine edges |E|  <a href="#a53bcee00c584232a3d0991c5ead49bdf">More...</a><br /></td></tr>
 <tr class="separator:a53bcee00c584232a3d0991c5ead49bdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab67c0f79238c0e2e5bccd80c43c07a1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classreflex_1_1_pattern.html#a4d44677873f6377230f2513218101c1c">Opcode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1">opc_</a></td></tr>
-<tr class="memdesc:aab67c0f79238c0e2e5bccd80c43c07a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">points to the opcode table  <a href="#aab67c0f79238c0e2e5bccd80c43c07a1">More...</a><br /></td></tr>
+<tr class="memdesc:aab67c0f79238c0e2e5bccd80c43c07a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">points to the table with compiled finite state machine opcodes  <a href="#aab67c0f79238c0e2e5bccd80c43c07a1">More...</a><br /></td></tr>
 <tr class="separator:aab67c0f79238c0e2e5bccd80c43c07a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb40e55f6d057d0b1bed8cadab7f8548"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#adb40e55f6d057d0b1bed8cadab7f8548">nop_</a></td></tr>
 <tr class="memdesc:adb40e55f6d057d0b1bed8cadab7f8548"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of opcodes generated  <a href="#adb40e55f6d057d0b1bed8cadab7f8548">More...</a><br /></td></tr>
@@ -507,20 +507,17 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a8bc2f333f66f08463a9b5471ae7a1a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">function pointer to FSM code  <a href="#a8bc2f333f66f08463a9b5471ae7a1a7f">More...</a><br /></td></tr>
 <tr class="separator:a8bc2f333f66f08463a9b5471ae7a1a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1624c5f585c0973a04527bf562f5433"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#af1624c5f585c0973a04527bf562f5433">len_</a></td></tr>
-<tr class="memdesc:af1624c5f585c0973a04527bf562f5433"><td class="mdescLeft">&#160;</td><td class="mdescRight">prefix length of pre_[], less or equal to 255  <a href="#af1624c5f585c0973a04527bf562f5433">More...</a><br /></td></tr>
+<tr class="memdesc:af1624c5f585c0973a04527bf562f5433"><td class="mdescLeft">&#160;</td><td class="mdescRight">length of chr_[], less or equal to 255  <a href="#af1624c5f585c0973a04527bf562f5433">More...</a><br /></td></tr>
 <tr class="separator:af1624c5f585c0973a04527bf562f5433"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17ba8adaa619f3c6d5ed10be5a1ea566"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a17ba8adaa619f3c6d5ed10be5a1ea566">min_</a></td></tr>
 <tr class="memdesc:a17ba8adaa619f3c6d5ed10be5a1ea566"><td class="mdescLeft">&#160;</td><td class="mdescRight">patterns after the prefix are at least this long but no more than 8  <a href="#a17ba8adaa619f3c6d5ed10be5a1ea566">More...</a><br /></td></tr>
 <tr class="separator:a17ba8adaa619f3c6d5ed10be5a1ea566"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17e567f4464a1caf947211fb3df63e68"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a17e567f4464a1caf947211fb3df63e68">pin_</a></td></tr>
-<tr class="memdesc:a17e567f4464a1caf947211fb3df63e68"><td class="mdescLeft">&#160;</td><td class="mdescRight">position of the needles in the pattern, if any, less then min_  <a href="#a17e567f4464a1caf947211fb3df63e68">More...</a><br /></td></tr>
+<tr class="memdesc:a17e567f4464a1caf947211fb3df63e68"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of needles  <a href="#a17e567f4464a1caf947211fb3df63e68">More...</a><br /></td></tr>
 <tr class="separator:a17e567f4464a1caf947211fb3df63e68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43ceca6a0b95815fc08bc462fd264ee3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a43ceca6a0b95815fc08bc462fd264ee3">ndl_</a></td></tr>
-<tr class="memdesc:a43ceca6a0b95815fc08bc462fd264ee3"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of needles  <a href="#a43ceca6a0b95815fc08bc462fd264ee3">More...</a><br /></td></tr>
-<tr class="separator:a43ceca6a0b95815fc08bc462fd264ee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b7a0074dd7a97b96286f0ec37b510ed"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a2b7a0074dd7a97b96286f0ec37b510ed">pre_</a> [256]</td></tr>
-<tr class="memdesc:a2b7a0074dd7a97b96286f0ec37b510ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">pattern prefix or needles, shorter or equal to 255 bytes  <a href="#a2b7a0074dd7a97b96286f0ec37b510ed">More...</a><br /></td></tr>
-<tr class="separator:a2b7a0074dd7a97b96286f0ec37b510ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af06399ca4d2d20096fc94d0db95a45c2"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#af06399ca4d2d20096fc94d0db95a45c2">chr_</a> [256]</td></tr>
+<tr class="memdesc:af06399ca4d2d20096fc94d0db95a45c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">pattern prefix string or character needles for needle-based search  <a href="#af06399ca4d2d20096fc94d0db95a45c2">More...</a><br /></td></tr>
+<tr class="separator:af06399ca4d2d20096fc94d0db95a45c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4361e841b84f19cae9ebecd29198d18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab4361e841b84f19cae9ebecd29198d18">bit_</a> [256]</td></tr>
 <tr class="memdesc:ab4361e841b84f19cae9ebecd29198d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">bitap array  <a href="#ab4361e841b84f19cae9ebecd29198d18">More...</a><br /></td></tr>
 <tr class="separator:ab4361e841b84f19cae9ebecd29198d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -530,6 +527,18 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:aba8c5bf9348e6dd96454e7e5caee9b52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aba8c5bf9348e6dd96454e7e5caee9b52">pma_</a> [<a class="el" href="structreflex_1_1_pattern_1_1_const.html#a1f1b9246eb17fb69412ebb845eb13abf">Const::HASH</a>]</td></tr>
 <tr class="memdesc:aba8c5bf9348e6dd96454e7e5caee9b52"><td class="mdescLeft">&#160;</td><td class="mdescRight">predict-match array  <a href="#aba8c5bf9348e6dd96454e7e5caee9b52">More...</a><br /></td></tr>
 <tr class="separator:aba8c5bf9348e6dd96454e7e5caee9b52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d216a82feb971fc80d10a0c352324ae"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a2d216a82feb971fc80d10a0c352324ae">lcp_</a></td></tr>
+<tr class="memdesc:a2d216a82feb971fc80d10a0c352324ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">primary least common character position in the pattern or 0xffff  <a href="#a2d216a82feb971fc80d10a0c352324ae">More...</a><br /></td></tr>
+<tr class="separator:a2d216a82feb971fc80d10a0c352324ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82e8ede5387a3535ba687f6d2c4865f4"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a82e8ede5387a3535ba687f6d2c4865f4">lcs_</a></td></tr>
+<tr class="memdesc:a82e8ede5387a3535ba687f6d2c4865f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">secondary least common character position in the pattern or 0xffff  <a href="#a82e8ede5387a3535ba687f6d2c4865f4">More...</a><br /></td></tr>
+<tr class="separator:a82e8ede5387a3535ba687f6d2c4865f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9279c1c1980bf31c60f091ad38b90dff"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a9279c1c1980bf31c60f091ad38b90dff">bmd_</a></td></tr>
+<tr class="memdesc:a9279c1c1980bf31c60f091ad38b90dff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boyer-Moore jump distance on mismatch, B-M is enabled when bmd_ &gt; 0.  <a href="#a9279c1c1980bf31c60f091ad38b90dff">More...</a><br /></td></tr>
+<tr class="separator:a9279c1c1980bf31c60f091ad38b90dff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed618395562196d475df30ed05a89d5a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aed618395562196d475df30ed05a89d5a">bms_</a> [256]</td></tr>
+<tr class="memdesc:aed618395562196d475df30ed05a89d5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boyer-Moore skip array.  <a href="#aed618395562196d475df30ed05a89d5a">More...</a><br /></td></tr>
+<tr class="separator:aed618395562196d475df30ed05a89d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94209f79e5409ae48e486b447cbc52b9"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a94209f79e5409ae48e486b447cbc52b9">pms_</a></td></tr>
 <tr class="memdesc:a94209f79e5409ae48e486b447cbc52b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">ms elapsed time to parse regex  <a href="#a94209f79e5409ae48e486b447cbc52b9">More...</a><br /></td></tr>
 <tr class="separator:a94209f79e5409ae48e486b447cbc52b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -543,10 +552,10 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:ab9a63c8a4a9e95e57ee53f83b748b187"><td class="mdescLeft">&#160;</td><td class="mdescRight">ms elapsed time to assemble code words  <a href="#ab9a63c8a4a9e95e57ee53f83b748b187">More...</a><br /></td></tr>
 <tr class="separator:ab9a63c8a4a9e95e57ee53f83b748b187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e38500e4bd2092c65c92ce44df1783f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a2e38500e4bd2092c65c92ce44df1783f">npy_</a></td></tr>
-<tr class="memdesc:a2e38500e4bd2092c65c92ce44df1783f"><td class="mdescLeft">&#160;</td><td class="mdescRight">entropy derived from bitap array  <a href="#a2e38500e4bd2092c65c92ce44df1783f">More...</a><br /></td></tr>
+<tr class="memdesc:a2e38500e4bd2092c65c92ce44df1783f"><td class="mdescLeft">&#160;</td><td class="mdescRight">entropy derived from the bitap array bit_[]  <a href="#a2e38500e4bd2092c65c92ce44df1783f">More...</a><br /></td></tr>
 <tr class="separator:a2e38500e4bd2092c65c92ce44df1783f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a02fdf7c8b6b9a8871c14a778c7f0c3e4">one_</a></td></tr>
-<tr class="memdesc:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if matching one string in pre_[] without meta/anchors  <a href="#a02fdf7c8b6b9a8871c14a778c7f0c3e4">More...</a><br /></td></tr>
+<tr class="memdesc:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if matching one string stored in chr_[] without meta/anchors  <a href="#a02fdf7c8b6b9a8871c14a778c7f0c3e4">More...</a><br /></td></tr>
 <tr class="separator:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
@@ -652,7 +661,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>index into opcodes array <a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1" title="points to the opcode table ">Pattern::opc_</a> and subpattern indexing </p>
+<p>index into opcodes array <a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1" title="points to the table with compiled finite state machine opcodes ">Pattern::opc_</a> and subpattern indexing </p>
 
 </div>
 </div>
@@ -4108,7 +4117,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns zero when match is predicted (removed shift distance return code). </p>
+<p>Returns zero when match is predicted (removed shift distance return, just 0 or 1). </p>
 
 </div>
 </div>
@@ -4666,6 +4675,72 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a9279c1c1980bf31c60f091ad38b90dff"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::Pattern::bmd_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Boyer-Moore jump distance on mismatch, B-M is enabled when bmd_ &gt; 0. </p>
+
+</div>
+</div>
+<a class="anchor" id="aed618395562196d475df30ed05a89d5a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t reflex::Pattern::bms_[256]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Boyer-Moore skip array. </p>
+
+</div>
+</div>
+<a class="anchor" id="af06399ca4d2d20096fc94d0db95a45c2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char reflex::Pattern::chr_[256]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>pattern prefix string or character needles for needle-based search </p>
+
+</div>
+</div>
 <a class="anchor" id="a13eb00b2d15c2a25b179a9261c82e595"></a>
 <div class="memitem">
 <div class="memproto">
@@ -4776,6 +4851,50 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a2d216a82feb971fc80d10a0c352324ae"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t reflex::Pattern::lcp_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>primary least common character position in the pattern or 0xffff </p>
+
+</div>
+</div>
+<a class="anchor" id="a82e8ede5387a3535ba687f6d2c4865f4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t reflex::Pattern::lcs_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>secondary least common character position in the pattern or 0xffff </p>
+
+</div>
+</div>
 <a class="anchor" id="af1624c5f585c0973a04527bf562f5433"></a>
 <div class="memitem">
 <div class="memproto">
@@ -4794,7 +4913,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>prefix length of pre_[], less or equal to 255 </p>
+<p>length of chr_[], less or equal to 255 </p>
 
 </div>
 </div>
@@ -4817,28 +4936,6 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>patterns after the prefix are at least this long but no more than 8 </p>
-
-</div>
-</div>
-<a class="anchor" id="a43ceca6a0b95815fc08bc462fd264ee3"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t reflex::Pattern::ndl_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>number of needles </p>
 
 </div>
 </div>
@@ -4882,7 +4979,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>entropy derived from bitap array </p>
+<p>entropy derived from the bitap array bit_[] </p>
 
 </div>
 </div>
@@ -4904,7 +5001,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>true if matching one string in pre_[] without meta/anchors </p>
+<p>true if matching one string stored in chr_[] without meta/anchors </p>
 
 </div>
 </div>
@@ -4926,7 +5023,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>points to the opcode table </p>
+<p>points to the table with compiled finite state machine opcodes </p>
 
 </div>
 </div>
@@ -4970,7 +5067,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>position of the needles in the pattern, if any, less then min_ </p>
+<p>number of needles </p>
 
 </div>
 </div>
@@ -5037,28 +5134,6 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ms elapsed time to parse regex </p>
-
-</div>
-</div>
-<a class="anchor" id="a2b7a0074dd7a97b96286f0ec37b510ed"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">char reflex::Pattern::pre_[256]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>pattern prefix or needles, shorter or equal to 255 bytes </p>
 
 </div>
 </div>
@@ -5178,7 +5253,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Tue Jul 11 2023 13:32:47 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Jul 17 2023 13:08:46 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

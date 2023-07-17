@@ -27,6 +27,11 @@ Matcher class for efficient fuzzy matching and fuzzy search with regex patterns.
 
 - FuzzyMatcher is used in the [ugrep](https://github.com/Genivia/ugrep) project
 
+Requires
+--------
+
+[RE-Flex](https://github.com/Genivia/RE-flex) version 3.3.7 or greater.
+
 Examples
 --------
 

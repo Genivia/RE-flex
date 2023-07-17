@@ -574,6 +574,7 @@ Changelog
 - May 31, 2023: 3.3.4 fix `find()` initialization issue in 3.3.3.
 - Jun 12, 2023: 3.3.5 improve source code output of lexer class definitions.
 - Jul 11, 2023: 3.3.6 faster `find()`; improved `--stdout` to include tables.
+- Jul 17, 2023: 3.3.7 faster `find()`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
