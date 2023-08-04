@@ -575,6 +575,7 @@ Changelog
 - Jun 12, 2023: 3.3.5 improve source code output of lexer class definitions.
 - Jul 11, 2023: 3.3.6 faster `find()`; improved `--stdout` to include tables.
 - Jul 17, 2023: 3.3.7 faster `find()`.
+- Aug  4, 2023: 3.3.8 minor update to sync up the code base with the ugrep project.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
