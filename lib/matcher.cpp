@@ -436,9 +436,13 @@ unrolled:
       Pattern::Index jump = Pattern::index_of(opcode);
       if (jump == 0)
       {
-        // loop back to start state after only one char matched (one transition) but w/o full match, then optimize
-        if (cap_ == 0 && pos_ == cur_ + 1 && method == Const::FIND)
-          cur_ = pos_; // set cur_ to move forward from cur_ + 1 with FIND advance()
+        // loop back to start state w/o full match: advance to avoid backtracking
+        if (cap_ == 0 && pos_ > cur_ && method == Const::FIND)
+        {
+          // use bit_[] to check each char in buf_[cur_+1..pos_-1] if it is a starting char, if not then increase cur_
+          while (++cur_ < pos_ && (pat_->bit_[static_cast<uint8_t>(buf_[cur_])] & 1))
+            continue;
+        }
       }
       else if (jump >= Pattern::Const::LONG)
       {
@@ -576,11 +580,40 @@ unrolled:
     else if (method == Const::FIND)
     {
       DBGLOG("Reject empty match and continue?");
-      // skip one char to keep searching
-      set_current(++cur_);
       // allow FIND with "N" to match an empty line, with ^$ etc.
       if (cap_ == 0 || !opt_.N)
-        goto scan;
+      {
+        // if we found an empty match, we keep looking for non-empty matches when "N" is off
+        if (cap_ != 0)
+        {
+          if (
+#if defined(COMPILE_AVX512BW)
+              simd_advance_avx512bw()
+#elif defined(COMPILE_AVX2)
+              simd_advance_avx2()
+#else
+              advance()
+#endif
+             )
+          {
+            goto scan;
+          }
+          set_current(++cur_);
+          // at end of input, no matches remain
+          cap_ = 0;
+        }
+        else
+        {
+          // advance one char to keep searching
+          set_current(++cur_);
+          goto scan;
+        }
+      }
+      else
+      {
+        // advance one char to keep searching at the next character position when we return
+        set_current(++cur_);
+      }
       DBGLOG("Accept empty match");
     }
     else
@@ -633,7 +666,13 @@ bool Matcher::advance()
   if (pat_->len_ == 0)
   {
     if (min == 0)
-      return false;
+    {
+      // if "N" is on (non-empty pattern matches only), then there is nothing to match
+      if (opt_.N)
+        return false;
+      // if "N" is off, then match an empty-matching pattern as if non-empty
+      min = 1;
+    }
     if (loc + min > end_)
     {
       set_current_match(loc - 1);
@@ -1290,7 +1329,7 @@ bool Matcher::advance()
           break;
       }
     }
-    else if (pat_->pin_ > 8 && pat_->pin_ <= 16)
+    else if (pat_->pin_ == 16)
     {
       size_t lcp = pat_->lcp_;
       size_t lcs = pat_->lcs_;
@@ -2566,7 +2605,7 @@ bool Matcher::advance()
       }
     }
 #endif
-    if (min >= 2 && pat_->npy_ < 16)
+    if (min >= 4 || pat_->npy_ < 16 || (min >= 2 && pat_->npy_ >= 56))
     {
       if (min >= 4)
       {
@@ -2695,65 +2734,67 @@ bool Matcher::advance()
           }
         }
       }
-    }
-    if (min >= 4)
-    {
+      const Pattern::Pred *bit = pat_->bit_;
       while (true)
       {
         const char *s = buf_ + loc;
-        const char *e = buf_ + end_ - min;
+        const char *e = buf_ + end_ - 3;
         bool f = true;
         while (s < e &&
-            (f = (!Pattern::predict_match(pmh, s, min) &&
-                  !Pattern::predict_match(pmh, ++s, min))))
+            (f = ((bit[static_cast<uint8_t>(*s)] & 1) &&
+                  (bit[static_cast<uint8_t>(*++s)] & 1) &&
+                  (bit[static_cast<uint8_t>(*++s)] & 1) &&
+                  (bit[static_cast<uint8_t>(*++s)] & 1))))
         {
           ++s;
         }
         loc = s - buf_;
         if (!f)
         {
+          if (s < e && Pattern::predict_match(pma, s))
+          {
+            ++loc;
+            continue;
+          }
           set_current(loc);
           return true;
         }
         set_current_match(loc - 1);
         (void)peek_more();
         loc = cur_ + 1;
-        if (loc + min >= end_)
+        if (loc + 3 >= end_)
         {
           set_current(loc);
           return loc + min <= end_;
         }
       }
     }
-    else
+    while (true)
     {
-      while (true)
+      const char *s = buf_ + loc;
+      const char *e = buf_ + end_ - 6;
+      bool f = true;
+      while (s < e &&
+          (f = (Pattern::predict_match(pma, s) &&
+                Pattern::predict_match(pma, ++s) &&
+                Pattern::predict_match(pma, ++s) &&
+                Pattern::predict_match(pma, ++s))))
       {
-        const char *s = buf_ + loc;
-        const char *e = buf_ + end_ - 6;
-        bool f = true;
-        while (s < e &&
-            (f = (Pattern::predict_match(pma, s) &&
-                  Pattern::predict_match(pma, ++s) &&
-                  Pattern::predict_match(pma, ++s) &&
-                  Pattern::predict_match(pma, ++s))))
-        {
-          ++s;
-        }
-        loc = s - buf_;
-        if (!f)
-        {
-          set_current(loc);
-          return true;
-        }
-        set_current_match(loc - 1);
-        (void)peek_more();
-        loc = cur_ + 1;
-        if (loc + 6 >= end_)
-        {
-          set_current(loc);
-          return loc + min <= end_;
-        }
+        ++s;
+      }
+      loc = s - buf_;
+      if (!f)
+      {
+        set_current(loc);
+        return true;
+      }
+      set_current_match(loc - 1);
+      (void)peek_more();
+      loc = cur_ + 1;
+      if (loc + 6 >= end_)
+      {
+        set_current(loc);
+        return loc + min <= end_;
       }
     }
   }
@@ -2770,8 +2811,6 @@ bool Matcher::advance()
       {
         loc = s - buf_;
         set_current(loc);
-        if (min == 0)
-          return true;
         if (min >= 4)
         {
           if (s + 1 + min > e || Pattern::predict_match(pmh, s + 1, min))
@@ -2779,7 +2818,7 @@ bool Matcher::advance()
         }
         else
         {
-          if (s > e - 5 || Pattern::predict_match(pma, s + 1) == 0)
+          if (min == 0 || s > e - 5 || Pattern::predict_match(pma, s + 1) == 0)
             return true;
         }
         ++loc;
@@ -2820,8 +2859,6 @@ bool Matcher::advance()
           {
             loc = s - lcp + offset - buf_;
             set_current(loc);
-            if (min == 0)
-              return true;
             if (min >= 4)
             {
               if (loc + len + min > end_ || Pattern::predict_match(pmh, &buf_[loc + len], min))
@@ -2829,7 +2866,7 @@ bool Matcher::advance()
             }
             else
             {
-              if (loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
+              if (min == 0 || loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
                 return true;
             }
           }
@@ -2856,8 +2893,6 @@ bool Matcher::advance()
           {
             loc = s - lcp + offset - buf_;
             set_current(loc);
-            if (min == 0)
-              return true;
             if (min >= 4)
             {
               if (loc + len + min > end_ || Pattern::predict_match(pmh, &buf_[loc + len], min))
@@ -2865,7 +2900,7 @@ bool Matcher::advance()
             }
             else
             {
-              if (loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
+              if (min == 0 || loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
                 return true;
             }
           }
@@ -2892,8 +2927,6 @@ bool Matcher::advance()
           {
             loc = s - lcp + offset - buf_;
             set_current(loc);
-            if (min == 0)
-              return true;
             if (min >= 4)
             {
               if (loc + len + min > end_ || Pattern::predict_match(pmh, &buf_[loc + len], min))
@@ -2901,7 +2934,7 @@ bool Matcher::advance()
             }
             else
             {
-              if (loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
+              if (min == 0 || loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
                 return true;
             }
           }
@@ -2914,65 +2947,91 @@ bool Matcher::advance()
       // enhanced with least frequent character matching
       uint8x16_t vlcp = vdupq_n_u8(chr[lcp]);
       uint8x16_t vlcs = vdupq_n_u8(chr[lcs]);
-      while (s <= e - 16)
+      if (min >= 4)
       {
-        uint8x16_t vlcpm = vld1q_u8(reinterpret_cast<const uint8_t*>(s));
-        uint8x16_t vlcsm = vld1q_u8(reinterpret_cast<const uint8_t*>(s) + lcs - lcp);
-        uint8x16_t vlcpeq = vceqq_u8(vlcp, vlcpm);
-        uint8x16_t vlcseq = vceqq_u8(vlcs, vlcsm);
-        uint8x16_t vmask8 = vandq_u8(vlcpeq, vlcseq);
-        uint64x2_t vmask64 = vreinterpretq_u64_u8(vmask8);
-        uint64_t mask = vgetq_lane_u64(vmask64, 0);
-        if (mask != 0)
+        while (s <= e - 16)
         {
-          for (int i = 0; i < 8; ++i)
+          uint8x16_t vlcpm = vld1q_u8(reinterpret_cast<const uint8_t*>(s));
+          uint8x16_t vlcsm = vld1q_u8(reinterpret_cast<const uint8_t*>(s) + lcs - lcp);
+          uint8x16_t vlcpeq = vceqq_u8(vlcp, vlcpm);
+          uint8x16_t vlcseq = vceqq_u8(vlcs, vlcsm);
+          uint8x16_t vmask8 = vandq_u8(vlcpeq, vlcseq);
+          uint64x2_t vmask64 = vreinterpretq_u64_u8(vmask8);
+          uint64_t mask = vgetq_lane_u64(vmask64, 0);
+          if (mask != 0)
           {
-            if ((mask & 0xff) && std::memcmp(s - lcp + i, chr, len) == 0)
+            for (int i = 0; i < 8; ++i)
             {
-              loc = s - lcp + i - buf_;
-              set_current(loc);
-              if (min == 0)
-                return true;
-              if (min >= 4)
+              if ((mask & 0xff) && std::memcmp(s - lcp + i, chr, len) == 0)
               {
+                loc = s - lcp + i - buf_;
+                set_current(loc);
                 if (loc + len + min > end_ || Pattern::predict_match(pmh, &buf_[loc + len], min))
                   return true;
               }
-              else
-              {
-                if (loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
-                  return true;
-              }
+              mask >>= 8;
             }
-            mask >>= 8;
           }
-        }
-        mask = vgetq_lane_u64(vmask64, 1);
-        if (mask != 0)
-        {
-          for (int i = 0; i < 8; ++i)
+          mask = vgetq_lane_u64(vmask64, 1);
+          if (mask != 0)
           {
-            if ((mask & 0xff) && std::memcmp(s - lcp + i + 8, chr, len) == 0)
+            for (int i = 0; i < 8; ++i)
             {
-              loc = s - lcp + i + 8 - buf_;
-              set_current(loc);
-              if (min == 0)
-                return true;
-              if (min >= 4)
+              if ((mask & 0xff) && std::memcmp(s - lcp + i + 8, chr, len) == 0)
               {
+                loc = s - lcp + i + 8 - buf_;
+                set_current(loc);
                 if (loc + len + min > end_ || Pattern::predict_match(pmh, &buf_[loc + len], min))
                   return true;
               }
-              else
+              mask >>= 8;
+            }
+          }
+          s += 16;
+        }
+      }
+      else
+      {
+        while (s <= e - 16)
+        {
+          uint8x16_t vlcpm = vld1q_u8(reinterpret_cast<const uint8_t*>(s));
+          uint8x16_t vlcsm = vld1q_u8(reinterpret_cast<const uint8_t*>(s) + lcs - lcp);
+          uint8x16_t vlcpeq = vceqq_u8(vlcp, vlcpm);
+          uint8x16_t vlcseq = vceqq_u8(vlcs, vlcsm);
+          uint8x16_t vmask8 = vandq_u8(vlcpeq, vlcseq);
+          uint64x2_t vmask64 = vreinterpretq_u64_u8(vmask8);
+          uint64_t mask = vgetq_lane_u64(vmask64, 0);
+          if (mask != 0)
+          {
+            for (int i = 0; i < 8; ++i)
+            {
+              if ((mask & 0xff) && std::memcmp(s - lcp + i, chr, len) == 0)
               {
-                if (loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
+                loc = s - lcp + i - buf_;
+                set_current(loc);
+                if (min == 0 || loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
                   return true;
               }
+              mask >>= 8;
             }
-            mask >>= 8;
           }
+          mask = vgetq_lane_u64(vmask64, 1);
+          if (mask != 0)
+          {
+            for (int i = 0; i < 8; ++i)
+            {
+              if ((mask & 0xff) && std::memcmp(s - lcp + i + 8, chr, len) == 0)
+              {
+                loc = s - lcp + i + 8 - buf_;
+                set_current(loc);
+                if (min == 0 || loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
+                  return true;
+              }
+              mask >>= 8;
+            }
+          }
+          s += 16;
         }
-        s += 16;
       }
 #endif
       while (s < e)
@@ -3038,8 +3097,6 @@ bool Matcher::advance()
         {
           loc = q - buf_ + 1;
           set_current(loc);
-          if (min == 0)
-            return true;
           if (min >= 4)
           {
             if (loc + len + min > end_ || Pattern::predict_match(pmh, &buf_[loc + len], min))
@@ -3047,7 +3104,7 @@ bool Matcher::advance()
           }
           else
           {
-            if (loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
+            if (min == 0 || loc + len + 4 > end_ || Pattern::predict_match(pma, &buf_[loc + len]) == 0)
               return true;
           }
         }

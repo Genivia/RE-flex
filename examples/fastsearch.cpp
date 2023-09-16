@@ -1,4 +1,5 @@
-// Super fast search with fixed regex patterns compiled into FSM code with hash
+// Super fast search with fixed regex patterns compiled into FSM code
+// This search uses a Bloom filter with SIMD (SSE2/AVX2/AVX512/AArch64)
 //
 // Build steps:
 //

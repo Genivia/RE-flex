@@ -67,8 +67,9 @@ namespace convert_flag {
   const convert_flag_type multiline  = 0x0040; ///< regex with multiline anchors `^` and `$`, same as `(?m)`
   const convert_flag_type dotall     = 0x0080; ///< convert `.` (dot) to match all, same as `(?s)`
   const convert_flag_type freespace  = 0x0100; ///< convert regex by removing spacing, same as `(?x)`
-  const convert_flag_type notnewline = 0x0200; ///< inverted character classes and `\s` do not match newline `\n`
-  const convert_flag_type permissive = 0x0400; ///< convert Unicode to compact UTF-8 patterns and DFA, permits some invalid UTF-8 sequences
+  const convert_flag_type notnewline = 0x0200; ///< inverted character classes and \s do not match newline `\n`
+  const convert_flag_type permissive = 0x0400; ///< convert Unicode to compact UTF-8 patterns, permits some invalid UTF-8 sequences
+  const convert_flag_type closing    = 0x8000; ///< permit matching ) literally when it has no opening (
 }
 
 /// @brief Returns the converted regex string given a regex library signature and conversion flags, throws regex_error.
@@ -161,6 +162,7 @@ std::string convert(
     const char                              *pattern,                    ///< regex string pattern to convert
     const char                              *signature,                  ///< regex library signature
     convert_flag_type                        flags = convert_flag::none, ///< conversion flags
+    bool                                    *multiline = NULL,           ///< set to true if pattern may be multiline
     const std::map<std::string,std::string> *macros = NULL)              ///< {name} macros to expand
   ;
 
@@ -168,9 +170,10 @@ inline std::string convert(
     const std::string&                       pattern,
     const char                              *signature,
     convert_flag_type                        flags = convert_flag::none,
+    bool                                    *multiline = NULL,
     const std::map<std::string,std::string> *macros = NULL)
 {
-  return convert(pattern.c_str(), signature, flags, macros);
+  return convert(pattern.c_str(), signature, flags, multiline, macros);
 }
 
 } // namespace reflex

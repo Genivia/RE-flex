@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Aug 4 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Sep 16 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -100,6 +100,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1lazy__union.html">lazy_union</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Union of two ordered sets, with an iterator to get elements lazely.  <a href="structreflex_1_1lazy__union.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_line_matcher.html">LineMatcher</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Line matcher engine class implements <a class="el" href="classreflex_1_1_pattern_matcher.html" title="The pattern matcher class template extends abstract matcher base class. ">reflex::PatternMatcher</a> pattern matching interface with scan, find, split functors and iterators for matching lines only, use option 'A' to include newline with FIND, option 'N' to also FIND empty lines and option 'W' to only FIND empty lines.  <a href="classreflex_1_1_line_matcher.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_matcher.html">Matcher</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">RE/flex matcher engine class, implements <a class="el" href="classreflex_1_1_pattern_matcher.html" title="The pattern matcher class template extends abstract matcher base class. ">reflex::PatternMatcher</a> pattern matching interface with scan, find, split functors and iterators.  <a href="classreflex_1_1_matcher.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,7 +152,7 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ab659f1b759d66631c2e2e32771af1200"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a></td></tr>
-<tr class="memdesc:ab659f1b759d66631c2e2e32771af1200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conversion flags for <a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.  <a href="#ab659f1b759d66631c2e2e32771af1200">More...</a><br /></td></tr>
+<tr class="memdesc:ab659f1b759d66631c2e2e32771af1200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conversion flags for <a class="el" href="namespacereflex.html#ab15e99233257097b3c83c47d9ce3f9e6" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.  <a href="#ab659f1b759d66631c2e2e32771af1200">More...</a><br /></td></tr>
 <tr class="separator:ab659f1b759d66631c2e2e32771af1200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a776c689092282b15974a151328083b2d"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a776c689092282b15974a151328083b2d">regex_error_type</a></td></tr>
 <tr class="memdesc:a776c689092282b15974a151328083b2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Regex syntax error exception error code.  <a href="#a776c689092282b15974a151328083b2d">More...</a><br /></td></tr>
@@ -162,11 +165,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">isword</a> (int c)</td></tr>
 <tr class="memdesc:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check ASCII word-like character <code>[A-Za-z0-9_]</code>, permitting the character range 0..303 (0x12F) and EOF.  <a href="#a10f9faa3bb7ef4d3cee8339b8e647875">More...</a><br /></td></tr>
 <tr class="separator:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a794c59aedcee591fca830db0f2e62212"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212">convert</a> (const char *pattern, const char *signature, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
-<tr class="memdesc:a794c59aedcee591fca830db0f2e62212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the converted regex string given a regex library signature and conversion flags, throws <a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">regex_error</a>.  <a href="#a794c59aedcee591fca830db0f2e62212">More...</a><br /></td></tr>
-<tr class="separator:a794c59aedcee591fca830db0f2e62212"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa303caed5382f8e85ae90061a2bc7163"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#aa303caed5382f8e85ae90061a2bc7163">convert</a> (const std::string &amp;pattern, const char *signature, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
-<tr class="separator:aa303caed5382f8e85ae90061a2bc7163"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab15e99233257097b3c83c47d9ce3f9e6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ab15e99233257097b3c83c47d9ce3f9e6">convert</a> (const char *pattern, const char *signature, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, bool *multiline=NULL, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
+<tr class="memdesc:ab15e99233257097b3c83c47d9ce3f9e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the converted regex string given a regex library signature and conversion flags, throws <a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">regex_error</a>.  <a href="#ab15e99233257097b3c83c47d9ce3f9e6">More...</a><br /></td></tr>
+<tr class="separator:ab15e99233257097b3c83c47d9ce3f9e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37f99860b0eb4399bff6606da99a04d0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a37f99860b0eb4399bff6606da99a04d0">convert</a> (const std::string &amp;pattern, const char *signature, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, bool *multiline=NULL, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
+<tr class="separator:a37f99860b0eb4399bff6606da99a04d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af28a7d81300acbe54be048b558352c22"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#af28a7d81300acbe54be048b558352c22">ztoa</a> (size_t n)</td></tr>
 <tr class="separator:af28a7d81300acbe54be048b558352c22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3deed9d6b147d91074913f47c330d232"><td class="memTemplParams" colspan="2">template&lt;typename S1 , typename S2 &gt; </td></tr>
@@ -238,7 +241,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Conversion flags for <a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>. </p>
+<p>Conversion flags for <a class="el" href="namespacereflex.html#ab15e99233257097b3c83c47d9ce3f9e6" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>. </p>
 
 </div>
 </div>
@@ -269,7 +272,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a794c59aedcee591fca830db0f2e62212"></a>
+<a class="anchor" id="ab15e99233257097b3c83c47d9ce3f9e6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -290,6 +293,12 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a>&#160;</td>
           <td class="paramname"><em>flags</em> = <code><a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool *&#160;</td>
+          <td class="paramname"><em>multiline</em> = <code>NULL</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -385,6 +394,7 @@ Variables</h2></td></tr>
     <tr><td class="paramname">pattern</td><td>regex string pattern to convert </td></tr>
     <tr><td class="paramname">signature</td><td>regex library signature </td></tr>
     <tr><td class="paramname">flags</td><td>conversion flags </td></tr>
+    <tr><td class="paramname">multiline</td><td>set to true if pattern may be multiline </td></tr>
     <tr><td class="paramname">macros</td><td>{name} macros to expand </td></tr>
   </table>
   </dd>
@@ -392,7 +402,7 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aa303caed5382f8e85ae90061a2bc7163"></a>
+<a class="anchor" id="a37f99860b0eb4399bff6606da99a04d0"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -416,6 +426,12 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a>&#160;</td>
           <td class="paramname"><em>flags</em> = <code><a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool *&#160;</td>
+          <td class="paramname"><em>multiline</em> = <code>NULL</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1084,7 +1100,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Aug 4 2023 13:28:35 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Sep 16 2023 14:33:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

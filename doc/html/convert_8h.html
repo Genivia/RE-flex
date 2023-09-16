@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">convert.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Aug 4 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Sep 16 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -77,15 +77,16 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="convert_8h__dep__incl.png" border="0" usemap="#convert_8hdep" alt=""/></div>
 <map name="convert_8hdep" id="convert_8hdep">
-<area shape="rect" id="node2" href="absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="301,80,404,107"/>
-<area shape="rect" id="node9" href="reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="527,80,592,107"/>
-<area shape="rect" id="node3" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="5,155,89,181"/>
-<area shape="rect" id="node5" href="boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="113,155,227,181"/>
-<area shape="rect" id="node6" href="matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="251,155,332,181"/>
-<area shape="rect" id="node7" href="pcre2matcher_8h.html" title="PCRE2&#45;JIT&#45;based matcher engines for pattern matching. " alt="" coords="357,155,471,181"/>
-<area shape="rect" id="node8" href="stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="495,155,594,181"/>
-<area shape="rect" id="node4" href="flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Flex&#45;compatible macros. " alt="" coords="6,229,89,256"/>
-<area shape="rect" id="node10" href="reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="618,155,698,181"/>
+<area shape="rect" id="node2" href="absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="359,80,459,107"/>
+<area shape="rect" id="node10" href="reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="608,80,673,107"/>
+<area shape="rect" id="node3" href="abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="5,155,87,181"/>
+<area shape="rect" id="node5" href="boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="111,155,221,181"/>
+<area shape="rect" id="node6" href="linematcher_8h.html" title="a matcher engine to match lines and nothing else " alt="" coords="246,155,345,181"/>
+<area shape="rect" id="node7" href="matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="369,155,448,181"/>
+<area shape="rect" id="node8" href="pcre2matcher_8h.html" title="PCRE2&#45;JIT&#45;based matcher engines for pattern matching. " alt="" coords="472,155,583,181"/>
+<area shape="rect" id="node9" href="stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="607,155,704,181"/>
+<area shape="rect" id="node4" href="flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Flex&#45;compatible macros. " alt="" coords="5,229,87,256"/>
+<area shape="rect" id="node11" href="reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="728,155,807,181"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -99,16 +100,16 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ab659f1b759d66631c2e2e32771af1200"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">reflex::convert_flag_type</a></td></tr>
-<tr class="memdesc:ab659f1b759d66631c2e2e32771af1200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conversion flags for <a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.  <a href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">More...</a><br /></td></tr>
+<tr class="memdesc:ab659f1b759d66631c2e2e32771af1200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conversion flags for <a class="el" href="namespacereflex.html#ab15e99233257097b3c83c47d9ce3f9e6" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.  <a href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">More...</a><br /></td></tr>
 <tr class="separator:ab659f1b759d66631c2e2e32771af1200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a794c59aedcee591fca830db0f2e62212"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212">reflex::convert</a> (const char *pattern, const char *signature, convert_flag_type flags=convert_flag::none, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
-<tr class="memdesc:a794c59aedcee591fca830db0f2e62212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the converted regex string given a regex library signature and conversion flags, throws <a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">regex_error</a>.  <a href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212">More...</a><br /></td></tr>
-<tr class="separator:a794c59aedcee591fca830db0f2e62212"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa303caed5382f8e85ae90061a2bc7163"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#aa303caed5382f8e85ae90061a2bc7163">reflex::convert</a> (const std::string &amp;pattern, const char *signature, convert_flag_type flags=convert_flag::none, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
-<tr class="separator:aa303caed5382f8e85ae90061a2bc7163"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab15e99233257097b3c83c47d9ce3f9e6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ab15e99233257097b3c83c47d9ce3f9e6">reflex::convert</a> (const char *pattern, const char *signature, convert_flag_type flags=convert_flag::none, bool *multiline=NULL, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
+<tr class="memdesc:ab15e99233257097b3c83c47d9ce3f9e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the converted regex string given a regex library signature and conversion flags, throws <a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">regex_error</a>.  <a href="namespacereflex.html#ab15e99233257097b3c83c47d9ce3f9e6">More...</a><br /></td></tr>
+<tr class="separator:ab15e99233257097b3c83c47d9ce3f9e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37f99860b0eb4399bff6606da99a04d0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a37f99860b0eb4399bff6606da99a04d0">reflex::convert</a> (const std::string &amp;pattern, const char *signature, convert_flag_type flags=convert_flag::none, bool *multiline=NULL, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
+<tr class="separator:a37f99860b0eb4399bff6606da99a04d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -143,11 +144,14 @@ Variables</h2></td></tr>
 <tr class="memdesc:a32e4f47592b2442c814a32502365a8e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert regex by removing spacing, same as <code>(?x)</code>  <a href="namespacereflex_1_1convert__flag.html#a32e4f47592b2442c814a32502365a8e3">More...</a><br /></td></tr>
 <tr class="separator:a32e4f47592b2442c814a32502365a8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaed1f496284028394303d24be3e7bbb9"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9">reflex::convert_flag::notnewline</a> = 0x0200</td></tr>
-<tr class="memdesc:aaed1f496284028394303d24be3e7bbb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">inverted character classes and <code>\s</code> do not match newline <code>\n</code>  <a href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9">More...</a><br /></td></tr>
+<tr class="memdesc:aaed1f496284028394303d24be3e7bbb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">inverted character classes and  do not match newline <code>\n</code>  <a href="namespacereflex_1_1convert__flag.html#aaed1f496284028394303d24be3e7bbb9">More...</a><br /></td></tr>
 <tr class="separator:aaed1f496284028394303d24be3e7bbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fcbe121a0a80ba46baa1a4b67b045df"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a2fcbe121a0a80ba46baa1a4b67b045df">reflex::convert_flag::permissive</a> = 0x0400</td></tr>
-<tr class="memdesc:a2fcbe121a0a80ba46baa1a4b67b045df"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> to compact UTF-8 patterns and DFA, permits some invalid UTF-8 sequences  <a href="namespacereflex_1_1convert__flag.html#a2fcbe121a0a80ba46baa1a4b67b045df">More...</a><br /></td></tr>
+<tr class="memdesc:a2fcbe121a0a80ba46baa1a4b67b045df"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert <a class="el" href="namespacereflex_1_1_unicode.html">Unicode</a> to compact UTF-8 patterns, permits some invalid UTF-8 sequences  <a href="namespacereflex_1_1convert__flag.html#a2fcbe121a0a80ba46baa1a4b67b045df">More...</a><br /></td></tr>
 <tr class="separator:a2fcbe121a0a80ba46baa1a4b67b045df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09742aff752a347ffa8961d4dc2a0367"><td class="memItemLeft" align="right" valign="top">const convert_flag_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex_1_1convert__flag.html#a09742aff752a347ffa8961d4dc2a0367">reflex::convert_flag::closing</a> = 0x8000</td></tr>
+<tr class="memdesc:a09742aff752a347ffa8961d4dc2a0367"><td class="mdescLeft">&#160;</td><td class="mdescRight">permit matching ) literally when it has no opening (  <a href="namespacereflex_1_1convert__flag.html#a09742aff752a347ffa8961d4dc2a0367">More...</a><br /></td></tr>
+<tr class="separator:a09742aff752a347ffa8961d4dc2a0367"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex regex converter. </p>
@@ -158,7 +162,7 @@ Variables</h2></td></tr>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Aug 4 2023 13:28:34 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Sep 16 2023 14:33:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

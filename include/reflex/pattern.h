@@ -803,15 +803,15 @@ class Pattern {
     Option() : b(), h(), e(), f(), i(), m(), n(), o(), p(), q(), r(), s(), w(), x(), z() { }
     bool                     b; ///< disable escapes in bracket lists
     bool                     h; ///< construct indexing hash finite state automaton
-    Char                     e; ///< escape character, or > 255 for none, '\\' default
-    std::vector<std::string> f; ///< output to files
+    Char                     e; ///< escape character, or > 255 for none, a backslash by default
+    std::vector<std::string> f; ///< output the patterns and/or DFA to files(s)
     bool                     i; ///< case insensitive mode, also `(?i:X)`
     bool                     m; ///< multi-line mode, also `(?m:X)`
     std::string              n; ///< pattern name (for use in generated code)
     bool                     o; ///< generate optimized FSM code for option f
     bool                     p; ///< with option f also output predict match array for fast search with find()
     bool                     q; ///< enable "X" quotation of verbatim content, also `(?q:X)`
-    bool                     r; ///< raise syntax errors
+    bool                     r; ///< raise syntax errors as exceptions
     bool                     s; ///< single-line mode (dotall mode), also `(?s:X)`
     bool                     w; ///< write error message to stderr
     bool                     x; ///< free-spacing mode, also `(?x:X)`
@@ -820,19 +820,23 @@ class Pattern {
   /// Meta characters.
   enum Meta {
     META_MIN = 0x100,
+    // word boundaries
     META_NWB = 0x101, ///< non-word boundary at begin `\Bx`
     META_NWE = 0x102, ///< non-word boundary at end   `x\B`
     META_BWB = 0x103, ///< begin of word at begin     `\<x` where \bx=(\<|\>)x
     META_EWB = 0x104, ///< end of word at begin       `\>x`
     META_BWE = 0x105, ///< begin of word at end       `x\<` where x\b=x(\<|\>)
     META_EWE = 0x106, ///< end of word at end         `x\>`
+    // line and buffer boundaries
     META_BOL = 0x107, ///< begin of line              `^`
     META_EOL = 0x108, ///< end of line                `$`
     META_BOB = 0x109, ///< begin of buffer            `\A`
     META_EOB = 0x10A, ///< end of buffer              `\Z`
+    // indent boundaries
     META_UND = 0x10B, ///< undent boundary            `\k`
     META_IND = 0x10C, ///< indent boundary            `\i` (must be one but the largest META code)
     META_DED = 0x10D, ///< dedent boundary            `\j` (must be the largest META code)
+    // end of boundaries
     META_MAX          ///< max meta characters
   };
   /// Initialize the pattern at construction.
@@ -1142,7 +1146,7 @@ class Pattern {
   {
     return ((h << 3) ^ b) & (Const::HASH - 1);
   }
-  /// file indexing hash 0 <= indexhash() < 65536, must be additive: indexhash(x,b+1) = indexhash(x,b)+1 modulo 2^16
+  /// file indexing hash 0 <= indexhash() < 65536, must be additive: indexhash(x,b+1) = indexhash(x,b)+1 modulo 2^16.
   static inline Hash indexhash(Hash h, uint8_t b)
   {
     return (h << 6) - h - h - h + b;

@@ -1153,7 +1153,7 @@ bool Reflex::get_pattern(size_t& pos, std::string& pattern, std::string& regex)
       flags |= reflex::convert_flag::permissive;
     try
     {
-      regex = reflex::convert(pattern, library->signature, flags, &definitions); 
+      regex = reflex::convert(pattern, library->signature, flags, NULL, &definitions); 
     }
     catch (reflex::regex_error& e)
     {

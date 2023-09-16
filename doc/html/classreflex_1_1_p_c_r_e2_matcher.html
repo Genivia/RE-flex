@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::PCRE2Matcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Aug 4 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Sep 16 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -405,10 +405,10 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a176455169227dc6e9975c80b77d639be"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a176455169227dc6e9975c80b77d639be"><td class="memTemplItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a176455169227dc6e9975c80b77d639be">convert</a> (T regex, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>)</td></tr>
-<tr class="memdesc:a176455169227dc6e9975c80b77d639be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a regex to an acceptable form, given the specified regex library signature <code>"[decls:]escapes[?+]"</code>, see <a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.  <a href="#a176455169227dc6e9975c80b77d639be">More...</a><br /></td></tr>
-<tr class="separator:a176455169227dc6e9975c80b77d639be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13add8178d16778cdff927f84379a2be"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a13add8178d16778cdff927f84379a2be"><td class="memTemplItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a13add8178d16778cdff927f84379a2be">convert</a> (T regex, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, bool *multiline=NULL)</td></tr>
+<tr class="memdesc:a13add8178d16778cdff927f84379a2be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a regex to an acceptable form, given the specified regex library signature <code>"[decls:]escapes[?+]"</code>, see <a class="el" href="namespacereflex.html#ab15e99233257097b3c83c47d9ce3f9e6" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>.  <a href="#a13add8178d16778cdff927f84379a2be">More...</a><br /></td></tr>
+<tr class="separator:a13add8178d16778cdff927f84379a2be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -861,7 +861,7 @@ template&lt;typename P &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a176455169227dc6e9975c80b77d639be"></a>
+<a class="anchor" id="a13add8178d16778cdff927f84379a2be"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -880,7 +880,13 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a>&#160;</td>
-          <td class="paramname"><em>flags</em> = <code><a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a></code>&#160;</td>
+          <td class="paramname"><em>flags</em> = <code><a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool *&#160;</td>
+          <td class="paramname"><em>multiline</em> = <code>NULL</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -895,7 +901,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Convert a regex to an acceptable form, given the specified regex library signature <code>"[decls:]escapes[?+]"</code>, see <a class="el" href="namespacereflex.html#a794c59aedcee591fca830db0f2e62212" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>. </p>
+<p>Convert a regex to an acceptable form, given the specified regex library signature <code>"[decls:]escapes[?+]"</code>, see <a class="el" href="namespacereflex.html#ab15e99233257097b3c83c47d9ce3f9e6" title="Returns the converted regex string given a regex library signature and conversion flags...">reflex::convert</a>. </p>
 
 </div>
 </div>
@@ -1464,7 +1470,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Aug 4 2023 13:28:35 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Sep 16 2023 14:33:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -1,5 +1,7 @@
 // test FuzzyMatcher
 //
+// ftest
+// ftest max_error[idsb]
 // ftest regex text [max_error[idsb]]
 //
 // where:
@@ -12,10 +14,9 @@
 // Build after installing RE/flex:
 //   c++ -o ftest ftest.cpp -lreflex
 //
-// Test run:
+// Examples:
 //   ./ftest
-//   ./ftest 1ids
-// Example runs:
+//   ./ftest 2ids
 //   ./ftest 'abcd' 'axbcd'
 //   ./ftest 'abcd' 'axcd'
 //   ./ftest 'abcd' 'acd'
@@ -79,10 +80,8 @@ int main(int argc, char **argv)
         }
       }
       reflex::FuzzyMatcher matcher(reflex_pattern, max | flags, text);
-      if (!matcher.matches())
-        printf("matches(): no match\n");
-      else
-        printf("matches(): match (%u edits)\n", matcher.edits());
+      if (matcher.matches())
+        printf("matches(): %u edits\n", matcher.edits());
       matcher.input(text);
       /* scan() may not work well with fuzzy matching, because of possible "gaps" between matches caused by fuzzy matches
          while (matcher.scan())
@@ -90,10 +89,10 @@ int main(int argc, char **argv)
          matcher.input(text);
        */
       while (matcher.find())
-        printf("find():    '%s' at %zu (%u edits)\n", matcher.text(), matcher.columno(), matcher.edits());
+        printf("find():    %u edits: '%s' at %zu\n", matcher.edits(), matcher.text(), matcher.columno());
       matcher.input(text);
       while (matcher.split())
-        printf("split():   '%s' at %zu (%u edits)\n", matcher.text(), matcher.columno(), matcher.edits());
+        printf("split():   %u edits: '%s' at %zu\n", matcher.edits(), matcher.text(), matcher.columno());
     }
     catch (const reflex::regex_error& e)
     {
@@ -128,6 +127,9 @@ int main(int argc, char **argv)
     }
     printf("PATTERN/TEXT DISTANCE=%u TESTING\n", max);
     const char *regex_texts[] = {
+      "abcd", "abcd",
+      "abcd+", "abcd",
+
       "abcd", "ab_cd",
       "ab_cd", "ab-cd",
       "ab_cd", "abcd",
@@ -221,19 +223,15 @@ int main(int argc, char **argv)
         const char *text = regex_texts[it++];
         reflex::FuzzyMatcher matcher(regex, max | flags, text);
         printf("'%s'/'%s'\n", regex.c_str(), text);
-        if (!matcher.matches())
+        if (matcher.matches())
         {
-          printf("  matches(): no match\n");
-        }
-        else
-        {
-          printf("  matches(): match (%u edits)\n", matcher.edits());
+          printf("\tmatches(): %u edits\n", matcher.edits());
           ++hits;
         }
         matcher.input(text);
         while (matcher.find())
         {
-          printf("  find():    '%s' at %zu (%u edits)\n", matcher.text(), matcher.columno(), matcher.edits());
+          printf("\tfind():    %u edits: '%s' at %zu\n", matcher.edits(), matcher.text(), matcher.columno());
           ++hits;
         }
       }

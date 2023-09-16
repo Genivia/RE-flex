@@ -576,6 +576,8 @@ Changelog
 - Jul 11, 2023: 3.3.6 faster `find()`; improved `--stdout` to include tables.
 - Jul 17, 2023: 3.3.7 faster `find()`.
 - Aug  4, 2023: 3.3.8 minor update to sync up the code base with the ugrep project.
+- Aug 16, 2023: 3.3.9 fix avx512bw compilation error; new LineMatcher matching engine.
+- Sep 16, 2023: 3.4.0 fix `FuzzyMatcher::DEL` flag when this is the only flag selected; fix `FuzzyMatcher::matches()` bug that incorrectly matched an extra character before the end of the input; optimize `find()`; updated saving the FSM `pred[]` hashes to a file, which has changed; increase default buffer size `REFLEX_BUFSZ` to 128K for best throughput performance.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

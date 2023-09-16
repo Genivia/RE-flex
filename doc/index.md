@@ -2558,7 +2558,8 @@ class after the character class operations are applied.  For example,
 Note that negated character classes such as `[^a-zA-Z]` match newlines when
 `\n` is not included in the class.  Include `\n` in the negated character class
 to prevent matching newlines.  The `reflex::convert_flag::notnewline` removes
-newlines from negated character classes when used with \ref regex-convert.
+newlines from character classes when used with \ref regex-convert, except for
+patterns `\P{C}`, `\R`, `\D`, `\H`, and `\W`.
 
 A lexer specification may use a defined name in place of the second operand of
 a character class operation.  A defined name when used as an operand should
@@ -2616,24 +2617,24 @@ characters only.
 
 The 7-bit ASCII POSIX character categories are:
 
-  POSIX form   | POSIX category    | Matches
-  ------------ | ----------------- | ---------------------------------------------
-  `[:ascii:]`  | `\p{ASCII}`       | matches any ASCII character
-  `[:space:]`  | `\p{Space}`       | matches a white space character `[ \t\n\v\f\r]`
-  `[:xdigit:]` | `\p{Xdigit}`      | matches a hex digit `[0-9A-Fa-f]`
-  `[:cntrl:]`  | `\p{Cntrl}`       | matches a control character `[\x00-\0x1f\x7f]`
-  `[:print:]`  | `\p{Print}`       | matches a printable character `[\x20-\x7e]`
-  `[:alnum:]`  | `\p{Alnum}`       | matches a alphanumeric character `[0-9A-Za-z]`
-  `[:alpha:]`  | `\p{Alpha}`       | matches a letter `[A-Za-z]`
-  `[:blank:]`  | `\p{Blank}`, `\h` | matches a blank `[ \t]`
-  `[:digit:]`  | `\p{Digit}`       | matches a digit `[0-9]`
-  `[:graph:]`  | `\p{Graph}`       | matches a visible character `[\x21-\x7e]`
-  `[:lower:]`  | `\p{Lower}`       | matches a lower case letter `[a-z]`
-  `[:punct:]`  | `\p{Punct}`       | matches a punctuation character `[\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]`
-  `[:upper:]`  | `\p{Upper}`       | matches an upper case letter `[A-Z]`
-  `[:word:]`   | `\p{Word}`        | matches a word character `[0-9A-Za-z_]`
-  `[:^blank:]` | `\P{Blank}`, `\H` | matches a non-blank character `[^ \t]`
-  `[:^digit:]` | `\P{Digit}`       | matches a non-digit `[^0-9]`
+  POSIX form   | Matches
+  ------------ | ---------------------------------------------
+  `[:ascii:]`  | matches any ASCII character
+  `[:space:]`  | matches a white space character `[ \t\n\v\f\r]`
+  `[:xdigit:]` | matches a hex digit `[0-9A-Fa-f]`
+  `[:cntrl:]`  | matches a control character `[\x00-\x1f\x7f]`
+  `[:print:]`  | matches a printable character `[\x20-\x7e]`
+  `[:alnum:]`  | matches a alphanumeric character `[0-9A-Za-z]`
+  `[:alpha:]`  | matches a letter `[A-Za-z]`
+  `[:blank:]`  | matches a blank character `\h` same as `[ \t]`
+  `[:digit:]`  | matches a digit `[0-9]`
+  `[:graph:]`  | matches a visible character `[\x21-\x7e]`
+  `[:lower:]`  | matches a lower case letter `[a-z]`
+  `[:punct:]`  | matches a punctuation character `[\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]`
+  `[:upper:]`  | matches an upper case letter `[A-Z]`
+  `[:word:]`   | matches a word character `[0-9A-Za-z_]`
+  `[:^blank:]` | matches a non-blank character `\H` same as `[^ \t]`
+  `[:^digit:]` | matches a non-digit `[^0-9]`
 
 The POSIX forms are used in bracket lists.  For example `[[:lower:][:digit:]]`
 matches an ASCII lower case letter or a digit.  
@@ -2660,12 +2661,14 @@ library:
   `\D`                                   | matches a non-digit
   `\e`                                   | matches ESC U+001b
   `\f`                                   | matches FF U+000c
+  `\h`                                   | matches a blank `[ \t]`
+  `\H`                                   | matches a non-blank `[^ \t]`
   `\l`                                   | matches a lower case letter `\p{Ll}`
   `\n`                                   | matches LF U+000a
   `\N`                                   | matches any non-LF character
   `\r`                                   | matches CR U+000d
   `\R`                                   | matches a Unicode line break
-  `\s`                                   | matches a white space character `[ \t\n\v\f\r\x85\p{Z}]` (excludes `\n` with `reflex::convert_flag::notnewline`)
+  `\s`                                   | matches a white space character `[ \t\n\v\f\r\x85\p{Z}]`
   `\S`                                   | matches a non-white space character
   `\t`                                   | matches TAB U+0009
   `\u`                                   | matches an upper case letter `\p{Lu}`
@@ -2673,7 +2676,7 @@ library:
   `\w`                                   | matches a Unicode word character `[\p{L}\p{Nd}\p{Pc}]`
   `\W`                                   | matches a non-Unicode word character
   `\X`                                   | matches any ISO-8859-1 or Unicode character
-  `\p{Space}`                            | matches a white space character `[ \t\n\v\f\r\x85\p{Z}]` including `\n`
+  `\p{Space}`                            | matches a white space character `[ \t\n\v\f\r\x85\p{Z}]`
   `\p{Unicode}`                          | matches any Unicode character U+0000 to U+10FFFF minus U+D800 to U+DFFF
   `\p{ASCII}`                            | matches an ASCII character U+0000 to U+007F
   `\p{ASCII}`                            | matches an ASCII character U+0000 to U+007F)
@@ -6985,8 +6988,9 @@ following `reflex::convert_flag` flags:
   `reflex::convert_flag::recap`      | remove capturing groups and add capturing groups to the top level
   `reflex::convert_flag::lex`        | convert Flex/Lex regular expression syntax
   `reflex::convert_flag::u4`         | convert `\uXXXX` (shorthand for `\u{XXXX}`), may conflict with `\u` (upper case letter).
-  `reflex::convert_flag::notnewline` | inverted character classes and `\s` do not match newline `\n`, e.g. `[^a-z]` does not match `\n`
+  `reflex::convert_flag::notnewline` | character classes do not match newline `\n`, e.g. `[^a-z]` does not match `\n`
   `reflex::convert_flag::permissive` | when used with `unicode`, produces a more compact FSM that tolerates some invalid UTF-8 sequences
+  `reflex::convert_flag::closing`    | match a `)` literally without the presence of an opening `(`
 
 The following `reflex::convert_flag` flags correspond to the common `(?imsx)`
 modifiers.  These flags or modifiers may be specified, or both.  Modifiers are
