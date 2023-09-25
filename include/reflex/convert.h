@@ -176,6 +176,29 @@ inline std::string convert(
   return convert(pattern.c_str(), signature, flags, multiline, macros);
 }
 
+inline bool supports_modifier(
+    const char *signature,
+    int         modchar)
+{
+  if (signature == NULL)
+    return false;
+  const char *escapes = std::strchr(signature, ':');
+  if (escapes == NULL)
+    return false;
+  const char *s = std::strchr(signature, modchar);
+  return s && s < escapes;
+}
+
+inline bool supports_escape(
+    const char *signature,
+    int         escape)
+{
+  if (signature == NULL)
+    return false;
+  const char *escapes = std::strchr(signature, ':');
+  return std::strchr(escapes != NULL ? escapes : signature, escape) != NULL;
+}
+
 } // namespace reflex
 
 #endif

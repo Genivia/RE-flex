@@ -219,23 +219,6 @@ inline bool is_modified(const std::map<size_t,std::string>& mod, int c)
   return false;
 }
 
-inline bool supports_modifier(const char *signature, int c)
-{
-  const char *escapes = std::strchr(signature, ':');
-  if (escapes == NULL)
-    return false;
-  const char *s = std::strchr(signature, c);
-  return s && s < escapes;
-}
-
-inline bool supports_escape(const char *signature, int escape)
-{
-  if (!signature)
-    return false;
-  const char *escapes = std::strchr(signature, ':');
-  return std::strchr(escapes != NULL ? escapes : signature, escape) != NULL;
-}
-
 inline int hex_or_octal_escape(const char *signature)
 {
   if (supports_escape(signature, 'x'))

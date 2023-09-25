@@ -1730,23 +1730,19 @@ void Reflex::parse_section_2()
   for (Start start = 0; start < conditions.size(); ++start)
   {
     std::string& pattern = patterns[start];
-    pattern.assign("(?m");
+    pattern.assign("(?");
+    if (reflex::supports_modifier(library->signature, 'm'))
+      pattern.push_back('m');
     if (!options["case_insensitive"].empty())
       pattern.push_back('i');
     if (!options["dotall"].empty())
       pattern.push_back('s');
     if (!options["freespace"].empty())
       pattern.push_back('x');
-    pattern.append(")%");
-    try
-    {
-      pattern.assign(reflex::convert(pattern, library->signature, reflex::convert_flag::none));
-    }
-    catch (reflex::regex_error& e)
-    {
-      error("malformed regular expression\n", e.what());
-    }
-    pattern.resize(pattern.size() - 1); // remove dummy % from (?m...)%
+    if (pattern.size() > 2)
+      pattern.push_back(')');
+    else
+      pattern.clear();
     const char *sep = "";
     for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
     {

@@ -10,27 +10,34 @@ support.
 parsers.  RE/flex is faster than Flex while providing a wealth of new features
 and contributions.  RE/flex is also much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
-representative C source code file into 244 tokens takes only 8 microseconds:
+representative C source code file into 244 tokens takes only 8.7 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
-<tr><td><b>reflex --fast --noindent</b></td><td><b>RE/flex 2.0.0</b></td><td><b>8</b></td></tr>
-<tr><td><b>reflex --fast</b></td><td><b>RE/flex 2.0.0</b></td><td><b>9</b></td></tr>
-<tr><td>flex -+ --full</td><td>Flex 2.5.35</td><td>17</td></tr>
-<tr><td>reflex --full</td><td>RE/flex 2.0.0</td><td>18</td></tr>
-<tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex 1.66.0</td><td>40</td></tr>
-<tr><td>pcre2_jit_match()</td><td>PCRE2 (jit) 10.32</td><td>60</td></tr>
-<tr><td>hs_compile_multi(), hs_scan()</td><td>Hyperscan 5.1.0</td><td>209</td></tr>
-<tr><td>reflex -m=boost-perl</td><td>Boost.Regex 1.66.0</td><td>230</td></tr>
-<tr><td>pcre2_match()</td><td>PCRE2 10.32</td><td>318</td></tr>
-<tr><td>RE2::Consume()</td><td>RE2 (pre-compiled) 2018-04-01</td><td>417</td></tr>
-<tr><td>reflex -m=boost</td><td>Boost.Regex POSIX 1.66.0</td><td>450</td></tr>
-<tr><td>RE2::Consume()</td><td>RE2 POSIX (pre-compiled) 2018-04-01</td><td>1226</td></tr>
-<tr><td>flex -+</td><td>Flex 2.5.35</td><td>3968</td></tr>
-<tr><td>pcre2_dfa_match()</td><td>PCRE2 POSIX (dfa) 10.32</td><td>4094</td></tr>
-<tr><td>regcomp(), regexec()</td><td>GNU C POSIX.2 regex</td><td>5800</td></tr>
-<tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>5979</td></tr>
+<tr><td><b>reflex --fast --noindent</b></td><td><b>RE/flex 3.4.1</b></td><td><b>8.7</b></td></tr>
+<tr><td><b>reflex --fast</b></td><td><b>RE/flex 3.4.1</b></td><td><b>8.9</b></td></tr>
+<tr><td>flex -+ --full</td><td>Flex 2.5.35</td><td>9.8</td></tr>
+<tr><td>boost::spirit::lex::lexertl::actor_lexer::iterator_type</td><td>Boost.Spirit.Lex 1.82.0</td><td>10.7</td></tr>
+<tr><td>reflex --full</td><td>RE/flex 3.4.1</td><td>20.6</td></tr>
+<tr><td>pcre2_jit_match()</td><td>PCRE2 (jit) 10.42</td><td>60.8</td></tr>
+<tr><td>hs_compile_multi(), hs_scan()</td><td>Hyperscan 5.4.2</td><td>129</td></tr>
+<tr><td>reflex -m=boost-perl</td><td>Boost.Regex 1.82.0</td><td>205</td></tr>
+<tr><td>RE2::Consume()</td><td>RE2 (pre-compiled) 2023-09-01</td><td>218</td></tr>
+<tr><td>reflex -m=boost</td><td>Boost.Regex POSIX 1.82.0</td><td>392</td></tr>
+<tr><td>pcre2_match()</td><td>PCRE2 10.42</td><td>500</td></tr>
+<tr><td>RE2::Consume()</td><td>RE2 POSIX (pre-compiled) 2023-09-01</td><td>534</td></tr>
+<tr><td>flex -+</td><td>Flex 2.5.35</td><td>3759</td></tr>
+<tr><td>pcre2_dfa_match()</td><td>PCRE2 POSIX (dfa) 10.42</td><td>4029</td></tr>
+<tr><td>regcomp(), regexec()</td><td>GNU C POSIX.2 regex</td><td>4932</td></tr>
+<tr><td>std::cregex_iterator()</td><td>C++11 std::regex</td><td>6490</td></tr>
 </table>
+
+Note: *performance in elapsed time (lower is better) in microseconds for 1000 to 10000
+benchmark runs using Mac OS X 12.6.9 with clang 12.0.0 -O2, 2.9 GHz Intel Core
+i7, 16 GB 2133 MHz LPDDR3.  Hyperscan disqualifies as a scanner due to its "All
+matches reported" semantics resulting in 1915 matches for this test, and due to
+its event handler requirements.*
+[Download the tests](https://www.genivia.com/files/perfcomp.zip)
 
 The performance table is indicative of the impact on performance when using
 PCRE2 and Boost.Regex with RE/flex.  PCRE2 and Boost.Regex are optional
@@ -44,15 +51,6 @@ matchers in the table (except PCRE2 and Boost.Regex when used with RE/flex).
 Tracking this information incurs some overhead.  RE/flex also automatically
 decodes UTF-8/16/32 input and accepts `std::istream`, strings, and wide strings
 as input.
-
-Note: *Best times of 30 tests with average time in microseconds over 100 runs
-executed on the command line using Mac OS X 10.12.6 clang 9.0.0 -O2, 2.9 GHz
-Intel Core i7, 16 GB 2133 MHz LPDDR3.  Hyperscan disqualifies as a scanner due
-to its "All matches reported" semantics resulting in 1915 matches for this
-test, and due to its event handler requirements.*
-[Download the tests](https://www.genivia.com/files/perfcomp.zip)
-*Timings on other platforms may differ, though in the worst cases tested,
-reflex ran equally fast or slightly faster than the best times of Flex.*
 
 Features
 --------
@@ -145,7 +143,8 @@ with MS Visual Studio C++.
 ### Unix/Linux and Mac OS X
 
 On macOS systems you can use [homebrew](https://brew.sh) to install RE/flex
-with `brew install re-flex`.
+with `brew install re-flex`.  Or use [MacPorts](https://www.macports.org)
+to install RE/flex with `sudo port install re-flex`.
 
 On NetBSD systems you can use the standard NetBSD package installer (pkgsrc):
 <http://cdn.netbsd.org/pub/pkgsrc/current/pkgsrc/devel/RE-flex/README.html>
@@ -578,6 +577,7 @@ Changelog
 - Aug  4, 2023: 3.3.8 minor update to sync up the code base with the ugrep project.
 - Aug 16, 2023: 3.3.9 fix avx512bw compilation error; new LineMatcher matching engine.
 - Sep 16, 2023: 3.4.0 fix `FuzzyMatcher::DEL` flag when this is the only flag selected; fix `FuzzyMatcher::matches()` bug that incorrectly matched an extra character before the end of the input; optimize `find()`; updated saving the FSM `pred[]` hashes to a file, which has changed; increase default buffer size `REFLEX_BUFSZ` to 128K for best throughput performance.
+- Sep 25, 2023: 3.4.1 make word boundaries `\b`, `\B`, `\<` and `\>` applicable anywhere in a pattern.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

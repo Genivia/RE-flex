@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sat Sep 16 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Mon Sep 25 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -742,7 +742,7 @@ Lexer specifications                                             </h2>
 <p>Because the pattern <code>cow</code> also matches words partly we get <code>chicks</code> for <code>cows</code>. But we also get badly garbled output for words such as <code>coward</code> and we are skipping capitalized Cows. We can improve this with a pattern that anchors word boundaries and accepts a lower or upper case C:</p>
 <div class="alt"> <div class="fragment"><div class="line">cow      \&lt;[Cc]ow\&gt;</div><div class="line">%%</div><div class="line">{cow}    out() &lt;&lt; text()[0] &lt;&lt; <span class="stringliteral">&quot;hick&quot;</span>;</div><div class="line">%%</div></div><!-- fragment --> </div><p>Note that we defined a named pattern <code>cow</code> in <a class="el" href="index.html#reflex-spec-defs">The definitions section</a> to match the start and end of a "cow" or capitalized "Cow" with the regex <code>\&lt;[Cc]ow\&gt;</code>. We use <code>{cow}</code> in our rule for matching. The matched text first character is emitted with <code>text()[0]</code> and we simply append a <code>"hick"</code> to complete our chick.</p>
 <p>Note that regex grouping with parenthesis to capture text matched by a parenthesized sub-regex is generally not supported by scanner generators, so we have to use the entire matched <code>text()</code> string.</p>
-<p>Flex and Lex do not support word boundary anchors <code>\&lt;</code>, <code>\&gt;</code>, <code>\b</code>, and <code>\B</code> so this example only works with RE/flex.</p>
+<p>Flex and Lex do not support word boundary anchors <code>\&lt;</code>, <code>\&gt;</code>, <code>\b</code>, and <code>\B</code>, so this example only works with RE/flex.</p>
 <p>If you are wondering about the action code in our example not exactly reflecting the C code expected with Flex, then rest assured that RE/flex supports the classic Flex and Lex actions such as <code>yytext</code> instead of <code>text()</code> and <code>*yyout</code> instead of <code>out()</code>. Simply use option <code>−−flex</code> to regress to the C-style Flex names and actions. Use options <code>−−flex</code> and <code>−−bison</code> (or option <code>−−yy</code>) to regress even further to generated a global <code>yylex()</code> function and "yy" variables.</p>
 <p>To create a stand-alone scanner, we add <code>main</code> to the User code section:</p>
 <div class="alt"> <div class="fragment"><div class="line">cow      \&lt;[Cc]ow\&gt;</div><div class="line">%%</div><div class="line">{cow}    out() &lt;&lt; text()[0] &lt;&lt; <span class="stringliteral">&quot;hick&quot;</span>;</div><div class="line">%%</div><div class="line"><span class="keywordtype">int</span> <a class="code" href="reflex_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>() { <span class="keywordflow">return</span> Lexer().lex(); }</div></div><!-- fragment --> </div><p>The main function instantiates the lexer class and invokes the scanner, which will not return until the entire input is processed. In fact, you can let <b><code>reflex</code></b> generate this main function for you with option <code>−−main</code>.</p>
@@ -1099,21 +1099,21 @@ Pattern syntax</h3>
 <tr>
 <td><code>φ\z</code> </td><td>matches <code>φ</code> at the end of input (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
 <tr>
-<td><code>\bφ</code> </td><td>matches <code>φ</code> starting at a word boundary (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
+<td><code>\bφ</code> </td><td>matches <code>φ</code> starting at a word boundary </td></tr>
 <tr>
-<td><code>φ\b</code> </td><td>matches <code>φ</code> ending at a word boundary (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
+<td><code>φ\b</code> </td><td>matches <code>φ</code> ending at a word boundary </td></tr>
 <tr>
-<td><code>\Bφ</code> </td><td>matches <code>φ</code> starting at a non-word boundary (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
+<td><code>\Bφ</code> </td><td>matches <code>φ</code> starting at a non-word boundary </td></tr>
 <tr>
-<td><code>φ\B</code> </td><td>matches <code>φ</code> ending at a non-word boundary (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
+<td><code>φ\B</code> </td><td>matches <code>φ</code> ending at a non-word boundary </td></tr>
 <tr>
-<td><code>\&lt;φ</code> </td><td>matches <code>φ</code> that starts a word (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
+<td><code>\&lt;φ</code> </td><td>matches <code>φ</code> that starts a word </td></tr>
 <tr>
-<td><code>\&gt;φ</code> </td><td>matches <code>φ</code> that starts a non-word (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
+<td><code>\&gt;φ</code> </td><td>matches <code>φ</code> that starts a non-word </td></tr>
 <tr>
-<td><code>φ\&lt;</code> </td><td>matches <code>φ</code> that ends a non-word (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
+<td><code>φ\&lt;</code> </td><td>matches <code>φ</code> that ends a non-word </td></tr>
 <tr>
-<td><code>φ\&gt;</code> </td><td>matches <code>φ</code> that ends a word (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
+<td><code>φ\&gt;</code> </td><td>matches <code>φ</code> that ends a word </td></tr>
 <tr>
 <td><code>\i</code> </td><td>matches an indent for <a class="el" href="index.html#reflex-pattern-dents">Indent/nodent/dedent</a> matching </td></tr>
 <tr>
@@ -2786,11 +2786,11 @@ Limitations                                               </h2>
 <p>The RE/flex matcher engine uses an efficient FSM. There are known limitations to FSM matching that apply to Flex/Lex and therefore also apply to the <b><code>reflex</code></b> scanner generator and to the RE/flex matcher engine:</p>
 <ul>
 <li>Lookaheads (trailing contexts) must appear at the end of a pattern when using the RE/flex matcher, so <code>a/b</code> (which is the same as lookahead <code>a(?=b)</code>) is permitted, but <code>(a/b)c</code> and <code>a(?=b)c</code> are not.</li>
-<li>Lookaheads cannot be properly matched when the ending of the first part of the pattern matches the beginning of the second part, such as <code>zx*/xy*</code>, where the <code>x*</code> matches the <code>x</code> at the beginning of the lookahead pattern.</li>
-<li>Anchors and boundaries must appear at the start or at the end of a pattern. The begin of buffer/line anchors <code>\A</code> and <code>^</code>, end of buffer/line anchors <code>\z</code> and <code>$</code> and the word boundary anchors must start or end a pattern. For example, <code>\&lt;cow\&gt;</code> is permitted, but <code>.*\Bboy</code> is not.</li>
+<li>Lookaheads cannot be properly matched when the ending of the first part of the pattern matches the beginning of the second part, such as <code>zx*/xy*</code>, where the <code>x*</code> matches the <code>x</code> at the beginning of the lookahead pattern. This is a common limitation that also Lex and Flex (with some ad-hoc exceptions) have.</li>
 <li>The POSIX Lex <code>REJECT</code> action is not supported.</li>
-<li>The POSIX Lex table size parameters <code>p</code>, <code>n</code>, <code>a</code>, <code>e</code>, <code>k</code>, and <code>o</code> are not supported; <code>o</code> may be used as a shorthand for <code>option</code>.</li>
+<li>The POSIX Lex table size parameters <code>p</code>, <code>n</code>, <code>a</code>, <code>e</code>, <code>k</code>, and <code>o</code> are not supported; <code>o</code> may also be used as a shorthand for <code>option</code>.</li>
 <li>Flex translations <em><code>%T</code></em> are not supported.</li>
+<li>Word boundaries <code>\&lt;</code>, <code>\&gt;</code>, <code>\b</code> and <code>\B</code> are supported by RE/flex using backtracking (since RE/flex version 3.4.1). Except that option <code>−−fast</code> does not produce code that backtracks, which means that patterns such as <code>bar.*\bfoo</code> that require backtracking on <code>\b</code> may not work properly. If necessary, use option <code>−−full</code> when word boundaries are used when these require backtracking to find a match.</li>
 </ul>
 <p>Some of these limitations may be removed in future versions of RE/flex.</p>
 <p>Boost.Regex library limitations:</p>
@@ -3700,7 +3700,7 @@ Minimized library and cross compiling                                </h2>
 </pre><p>The regex Unicode converters and the Unicode tables that are not used at run time are excluded from the minimized library.</p>
 <p>If the RE/flex library is not installed, for example when cross-compiling a RE/flex scanner to a different platform, then compile directly from the RE/flex C++ source files located in the <code>reflex/lib</code> and <code>reflex/include</code> directories: </p><pre class="fragment">c++ -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
     lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp
-</pre><p>This compiles the code without SIMD optimizations. SIMD intrinsics for SSE/AVX and ARM NEON/AArch64 are used to speed up string search and newline detection in the library. These optimizations are not applicable to scanners.</p>
+</pre><p>This compiles the code without SIMD optimizations. SIMD intrinsics for SSE/AVX and ARM NEON/AArch64 are used to speed up string search and newline detection in the library. However, these optimizations are applicable to searching with the <code>find()</code> method and are not applicable to scanners.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="memusage"></a>
 How to minimize runtime memory usage                                </h2>
@@ -3742,7 +3742,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sat Sep 16 2023 14:33:29 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Mon Sep 25 2023 10:43:27 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

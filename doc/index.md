@@ -1761,8 +1761,8 @@ Note that regex grouping with parenthesis to capture text matched by a
 parenthesized sub-regex is generally not supported by scanner generators, so we
 have to use the entire matched `text()` string.
 
-Flex and Lex do not support word boundary anchors `\<`, `\>`, `\b`, and `\B` so
-this example only works with RE/flex.
+Flex and Lex do not support word boundary anchors `\<`, `\>`, `\b`, and `\B`,
+so this example only works with RE/flex.
 
 If you are wondering about the action code in our example not exactly
 reflecting the C code expected with Flex, then rest assured that RE/flex
@@ -2431,14 +2431,14 @@ patterns `φ` and `ψ`:
   `φ$`      | matches `φ` at the end of input or end of a line (requires multi-line mode) (top-level `φ`, not nested in a sub-pattern)
   `\Aφ`     | matches `φ` at the begin of input (top-level `φ`, not nested in a sub-pattern)
   `φ\z`     | matches `φ` at the end of input (top-level `φ`, not nested in a sub-pattern)
-  `\bφ`     | matches `φ` starting at a word boundary (top-level `φ`, not nested in a sub-pattern)
-  `φ\b`     | matches `φ` ending at a word boundary (top-level `φ`, not nested in a sub-pattern)
-  `\Bφ`     | matches `φ` starting at a non-word boundary (top-level `φ`, not nested in a sub-pattern)
-  `φ\B`     | matches `φ` ending at a non-word boundary (top-level `φ`, not nested in a sub-pattern)
-  `\<φ`     | matches `φ` that starts a word (top-level `φ`, not nested in a sub-pattern)
-  `\>φ`     | matches `φ` that starts a non-word (top-level `φ`, not nested in a sub-pattern)
-  `φ\<`     | matches `φ` that ends a non-word (top-level `φ`, not nested in a sub-pattern)
-  `φ\>`     | matches `φ` that ends a word (top-level `φ`, not nested in a sub-pattern)
+  `\bφ`     | matches `φ` starting at a word boundary
+  `φ\b`     | matches `φ` ending at a word boundary
+  `\Bφ`     | matches `φ` starting at a non-word boundary
+  `φ\B`     | matches `φ` ending at a non-word boundary
+  `\<φ`     | matches `φ` that starts a word
+  `\>φ`     | matches `φ` that starts a non-word
+  `φ\<`     | matches `φ` that ends a non-word
+  `φ\>`     | matches `φ` that ends a word
   `\i`      | matches an indent for \ref reflex-pattern-dents matching
   `\j`      | matches a dedent for \ref reflex-pattern-dents matching
   `\k`      | matches if indent depth changed, undoing this change to keep the current indent stops for \ref reflex-pattern-dents matching
@@ -6395,14 +6395,18 @@ to FSM matching that apply to Flex/Lex and therefore also apply to the
 - Lookaheads cannot be properly matched when the ending of the first part of
   the pattern matches the beginning of the second part, such as `zx*/xy*`,
   where the `x*` matches the `x` at the beginning of the lookahead pattern.
-- Anchors and boundaries must appear at the start or at the end of a pattern.
-  The begin of buffer/line anchors `\A` and `^`, end of buffer/line anchors
-  `\z` and `$` and the word boundary anchors must start or end a pattern.  For
-  example, `\<cow\>` is permitted, but `.*\Bboy` is not.
+  This is a common limitation that also Lex and Flex (with some ad-hoc
+  exceptions) have.
 - The POSIX Lex `REJECT` action is not supported.
 - The POSIX Lex table size parameters `%p`, `%n`, `%a`, `%e`, `%k`, and `%o`
-  are not supported; `%o` may be used as a shorthand for `%option`.
+  are not supported; `%o` may also be used as a shorthand for `%option`.
 - Flex translations <i>`%%T`</i> are not supported.
+- Word boundaries `\<`, `\>`, `\b` and `\B` are supported by RE/flex using
+  backtracking (since RE/flex version 3.4.1).  Except that option `−−fast` does
+  not produce code that backtracks, which means that patterns such as
+  `bar.*\bfoo` that require backtracking on `\b` may not work properly.  If
+  necessary, use option `−−full` when word boundaries are used when these
+  require backtracking to find a match.
 
 Some of these limitations may be removed in future versions of RE/flex.
 
@@ -9404,7 +9408,8 @@ directories:
 
 This compiles the code without SIMD optimizations.  SIMD intrinsics for SSE/AVX
 and ARM NEON/AArch64 are used to  speed up string search and newline detection
-in the library.  These optimizations are not applicable to scanners.
+in the library.  However, these optimizations are applicable to searching with
+the `find()` method and are not applicable to scanners.
 
 🔝 [Back to table of contents](#)
 
