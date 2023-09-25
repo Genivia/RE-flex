@@ -40,6 +40,7 @@
 #include <reflex/error.h>
 #include <string>
 #include <map>
+#include <cstring>
 
 #if (defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__BORLANDC__)) && !defined(__CYGWIN__) && !defined(__MINGW32__) && !defined(__MINGW64__)
 # pragma warning( disable : 4290 )
