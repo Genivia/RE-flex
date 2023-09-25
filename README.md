@@ -105,7 +105,7 @@ Python, C/C++, JSON, XML, YAML.
 Installation
 ------------
 
-### Windows users
+### Windows
 
 Use `reflex/bin/reflex.exe` from the command line or add a **Custom Build
 Step** in MSVC++ as follows:
@@ -140,20 +140,16 @@ to run `reflex.exe`).  Drag the generated `lex.yy.h` (if present) and
 In addition, the `reflex/vs` directory contains batch scripts to build projects
 with MS Visual Studio C++.
 
-### Unix/Linux and Mac OS X
+### MacOS
 
 On macOS systems you can use [homebrew](https://brew.sh) to install RE/flex
 with `brew install re-flex`.  Or use [MacPorts](https://www.macports.org)
 to install RE/flex with `sudo port install re-flex`.
 
+### NetBSD
+
 On NetBSD systems you can use the standard NetBSD package installer (pkgsrc):
 <http://cdn.netbsd.org/pub/pkgsrc/current/pkgsrc/devel/RE-flex/README.html>
-
-Otherwise, you have two options: 1) quick install or 2) configure and make.
-
-**Note:** GCC 8 and greater may produce warnings of the sort *"note: parameter
-passing for argument ... changed in GCC 7.1"*.  These warnings should be
-ignored.
 
 ### Quick install
 
