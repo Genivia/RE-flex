@@ -574,6 +574,7 @@ Changelog
 - Aug 16, 2023: 3.3.9 fix avx512bw compilation error; new LineMatcher matching engine.
 - Sep 16, 2023: 3.4.0 fix `FuzzyMatcher::DEL` flag when this is the only flag selected; fix `FuzzyMatcher::matches()` bug that incorrectly matched an extra character before the end of the input; optimize `find()`; updated saving the FSM `pred[]` hashes to a file, which has changed; increase default buffer size `REFLEX_BUFSZ` to 128K for best throughput performance.
 - Sep 25, 2023: 3.4.1 make word boundaries `\b`, `\B`, `\<` and `\>` applicable anywhere in a pattern.
+- Oct  7, 2023: 3.5.0 updated to Unicode 15.1; clarify `.` (dot) with `%unicode` enabled, which is a catch-all pattern; update `\X` to match only valid Unicode characters.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

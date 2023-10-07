@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Sep 25 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sat Oct 7 2023 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -135,7 +135,7 @@
 </li>
 <li class="level1"><a href="#tricks">Tips, tricks, and gotchas                                             </a><ul><li class="level2"><a href="#extern-yyin">Errors when declaring extern yyin, yytext, yylineno              </a></li>
 <li class="level2"><a href="#yy-functions">Compilation errors when using yy functions                      </a></li>
-<li class="level2"><a href="#invalid-utf">Invalid UTF encodings                                            </a></li>
+<li class="level2"><a href="#invalid-utf">Invalid UTF encodings and the dot pattern                        </a></li>
 <li class="level2"><a href="#errors">Error reporting and recovery                                          </a></li>
 <li class="level2"><a href="#setlocale">On using setlocale                                                 </a></li>
 <li class="level2"><a href="#iso-8859-1">Scanning ISO-8859-1 (latin-1) files with a Unicode scanner        </a></li>
@@ -1023,7 +1023,7 @@ Pattern syntax</h3>
 <tr>
 <td><code>x</code> </td><td>matches the character <code>x</code>, where <code>x</code> is not a special character </td></tr>
 <tr>
-<td><code>.</code> </td><td>matches any single character except newline (unless in dotall mode) </td></tr>
+<td><code>.</code> </td><td>matches any single character or a byte, except newline (unless in dotall mode) </td></tr>
 <tr>
 <td><code>\.</code> </td><td>matches <code>.</code> (dot), special characters are escaped with a backslash </td></tr>
 <tr>
@@ -1091,9 +1091,9 @@ Pattern syntax</h3>
 <tr>
 <td><code>(?^φ)</code> </td><td>matches <code>φ</code> and ignores it, marking everything as a non-match to continue matching (RE/flex matcher only) </td></tr>
 <tr>
-<td><code>^φ</code> </td><td>matches <code>φ</code> at the begin of input or begin of a line (requires multi-line mode) (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
+<td><code>^φ</code> </td><td>matches <code>φ</code> at the begin of input or begin of a line (requires multi-line mode) (top-level <code>φ</code> only, not nested in a sub-pattern) </td></tr>
 <tr>
-<td><code>φ$</code> </td><td>matches <code>φ</code> at the end of input or end of a line (requires multi-line mode) (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
+<td><code>φ$</code> </td><td>matches <code>φ</code> at the end of input or end of a line (requires multi-line mode) (top-level <code>φ</code> only, not nested in a sub-pattern) </td></tr>
 <tr>
 <td><code>\Aφ</code> </td><td>matches <code>φ</code> at the begin of input (top-level <code>φ</code>, not nested in a sub-pattern) </td></tr>
 <tr>
@@ -1133,7 +1133,10 @@ Pattern syntax</h3>
 <tr>
 <td><code>(?#:X)</code> </td><td>all of <code>X</code> is skipped as a comment </td></tr>
 </table>
-<dl class="section note"><dt>Note</dt><dd>The lazy quantifier <code>?</code> for optional patterns <code>φ??</code> and repetitions <code>φ*?</code> <code>φ+?</code> is not supported by Boost.Regex in POSIX mode. In general, POSIX matchers do not support lazy quantifiers due to POSIX limitations that are rooted in the theory of formal languages FSM of regular expressions.</dd></dl>
+<p>Word boundaries <code>\&lt;</code>, <code>\&gt;</code>, <code>\b</code> and <code>\B</code> demarcate words. Word characters are letters, digits, and the underscore. Anchors <code>\A</code> and <code>\z</code> demarcate the begin and end of the input, respectively. Anchors <code>^</code> and <code>$</code> demarcate the begin and end of a line, respectively, because multi-line mode is enabled by default in all RE/flex-generated scanners. See also <a class="el" href="index.html#reflex-pattern-anchor">Anchors and boundaries</a>.</p>
+<p>Indentation matching with <code>\i</code>, <code>\j</code> and <code>\k</code> is a RE/flex feature available only with the RE/flex regex library that supports it. See also <a class="el" href="index.html#reflex-pattern-dents">Indent/nodent/dedent</a> for more details.</p>
+<dl class="section note"><dt>Note</dt><dd>The lazy quantifier <code>?</code> for optional patterns <code>φ??</code> and repetitions <code>φ*?</code> <code>φ+?</code> is not supported by Boost.Regex in POSIX mode. In general, POSIX matchers do not support lazy quantifiers due to POSIX limitations that are rooted in the theory of formal languages FSM of regular expressions. The RE/flex regex library is POSIX compliant and supports lazy quantifiers as an exception.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Option <code>−−fast</code> does not produce code that backtracks, which means that patterns such as <code>bar.*\bfoo</code> that require backtracking on <code>\b</code> may not work properly. If necessary, use option <code>−−full</code> when word boundaries are used when these require backtracking to find a match.</dd></dl>
 <p>The following patterns are available in RE/flex and adopt the same Flex/Lex patterns syntax. These pattern should only be used in lexer specifications:</p>
 <table class="doxtable">
 <tr>
@@ -1276,7 +1279,7 @@ Character categories</h3>
 <tr>
 <th>Unicode category </th><th>Matches  </th></tr>
 <tr>
-<td><code>.</code> </td><td>matches any single Unicode character except newline (including <a class="el" href="index.html#invalid-utf">Invalid UTF encodings </a>) </td></tr>
+<td><code>.</code> </td><td>matches any single character (or a byte in Unicode mode, see <a class="el" href="index.html#invalid-utf">Invalid UTF encodings and the dot pattern </a>) </td></tr>
 <tr>
 <td><code>\a</code> </td><td>matches BEL U+0007 </td></tr>
 <tr>
@@ -2083,7 +2086,7 @@ Anchors and boundaries</h3>
 <p>Anchors in lexer specifications require pattern context, meaning that <code>φ</code> cannot be empty.</p>
 <p>Note that <code>&lt;&lt;EOF&gt;&gt;</code> in lexer specifications match the end of input, which can be used in place of the pattern <code>\z</code>.</p>
 <p>Actions for the start of input can be specified in an initial code block preceding the rules, see <a class="el" href="index.html#reflex-code-blocks">Initial code blocks </a>.</p>
-<p>Word boundaries demarcate words. Word characters <code>\w</code> are letters, digits, and the underscore.</p>
+<p>Word boundaries demarcate words. Word characters are letters, digits, and the underscore.</p>
 <table class="doxtable">
 <tr>
 <th>Pattern </th><th>Matches  </th></tr>
@@ -2104,7 +2107,6 @@ Anchors and boundaries</h3>
 <tr>
 <td><code>φ\&gt;</code> </td><td>matches <code>φ</code> that ends as a word </td></tr>
 </table>
-<dl class="section note"><dt>Note</dt><dd>The RE/flex regex library requires anchors and word boundaries to be specified in patterns at the start or end of the pattern. Boundaries are not permitted in the middle of a pattern, see <a class="el" href="index.html#reflex-limitations">Limitations </a>.</dd></dl>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h3><a class="anchor" id="reflex-pattern-dents"></a>
 Indent/nodent/dedent</h3>
@@ -2201,7 +2203,7 @@ Unicode mode</h3>
 <tr>
 <th>Pattern </th><th>Matches  </th></tr>
 <tr>
-<td><code>.</code> </td><td>matches any Unicode character (beware of <a class="el" href="index.html#invalid-utf">Invalid UTF encodings </a>) </td></tr>
+<td><code>.</code> </td><td>matches any character (or byte in Unicode mode, see <a class="el" href="index.html#invalid-utf">Invalid UTF encodings and the dot pattern </a>) </td></tr>
 <tr>
 <td><code>€</code> (UTF-8) </td><td>matches wide character <code>€</code>, encoded in UTF-8 </td></tr>
 <tr>
@@ -3564,19 +3566,21 @@ Compilation errors when using yy functions                      </h2>
 </ul>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="invalid-utf"></a>
-Invalid UTF encodings                                            </h2>
+Invalid UTF encodings and the dot pattern                        </h2>
 <p>It may be tempting to write a pattern with <code>.</code> (dot) as a wildcard in a lexer specification, but beware that in Unicode mode enabled with <em><code>%option unicode</code></em> or with modifier <code>(?u:φ)</code>, the dot matches any code point, including code points outside of the valid Unicode character range and invalid overlong UTF-8 (except that it won't match newline unless <em><code>%option dotall</code></em> is specified.) The reason for this design choice is that a lexer should be able to implement a "catch all else" rule to report errors in the input:</p>
-<div class="alt"> <div class="fragment"><div class="line">.    std::cerr &lt;&lt; <span class="stringliteral">&quot;lexical error, full stop!&quot;</span> &lt;&lt; std::endl;</div><div class="line">     <span class="keywordflow">return</span> 0;</div></div><!-- fragment --> </div><p>If dot in Unicode mode would be restricted to match valid Unicode only, then the action above will never be triggered when invalid input is encountered. Because all non-dot regex patterns are valid Unicode in RE/flex, it would be impossible to write a "catch all else" rule that catches input format errors!</p>
-<p>The dot in Unicode mode is self-synchronizing and consumes text up to to the next ASCII or Unicode character.</p>
-<p>To accept valid Unicode input in regex patterns, make sure to avoid <code>.</code> (dot) and use <code>\p{Unicode}</code> or <code>\X</code> instead, and reserve dot to catch anything, such as invalid UTF encodings. We use <code>.|\n</code> or <em><code>%option dotall</code></em> to catch anything including <code>\n</code> and invalid UTF-8/16/32 encodings.</p>
+<div class="alt"> <div class="fragment"><div class="line">.    std::cerr &lt;&lt; <span class="stringliteral">&quot;lexical error, full stop!&quot;</span> &lt;&lt; std::endl;</div><div class="line">     <span class="keywordflow">return</span> 0;</div></div><!-- fragment --> </div><p>If dot in Unicode mode with <em><code>%option unicode</code></em> would be restricted to match valid Unicode only, then the action above will never be triggered when invalid input is encountered. Because all non-dot regex patterns are valid Unicode in RE/flex, it would be impossible to write a "catch all else" rule that catches input format errors!</p>
+<p>The dot in Unicode mode is self-synchronizing and consumes text up to the next ASCII or Unicode character.</p>
+<p>Because the <code>.</code> is "permissive" by design with <em><code>%option unicode</code></em>, multiple <code>.</code> dots in sequence can match a single multi-byte Unicode character by its individual bytes.</p>
+<p>To accept only valid Unicode input in regex patterns, make sure to avoid <code>.</code> (dot) and use <code>\p{Unicode}</code> or <code>\X</code> instead, and reserve dot to catch anything, such as invalid UTF encodings. We can use <code>.|\n</code> or <em><code>%option dotall</code></em> to catch anything including <code>\n</code> and invalid UTF-8/16/32 encodings.</p>
 <p>Furthermore, before matching any input, invalid UTF-16 input is detected automatically by the <code><a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a></code> class and replaced with the <code><a class="el" href="utf8_8h.html#a75f9fce49b2f30fb97235c76cd70d32f" title="Replace invalid UTF-8 with the non-character U+200000 code point for guaranteed error detection (the ...">REFLEX_NONCHAR</a></code> code point U+200000 that lies outside the valid Unicode range. This code point is never matched by non-dot regex patterns and is easy to detect by a regex pattern with a dot and a corresponding error action as shown above.</p>
 <p>Note that character classes written as bracket lists may produce invalid Unicode ranges when used improperly. This is not a problem for matching, but may prevent rejecting surrogate halves that are invalid Unicode. For example, <code>[\u{00}-\u{10FFFF}]</code> obviously includes the invalid range of surrogate halves <code>[\u{D800}-\u{DFFF}]</code>. You can always remove surrogate halves from any character class by intersecting the class with <code>[\p{Unicode}]</code>, that is <code>[...&amp;&amp;[\p{Unicode}]]</code>. Furthermore, character class negation with <code>^</code> results in classes that are within range U+0000 to U+10FFFF and excludes surrogate halves.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="errors"></a>
 Error reporting and recovery                                          </h2>
 <p>When your scanner or parser encounters an error in the input, the scanner or parser should report it and attempt to continue processing the input by recovering from the error condition. Most compilers recover from an error to continue processing the input until a threshold on the maximum number of errors is exceeded.</p>
-<p>In our lexer specification of a scanner, we may define a "catch all else" rule with pattern <code>.</code> to report an unmatched "mystery character" that is not recognized, for example:</p>
-<div class="alt"> <div class="fragment"><div class="line">%<span class="keyword">class</span>{</div><div class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> max_errors = 10;</div><div class="line">  <span class="keywordtype">size_t</span> errors;</div><div class="line">}</div><div class="line"></div><div class="line">%init{</div><div class="line">  errors = 0;</div><div class="line">}</div><div class="line"></div><div class="line">%%</div><div class="line">...  <span class="comment">// lexer rules</span></div><div class="line"></div><div class="line">.    std::string line = matcher().line();</div><div class="line">     std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: mystery character at line &quot;</span> &lt;&lt; lineno() &lt;&lt; <span class="stringliteral">&quot;:\n&quot;</span> &lt;&lt; line &lt;&lt; std::endl;</div><div class="line">     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = columno(); i &gt; 0; --i)</div><div class="line">       std::cerr &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div><div class="line">     std::cerr &lt;&lt; <span class="stringliteral">&quot;\\__ here&quot;</span> &lt;&lt; std::endl;</div><div class="line">     <span class="keywordflow">if</span> (++errors &gt;= max_errors)</div><div class="line">       <span class="keywordflow">return</span> 0;</div><div class="line">%%</div></div><!-- fragment --> </div><p>The error message indicates the offending line number with <code>lineno()</code> and prints the problematic line of input using <code>matcher().line()</code>. The position on the line is indicated with an arrow placed below the line at offset <code>columno()</code> from the start of the line, where <code>columno()</code> takes tabs and wide characters into account.</p>
+<p>In our lexer specification of a scanner, we may define a "catch all else" rule with pattern <code>.</code> to report an unmatched "mystery character" that is not recognized. For example:</p>
+<div class="alt"> <div class="fragment"><div class="line">%<span class="keyword">class</span>{</div><div class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> max_errors = 10;</div><div class="line">  <span class="keywordtype">size_t</span> errors;</div><div class="line">}</div><div class="line"></div><div class="line">%init{</div><div class="line">  errors = 0;</div><div class="line">}</div><div class="line"></div><div class="line">%%</div><div class="line">...  <span class="comment">// lexer rules</span></div><div class="line"></div><div class="line">.    std::string line = matcher().line();</div><div class="line">     std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: mystery character at line &quot;</span> &lt;&lt; lineno() &lt;&lt; <span class="stringliteral">&quot;:\n&quot;</span> &lt;&lt; line &lt;&lt; std::endl;</div><div class="line">     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = columno(); i &gt; 0; --i)</div><div class="line">       std::cerr &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div><div class="line">     std::cerr &lt;&lt; <span class="stringliteral">&quot;\\__ here&quot;</span> &lt;&lt; std::endl;</div><div class="line">     <span class="keywordflow">if</span> (++errors &gt;= max_errors)</div><div class="line">       <span class="keywordflow">return</span> 0;</div><div class="line">%%</div></div><!-- fragment --> </div><p>Beware that a <code>.</code> (dot) matches any character or byte, including invalid Unicode. See also <a class="el" href="index.html#invalid-utf">Invalid UTF encodings and the dot pattern </a>.</p>
+<p>The error message indicates the offending line number with <code>lineno()</code> and prints the problematic line of input using <code>matcher().line()</code>. The position on the line is indicated with an arrow placed below the line at offset <code>columno()</code> from the start of the line, where <code>columno()</code> takes tabs and wide characters into account.</p>
 <p>This error message does not take the window width into account, which may result in misplacing the arrow when the line is too long and overflows onto the next rows in the window, unless changes are made to the code to print the relevant part of the line only.</p>
 <p>There are other ways to indicate the location of an error, for example as <code>--&gt;</code> <code>&lt;--</code> and highlighting the error using the ANSI SGI escape sequence for bold typeface:</p>
 <div class="alt"> <div class="fragment"><div class="line">.    std::string line = lexer-&gt;matcher().line();</div><div class="line">     std::string before = line.substr(0, border());</div><div class="line">     std::string after = line.substr(border() + size());</div><div class="line">     std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: mystery character at line &quot;</span> &lt;&lt; lineno() &lt;&lt; <span class="stringliteral">&quot;:&quot;</span> &lt;&lt; std::endl;</div><div class="line">     std::cerr &lt;&lt; before &lt;&lt; <span class="stringliteral">&quot;\033[1m --&gt; &quot;</span> &lt;&lt; str() &lt;&lt; <span class="stringliteral">&quot; &lt;-- \033[0m&quot;</span> &lt;&lt; after &lt;&lt; std::endl;</div><div class="line">     <span class="keywordflow">if</span> (++errors &gt;= max_errors)</div><div class="line">       <span class="keywordflow">return</span> 0;</div></div><!-- fragment --> </div><p>This prints the start of the line up to the mismatching position on the line returned by <code>border()</code>, followed by the highlighted "mystery character". Beware that this can be a control code or invalid Unicode code point, which should be checked before displaying it.</p>
@@ -3742,7 +3746,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Sep 25 2023 10:43:27 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sat Oct 7 2023 14:08:25 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

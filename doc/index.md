@@ -2393,7 +2393,7 @@ patterns `φ` and `ψ`:
   Pattern   | Matches
   --------- | -----------------------------------------------------------------
   `x`       | matches the character `x`, where `x` is not a special character
-  `.`       | matches any single character except newline (unless in dotall mode)
+  `.`       | matches any single character or a byte, except newline (unless in dotall mode)
   `\.`      | matches `.` (dot), special characters are escaped with a backslash
   `\n`      | matches a newline, others are `\a` (BEL), `\b` (BS), `\t` (HT), `\v` (VT), `\f` (FF), and `\r` (CR)
   `\N`      | matches any single character except newline
@@ -2427,8 +2427,8 @@ patterns `φ` and `ψ`:
   `(?=φ)`   | matches `φ` without consuming it (\ref reflex-pattern-lookahead)
   `(?<=φ)`  | matches `φ` to the left without consuming it (\ref reflex-pattern-lookbehind, not supported by the RE/flex matcher)
   `(?^φ)`   | matches `φ` and ignores it, marking everything as a non-match to continue matching (RE/flex matcher only)
-  `^φ`      | matches `φ` at the begin of input or begin of a line (requires multi-line mode) (top-level `φ`, not nested in a sub-pattern)
-  `φ$`      | matches `φ` at the end of input or end of a line (requires multi-line mode) (top-level `φ`, not nested in a sub-pattern)
+  `^φ`      | matches `φ` at the begin of input or begin of a line (requires multi-line mode) (top-level `φ` only, not nested in a sub-pattern)
+  `φ$`      | matches `φ` at the end of input or end of a line (requires multi-line mode) (top-level `φ` only, not nested in a sub-pattern)
   `\Aφ`     | matches `φ` at the begin of input (top-level `φ`, not nested in a sub-pattern)
   `φ\z`     | matches `φ` at the end of input (top-level `φ`, not nested in a sub-pattern)
   `\bφ`     | matches `φ` starting at a word boundary
@@ -2449,10 +2449,27 @@ patterns `φ` and `ψ`:
   `(?x:φ)`  | \ref reflex-pattern-freespace ignore all whitespace and comments in `φ`
   `(?#:X)`  | all of `X` is skipped as a comment
 
+Word boundaries `\<`, `\>`, `\b` and `\B` demarcate words.  Word characters are
+letters, digits, and the underscore.  Anchors `\A` and `\z` demarcate the begin
+and end of the input, respectively.  Anchors `^` and `$` demarcate the begin
+and end of a line, respectively, because multi-line mode is enabled by default
+in all RE/flex-generated scanners.  See also \ref reflex-pattern-anchor.
+
+Indentation matching with `\i`, `\j` and `\k` is a RE/flex feature available
+only with the RE/flex regex library that supports it.  See also \ref
+reflex-pattern-dents for more details.
+
 @note The lazy quantifier `?` for optional patterns `φ??` and repetitions `φ*?`
 `φ+?` is not supported by Boost.Regex in POSIX mode.  In general, POSIX
 matchers do not support lazy quantifiers due to POSIX limitations that are
-rooted in the theory of formal languages FSM of regular expressions.
+rooted in the theory of formal languages FSM of regular expressions.  The
+RE/flex regex library is POSIX compliant and supports lazy quantifiers as an
+exception.
+
+@warning Option `−−fast` does not produce code that backtracks, which means
+that patterns such as `bar.*\bfoo` that require backtracking on `\b` may not
+work properly.  If necessary, use option `−−full` when word boundaries are used
+when these require backtracking to find a match.
 
 The following patterns are available in RE/flex and adopt the same Flex/Lex
 patterns syntax.  These pattern should only be used in lexer specifications:
@@ -2655,7 +2672,7 @@ library:
 
   Unicode category                       | Matches
   -------------------------------------- | ------------------------------------
-  `.`                                    | matches any single Unicode character except newline (including \ref invalid-utf)
+  `.`                                    | matches any single character (or a byte in Unicode mode, see \ref invalid-utf)
   `\a`                                   | matches BEL U+0007
   `\d`                                   | matches a digit `\p{Nd}`
   `\D`                                   | matches a non-digit
@@ -3123,8 +3140,8 @@ can be used in place of the pattern `\z`.
 Actions for the start of input can be specified in an initial code block
 preceding the rules, see \ref reflex-code-blocks.
 
-Word boundaries demarcate words.  Word characters `\w` are letters, digits, and
-the underscore.
+Word boundaries demarcate words.  Word characters are letters, digits, and the
+underscore.
 
   Pattern   | Matches
   --------- | -----------------------------------------------------------------
@@ -3136,10 +3153,6 @@ the underscore.
   `\>φ`     | matches `φ` that starts as a non-word
   `φ\<`     | matches `φ` that ends as a non-word
   `φ\>`     | matches `φ` that ends as a word
-
-@note The RE/flex regex library requires anchors and word boundaries to be
-specified in patterns at the start or end of the pattern.  Boundaries are not
-permitted in the middle of a pattern, see \ref reflex-limitations.
 
 🔝 [Back to table of contents](#)
 
@@ -3488,7 +3501,7 @@ the following patterns to be used:
 
   Pattern            | Matches
   ------------------ | --------------------------------------------------------
-  `.`                | matches any Unicode character (beware of \ref invalid-utf)
+  `.`                | matches any character (or byte in Unicode mode, see \ref invalid-utf)
   `€` (UTF-8)        | matches wide character `€`, encoded in UTF-8
   `[€¥£]` (UTF-8)    | matches wide character `€`, `¥` or `£`, encoded in UTF-8
   `\X`               | matches any ISO-8859-1 or Unicode character
@@ -8563,8 +8576,8 @@ to generate global `yy` variables and functions stored in the global
 🔝 [Back to table of contents](#)
 
 
-Invalid UTF encodings                                            {#invalid-utf}
----------------------
+Invalid UTF encodings and the dot pattern                        {#invalid-utf}
+-----------------------------------------
 
 It may be tempting to write a pattern with `.` (dot) as a wildcard in a lexer
 specification, but beware that in Unicode mode enabled with
@@ -8582,18 +8595,23 @@ errors in the input:
 ~~~
 </div>
 
-If dot in Unicode mode would be restricted to match valid Unicode only, then
-the action above will never be triggered when invalid input is encountered.
-Because all non-dot regex patterns are valid Unicode in RE/flex, it would be
-impossible to write a "catch all else" rule that catches input format errors!
+If dot in Unicode mode with <i>`%%option unicode`</i> would be restricted to
+match valid Unicode only, then the action above will never be triggered when
+invalid input is encountered.  Because all non-dot regex patterns are valid
+Unicode in RE/flex, it would be impossible to write a "catch all else" rule
+that catches input format errors!
 
-The dot in Unicode mode is self-synchronizing and consumes text up to to the
-next ASCII or Unicode character.
+The dot in Unicode mode is self-synchronizing and consumes text up to the next
+ASCII or Unicode character.
 
-To accept valid Unicode input in regex patterns, make sure to avoid `.` (dot)
-and use `\p{Unicode}` or `\X` instead, and reserve dot to catch anything,
-such as invalid UTF encodings.  We use `.|\n` or <i>`%%option dotall`</i> to
-catch anything including `\n` and invalid UTF-8/16/32 encodings.
+Because the `.` is "permissive" by design with <i>`%%option unicode`</i>,
+multiple `.` dots in sequence can match a single multi-byte Unicode character
+by its individual bytes.
+
+To accept only valid Unicode input in regex patterns, make sure to avoid `.`
+(dot) and use `\p{Unicode}` or `\X` instead, and reserve dot to catch anything,
+such as invalid UTF encodings.  We can use `.|\n` or <i>`%%option dotall`</i>
+to catch anything including `\n` and invalid UTF-8/16/32 encodings.
 
 Furthermore, before matching any input, invalid UTF-16 input is detected
 automatically by the `reflex::Input` class and replaced with the
@@ -8626,7 +8644,7 @@ is exceeded.
 
 In our lexer specification of a scanner, we may define a "catch all else" rule
 with pattern `.` to report an unmatched "mystery character" that is not
-recognized, for example:
+recognized.  For example:
 
 <div class="alt">
 ~~~{.cpp}
@@ -8652,6 +8670,9 @@ recognized, for example:
     %%
 ~~~
 </div>
+
+Beware that a `.` (dot) matches any character or byte, including invalid
+Unicode.  See also \ref invalid-utf.
 
 The error message indicates the offending line number with `lineno()` and
 prints the problematic line of input using `matcher().line()`.  The position on

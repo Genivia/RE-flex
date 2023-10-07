@@ -1,14 +1,14 @@
 <map id="matcher.h" name="matcher.h">
-<area shape="rect" id="node2" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="1311,80,1447,107"/>
-<area shape="rect" id="node21" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="639,80,748,107"/>
-<area shape="rect" id="node3" href="$convert_8h.html" title="RE/flex regex converter. " alt="" coords="1140,155,1252,181"/>
-<area shape="rect" id="node9" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="1327,155,1431,181"/>
-<area shape="rect" id="node11" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="831,155,929,181"/>
-<area shape="rect" id="node16" href="$traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="1455,155,1553,181"/>
-<area shape="rect" id="node17" href="$simd_8h.html" title="RE/flex SIMD intrinsics. " alt="" coords="1578,155,1675,181"/>
-<area shape="rect" id="node4" href="$error_8h.html" title="RE/flex regex errors. " alt="" coords="1155,229,1250,256"/>
-<area shape="rect" id="node12" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="765,229,856,256"/>
-<area shape="rect" id="node22" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="477,155,568,181"/>
-<area shape="rect" id="node23" href="$ranges_8h.html" title="RE/flex range sets as closed and open&#45;ended set containers. " alt="" coords="243,155,351,181"/>
-<area shape="rect" id="node26" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="643,155,744,181"/>
+<area shape="rect" id="node2" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="384,80,520,107"/>
+<area shape="rect" id="node21" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="1079,80,1188,107"/>
+<area shape="rect" id="node3" href="$convert_8h.html" title="RE/flex regex converter. " alt="" coords="685,155,797,181"/>
+<area shape="rect" id="node10" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="507,155,611,181"/>
+<area shape="rect" id="node12" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="923,155,1021,181"/>
+<area shape="rect" id="node16" href="$traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="5,155,104,181"/>
+<area shape="rect" id="node17" href="$simd_8h.html" title="RE/flex SIMD intrinsics. " alt="" coords="129,155,226,181"/>
+<area shape="rect" id="node4" href="$error_8h.html" title="RE/flex regex errors. " alt="" coords="569,229,663,256"/>
+<area shape="rect" id="node13" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="1013,229,1104,256"/>
+<area shape="rect" id="node22" href="$bits_8h.html" title="RE/flex operations on dynamic bit vectors. " alt="" coords="1396,155,1487,181"/>
+<area shape="rect" id="node23" href="$ranges_8h.html" title="RE/flex range sets as closed and open&#45;ended set containers. " alt="" coords="1687,155,1795,181"/>
+<area shape="rect" id="node26" href="$setop_8h.html" title="RE/flex operations on STL containers and sets. " alt="" coords="1511,155,1612,181"/>
 </map>
