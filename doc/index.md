@@ -13,20 +13,27 @@ RE/flex user guide                                                  {#mainpage}
 What is RE/flex?                                                       {#intro}
 ================
 
-RE/flex is the regex-centric, fast lexical analyzer generator with full Unicode
-support, indentation anchors, lazy quantifiers, word boundaries, and many other
-modern features.  RE/flex also includes a fast regex engine written in C++ with
-options to generate finite state machine tables or direct code to match input
-more efficiently.  RE/flex includes a smart input class to normalize input from
-files, streams, strings, and memory.  RE/flex is compatible with Bison/Yacc and
-accepts Flex lexer specifications.
+A high-performance C++ regex library and lexical analyzer generator with
+Unicode support.
 
-RE/flex does some heavy-lifting for you to make it easier to integrate advanced
-tokenizers with Bison in C++.  The RE/flex code generation tool accepts options
-to fascilitate seamless integration with Bison by generating the necessary
-gluing code, such as the C++ source code expected by "Bison complete parsers".
+The RE/flex lexical analyzer generator is compatible with standard Flex lexer
+specifications and integrates seamlessly with Bison parsers.  The lexical
+analyzer generator accepts Flex lexer specifications, but also supports
+indentation anchors, lazy quantifiers, word boundaries, and many other modern
+features.
 
-A summary of features:
+The RE/flex lexical analyzer generator does all the heavy-lifting for you to
+make it easier to integrate advanced tokenizers with Bison parsers.  It
+generates the necessary gluing code depending on the type of Bison parser used,
+such as advanced "Bison complete parsers".
+
+The high-performance RE/flex regex library is used by the RE/flex lexical
+analyzer generator to generate finite state machine tables or direct code to
+scan and search input efficiently.  RE/flex also includes a smart input class
+to normalize input from files, streams, strings, and memory to standard UTF-8
+streams.
+
+A quick summary of features:
 
 - faster than Flex++ for typical applications such as tokenization;
 - accepts Flex/Lex lexer specifications, extended to support Unicode;

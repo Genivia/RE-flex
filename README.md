@@ -3,12 +3,12 @@
 
 [![build status][ci-image]][ci-url] [![license][bsd-3-image]][bsd-3-url] [![CodeProject][codeproject-image]][codeproject-url]
 
-The regex-centric, fast lexical analyzer generator for C++ with full Unicode
-support.
+A high-performance C++ regex library and lexical analyzer generator with
+Unicode support.
 
-[RE/flex][reflex-url] is compatible with Flex lexer specifications and Bison
-parsers.  RE/flex is faster than Flex while providing a wealth of new features
-and contributions.  RE/flex is also much faster than regex libraries such as
+RE/flex is compatible with Flex lexer specifications and Bison parsers.
+RE/flex is faster than Flex while providing a wealth of new features and
+contributions.  RE/flex is also much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
 representative C source code file into 244 tokens takes only 8.7 microseconds:
 
@@ -575,6 +575,7 @@ Changelog
 - Sep 16, 2023: 3.4.0 fix `FuzzyMatcher::DEL` flag when this is the only flag selected; fix `FuzzyMatcher::matches()` bug that incorrectly matched an extra character before the end of the input; optimize `find()`; updated saving the FSM `pred[]` hashes to a file, which has changed; increase default buffer size `REFLEX_BUFSZ` to 128K for best throughput performance.
 - Sep 25, 2023: 3.4.1 make word boundaries `\b`, `\B`, `\<` and `\>` applicable anywhere in a pattern.
 - Oct  7, 2023: 3.5.0 updated to Unicode 15.1; clarify `.` (dot) with `%unicode` enabled, which is a catch-all pattern; update `\X` to match only valid Unicode characters.
+- Nov  5, 2023: 3.5.1 minor improvements.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
