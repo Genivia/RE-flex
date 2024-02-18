@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::ORanges&lt; T &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Nov 5 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Feb 18 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -183,6 +183,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aebbc4ec485e34807b3f04d8569477bb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_ranges.html#a5932a3dc82b3b47baa01c205b40eec64">bound_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_o_ranges.html#aebbc4ec485e34807b3f04d8569477bb4">hi</a> () const </td></tr>
 <tr class="memdesc:aebbc4ec485e34807b3f04d8569477bb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the highest value in the set of ranges (the set cannot be empty)  <a href="#aebbc4ec485e34807b3f04d8569477bb4">More...</a><br /></td></tr>
 <tr class="separator:aebbc4ec485e34807b3f04d8569477bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a111ba731966af84356477ef5d2b062dd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_o_ranges.html#a111ba731966af84356477ef5d2b062dd">count</a> () const </td></tr>
+<tr class="memdesc:a111ba731966af84356477ef5d2b062dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of items stored in ranges.  <a href="#a111ba731966af84356477ef5d2b062dd">More...</a><br /></td></tr>
+<tr class="separator:a111ba731966af84356477ef5d2b062dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreflex_1_1_ranges"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreflex_1_1_ranges')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreflex_1_1_ranges.html">reflex::Ranges&lt; T &gt;</a></td></tr>
 <tr class="memitem:a113a3eed86ce245a93626b1f5b84c5ad inherit pub_methods_classreflex_1_1_ranges"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_ranges.html#a113a3eed86ce245a93626b1f5b84c5ad">Ranges</a> ()</td></tr>
 <tr class="memdesc:a113a3eed86ce245a93626b1f5b84c5ad inherit pub_methods_classreflex_1_1_ranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an empty range.  <a href="#a113a3eed86ce245a93626b1f5b84c5ad">More...</a><br /></td></tr>
@@ -280,6 +283,10 @@ class reflex::ORanges&lt; T &gt;</h3>
 </ul>
 <p>Open-ended ranges are more efficient than <code>std::set</code> when the values stored are adjacent (e.g. integers 2 and 3 are adjacent), since <code>std::set</code> stores values individually whereas open-ended ranges merges adjacent values into ranges. This lowers storage overhead and reduces insertion, deletion, and search time.</p>
 <p>We can iterate over open-ended ranges. The iterator dereferences values are <code>[lo,hi+1)</code> pairs, i.e. <code>lo = i-&gt;first</code> and <code>hi = i-&gt;second - 1</code>.</p>
+<p>Additional <a class="el" href="classreflex_1_1_o_ranges.html" title="RE/flex ORanges (open-ended, ordinal value range) template class. ">ORanges</a> methods not defined by <a class="el" href="classreflex_1_1_ranges.html" title="RE/flex Ranges template class. ">Ranges</a>:</p>
+<ul>
+<li><code>size_t <a class="el" href="classreflex_1_1_o_ranges.html#a111ba731966af84356477ef5d2b062dd" title="Return the number of items stored in ranges. ">count()</a></code> returns the number of items stored in ranges, note that <code>size()</code> returns the number of ranges.</li>
+</ul>
 <p>IMPORTANT:</p>
 <p>The largest value that can be stored in an open-ended range of value type T is the maximum T-representable value minus 1. For example, the character range <code><a class="el" href="classreflex_1_1_o_ranges.html" title="RE/flex ORanges (open-ended, ordinal value range) template class. ">reflex::ORanges</a>&lt;char&gt;</code> holds values -128 to 126 and excludes 127.</p><ul>
 <li>Pick sufficiently wide container value types T, e.g. int instead of char.</li>
@@ -574,6 +581,33 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a111ba731966af84356477ef5d2b062dd"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t <a class="el" href="classreflex_1_1_o_ranges.html">reflex::ORanges</a>&lt; T &gt;::count </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the number of items stored in ranges. </p>
 
 </div>
 </div>
@@ -1093,7 +1127,7 @@ template&lt;typename T&gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Nov 5 2023 14:04:46 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Feb 18 2024 13:54:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

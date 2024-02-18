@@ -1,41 +1,44 @@
 #include <reflex/matcher.h>
 
 #if defined(OS_WIN)
-#pragma warning(disable:4102)
+#pragma warning(disable:4101 4102)
 #elif defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wunused-label"
 #elif defined(__clang__)
+#pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wunused-label"
 #endif
 
 void reflex_code_FSM(reflex::Matcher& m)
 {
-  int c0 = 0, c1 = c0;
+  int c0 = 0, c1 = 0;
   m.FSM_INIT(c1);
 
 S0:
-  c0 = c1, c1 = m.FSM_CHAR();
+  m.FSM_FIND();
+  c1 = m.FSM_CHAR();
   if (c1 == 'e') goto S2;
   return m.FSM_HALT(c1);
 
 S2:
-  c0 = c1, c1 = m.FSM_CHAR();
+  c1 = m.FSM_CHAR();
   if (c1 == 'l') goto S4;
   return m.FSM_HALT(c1);
 
 S4:
-  c0 = c1, c1 = m.FSM_CHAR();
+  c1 = m.FSM_CHAR();
   if (c1 == 'i') goto S7;
   if (c1 == 'e') goto S9;
   return m.FSM_HALT(c1);
 
 S7:
-  c0 = c1, c1 = m.FSM_CHAR();
+  c1 = m.FSM_CHAR();
   if (c1 == 't') goto S11;
   return m.FSM_HALT(c1);
 
 S9:
-  c0 = c1, c1 = m.FSM_CHAR();
+  c1 = m.FSM_CHAR();
   if (c1 == 'i') goto S13;
   return m.FSM_HALT(c1);
 
@@ -49,34 +52,32 @@ S11:
   return m.FSM_HALT(c1);
 
 S13:
-  c0 = c1, c1 = m.FSM_CHAR();
+  c1 = m.FSM_CHAR();
   if (c1 == 'f') goto S17;
   return m.FSM_HALT(c1);
 
 S15:
-  c0 = c1, c1 = m.FSM_CHAR();
   if (m.FSM_META_BWB()) {
-    m.FSM_TAKE(1, c1);
+    m.FSM_TAKE(1);
   }
-  return m.FSM_HALT(c1);
+  return m.FSM_HALT();
 
 S17:
-  c0 = c1, c1 = m.FSM_CHAR();
+  c1 = m.FSM_CHAR();
   if (c1 == 'e') goto S21;
   return m.FSM_HALT(c1);
 
 S19:
   m.FSM_TAKE(1);
-  c0 = c1, c1 = m.FSM_CHAR();
-  return m.FSM_HALT(c1);
+  return m.FSM_HALT();
 
 S21:
-  c0 = c1, c1 = m.FSM_CHAR();
+  c1 = m.FSM_CHAR();
   if (c1 == 'n') goto S23;
   return m.FSM_HALT(c1);
 
 S23:
-  c0 = c1, c1 = m.FSM_CHAR();
+  c1 = m.FSM_CHAR();
   if (c1 == 'd') goto S11;
   return m.FSM_HALT(c1);
 }

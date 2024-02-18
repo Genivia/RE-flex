@@ -381,6 +381,18 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     anc_ = true;
     return isword(got_) == isword(static_cast<unsigned char>(txt_[len_]));
   }
+  /// FSM code META WBE.
+  inline bool FSM_META_WBE(int c0, int c1)
+  {
+    anc_ = true;
+    return isword(c0) != isword(c1);
+  }
+  /// FSM code META WBB.
+  inline bool FSM_META_WBB()
+  {
+    anc_ = true;
+    return isword(got_) != isword(static_cast<unsigned char>(txt_[len_]));
+  }
  protected:
   typedef std::vector<size_t> Stops; ///< indent margin/tab stops
   /// FSM data for FSM code
@@ -437,14 +449,14 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
     return (col_ <= 0 || (!tab_.empty() && tab_.back() >= col_)) && (tab_.empty() || tab_.back() <= col_);
   }
 #endif
-  size_t            ded_;      ///< dedent count
-  size_t            col_;      ///< column counter for indent matching, updated by newline(), indent(), and dedent()
-  Stops             tab_;      ///< tab stops set by detecting indent margins
-  std::vector<int>  lap_;      ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
-  std::stack<Stops> stk_;      ///< stack to push/pop stops
-  FSM               fsm_;      ///< local state for FSM code
-  bool              mrk_;      ///< indent \i or dedent \j in pattern found: should check and update indent stops
-  bool              anc_;      ///< match is anchored, advance slowly to retry when searching
+  size_t            ded_; ///< dedent count
+  size_t            col_; ///< column counter for indent matching, updated by newline(), indent(), and dedent()
+  Stops             tab_; ///< tab stops set by detecting indent margins
+  std::vector<int>  lap_; ///< lookahead position in input that heads a lookahead match (indexed by lookahead number)
+  std::stack<Stops> stk_; ///< stack to push/pop stops
+  FSM               fsm_; ///< local state for FSM code
+  bool              mrk_; ///< indent \i or dedent \j in pattern found: should check and update indent stops
+  bool              anc_; ///< match is anchored, advance slowly to retry when searching
 };
 
 } // namespace reflex

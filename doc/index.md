@@ -93,8 +93,9 @@ In summary, RE/flex is really several things combined into one package:
 
 - a stand-alone regex library for fast regex matching in C++;
 
-- a C++ regex API enhancement of the [Boost.Regex](www.boost.org/libs/regex)
-  and [PCRE2](www.pcre.org) libraries for matching, seaching, splitting and
+- a C++ regex API enhancement of the
+  [Boost.Regex](https://www.boost.org/libs/regex) and
+  [PCRE2](https://www.pcre.org) libraries for matching, seaching, splitting and
   scanning of input, with input from (wide) strings, files, and streams of
   potentially unlimited length.
 
@@ -7719,9 +7720,9 @@ File content specified with a `FILE*` file descriptor can be encoded in ASCII,
 binary, UTF-8/16/32, ISO-8859-1 through ISO-8859-15, CP 1250 through 1258, CP
 437, CP 850, CP 858, or EBCDIC.
 
-A [UTF Byte Order Mark (BOM)](www.unicode.org/faq/utf_bom.html) is detected in
-the content of a file scanned by the matcher, which enables UTF-8 normalization
-of the input automatically.
+A [UTF Byte Order Mark (BOM)](https://www.unicode.org/faq/utf_bom.html) is
+detected in the content of a file scanned by the matcher, which enables UTF-8
+normalization of the input automatically.
 
 Otherwise, if no file encoding is explicitly specified, the matcher expects
 raw UTF-8, ASCII, or plain binary by default.  File formats can be decoded and
@@ -9006,8 +9007,8 @@ encodings), set the default file encoding to `latin`:
 ~~~
 
 This scans files from standard input that are encoded in ISO-8859-1, unless the
-file has a [UTF Byte Order Mark (BOM)](www.unicode.org/faq/utf_bom.html).  When
-a BOM is detected the scanner switches to UTF scanning.
+file has a [UTF Byte Order Mark (BOM)](https://www.unicode.org/faq/utf_bom.html).
+When a BOM is detected the scanner switches to UTF scanning.
 
 See \ref regex-input-file to set file encodings.
 

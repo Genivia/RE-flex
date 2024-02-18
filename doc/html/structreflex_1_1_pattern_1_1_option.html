@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern::Option Struct Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Nov 5 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Feb 18 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -90,6 +90,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a234c1efec34047030cf5e9c3c1d99512"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_option.html#a234c1efec34047030cf5e9c3c1d99512">f</a></td></tr>
 <tr class="memdesc:a234c1efec34047030cf5e9c3c1d99512"><td class="mdescLeft">&#160;</td><td class="mdescRight">output the patterns and/or <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> to files(s)  <a href="#a234c1efec34047030cf5e9c3c1d99512">More...</a><br /></td></tr>
 <tr class="separator:a234c1efec34047030cf5e9c3c1d99512"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21da39810d0919492897cdb8f6c37dab"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_option.html#a21da39810d0919492897cdb8f6c37dab">g</a></td></tr>
+<tr class="memdesc:a21da39810d0919492897cdb8f6c37dab"><td class="mdescLeft">&#160;</td><td class="mdescRight">debug level 0,1,2: output a cut <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> graphviz file with option f, predict match and <a class="el" href="structreflex_1_1_pattern_1_1_h_f_a.html" title="Indexing hash finite state automaton for indexed file search. ">HFA</a> states  <a href="#a21da39810d0919492897cdb8f6c37dab">More...</a><br /></td></tr>
+<tr class="separator:a21da39810d0919492897cdb8f6c37dab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7099c45faf54326be5963491de4bffc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_option.html#ab7099c45faf54326be5963491de4bffc">i</a></td></tr>
 <tr class="memdesc:ab7099c45faf54326be5963491de4bffc"><td class="mdescLeft">&#160;</td><td class="mdescRight">case insensitive mode, also <code>(?i:X)</code>  <a href="#ab7099c45faf54326be5963491de4bffc">More...</a><br /></td></tr>
 <tr class="separator:ab7099c45faf54326be5963491de4bffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -100,7 +103,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a5d9567281062403127f548d259052157"><td class="mdescLeft">&#160;</td><td class="mdescRight">pattern name (for use in generated code)  <a href="#a5d9567281062403127f548d259052157">More...</a><br /></td></tr>
 <tr class="separator:a5d9567281062403127f548d259052157"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cd0a415248ef07fe8fbdacdf1f97367"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_option.html#a8cd0a415248ef07fe8fbdacdf1f97367">o</a></td></tr>
-<tr class="memdesc:a8cd0a415248ef07fe8fbdacdf1f97367"><td class="mdescLeft">&#160;</td><td class="mdescRight">generate optimized FSM code for option f  <a href="#a8cd0a415248ef07fe8fbdacdf1f97367">More...</a><br /></td></tr>
+<tr class="memdesc:a8cd0a415248ef07fe8fbdacdf1f97367"><td class="mdescLeft">&#160;</td><td class="mdescRight">generate optimized FSM code with option f  <a href="#a8cd0a415248ef07fe8fbdacdf1f97367">More...</a><br /></td></tr>
 <tr class="separator:a8cd0a415248ef07fe8fbdacdf1f97367"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8366e40d7bc3474ff4f0fa409ec0ed0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_option.html#af8366e40d7bc3474ff4f0fa409ec0ed0">p</a></td></tr>
 <tr class="memdesc:af8366e40d7bc3474ff4f0fa409ec0ed0"><td class="mdescLeft">&#160;</td><td class="mdescRight">with option f also output predict match array for fast search with find()  <a href="#af8366e40d7bc3474ff4f0fa409ec0ed0">More...</a><br /></td></tr>
@@ -193,6 +196,20 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a21da39810d0919492897cdb8f6c37dab"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int reflex::Pattern::Option::g</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>debug level 0,1,2: output a cut <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> graphviz file with option f, predict match and <a class="el" href="structreflex_1_1_pattern_1_1_h_f_a.html" title="Indexing hash finite state automaton for indexed file search. ">HFA</a> states </p>
+
+</div>
+</div>
 <a class="anchor" id="a99822e4f211bfda7b88bb9ce9c1ee6ba"></a>
 <div class="memitem">
 <div class="memproto">
@@ -259,7 +276,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>generate optimized FSM code for option f </p>
+<p>generate optimized FSM code with option f </p>
 
 </div>
 </div>
@@ -367,7 +384,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Nov 5 2023 14:04:46 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Feb 18 2024 13:54:05 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

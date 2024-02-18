@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun Nov 5 2023 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Feb 18 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -202,7 +202,7 @@ What is RE/flex?                                                       </h1>
 <ul>
 <li>a faster, feature-rich replacement of Flex++ and Flex;</li>
 <li>a stand-alone regex library for fast regex matching in C++;</li>
-<li>a C++ regex API enhancement of the <a href="www.boost.org/libs/regex">Boost.Regex</a> and <a href="www.pcre.org">PCRE2</a> libraries for matching, seaching, splitting and scanning of input, with input from (wide) strings, files, and streams of potentially unlimited length.</li>
+<li>a C++ regex API enhancement of the <a href="https://www.boost.org/libs/regex">Boost.Regex</a> and <a href="https://www.pcre.org">PCRE2</a> libraries for matching, seaching, splitting and scanning of input, with input from (wide) strings, files, and streams of potentially unlimited length.</li>
 </ul>
 <p>The typographical conventions used by this document are:</p>
 <ul>
@@ -3347,7 +3347,7 @@ Input streams</h3>
 <h3><a class="anchor" id="regex-input-file"></a>
 FILE encodings</h3>
 <p>File content specified with a <code>FILE*</code> file descriptor can be encoded in ASCII, binary, UTF-8/16/32, ISO-8859-1 through ISO-8859-15, CP 1250 through 1258, CP 437, CP 850, CP 858, or EBCDIC.</p>
-<p>A <a href="www.unicode.org/faq/utf_bom.html">UTF Byte Order Mark (BOM)</a> is detected in the content of a file scanned by the matcher, which enables UTF-8 normalization of the input automatically.</p>
+<p>A <a href="https://www.unicode.org/faq/utf_bom.html">UTF Byte Order Mark (BOM)</a> is detected in the content of a file scanned by the matcher, which enables UTF-8 normalization of the input automatically.</p>
 <p>Otherwise, if no file encoding is explicitly specified, the matcher expects raw UTF-8, ASCII, or plain binary by default. File formats can be decoded and translated to UTF-8 on the fly for matching by means of specifying encodings.</p>
 <p>The current file encoding used by a matcher is obtained with the <code><a class="el" href="classreflex_1_1_input.html#a25682c7ebc7df115ade370d9d21ed888" title="Set encoding for FILE* input. ">reflex::Input::file_encoding()</a></code> method, which returns an <code><a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">reflex::Input::file_encoding</a></code> constant of type <code><a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8" title="Common file_encoding constants type. ">reflex::Input::file_encoding_type</a></code>:</p>
 <table class="doxtable">
@@ -3615,7 +3615,7 @@ On using setlocale                                                 </h2>
 Scanning ISO-8859-1 (latin-1) files with a Unicode scanner        </h2>
 <p>Scanning files encoded in ISO-8859-1 by a Unicode scanner that expects UTF-8 will cause the scanner to misbehave or throw errors.</p>
 <p>Many text files are still encoded in ISO-8859-1 (also called latin-1). To set up your scanner to safely scan ISO-8859-1 content when your scanner rules use Unicode (with the <code>−−unicode</code> option and your patterns that use UTF-8 encodings), set the default file encoding to <code>latin</code>:</p>
-<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(stdin, <a class="code" href="structreflex_1_1_input_1_1file__encoding.html#a70850a47577443173f3c31303612cdcf">reflex::Input::file_encoding::latin</a>);</div><div class="line">Lexer lexer(input);</div><div class="line">lexer.lex();</div></div><!-- fragment --><p>This scans files from standard input that are encoded in ISO-8859-1, unless the file has a <a href="www.unicode.org/faq/utf_bom.html">UTF Byte Order Mark (BOM)</a>. When a BOM is detected the scanner switches to UTF scanning.</p>
+<div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_input.html">reflex::Input</a> input(stdin, <a class="code" href="structreflex_1_1_input_1_1file__encoding.html#a70850a47577443173f3c31303612cdcf">reflex::Input::file_encoding::latin</a>);</div><div class="line">Lexer lexer(input);</div><div class="line">lexer.lex();</div></div><!-- fragment --><p>This scans files from standard input that are encoded in ISO-8859-1, unless the file has a <a href="https://www.unicode.org/faq/utf_bom.html">UTF Byte Order Mark (BOM)</a>. When a BOM is detected the scanner switches to UTF scanning.</p>
 <p>See <a class="el" href="index.html#regex-input-file">FILE encodings</a> to set file encodings.</p>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="crlf"></a>
@@ -3748,7 +3748,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun Nov 5 2023 14:04:48 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Feb 18 2024 13:54:07 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

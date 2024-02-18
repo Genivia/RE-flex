@@ -27,7 +27,7 @@ int main(int argc, char **argv)
       std::string regex;
       try
       {
-        regex = reflex::BoostPosixMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
+        regex = reflex::BoostPosixMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode | reflex::convert_flag::notnewline);
         printf(" with converted regex: %s\n\n", regex.c_str());
         boost::regex boost_pattern(regex, boost::regex_constants::no_empty_expressions);
         reflex::BoostPosixMatcher boostmatcher(boost_pattern, text, opts);
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
       printf("\n** Boost.Regex Perl mode test");
       try
       {
-        regex = reflex::BoostPerlMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
+        regex = reflex::BoostPerlMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode | reflex::convert_flag::notnewline);
         printf(" with converted regex: %s\n\n", regex.c_str());
         boost::regex boost_pattern(regex, boost::regex_constants::no_empty_expressions);
         reflex::BoostPerlMatcher boostmatcher(boost_pattern, text, opts);
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
       printf("\n** PCRE2 Perl mode test");
       try
       {
-        regex = reflex::PCRE2Matcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
+        regex = reflex::PCRE2Matcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode | reflex::convert_flag::notnewline);
         printf(" with converted regex: %s\n\n", regex.c_str());
         std::string pcre2_pattern(regex);
         reflex::PCRE2Matcher pcre2matcher(pcre2_pattern, text, opts);
@@ -156,7 +156,7 @@ int main(int argc, char **argv)
       printf("\n** C++11 std::regex Ecma mode test");
       try
       {
-        regex = reflex::StdMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode);
+        regex = reflex::StdMatcher::convert(argv[1], reflex::convert_flag::recap | reflex::convert_flag::unicode | reflex::convert_flag::notnewline);
         printf(" with converted regex: %s\n\n", regex.c_str());
         reflex::StdMatcher stdmatcher(regex, text, opts);
         if (argc > 3)
@@ -196,10 +196,10 @@ int main(int argc, char **argv)
 #endif
     try
     {
-      std::string regex = reflex::Matcher::convert(argv[1], reflex::convert_flag::unicode);
+      std::string regex = reflex::Matcher::convert(argv[1], reflex::convert_flag::unicode | reflex::convert_flag::notnewline);
       printf("\n** RE/flex converted regex = %s\n", regex.c_str());
-      reflex::Pattern reflex_pattern(regex, "mr;o;f=dump.gv,dump.cpp");
-      printf("\nDFA parse=%zu(%g) nodes=%zu(%g) edges=%zu(%g) words=%zu(%g)\n", regex.size(), reflex_pattern.parse_time(), reflex_pattern.nodes(), reflex_pattern.nodes_time(), reflex_pattern.edges(), reflex_pattern.edges_time(), reflex_pattern.words(), reflex_pattern.words_time());
+      reflex::Pattern reflex_pattern(regex, "mr;o;f=dump.gv,dump.cpp"); // include ;g; or ;gg; to show cut DFA after analysis
+      printf("\nDFA parse=%zu(%g) analysis=(%g) nodes=%zu(%g) edges=%zu(%g) words=%zu(%g)\n", regex.size(), reflex_pattern.parse_time(), reflex_pattern.analysis_time(), reflex_pattern.nodes(), reflex_pattern.nodes_time(), reflex_pattern.edges(), reflex_pattern.edges_time(), reflex_pattern.words(), reflex_pattern.words_time());
       if (argc > 2)
       {
         const char *text = argv[2];

@@ -47,19 +47,19 @@ The full documentation for \fBreflex\fR is maintained as a Doxygen\-generated
 manual reflex/doc/html/index.html located in the source directory of the reflex
 installation.  Or visit:
 .IP
-https://www.genivia.com/doc/reflex/html/index.html
+<https://www.genivia.com/doc/reflex/html/index.html>
 .PP
 to browse the latest version of the reflex user guide.
-.SH BUGS
-REJECT is not functional and not available.
+.SH COPYRIGHT
+Copyright (c) 2016-2024 Robert A. van Engelen <engelen@acm.org>
 .PP
-Report bugs at:
-.IP
-https://github.com/Genivia/RE-flex/issues
-.SH LICENSE
 \fBreflex\fR is released under the BSD\-3 license.  All parts of the software
 have reasonable copyright terms permitting free redistribution.  This includes
 the ability to reuse all or parts of the reflex source tree.
+.SH BUGS
+REJECT is not functional and not available.
+.PP
+Report bugs at: <https://github.com/Genivia/RE-flex/issues>
 .SH "SEE ALSO"
 lex(1), flex(1), flex++(1).
 END

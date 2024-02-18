@@ -154,6 +154,11 @@ class FuzzyMatcher : public Matcher {
     bin_ = (max & BIN);
     bpt_.resize(max_);
   }
+  /// Get the fuzzy distance parameters, the max is stored in the lower byte and INS, DEL, SUB are hi byte bits
+  uint16_t distance()
+  {
+    return max_;
+  }
  protected:
   /// Save state to restore fuzzy matcher state after a second pass
   struct SaveState {
@@ -586,6 +591,29 @@ redo:
                       }
                       opcode = *++pc;
                       continue;
+                    case Pattern::META_WBE - Pattern::META_MIN:
+                      DBGLOG("WBE? %d %d %d", c0, c1, isword(c0) != isword(c1));
+                      anc_ = true;
+                      if (jump == Pattern::Const::IMAX && isword(c0) != isword(c1))
+                      {
+                        jump = Pattern::index_of(opcode);
+                        if (jump == Pattern::Const::LONG)
+                          jump = Pattern::long_index_of(*++pc);
+                      }
+                      opcode = *++pc;
+                      continue;
+                    case Pattern::META_WBB - Pattern::META_MIN:
+                      DBGLOG("WBB? %d %d", at_bow(), at_eow());
+                      anc_ = true;
+                      if (jump == Pattern::Const::IMAX &&
+                          isword(got_) != isword(static_cast<unsigned char>(txt_[len_])))
+                      {
+                        jump = Pattern::index_of(opcode);
+                        if (jump == Pattern::Const::LONG)
+                          jump = Pattern::long_index_of(*++pc);
+                      }
+                      opcode = *++pc;
+                      continue;
                     case 0xFF: // LONG
                       opcode = *++pc;
                       continue;
@@ -701,7 +729,7 @@ unrolled:
             if (cap_ == 0 && pos_ > cur_ && method == Const::FIND)
             {
               // use bit_[] to check each char in buf_[cur_+1..pos_-1] if it is a starting char, if not then increase cur_
-              while (++cur_ < pos_ && (pat_->bit_[static_cast<uint8_t>(buf_[cur_])] & 1))
+              while (++cur_ < pos_ && !pat_->fst_.test(static_cast<uint8_t>(buf_[cur_])))
                 continue;
             }
           }
@@ -867,8 +895,7 @@ unrolled:
       {
         if (pat_->min_ > 0)
         {
-          const Pattern::Pred *bit = pat_->bit_;
-          while (s < e && (bit[static_cast<uint8_t>(*s)] & 1))
+          while (s < e && !pat_->fst_.test(static_cast<uint8_t>(*s)))
             ++s;
           if (s < e)
           {
@@ -1023,12 +1050,11 @@ unrolled:
             {
               if (pat_->min_ > 0)
               {
-                const Pattern::Pred *bit = pat_->bit_;
                 while (true)
                 {
                   const char *s = buf_ + loc;
                   const char *e = buf_ + end_;
-                  while (s < e && (bit[static_cast<uint8_t>(*s)] & 1))
+                  while (s < e && !pat_->fst_.test(static_cast<uint8_t>(*s)))
                     ++s;
                   if (s < e)
                   {
@@ -1037,8 +1063,7 @@ unrolled:
                     goto scan;
                   }
                   loc = e - buf_;
-                  set_current_match(loc - 1);
-                  peek_more();
+                  set_current_and_peek_more(loc - 1);
                   loc = cur_ + 1;
                   if (loc >= end_)
                     break;
@@ -1059,8 +1084,7 @@ unrolled:
                   goto scan;
                 }
                 loc = e - buf_;
-                set_current_match(loc - 1);
-                peek_more();
+                set_current_and_peek_more(loc - 1);
                 loc = cur_ + 1;
                 if (loc + pat_->len_ > end_)
                   break;

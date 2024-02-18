@@ -247,7 +247,7 @@ Usage
 There are two ways you can use this project:
 
 1. as a scanner generator for C++, similar to Flex;
-2. as a flexible regex matching API for C++.
+2. as a flexible regex library API for C++.
 
 For the first option, simply build the **reflex** tool and run it on the
 command line on a lexer specification:
@@ -267,7 +267,8 @@ Several examples are included to get you started.  See the [manual][manual-url]
 for more details.
 
 For the second option, simply use the RE/flex matcher API classes to start
-pattern matching on strings, wide strings, files, and streams.
+pattern search, matching, splitting and scanning on strings, wide strings,
+files, and streams.
 
 You can select matchers that are based on different regex engines:
 
@@ -422,7 +423,7 @@ License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2016-2020, All rights reserved.
+Copyright (c) 2016-2023, All rights reserved.
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.
@@ -565,17 +566,18 @@ Changelog
 - Jan 24, 2023: 3.3.0 overall update; corrected a problem with Unicode characters in regex patterns adjacent to curly braces; permit cxx extension in FSM filename output.
 - Mar  6, 2023: 3.3.1 for consistency include NAME in default header file name, tables file name, and graphs file name when option `--prefix` is specified.
 - Mar 17, 2023: 3.3.2 fix a performance issue with case-insensitive pattern construction.
-- May 28, 2023: 3.3.3 fix `yyrestart` dropping the first character; faster `find()`.
-- May 31, 2023: 3.3.4 fix `find()` initialization issue in 3.3.3.
+- May 28, 2023: 3.3.3 fix `yyrestart` dropping the first character; faster `Matcher::find()`.
+- May 31, 2023: 3.3.4 fix `Matcher::find()` initialization issue in 3.3.3.
 - Jun 12, 2023: 3.3.5 improve source code output of lexer class definitions.
-- Jul 11, 2023: 3.3.6 faster `find()`; improved `--stdout` to include tables.
-- Jul 17, 2023: 3.3.7 faster `find()`.
+- Jul 11, 2023: 3.3.6 faster `Matcher::find()`; improved `--stdout` to include tables.
+- Jul 17, 2023: 3.3.7 faster `Matcher::find()`.
 - Aug  4, 2023: 3.3.8 minor update to sync up the code base with the ugrep project.
 - Aug 16, 2023: 3.3.9 fix avx512bw compilation error; new LineMatcher matching engine.
 - Sep 16, 2023: 3.4.0 fix `FuzzyMatcher::DEL` flag when this is the only flag selected; fix `FuzzyMatcher::matches()` bug that incorrectly matched an extra character before the end of the input; optimize `find()`; updated saving the FSM `pred[]` hashes to a file, which has changed; increase default buffer size `REFLEX_BUFSZ` to 128K for best throughput performance.
 - Sep 25, 2023: 3.4.1 make word boundaries `\b`, `\B`, `\<` and `\>` applicable anywhere in a pattern.
 - Oct  7, 2023: 3.5.0 updated to Unicode 15.1; clarify `.` (dot) with `%unicode` enabled, which is a catch-all pattern; update `\X` to match only valid Unicode characters.
 - Nov  5, 2023: 3.5.1 minor improvements.
+- Feb 17, 2024: 4.0.0 faster `Matcher::find()` with a new DFA cut algorithm to optimize match prediction speed and accuracy, see also ugrep 5.0; apply Unicode pattern canonicalization with `reflex::convert(..., reflex::convert_flag::unicode)`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
