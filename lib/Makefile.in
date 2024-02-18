@@ -148,7 +148,8 @@ am_libreflex_a_OBJECTS = libreflex_a-convert.$(OBJEXT) \
 	libreflex_a-unicode.$(OBJEXT) libreflex_a-utf8.$(OBJEXT) \
 	libreflex_a-block_scripts.$(OBJEXT) \
 	libreflex_a-language_scripts.$(OBJEXT) \
-	libreflex_a-letter_scripts.$(OBJEXT)
+	libreflex_a-letter_scripts.$(OBJEXT) \
+	libreflex_a-composer.$(OBJEXT)
 libreflex_a_OBJECTS = $(am_libreflex_a_OBJECTS)
 libreflexmin_a_AR = $(AR) $(ARFLAGS)
 libreflexmin_a_LIBADD =
@@ -178,6 +179,7 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/libreflex_a-block_scripts.Po \
+	./$(DEPDIR)/libreflex_a-composer.Po \
 	./$(DEPDIR)/libreflex_a-convert.Po \
 	./$(DEPDIR)/libreflex_a-debug.Po \
 	./$(DEPDIR)/libreflex_a-error.Po \
@@ -366,7 +368,7 @@ reflexincludedir = $(includedir)/reflex
 reflexinclude_HEADERS = $(top_srcdir)/include/reflex/abslexer.h $(top_srcdir)/include/reflex/absmatcher.h $(top_srcdir)/include/reflex/bits.h $(top_srcdir)/include/reflex/boostmatcher.h $(top_srcdir)/include/reflex/convert.h $(top_srcdir)/include/reflex/debug.h $(top_srcdir)/include/reflex/error.h $(top_srcdir)/include/reflex/flexlexer.h $(top_srcdir)/include/reflex/input.h $(top_srcdir)/include/reflex/matcher.h $(top_srcdir)/include/reflex/pattern.h $(top_srcdir)/include/reflex/posix.h $(top_srcdir)/include/reflex/ranges.h $(top_srcdir)/include/reflex/setop.h $(top_srcdir)/include/reflex/simd.h $(top_srcdir)/include/reflex/stdmatcher.h $(top_srcdir)/include/reflex/timer.h $(top_srcdir)/include/reflex/traits.h $(top_srcdir)/include/reflex/unicode.h $(top_srcdir)/include/reflex/utf8.h
 lib_LIBRARIES = libreflex.a libreflexmin.a
 libreflex_a_CPPFLAGS = -I$(top_srcdir)/include $(SIMD_FLAGS)
-libreflex_a_SOURCES = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp posix.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp
+libreflex_a_SOURCES = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp posix.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp $(top_srcdir)/unicode/composer.cpp
 libreflexmin_a_CPPFLAGS = -I$(top_srcdir)/include $(SIMD_FLAGS)
 libreflexmin_a_SOURCES = debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp simd_avx2.cpp simd_avx512bw.cpp utf8.cpp
 all: all-am
@@ -451,6 +453,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-block_scripts.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-composer.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-convert.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-debug.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-error.Po@am__quote@ # am--include-marker
@@ -720,6 +723,20 @@ libreflex_a-letter_scripts.obj: $(top_srcdir)/unicode/letter_scripts.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/letter_scripts.cpp' object='libreflex_a-letter_scripts.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-letter_scripts.obj `if test -f '$(top_srcdir)/unicode/letter_scripts.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/letter_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/letter_scripts.cpp'; fi`
+
+libreflex_a-composer.o: $(top_srcdir)/unicode/composer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflex_a-composer.o -MD -MP -MF $(DEPDIR)/libreflex_a-composer.Tpo -c -o libreflex_a-composer.o `test -f '$(top_srcdir)/unicode/composer.cpp' || echo '$(srcdir)/'`$(top_srcdir)/unicode/composer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libreflex_a-composer.Tpo $(DEPDIR)/libreflex_a-composer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/composer.cpp' object='libreflex_a-composer.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-composer.o `test -f '$(top_srcdir)/unicode/composer.cpp' || echo '$(srcdir)/'`$(top_srcdir)/unicode/composer.cpp
+
+libreflex_a-composer.obj: $(top_srcdir)/unicode/composer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflex_a-composer.obj -MD -MP -MF $(DEPDIR)/libreflex_a-composer.Tpo -c -o libreflex_a-composer.obj `if test -f '$(top_srcdir)/unicode/composer.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/composer.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/composer.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libreflex_a-composer.Tpo $(DEPDIR)/libreflex_a-composer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/composer.cpp' object='libreflex_a-composer.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-composer.obj `if test -f '$(top_srcdir)/unicode/composer.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/composer.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/composer.cpp'; fi`
 
 libreflexmin_a-debug.o: debug.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflexmin_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflexmin_a-debug.o -MD -MP -MF $(DEPDIR)/libreflexmin_a-debug.Tpo -c -o libreflexmin_a-debug.o `test -f 'debug.cpp' || echo '$(srcdir)/'`debug.cpp
@@ -1009,6 +1026,7 @@ clean-am: clean-generic clean-libLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/libreflex_a-block_scripts.Po
+	-rm -f ./$(DEPDIR)/libreflex_a-composer.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-convert.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-debug.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-error.Po
@@ -1080,6 +1098,7 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/libreflex_a-block_scripts.Po
+	-rm -f ./$(DEPDIR)/libreflex_a-composer.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-convert.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-debug.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-error.Po
@@ -1158,7 +1177,7 @@ libreflexmin_a-simd_avx512bw.$(OBJEXT) : CXXFLAGS += $(SIMD_AVX512BW_FLAGS)
 # lib_LTLIBRARIES       = libreflex.la libreflexmin.la
 #
 # libreflex_la_CPPFLAGS = -I$(top_srcdir)/include $(SIMD_FLAGS)
-# libreflex_la_SOURCES  = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp posix.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp
+# libreflex_la_SOURCES  = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp posix.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp $(top_srcdir)/unicode/composer.cpp
 #
 # libreflexmin_la_CPPFLAGS = -I$(top_srcdir)/include
 # libreflexmin_la_SOURCES  = debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp simd_avx2.cpp simd_avx512bw.cpp utf8.cpp
