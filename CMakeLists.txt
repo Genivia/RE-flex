@@ -31,6 +31,7 @@ set(lib_sources
   unicode/block_scripts.cpp
   unicode/language_scripts.cpp
   unicode/letter_scripts.cpp
+  unicode/composer.cpp
 )
 
 set(bin_sources
