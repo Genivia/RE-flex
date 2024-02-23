@@ -578,6 +578,7 @@ Changelog
 - Oct  7, 2023: 3.5.0 updated to Unicode 15.1; clarify `.` (dot) with `%unicode` enabled, which is a catch-all pattern; update `\X` to match only valid Unicode characters.
 - Nov  5, 2023: 3.5.1 minor improvements.
 - Feb 17, 2024: 4.0.0 faster `Matcher::find()` with a new DFA cut algorithm to optimize match prediction speed and accuracy, see also ugrep 5.0; apply Unicode pattern canonicalization with `reflex::convert(..., reflex::convert_flag::unicode)`.
+- Feb 23, 2024: 4.0.1 new `rawk` example to demonstrate awk-like fast search in C++; enable `<<EOF>>` rules for option `find` to generate a fast search engine.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

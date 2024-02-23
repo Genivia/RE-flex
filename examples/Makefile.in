@@ -478,6 +478,7 @@ examples:	flexexample1 \
 		wcu \
 		wcpp \
 		wcwc \
+                rawk \
 		tag \
 		tag_lazy \
 		tag_lazystates \
@@ -485,6 +486,7 @@ examples:	flexexample1 \
 		tag_tidy \
 		cow \
 		cows \
+		moo \
 		indent1 \
 		indent2 \
 		json \
@@ -747,6 +749,10 @@ wcwc:		wcwc.l
 		$(REFLEX) $(REFLAGS) --flex wcwc.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 
+rawk:		rawk.l
+		$(REFLEX) $(REFLAGS) rawk.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+
 tag:		tag.l
 		$(REFLEX) $(REFLAGS) tag.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
@@ -776,6 +782,11 @@ cows:		cows.l
 		$(REFLEX) $(REFLAGS) cows.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
 		./cows < cows.l
+
+moo:		moo.l
+		$(REFLEX) $(REFLAGS) moo.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		./moo < moo.l
 
 indent1:	indent1.l
 		$(REFLEX) $(REFLAGS) indent1.l
@@ -882,7 +893,7 @@ clean:
 		-rm -f lex.yy.h lex.yy.hpp lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx parser.hpp parser.cpp scanner.hpp scanner.cpp location.hh location.hpp position.hh position.hpp stack.hh stack.hpp reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
 		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows indent1 indent2 json yaml braille unicode csv scanstrings yyscanstrings mmap fastfind fastsearch cards cvt2utf ugrep gz dos url_boost wc_boost url_pcre2 wc_pcre2 minic minicdemo.class LuaParser.cpp LuaParser.hpp LuaScanner.cpp LuaScanner.hpp lua2lisp
+		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc rawk tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows moo indent1 indent2 json yaml braille unicode csv scanstrings yyscanstrings mmap fastfind fastsearch cards cvt2utf ugrep gz dos url_boost wc_boost url_pcre2 wc_pcre2 minic minicdemo.class LuaParser.cpp LuaParser.hpp LuaScanner.cpp LuaScanner.hpp lua2lisp
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

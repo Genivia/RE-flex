@@ -30,7 +30,9 @@ Matcher class for efficient fuzzy matching and fuzzy search with regex patterns.
 Requires
 --------
 
-[RE-Flex](https://github.com/Genivia/RE-flex) version 3.4.0 or greater.
+[RE-Flex](https://github.com/Genivia/RE-flex) version 4.0 or greater, because
+of regex pattern analysis and translation updates to RE/flex 4.0 that are
+also used by [ugrep 5.0](https://github.com/Genivia/ugrep).
 
 Examples
 --------

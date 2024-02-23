@@ -2869,8 +2869,37 @@ void Reflex::write_lexer()
           "        switch (matcher().find())\n";
       *out <<
         "        {\n"
-        "          case 0:\n"
-        "            return " << token_eof << ";\n";
+        "          case 0:\n";
+      bool has_eof = false;
+      for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
+      {
+        if (rule->regex == "<<EOF>>")
+        {
+          if (!options["debug"].empty())
+            *out <<
+              "            if (debug()) std::cerr << \"--" <<
+              SGR("\\033[1;35m") << "EOF rule " << escape_bs(rule->code.file) << ":" << rule->code.lineno << SGR("\\033[0m") <<
+              " start(\" << start() << \")\\n\";\n";
+          write_code(rule->code);
+          has_eof = true;
+          break;
+        }
+      }
+      if (!has_eof && !options["debug"].empty())
+        *out <<
+          "            if (debug()) std::cerr << \"--" <<
+          SGR("\\033[1;35m") << "EOF" << SGR("\\033[0m") << " start(\" << start() << \")\\n\";\n";
+      if (!options["perf_report"].empty())
+        *out << "            perf_report();\n";
+      if (!has_eof)
+      {
+        if (!options["flex"].empty())
+          *out <<
+            "            yyterminate();\n";
+        else
+          *out <<
+            "            return " << token_eof << ";\n";
+      }
     }
     else
     {

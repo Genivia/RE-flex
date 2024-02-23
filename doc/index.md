@@ -715,6 +715,7 @@ This method and other methods may be used to obtain the details of a match:
   `columno()`     | returns column number of the match in characters, starting at 0
   `lineno_end()`  | returns ending line number of the match, starting at line 1
   `columno_end()` | returns ending column number of the match, starting at 0
+  `bol()`         | returns `const char*` to begin of matching line (not 0-terminated)
   `border()`      | returns the byte offset from the start of the line of the match
   `first()`       | returns input position of the first character of the match
   `last()`        | returns input position + 1 of the last character of the match
@@ -1923,29 +1924,36 @@ code that expands to the class name.  To do so, use <b>`reflex`</b> option
 `−−header-file` to generate a header file to include in your code.
 
 For example, we use these code injectors to make our cow counter `herd` part of
-the Lexer class state:
+the Lexer class state.  We also add a sound "Moo!" when a cow was matched, to
+illustrate the use of a static data member that is initialized ouf of line:
 
 <div class="alt">
 ~~~{.cpp}
     %option dotall main
 
     %top{
-      #include <iostream>    // std::cout etc.
+      #include <iostream>  // std::cout etc.
     }
 
     %class{
       int herd;  // lexer class member variable (private by default)
+      static const char *moo;  // a static data member
     }
 
     %init{
       herd = 0;  // initialize member variable in Lexer class constructor
     }
 
+    %{
+      const char *Lexer::moo = "Moo!";  // must be initialized out of line
+    %}
+
     cow        \<[Cc]ow\>
 
     %%
 
     {cow}      herd++;       // found a cow, bump count by one
+               out() << moo << " ";
     .          // do nothing
     <<EOF>>    out() << herd << " cows!" << std::endl; return 0;
 
@@ -1953,9 +1961,30 @@ the Lexer class state:
 ~~~
 </div>
 
-Note that nothing else needed to be changed, because the actions are part of
-the generated Lexer class and can access the Lexer class members, in this
-example the member variable `herd`.
+Note that nothing else needs to be changed, because the actions are part of
+the generated Lexer class and can access the Lexer class members, which in this
+example is the member variable `herd`.
+
+In this example, we just search for pattern matches and ignore everything else
+with a dot rule with no action.  This dot matches newlines too because we
+specified option `dotall`.  Searching for pattern matches like this example can
+be done much more efficiently with option `find` to generate a search engine
+instead of a scanner:
+
+<div class="alt">
+~~~{.cpp}
+    %option find main
+~~~
+</div>
+
+We should not forget to remove the dot rule from our lexer specification, otherwise
+we still match a lot that we don't need to match:
+
+<div class="alt">
+~~~{.cpp}
+    .          // do nothing REMOVE THIS LINE!
+~~~
+</div>
 
 To modularize specifications of lexers, use <i>`%%include`</i> (or <i>`%%i`</i>
 for short) to include one or more files into \ref reflex-spec-defs of a
@@ -2224,9 +2253,10 @@ used to obtain the context of a match, for example to display the line where a
 lexical error or syntax error occurred.
 
 @warning The methods `matcher().span()`, `matcher().line()`, and
-`matcher().wline()` invalidate the previous `text()`, `yytext`, `begin()`, and
-`end()` string pointers.  Call these methods again to retrieve the updated
-pointer or call `str()` or `wstr()` to obtain a string copy of the match:
+`matcher().wline()` invalidate the previous `text()`, `yytext`, `begin()`,
+`bol()`, and `end()` string pointers.  Call these methods again to retrieve the
+updated pointer or call `str()` or `wstr()` to obtain a string copy of the
+match:
 ~~~{.cpp}
     // INCORRECT, because t is invalid after line():
     const char *t = matcher().text();
@@ -7371,6 +7401,7 @@ To obtain properties of a match, use the following methods:
   `columno()`     | returns column number of the match, starting at 0
   `lineno_end()`  | returns ending line number of the match, starting at line 1
   `columno_end()` | returns ending column number of the match, starting at 0
+  `bol()`         | returns `const char*` to non-0-terminated begin of matching line
   `border()`      | returns byte offset from the start of the line of the match
   `first()`       | returns input position of the first character of the match
   `last()`        | returns input position + 1 of the last character of the match
@@ -7437,9 +7468,9 @@ with the matched text as a substring.  These methods can be used to obtain the
 context of a match.
 
 @warning The methods `span()`, `line()`, and `wline()` invalidate the previous
-`text()`, `begin()`, and `end()` string pointers.  Call these methods again to
-retrieve the updated pointer or call `str()` or `wstr()` to obtain a string
-copy of the match:
+`text()`, `begin()`, `bol()`, and `end()` string pointers.  Call these methods
+again to retrieve the updated pointer or call `str()` or `wstr()` to obtain a
+string copy of the match:
 ~~~{.cpp}
     // INCORRECT, because t is invalid after line():
     const char *t = text();

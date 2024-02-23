@@ -191,6 +191,7 @@ void Pattern::init(const char *options, const uint8_t *pred)
   ams_ = 0.0;
   cut_ = 0;
   lbk_ = 0;
+  lbm_ = 0;
   cbk_.reset();
   fst_.reset();
   if (opc_ != NULL || fsm_ != NULL )
