@@ -12,10 +12,10 @@ Two example use cases:
    [Tiger Compiler](https://assignments.lrde.epita.fr/tools/reflex.html).
 2. The RE/flex regex engine is used by the [ugrep](https://ugrep.com) utility.
 
-The RE/flex lexical analyzer generator is compatible with Flex lexer
+The RE/flex lexical analyzer generator is fully compatible with Flex lexer
 specifications and Bison parsers.  RE/flex offers new lexical analysis features
-(see below) and includes contributions to make integration with Bison and other
-parsers more robust.
+(see further below) and includes contributions to make integration with Bison
+and other parsers more robust.
 
 RE/flex is faster than Flex and much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
@@ -66,16 +66,15 @@ Features
 
 - Includes many examples, such as a mini C compiler to Java bytecode, a
   tokenizer for C/C++ source code, a tokenizer for Python source code, a
-  tokenizer for Java source code, and much more.
-- Extensive documentation in the online [User Guide][manual-url].
+  tokenizer for Java source code, Lua, JSON, XML, YAML, and more.
 - Compatible with Flex and Bison to eliminate a learning curve, making a
   transition from Flex++ to RE/flex frustration-free.
-- Integrates seamlessly with Bison and generates Reentrant, Bison-Bridge,
-  Bison-Locations, Bison 3.0 C++ interface `%skeleton "lalr1.cc"` and Bison
-  Complete Symbols.
-- IEEE POSIX P1003.2 standard compliant (like Lex and Flex).
-- Includes methods for lexical and syntax error reporting and recovery.
-- Generates reusable source code that is easy to understand.
+- Auto-generates code that integrates seamlessly with Bison Reentrant,
+  Bison-Bridge, Bison-Locations, Bison 3.0 C++ interface `%skeleton
+  "lalr1.cc"` and Bison Complete Symbols.
+- Generates code and includes methods for lexical and syntax error reporting
+  and recovery.
+- The generated scanner source code is structured and easy to understand.
 - Fully supports Unicode and Unicode properties `\p{C}`, including Unicode
   identifier matching for C++11, Java, C#, and Python source code.
 - Auto-detects UTF-8/16/32 input to match Unicode patterns.
@@ -83,8 +82,7 @@ Features
   CP 437, CP 850, CP 858, KOI8, MACROMAN, EBCDIC, and custom code pages.
 - Generates scanners for lexical analysis on files, C++ streams, (wide)
   strings, and memory such as mmap files.
-- Indent/nodent/dedent anchors to match text with indentation, including
-  custom `\t` (tab) widths.
+- Indent/nodent/dedent anchors to match indentation levels to tokenize.
 - Lazy quantifiers, no hacks are needed to work around greedy repetitions.
 - Word boundary anchors.
 - Freespace mode option to improve readability of lexer specifications.
@@ -99,17 +97,15 @@ Features
   regex engines, including the RE/flex regex engine, PCRE2, and Boost.Regex.
 - The RE/flex regex library makes C++11 std::regex, PCRE2, and Boost.Regex much
   easier to use for pattern matching on (wide) strings, files, and streams.
+- IEEE POSIX P1003.2 standard compliant (like Lex and Flex).
+- Extensive documentation in the online [User Guide][manual-url].
 - Lots of other improvements over Flex++, such as `yypush_buffer_state` saves
   the scanner state (line, column, and indentation positions), not just the
   input buffer; no input buffer length limit (Flex has a 16KB limit); `line()`
   returns the current line (e.g. for error reporting).
 
-The RE/flex software is fully self-contained.  No other libraries are required.
-PCRE2 and Boost.Regex are optional to use as regex engines.
-
-The RE/flex repo includes a Mini C compiler demo and tokenizers for Java,
-Python, C/C++, JSON, XML, YAML.
-
+Note: PCRE2 and Boost.Regex are not dependencies, they can be used as optional
+regex engines in addition to the RE/flex regex engine.
 
 Installation
 ------------
