@@ -27,6 +27,8 @@ Examples with RE/flex C++ lexer methods
 - `tag_tidy.l` lexer to tidy and normalize HTML
 - `cow.l` scanner to convert cows
 - `cows.l` scanner to convert cows, uses word boundary anchors
+- `moo.l` like `cows.l` but uses a fast search engine generated with option `find`
+- `rawk.l` fast file search with AWK-like rules, uses options `fast` and `find`
 - `reflexexample3.l` example RE/flex scanner adapted from the Flex documentation with C bison
 - `reflexexample3.lxx` example RE/flex scanner adapted from the Flex documentation with C++ bison
 - `reflexexample4.l` example RE/flex scanner adapted from the Flex documentation with C bison-bridge
