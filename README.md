@@ -6,9 +6,18 @@
 A high-performance C++ regex library and lexical analyzer generator with
 Unicode support.
 
-RE/flex is compatible with Flex lexer specifications and Bison parsers.
-RE/flex is faster than Flex while providing a wealth of new features and
-contributions.  RE/flex is also much faster than regex libraries such as
+Two example use cases:
+
+1. A RE/flex-generated tokenizer is used by the
+   [Tiger Compiler](https://assignments.lrde.epita.fr/tools/reflex.html).
+2. The RE/flex regex engine is used by the [ugrep](https://ugrep.com) utility.
+
+The RE/flex lexical analyzer generator is compatible with Flex lexer
+specifications and Bison parsers.  RE/flex offers new lexical analysis features
+(see below) and includes contributions to make integration with Bison and other
+parsers more robust.
+
+RE/flex is faster than Flex and much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
 representative C source code file into 244 tokens takes only 8.7 microseconds:
 
