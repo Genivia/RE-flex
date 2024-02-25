@@ -1,4 +1,5 @@
-%option dotall main
+// option find generates a search engine to match the specified patterns
+%option fast find main
 
 %top{
   #include <iostream>    // std::cout etc.
@@ -23,7 +24,6 @@ cow        \<[Cc]ow\>
 
 {cow}      herd++;       // found a cow, bump count by one
            out() << moo << " ";
-.          // do nothing
 <<EOF>>    out() << herd << " cows!" << std::endl; return 0;
 
 %%
