@@ -12,11 +12,12 @@ Two example use cases:
    [Tiger Compiler](https://assignments.lrde.epita.fr/tools/reflex.html).
 2. The RE/flex C++ regex engines are used by [ugrep](https://ugrep.com).
 
-The RE/flex lexical analyzer generator accepts Flex lexer specifications and
-seamlessly integrates with Bison parsers.  RE/flex is faster than Flex and much
-faster than regex libraries such as Boost.Regex, C++11 std::regex, PCRE2 and
-RE2.  For example, tokenizing a 2 KB representative C source code file into 244
-tokens takes only 8.7 microseconds:
+The RE/flex lexical analyzer generator extends Flex++ with Unicode support,
+indent/dedent anchors, lazy quantifiers, word boundaries, functions for lex and
+syntax error reporting and other new features.  RE/flex is faster than Flex and
+much faster than regex libraries such as Boost.Regex, C++11 std::regex, PCRE2
+and RE2.  For example, tokenizing a 2 KB representative C source code file into
+244 tokens takes only 8.7 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
