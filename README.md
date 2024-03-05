@@ -13,11 +13,17 @@ Two example use cases:
 2. The RE/flex C++ regex engines are used by [ugrep](https://ugrep.com).
 
 The RE/flex lexical analyzer generator extends Flex++ with Unicode support,
-indent/dedent anchors, lazy quantifiers, word boundaries, functions for lex and
-syntax error reporting and other new features.  RE/flex is faster than Flex and
-much faster than regex libraries such as Boost.Regex, C++11 std::regex, PCRE2
-and RE2.  For example, tokenizing a 2 KB representative C source code file into
-244 tokens takes only 8.7 microseconds:
+indent/dedent anchors, POSIX regex lazy quantifiers, word boundaries, functions
+for lex and syntax error reporting, lexer rule execution performance profiling,
+and other new features.
+
+Only RE/flex supports POSIX regex lazy matching in linear time using an
+advanced DFA transformation algorithm invented by Dr. van Engelen.  By
+contrast, Perl regex lazy quantifiers require backtracking to match.
+
+RE/flex is faster than Flex and much faster than regex libraries such as
+Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
+representative C source code file into 244 tokens takes only 8.7 microseconds:
 
 <table>
 <tr><th>Command / Function</th><th>Software</th><th>Time (μs)</th></tr>
@@ -81,7 +87,8 @@ Features
 - Generates scanners for lexical analysis on files, C++ streams, (wide)
   strings, and memory such as mmap files.
 - Indent/nodent/dedent anchors to match indentation levels to tokenize.
-- Lazy quantifiers, no hacks are needed to work around greedy repetitions.
+- Lazy quantifiers for POSIX regex matching, i.e. no hacks are needed to work
+  around greedy repetitions.
 - Word boundary anchors.
 - Freespace mode option to improve readability of lexer specifications.
 - `%class` and `%init` to customize the generated Lexer classes.
@@ -582,6 +589,7 @@ Changelog
 - Nov  5, 2023: 3.5.1 minor improvements.
 - Feb 17, 2024: 4.0.0 faster `Matcher::find()` with a new DFA cut algorithm to optimize match prediction speed and accuracy, see also ugrep 5.0; apply Unicode pattern canonicalization with `reflex::convert(..., reflex::convert_flag::unicode)`.
 - Feb 23, 2024: 4.0.1 new `rawk` example to demonstrate awk-like fast search in C++; enable `<<EOF>>` rules for option `find` to generate a fast search engine.
+- Mar  5, 2024: 4.1.0 improved lazy quantifiers for POSIX regex lazy matching in linear time using an advanced DFA transformation algorithm introduced in RE/flex in 2016.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

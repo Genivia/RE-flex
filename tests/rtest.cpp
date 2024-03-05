@@ -155,7 +155,7 @@ Test tests[] = {
   { "a?\?b?b", "", "", "abb", { 1 } }, // 'abb'
   // Lazy closure X*
   { "a*?a", "", "", "aaaa", { 1, 1, 1, 1 } },
-  { "a*?|a|b", "", "", "aab", { 2, 2, 3 } },
+  { "a*?|b", "", "", "aab", { 1, 1, 2 } },
   { "(a|bb)*?abb", "", "", "abbbbabb", { 1, 1 } },
   { "ab*?|b", "", "", "ab", { 1, 2 } },
   { "(ab)*?|b", "", "", "b", { 2 } },
@@ -198,6 +198,15 @@ Test tests[] = {
   { "(ab|cd){1,3}?ababab", "", "", "cdababababababab", { 1, 1 } },
   { "(a|b){1,}?a|a", "", "", "bbaaa", { 1, 1 } },
   { "(a|b){2,}?a|aa", "", "", "bbbaaaa", { 1, 1 } },
+  // Lazy misc tests
+  { "(c[ab]*)*?cb|bb", "", "", "caaabcabcbbbcbcb", { 1, 2, 1, 1 } },
+  { "(c[ab]*)[abc]*?cb|bb", "", "", "caaabcabcbbb", { 1, 2 } },
+  { "((a|b)??b)*", "", "", "ababab", { 1 } },
+  { "((a|b)*?b)*", "", "", "abaaab", { 1 } },
+  { "((a|b)+?b)*", "", "", "bbaaab", { 1 } },
+  { "((a|b)??b)+", "", "", "babbab", { 1 } },
+  { "((a|b)*?b)+", "", "", "baabb", { 1 } },
+  { "((a|b)+?)?", "", "", "abb", { 1, 1, 1 } },
   // Bracket lists
   { "[a-z]", "", "", "abcxyz", { 1, 1, 1, 1, 1, 1 } },
   { "[a-d-z]", "", "", "abcd-z", { 1, 1, 1, 1, 1, 1 } },

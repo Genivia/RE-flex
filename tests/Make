@@ -44,6 +44,10 @@ rtest:		rtest.cpp
 		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX)
 		./rtest
 
+lazytest:	lazytest.cpp
+		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX)
+		./lazytest
+
 ptest:		ptest.cpp
 		$(CXX) $(CXXFLAGS) -o $@ $< $(LIBREFLEX) $(LIBPCRE2)
 		./ptest
@@ -74,4 +78,4 @@ clean:
 		-rm -f *.o *.gch *.log
 		-rm -f lex.yy.h lex.yy.cpp y.tab.h y.tab.c reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f a.out test_regex_history dump.gv dump.pdf dump.cpp
-		-rm -f lorem streams test rtest ptest btest stest test_bits test_ranges
+		-rm -f lorem streams test rtest lazytest ptest btest stest test_bits test_ranges

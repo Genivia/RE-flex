@@ -1,4 +1,4 @@
-.TH REFLEX "1" "February 23, 2024" "reflex 4.0.1" "User Commands"
+.TH REFLEX "1" "March 05, 2024" "reflex 4.1.0" "User Commands"
 .SH NAME
 \fBreflex\fR -- regex\-centric, fast and flexible lexical analyzer generator
 .SH SYNOPSIS
@@ -132,11 +132,14 @@ NOTE: adds functions only, reflex scanners are always reentrant
   \fB\-y\fR, \fB\-\-yy\fR
 same as \fB\-\-flex\fR and \fB\-\-bison\fR, also generate global yyin, yyout
 .TP
+  \fB\-\-yypanic\fR
+call yypanic() when scanner jams, requires \fB\-\-flex\fR \fB\-\-nodefault\fR
+.TP
   \fB\-\-noyywrap\fR
-do not call global yywrap() on EOF, requires option \fB\-\-flex\fR
+do not call yywrap() on EOF, requires option \fB\-\-flex\fR
 .TP
   \fB\-\-exception\fR=\fIVALUE\fR
-use exception VALUE to throw in the default rule of the scanner
+use exception VALUE to throw as the default rule
 .TP
   \fB\-\-token\-type\fR=\fINAME\fR
 use NAME as the return type of lex() and yylex() instead of int
@@ -150,7 +153,7 @@ enable debug mode in scanner
 scanner reports detailed performance statistics to stderr
 .TP
   \fB\-s\fR, \fB\-\-nodefault\fR
-disable the default rule in scanner that echoes unmatched text
+disable the default rule that echoes unmatched text
 .TP
   \fB\-v\fR, \fB\-\-verbose\fR
 report summary of scanner statistics to stdout

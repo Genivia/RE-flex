@@ -110,6 +110,7 @@ static const char *options_table[] = {
   "nowarn",
   "noyylineno",
   "noyymore",
+  "noyypanic",
   "noyywrap",
   "outfile",
   "params",
@@ -136,6 +137,7 @@ static const char *options_table[] = {
   "yyclass",
   "yylineno",
   "yymore",
+  "yypanic",
   "yywrap",
   "YYLTYPE",
   "YYSTYPE",
@@ -633,10 +635,12 @@ void Reflex::help(const char *message, const char *arg)
                 NOTE: adds functions only, reflex scanners are always reentrant\n\
         -y, --yy\n\
                 same as --flex and --bison, also generate global yyin, yyout\n\
+        --yypanic\n\
+                call yypanic() when scanner jams, requires --flex --nodefault\n\
         --noyywrap\n\
-                do not call global yywrap() on EOF, requires option --flex\n\
+                do not call yywrap() on EOF, requires option --flex\n\
         --exception=VALUE\n\
-                use exception VALUE to throw in the default rule of the scanner\n\
+                use exception VALUE to throw as the default rule\n\
         --token-type=NAME\n\
                 use NAME as the return type of lex() and yylex() instead of int\n\
 \n\
@@ -646,7 +650,7 @@ void Reflex::help(const char *message, const char *arg)
         -p, --perf-report\n\
                 scanner reports detailed performance statistics to stderr\n\
         -s, --nodefault\n\
-                disable the default rule in scanner that echoes unmatched text\n\
+                disable the default rule that echoes unmatched text\n\
         -v, --verbose\n\
                 report summary of scanner statistics to stdout\n\
         -w, --nowarn\n\
@@ -2957,7 +2961,11 @@ void Reflex::write_lexer()
           "\\n\";\n";
       if (!options["nodefault"].empty())
       {
-        if (!options["flex"].empty())
+        if (!options["flex"].empty() && !options["yypanic"].empty() && options["noyypanic"].empty())
+          *out <<
+            "              yypanic(\"scanner jammed\");\n"
+            "              yyterminate();\n";
+        else if (!options["flex"].empty())
           *out <<
             "              LexerError(\"scanner jammed\");\n"
             "              yyterminate();\n";

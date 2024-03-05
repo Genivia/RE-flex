@@ -144,7 +144,7 @@ Test tests[] = {
   { "a?\?b?b", "", "", "abb", { 1 } }, // 'abb'
   // Lazy closure X*
   { "a*?a", "", "", "aaaa", { 1, 1, 1, 1 } },
-  { "a|a*?|b", "", "", "aab", { 1, 1, 3 } }, // CHANGED for Perl matching
+  { "a*?|b", "", "", "aab", { 1, 1, 2 } },
   { "(a|bb)*?abb", "", "", "abbbbabb", { 1, 1 } },
   { "ab*?|b", "", "", "ab", { 1, 2 } },
   { "(ab)*?|b", "", "", "b", { 2 } },
