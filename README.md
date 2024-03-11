@@ -590,6 +590,7 @@ Changelog
 - Feb 17, 2024: 4.0.0 faster `Matcher::find()` with a new DFA cut algorithm to optimize match prediction speed and accuracy, see also ugrep 5.0; apply Unicode pattern canonicalization with `reflex::convert(..., reflex::convert_flag::unicode)`.
 - Feb 23, 2024: 4.0.1 new `rawk` example to demonstrate awk-like fast search in C++; enable `<<EOF>>` rules for option `find` to generate a fast search engine.
 - Mar  5, 2024: 4.1.0 improved lazy quantifiers for POSIX regex lazy matching in linear time using an advanced DFA transformation algorithm introduced in RE/flex in 2016.
+- Mar 11, 2024: 4.1.1 minor update to correct a DFA construction problem for POSIX regex lazy quantifiers matching too much in some cases.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
