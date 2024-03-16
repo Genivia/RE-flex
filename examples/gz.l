@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <streambuf>
 #include <cstring>
+#include <unistd.h>
 #include <zlib.h>
 
 #ifndef Z_BUF_LEN
