@@ -7,6 +7,8 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstdint>
+#include <cstring>
+#include <memory>
 #include <string>
 #include <set>
 #include <stack>
