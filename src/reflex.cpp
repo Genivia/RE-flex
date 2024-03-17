@@ -518,7 +518,7 @@ void Reflex::init(int argc, char **argv)
     }
   }
 
-#ifdef OS_WIN
+#if defined(OS_WIN) && !defined(__CYGWIN__)
   if (infile.empty() && _isatty(0) != 0)
     abort("no input file specified");
 #else

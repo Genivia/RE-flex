@@ -18,8 +18,7 @@ for lex and syntax error reporting, lexer rule execution performance profiling,
 and other new features.
 
 Only RE/flex supports POSIX regex lazy matching in linear time using an
-advanced DFA transformation algorithm invented by Dr. van Engelen.  By
-contrast, Perl regex lazy quantifiers require backtracking to match.
+advanced DFA transformation algorithm invented by Dr. Robert van Engelen.
 
 RE/flex is faster than Flex and much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
@@ -591,6 +590,7 @@ Changelog
 - Feb 23, 2024: 4.0.1 new `rawk` example to demonstrate awk-like fast search in C++; enable `<<EOF>>` rules for option `find` to generate a fast search engine.
 - Mar  5, 2024: 4.1.0 improved lazy quantifiers for POSIX regex lazy matching in linear time using an advanced DFA transformation algorithm introduced in RE/flex in 2016.
 - Mar 11, 2024: 4.1.1 minor update to correct a DFA construction problem for POSIX regex lazy quantifiers matching too much in some cases.
+- Mar 17, 2024: 4.1.2 updated configure scripts; cast negative ctype function arguments (problem detected on NetBSD 10).
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

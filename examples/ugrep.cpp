@@ -98,10 +98,12 @@ Compile:
 
 */
 
+#include <reflex/input.h>
+#include <reflex/pattern.h>
 #include <reflex/matcher.h>
 
 // check if we are on a windows OS
-#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__BORLANDC__)
+#if (defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__BORLANDC__)) && !defined(__CYGWIN__) && !defined(__MINGW32__) && !defined(__MINGW64__)
 # define OS_WIN
 #endif
 

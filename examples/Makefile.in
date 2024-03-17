@@ -156,7 +156,6 @@ CPPFLAGS = -I. -I$(top_srcdir)/include
 CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
 CXX = @CXX@
-CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = $(CXXWFLAGS) $(CXXOFLAGS) $(CXXIFLAGS) $(CXXMFLAGS)
 CYGPATH_W = @CYGPATH_W@
@@ -848,7 +847,7 @@ cvt2utf:	cvt2utf.cpp
 		$(CXX) $(CXXFLAGS) -o $@ cvt2utf.cpp $(LIBREFLEX)
 
 ugrep:		ugrep.cpp
-		$(CXX) -std=c++11 $(CXXFLAGS) -o $@ ugrep.cpp $(LIBREFLEX)
+		$(CXX) -std=gnu++11 $(CXXFLAGS) -o $@ ugrep.cpp $(LIBREFLEX)
 
 gz:		gz.l
 		$(REFLEX) $(REFLAGS) gz.l

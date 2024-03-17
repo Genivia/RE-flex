@@ -442,7 +442,7 @@ cvt2utf:	cvt2utf.cpp
 		$(CXX) $(CXXFLAGS) -o $@ cvt2utf.cpp $(LIBREFLEX)
 
 ugrep:		ugrep.cpp
-		$(CXX) -std=c++11 $(CXXFLAGS) -o $@ ugrep.cpp $(LIBREFLEX)
+		$(CXX) -std=gnu++11 $(CXXFLAGS) -o $@ ugrep.cpp $(LIBREFLEX)
 
 gz:		gz.l
 		$(REFLEX) $(REFLAGS) gz.l

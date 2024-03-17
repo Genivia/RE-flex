@@ -1,4 +1,17 @@
 #!/bin/bash
+
+# Script to build reflex without autotools
+# May be used when autotools is not installed
+#
+# Normally we want to build with autotools:
+#   $ ./configure
+#   $ make
+#   $ make test
+#   $ sudo make install
+#
+# To also build the examples:
+#   $ ./configure --enable-examples
+
 echo
 echo "Building reflex..."
 echo

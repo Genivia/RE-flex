@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex.cpp File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Feb 23 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Mar 17 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -90,9 +90,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a79c7ae6e636236eb1b77ae4d6482a4cb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#a79c7ae6e636236eb1b77ae4d6482a4cb">fopen_s</a> (FILE **file, const char *name, const char *mode)</td></tr>
 <tr class="memdesc:a79c7ae6e636236eb1b77ae4d6482a4cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safer <a class="el" href="reflex_8cpp.html#a79c7ae6e636236eb1b77ae4d6482a4cb" title="Safer fopen_s() ">fopen_s()</a>  <a href="#a79c7ae6e636236eb1b77ae4d6482a4cb">More...</a><br /></td></tr>
 <tr class="separator:a79c7ae6e636236eb1b77ae4d6482a4cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd21dbba9aaf2944d477caa4caddd963"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#afd21dbba9aaf2944d477caa4caddd963">lower</a> (int c)</td></tr>
-<tr class="memdesc:afd21dbba9aaf2944d477caa4caddd963"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert to lower case.  <a href="#afd21dbba9aaf2944d477caa4caddd963">More...</a><br /></td></tr>
-<tr class="separator:afd21dbba9aaf2944d477caa4caddd963"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4479b812fbb7d9b88b4521428ccaffa3"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#a4479b812fbb7d9b88b4521428ccaffa3">char_tolower</a> (char c)</td></tr>
+<tr class="memdesc:a4479b812fbb7d9b88b4521428ccaffa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert to lower case.  <a href="#a4479b812fbb7d9b88b4521428ccaffa3">More...</a><br /></td></tr>
+<tr class="separator:a4479b812fbb7d9b88b4521428ccaffa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23c1dba2877c42e2d1c8ae48c8cebce0"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="reflex_8cpp.html#a23c1dba2877c42e2d1c8ae48c8cebce0">file_ext</a> (std::string &amp;name, const char *ext)</td></tr>
 <tr class="memdesc:a23c1dba2877c42e2d1c8ae48c8cebce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add file extension if not present, modifies the string argument and returns a copy.  <a href="#a23c1dba2877c42e2d1c8ae48c8cebce0">More...</a><br /></td></tr>
 <tr class="separator:a23c1dba2877c42e2d1c8ae48c8cebce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -131,6 +131,33 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a4479b812fbb7d9b88b4521428ccaffa3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char char_tolower </td>
+          <td>(</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert to lower case. </p>
+<dl class="section return"><dt>Returns</dt><dd>lower case char </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a23c1dba2877c42e2d1c8ae48c8cebce0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -207,33 +234,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Safer <a class="el" href="reflex_8cpp.html#a79c7ae6e636236eb1b77ae4d6482a4cb" title="Safer fopen_s() ">fopen_s()</a> </p>
-
-</div>
-</div>
-<a class="anchor" id="afd21dbba9aaf2944d477caa4caddd963"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int lower </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>c</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert to lower case. </p>
-<dl class="section return"><dt>Returns</dt><dd>lower case char </dd></dl>
 
 </div>
 </div>
@@ -386,7 +386,7 @@ Variables</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Feb 23 2024 11:50:22 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Mar 17 2024 14:23:12 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

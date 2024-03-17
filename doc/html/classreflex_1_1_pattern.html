@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Feb 23 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun Mar 17 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -320,8 +320,8 @@ Private Types</h2></td></tr>
 <tr class="separator:aa52226cd084c5dfefff2b38e08959629"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a523ad04c3b69d0186a429ae5a7d6c5ef"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classreflex_1_1_pattern.html#aa3bcc06b90015496882ec43819db7fb0">Locations</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a>[10]</td></tr>
 <tr class="separator:a523ad04c3b69d0186a429ae5a7d6c5ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a813fb6287340d1b1029dd5257eef892d"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a></td></tr>
-<tr class="separator:a813fb6287340d1b1029dd5257eef892d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accfa4e7b212379a862e6315169c44d76"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="structreflex_1_1_pattern_1_1_position.html">Position</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a></td></tr>
+<tr class="separator:accfa4e7b212379a862e6315169c44d76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ea053204e8da308a99fc16d16a5b231"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="structreflex_1_1_pattern_1_1_position.html">Position</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a></td></tr>
 <tr class="separator:a9ea053204e8da308a99fc16d16a5b231"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c44038d35a1a401ae2fb75787d6df2c"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; <a class="el" href="structreflex_1_1_pattern_1_1_position.html">Position</a>, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a></td></tr>
@@ -338,32 +338,32 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a6fafcda71f7c7c705397088ca29c4caf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8bdde704ce3cbc0f3fcf4502338d92b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab8bdde704ce3cbc0f3fcf4502338d92b">init_options</a> (const char *options)</td></tr>
 <tr class="separator:ab8bdde704ce3cbc0f3fcf4502338d92b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31221640cf5f2a49d73b11c5c6335021"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a31221640cf5f2a49d73b11c5c6335021">parse</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;startpos, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aa52226cd084c5dfefff2b38e08959629">Map</a> &amp;lookahead)</td></tr>
-<tr class="separator:a31221640cf5f2a49d73b11c5c6335021"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4b042d62dbb2cf00c917fc43d40fd69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab4b042d62dbb2cf00c917fc43d40fd69">parse1</a> (bool begin, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> &amp;loc, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;firstpos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;lastpos, bool &amp;nullable, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &amp;lazyidx, <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;lazyset, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aa3bcc06b90015496882ec43819db7fb0">Locations</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aea59f78bfd3d8e70fc56fd4c3018a6a0">Iter</a> &amp;iter)</td></tr>
-<tr class="separator:ab4b042d62dbb2cf00c917fc43d40fd69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8ec85c9b0faa064ba3d12852e6bbb7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#af8ec85c9b0faa064ba3d12852e6bbb7d">parse2</a> (bool begin, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> &amp;loc, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;firstpos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;lastpos, bool &amp;nullable, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &amp;lazyidx, <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;lazyset, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aa3bcc06b90015496882ec43819db7fb0">Locations</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aea59f78bfd3d8e70fc56fd4c3018a6a0">Iter</a> &amp;iter)</td></tr>
-<tr class="separator:af8ec85c9b0faa064ba3d12852e6bbb7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc40f09c285169cd17a449aaa930ed79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#adc40f09c285169cd17a449aaa930ed79">parse3</a> (bool begin, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> &amp;loc, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;firstpos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;lastpos, bool &amp;nullable, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &amp;lazyidx, <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;lazyset, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aa3bcc06b90015496882ec43819db7fb0">Locations</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aea59f78bfd3d8e70fc56fd4c3018a6a0">Iter</a> &amp;iter)</td></tr>
-<tr class="separator:adc40f09c285169cd17a449aaa930ed79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4dbce7a0fe12c9d9568d6681b9fea1d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a4dbce7a0fe12c9d9568d6681b9fea1d0">parse4</a> (bool begin, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> &amp;loc, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;firstpos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;lastpos, bool &amp;nullable, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &amp;lazyidx, <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;lazyset, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aa3bcc06b90015496882ec43819db7fb0">Locations</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aea59f78bfd3d8e70fc56fd4c3018a6a0">Iter</a> &amp;iter)</td></tr>
-<tr class="separator:a4dbce7a0fe12c9d9568d6681b9fea1d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a683f8d34e9033c7be81c57728f0852b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a683f8d34e9033c7be81c57728f0852b8">parse</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;startpos, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aa52226cd084c5dfefff2b38e08959629">Map</a> &amp;lookahead)</td></tr>
+<tr class="separator:a683f8d34e9033c7be81c57728f0852b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d5c524b0874e8fb9a710dd6ae0eea81"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a5d5c524b0874e8fb9a710dd6ae0eea81">parse1</a> (bool begin, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> &amp;loc, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;firstpos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;lastpos, bool &amp;nullable, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &amp;lazyidx, <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aa3bcc06b90015496882ec43819db7fb0">Locations</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aea59f78bfd3d8e70fc56fd4c3018a6a0">Iter</a> &amp;iter)</td></tr>
+<tr class="separator:a5d5c524b0874e8fb9a710dd6ae0eea81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41085d3988f12cc657c3259574c51eb4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a41085d3988f12cc657c3259574c51eb4">parse2</a> (bool begin, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> &amp;loc, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;firstpos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;lastpos, bool &amp;nullable, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &amp;lazyidx, <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aa3bcc06b90015496882ec43819db7fb0">Locations</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aea59f78bfd3d8e70fc56fd4c3018a6a0">Iter</a> &amp;iter)</td></tr>
+<tr class="separator:a41085d3988f12cc657c3259574c51eb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06b57e0e0da9509c8c15b858116bde39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a06b57e0e0da9509c8c15b858116bde39">parse3</a> (bool begin, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> &amp;loc, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;firstpos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;lastpos, bool &amp;nullable, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &amp;lazyidx, <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aa3bcc06b90015496882ec43819db7fb0">Locations</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aea59f78bfd3d8e70fc56fd4c3018a6a0">Iter</a> &amp;iter)</td></tr>
+<tr class="separator:a06b57e0e0da9509c8c15b858116bde39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a260081c53fe4862de79424da1724d6de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a260081c53fe4862de79424da1724d6de">parse4</a> (bool begin, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> &amp;loc, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;firstpos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;lastpos, bool &amp;nullable, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &amp;lazyidx, <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aa3bcc06b90015496882ec43819db7fb0">Locations</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aea59f78bfd3d8e70fc56fd4c3018a6a0">Iter</a> &amp;iter)</td></tr>
+<tr class="separator:a260081c53fe4862de79424da1724d6de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a885a3889e2042be07d838469f3347986"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#a1d74385d9faa9b77a0fd17614a17d3b1">Char</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a885a3889e2042be07d838469f3347986">parse_esc</a> (<a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> &amp;loc, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html">Chars</a> *chars=NULL) const </td></tr>
 <tr class="separator:a885a3889e2042be07d838469f3347986"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e3f5b3d20ed36784e1ca9528fb98e9b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a6e3f5b3d20ed36784e1ca9528fb98e9b">compile</a> (<a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *start, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, const <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, const <a class="el" href="classreflex_1_1_pattern.html#aa52226cd084c5dfefff2b38e08959629">Map</a> &amp;lookahead)</td></tr>
-<tr class="separator:a6e3f5b3d20ed36784e1ca9528fb98e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a381f47ded939a81bea5d795629ec4ff2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a381f47ded939a81bea5d795629ec4ff2">lazy</a> (const <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;lazyset, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;pos) const </td></tr>
-<tr class="separator:a381f47ded939a81bea5d795629ec4ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac16753380560141a1ace41c4a87f8e97"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ac16753380560141a1ace41c4a87f8e97">lazy</a> (const <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;lazyset, const <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;pos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;pos1) const </td></tr>
-<tr class="separator:ac16753380560141a1ace41c4a87f8e97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f784f496aa9fe5b238a9ba37ff54213"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a7f784f496aa9fe5b238a9ba37ff54213">compile</a> (<a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *start, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos, const <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, const <a class="el" href="classreflex_1_1_pattern.html#aa52226cd084c5dfefff2b38e08959629">Map</a> &amp;lookahead)</td></tr>
+<tr class="separator:a7f784f496aa9fe5b238a9ba37ff54213"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab96a137c03b9acefbc9594e0f2c4bc20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab96a137c03b9acefbc9594e0f2c4bc20">lazy</a> (const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;pos) const </td></tr>
+<tr class="separator:ab96a137c03b9acefbc9594e0f2c4bc20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaefebc165c3ebb6fef9b45d457e14227"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aaefebc165c3ebb6fef9b45d457e14227">lazy</a> (const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos, const <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;pos, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;pos1) const </td></tr>
+<tr class="separator:aaefebc165c3ebb6fef9b45d457e14227"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85281a3707c8eca56b5ace45a482aa13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a85281a3707c8eca56b5ace45a482aa13">greedy</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;pos) const </td></tr>
 <tr class="separator:a85281a3707c8eca56b5ace45a482aa13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a880d99f4bc743beb2039f5741d06608d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a880d99f4bc743beb2039f5741d06608d">trim_anchors</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;follow, const <a class="el" href="structreflex_1_1_pattern_1_1_position.html">Position</a> p) const </td></tr>
 <tr class="separator:a880d99f4bc743beb2039f5741d06608d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84b6861f81aedef3db3c720f1cd560d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a84b6861f81aedef3db3c720f1cd560d3">trim_lazy</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> *pos) const </td></tr>
-<tr class="separator:a84b6861f81aedef3db3c720f1cd560d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab22cf767cae71b41f42168ac9367819e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab22cf767cae71b41f42168ac9367819e">compile_transition</a> (<a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *state, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, const <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, const <a class="el" href="classreflex_1_1_pattern.html#aa52226cd084c5dfefff2b38e08959629">Map</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aadfb59075bcf8a23e648c50d4a103d1e">Moves</a> &amp;moves) const </td></tr>
-<tr class="separator:ab22cf767cae71b41f42168ac9367819e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4b0a841c0f6150197661892179c3956"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ae4b0a841c0f6150197661892179c3956">trim_lazy</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> *pos, const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos) const </td></tr>
+<tr class="separator:ae4b0a841c0f6150197661892179c3956"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e44ae99655dafd7868223e31a82cd85"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a7e44ae99655dafd7868223e31a82cd85">compile_transition</a> (<a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *state, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos, const <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, const <a class="el" href="classreflex_1_1_pattern.html#aa52226cd084c5dfefff2b38e08959629">Map</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aadfb59075bcf8a23e648c50d4a103d1e">Moves</a> &amp;moves) const </td></tr>
+<tr class="separator:a7e44ae99655dafd7868223e31a82cd85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a288fbf25da1636a41dc948610b1e1c66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a288fbf25da1636a41dc948610b1e1c66">transition</a> (<a class="el" href="classreflex_1_1_pattern.html#aadfb59075bcf8a23e648c50d4a103d1e">Moves</a> &amp;moves, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html">Chars</a> &amp;chars, const <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;follow) const </td></tr>
 <tr class="separator:a288fbf25da1636a41dc948610b1e1c66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9dd91cd9b9de51af0d1a51e6983c21d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aa9dd91cd9b9de51af0d1a51e6983c21d">compile_list</a> (<a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> loc, <a class="el" href="structreflex_1_1_pattern_1_1_chars.html">Chars</a> &amp;chars, const <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers) const </td></tr>
@@ -427,10 +427,10 @@ Static Private Member Functions</h2></td></tr>
 <tr class="separator:ac9f1d1eeece83683a8f0ce5333ce56d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02e33e80781782d92fd3805a373cff37"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a02e33e80781782d92fd3805a373cff37">pos_add</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;s, const <a class="el" href="structreflex_1_1_pattern_1_1_position.html">Position</a> &amp;e)</td></tr>
 <tr class="separator:a02e33e80781782d92fd3805a373cff37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e8fdc67bcff375384e3c5e32add90f8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a2e8fdc67bcff375384e3c5e32add90f8">lazy_insert</a> (<a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;s1, const <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;s2)</td></tr>
-<tr class="separator:a2e8fdc67bcff375384e3c5e32add90f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e28a021392724d100b9a0e0715b2eba"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a6e28a021392724d100b9a0e0715b2eba">lazy_add</a> (<a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;s, const <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &amp;e)</td></tr>
-<tr class="separator:a6e28a021392724d100b9a0e0715b2eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2fc6baa6922d8ed55dbf098f777e38e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#af2fc6baa6922d8ed55dbf098f777e38e">lazy_insert</a> (<a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;s1, const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;s2)</td></tr>
+<tr class="separator:af2fc6baa6922d8ed55dbf098f777e38e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af06e472436cdf748d7d63f4203573db7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#af06e472436cdf748d7d63f4203573db7">lazy_add</a> (<a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;s, const <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> i, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> p)</td></tr>
+<tr class="separator:af06e472436cdf748d7d63f4203573db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a225dbb7fa4e740d27aa6cb7f0965e09d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a225dbb7fa4e740d27aa6cb7f0965e09d">is_modified</a> (<a class="el" href="classreflex_1_1_pattern.html#ac6f156725d772280281fdfc221be2891">Mod</a> mod, const <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> loc)</td></tr>
 <tr class="separator:a225dbb7fa4e740d27aa6cb7f0965e09d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3681600aca8698052850aaaec66b0393"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a3681600aca8698052850aaaec66b0393">update_modified</a> (<a class="el" href="classreflex_1_1_pattern.html#ac6f156725d772280281fdfc221be2891">Mod</a> mod, <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> from, <a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a> to)</td></tr>
@@ -761,7 +761,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a813fb6287340d1b1029dd5257eef892d"></a>
+<a class="anchor" id="accfa4e7b212379a862e6315169c44d76"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -769,7 +769,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::vector&lt;<a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a>&gt; <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">reflex::Pattern::Lazyset</a></td>
+          <td class="memname">typedef std::vector&lt;<a class="el" href="structreflex_1_1_pattern_1_1_position.html">Position</a>&gt; <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">reflex::Pattern::Lazypos</a></td>
         </tr>
       </table>
   </td>
@@ -1793,7 +1793,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a6e3f5b3d20ed36784e1ca9528fb98e9b"></a>
+<a class="anchor" id="a7f784f496aa9fe5b238a9ba37ff54213"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1811,6 +1811,12 @@ Friends</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;&#160;</td>
           <td class="paramname"><em>followpos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
+          <td class="paramname"><em>lazypos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1879,7 +1885,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab22cf767cae71b41f42168ac9367819e"></a>
+<a class="anchor" id="a7e44ae99655dafd7868223e31a82cd85"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1897,6 +1903,12 @@ Friends</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;&#160;</td>
           <td class="paramname"><em>followpos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
+          <td class="paramname"><em>lazypos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -3162,7 +3174,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a381f47ded939a81bea5d795629ec4ff2"></a>
+<a class="anchor" id="ab96a137c03b9acefbc9594e0f2c4bc20"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -3172,8 +3184,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="memname">void reflex::Pattern::lazy </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;&#160;</td>
-          <td class="paramname"><em>lazyset</em>, </td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
+          <td class="paramname"><em>lazypos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -3196,7 +3208,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ac16753380560141a1ace41c4a87f8e97"></a>
+<a class="anchor" id="aaefebc165c3ebb6fef9b45d457e14227"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -3206,8 +3218,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="memname">void reflex::Pattern::lazy </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;&#160;</td>
-          <td class="paramname"><em>lazyset</em>, </td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
+          <td class="paramname"><em>lazypos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -3236,7 +3248,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a6e28a021392724d100b9a0e0715b2eba"></a>
+<a class="anchor" id="af06e472436cdf748d7d63f4203573db7"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -3246,14 +3258,20 @@ Friends</h2></td></tr>
         <tr>
           <td class="memname">static void reflex::Pattern::lazy_add </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
           <td class="paramname"><em>s</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a> &amp;&#160;</td>
-          <td class="paramname"><em>e</em>&#160;</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#ae3e4d6db585b2227ae4eedcfd7039937">Lazy</a>&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#aae63990b13c5d127f3d00b20ff56a8d9">Location</a>&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3270,7 +3288,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2e8fdc67bcff375384e3c5e32add90f8"></a>
+<a class="anchor" id="af2fc6baa6922d8ed55dbf098f777e38e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -3280,13 +3298,13 @@ Friends</h2></td></tr>
         <tr>
           <td class="memname">static void reflex::Pattern::lazy_insert </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
           <td class="paramname"><em>s1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
           <td class="paramname"><em>s2</em>&#160;</td>
         </tr>
         <tr>
@@ -3899,7 +3917,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a31221640cf5f2a49d73b11c5c6335021"></a>
+<a class="anchor" id="a683f8d34e9033c7be81c57728f0852b8"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -3917,6 +3935,12 @@ Friends</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;&#160;</td>
           <td class="paramname"><em>followpos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
+          <td class="paramname"><em>lazypos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -3945,7 +3969,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab4b042d62dbb2cf00c917fc43d40fd69"></a>
+<a class="anchor" id="a5d5c524b0874e8fb9a710dd6ae0eea81"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -3997,8 +4021,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;&#160;</td>
-          <td class="paramname"><em>lazyset</em>, </td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
+          <td class="paramname"><em>lazypos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -4033,7 +4057,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="af8ec85c9b0faa064ba3d12852e6bbb7d"></a>
+<a class="anchor" id="a41085d3988f12cc657c3259574c51eb4"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -4085,8 +4109,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;&#160;</td>
-          <td class="paramname"><em>lazyset</em>, </td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
+          <td class="paramname"><em>lazypos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -4121,7 +4145,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="adc40f09c285169cd17a449aaa930ed79"></a>
+<a class="anchor" id="a06b57e0e0da9509c8c15b858116bde39"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -4173,8 +4197,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;&#160;</td>
-          <td class="paramname"><em>lazyset</em>, </td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
+          <td class="paramname"><em>lazypos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -4209,7 +4233,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4dbce7a0fe12c9d9568d6681b9fea1d0"></a>
+<a class="anchor" id="a260081c53fe4862de79424da1724d6de"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -4261,8 +4285,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a813fb6287340d1b1029dd5257eef892d">Lazyset</a> &amp;&#160;</td>
-          <td class="paramname"><em>lazyset</em>, </td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
+          <td class="paramname"><em>lazypos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -4664,7 +4688,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a84b6861f81aedef3db3c720f1cd560d3"></a>
+<a class="anchor" id="ae4b0a841c0f6150197661892179c3956"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -4675,8 +4699,18 @@ Friends</h2></td></tr>
           <td class="memname">void reflex::Pattern::trim_lazy </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> *&#160;</td>
-          <td class="paramname"><em>pos</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramname"><em>pos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;&#160;</td>
+          <td class="paramname"><em>lazypos</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
   </td>
@@ -5801,7 +5835,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Feb 23 2024 11:50:23 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun Mar 17 2024 14:23:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

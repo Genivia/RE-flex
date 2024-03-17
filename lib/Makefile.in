@@ -137,6 +137,7 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 libreflex_a_AR = $(AR) $(ARFLAGS)
 libreflex_a_LIBADD =
+am__dirstamp = $(am__leading_dot)dirstamp
 am_libreflex_a_OBJECTS = libreflex_a-convert.$(OBJEXT) \
 	libreflex_a-debug.$(OBJEXT) libreflex_a-error.$(OBJEXT) \
 	libreflex_a-input.$(OBJEXT) libreflex_a-matcher.$(OBJEXT) \
@@ -146,10 +147,10 @@ am_libreflex_a_OBJECTS = libreflex_a-convert.$(OBJEXT) \
 	libreflex_a-simd_avx2.$(OBJEXT) \
 	libreflex_a-simd_avx512bw.$(OBJEXT) \
 	libreflex_a-unicode.$(OBJEXT) libreflex_a-utf8.$(OBJEXT) \
-	libreflex_a-block_scripts.$(OBJEXT) \
-	libreflex_a-language_scripts.$(OBJEXT) \
-	libreflex_a-letter_scripts.$(OBJEXT) \
-	libreflex_a-composer.$(OBJEXT)
+	$(top_builddir)/unicode/libreflex_a-block_scripts.$(OBJEXT) \
+	$(top_builddir)/unicode/libreflex_a-language_scripts.$(OBJEXT) \
+	$(top_builddir)/unicode/libreflex_a-letter_scripts.$(OBJEXT) \
+	$(top_builddir)/unicode/libreflex_a-composer.$(OBJEXT)
 libreflex_a_OBJECTS = $(am_libreflex_a_OBJECTS)
 libreflexmin_a_AR = $(AR) $(ARFLAGS)
 libreflexmin_a_LIBADD =
@@ -178,14 +179,14 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/libreflex_a-block_scripts.Po \
-	./$(DEPDIR)/libreflex_a-composer.Po \
+am__depfiles_remade = $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Po \
+	$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Po \
+	$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Po \
+	$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Po \
 	./$(DEPDIR)/libreflex_a-convert.Po \
 	./$(DEPDIR)/libreflex_a-debug.Po \
 	./$(DEPDIR)/libreflex_a-error.Po \
 	./$(DEPDIR)/libreflex_a-input.Po \
-	./$(DEPDIR)/libreflex_a-language_scripts.Po \
-	./$(DEPDIR)/libreflex_a-letter_scripts.Po \
 	./$(DEPDIR)/libreflex_a-matcher.Po \
 	./$(DEPDIR)/libreflex_a-matcher_avx2.Po \
 	./$(DEPDIR)/libreflex_a-matcher_avx512bw.Po \
@@ -265,7 +266,6 @@ CPPFLAGS = @CPPFLAGS@
 CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
 CXX = @CXX@
-CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
@@ -365,12 +365,71 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 reflexincludedir = $(includedir)/reflex
-reflexinclude_HEADERS = $(top_srcdir)/include/reflex/abslexer.h $(top_srcdir)/include/reflex/absmatcher.h $(top_srcdir)/include/reflex/bits.h $(top_srcdir)/include/reflex/boostmatcher.h $(top_srcdir)/include/reflex/convert.h $(top_srcdir)/include/reflex/debug.h $(top_srcdir)/include/reflex/error.h $(top_srcdir)/include/reflex/flexlexer.h $(top_srcdir)/include/reflex/input.h $(top_srcdir)/include/reflex/matcher.h $(top_srcdir)/include/reflex/pattern.h $(top_srcdir)/include/reflex/posix.h $(top_srcdir)/include/reflex/ranges.h $(top_srcdir)/include/reflex/setop.h $(top_srcdir)/include/reflex/simd.h $(top_srcdir)/include/reflex/stdmatcher.h $(top_srcdir)/include/reflex/timer.h $(top_srcdir)/include/reflex/traits.h $(top_srcdir)/include/reflex/unicode.h $(top_srcdir)/include/reflex/utf8.h
-lib_LIBRARIES = libreflex.a libreflexmin.a
-libreflex_a_CPPFLAGS = -I$(top_srcdir)/include $(SIMD_FLAGS)
-libreflex_a_SOURCES = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp posix.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp $(top_srcdir)/unicode/composer.cpp
-libreflexmin_a_CPPFLAGS = -I$(top_srcdir)/include $(SIMD_FLAGS)
-libreflexmin_a_SOURCES = debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp simd_avx2.cpp simd_avx512bw.cpp utf8.cpp
+reflexinclude_HEADERS = \
+        $(top_srcdir)/include/reflex/abslexer.h \
+        $(top_srcdir)/include/reflex/absmatcher.h \
+        $(top_srcdir)/include/reflex/bits.h \
+        $(top_srcdir)/include/reflex/boostmatcher.h \
+        $(top_srcdir)/include/reflex/convert.h \
+        $(top_srcdir)/include/reflex/debug.h \
+        $(top_srcdir)/include/reflex/error.h \
+        $(top_srcdir)/include/reflex/flexlexer.h \
+        $(top_srcdir)/include/reflex/input.h \
+        $(top_srcdir)/include/reflex/matcher.h \
+        $(top_srcdir)/include/reflex/pattern.h \
+        $(top_srcdir)/include/reflex/posix.h \
+        $(top_srcdir)/include/reflex/ranges.h \
+        $(top_srcdir)/include/reflex/setop.h \
+        $(top_srcdir)/include/reflex/simd.h \
+        $(top_srcdir)/include/reflex/stdmatcher.h \
+        $(top_srcdir)/include/reflex/timer.h \
+        $(top_srcdir)/include/reflex/traits.h \
+        $(top_srcdir)/include/reflex/unicode.h \
+        $(top_srcdir)/include/reflex/utf8.h
+
+lib_LIBRARIES = \
+        libreflex.a \
+        libreflexmin.a
+
+libreflex_a_CPPFLAGS = \
+        -I$(top_srcdir)/include \
+        $(SIMD_FLAGS)
+
+libreflex_a_SOURCES = \
+        convert.cpp \
+        debug.cpp \
+        error.cpp \
+        input.cpp \
+        matcher.cpp \
+        matcher_avx2.cpp \
+        matcher_avx512bw.cpp \
+        pattern.cpp \
+        posix.cpp \
+        simd_avx2.cpp \
+        simd_avx512bw.cpp \
+        unicode.cpp \
+        utf8.cpp \
+        $(top_srcdir)/unicode/block_scripts.cpp \
+        $(top_srcdir)/unicode/language_scripts.cpp \
+        $(top_srcdir)/unicode/letter_scripts.cpp \
+        $(top_srcdir)/unicode/composer.cpp
+
+libreflexmin_a_CPPFLAGS = \
+        -I$(top_srcdir)/include \
+        $(SIMD_FLAGS)
+
+libreflexmin_a_SOURCES = \
+        debug.cpp \
+        error.cpp \
+        input.cpp \
+        matcher.cpp \
+        matcher_avx2.cpp \
+        matcher_avx512bw.cpp \
+        pattern.cpp \
+        simd_avx2.cpp \
+        simd_avx512bw.cpp \
+        utf8.cpp
+
 all: all-am
 
 .SUFFIXES:
@@ -435,6 +494,24 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
+$(top_builddir)/unicode/$(am__dirstamp):
+	@$(MKDIR_P) $(top_builddir)/unicode
+	@: > $(top_builddir)/unicode/$(am__dirstamp)
+$(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) $(top_builddir)/unicode/$(DEPDIR)
+	@: > $(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp)
+$(top_builddir)/unicode/libreflex_a-block_scripts.$(OBJEXT):  \
+	$(top_builddir)/unicode/$(am__dirstamp) \
+	$(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp)
+$(top_builddir)/unicode/libreflex_a-language_scripts.$(OBJEXT):  \
+	$(top_builddir)/unicode/$(am__dirstamp) \
+	$(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp)
+$(top_builddir)/unicode/libreflex_a-letter_scripts.$(OBJEXT):  \
+	$(top_builddir)/unicode/$(am__dirstamp) \
+	$(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp)
+$(top_builddir)/unicode/libreflex_a-composer.$(OBJEXT):  \
+	$(top_builddir)/unicode/$(am__dirstamp) \
+	$(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp)
 
 libreflex.a: $(libreflex_a_OBJECTS) $(libreflex_a_DEPENDENCIES) $(EXTRA_libreflex_a_DEPENDENCIES) 
 	$(AM_V_at)-rm -f libreflex.a
@@ -448,18 +525,19 @@ libreflexmin.a: $(libreflexmin_a_OBJECTS) $(libreflexmin_a_DEPENDENCIES) $(EXTRA
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f $(top_builddir)/unicode/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-block_scripts.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-composer.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-convert.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-debug.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-error.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-input.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-language_scripts.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-letter_scripts.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-matcher.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-matcher_avx2.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-matcher_avx512bw.Po@am__quote@ # am--include-marker
@@ -487,15 +565,17 @@ $(am__depfiles_remade):
 am--depfiles: $(am__depfiles_remade)
 
 .cpp.o:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ $<
 
 .cpp.obj:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
@@ -682,61 +762,61 @@ libreflex_a-utf8.obj: utf8.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-utf8.obj `if test -f 'utf8.cpp'; then $(CYGPATH_W) 'utf8.cpp'; else $(CYGPATH_W) '$(srcdir)/utf8.cpp'; fi`
 
-libreflex_a-block_scripts.o: $(top_srcdir)/unicode/block_scripts.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflex_a-block_scripts.o -MD -MP -MF $(DEPDIR)/libreflex_a-block_scripts.Tpo -c -o libreflex_a-block_scripts.o `test -f '$(top_srcdir)/unicode/block_scripts.cpp' || echo '$(srcdir)/'`$(top_srcdir)/unicode/block_scripts.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libreflex_a-block_scripts.Tpo $(DEPDIR)/libreflex_a-block_scripts.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/block_scripts.cpp' object='libreflex_a-block_scripts.o' libtool=no @AMDEPBACKSLASH@
+$(top_builddir)/unicode/libreflex_a-block_scripts.o: $(top_builddir)/unicode/block_scripts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-block_scripts.o -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Tpo -c -o $(top_builddir)/unicode/libreflex_a-block_scripts.o `test -f '$(top_builddir)/unicode/block_scripts.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/block_scripts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Tpo $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/block_scripts.cpp' object='$(top_builddir)/unicode/libreflex_a-block_scripts.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-block_scripts.o `test -f '$(top_srcdir)/unicode/block_scripts.cpp' || echo '$(srcdir)/'`$(top_srcdir)/unicode/block_scripts.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-block_scripts.o `test -f '$(top_builddir)/unicode/block_scripts.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/block_scripts.cpp
 
-libreflex_a-block_scripts.obj: $(top_srcdir)/unicode/block_scripts.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflex_a-block_scripts.obj -MD -MP -MF $(DEPDIR)/libreflex_a-block_scripts.Tpo -c -o libreflex_a-block_scripts.obj `if test -f '$(top_srcdir)/unicode/block_scripts.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/block_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/block_scripts.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libreflex_a-block_scripts.Tpo $(DEPDIR)/libreflex_a-block_scripts.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/block_scripts.cpp' object='libreflex_a-block_scripts.obj' libtool=no @AMDEPBACKSLASH@
+$(top_builddir)/unicode/libreflex_a-block_scripts.obj: $(top_builddir)/unicode/block_scripts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-block_scripts.obj -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Tpo -c -o $(top_builddir)/unicode/libreflex_a-block_scripts.obj `if test -f '$(top_builddir)/unicode/block_scripts.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/block_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/block_scripts.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Tpo $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/block_scripts.cpp' object='$(top_builddir)/unicode/libreflex_a-block_scripts.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-block_scripts.obj `if test -f '$(top_srcdir)/unicode/block_scripts.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/block_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/block_scripts.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-block_scripts.obj `if test -f '$(top_builddir)/unicode/block_scripts.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/block_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/block_scripts.cpp'; fi`
 
-libreflex_a-language_scripts.o: $(top_srcdir)/unicode/language_scripts.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflex_a-language_scripts.o -MD -MP -MF $(DEPDIR)/libreflex_a-language_scripts.Tpo -c -o libreflex_a-language_scripts.o `test -f '$(top_srcdir)/unicode/language_scripts.cpp' || echo '$(srcdir)/'`$(top_srcdir)/unicode/language_scripts.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libreflex_a-language_scripts.Tpo $(DEPDIR)/libreflex_a-language_scripts.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/language_scripts.cpp' object='libreflex_a-language_scripts.o' libtool=no @AMDEPBACKSLASH@
+$(top_builddir)/unicode/libreflex_a-language_scripts.o: $(top_builddir)/unicode/language_scripts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-language_scripts.o -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Tpo -c -o $(top_builddir)/unicode/libreflex_a-language_scripts.o `test -f '$(top_builddir)/unicode/language_scripts.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/language_scripts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Tpo $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/language_scripts.cpp' object='$(top_builddir)/unicode/libreflex_a-language_scripts.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-language_scripts.o `test -f '$(top_srcdir)/unicode/language_scripts.cpp' || echo '$(srcdir)/'`$(top_srcdir)/unicode/language_scripts.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-language_scripts.o `test -f '$(top_builddir)/unicode/language_scripts.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/language_scripts.cpp
 
-libreflex_a-language_scripts.obj: $(top_srcdir)/unicode/language_scripts.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflex_a-language_scripts.obj -MD -MP -MF $(DEPDIR)/libreflex_a-language_scripts.Tpo -c -o libreflex_a-language_scripts.obj `if test -f '$(top_srcdir)/unicode/language_scripts.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/language_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/language_scripts.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libreflex_a-language_scripts.Tpo $(DEPDIR)/libreflex_a-language_scripts.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/language_scripts.cpp' object='libreflex_a-language_scripts.obj' libtool=no @AMDEPBACKSLASH@
+$(top_builddir)/unicode/libreflex_a-language_scripts.obj: $(top_builddir)/unicode/language_scripts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-language_scripts.obj -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Tpo -c -o $(top_builddir)/unicode/libreflex_a-language_scripts.obj `if test -f '$(top_builddir)/unicode/language_scripts.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/language_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/language_scripts.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Tpo $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/language_scripts.cpp' object='$(top_builddir)/unicode/libreflex_a-language_scripts.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-language_scripts.obj `if test -f '$(top_srcdir)/unicode/language_scripts.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/language_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/language_scripts.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-language_scripts.obj `if test -f '$(top_builddir)/unicode/language_scripts.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/language_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/language_scripts.cpp'; fi`
 
-libreflex_a-letter_scripts.o: $(top_srcdir)/unicode/letter_scripts.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflex_a-letter_scripts.o -MD -MP -MF $(DEPDIR)/libreflex_a-letter_scripts.Tpo -c -o libreflex_a-letter_scripts.o `test -f '$(top_srcdir)/unicode/letter_scripts.cpp' || echo '$(srcdir)/'`$(top_srcdir)/unicode/letter_scripts.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libreflex_a-letter_scripts.Tpo $(DEPDIR)/libreflex_a-letter_scripts.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/letter_scripts.cpp' object='libreflex_a-letter_scripts.o' libtool=no @AMDEPBACKSLASH@
+$(top_builddir)/unicode/libreflex_a-letter_scripts.o: $(top_builddir)/unicode/letter_scripts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-letter_scripts.o -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Tpo -c -o $(top_builddir)/unicode/libreflex_a-letter_scripts.o `test -f '$(top_builddir)/unicode/letter_scripts.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/letter_scripts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Tpo $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/letter_scripts.cpp' object='$(top_builddir)/unicode/libreflex_a-letter_scripts.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-letter_scripts.o `test -f '$(top_srcdir)/unicode/letter_scripts.cpp' || echo '$(srcdir)/'`$(top_srcdir)/unicode/letter_scripts.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-letter_scripts.o `test -f '$(top_builddir)/unicode/letter_scripts.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/letter_scripts.cpp
 
-libreflex_a-letter_scripts.obj: $(top_srcdir)/unicode/letter_scripts.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflex_a-letter_scripts.obj -MD -MP -MF $(DEPDIR)/libreflex_a-letter_scripts.Tpo -c -o libreflex_a-letter_scripts.obj `if test -f '$(top_srcdir)/unicode/letter_scripts.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/letter_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/letter_scripts.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libreflex_a-letter_scripts.Tpo $(DEPDIR)/libreflex_a-letter_scripts.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/letter_scripts.cpp' object='libreflex_a-letter_scripts.obj' libtool=no @AMDEPBACKSLASH@
+$(top_builddir)/unicode/libreflex_a-letter_scripts.obj: $(top_builddir)/unicode/letter_scripts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-letter_scripts.obj -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Tpo -c -o $(top_builddir)/unicode/libreflex_a-letter_scripts.obj `if test -f '$(top_builddir)/unicode/letter_scripts.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/letter_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/letter_scripts.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Tpo $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/letter_scripts.cpp' object='$(top_builddir)/unicode/libreflex_a-letter_scripts.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-letter_scripts.obj `if test -f '$(top_srcdir)/unicode/letter_scripts.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/letter_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/letter_scripts.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-letter_scripts.obj `if test -f '$(top_builddir)/unicode/letter_scripts.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/letter_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/letter_scripts.cpp'; fi`
 
-libreflex_a-composer.o: $(top_srcdir)/unicode/composer.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflex_a-composer.o -MD -MP -MF $(DEPDIR)/libreflex_a-composer.Tpo -c -o libreflex_a-composer.o `test -f '$(top_srcdir)/unicode/composer.cpp' || echo '$(srcdir)/'`$(top_srcdir)/unicode/composer.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libreflex_a-composer.Tpo $(DEPDIR)/libreflex_a-composer.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/composer.cpp' object='libreflex_a-composer.o' libtool=no @AMDEPBACKSLASH@
+$(top_builddir)/unicode/libreflex_a-composer.o: $(top_builddir)/unicode/composer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-composer.o -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Tpo -c -o $(top_builddir)/unicode/libreflex_a-composer.o `test -f '$(top_builddir)/unicode/composer.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/composer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Tpo $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/composer.cpp' object='$(top_builddir)/unicode/libreflex_a-composer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-composer.o `test -f '$(top_srcdir)/unicode/composer.cpp' || echo '$(srcdir)/'`$(top_srcdir)/unicode/composer.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-composer.o `test -f '$(top_builddir)/unicode/composer.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/composer.cpp
 
-libreflex_a-composer.obj: $(top_srcdir)/unicode/composer.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflex_a-composer.obj -MD -MP -MF $(DEPDIR)/libreflex_a-composer.Tpo -c -o libreflex_a-composer.obj `if test -f '$(top_srcdir)/unicode/composer.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/composer.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/composer.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libreflex_a-composer.Tpo $(DEPDIR)/libreflex_a-composer.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_srcdir)/unicode/composer.cpp' object='libreflex_a-composer.obj' libtool=no @AMDEPBACKSLASH@
+$(top_builddir)/unicode/libreflex_a-composer.obj: $(top_builddir)/unicode/composer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-composer.obj -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Tpo -c -o $(top_builddir)/unicode/libreflex_a-composer.obj `if test -f '$(top_builddir)/unicode/composer.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/composer.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/composer.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Tpo $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/composer.cpp' object='$(top_builddir)/unicode/libreflex_a-composer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libreflex_a-composer.obj `if test -f '$(top_srcdir)/unicode/composer.cpp'; then $(CYGPATH_W) '$(top_srcdir)/unicode/composer.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/unicode/composer.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-composer.obj `if test -f '$(top_builddir)/unicode/composer.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/composer.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/composer.cpp'; fi`
 
 libreflexmin_a-debug.o: debug.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflexmin_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libreflexmin_a-debug.o -MD -MP -MF $(DEPDIR)/libreflexmin_a-debug.Tpo -c -o libreflexmin_a-debug.o `test -f 'debug.cpp' || echo '$(srcdir)/'`debug.cpp
@@ -1016,6 +1096,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-test -z "$(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp)" || rm -f $(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp)
+	-test -z "$(top_builddir)/unicode/$(am__dirstamp)" || rm -f $(top_builddir)/unicode/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -1025,14 +1107,14 @@ clean: clean-am
 clean-am: clean-generic clean-libLIBRARIES mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/libreflex_a-block_scripts.Po
-	-rm -f ./$(DEPDIR)/libreflex_a-composer.Po
+		-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Po
+	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Po
+	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Po
+	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-convert.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-debug.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-error.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-input.Po
-	-rm -f ./$(DEPDIR)/libreflex_a-language_scripts.Po
-	-rm -f ./$(DEPDIR)/libreflex_a-letter_scripts.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-matcher.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-matcher_avx2.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-matcher_avx512bw.Po
@@ -1097,14 +1179,14 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/libreflex_a-block_scripts.Po
-	-rm -f ./$(DEPDIR)/libreflex_a-composer.Po
+		-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Po
+	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Po
+	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Po
+	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-convert.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-debug.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-error.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-input.Po
-	-rm -f ./$(DEPDIR)/libreflex_a-language_scripts.Po
-	-rm -f ./$(DEPDIR)/libreflex_a-letter_scripts.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-matcher.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-matcher_avx2.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-matcher_avx512bw.Po
