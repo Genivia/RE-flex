@@ -2,7 +2,10 @@ SUBDIRS = lib src . tests @EXAMPLESDIR@
 
 man1_MANS = doc/man/reflex.1
 
-EXTRA_DIST = README.md LICENSE.txt CONTRIBUTING.md CODE_OF_CONDUCT.md
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = reflex.pc reflexmin.pc
+
+EXTRA_DIST = README.md LICENSE.txt CONTRIBUTING.md CODE_OF_CONDUCT.md reflex.pc.in reflexmin.pc.in
 
 all-local:	cp2bin
 

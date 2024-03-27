@@ -54,8 +54,8 @@ its event handler requirements.*
 The performance table is indicative of the impact on performance when using
 PCRE2 and Boost.Regex with RE/flex.  PCRE2 and Boost.Regex are optional
 libraries integrated with RE/flex for Perl matching because of their
-efficiency.  By default, RE/flex uses DFA-based extended POSIX matching,
-which is the fastest method as shown in the table.
+efficiency.  By default, RE/flex uses DFA-based extended regular expression
+matching in linear time, the fastest method (as shown in the table).
 
 The RE/flex matcher tracks line numbers, column numbers, and indentations,
 whereas Flex does not (option noyylineno) and neither do the other regex
@@ -212,7 +212,7 @@ To build the examples also:
     $ ./configure --enable-examples && make
 
 After this successfully completes, you can optionally run `make install` to
-install the `reflex` command and `libreflex` library:
+install the `reflex` command and the `libreflex` library:
 
     $ sudo make install
 
@@ -591,6 +591,7 @@ Changelog
 - Mar  5, 2024: 4.1.0 improved lazy quantifiers for POSIX regex lazy matching in linear time using an advanced DFA transformation algorithm introduced in RE/flex in 2016.
 - Mar 11, 2024: 4.1.1 minor update to correct a DFA construction problem for POSIX regex lazy quantifiers matching too much in some cases.
 - Mar 17, 2024: 4.1.2 updated configure scripts; cast negative ctype function arguments (problem detected on NetBSD 10).
+- Mar 27, 2024: 4.2.0 support pkg-config with `reflex.pc` (and `reflexmin.pc` minimized library) to use the reflex library `-lreflex`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

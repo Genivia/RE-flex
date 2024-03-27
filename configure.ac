@@ -1,4 +1,4 @@
-AC_INIT([re-flex],[4.1.2],[https://github.com/Genivia/RE-flex/issues],[reflex])
+AC_INIT([re-flex],[4.2.0],[https://github.com/Genivia/RE-flex/issues],[reflex])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 AC_CONFIG_HEADERS([config.h])
 AC_COPYRIGHT([Copyright (C) 2016-2024 Robert van Engelen, Genivia Inc.])
@@ -276,6 +276,6 @@ fi
 DOXYGEN_OUTPUT_DIRECTORY="doc/html"
 AC_SUBST(DOXYGEN_OUTPUT_DIRECTORY)
   
-AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile tests/Makefile examples/Makefile])
+AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile tests/Makefile examples/Makefile reflex.pc reflexmin.pc])
 
 AC_OUTPUT

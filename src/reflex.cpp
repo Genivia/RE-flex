@@ -2396,10 +2396,13 @@ void Reflex::write_perf_report()
       for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
         if (rule->regex != "<<EOF>>" && rule->code.line != "|")
           ++report;
-      *out <<
-        "  size_t perf_report_" << conditions[start] << "_rule[" << report << "];\n"
-        "  size_t perf_report_" << conditions[start] << "_size[" << report << "];\n"
-        "  float  perf_report_" << conditions[start] << "_time[" << report << "];\n";
+      if (report > 0)
+      {
+        *out <<
+          "  size_t perf_report_" << conditions[start] << "_rule[" << report << "];\n"
+          "  size_t perf_report_" << conditions[start] << "_size[" << report << "];\n"
+          "  float  perf_report_" << conditions[start] << "_time[" << report << "];\n";
+      }
       if (options["nodefault"].empty())
         *out <<
           "  size_t perf_report_" << conditions[start] << "_default;\n";
