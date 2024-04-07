@@ -3,3 +3,4 @@
 include("${CMAKE_CURRENT_LIST_DIR}/ReflexTargets.cmake")
 
 check_required_components(Reflex)
+include("${CMAKE_CURRENT_LIST_DIR}/ReflexCMakeSupport.cmake")

@@ -110,6 +110,7 @@ configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/Config.cmake.in
 )
 
 install(FILES
+  cmake/ReflexCMakeSupport.cmake
   "${CMAKE_CURRENT_BINARY_DIR}/ReflexConfig.cmake"
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/reflex
 )
