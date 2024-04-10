@@ -592,6 +592,7 @@ Changelog
 - Mar 11, 2024: 4.1.1 minor update to correct a DFA construction problem for POSIX regex lazy quantifiers matching too much in some cases.
 - Mar 17, 2024: 4.1.2 updated configure scripts; cast negative ctype function arguments (problem detected on NetBSD 10).
 - Mar 27, 2024: 4.2.0 support pkg-config with `reflex.pc` (and `reflexmin.pc` minimized library) to use the reflex library `-lreflex`.
+- Apr 10, 2024: 4.2.1 minor update to adjust the current input pointer by one when not matching anything.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
