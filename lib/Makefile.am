@@ -1,6 +1,6 @@
-reflexincludedir        = $(includedir)/reflex
+reflexincludedir = $(includedir)/reflex
 
-reflexinclude_HEADERS   = \
+reflexinclude_HEADERS = \
         $(top_srcdir)/include/reflex/abslexer.h \
         $(top_srcdir)/include/reflex/absmatcher.h \
         $(top_srcdir)/include/reflex/bits.h \
@@ -22,14 +22,14 @@ reflexinclude_HEADERS   = \
         $(top_srcdir)/include/reflex/unicode.h \
         $(top_srcdir)/include/reflex/utf8.h
 
-lib_LIBRARIES           = \
+lib_LIBRARIES = \
         libreflex.a \
         libreflexmin.a
 
-libreflex_a_CPPFLAGS    = \
+libreflex_a_CPPFLAGS = \
         -I$(top_srcdir)/include \
         $(SIMD_FLAGS)
-libreflex_a_SOURCES     = \
+libreflex_a_SOURCES = \
         convert.cpp \
         debug.cpp \
         error.cpp \
@@ -39,6 +39,7 @@ libreflex_a_SOURCES     = \
         matcher_avx512bw.cpp \
         pattern.cpp \
         posix.cpp \
+        simd.cpp \
         simd_avx2.cpp \
         simd_avx512bw.cpp \
         unicode.cpp \
@@ -51,7 +52,7 @@ libreflex_a_SOURCES     = \
 libreflexmin_a_CPPFLAGS = \
         -I$(top_srcdir)/include \
         $(SIMD_FLAGS)
-libreflexmin_a_SOURCES  = \
+libreflexmin_a_SOURCES = \
         debug.cpp \
         error.cpp \
         input.cpp \
@@ -59,17 +60,18 @@ libreflexmin_a_SOURCES  = \
         matcher_avx2.cpp \
         matcher_avx512bw.cpp \
         pattern.cpp \
+        simd.cpp \
         simd_avx2.cpp \
         simd_avx512bw.cpp \
         utf8.cpp
 
-# separately compile matcher_avx2.cpp and matcher_avx512bw (with the same content as matcher.cpp) with AVX optimizations enabled
+# separately compile matcher_avx2.cpp and matcher_avx512bw with AVX2 optimizations enabled
 libreflex_a-matcher_avx2.$(OBJEXT)        : CXXFLAGS += $(SIMD_AVX2_FLAGS)
 libreflex_a-matcher_avx512bw.$(OBJEXT)    : CXXFLAGS += $(SIMD_AVX512BW_FLAGS)
 libreflexmin_a-matcher_avx2.$(OBJEXT)     : CXXFLAGS += $(SIMD_AVX2_FLAGS)
 libreflexmin_a-matcher_avx512bw.$(OBJEXT) : CXXFLAGS += $(SIMD_AVX512BW_FLAGS)
 
-# separately compile simd_avx2.cpp and simd_avx512bw.cpp with AVX optimizations enabled
+# separately compile simd_avx2.cpp and simd_avx512bw.cpp with AVX512BW optimizations enabled
 libreflex_a-simd_avx2.$(OBJEXT)        : CXXFLAGS += $(SIMD_AVX2_FLAGS)
 libreflex_a-simd_avx512bw.$(OBJEXT)    : CXXFLAGS += $(SIMD_AVX512BW_FLAGS)
 libreflexmin_a-simd_avx2.$(OBJEXT)     : CXXFLAGS += $(SIMD_AVX2_FLAGS)

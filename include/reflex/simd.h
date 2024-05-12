@@ -28,14 +28,18 @@
 
 /**
 @file      simd.h
-@brief     RE/flex SIMD intrinsics
+@brief     RE/flex SIMD primitives
 @author    Robert van Engelen - engelen@genivia.com
-@copyright (c) 2016-2022, Robert van Engelen, Genivia Inc. All rights reserved.
+@copyright (c) 2016-2024, Robert van Engelen, Genivia Inc. All rights reserved.
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
 #ifndef SIMD_H
 #define SIMD_H
+
+#include <cstddef>
+#include <cstdint>
+#include <cstdlib>
 
 #if defined(HAVE_AVX512BW)
 # include <immintrin.h>
@@ -133,15 +137,19 @@ inline uint32_t popcountl(uint64_t x)
 }
 #endif
 
-// Partially count newlines in string b up to and including position e in b, updates b close to e with uncounted part
-extern size_t simd_nlcount_sse2(const char*& b, const char *e);
-extern size_t simd_nlcount_avx2(const char*& b, const char *e);
-extern size_t simd_nlcount_avx512bw(const char*& b, const char *e);
+// Partially count newlines in string b up to e, updates b close to e with uncounted part
+extern size_t simd_nlcount_avx2(const char *&b, const char *e);
+extern size_t simd_nlcount_avx512bw(const char *&b, const char *e);
 
 } // namespace reflex
 
 #endif
 
+namespace reflex {
+
+// Count newlines in string s up to t
+extern size_t nlcount(const char *s, const char *t);
+
+} // namespace reflex
+
 #endif
-
-

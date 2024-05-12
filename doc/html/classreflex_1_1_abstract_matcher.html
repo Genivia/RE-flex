@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Apr 10 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun May 12 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -216,6 +216,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa1b7e09cf2e74ffbf09fb65ebac337f5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#aa1b7e09cf2e74ffbf09fb65ebac337f5">wchr</a> () const </td></tr>
 <tr class="memdesc:aa1b7e09cf2e74ffbf09fb65ebac337f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the first wide character of the text matched.  <a href="#aa1b7e09cf2e74ffbf09fb65ebac337f5">More...</a><br /></td></tr>
 <tr class="separator:aa1b7e09cf2e74ffbf09fb65ebac337f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a69f32040ea02b605f6fa0f31af0be7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a3a69f32040ea02b605f6fa0f31af0be7">lineno_skip</a> (bool f=false)</td></tr>
+<tr class="memdesc:a3a69f32040ea02b605f6fa0f31af0be7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set or reset mode to count matching lines only and skip other (e.g. for speed).  <a href="#a3a69f32040ea02b605f6fa0f31af0be7">More...</a><br /></td></tr>
+<tr class="separator:a3a69f32040ea02b605f6fa0f31af0be7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3812c606737fdf861eb64023e9e9cec6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a3812c606737fdf861eb64023e9e9cec6">lineno</a> (size_t n)</td></tr>
 <tr class="memdesc:a3812c606737fdf861eb64023e9e9cec6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set or change the starting line number of the last match.  <a href="#a3812c606737fdf861eb64023e9e9cec6">More...</a><br /></td></tr>
 <tr class="separator:a3812c606737fdf861eb64023e9e9cec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -300,6 +303,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7b5244017d854301305afbf8326c9e98"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a7b5244017d854301305afbf8326c9e98">eol</a> (bool inclusive=false)</td></tr>
 <tr class="memdesc:a7b5244017d854301305afbf8326c9e98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns pointer to the end of the line (last char + 1) in the buffer containing the matched text, DANGER: invalidates previous <a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a" title="Returns pointer to the begin of the line in the buffer containing the matched text. ">bol()</a> and <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a> pointers, use <a class="el" href="classreflex_1_1_abstract_matcher.html#a7b5244017d854301305afbf8326c9e98" title="Returns pointer to the end of the line (last char + 1) in the buffer containing the matched text...">eol()</a> before <a class="el" href="classreflex_1_1_abstract_matcher.html#a640e70bf23e06e40ae52cadea0ecf19a" title="Returns pointer to the begin of the line in the buffer containing the matched text. ">bol()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a009bad2d87f9bc2f18a9ae52cc08b9e1" title="Returns 0-terminated string of the text matched, does not include matched \0s, this is a constant-tim...">text()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#a329001b2880a756dd4d6f6fd0192d004" title="Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation...">begin()</a>, and <a class="el" href="classreflex_1_1_abstract_matcher.html#aaf1c25cf25951b7eeda7aa50d4736fd4" title="Returns pointer to the exclusive end of the matched text, a constant-time operation. ">end()</a> when those are used.  <a href="#a7b5244017d854301305afbf8326c9e98">More...</a><br /></td></tr>
 <tr class="separator:a7b5244017d854301305afbf8326c9e98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac71eb02005f4225d04a39c112296a000"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#ac71eb02005f4225d04a39c112296a000">fetch</a> (size_t len)</td></tr>
+<tr class="memdesc:ac71eb02005f4225d04a39c112296a000"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return number of bytes available given number of bytes to fetch ahead, limited by input size and buffer size.  <a href="#ac71eb02005f4225d04a39c112296a000">More...</a><br /></td></tr>
+<tr class="separator:ac71eb02005f4225d04a39c112296a000"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66c8231e2a0fbf53aa188448c9f9b229"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a66c8231e2a0fbf53aa188448c9f9b229">avail</a> ()</td></tr>
 <tr class="memdesc:a66c8231e2a0fbf53aa188448c9f9b229"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of bytes in the buffer available to search from the current <a class="el" href="classreflex_1_1_abstract_matcher.html#a329001b2880a756dd4d6f6fd0192d004" title="Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation...">begin()</a>/text() position.  <a href="#a66c8231e2a0fbf53aa188448c9f9b229">More...</a><br /></td></tr>
 <tr class="separator:a66c8231e2a0fbf53aa188448c9f9b229"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -510,6 +516,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a4fdfd4999a13a782643d33da7bd2b5cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a4fdfd4999a13a782643d33da7bd2b5cf">mat_</a></td></tr>
 <tr class="memdesc:a4fdfd4999a13a782643d33da7bd2b5cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if <a class="el" href="classreflex_1_1_abstract_matcher.html#ab880e6c8fe0df7c4ee7bb629aab41d0f" title="Returns nonzero capture index (i.e. true) if the entire input matches this matcher&#39;s pattern (and int...">AbstractMatcher::matches()</a> was successful  <a href="#a4fdfd4999a13a782643d33da7bd2b5cf">More...</a><br /></td></tr>
 <tr class="separator:a4fdfd4999a13a782643d33da7bd2b5cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a355e00f049bb4151a282ce4ba0e91ef7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_matcher.html#a355e00f049bb4151a282ce4ba0e91ef7">cml_</a></td></tr>
+<tr class="memdesc:a355e00f049bb4151a282ce4ba0e91ef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">true when counting matching lines instead of line numbers  <a href="#a355e00f049bb4151a282ce4ba0e91ef7">More...</a><br /></td></tr>
+<tr class="separator:a355e00f049bb4151a282ce4ba0e91ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The abstract matcher base class template defines an interface for all pattern matcher engines. </p>
@@ -1112,7 +1121,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Polymorphic cloning. </p>
 
-<p>Implemented in <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#aca2313a4a5f32cf7655e13036a71ca7a">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_matcher.html#a70d0469bd7c8ad7697dc877d4d30b8b5">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a5b5fad3842e63bfe631249b2d5c49850">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#aa96807bdc0b350aef4a92c595eb8aef5">reflex::StdMatcher</a>, and <a class="el" href="classreflex_1_1_line_matcher.html#a32bb49912df9961f1d07f42e2cc96de2">reflex::LineMatcher</a>.</p>
+<p>Implemented in <a class="el" href="classreflex_1_1_matcher.html#a70d0469bd7c8ad7697dc877d4d30b8b5">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#aca2313a4a5f32cf7655e13036a71ca7a">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a5b5fad3842e63bfe631249b2d5c49850">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#aa96807bdc0b350aef4a92c595eb8aef5">reflex::StdMatcher</a>, and <a class="el" href="classreflex_1_1_line_matcher.html#a32bb49912df9961f1d07f42e2cc96de2">reflex::LineMatcher</a>.</p>
 
 </div>
 </div>
@@ -1284,6 +1293,33 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="ac71eb02005f4225d04a39c112296a000"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::AbstractMatcher::fetch </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return number of bytes available given number of bytes to fetch ahead, limited by input size and buffer size. </p>
+<dl class="section return"><dt>Returns</dt><dd>number of bytes available after fetching. </dd></dl>
 
 </div>
 </div>
@@ -1463,7 +1499,7 @@ Protected Attributes</h2></td></tr>
 <p>Returns the group capture identifier containing the group capture index &gt;0 and name (or NULL) of a named group capture, or (1,NULL) by default. </p>
 <dl class="section return"><dt>Returns</dt><dd>a pair of size_t and string </dd></dl>
 
-<p>Implemented in <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a2e4cddcd72c972bbfbd9e7a410818da4">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a354995008f1e51281594cc72749ef1b9">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#a82f61242adaa3db4d546cefb5a518a92">reflex::StdMatcher</a>, <a class="el" href="classreflex_1_1_matcher.html#a19ee864fe3ae325d28b900c7bd4b919a">reflex::Matcher</a>, and <a class="el" href="classreflex_1_1_line_matcher.html#afc3f0e21b37132dbe2512aafc56c2610">reflex::LineMatcher</a>.</p>
+<p>Implemented in <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a2e4cddcd72c972bbfbd9e7a410818da4">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_matcher.html#a19ee864fe3ae325d28b900c7bd4b919a">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a354995008f1e51281594cc72749ef1b9">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#a82f61242adaa3db4d546cefb5a518a92">reflex::StdMatcher</a>, and <a class="el" href="classreflex_1_1_line_matcher.html#afc3f0e21b37132dbe2512aafc56c2610">reflex::LineMatcher</a>.</p>
 
 </div>
 </div>
@@ -1491,7 +1527,7 @@ Protected Attributes</h2></td></tr>
 <p>Returns the next group capture identifier containing the group capture index &gt;0 and name (or NULL) of a named group capture, or (0,NULL) when no more groups matched. </p>
 <dl class="section return"><dt>Returns</dt><dd>a pair of size_t and string </dd></dl>
 
-<p>Implemented in <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#abe198fe92683178695e6d772a4207176">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a0693b14273884a92a3682c1524c61646">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#a818cf4601fcb97125890e1935315d4e9">reflex::StdMatcher</a>, <a class="el" href="classreflex_1_1_matcher.html#aff7790e539b65f03b5c45403c37da7c9">reflex::Matcher</a>, and <a class="el" href="classreflex_1_1_line_matcher.html#ac452fbdf3ba2412b8089b4aea68c83de">reflex::LineMatcher</a>.</p>
+<p>Implemented in <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#abe198fe92683178695e6d772a4207176">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_matcher.html#aff7790e539b65f03b5c45403c37da7c9">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a0693b14273884a92a3682c1524c61646">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#a818cf4601fcb97125890e1935315d4e9">reflex::StdMatcher</a>, and <a class="el" href="classreflex_1_1_line_matcher.html#ac452fbdf3ba2412b8089b4aea68c83de">reflex::LineMatcher</a>.</p>
 
 </div>
 </div>
@@ -1837,6 +1873,32 @@ Protected Attributes</h2></td></tr>
 
 <p>Returns the inclusive ending line number of the match in the input character sequence. </p>
 <dl class="section return"><dt>Returns</dt><dd>line number </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a3a69f32040ea02b605f6fa0f31af0be7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reflex::AbstractMatcher::lineno_skip </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>f</em> = <code>false</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set or reset mode to count matching lines only and skip other (e.g. for speed). </p>
 
 </div>
 </div>
@@ -2339,7 +2401,7 @@ Protected Attributes</h2></td></tr>
 <p>Returns captured text as a std::pair&lt;const char*,size_t&gt; with string pointer (non-0-terminated) and length. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::pair of string pointer and length in the captured text, where [0] returns std::pair(<a class="el" href="classreflex_1_1_abstract_matcher.html#a329001b2880a756dd4d6f6fd0192d004" title="Returns pointer to the begin of the matched text (non-0-terminated), a constant-time operation...">begin()</a>, <a class="el" href="classreflex_1_1_abstract_matcher.html#adb5fec59e6c6a86b8cf405c40f93d1de" title="Returns the length of the matched text in number of bytes, including matched \0s, a constant-time ope...">size()</a>) </dd></dl>
 
-<p>Implemented in <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a0c9a3b53d00fb2bba35956c437018530">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#aa48c631145c803cbda9f3891eccc1b3e">reflex::StdMatcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#aafdb43bb11cab6eac43ba846e17ca33e">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_matcher.html#acf0031339b3f8426b730a6860e5feba2">reflex::Matcher</a>, and <a class="el" href="classreflex_1_1_line_matcher.html#a691d52bfed1523c7b4c3f70d280a875c">reflex::LineMatcher</a>.</p>
+<p>Implemented in <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a0c9a3b53d00fb2bba35956c437018530">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_matcher.html#acf0031339b3f8426b730a6860e5feba2">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#aa48c631145c803cbda9f3891eccc1b3e">reflex::StdMatcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#aafdb43bb11cab6eac43ba846e17ca33e">reflex::BoostMatcher</a>, and <a class="el" href="classreflex_1_1_line_matcher.html#a691d52bfed1523c7b4c3f70d280a875c">reflex::LineMatcher</a>.</p>
 
 </div>
 </div>
@@ -2445,7 +2507,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reset this matcher's state to the initial state and set options (when provided). </p>
 
-<p>Reimplemented in <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a7dacee924aa6e994fc18df71661a565c">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_matcher.html#a641754cf7025a978c7dc672a563ac5c0">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a49d2b5f7c6261d57274447345b6c7c81">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#aeb6cb1ab8afe16437091c1e29af2b7e4">reflex::StdMatcher</a>, and <a class="el" href="classreflex_1_1_line_matcher.html#a1a87a154ff3c862e0ba1d899dc87e140">reflex::LineMatcher</a>.</p>
+<p>Reimplemented in <a class="el" href="classreflex_1_1_matcher.html#a641754cf7025a978c7dc672a563ac5c0">reflex::Matcher</a>, <a class="el" href="classreflex_1_1_p_c_r_e2_matcher.html#a7dacee924aa6e994fc18df71661a565c">reflex::PCRE2Matcher</a>, <a class="el" href="classreflex_1_1_boost_matcher.html#a49d2b5f7c6261d57274447345b6c7c81">reflex::BoostMatcher</a>, <a class="el" href="classreflex_1_1_std_matcher.html#aeb6cb1ab8afe16437091c1e29af2b7e4">reflex::StdMatcher</a>, and <a class="el" href="classreflex_1_1_line_matcher.html#a1a87a154ff3c862e0ba1d899dc87e140">reflex::LineMatcher</a>.</p>
 
 </div>
 </div>
@@ -3299,6 +3361,28 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a355e00f049bb4151a282ce4ba0e91ef7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::AbstractMatcher::cml_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>true when counting matching lines instead of line numbers </p>
+
+</div>
+</div>
 <a class="anchor" id="a92d20b0cfaa79571f201b52289c3fe2c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3757,7 +3841,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Apr 10 2024 09:40:34 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun May 12 2024 10:52:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -8,4 +8,4 @@ Description: high-performance C++ regex library and lexical analyzer generator
 Version: @VERSION@
 Requires:
 Libs: -L${libdir} -lreflex
-Cflags: @SIMD_FLAGS@ -I${includedir}
+Cflags: -I${includedir}

@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">absmatcher.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Apr 10 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun May 12 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -75,13 +75,13 @@ Include dependency graph for absmatcher.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="absmatcher_8h__incl.png" border="0" usemap="#absmatcher_8h" alt=""/></div>
 <map name="absmatcher_8h" id="absmatcher_8h">
-<area shape="rect" id="node2" href="convert_8h.html" title="RE/flex regex converter. " alt="" coords="346,80,458,107"/>
-<area shape="rect" id="node9" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="57,80,161,107"/>
-<area shape="rect" id="node11" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="484,80,581,107"/>
-<area shape="rect" id="node15" href="traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="606,80,705,107"/>
-<area shape="rect" id="node16" href="simd_8h.html" title="RE/flex SIMD intrinsics. " alt="" coords="729,80,827,107"/>
-<area shape="rect" id="node3" href="error_8h.html" title="RE/flex regex errors. " alt="" coords="269,155,364,181"/>
-<area shape="rect" id="node12" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="490,155,581,181"/>
+<area shape="rect" id="node2" href="convert_8h.html" title="RE/flex regex converter. " alt="" coords="309,80,421,107"/>
+<area shape="rect" id="node9" href="debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="5,80,109,107"/>
+<area shape="rect" id="node11" href="input_8h.html" title="RE/flex input character sequence class. " alt="" coords="606,80,703,107"/>
+<area shape="rect" id="node15" href="traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="738,80,835,107"/>
+<area shape="rect" id="node16" href="simd_8h.html" title="RE/flex SIMD primitives. " alt="" coords="910,80,1007,107"/>
+<area shape="rect" id="node3" href="error_8h.html" title="RE/flex regex errors. " alt="" coords="234,155,328,182"/>
+<area shape="rect" id="node12" href="utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="504,155,594,182"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -140,10 +140,10 @@ Macros</h2></td></tr>
 <tr class="memdesc:a848ff944c984502c0739b440d647f0ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">This compile-time option may speed up buffer reallocation with realloc() instead of new and delete.  <a href="#a848ff944c984502c0739b440d647f0ce">More...</a><br /></td></tr>
 <tr class="separator:a848ff944c984502c0739b440d647f0ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52b73659b2f527a60c6b59f43b8e511a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="absmatcher_8h.html#a52b73659b2f527a60c6b59f43b8e511a">WITH_FAST_GET</a>&#160;&#160;&#160;1</td></tr>
-<tr class="memdesc:a52b73659b2f527a60c6b59f43b8e511a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This compile-time option speeds up matching, but slows input().  <a href="#a52b73659b2f527a60c6b59f43b8e511a">More...</a><br /></td></tr>
+<tr class="memdesc:a52b73659b2f527a60c6b59f43b8e511a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This compile-time option speeds up matching, but slows input() somewhat.  <a href="#a52b73659b2f527a60c6b59f43b8e511a">More...</a><br /></td></tr>
 <tr class="separator:a52b73659b2f527a60c6b59f43b8e511a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d45f91056db597182a27328a402bbc1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="absmatcher_8h.html#a2d45f91056db597182a27328a402bbc1">WITH_SPAN</a>&#160;&#160;&#160;1</td></tr>
-<tr class="memdesc:a2d45f91056db597182a27328a402bbc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">This compile-time option adds span(), line(), wline(), bol(), eol()  <a href="#a2d45f91056db597182a27328a402bbc1">More...</a><br /></td></tr>
+<tr class="memdesc:a2d45f91056db597182a27328a402bbc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">This compile-time option adds span(), line(), wline(), bol(), eol().  <a href="#a2d45f91056db597182a27328a402bbc1">More...</a><br /></td></tr>
 <tr class="separator:a2d45f91056db597182a27328a402bbc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -161,7 +161,7 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex abstract matcher base class and pattern matcher class. </p>
 <dl class="section author"><dt>Author</dt><dd>Robert van Engelen - <a href="#" onclick="location.href='mai'+'lto:'+'eng'+'el'+'en@'+'ge'+'niv'+'ia'+'.co'+'m'; return false;">engel<span style="display: none;">.nosp@m.</span>en@g<span style="display: none;">.nosp@m.</span>enivi<span style="display: none;">.nosp@m.</span>a.co<span style="display: none;">.nosp@m.</span>m</a> </dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>(c) 2016-2022, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
+<dl class="section copyright"><dt>Copyright</dt><dd>(c) 2016-2024, Robert van Engelen, Genivia Inc. All rights reserved. </dd>
 <dd>
 (c) BSD-3 License - see LICENSE.txt </dd></dl>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
@@ -175,7 +175,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>This compile-time option speeds up matching, but slows input(). </p>
+<p>This compile-time option speeds up matching, but slows input() somewhat. </p>
 
 </div>
 </div>
@@ -203,7 +203,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>This compile-time option adds span(), line(), wline(), bol(), eol() </p>
+<p>This compile-time option adds span(), line(), wline(), bol(), eol(). </p>
 
 </div>
 </div>
@@ -283,7 +283,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Apr 10 2024 09:40:34 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun May 12 2024 10:52:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

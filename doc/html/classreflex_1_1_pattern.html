@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Wed Apr 10 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun May 12 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -553,7 +553,7 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a17ba8adaa619f3c6d5ed10be5a1ea566"><td class="mdescLeft">&#160;</td><td class="mdescRight">patterns after the prefix are at least this long but no more than 8  <a href="#a17ba8adaa619f3c6d5ed10be5a1ea566">More...</a><br /></td></tr>
 <tr class="separator:a17ba8adaa619f3c6d5ed10be5a1ea566"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17e567f4464a1caf947211fb3df63e68"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a17e567f4464a1caf947211fb3df63e68">pin_</a></td></tr>
-<tr class="memdesc:a17e567f4464a1caf947211fb3df63e68"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of needles  <a href="#a17e567f4464a1caf947211fb3df63e68">More...</a><br /></td></tr>
+<tr class="memdesc:a17e567f4464a1caf947211fb3df63e68"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of needles, 0 to 16  <a href="#a17e567f4464a1caf947211fb3df63e68">More...</a><br /></td></tr>
 <tr class="separator:a17e567f4464a1caf947211fb3df63e68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b322c8509e8880607138c507172b422"><td class="memItemLeft" align="right" valign="top">std::bitset&lt; 256 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a6b322c8509e8880607138c507172b422">cbk_</a></td></tr>
 <tr class="memdesc:a6b322c8509e8880607138c507172b422"><td class="mdescLeft">&#160;</td><td class="mdescRight">characters to look back over when lbk_ &gt; 0, never includes <br />
@@ -587,7 +587,7 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a82e8ede5387a3535ba687f6d2c4865f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">secondary least common character position in the pattern or 0xffff  <a href="#a82e8ede5387a3535ba687f6d2c4865f4">More...</a><br /></td></tr>
 <tr class="separator:a82e8ede5387a3535ba687f6d2c4865f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9279c1c1980bf31c60f091ad38b90dff"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a9279c1c1980bf31c60f091ad38b90dff">bmd_</a></td></tr>
-<tr class="memdesc:a9279c1c1980bf31c60f091ad38b90dff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boyer-Moore jump distance on mismatch, B-M is enabled when bmd_ &gt; 0.  <a href="#a9279c1c1980bf31c60f091ad38b90dff">More...</a><br /></td></tr>
+<tr class="memdesc:a9279c1c1980bf31c60f091ad38b90dff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boyer-Moore jump distance on mismatch, B-M is enabled when bmd_ &gt; 0 (&lt;= 255)  <a href="#a9279c1c1980bf31c60f091ad38b90dff">More...</a><br /></td></tr>
 <tr class="separator:a9279c1c1980bf31c60f091ad38b90dff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed618395562196d475df30ed05a89d5a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aed618395562196d475df30ed05a89d5a">bms_</a> [256]</td></tr>
 <tr class="memdesc:aed618395562196d475df30ed05a89d5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boyer-Moore skip array.  <a href="#aed618395562196d475df30ed05a89d5a">More...</a><br /></td></tr>
@@ -5120,7 +5120,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Boyer-Moore jump distance on mismatch, B-M is enabled when bmd_ &gt; 0. </p>
+<p>Boyer-Moore jump distance on mismatch, B-M is enabled when bmd_ &gt; 0 (&lt;= 255) </p>
 
 </div>
 </div>
@@ -5649,7 +5649,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>number of needles </p>
+<p>number of needles, 0 to 16 </p>
 
 </div>
 </div>
@@ -5835,7 +5835,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Wed Apr 10 2024 09:40:35 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun May 12 2024 10:52:13 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

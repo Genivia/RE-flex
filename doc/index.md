@@ -13,50 +13,49 @@ RE/flex user guide                                                  {#mainpage}
 What is RE/flex?                                                       {#intro}
 ================
 
-A high-performance C++ regex library and lexical analyzer generator with
-Unicode support.
+A high-performance C++ regex library and a lexical analyzer generator like
+Flex and Lex.
 
-The RE/flex lexical analyzer generator is compatible with standard Flex lexer
-specifications and integrates seamlessly with Bison parsers.  The lexical
-analyzer generator accepts Flex lexer specifications, but also supports
-indentation anchors, lazy quantifiers, word boundaries, and many other modern
-features.
+The RE/flex lexical analyzer generator extends Flex++ with Unicode support
+and many other useful features, such as regex indentation anchors, regex lazy
+quantifiers, regex word boundaries, methods for error reporting and recovery,
+and options to simplify integration with with Bison and other parsers.
 
 The RE/flex lexical analyzer generator does all the heavy-lifting for you to
-make it easier to integrate advanced tokenizers with Bison parsers.  It
-generates the necessary gluing code depending on the type of Bison parser used,
-such as advanced "Bison complete parsers".
+make it easier to integrate advanced tokenizers with Bison and other parsers.
+It generates the necessary gluing code depending on the type of Bison parser
+used, such as advanced "Bison complete parsers".
 
-The high-performance RE/flex regex library is used by the RE/flex lexical
-analyzer generator to generate finite state machine tables or direct code to
-scan and search input efficiently.  RE/flex also includes a smart input class
-to normalize input from files, streams, strings, and memory to standard UTF-8
-streams.
+The high-performance RE/flex regex library generates finite state machine
+tables or direct code to scan and search input efficiently.  RE/flex also
+includes a smart input class to normalize input from files, streams, strings,
+and memory to standard UTF-8 streams.
 
-A quick summary of features:
+In a nutshell, RE/flex
 
-- faster than Flex++ for typical applications such as tokenization;
-- accepts Flex/Lex lexer specifications, extended to support Unicode;
-- IEEE POSIX P1003.2 standard compliant (like Lex and Flex);
-- fully supports Unicode, auto-detects UTF-8/16/32 with smart input handling;
-- supports legacy file encoding formats, e.g. CP 1250, EBCDIC.
-- offers methods for lex/syntax \ref errors;
-- easily integrates with Bison reentrant, C++, bridge and location parsers;
-- generates source code that is easy to understand;
-- generates thread-safe scanners;
-- generates graphviz files for visualization of finite state machines;
-- options for intuitive customization of the lexer class source code output;
-- efficient matching in direct code or with finite state machine tables;
-- optional "free space mode" to improve readability of lexer specifications;
-- regular expressions may contain lazy quantifiers;
-- regular expressions may contain word boundary anchors;
-- regular expressions may contain indent/dedent markers for matching;
-- other regex engines to choose from, such as PCRE2 and Boost.Regex;
-- released under a permissive open source license (BSD-3).
+- extends Flex++ with Unicode and other new featues
+- accepts legacy Flex and Lex lexer specifications
+- is faster than Flex++ for typical applications such as tokenization
+- is compliant to the IEEE POSIX P1003.2 standard (like Lex and Flex)
+- supports Unicode, auto-detects UTF-8/16/32 with smart input handling
+- supports legacy file encoding formats, e.g. CP 1250, EBCDIC
+- includes methods for lex and syntax \ref errors
+- integrates with Bison reentrant, C++, bridge and location parsers
+- generates source code that is easy to understand
+- generates thread-safe scanners
+- generates graphviz files for visualization of finite state machines
+- supports easy customization of the lexer class source code output
+- is fast with direct code or with finite state machine tables
+- supports "free space mode" to improve readability of lexer specifications
+- regular expressions may contain lazy quantifiers
+- regular expressions may contain word boundary anchors
+- regular expressions may contain indent/dedent markers for matching
+- offers other regex engines to choose from, such as PCRE2 and Boost.Regex
+- is released under a permissive open source license (BSD-3)
 
-RE/flex offers many other practical improvements over Flex++, such as:
+RE/flex includes practical improvements over Flex++, such as:
 
-- no input buffer length limit (Flex has a 16KB limit);
+- no input buffer length limit (Flex has a 16K limit);
 - `yypush_buffer_state` saves the scanner state (line, column, and indentation
   positions), not just the input buffer;
 - new methods to analyze ASCII and Unicode input, such as `str()` and `wstr()`
@@ -219,7 +218,7 @@ scan over C/C++ source code input to match multiline comments that start with a
 </div>
 
 Another argument to use this code with Flex is that the internal Flex buffer is
-limited to 16KB.  By contrast, RE/flex buffers are dynamically resized and will
+limited to 16K.  By contrast, RE/flex buffers are dynamically resized and will
 never run out of buffer space to accept long matches.
 
 Workarounds such as these are not necessary with RE/flex.  The RE/flex scanners
@@ -2271,12 +2270,11 @@ match:
     const char *s = matcher().span();
     std::cout << t << " in " << s << std::endl;
 ~~~
-The start of a line is truncated when the line is too long.  The length of the
-line's contents before the pattern match on the line is restricted to 8KB,
-which is the size specified by `reflex::AbstractMatcher::Const::BLOCK`.  When
-this length is exceeded, the line's length before the match is truncated to
-8KB.  This ensures that pattern matching binary files or files with very long
-lines cannot cause memory allocation exceptions.
+The start of a line is truncated when the line is too long, longer than 256K
+which is the initial buffer size `reflex::AbstractMatcher::Const::BUFSZ`.  When
+this length is exceeded, the line's length before the match is truncated.  This
+ensures that pattern matching binary files or files with very long lines cannot
+cause memory allocation exceptions.
 
 Because `matcher()` returns the current matcher object, the following Flex-like
 actions are also supported:
@@ -7485,12 +7483,11 @@ string copy of the match:
     const char *s = span();
     std::cout << t << " in " << s << std::endl;
 ~~~
-The start of a line is truncated when the line is too long.  The length of the
-line's contents before the pattern match on the line is restricted to 8KB,
-which is the size specified by `reflex::AbstractMatcher::Const::BLOCK`.  When
-this length is exceeded, the line's length before the match is truncated to
-8KB.  This ensures that pattern matching binary files or files with very long
-lines cannot cause memory allocation exceptions.
+The start of a line is truncated when the line is too long, longer than 256K
+which is the initial buffer size `reflex::AbstractMatcher::Const::BUFSZ`.  When
+this length is exceeded, the line's length before the match is truncated.  This
+ensures that pattern matching binary files or files with very long lines cannot
+cause memory allocation exceptions.
 
 The `matcher().more()` method is used to create longer matches by stringing
 together consecutive matches in the input after scanning the input with the
@@ -9450,8 +9447,8 @@ RE/flex applications:
 Minimized library and cross compiling                                {#linking}
 -------------------------------------
 
-RE/flex scanners generated by <b>`reflex`</b> can be linked against a minimized
-version of the RE/flex library `libreflexmin`:
+RE/flex scanners generated with <b>`reflex`</b> can be linked against a
+minimized version of the RE/flex library `libreflexmin`:
 
     c++ ... -lreflexmin
 
@@ -9461,15 +9458,38 @@ time are excluded from the minimized library.
 If the RE/flex library is not installed, for example when cross-compiling
 a RE/flex scanner to a different platform, then compile directly from the
 RE/flex C++ source files located in the `reflex/lib` and `reflex/include`
-directories:
+directories as follows:
 
     c++ -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
-        lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp
+        lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp
 
-This compiles the code without SIMD optimizations.  SIMD intrinsics for SSE/AVX
-and ARM NEON/AArch64 are used to  speed up string search and newline detection
-in the library.  However, these optimizations are applicable to searching with
-the `find()` method and are not applicable to scanners.
+This compiles the code without SIMD optimizations, despite compiling
+`lib/simd.cpp`.  SIMD intrinsics for SSE/AVX and ARM NEON/AArch64 are used to
+speed up string search and newline detection in the library.  These
+optimizations are for the most part applicable to speed up searching with the
+`Matcher::find()` method.
+
+To compile with NEON/AArch64 optimizations applied (omit `-mfpu=neon` for AArch64):
+
+    c++ -DHAVE_NEON -mfpu=neon -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
+        lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp
+
+To compile with SSE2 optimizations applied:
+
+    c++ -DHAVE_SSE2 -msse2 -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
+        lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp
+
+To compile with AVX2 optimizations applied:
+
+    c++ -DHAVE_AVX2 -mavx2 -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
+        lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp \
+        lib/matcher_avx2.cpp lib/simd_avx2.cpp
+
+To compile with AVX512BW optimizations applied:
+
+    c++ -DHAVE_AVX512BW -mavx512bw -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
+        lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp \
+        lib/matcher_avx2.cpp lib/matcher_avx512bw.cpp lib/simd_avx2.cpp lib/simd_avx512bw.cpp
 
 🔝 [Back to table of contents](#)
 
@@ -9487,19 +9507,18 @@ input buffer:
 
 - Compile the generated source code with `-DREFLEX_BUFSZ=16384` to override
   the internal buffer `reflex::AbstractMatcher::Const::BUFSZ` size.  By
-  default, the `reflex::AbstractMatcher::Const::BLOCK` size is 64K, which is
-  reasonably optimal for high-performance file searching and tokenization.  The
-  buffer is a sliding window over the input, i.e. input files may be much
-  larger than the buffer size.  A reasonably small `REFLEX_BUFSZ` is 16384
-  for a 16K buffer.  A small buffer automatically expands to accommodate larger
-  pattern matches.  However, when using the `line()` and `wline()` methods,
-  very long lines may not fit and the return string values of `line()` and
-  `wline()` may be truncated as a result.  Furtheremore, a small buffer
-  increase processing time, i.e. to frequently move the buffered window along a
-  file and increases the cost to decode UTF-16/32 into UTF-8 multibyte
-  sequences.
+  default, the buffer size is 256K, which is optimal for high-performance file
+  searching and tokenization.  The buffer is a sliding window over the input,
+  i.e. input files may be much larger than the buffer size.  A reasonably small
+  `REFLEX_BUFSZ` is 16384 for a 16K buffer.  A small buffer automatically
+  expands to accommodate larger pattern matches.  However, when using the
+  `line()` and `wline()` methods, very long lines may not fit and the return
+  string values of `line()` and `wline()` may be truncated as a result.
+  Furtheremore, a small buffer increase processing time, i.e. to frequently
+  move the buffered window along a file and increases the cost to decode
+  UTF-16/32 into UTF-8 multibyte sequences.
 
-@warning The value of `REFLEX_BUFSZ` should not be less than 8192.
+@warning The value of `REFLEX_BUFSZ` should not be less than 4096.
 
 🔝 [Back to table of contents](#)
 

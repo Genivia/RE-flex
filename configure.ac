@@ -1,4 +1,4 @@
-AC_INIT([re-flex],[4.2.1],[https://github.com/Genivia/RE-flex/issues],[reflex])
+AC_INIT([re-flex],[4.3.0],[https://github.com/Genivia/RE-flex/issues],[reflex])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 AC_CONFIG_HEADERS([config.h])
 AC_COPYRIGHT([Copyright (C) 2016-2024 Robert van Engelen, Genivia Inc.])
@@ -84,7 +84,7 @@ if test "x$cross_compiling" = "xyes"; then
             AC_MSG_CHECKING([whether ${CXX} supports AVX2/AVX512BW intrinsics])
             save_CXXFLAGS=$CXXFLAGS
             CXXFLAGS="-mavx512bw"
-            AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <immintrin.h>]], [[__m512 n = _mm512_set1_epi8(42); (void)_mm512_cmpeq_epi8_mask(n, n);]])],
+            AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <immintrin.h>]], [[__m512i n = _mm512_set1_epi8(42); (void)_mm512_cmpeq_epi8_mask(n, n);]])],
                               [mavx_ok=yes],
                               [mavx_ok=no])
             if test "x$mavx_ok" = "xyes"; then
@@ -168,7 +168,7 @@ else
         AC_MSG_CHECKING([whether ${CXX} supports AVX2/AVX512BW intrinsics])
         save_CXXFLAGS=$CXXFLAGS
         CXXFLAGS="-mavx512bw"
-        AC_RUN_IFELSE([AC_LANG_PROGRAM([[#include <immintrin.h>]],[[__m512 n = _mm512_set1_epi8(42); (void)_mm512_cmpeq_epi8_mask(n, n);]])],
+        AC_RUN_IFELSE([AC_LANG_PROGRAM([[#include <immintrin.h>]],[[__m512i n = _mm512_set1_epi8(42); (void)_mm512_cmpeq_epi8_mask(n, n);]])],
                       [mavx_ok=yes],
                       [mavx_ok=no])
         if test "x$mavx_ok" = "xyes"; then

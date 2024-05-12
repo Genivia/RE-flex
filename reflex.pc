@@ -5,7 +5,7 @@ includedir=${prefix}/include
 
 Name: RE/flex
 Description: high-performance C++ regex library and lexical analyzer generator
-Version: 4.2.1
+Version: 4.3.0
 Requires:
 Libs: -L${libdir} -lreflex
-Cflags: -DHAVE_NEON -I${includedir}
+Cflags: -I${includedir}
