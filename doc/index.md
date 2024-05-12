@@ -9479,13 +9479,16 @@ To compile with SSE2 optimizations applied:
     c++ -DHAVE_SSE2 -msse2 -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
         lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp
 
-To compile with AVX2 optimizations applied:
+To compile with AVX2 optimizations applied and run-time detection of AVX2 using
+SSE2 as a fallback optimization when the CPU does not support AVX2:
 
     c++ -DHAVE_AVX2 -mavx2 -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
         lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp \
         lib/matcher_avx2.cpp lib/simd_avx2.cpp
 
-To compile with AVX512BW optimizations applied:
+To compile with AVX512BW optimizations applied and run-time detection of
+AVX512BW using AVX2 or SSE2 as a fallback optimization when the CPU does not
+support AVX512BW:
 
     c++ -DHAVE_AVX512BW -mavx512bw -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
         lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp \

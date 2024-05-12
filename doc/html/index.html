@@ -3718,10 +3718,10 @@ Minimized library and cross compiling                                </h2>
     lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp
 </pre><p>To compile with SSE2 optimizations applied: </p><pre class="fragment">c++ -DHAVE_SSE2 -msse2 -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
     lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp
-</pre><p>To compile with AVX2 optimizations applied: </p><pre class="fragment">c++ -DHAVE_AVX2 -mavx2 -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
+</pre><p>To compile with AVX2 optimizations applied and run-time detection of AVX2 using SSE2 as a fallback optimization when the CPU does not support AVX2: </p><pre class="fragment">c++ -DHAVE_AVX2 -mavx2 -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
     lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp \
     lib/matcher_avx2.cpp lib/simd_avx2.cpp
-</pre><p>To compile with AVX512BW optimizations applied: </p><pre class="fragment">c++ -DHAVE_AVX512BW -mavx512bw -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
+</pre><p>To compile with AVX512BW optimizations applied and run-time detection of AVX512BW using AVX2 or SSE2 as a fallback optimization when the CPU does not support AVX512BW: </p><pre class="fragment">c++ -DHAVE_AVX512BW -mavx512bw -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
     lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp \
     lib/matcher_avx2.cpp lib/matcher_avx512bw.cpp lib/simd_avx2.cpp lib/simd_avx512bw.cpp
 </pre><p>🔝 <a href="#">Back to table of contents</a></p>
@@ -3765,7 +3765,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun May 12 2024 10:52:15 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun May 12 2024 13:11:26 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
