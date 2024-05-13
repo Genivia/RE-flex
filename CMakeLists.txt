@@ -19,14 +19,15 @@ set(lib_sources
   lib/error.cpp
   lib/input.cpp
   lib/matcher.cpp
+  lib/matcher_avx2.cpp
+  lib/matcher_avx512bw.cpp
   lib/pattern.cpp
   lib/posix.cpp
+  lib/simd.cpp
   lib/simd_avx2.cpp
   lib/simd_avx512bw.cpp
   lib/unicode.cpp
   lib/utf8.cpp
-  lib/matcher_avx2.cpp
-  lib/matcher_avx512bw.cpp
 
   unicode/block_scripts.cpp
   unicode/language_scripts.cpp
