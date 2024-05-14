@@ -52,4 +52,10 @@ config.log
 stamp-h1
 
 # default cmake build directory
-/build/
+/build
+
+#clangd
+/.cache
+
+#xmake
+/.xmake
