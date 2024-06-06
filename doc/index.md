@@ -31,7 +31,7 @@ tables or direct code to scan and search input efficiently.  RE/flex also
 includes a smart input class to normalize input from files, streams, strings,
 and memory to standard UTF-8 streams.
 
-In a nutshell, RE/flex
+In a nutshell, the RE/flex lexical analyzer generator
 
 - extends Flex++ with Unicode and other new featues
 - accepts legacy Flex and Lex lexer specifications
@@ -53,7 +53,7 @@ In a nutshell, RE/flex
 - offers other regex engines to choose from, such as PCRE2 and Boost.Regex
 - is released under a permissive open source license (BSD-3)
 
-RE/flex includes practical improvements over Flex++, such as:
+RE/flex includes usability improvements over Flex++, such as:
 
 - no input buffer length limit (Flex has a 16K limit);
 - `yypush_buffer_state` saves the scanner state (line, column, and indentation
@@ -88,7 +88,7 @@ that Perl introduced.  Both concepts are applicable to RE/flex patterns.
 
 In summary, RE/flex is really several things combined into one package:
 
-- a faster, feature-rich replacement of Flex++ and Flex;
+- a faster, feature-rich extension of Flex++.
 
 - a stand-alone regex library for fast regex matching in C++;
 
@@ -2732,7 +2732,6 @@ library:
   `\p{Space}`                            | matches a white space character `[ \t\n\v\f\r\x85\p{Z}]`
   `\p{Unicode}`                          | matches any Unicode character U+0000 to U+10FFFF minus U+D800 to U+DFFF
   `\p{ASCII}`                            | matches an ASCII character U+0000 to U+007F
-  `\p{ASCII}`                            | matches an ASCII character U+0000 to U+007F)
   `\p{Non_ASCII_Unicode}`                | matches a non-ASCII character U+0080 to U+10FFFF minus U+D800 to U+DFFF)
   `\p{L&}`                               | matches a character with Unicode property L& (i.e. property Ll, Lu, or Lt)
   `\p{Letter}`,`\p{L}`                   | matches a character with Unicode property Letter
@@ -6810,7 +6809,9 @@ where the RE/flex `reflex::Pattern` class represents a regex pattern.  Patterns
 as regex texts are internally compiled into deterministic finite state machines
 by the `reflex::Pattern` class.  The machines are used by the `reflex::Matcher`
 for fast matching of regex patterns on some given input.  The `reflex::Matcher`
-is faster than the Boost.Regex and PCRE2 matchers.
+is faster than the Boost.Regex and PCRE2 matchers.  The `reflex::FuzzyMatcher`
+subclass is included and performs approximate pattern matching, see the
+[FuzzyMatcher readme](https://github.com/Genivia/FuzzyMatcher).
 
 A `reflex::Matcher` engine is constructed from a `reflex::Pattern` object, or a
 string regex, and some given input:
@@ -6826,7 +6827,9 @@ The regex is specified as a string or a `reflex::Pattern` object, see
 
 We use option `"N"` to permit empty matches when searching input with
 `reflex::Matcher::find`.  Option `"T=8"` sets the tab size to 8 for
-\ref reflex-pattern-dents matching.
+\ref reflex-pattern-dents matching.  Option `"W"` makes patterns match as
+words, i.e. a non-word Unicode character precedes and follows the pattern (only
+applies to `reflex::Matcher` and `reflex::FuzzyMatcher`.)
 
 For input you can specify a string, a wide string, a file, or a stream object.
 

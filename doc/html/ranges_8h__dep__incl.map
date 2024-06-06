@@ -1,6 +1,7 @@
 <map id="ranges.h" name="ranges.h">
-<area shape="rect" id="node2" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="57,80,131,107"/>
-<area shape="rect" id="node3" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="5,155,87,181"/>
-<area shape="rect" id="node4" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="111,155,176,181"/>
-<area shape="rect" id="node5" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="103,229,183,256"/>
+<area shape="rect" id="node2" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="74,80,146,107"/>
+<area shape="rect" id="node3" href="$fuzzymatcher_8h.html" title="RE/flex fuzzy matcher engine. " alt="" coords="5,230,116,257"/>
+<area shape="rect" id="node4" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="71,155,149,182"/>
+<area shape="rect" id="node5" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="174,155,238,182"/>
+<area shape="rect" id="node6" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="167,230,245,257"/>
 </map>

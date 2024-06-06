@@ -80,16 +80,16 @@ int main()
   (((   p["S"] = p["Sm"]) |= p["Sc"]) |= p["Sk"]) |= p["So"];
   ((    p["Z"] = p["Zs"]) |= p["Zl"]) |= p["Zp"];
 
-  // Add ASCII and Unicode character range U+00 to U+10FFFF minus the UTF-16 surrogate halves
+  // Add Unicode character classes
    p["ASCII"]             = Chars(0x00, 0x7F);
-  (p["Unicode"]           = Chars(0x00, 0x10FFFF)) -= Chars(0xD800, 0xDFFF);
+  (p["Unicode"]           = Chars(0x00, 0x10FFFF)) -= Chars(0xD800, 0xDFFF); // no surrogates
   (p["Non_ASCII_Unicode"] = p["Unicode"])          -= p["ASCII"];
+  (p["Print"]             = p["Unicode"])          -= p["C"]; // no control
+  (p["Graph"]             = p["Print"])            -= p["Z"]; // no control and white space
+  (p["Space"]             = p["Zs"])               |= Chars(0x09, 0x0D); // HT(9), LF(10), VT(11), FF(12), CR(13)
 
-  // Add Unicode Space, includes blank characters HT (9), LF (10), VT (11), FF (12), CR (13)
-  (p["Space"] = p["Zs"]) |= Chars(0x09, 0x0D);
-
-  // Add Unicode Word
-  ((p["Word"]  = p["L"]) |= p["Nd"]) |= p["Pc"];
+  // Add Unicode Word character class
+  ((p["Word"] = p["L"]) |= p["Nd"]) |= p["Pc"];
 
   // Add Unicode identifier properties
   (((    p["IdentifierIgnorable"]    = Chars(0x00, 0x08)) |= Chars(0x0E, 0x1B)) |= Chars(0x7F)) |= Chars(0x80, 0x9F);

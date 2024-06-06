@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="5,5,151,32"/>
+<area shape="rect" id="node1" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="5,5,96,32"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_buffered_input.html" title="Buffered input. " alt="" coords="144,5,283,32"/>
 </map>

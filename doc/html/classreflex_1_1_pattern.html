@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun May 12 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Jun 6 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -380,8 +380,8 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a484cf1e24fecb486c6a7d8c6fcf8195a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0411ca191bfa4968c61f932b790cba2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab0411ca191bfa4968c61f932b790cba2">gencode_dfa</a> (const <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *start) const </td></tr>
 <tr class="separator:ab0411ca191bfa4968c61f932b790cba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae6a8c124ddb4d6ae3afb280f270bd9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aae6a8c124ddb4d6ae3afb280f270bd9a">check_dfa_closure</a> (const <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *state, int nest, bool &amp;peek, bool &amp;prev) const </td></tr>
-<tr class="separator:aae6a8c124ddb4d6ae3afb280f270bd9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0cc6a166f53adbd6d74b1a12d5282c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ad0cc6a166f53adbd6d74b1a12d5282c1">check_dfa_closure</a> (const <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *state, int nest, bool &amp;peek) const </td></tr>
+<tr class="separator:ad0cc6a166f53adbd6d74b1a12d5282c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53a9a77e4caecfc0a33f4574bd8ebdf8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a53a9a77e4caecfc0a33f4574bd8ebdf8">gencode_dfa_closure</a> (FILE *fd, const <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *start, int nest, bool peek) const </td></tr>
 <tr class="separator:a53a9a77e4caecfc0a33f4574bd8ebdf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8daba97b1f7ac3d8ea52a4d079b054a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a8daba97b1f7ac3d8ea52a4d079b054a0">graph_dfa</a> (const <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *start) const </td></tr>
@@ -613,6 +613,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a02fdf7c8b6b9a8871c14a778c7f0c3e4">one_</a></td></tr>
 <tr class="memdesc:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if matching one string stored in chr_[] without meta/anchors  <a href="#a02fdf7c8b6b9a8871c14a778c7f0c3e4">More...</a><br /></td></tr>
 <tr class="separator:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88958d954a2113c34d639b71f4197766"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a88958d954a2113c34d639b71f4197766">bol_</a></td></tr>
+<tr class="memdesc:a88958d954a2113c34d639b71f4197766"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if matching all patterns at the begin of a line with anchor ^  <a href="#a88958d954a2113c34d639b71f4197766">More...</a><br /></td></tr>
+<tr class="separator:a88958d954a2113c34d639b71f4197766"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -620,7 +623,7 @@ Friends</h2></td></tr>
 <tr class="memdesc:a516355df9ce1c7333bdc6d42e0cf89ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">permit access by the <a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a> engine  <a href="#a516355df9ce1c7333bdc6d42e0cf89ef">More...</a><br /></td></tr>
 <tr class="separator:a516355df9ce1c7333bdc6d42e0cf89ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a446b7302ba511500d9979de3cb00436a"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a446b7302ba511500d9979de3cb00436a">FuzzyMatcher</a></td></tr>
-<tr class="memdesc:a446b7302ba511500d9979de3cb00436a"><td class="mdescLeft">&#160;</td><td class="mdescRight">permit access by the reflex::FuzzyMatcher engine  <a href="#a446b7302ba511500d9979de3cb00436a">More...</a><br /></td></tr>
+<tr class="memdesc:a446b7302ba511500d9979de3cb00436a"><td class="mdescLeft">&#160;</td><td class="mdescRight">permit access by the <a class="el" href="classreflex_1_1_fuzzy_matcher.html" title="RE/flex fuzzy matcher engine class, implements reflex::Matcher fuzzy pattern matching interface with ...">reflex::FuzzyMatcher</a> engine  <a href="#a446b7302ba511500d9979de3cb00436a">More...</a><br /></td></tr>
 <tr class="separator:a446b7302ba511500d9979de3cb00436a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -1698,7 +1701,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aae6a8c124ddb4d6ae3afb280f270bd9a"></a>
+<a class="anchor" id="ad0cc6a166f53adbd6d74b1a12d5282c1"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1721,13 +1724,7 @@ Friends</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool &amp;&#160;</td>
-          <td class="paramname"><em>peek</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool &amp;&#160;</td>
-          <td class="paramname"><em>prev</em>&#160;</td>
+          <td class="paramname"><em>peek</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4999,7 +4996,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">friend class FuzzyMatcher</td>
+          <td class="memname">friend class <a class="el" href="classreflex_1_1_fuzzy_matcher.html">FuzzyMatcher</a></td>
         </tr>
       </table>
   </td>
@@ -5009,7 +5006,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>permit access by the reflex::FuzzyMatcher engine </p>
+<p>permit access by the <a class="el" href="classreflex_1_1_fuzzy_matcher.html" title="RE/flex fuzzy matcher engine class, implements reflex::Matcher fuzzy pattern matching interface with ...">reflex::FuzzyMatcher</a> engine </p>
 
 </div>
 </div>
@@ -5143,6 +5140,28 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Boyer-Moore skip array. </p>
+
+</div>
+</div>
+<a class="anchor" id="a88958d954a2113c34d639b71f4197766"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Pattern::bol_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>true if matching all patterns at the begin of a line with anchor ^ </p>
 
 </div>
 </div>
@@ -5835,7 +5854,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun May 12 2024 13:11:24 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Jun 6 2024 14:02:54 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

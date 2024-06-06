@@ -1,13 +1,14 @@
 <map id="input.h" name="input.h">
-<area shape="rect" id="node2" href="$abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="5,155,87,181"/>
-<area shape="rect" id="node4" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="375,80,475,107"/>
-<area shape="rect" id="node10" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="628,80,701,107"/>
-<area shape="rect" id="node11" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="728,155,793,181"/>
-<area shape="rect" id="node3" href="$flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Flex&#45;compatible macros. " alt="" coords="5,229,87,256"/>
-<area shape="rect" id="node5" href="$boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="111,155,221,181"/>
-<area shape="rect" id="node6" href="$linematcher_8h.html" title="a matcher engine to match lines and nothing else " alt="" coords="246,155,345,181"/>
-<area shape="rect" id="node7" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="625,155,704,181"/>
-<area shape="rect" id="node8" href="$pcre2matcher_8h.html" title="PCRE2&#45;JIT&#45;based matcher engines for pattern matching. " alt="" coords="369,155,480,181"/>
-<area shape="rect" id="node9" href="$stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="504,155,601,181"/>
-<area shape="rect" id="node12" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="721,229,800,256"/>
+<area shape="rect" id="node2" href="$abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="5,155,86,182"/>
+<area shape="rect" id="node4" href="$absmatcher_8h.html" title="RE/flex abstract matcher base class and pattern matcher class. " alt="" coords="372,80,471,107"/>
+<area shape="rect" id="node11" href="$pattern_8h.html" title="RE/flex regular expression pattern compiler. " alt="" coords="643,80,715,107"/>
+<area shape="rect" id="node12" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="775,155,839,182"/>
+<area shape="rect" id="node3" href="$flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Flex&#45;compatible macros. " alt="" coords="5,230,86,257"/>
+<area shape="rect" id="node5" href="$boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="110,155,221,182"/>
+<area shape="rect" id="node6" href="$linematcher_8h.html" title="a matcher engine to match lines and nothing else " alt="" coords="244,155,343,182"/>
+<area shape="rect" id="node7" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="622,155,701,182"/>
+<area shape="rect" id="node9" href="$pcre2matcher_8h.html" title="PCRE2&#45;JIT&#45;based matcher engines for pattern matching. " alt="" coords="366,155,477,182"/>
+<area shape="rect" id="node10" href="$stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="501,155,598,182"/>
+<area shape="rect" id="node8" href="$fuzzymatcher_8h.html" title="RE/flex fuzzy matcher engine. " alt="" coords="620,230,730,257"/>
+<area shape="rect" id="node13" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="768,230,846,257"/>
 </map>

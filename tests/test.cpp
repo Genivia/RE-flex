@@ -209,7 +209,7 @@ int main(int argc, char **argv)
         if (!matcher.matches())
           printf("No match\n");
         else
-          printf("Match\n");
+          printf("Match %zu\n", matcher.accept());
         matcher.input(text);
         if (argc > 3)
           matcher.buffer(strtoul(argv[3], NULL, 10));

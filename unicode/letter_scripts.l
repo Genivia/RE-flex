@@ -58,6 +58,7 @@ hex			[[:xdigit:]]+
 ^{hex};[^;\n]+;Ll;.+\n	sscanf(text(), "%x", &x); p["Ll"].insert(x);
 ^{hex};[^;\n]+;Lu;.+\n	sscanf(text(), "%x", &x); p["Lu"].insert(x);
 ^{hex};[^;\n]+;Lt;.+\n	sscanf(text(), "%x", &x); p["Lt"].insert(x);
+^{hex};[^;\n]+;Nd;.+\n	sscanf(text(), "%x", &x); p["Alnum"].insert(x);
 .*\n			// skip remainder
 
 %%
@@ -65,6 +66,9 @@ hex			[[:xdigit:]]+
 int main()
 {
   Lexer().lex();
+
+  // Add Unicode Alpha and Alnum character classes
+  p["Alnum"] |= (p["Alpha"] = p["Ll"]) |= p["Lu"];
 
   std::cout <<
     "// Converted from http://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt by letter_scripts.l\n"

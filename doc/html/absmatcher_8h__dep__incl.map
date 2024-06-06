@@ -1,9 +1,10 @@
 <map id="absmatcher.h" name="absmatcher.h">
-<area shape="rect" id="node2" href="$abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="5,80,87,107"/>
-<area shape="rect" id="node4" href="$boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="111,80,221,107"/>
-<area shape="rect" id="node5" href="$linematcher_8h.html" title="a matcher engine to match lines and nothing else " alt="" coords="246,80,345,107"/>
-<area shape="rect" id="node6" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="369,80,448,107"/>
-<area shape="rect" id="node7" href="$pcre2matcher_8h.html" title="PCRE2&#45;JIT&#45;based matcher engines for pattern matching. " alt="" coords="472,80,583,107"/>
-<area shape="rect" id="node8" href="$stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="607,80,704,107"/>
-<area shape="rect" id="node3" href="$flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Flex&#45;compatible macros. " alt="" coords="5,155,87,181"/>
+<area shape="rect" id="node2" href="$abslexer_8h.html" title="RE/flex abstract lexer base class for reflex&#45;generated scanners. " alt="" coords="5,80,86,107"/>
+<area shape="rect" id="node4" href="$boostmatcher_8h.html" title="Boost::regex&#45;based matcher engines for pattern matching. " alt="" coords="110,80,221,107"/>
+<area shape="rect" id="node5" href="$linematcher_8h.html" title="a matcher engine to match lines and nothing else " alt="" coords="244,80,343,107"/>
+<area shape="rect" id="node6" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="366,80,445,107"/>
+<area shape="rect" id="node8" href="$pcre2matcher_8h.html" title="PCRE2&#45;JIT&#45;based matcher engines for pattern matching. " alt="" coords="469,80,579,107"/>
+<area shape="rect" id="node9" href="$stdmatcher_8h.html" title="C++11 std::regex&#45;based matcher engines for pattern matching. " alt="" coords="604,80,700,107"/>
+<area shape="rect" id="node3" href="$flexlexer_8h.html" title="RE/flex Flex&#45;compatible FlexLexer base class and Flex&#45;compatible macros. " alt="" coords="5,155,86,182"/>
+<area shape="rect" id="node7" href="$fuzzymatcher_8h.html" title="RE/flex fuzzy matcher engine. " alt="" coords="350,155,461,182"/>
 </map>

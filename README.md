@@ -594,6 +594,7 @@ Changelog
 - Mar 27, 2024: 4.2.0 support pkg-config with `reflex.pc` (and `reflexmin.pc` minimized library) to use the reflex library `-lreflex`.
 - Apr 10, 2024: 4.2.1 minor update to adjust the current input pointer by one when not matching anything.
 - May 12, 2024: 4.3.0 faster `Matcher::find()` with refactored SIMD (SSE2/AVX2/AVX512BW/NEON/AArch64) code; larger default 256KB buffer (from 128KB).
+- Jun  6, 2024: 4.4.0 upgraded `reflex::Matcher` and `reflex::FuzzyMatcher` to respect Unicode word boundaries instead of only ASCII `\<`, `\>`, `\b`, `\B`; upgraded regex Unicode converters to Unicode `[::]` character classes instead of only ASCII `[[:alpha:]]` etc.; improved FSM code generation without local c0.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
