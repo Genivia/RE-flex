@@ -326,7 +326,7 @@ The `reflex::BoostMatcher` and `reflex::BoostPosixMatcher` classes are for Perl
 mode and POSIX mode matching, respectively.
 
 The `reflex::PCRE2Matcher` and `reflex::PCRE2UTFMatcher` classes are for Perl
-mode matching only, where the latter uses native PCRE2 Unicode matching with
+mode matching, where the latter uses native PCRE2 Unicode matching with
 `PCRE2_UTF+PCRE2_UCP`.  The PCRE2 matchers use JIT optimizations to speed up
 matching, which comes at a cost of extra processing when the matcher is
 instantiated.  The benefit outweighs the cost when many matches are processed.
@@ -619,11 +619,11 @@ We can use these RE/flex iterators in C++ for many tasks, including to populate
 containers by stuffing the iterator's text matches into it:
 
 ~~~{.cpp}
-    #include <reflex/pcre2matcher.h> // reflex::PCRE2Matcher, reflex::Input
+    #include <reflex/pcre2matcher.h> // reflex::PCRE2UTFMatcher, reflex::Input
     #include <vector>                // std::vector
 
-    // use a PCRE2Matcher to convert words of a sentence into a string vector
-    reflex::PCRE2Matcher matcher("\\w+", "How now brown cow.");
+    // use a PCRE2UTFMatcher to convert words of a sentence into a string vector
+    reflex::PCRE2UTFMatcher matcher("\\w+", "How now brown cow.");
     std::vector<std::string> words(matcher.find.begin(), matcher.find.end());
 ~~~
 
@@ -653,8 +653,8 @@ When executed this code prints:
     Found brown
     Found cow
 
-And RE/flex iterators are also useful with STL algorithms and lambdas, for
-example to compute a histogram of word frequencies:
+And RE/flex iterators are also useful with algorithms and lambdas, for example
+to compute a histogram of word frequencies:
 
 ~~~{.cpp}
     // Requires C++11, compile with: cc -std=c++11
@@ -7205,12 +7205,13 @@ The `find()` method returns a nonzero "accept" value (the `size_t accept()`
 group capture index value or the value 1 if no groups are used) for a match
 and zero otherwise.
 
-For example, to find all words in a string with PCRE2:
+For example, to find all words in a string with PCRE2 on UTF-8 input using
+`reflex::PCRE2UTFMatcher`:
 
 ~~~{.cpp}
-    #include <reflex/pcre2matcher.h> // reflex::PCRE2Matcher, reflex::Input
+    #include <reflex/pcre2matcher.h> // reflex::PCRE2UTFMatcher, reflex::Input
 
-    reflex::PCRE2Matcher matcher("\\w+", "How now brown cow.");
+    reflex::PCRE2UTFMatcher matcher("\\w+", "How now brown cow.");
     while (matcher.find() != 0)
       std::cout << matcher.text() << std::endl;
 ~~~
@@ -7228,13 +7229,21 @@ For example, in C++11 we can use a range-based loop to loop over matches using
 the `find` iterator:
 
 ~~~{.cpp}
-    #include <reflex/pcre2matcher.h> // reflex::PCRE2Matcher, reflex::Input
+    #include <reflex/pcre2matcher.h> // reflex::PCRE2UTFMatcher, reflex::Input
 
-    for (auto& match : reflex::PCRE2Matcher("\\w+", "How now brown cow.").find)
+    for (auto& match : reflex::PCRE2UTFMatcher("\\w+", "How now brown cow.").find)
       std::cout << match.text() << std::endl;
 ~~~
 
-Iterators can be used with STL algorithms and other iterator functions.  For
+@note: we cannot generally simplify this loop to the following, because the
+temporary matcher object is destroyed (some compilers handle this in C++23):
+
+~~~{.cpp}
+    for (auto& match : reflex::PCRE2UTFMatcher matcher("\\w+", "How now brown cow.").find);
+      std::cout << "Found " << match.text() << std::endl;
+~~~
+
+Iterators can be used with algorithms and other iterator functions.  For
 example to count words in a string:
 
 ~~~{.cpp}
@@ -9615,4 +9624,4 @@ The Free Software Foundation maintains a
 
 🔝 [Back to table of contents](#)
 
-Copyright (c) 2016-2020, Robert van Engelen, Genivia Inc. All rights reserved.
+Copyright (c) 2016,2024, Robert van Engelen.  All rights reserved.
