@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$struct_reflex_1_1_rule.html" title="A regex pattern and action pair that forms a rule. " alt="" coords="5,5,100,32"/>
+<area shape="rect" id="node1" title="STL class. " alt="" coords="5,5,109,32"/>
+<area shape="rect" id="node2" title="STL class. " alt="" coords="157,5,280,32"/>
+<area shape="rect" id="node3" href="$classreflex_1_1regex__error.html" title="Regex syntax error exceptions. " alt="" coords="328,5,454,32"/>
 </map>

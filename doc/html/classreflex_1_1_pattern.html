@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Aug 1 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Oct 29 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -127,12 +127,15 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a92ee4d738dfc4d3ac9e3e5458300023b"><td class="memItemLeft" align="right" valign="top">typedef uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a92ee4d738dfc4d3ac9e3e5458300023b">Bitap</a></td></tr>
+<tr class="memdesc:a92ee4d738dfc4d3ac9e3e5458300023b"><td class="mdescLeft">&#160;</td><td class="mdescRight">bitap bitmask, may change in a future update  <a href="#a92ee4d738dfc4d3ac9e3e5458300023b">More...</a><br /></td></tr>
+<tr class="separator:a92ee4d738dfc4d3ac9e3e5458300023b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc0939fcf3c55e813039bc3e475a8a51"><td class="memItemLeft" align="right" valign="top">typedef uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a></td></tr>
 <tr class="memdesc:afc0939fcf3c55e813039bc3e475a8a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">predict match bits  <a href="#afc0939fcf3c55e813039bc3e475a8a51">More...</a><br /></td></tr>
 <tr class="separator:afc0939fcf3c55e813039bc3e475a8a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38d1c486b879013ed2cec52cdb0367ab"><td class="memItemLeft" align="right" valign="top">typedef uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a></td></tr>
-<tr class="memdesc:a38d1c486b879013ed2cec52cdb0367ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">hash value type, max value is <a class="el" href="structreflex_1_1_pattern_1_1_const.html#a1f1b9246eb17fb69412ebb845eb13abf" title="size of the predict match array ">Const::HASH</a>  <a href="#a38d1c486b879013ed2cec52cdb0367ab">More...</a><br /></td></tr>
-<tr class="separator:a38d1c486b879013ed2cec52cdb0367ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3739687ef42556a3700e046de2f1d33e"><td class="memItemLeft" align="right" valign="top">typedef uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a></td></tr>
+<tr class="memdesc:a3739687ef42556a3700e046de2f1d33e"><td class="mdescLeft">&#160;</td><td class="mdescRight">hash value type, max value is <a class="el" href="structreflex_1_1_pattern_1_1_const.html#a1f1b9246eb17fb69412ebb845eb13abf" title="size of the predict match array ">Const::HASH</a>  <a href="#a3739687ef42556a3700e046de2f1d33e">More...</a><br /></td></tr>
+<tr class="separator:a3739687ef42556a3700e046de2f1d33e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a878042a0e46a089fd40b5f27bbf81ea3"><td class="memItemLeft" align="right" valign="top">typedef uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a></td></tr>
 <tr class="memdesc:a878042a0e46a089fd40b5f27bbf81ea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">index into opcodes array <a class="el" href="classreflex_1_1_pattern.html#aab67c0f79238c0e2e5bccd80c43c07a1" title="points to the table with compiled finite state machine opcodes ">Pattern::opc_</a> and subpattern indexing  <a href="#a878042a0e46a089fd40b5f27bbf81ea3">More...</a><br /></td></tr>
 <tr class="separator:a878042a0e46a089fd40b5f27bbf81ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -287,13 +290,13 @@ Private Types</h2></td></tr>
 <br />
 &#160;&#160;<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba81e8ee255c0ea9fd7d608ea4afd109cd">META_EWE</a> = 0x108, 
 <a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba528f749628fea5497ec2b141fc68c86a">META_BOL</a> = 0x109, 
-<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bad4d665a6389e2021c333c82ccd7326ba">META_EOL</a> = 0x10A, 
-<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bafb92ecb707da8d19d22a680acafb5e59">META_BOB</a> = 0x10B, 
+<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bad4d665a6389e2021c333c82ccd7326ba">META_EOL</a> = 0x10a, 
+<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bafb92ecb707da8d19d22a680acafb5e59">META_BOB</a> = 0x10b, 
 <br />
-&#160;&#160;<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba3564384fa20ade8e086b725eec12401a">META_EOB</a> = 0x10C, 
-<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bafe1b7d462a9d651bfe15f7494e121179">META_UND</a> = 0x10D, 
-<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba1d18a927ad1bb4c58b066e5f4f914337">META_IND</a> = 0x10E, 
-<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bae47cfcacf92488d19d3589339a5c5e4d">META_DED</a> = 0x10F, 
+&#160;&#160;<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba3564384fa20ade8e086b725eec12401a">META_EOB</a> = 0x10c, 
+<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bafe1b7d462a9d651bfe15f7494e121179">META_UND</a> = 0x10d, 
+<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba1d18a927ad1bb4c58b066e5f4f914337">META_IND</a> = 0x10e, 
+<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2bae47cfcacf92488d19d3589339a5c5e4d">META_DED</a> = 0x10f, 
 <br />
 &#160;&#160;<a class="el" href="classreflex_1_1_pattern.html#a2776a201661c958c38e3deadceaf4d2ba2323c5c35b832fc9820b2e57a87f2f97">META_MAX</a>
 <br />
@@ -358,8 +361,8 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:aaefebc165c3ebb6fef9b45d457e14227"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85281a3707c8eca56b5ace45a482aa13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a85281a3707c8eca56b5ace45a482aa13">greedy</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;pos) const </td></tr>
 <tr class="separator:a85281a3707c8eca56b5ace45a482aa13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a880d99f4bc743beb2039f5741d06608d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a880d99f4bc743beb2039f5741d06608d">trim_anchors</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;follow, const <a class="el" href="structreflex_1_1_pattern_1_1_position.html">Position</a> p) const </td></tr>
-<tr class="separator:a880d99f4bc743beb2039f5741d06608d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f46fb1a3f21b699568145250237471c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a1f46fb1a3f21b699568145250237471c">trim_anchors</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;follow) const </td></tr>
+<tr class="separator:a1f46fb1a3f21b699568145250237471c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4b0a841c0f6150197661892179c3956"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ae4b0a841c0f6150197661892179c3956">trim_lazy</a> (<a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> *pos, const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos) const </td></tr>
 <tr class="separator:ae4b0a841c0f6150197661892179c3956"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e44ae99655dafd7868223e31a82cd85"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a7e44ae99655dafd7868223e31a82cd85">compile_transition</a> (<a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *state, <a class="el" href="classreflex_1_1_pattern.html#a0c44038d35a1a401ae2fb75787d6df2c">Follow</a> &amp;followpos, const <a class="el" href="classreflex_1_1_pattern.html#accfa4e7b212379a862e6315169c44d76">Lazypos</a> &amp;lazypos, const <a class="el" href="classreflex_1_1_pattern.html#a523ad04c3b69d0186a429ae5a7d6c5ef">Mods</a> modifiers, const <a class="el" href="classreflex_1_1_pattern.html#aa52226cd084c5dfefff2b38e08959629">Map</a> &amp;lookahead, <a class="el" href="classreflex_1_1_pattern.html#aadfb59075bcf8a23e648c50d4a103d1e">Moves</a> &amp;moves) const </td></tr>
@@ -392,16 +395,12 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a1f096948c4bc0a5bcf0b1c7e45b4ecf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a056b21d215761f4aa95bfed1895f2276"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a056b21d215761f4aa95bfed1895f2276">gen_min</a> (std::set&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> * &gt; &amp;states)</td></tr>
 <tr class="separator:a056b21d215761f4aa95bfed1895f2276"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e851486095ec067c6206ddacc314b35"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a3e851486095ec067c6206ddacc314b35">gen_min_start</a> (std::set&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> * &gt; &amp;states, std::set&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> * &gt; &amp;next)</td></tr>
-<tr class="separator:a3e851486095ec067c6206ddacc314b35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4407f5a5fd1cef71f385977c0563098b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a4407f5a5fd1cef71f385977c0563098b">gen_min_transitions</a> (size_t level, std::set&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> * &gt; &amp;next)</td></tr>
-<tr class="separator:a4407f5a5fd1cef71f385977c0563098b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87deb52e39d58849431d78aa012e0152"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a87deb52e39d58849431d78aa012e0152">gen_predict_match</a> (std::set&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> * &gt; &amp;states)</td></tr>
 <tr class="separator:a87deb52e39d58849431d78aa012e0152"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa243f49302992a2f2b7597aac831bdd9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aa243f49302992a2f2b7597aac831bdd9">gen_predict_match_start</a> (std::set&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> * &gt; &amp;states, std::map&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *, <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a> &gt; &gt; &amp;<a class="el" href="classreflex_1_1_pattern.html#ab0b085ddf3b620756f4c175fd0422a71">hashes</a>)</td></tr>
-<tr class="separator:aa243f49302992a2f2b7597aac831bdd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5240a244338a13766b4318506b671100"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a5240a244338a13766b4318506b671100">gen_predict_match_transitions</a> (size_t level, <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *state, const <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a> &gt; &amp;labels, std::map&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *, <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a> &gt; &gt; &amp;<a class="el" href="classreflex_1_1_pattern.html#ab0b085ddf3b620756f4c175fd0422a71">hashes</a>)</td></tr>
-<tr class="separator:a5240a244338a13766b4318506b671100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad56b077f0027e69ac8e61c96f18f4980"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ad56b077f0027e69ac8e61c96f18f4980">gen_predict_match_start</a> (std::set&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> * &gt; &amp;states, std::map&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *, std::pair&lt; <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a> &gt;, <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a1d74385d9faa9b77a0fd17614a17d3b1">Char</a> &gt; &gt; &gt; &amp;first_hashes)</td></tr>
+<tr class="separator:ad56b077f0027e69ac8e61c96f18f4980"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ddca4a3f7557454b340c6fb55872551"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a1ddca4a3f7557454b340c6fb55872551">gen_predict_match_transitions</a> (size_t level, <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *state, const std::pair&lt; <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a> &gt;, <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a1d74385d9faa9b77a0fd17614a17d3b1">Char</a> &gt; &gt; &amp;previous, std::map&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *, std::pair&lt; <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a> &gt;, <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a1d74385d9faa9b77a0fd17614a17d3b1">Char</a> &gt; &gt; &gt; &amp;level_hashes)</td></tr>
+<tr class="separator:a1ddca4a3f7557454b340c6fb55872551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c0512f918d32b550fc1ce07bc6e0687"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a6c0512f918d32b550fc1ce07bc6e0687">gen_match_hfa</a> (<a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *start)</td></tr>
 <tr class="separator:a6c0512f918d32b550fc1ce07bc6e0687"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37bbcc80a751c4a4c2f0f2c55828f24f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a37bbcc80a751c4a4c2f0f2c55828f24f">gen_match_hfa_start</a> (<a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *start, <a class="el" href="structreflex_1_1_pattern_1_1_h_f_a.html#ad820d77c47c11a5fd08500c5d4fb0f74">HFA::State</a> &amp;index, <a class="el" href="structreflex_1_1_pattern_1_1_h_f_a.html#ae6c08234994a53f63a5714a39d259cf0">HFA::StateHashes</a> &amp;<a class="el" href="classreflex_1_1_pattern.html#ab0b085ddf3b620756f4c175fd0422a71">hashes</a>)</td></tr>
@@ -501,12 +500,15 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a301e20a7d3c891298b19637183f98064"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classreflex_1_1_pattern.html#a1d74385d9faa9b77a0fd17614a17d3b1">Char</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a301e20a7d3c891298b19637183f98064">uppercase</a> (<a class="el" href="classreflex_1_1_pattern.html#a1d74385d9faa9b77a0fd17614a17d3b1">Char</a> c)</td></tr>
 <tr class="memdesc:a301e20a7d3c891298b19637183f98064"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert to upper case if c is a letter a-z, A-Z.  <a href="#a301e20a7d3c891298b19637183f98064">More...</a><br /></td></tr>
 <tr class="separator:a301e20a7d3c891298b19637183f98064"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cab6135b833c193e66dd0b6b086c458"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a3cab6135b833c193e66dd0b6b086c458">hash</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a> h, uint8_t b)</td></tr>
-<tr class="memdesc:a3cab6135b833c193e66dd0b6b086c458"><td class="mdescLeft">&#160;</td><td class="mdescRight">predict match hash 0 &lt;= <a class="el" href="classreflex_1_1_pattern.html#a3cab6135b833c193e66dd0b6b086c458" title="predict match hash 0 &lt;= hash() &lt; Const::HASH. ">hash()</a> &lt; <a class="el" href="structreflex_1_1_pattern_1_1_const.html#a1f1b9246eb17fb69412ebb845eb13abf" title="size of the predict match array ">Const::HASH</a>.  <a href="#a3cab6135b833c193e66dd0b6b086c458">More...</a><br /></td></tr>
-<tr class="separator:a3cab6135b833c193e66dd0b6b086c458"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49cc7f646a422220b9db498658de486d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a49cc7f646a422220b9db498658de486d">indexhash</a> (<a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a> h, uint8_t b)</td></tr>
-<tr class="memdesc:a49cc7f646a422220b9db498658de486d"><td class="mdescLeft">&#160;</td><td class="mdescRight">file indexing hash 0 &lt;= <a class="el" href="classreflex_1_1_pattern.html#a49cc7f646a422220b9db498658de486d" title="file indexing hash 0 &lt;= indexhash() &lt; 65536, must be additive: indexhash(x,b+1) = indexhash(x...">indexhash()</a> &lt; 65536, must be additive: indexhash(x,b+1) = indexhash(x,b)+1 modulo 2^16.  <a href="#a49cc7f646a422220b9db498658de486d">More...</a><br /></td></tr>
-<tr class="separator:a49cc7f646a422220b9db498658de486d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ff8664f993c95b2d16f72f0e49b6e26"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a9ff8664f993c95b2d16f72f0e49b6e26">hash</a> (uint32_t h, uint8_t b)</td></tr>
+<tr class="memdesc:a9ff8664f993c95b2d16f72f0e49b6e26"><td class="mdescLeft">&#160;</td><td class="mdescRight">predict match hash 0 &lt;= <a class="el" href="classreflex_1_1_pattern.html#a9ff8664f993c95b2d16f72f0e49b6e26" title="predict match hash 0 &lt;= hash() &lt; Const::HASH. ">hash()</a> &lt; <a class="el" href="structreflex_1_1_pattern_1_1_const.html#a1f1b9246eb17fb69412ebb845eb13abf" title="size of the predict match array ">Const::HASH</a>.  <a href="#a9ff8664f993c95b2d16f72f0e49b6e26">More...</a><br /></td></tr>
+<tr class="separator:a9ff8664f993c95b2d16f72f0e49b6e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c06d8ff3c15ace2a78e147ffeb36fb3"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a1c06d8ff3c15ace2a78e147ffeb36fb3">bihash</a> (uint8_t a, uint8_t b)</td></tr>
+<tr class="memdesc:a1c06d8ff3c15ace2a78e147ffeb36fb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">bitap character pairs hash  <a href="#a1c06d8ff3c15ace2a78e147ffeb36fb3">More...</a><br /></td></tr>
+<tr class="separator:a1c06d8ff3c15ace2a78e147ffeb36fb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a185abfcc1835267993341bdc2ed1523b"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a185abfcc1835267993341bdc2ed1523b">indexhash</a> (<a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a> h, uint8_t b)</td></tr>
+<tr class="memdesc:a185abfcc1835267993341bdc2ed1523b"><td class="mdescLeft">&#160;</td><td class="mdescRight">file indexing hash 0 &lt;= <a class="el" href="classreflex_1_1_pattern.html#a185abfcc1835267993341bdc2ed1523b" title="file indexing hash 0 &lt;= indexhash() &lt; 65536, must be additive: indexhash(x,b+1) = indexhash(x...">indexhash()</a> &lt; 65536, must be additive: indexhash(x,b+1) = indexhash(x,b)+1 modulo 2^16.  <a href="#a185abfcc1835267993341bdc2ed1523b">More...</a><br /></td></tr>
+<tr class="separator:a185abfcc1835267993341bdc2ed1523b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -532,10 +534,10 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a0886df05e8a3f6dcbd426bbe040e6f8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if subpattern n is accepting (state is reachable)  <a href="#a0886df05e8a3f6dcbd426bbe040e6f8e">More...</a><br /></td></tr>
 <tr class="separator:a0886df05e8a3f6dcbd426bbe040e6f8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed2b1013f44a1fa1b6529932c1df72cf"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aed2b1013f44a1fa1b6529932c1df72cf">vno_</a></td></tr>
-<tr class="memdesc:aed2b1013f44a1fa1b6529932c1df72cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of finite state machine vertices |V|  <a href="#aed2b1013f44a1fa1b6529932c1df72cf">More...</a><br /></td></tr>
+<tr class="memdesc:aed2b1013f44a1fa1b6529932c1df72cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of finite state machine vertices |V| (nodes)  <a href="#aed2b1013f44a1fa1b6529932c1df72cf">More...</a><br /></td></tr>
 <tr class="separator:aed2b1013f44a1fa1b6529932c1df72cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53bcee00c584232a3d0991c5ead49bdf"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a53bcee00c584232a3d0991c5ead49bdf">eno_</a></td></tr>
-<tr class="memdesc:a53bcee00c584232a3d0991c5ead49bdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of finite state machine edges |E|  <a href="#a53bcee00c584232a3d0991c5ead49bdf">More...</a><br /></td></tr>
+<tr class="memdesc:a53bcee00c584232a3d0991c5ead49bdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of finite state machine edges |E| (arrows)  <a href="#a53bcee00c584232a3d0991c5ead49bdf">More...</a><br /></td></tr>
 <tr class="separator:a53bcee00c584232a3d0991c5ead49bdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a9c46fe82dc686fef0be6e84ab8ff9c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a2a9c46fe82dc686fef0be6e84ab8ff9c">hno_</a></td></tr>
 <tr class="memdesc:a2a9c46fe82dc686fef0be6e84ab8ff9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of indexing hash tables (<a class="el" href="structreflex_1_1_pattern_1_1_h_f_a.html" title="Indexing hash finite state automaton for indexed file search. ">HFA</a> edges)  <a href="#a2a9c46fe82dc686fef0be6e84ab8ff9c">More...</a><br /></td></tr>
@@ -550,7 +552,7 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:adb40e55f6d057d0b1bed8cadab7f8548"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of opcodes generated  <a href="#adb40e55f6d057d0b1bed8cadab7f8548">More...</a><br /></td></tr>
 <tr class="separator:adb40e55f6d057d0b1bed8cadab7f8548"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ac3088273237d416ad9edc45e764faa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a1ac3088273237d416ad9edc45e764faa">cut_</a></td></tr>
-<tr class="memdesc:a1ac3088273237d416ad9edc45e764faa"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> s-t cut to improve predict match and <a class="el" href="structreflex_1_1_pattern_1_1_h_f_a.html" title="Indexing hash finite state automaton for indexed file search. ">HFA</a> accuracy together with lbk_ and cbk_.  <a href="#a1ac3088273237d416ad9edc45e764faa">More...</a><br /></td></tr>
+<tr class="memdesc:a1ac3088273237d416ad9edc45e764faa"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> s-t cut to improve predict match and <a class="el" href="structreflex_1_1_pattern_1_1_h_f_a.html" title="Indexing hash finite state automaton for indexed file search. ">HFA</a> accuracy with lbk_ and cbk_.  <a href="#a1ac3088273237d416ad9edc45e764faa">More...</a><br /></td></tr>
 <tr class="separator:a1ac3088273237d416ad9edc45e764faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1624c5f585c0973a04527bf562f5433"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#af1624c5f585c0973a04527bf562f5433">len_</a></td></tr>
 <tr class="memdesc:af1624c5f585c0973a04527bf562f5433"><td class="mdescLeft">&#160;</td><td class="mdescRight">length of chr_[], less or equal to 255  <a href="#af1624c5f585c0973a04527bf562f5433">More...</a><br /></td></tr>
@@ -571,14 +573,17 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:af06399ca4d2d20096fc94d0db95a45c2"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#af06399ca4d2d20096fc94d0db95a45c2">chr_</a> [256]</td></tr>
 <tr class="memdesc:af06399ca4d2d20096fc94d0db95a45c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">pattern prefix string or character needles for needle-based search  <a href="#af06399ca4d2d20096fc94d0db95a45c2">More...</a><br /></td></tr>
 <tr class="separator:af06399ca4d2d20096fc94d0db95a45c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4361e841b84f19cae9ebecd29198d18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#ab4361e841b84f19cae9ebecd29198d18">bit_</a> [256]</td></tr>
-<tr class="memdesc:ab4361e841b84f19cae9ebecd29198d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">bitap array  <a href="#ab4361e841b84f19cae9ebecd29198d18">More...</a><br /></td></tr>
-<tr class="separator:ab4361e841b84f19cae9ebecd29198d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ca8b457e2dbbd0d76b82c90fe0bb8ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#a92ee4d738dfc4d3ac9e3e5458300023b">Bitap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a0ca8b457e2dbbd0d76b82c90fe0bb8ea">bit_</a> [256]</td></tr>
+<tr class="memdesc:a0ca8b457e2dbbd0d76b82c90fe0bb8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">bitsets of characters for the first positions (one position per bit)  <a href="#a0ca8b457e2dbbd0d76b82c90fe0bb8ea">More...</a><br /></td></tr>
+<tr class="separator:a0ca8b457e2dbbd0d76b82c90fe0bb8ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a217ed408b4513e74e17a60ff9bafba5b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#a92ee4d738dfc4d3ac9e3e5458300023b">Bitap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a217ed408b4513e74e17a60ff9bafba5b">tap_</a> [<a class="el" href="structreflex_1_1_pattern_1_1_const.html#a89c8ff466ea717dafa8c0d190520d405">Const::BTAP</a>]</td></tr>
+<tr class="memdesc:a217ed408b4513e74e17a60ff9bafba5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">bitap hashed character pairs array  <a href="#a217ed408b4513e74e17a60ff9bafba5b">More...</a><br /></td></tr>
+<tr class="separator:a217ed408b4513e74e17a60ff9bafba5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a302640aaef595662983bdd56b8c4ffb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a302640aaef595662983bdd56b8c4ffb7">pmh_</a> [<a class="el" href="structreflex_1_1_pattern_1_1_const.html#a1f1b9246eb17fb69412ebb845eb13abf">Const::HASH</a>]</td></tr>
-<tr class="memdesc:a302640aaef595662983bdd56b8c4ffb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">predict-match hash array  <a href="#a302640aaef595662983bdd56b8c4ffb7">More...</a><br /></td></tr>
+<tr class="memdesc:a302640aaef595662983bdd56b8c4ffb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">predict-match bloom filter hash up to first 8 positions  <a href="#a302640aaef595662983bdd56b8c4ffb7">More...</a><br /></td></tr>
 <tr class="separator:a302640aaef595662983bdd56b8c4ffb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba8c5bf9348e6dd96454e7e5caee9b52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aba8c5bf9348e6dd96454e7e5caee9b52">pma_</a> [<a class="el" href="structreflex_1_1_pattern_1_1_const.html#a1f1b9246eb17fb69412ebb845eb13abf">Const::HASH</a>]</td></tr>
-<tr class="memdesc:aba8c5bf9348e6dd96454e7e5caee9b52"><td class="mdescLeft">&#160;</td><td class="mdescRight">predict-match array  <a href="#aba8c5bf9348e6dd96454e7e5caee9b52">More...</a><br /></td></tr>
+<tr class="memdesc:aba8c5bf9348e6dd96454e7e5caee9b52"><td class="mdescLeft">&#160;</td><td class="mdescRight">predict-match 4 (PM4) array  <a href="#aba8c5bf9348e6dd96454e7e5caee9b52">More...</a><br /></td></tr>
 <tr class="separator:aba8c5bf9348e6dd96454e7e5caee9b52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf4423586eb4b2119f8d6d5476a0f05e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#aaf4423586eb4b2119f8d6d5476a0f05e">lbk_</a></td></tr>
 <tr class="memdesc:aaf4423586eb4b2119f8d6d5476a0f05e"><td class="mdescLeft">&#160;</td><td class="mdescRight">lookback distance or 0xffff unlimited lookback or 0 for no lookback (empty cbk_)  <a href="#aaf4423586eb4b2119f8d6d5476a0f05e">More...</a><br /></td></tr>
@@ -613,9 +618,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a6322d83d4623edab736b398378e45c99"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a6322d83d4623edab736b398378e45c99">ams_</a></td></tr>
 <tr class="memdesc:a6322d83d4623edab736b398378e45c99"><td class="mdescLeft">&#160;</td><td class="mdescRight">ms elapsed time to analyze <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> for predict match and <a class="el" href="structreflex_1_1_pattern_1_1_h_f_a.html" title="Indexing hash finite state automaton for indexed file search. ">HFA</a>  <a href="#a6322d83d4623edab736b398378e45c99">More...</a><br /></td></tr>
 <tr class="separator:a6322d83d4623edab736b398378e45c99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e38500e4bd2092c65c92ce44df1783f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a2e38500e4bd2092c65c92ce44df1783f">npy_</a></td></tr>
-<tr class="memdesc:a2e38500e4bd2092c65c92ce44df1783f"><td class="mdescLeft">&#160;</td><td class="mdescRight">entropy derived from the bitap array bit_[]  <a href="#a2e38500e4bd2092c65c92ce44df1783f">More...</a><br /></td></tr>
-<tr class="separator:a2e38500e4bd2092c65c92ce44df1783f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af58e9bb85d1ee9fffd55d1e5fdd1b353"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#af58e9bb85d1ee9fffd55d1e5fdd1b353">npy_</a></td></tr>
+<tr class="memdesc:af58e9bb85d1ee9fffd55d1e5fdd1b353"><td class="mdescLeft">&#160;</td><td class="mdescRight">entropy derived from the bitap array bit_[]  <a href="#af58e9bb85d1ee9fffd55d1e5fdd1b353">More...</a><br /></td></tr>
+<tr class="separator:af58e9bb85d1ee9fffd55d1e5fdd1b353"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_pattern.html#a02fdf7c8b6b9a8871c14a778c7f0c3e4">one_</a></td></tr>
 <tr class="memdesc:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if matching one string stored in chr_[] without meta/anchors  <a href="#a02fdf7c8b6b9a8871c14a778c7f0c3e4">More...</a><br /></td></tr>
 <tr class="separator:a02fdf7c8b6b9a8871c14a778c7f0c3e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -646,6 +651,20 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>group capture index </p>
+
+</div>
+</div>
+<a class="anchor" id="a92ee4d738dfc4d3ac9e3e5458300023b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef uint8_t <a class="el" href="classreflex_1_1_pattern.html#a92ee4d738dfc4d3ac9e3e5458300023b">reflex::Pattern::Bitap</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>bitap bitmask, may change in a future update </p>
 
 </div>
 </div>
@@ -702,12 +721,12 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a38d1c486b879013ed2cec52cdb0367ab"></a>
+<a class="anchor" id="a3739687ef42556a3700e046de2f1d33e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef uint32_t <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">reflex::Pattern::Hash</a></td>
+          <td class="memname">typedef uint16_t <a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">reflex::Pattern::Hash</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1707,6 +1726,42 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a1c06d8ff3c15ace2a78e147ffeb36fb3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint32_t reflex::Pattern::bihash </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>bitap character pairs hash </p>
+
+</div>
+</div>
 <a class="anchor" id="ad0cc6a166f53adbd6d74b1a12d5282c1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2436,74 +2491,6 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3e851486095ec067c6206ddacc314b35"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void reflex::Pattern::gen_min_start </td>
-          <td>(</td>
-          <td class="paramtype">std::set&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> * &gt; &amp;&#160;</td>
-          <td class="paramname"><em>states</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::set&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> * &gt; &amp;&#160;</td>
-          <td class="paramname"><em>next</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a4407f5a5fd1cef71f385977c0563098b"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void reflex::Pattern::gen_min_transitions </td>
-          <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>level</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::set&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> * &gt; &amp;&#160;</td>
-          <td class="paramname"><em>next</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a87deb52e39d58849431d78aa012e0152"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2528,7 +2515,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aa243f49302992a2f2b7597aac831bdd9"></a>
+<a class="anchor" id="ad56b077f0027e69ac8e61c96f18f4980"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -2544,8 +2531,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::map&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *, <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a> &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>hashes</em>&#160;</td>
+          <td class="paramtype">std::map&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *, std::pair&lt; <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a> &gt;, <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a1d74385d9faa9b77a0fd17614a17d3b1">Char</a> &gt; &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>first_hashes</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2562,7 +2549,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a5240a244338a13766b4318506b671100"></a>
+<a class="anchor" id="a1ddca4a3f7557454b340c6fb55872551"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -2584,14 +2571,14 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>labels</em>, </td>
+          <td class="paramtype">const std::pair&lt; <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a> &gt;, <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a1d74385d9faa9b77a0fd17614a17d3b1">Char</a> &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>previous</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::map&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *, <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a> &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>hashes</em>&#160;</td>
+          <td class="paramtype">std::map&lt; <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">DFA::State</a> *, std::pair&lt; <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a> &gt;, <a class="el" href="classreflex_1_1_o_ranges.html">ORanges</a>&lt; <a class="el" href="classreflex_1_1_pattern.html#a1d74385d9faa9b77a0fd17614a17d3b1">Char</a> &gt; &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>level_hashes</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2749,7 +2736,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3cab6135b833c193e66dd0b6b086c458"></a>
+<a class="anchor" id="a9ff8664f993c95b2d16f72f0e49b6e26"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -2757,9 +2744,9 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a> reflex::Pattern::hash </td>
+          <td class="memname">static uint32_t reflex::Pattern::hash </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a>&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>h</em>, </td>
         </tr>
         <tr>
@@ -2781,7 +2768,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>predict match hash 0 &lt;= <a class="el" href="classreflex_1_1_pattern.html#a3cab6135b833c193e66dd0b6b086c458" title="predict match hash 0 &lt;= hash() &lt; Const::HASH. ">hash()</a> &lt; <a class="el" href="structreflex_1_1_pattern_1_1_const.html#a1f1b9246eb17fb69412ebb845eb13abf" title="size of the predict match array ">Const::HASH</a>. </p>
+<p>predict match hash 0 &lt;= <a class="el" href="classreflex_1_1_pattern.html#a9ff8664f993c95b2d16f72f0e49b6e26" title="predict match hash 0 &lt;= hash() &lt; Const::HASH. ">hash()</a> &lt; <a class="el" href="structreflex_1_1_pattern_1_1_const.html#a1f1b9246eb17fb69412ebb845eb13abf" title="size of the predict match array ">Const::HASH</a>. </p>
 
 </div>
 </div>
@@ -2883,7 +2870,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a49cc7f646a422220b9db498658de486d"></a>
+<a class="anchor" id="a185abfcc1835267993341bdc2ed1523b"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -2891,9 +2878,9 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a> reflex::Pattern::indexhash </td>
+          <td class="memname">static uint32_t reflex::Pattern::indexhash </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a38d1c486b879013ed2cec52cdb0367ab">Hash</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a3739687ef42556a3700e046de2f1d33e">Hash</a>&#160;</td>
           <td class="paramname"><em>h</em>, </td>
         </tr>
         <tr>
@@ -2915,7 +2902,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>file indexing hash 0 &lt;= <a class="el" href="classreflex_1_1_pattern.html#a49cc7f646a422220b9db498658de486d" title="file indexing hash 0 &lt;= indexhash() &lt; 65536, must be additive: indexhash(x,b+1) = indexhash(x...">indexhash()</a> &lt; 65536, must be additive: indexhash(x,b+1) = indexhash(x,b)+1 modulo 2^16. </p>
+<p>file indexing hash 0 &lt;= <a class="el" href="classreflex_1_1_pattern.html#a185abfcc1835267993341bdc2ed1523b" title="file indexing hash 0 &lt;= indexhash() &lt; 65536, must be additive: indexhash(x,b+1) = indexhash(x...">indexhash()</a> &lt; 65536, must be additive: indexhash(x,b+1) = indexhash(x,b)+1 modulo 2^16. </p>
 
 </div>
 </div>
@@ -4733,7 +4720,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a880d99f4bc743beb2039f5741d06608d"></a>
+<a class="anchor" id="a1f46fb1a3f21b699568145250237471c"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -4744,18 +4731,8 @@ Friends</h2></td></tr>
           <td class="memname">void reflex::Pattern::trim_anchors </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;&#160;</td>
-          <td class="paramname"><em>follow</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structreflex_1_1_pattern_1_1_position.html">Position</a>&#160;</td>
-          <td class="paramname"><em>p</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
+          <td class="paramname"><em>follow</em></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -5159,7 +5136,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab4361e841b84f19cae9ebecd29198d18"></a>
+<a class="anchor" id="a0ca8b457e2dbbd0d76b82c90fe0bb8ea"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -5167,7 +5144,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html#afc0939fcf3c55e813039bc3e475a8a51">Pred</a> reflex::Pattern::bit_[256]</td>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html#a92ee4d738dfc4d3ac9e3e5458300023b">Bitap</a> reflex::Pattern::bit_[256]</td>
         </tr>
       </table>
   </td>
@@ -5177,7 +5154,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>bitap array </p>
+<p>bitsets of characters for the first positions (one position per bit) </p>
 
 </div>
 </div>
@@ -5310,7 +5287,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> s-t cut to improve predict match and <a class="el" href="structreflex_1_1_pattern_1_1_h_f_a.html" title="Indexing hash finite state automaton for indexed file search. ">HFA</a> accuracy together with lbk_ and cbk_. </p>
+<p><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> s-t cut to improve predict match and <a class="el" href="structreflex_1_1_pattern_1_1_h_f_a.html" title="Indexing hash finite state automaton for indexed file search. ">HFA</a> accuracy with lbk_ and cbk_. </p>
 
 </div>
 </div>
@@ -5398,7 +5375,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>number of finite state machine edges |E| </p>
+<p>number of finite state machine edges |E| (arrows) </p>
 
 </div>
 </div>
@@ -5644,7 +5621,7 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2e38500e4bd2092c65c92ce44df1783f"></a>
+<a class="anchor" id="af58e9bb85d1ee9fffd55d1e5fdd1b353"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -5652,7 +5629,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t reflex::Pattern::npy_</td>
+          <td class="memname">uint16_t reflex::Pattern::npy_</td>
         </tr>
       </table>
   </td>
@@ -5772,7 +5749,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>predict-match array </p>
+<p>predict-match 4 (PM4) array </p>
 
 </div>
 </div>
@@ -5794,7 +5771,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>predict-match hash array </p>
+<p>predict-match bloom filter hash up to first 8 positions </p>
 
 </div>
 </div>
@@ -5839,6 +5816,28 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>regular expression string </p>
+
+</div>
+</div>
+<a class="anchor" id="a217ed408b4513e74e17a60ff9bafba5b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classreflex_1_1_pattern.html#a92ee4d738dfc4d3ac9e3e5458300023b">Bitap</a> reflex::Pattern::tap_[<a class="el" href="structreflex_1_1_pattern_1_1_const.html#a89c8ff466ea717dafa8c0d190520d405">Const::BTAP</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>bitap hashed character pairs array </p>
 
 </div>
 </div>
@@ -5904,7 +5903,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>number of finite state machine vertices |V| </p>
+<p>number of finite state machine vertices |V| (nodes) </p>
 
 </div>
 </div>
@@ -5936,7 +5935,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Aug 1 2024 11:49:37 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Oct 29 2024 12:14:59 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

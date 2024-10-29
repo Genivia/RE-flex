@@ -77,13 +77,11 @@ void Matcher::simd_init_advance_avx512bw()
   }
   else if (pat_->bmd_ == 0)
   {
-#if defined(WITH_STRING_PM)
     if (pat_->min_ >= 4)
       adv_ = &Matcher::simd_advance_string_pmh_avx512bw;
     else if (pat_->min_ > 0)
       adv_ = &Matcher::simd_advance_string_pma_avx512bw;
     else
-#endif
       adv_ = &Matcher::simd_advance_string_avx512bw;
   }
 }

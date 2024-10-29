@@ -223,8 +223,11 @@ Test tests[] = {
 #ifndef INTERACTIVE
   { "\\B(-|a)(-|a)\\B|b|#", "", "", "baab#--#", { 2, 1, 2, 3, 1, 3 } }, // boost has a partial match bug when interactive() blk=1
 #endif
+  { "a.*\\bbb.*\\b", "", "", "a--bb--cc--bb", { 1 } },
+  { "[ab]-\\<([bc]|\\<c)|c", "", "", "a-bc", { 1, 2 } },
+  { "a|(\\Bb?)*c", "", "", "abc", { 1, 2 } },
   { "-\\b(-|a)(-|a)\\b", "", "", "-aa", { 1 } },
-  { "a\\b(-|a)(-|a)\\b", "", "", "a-a", { 1 } },
+  { "a?\\b(-|a)(-|a)\\b|b", "", "", "a-ba-a", { 1, 2, 1 } },
 #ifndef INTERACTIVE
   { "a?\\>(-|a)(-|a)\\b| ", "", "", "a-a-a", { 1, 1 } }, // boost has a partial match bug when interactive() blk=1 & does not check \> at start, so accepts more liberally
 #endif

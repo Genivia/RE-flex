@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Bits Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Aug 1 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Oct 29 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -227,7 +227,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RE/flex <a class="el" href="classreflex_1_1_bits.html" title="RE/flex Bits class for dynamic bit vectors. ">Bits</a> class for dynamic bit vectors. </p>
-<p>Dynamic bit vectors are stored in <a class="el" href="classreflex_1_1_bits.html" title="RE/flex Bits class for dynamic bit vectors. ">Bits</a> objects, which can be manipulated with the usual bit-operations (<code>|</code> (bitor), <code>&amp;</code> (bitand), <code>^</code> (bitxor)).</p>
+<p>Dynamic bit vectors are stored in <a class="el" href="classreflex_1_1_bits.html" title="RE/flex Bits class for dynamic bit vectors. ">Bits</a> objects, which can be manipulated with the usual bit-operations (<code>|</code> (bitor), <code>&amp;</code> (bitand), <code>^</code> (bitxor)). Supports comparison relations on bit vectors, check if all bits set, check if any bits are set, flip bits, shift bits left or right, count bits, check if a bit vectors intersects another, check if a bit vector contains another. find_first bit, find_next bit.</p>
 <p>Example:</p>
 <div class="fragment"><div class="line"><a class="code" href="classreflex_1_1_bits.html">reflex::Bits</a> digit(<span class="charliteral">&#39;0&#39;</span>, <span class="charliteral">&#39;9&#39;</span>); <span class="comment">// bits &#39;0&#39; (48th bit) to &#39;9&#39; (57th bit)</span></div><div class="line"><a class="code" href="classreflex_1_1_bits.html">reflex::Bits</a> upper(<span class="charliteral">&#39;A&#39;</span>, <span class="charliteral">&#39;Z&#39;</span>); <span class="comment">// bits &#39;A&#39; (65th bit) to &#39;Z&#39; (92th bit)</span></div><div class="line"><a class="code" href="classreflex_1_1_bits.html">reflex::Bits</a> lower(<span class="charliteral">&#39;a&#39;</span>, <span class="charliteral">&#39;z&#39;</span>); <span class="comment">// bits &#39;a&#39; (97th bit) to &#39;z&#39; (122th bit)</span></div><div class="line"><span class="keywordflow">if</span> (upper.intersects(lower) == <span class="keyword">false</span>)</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;upper and lower are disjoint\n&quot;</span>;</div><div class="line"><a class="code" href="classreflex_1_1_bits.html">reflex::Bits</a> alnum = digit | upper | lower;</div><div class="line"><span class="keywordflow">if</span> (alnum.<a class="code" href="classreflex_1_1_bits.html#a4b528a08e89e3d83ab902123769819b4">contains</a>(digit) == <span class="keyword">true</span>)</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;digit is a subset of alnum\n&quot;</span>;</div><div class="line"><span class="keywordflow">if</span> (alnum[<span class="charliteral">&#39;_&#39;</span>] == <span class="keyword">false</span>)</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;_ is not in alnum\n&quot;</span>;</div><div class="line">alnum[<span class="charliteral">&#39;_&#39;</span>] = <span class="keyword">true</span>;</div><div class="line"><span class="keywordflow">if</span> (alnum[<span class="charliteral">&#39;_&#39;</span>] == <span class="keyword">true</span>)</div><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;_ is in updated alnum\n&quot;</span>;</div><div class="line">std::cout &lt;&lt; alnum.<a class="code" href="classreflex_1_1_bits.html#a78e6e437dac9eafbcad0bf286e202e38">count</a>() &lt;&lt; <span class="stringliteral">&quot; bits in alnum\n&quot;</span>;</div><div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = alnum.<a class="code" href="classreflex_1_1_bits.html#a0fb8e2c53cc8f09261740e342d4a43cb">find_first</a>(); i != <a class="code" href="classreflex_1_1_bits.html#a7a4b11558c758009cd2aa66e3fe5041a">reflex::Bits::npos</a>; i = alnum.<a class="code" href="classreflex_1_1_bits.html#a5e8b51223c078fe74528de476243d9c8">find_next</a>(i))</div><div class="line">  std::cout &lt;&lt; (<span class="keywordtype">char</span>)i;</div></div><!-- fragment --><p>Output: </p><pre class="fragment">upper and lower are disjoint
 digit is a subset of alnum
@@ -1718,7 +1718,7 @@ _ is in updated alnum
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Aug 1 2024 11:49:37 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Oct 29 2024 12:14:59 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -21,7 +21,7 @@ while true; do
       history
       ;;
     *)
-      history -s "$regex"
+      history -s -- "$regex"
       ./test "$regex"
       if [ $? -eq 0 ]; then
         dot -Tpdf dump.gv > dump.pdf

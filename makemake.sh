@@ -43,7 +43,7 @@ echo OK
 
 else
 
-echo "Usage: ./makemake.sh 4.v.v"
+echo "Usage: ./makemake.sh 5.v.v"
 exit 1
 
 fi

@@ -35,8 +35,9 @@ In a nutshell, the RE/flex lexical analyzer generator
 
 - extends Flex++ with Unicode and other new featues
 - accepts legacy Flex and Lex lexer specifications
+- is compliant to the IEEE POSIX P1003.2 standard on Lex specification input
+  (but generates C++ source code, like Flex++ does)
 - is faster than Flex++ for typical applications such as tokenization
-- is compliant to the IEEE POSIX P1003.2 standard (like Lex and Flex)
 - supports Unicode, auto-detects UTF-8/16/32 with smart input handling
 - supports legacy file encoding formats, e.g. CP 1250, EBCDIC
 - includes methods for lex and syntax \ref errors
@@ -45,7 +46,7 @@ In a nutshell, the RE/flex lexical analyzer generator
 - generates thread-safe scanners
 - generates graphviz files for visualization of finite state machines
 - supports easy customization of the lexer class source code output
-- is fast with direct code or with finite state machine tables
+- is fast with direct code and deterministic finite state machines
 - supports "free space mode" to improve readability of lexer specifications
 - regular expressions may contain lazy quantifiers
 - regular expressions may contain word boundary anchors
@@ -78,8 +79,9 @@ with its matcher engine defined as a template parameter.
 
 RE/flex is compatible with Lex/Flex and Bison/Yacc with options `−−flex` and
 `−−bison`, respectively.  Option `−−yy` forces basic, no-frills Lex POSIX
-compliance.  RE/flex also offers specific options to seamlessly integrate Bison
-bridge, Bison locations, Bison C++, Bison complete, and reentrant parsers.
+compliance of the lexer input (but with C++ output).  RE/flex also offers
+specific options to seamlessly integrate Bison bridge, Bison locations, Bison
+C++, Bison complete, and reentrant parsers.
 
 In this document we refer to a *regex* as a shorthand for *regular expression*,
 However, a "regular expression" refers to the formal concept of *regular
@@ -92,11 +94,11 @@ In summary, RE/flex is really several things combined into one package:
 
 - a stand-alone regex library for fast regex matching in C++;
 
-- a C++ regex API enhancement of the
-  [Boost.Regex](https://www.boost.org/libs/regex) and
-  [PCRE2](https://www.pcre.org) libraries for matching, seaching, splitting and
-  scanning of input, with input from (wide) strings, files, and streams of
-  potentially unlimited length.
+- a unified C++ regex API for the
+  [PCRE2](https://www.pcre.org), [Boost.Regex](https://www.boost.org/libs/regex)
+  and C++ `std::regex` libraries for matching, seaching, splitting and scanning
+  of input, with input from (wide) strings, files, and streams of potentially
+  unlimited length.
 
 The typographical conventions used by this document are:
 
@@ -303,8 +305,8 @@ and splitting input from strings, files and streams in regular C++ applications
 🔝 [Back to table of contents](#)
 
 
-And a flexible regex library                                          {#intro2}
-----------------------------
+A flexible regex library                                              {#intro2}
+------------------------
 
 The RE/flex regex pattern matching classes include two classes for Boost.Regex,
 two classes for PCRE2, two classes for C++11 std::regex, and a RE/flex class:
@@ -312,46 +314,52 @@ two classes for PCRE2, two classes for C++11 std::regex, and a RE/flex class:
   Engine        | Header file to include  | C++ matcher classes
   ------------- | ----------------------- | -----------------------------------
   RE/flex regex | `reflex/matcher.h`      | `Matcher`
-  Boost.Regex   | `reflex/boostmatcher.h` | `BoostMatcher`, `BoostPosixMatcher`
   PCRE2         | `reflex/pcre2matcher.h` | `PCRE2Matcher`, `PCRE2UTFMatcher`
+  Boost.Regex   | `reflex/boostmatcher.h` | `BoostMatcher`, `BoostPosixMatcher`
   std::regex    | `reflex/stdmatcher.h`   | `StdMatcher`, `StdPosixMatcher`
 
-The RE/flex `reflex::Matcher` class compiles regex patterns to efficient finite
-state machines (FSMs) when instantiated.  These deterministic automata speed up
-matching considerably, at the cost of the initial FSM construction (see further
-below for hints on how to avoid this run time overhead).  RE/flex matchers only
+The RE/flex `reflex::Matcher` class compiles regex patterns to efficient
+non-backtracking deterministic finite state machines (FSM) when instantiated.
+These deterministic finite automata (DFA) representations speed up matching
+considerably, at the cost of the initial FSM construction (see further below
+for hints on how to avoid this run time overhead).  RE/flex matchers only
 support POSIX mode matching, see \ref reflex-posix-perl.
 
-The `reflex::BoostMatcher` and `reflex::BoostPosixMatcher` classes are for Perl
-mode and POSIX mode matching, respectively.
+The `reflex::PCRE2Matcher` and `reflex::PCRE2UTFMatcher` classes are for
+efficient Perl mode matching with PCRE2 using JIT (just-in-time compilation),
+where the latter uses native PCRE2 Unicode matching with `PCRE2_UTF+PCRE2_UCP`.
+The PCRE2 matchers use JIT optimizations to speed up matching, which comes at a
+cost of extra processing when the matcher is instantiated.  The benefit
+outweighs the cost when many matches are processed.
 
-The `reflex::PCRE2Matcher` and `reflex::PCRE2UTFMatcher` classes are for Perl
-mode matching, where the latter uses native PCRE2 Unicode matching with
-`PCRE2_UTF+PCRE2_UCP`.  The PCRE2 matchers use JIT optimizations to speed up
-matching, which comes at a cost of extra processing when the matcher is
-instantiated.  The benefit outweighs the cost when many matches are processed.
+The `reflex::BoostMatcher` and `reflex::BoostPosixMatcher` classes are for Perl
+mode and POSIX mode matching using the Boost Regex library, respectively.
 
 C++11 std::regex supports ECMAScript and AWK POSIX syntax with the `StdMatcher`
 and `reflex::StdPosixMatcher` classes respectively.  The std::regex syntax is
-therefore a lot more limited compared to Boost.Regex, PCRE2, and RE/flex.
+therefore a lot more limited compared to PCRE2, Boost.Regex, and RE/flex.
+These regex matchers are considerably slower compared to the other matchers.
 
 The RE/flex regex common interface API is implemented in an abstract base class
-template `reflex::AbstractMatcher` from which regex matchers are derived.  This
-regex API offers a common interface that is used in the generated scanner.  You
-can also use this API in your C++ application for pattern matching.
+template `reflex::AbstractMatcher` from which all regex matcher engine classes
+are derived.  This regex API offers a uniform common interface.  This interface
+is used in the generated scanner.  You can also use this uniform API in your
+C++ application for pattern matching with any of the regex libraries without
+having to use library-specific API calls to do so.
 
 The RE/flex abstract matcher offers four operations for matching with the regex
-engines that are derived from this base abstract class:
+engines derived from this base abstract class:
 
   Method      | Result
   ----------- | ---------------------------------------------------------------
   `matches()` | returns nonzero if the input from begin to end matches
-  `find()`    | search input and return nonzero if a match was found
+  `find()`    | search the given input and return nonzero if a match was found
   `scan()`    | return nonzero if input at current position matches partially
   `split()`   | return nonzero for a split of the input at the next match
 
 These methods return a nonzero value for a match, meaning the `size_t accept()`
-value, and are repeatable, where the last three return additional matches.
+value that identifies the regex group pattern that matched.  The methods are
+repeatable, where the last three return additional matches found when repeated.
 
 For example, to check if a string is a valid date using Boost.Regex:
 
@@ -499,11 +507,11 @@ The regex engines currently available as classes in the `reflex` namespace are:
   Class               | Mode  | Engine        | Performance
   ------------------- | ----- |-------------- | ---------------------------------
   `Matcher`           | POSIX | RE/flex lib   | deterministic finite automaton, no backtracking
+  `PCRE2Matcher`      | Perl  | PCRE2         | JIT-optimized backtracking
+  `PCRE2UTFMatcher`   | Perl  | PCRE2 UTF+UPC | JIT-optimized backtracking
   `BoostMatcher`      | Perl  | Boost.Regex   | backtracking
   `BoostPerlMatcher`  | Perl  | Boost.Regex   | backtracking
   `BoostPosixMatcher` | POSIX | Boost.Regex   | backtracking
-  `PCRE2Matcher`      | Perl  | PCRE2         | JIT-optimized backtracking
-  `PCRE2UTFMatcher`   | Perl  | PCRE2 UTF+UPC | JIT-optimized backtracking
   `StdMatcher`        | ECMA  | std::regex    | backtracking
   `StdEcmaMatcher`    | ECMA  | std::regex    | backtracking
   `StdPosixMatcher`   | POSIX | std::regex    | backtracking
@@ -692,6 +700,7 @@ This method and other methods may be used to obtain the details of a match:
   --------------- | ---------------------------------------------------------------
   `accept()`      | returns group capture index (or zero if not captured/matched)
   `text()`        | returns `const char*` to 0-terminated match (ends in `\0`)
+  `strview()`     | returns `std::string_view` text match (preserves `\0`s) (C++17)
   `str()`         | returns `std::string` text match (preserves `\0`s)
   `wstr()`        | returns `std::wstring` wide text match (converted from UTF-8)
   `chr()`         | returns first 8-bit char of the text match (`str()[0]` as int)
@@ -756,7 +765,9 @@ When executed this code prints:
 @warning The `text()` method returns the match by pointing to the `const char*`
 string that is stored in an internal buffer.  This pointer *should not be used*
 after matching continues and when the matcher object is deallocated.  To retain
-the `text()` value use the `str()` method that returns a copy of `text()`.
+the `text()` value we recommend to use the `str()` method that returns a copy
+of `text()`.  Likewise, the `strview()` method returns the same `text()`
+pointer and should not be used after matching continues.
 
 @warning The `operator[]` method returns a pair with the match info of the n'th
 group, which is a non-0-terminated `const char*` pointer (or NULL) and its size
@@ -854,26 +865,25 @@ located at address `b` for in-place matching, where bytes `b[0...n]` are
 possibly modified by the matcher:
 
 ~~~{.cpp}
-    // read a 0-terminated buffer in place, buffer content is changed!!
-    char *base = ...;  // points to 0-terminated buffer
-    size_t size = ...; // length of the buffer including final \0 byte
+    // search data in place, data content is changed with text()!!
+    char *base = ...;  // points to the base address of the data
+    size_t size = ...; // length of the data including one extra byte for a final \0
     matcher.buffer(base, size);
     while (matcher.find() != 0)
       std::cout << "Found " << matcher.text() << std::endl;
 ~~~
 
-@warning `buffer(b, n)` reads `n`-1 bytes at address `b`.  The length `n`
-should include the final zero byte at the end of the string.
+@warning `buffer(b, n)` specifies `n`-1 bytes at address `b`.  The length `n`
+should include one extra byte that can be modified.
 
-@note In fact, the specified string may have any final byte value.  The final
-byte of the string will be set to zero when `text()` or `rest()` are used.
-Only `unput(c)`, `wunput()`, `text()`, `rest()`, and `span()` modify the buffer
-contents, because these functions require an extra byte at the end of the
-buffer to make the strings returned by these methods 0-terminated.  This means
-that we can specify read-only memory of `n` bytes located at address `b` by
-using `buffer(b, n+1)` safely as long as we do not use `unput()`, `unput()`,
-`text()`, `rest()`, and `span()`, for example to search read-only mmap(2)
-`PROT_READ` memory.
+@note The final byte of the specified data will be set to zero when `text()` or
+`rest()` are used.  Only `unput(c)`, `wunput()`, `text()`, `rest()`, and
+`span()` modify the buffer contents, because these functions require an extra
+byte at the end of the buffer to make the strings returned by these methods
+0-terminated.  This means that we can specify read-only memory of `n` bytes
+located at address `b` by using `buffer(b, n+1)` safely as long as we do not
+use `unput()`, `unput()`, `text()`, `rest()`, and `span()`, for example to
+search read-only mmap(2) `PROT_READ` memory.
 
 So far we explained how to use `reflex::PCRE2Matcher` and
 `reflex::BoostMatcher` for pattern matching.  We can also use the RE/flex
@@ -942,8 +952,10 @@ digraph FSM {
 }
 @enddot
 
-The `f=machine.cpp` option emits opcode tables for the finite state machine,
-which in this case is the following table of 11 code words:
+The `f=machine.cpp` option emits opcode tables for the FSM to match regular
+expressions efficiently.  The FSM matcher engine runs as a virtual machine to
+execute opcodes without backtracking.  In this case we get the following FSM
+table with eleven code words:
 
 ~~~{.cpp}
     REFLEX_CODE_DECL reflex_code_FSM[11] =
@@ -963,36 +975,37 @@ which in this case is the following table of 11 code words:
 ~~~
 
 Option `o` may be used with `f=machine.cpp` to emit optimized native C++ code
-for the finite state machine:
+for the FSM that gnerally runs faster than running the virtual machine on
+opcode tables:
 
 ~~~{.cpp}
     void reflex_code_FSM(reflex::Matcher& m)
     {
-      int c0 = 0, c1 = 0;
-      m.FSM_INIT(c1);
+      int c = 0;
+      m.FSM_INIT(c);
 
     S0:
-      c1 = m.FSM_CHAR();
-      if (97 <= c1 && c1 <= 122) goto S5;
-      if (c1 == 95) goto S5;
-      if (65 <= c1 && c1 <= 90) goto S5;
-      if (48 <= c1 && c1 <= 57) goto S5;
-      return m.FSM_HALT(c1);
+      c = m.FSM_CHAR();
+      if (97 <= c && c <= 122) goto S5;
+      if (c == 95) goto S5;
+      if (65 <= c && c <= 90) goto S5;
+      if (48 <= c && c <= 57) goto S5;
+      return m.FSM_HALT(c);
 
     S5:
       m.FSM_TAKE(1);
-      c1 = m.FSM_CHAR();
-      if (97 <= c1 && c1 <= 122) goto S5;
-      if (c1 == 95) goto S5;
-      if (65 <= c1 && c1 <= 90) goto S5;
-      if (48 <= c1 && c1 <= 57) goto S5;
-      return m.FSM_HALT(c1);
+      c = m.FSM_CHAR();
+      if (97 <= c && c <= 122) goto S5;
+      if (c == 95) goto S5;
+      if (65 <= c && c <= 90) goto S5;
+      if (48 <= c && c <= 57) goto S5;
+      return m.FSM_HALT(c);
     }
 ~~~
 
-The compact FSM opcode tables or the optimized larger FSM code may be used
-directly in your code.  This omits the FSM construction overhead at runtime.
-Simply include this generated file in your source code and pass it on to the
+The compact FSM opcode tables or the optimized FSM code may be used directly in
+your code.  This omits the FSM construction overhead at runtime.  Simply
+include this generated file in your source code and pass it on to the
 `reflex::Pattern` constructor:
 
 ~~~{.cpp}
@@ -2056,6 +2069,7 @@ are the classic Flex actions shown in the second column of this table:
   ------------------------ | -------------------- | -------------------------------
   `text()`                 | `YYText()`, `yytext` | 0-terminated text match
   `str()`                  | *n/a*                | `std::string` text match
+  `strview()`              | *n/a*                | `std::string_view` text match
   `wstr()`                 | *n/a*                | `std::wstring` wide text match
   `chr()`                  | `yytext[0]`          | first 8-bit char of text match
   `wchr()`                 | *n/a*                | first wide char of text match
@@ -2252,10 +2266,10 @@ used to obtain the context of a match, for example to display the line where a
 lexical error or syntax error occurred.
 
 @warning The methods `matcher().span()`, `matcher().line()`, and
-`matcher().wline()` invalidate the previous `text()`, `yytext`, `begin()`,
-`bol()`, and `end()` string pointers.  Call these methods again to retrieve the
-updated pointer or call `str()` or `wstr()` to obtain a string copy of the
-match:
+`matcher().wline()` invalidate the previous `text()`, `yytext`, `strview()`,
+`begin()`, `bol()`, and `end()` string pointers.  Call these methods again to
+retrieve the updated pointer or call `str()` or `wstr()` to obtain a string
+copy of the match:
 ~~~{.cpp}
     // INCORRECT, because t is invalid after line():
     const char *t = matcher().text();
@@ -2499,8 +2513,8 @@ reflex-pattern-dents for more details.
 `φ+?` is not supported by Boost.Regex in POSIX mode.  In general, POSIX
 matchers do not support lazy quantifiers due to POSIX limitations that are
 rooted in the theory of formal languages FSM of regular expressions.  The
-RE/flex regex library is POSIX compliant and supports lazy quantifiers as an
-exception.
+RE/flex regex library is regex POSIX compliant and supports lazy quantifiers as
+an addition.
 
 @warning Option `−−fast` does not produce code that backtracks, which means
 that patterns such as `bar.*\bfoo` that require backtracking on `\b` may not
@@ -4038,8 +4052,8 @@ demand, and modifies this buffered content, e.g. to allow `text()` to return a
 
 ~~~{.cpp}
     // read a 0-terminated buffer in place, buffer content is changed!!
-    char *base = ...;  // points to 0-terminated buffer
-    size_t size = ...; // length of the buffer including final \0 byte
+    char *base = ...;  // points to the base address of the data
+    size_t size = ...; // length of the data including one extra byte for a final \0
     lexer.buffer(base, size);
     lexer.lex();
 ~~~
@@ -5858,9 +5872,9 @@ To use a matcher for the generated scanner, use one of these three choices:
   Option          | Matcher class used  | Mode  | Engine      
   --------------- | ------------------- | ----- | ----------------------------- 
   `-m reflex`     | `Matcher`           | POSIX | RE/flex lib (default choice)
+  `-m pcre2-perl` | `PCRE2Matcher`      | Perl  | PCRE2
   `-m boost`      | `BoostPosixMatcher` | POSIX | Boost.Regex 
   `-m boost-perl` | `BoostPerlMatcher`  | Perl  | Boost.Regex 
-  `-m pcre2-perl` | `PCRE2Matcher`      | Perl  | PCRE2
 
 The POSIX matchers look for the *longest possible match* among the given set of
 alternative patterns.  Perl matchers look for the *first match* among the given
@@ -6501,7 +6515,7 @@ The RE/flex regex library is a class hierarchy that has at the root an abstract
 class `reflex::AbstractMatcher`.  Pattern types may differ between for matchers
 so the `reflex::PatternMatcher` template class takes a pattern type and creates
 a class that is complete except for the implementation of the `reflex::match()`
-virtual method that requires a regex engine, such as Boost.Regex, PCRE2, or the
+virtual method that requires a regex engine, such as PCRE2, Boost.Regex, or the
 RE/flex engine.
 
 To compile your application, simply include the applicable regex matcher of
@@ -6510,17 +6524,106 @@ compile, link your application against the `libreflex` library:
 
     c++ myapp.cpp -lreflex
 
-And optionally `-lboost_regex` depending on your Boost installation) if you use
-Boost.Regex for matching:
-
-    c++ myapp.cpp -lreflex -lboost_regex
-
-or `-lpcre2-8` if you use PCRE2 for matching:
+And optionally `-lpcre2-8` if you want to use PCRE2 for searching and matching:
 
     c++ myapp.cpp -lreflex -lpcre2-8
 
+or `-lboost_regex` if you want to use Boost.Regex for searching and matching:
+
+    c++ myapp.cpp -lreflex -lboost_regex
+
 If `libreflex` was not installed then linking with `-lreflex` fails.  See
 \ref link-errors on how to resolve this.
+
+🔝 [Back to table of contents](#)
+
+
+PCRE2 matcher classes                                            {#regex-pcre2}
+---------------------
+
+The `reflex::PCRE2Matcher` inherits `reflex::PatternMatcher<std::string>`.
+The `reflex::PCRE2UTFMatcher` is derived from `reflex::PCRE2Matcher`:
+
+  ![](classreflex_1_1_p_c_r_e2_matcher__inherit__graph.png)
+
+An instance of `reflex::PCRE2Matcher` is initialized with a pattern that is
+compiled with `pcre2_compile()` and `pcre2_jit_compile()` for optimal
+performance with PCRE2 JIT-generated code.
+
+An instance of `reflex::PCRE2UTFMatcher` creates a PCRE2 matcher with native
+Unicode support, using PCRE2 options `PCRE2_UTF+PCRE2_UCP`.
+
+PCRE2 is a powerful library.  The RE/flex regex API enhances this library with
+operations to match, search, scan, and split data from a given input.  The
+input may be a file, a string, or a stream.  Files that are UTF-8/16/32-encoded
+are automatically decoded.  Further, streams can be of potentially unlimited
+length because internal buffering is used by the RE/flex regex API enhancements
+to efficiently apply PCRE2 partial pattern matching to streaming data.  This
+enhancement permits pattern matching of interactive input from the console,
+such that searching and scanning interactive input for matches will return
+these matches immediately.
+
+A `reflex::PCRE2Matcher` (or `reflex::PCRE2UTFMatcher`) engine is created from
+a string regex and some given input:
+
+~~~{.cpp}
+    #include <reflex/pcre2matcher.h>
+
+    reflex::PCRE2Matcher matcher( string, reflex::Input [, "options"] )
+~~~
+
+Likewise, a `reflex::PCRE2UTFMatcher` engine is created from a string regex and
+some given input:
+
+~~~{.cpp}
+    #include <reflex/pcre2matcher.h>
+
+    reflex::PCRE2UTFMatcher matcher( string, reflex::Input [, "options"] )
+~~~
+
+This matcher uses PCRE2 native Unicode matching.  Non-UTF input is not
+supported, such as plain binary.  UTF encoding errors in the input will cause
+the matcher to terminate.
+
+For input you can specify a string, a wide string, a file, or a stream object.
+
+We use option `"N"` to permit empty matches when searching input with
+`reflex::PCRE2Matcher::find`.
+
+You can convert an expressive regex of the form defined in \ref reflex-patterns
+to a regex that the PCRE2 engine can handle:
+
+~~~{.cpp}
+    #include <reflex/pcre2matcher.h>
+
+    static const std::string regex = reflex::PCRE2Matcher::convert( string, [ flags ]);
+
+    reflex::PCRE2Matcher matcher( regex, reflex::Input [, "options"] )
+~~~
+
+The converter is specific to the matcher selected, i.e.
+`reflex::PCRE2Matcher::convert` and `reflex::PCRE2UTFMatcher::convert`.
+The former converter converts Unicode `\p` character classes to UTF-8 patterns,
+converts bracket character classes containing Unicode, and groups UTF-8
+multi-byte sequences in the regex string.  The latter converter does not
+convert these regex constructs, which are matched by the PCRE2 engine
+initialized with options `PCRE2_UTF+PCRE2_UCP`.
+
+The converter throws a `reflex::regex_error` exception if conversion fails,
+for example when the regex syntax is invalid.
+
+To compile your application, link your application against the `libreflex`
+library and `-lpcre2-8`:
+
+    c++ myapp.cpp -lreflex -lpcre2-8
+
+See \ref reflex-patterns for more details on regex patterns.
+
+See \ref regex-input for more details on the `reflex::Input` class.
+
+See \ref regex-methods for more details on pattern matching methods.
+
+See \ref regex-convert for more details on regex converters.
 
 🔝 [Back to table of contents](#)
 
@@ -6628,96 +6731,6 @@ See \ref regex-convert for more details on regex converters.
 🔝 [Back to table of contents](#)
 
 
-PCRE2 matcher classes                                            {#regex-pcre2}
----------------------
-
-The `reflex::PCRE2Matcher` inherits `reflex::PatternMatcher<std::string>`.
-The `reflex::PCRE2UTFMatcher` is derived from `reflex::PCRE2Matcher`:
-
-  ![](classreflex_1_1_p_c_r_e2_matcher__inherit__graph.png)
-
-An instance of `reflex::PCRE2Matcher` is initialized with a pattern that is
-compiled with `pcre2_compile()` and `pcre2_jit_compile()` for optimal
-performance with PCRE2 JIT-generated code.
-
-An instance of `reflex::PCRE2UTFMatcher` creates a PCRE2 matcher with native
-Unicode support, using PCRE2 options `PCRE2_UTF+PCRE2_UCP`.
-
-PCRE2 is a powerful library.  The RE/flex regex API enhances this library with
-operations to match, search, scan, and split data from a given input.  The
-input may be a file, a string, or a stream.  Files that are UTF-8/16/32-encoded
-are automatically decoded.  Further, streams can be of potentially unlimited
-length because internal buffering is used by the RE/flex regex API enhancements
-to efficiently apply PCRE2 partial pattern matching to streaming data.  This
-enhancement permits pattern matching of interactive input from the console,
-such that searching and scanning interactive input for matches will return
-these matches immediately.
-
-A `reflex::PCRE2Matcher` (or `reflex::PCRE2UTFMatcher`) engine is created from
-a string regex and some given input:
-
-~~~{.cpp}
-    #include <reflex/pcre2matcher.h>
-
-    reflex::PCRE2Matcher matcher( string, reflex::Input [, "options"] )
-~~~
-
-Likewise, a `reflex::PCRE2UTFMatcher` engine is created from a string regex and
-some given input:
-
-~~~{.cpp}
-    #include <reflex/pcre2matcher.h>
-
-    reflex::PCRE2UTFMatcher matcher( string, reflex::Input [, "options"] )
-~~~
-
-This matcher uses PCRE2 native Unicode matching.  Non-UTF input is not
-supported, such as plain binary.  UTF encoding errors in the input will cause
-the matcher to terminate.
-
-For input you can specify a string, a wide string, a file, or a stream object.
-
-We use option `"N"` to permit empty matches when searching input with
-`reflex::PCRE2Matcher::find`.
-
-You can convert an expressive regex of the form defined in \ref reflex-patterns
-to a regex that the PCRE2 engine can handle:
-
-~~~{.cpp}
-    #include <reflex/pcre2matcher.h>
-
-    static const std::string regex = reflex::PCRE2Matcher::convert( string, [ flags ]);
-
-    reflex::PCRE2Matcher matcher( regex, reflex::Input [, "options"] )
-~~~
-
-The converter is specific to the matcher selected, i.e.
-`reflex::PCRE2Matcher::convert` and `reflex::PCRE2UTFMatcher::convert`.
-The former converter converts Unicode `\p` character classes to UTF-8 patterns,
-converts bracket character classes containing Unicode, and groups UTF-8
-multi-byte sequences in the regex string.  The latter converter does not
-convert these regex constructs, which are matched by the PCRE2 engine
-initialized with options `PCRE2_UTF+PCRE2_UCP`.
-
-The converter throws a `reflex::regex_error` exception if conversion fails,
-for example when the regex syntax is invalid.
-
-To compile your application, link your application against the `libreflex`
-library and `-lpcre2-8`:
-
-    c++ myapp.cpp -lreflex -lpcre2-8
-
-See \ref reflex-patterns for more details on regex patterns.
-
-See \ref regex-input for more details on the `reflex::Input` class.
-
-See \ref regex-methods for more details on pattern matching methods.
-
-See \ref regex-convert for more details on regex converters.
-
-🔝 [Back to table of contents](#)
-
-
 std::regex matcher classes                                         {#regex-std}
 --------------------------
 
@@ -6743,7 +6756,7 @@ is buffered with the C++11 std::regex class matchers.
 With respect to performance, as of this time of writing, std::regex matching is
 much slower than other matchers, slower by a factor 10 or more.
 
-The std::regex syntax is more limited than Boost.Regex, PCRE2, and RE/flex.
+The std::regex syntax is more limited than PCRE2, Boost.Regex, and RE/flex.
 Also the matching behavior differs and cannot be controlled with mode
 modifiers:
 
@@ -6809,7 +6822,7 @@ where the RE/flex `reflex::Pattern` class represents a regex pattern.  Patterns
 as regex texts are internally compiled into deterministic finite state machines
 by the `reflex::Pattern` class.  The machines are used by the `reflex::Matcher`
 for fast matching of regex patterns on some given input.  The `reflex::Matcher`
-is faster than the Boost.Regex and PCRE2 matchers.  The `reflex::FuzzyMatcher`
+is faster than the PCRE2 and Boost.Regex matchers.  The `reflex::FuzzyMatcher`
 subclass is included and performs approximate pattern matching, see the
 [FuzzyMatcher readme](https://github.com/Genivia/FuzzyMatcher).
 
@@ -6945,9 +6958,9 @@ By default, the `reflex::Pattern` constructor solely throws the
 `reflex::regex_error::exceeds_length` and `reflex::regex_error::exceeds_limits`
 exceptions and silently ignores syntax errors.
 
-Likewise, the `reflex::Matcher::convert`, `reflex::BoostPerlMatcher::convert`,
-`reflex::BoostMatcher::convert`, `reflex::BoostPosixMatcher::convert`,
-`reflex::PCRE2Matcher::convert`, and `reflex::PCRE2UTFMatcher::convert`
+Likewise, the `reflex::Matcher::convert`, `reflex::PCRE2Matcher::convert`,
+`reflex::PCRE2UTFMatcher::convert`, `reflex::BoostPerlMatcher::convert`,
+`reflex::BoostMatcher::convert`, and `reflex::BoostPosixMatcher::convert`
 functions may throw a `reflex_error` exception.  See the next section for
 details.
 
@@ -7014,24 +7027,24 @@ underlying regex library understands and can use.
 Each converter is specific to the regex engine.  You can use a converter for
 the matcher of your choice:
 
+- `std::string reflex::Matcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+  converts an enhanced `regex` for use with the RE/flex POSIX regex library;
+- `std::string reflex::PCRE2Matcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+  converts an enhanced `regex` for use with PCRE2;
+- `std::string reflex::PCRE2UTFMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
+  converts an enhanced `regex` for use with PCRE2 native Unicode matching;
 - `std::string reflex::BoostMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
   converts an enhanced `regex` for use with Boost.Regex;
 - `std::string reflex::BoostPerlMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
   converts an enhanced `regex` for use with Boost.Regex in Perl mode;
 - `std::string reflex::BoostPosixMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
   converts an enhanced `regex` for use with Boost.Regex in POSIX mode;
-- `std::string reflex::PCRE2Matcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
-  converts an enhanced `regex` for use with PCRE2;
-- `std::string reflex::PCRE2UTFMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
-  converts an enhanced `regex` for use with PCRE2 native Unicode matching;
 - `std::string reflex::StdMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
   converts an enhanced `regex` for use with C++ std::regex;
 - `std::string reflex::StdEcmaMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
   converts an enhanced `regex` for use with C++ std::regex in ECMA mode;
 - `std::string reflex::StdPosixMatcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
   converts an enhanced `regex` for use with C++ std::regex in POSIX mode;
-- `std::string reflex::Matcher::convert(const std::string& regex, reflex::convert_flag_type flags)`
-  converts an enhanced `regex` for use with the RE/flex POSIX regex library;
 
 where `flags` is optional.  When specified, it may be a combination of the
 following `reflex::convert_flag` flags:
@@ -7389,6 +7402,7 @@ To obtain properties of a match, use the following methods:
   --------------- | ---------------------------------------------------------------
   `accept()`      | returns group capture index (or zero if not captured/matched)
   `text()`        | returns `const char*` to 0-terminated text match (ends in `\0`)
+  `strview()`     | returns `std::string_view` text match (preserves `\0`s) (C++17)
   `str()`         | returns `std::string` text match (preserves `\0`s)
   `wstr()`        | returns `std::wstring` wide text match (converted from UTF-8)
   `chr()`         | returns first 8-bit char of the text match (`str()[0]` as int)
@@ -7426,12 +7440,12 @@ group capture index.  The RE/flex matcher engine `reflex::Matcher` only
 recognizes group captures at the top level of the regex (i.e. among the
 top-level alternations), because it uses an efficient FSM for matching.
 
-The `text()`, `str()`, and `wstr()` methods return the matched text.  To get
-the first character of a match, use `chr()` or `wchr()`.  The `chr()` and
-`wchr()` methods are much more efficient than `str()[0]` (or `text()[0]`) and
-`wstr()[0]`, respectively.  Normally, a match cannot be empty unless option
-`"N"` is specified to explicitly initialize a matcher, see \ref regex-boost,
-\ref regex-pcre2, and \ref regex-matcher.
+The `text()`, `strview()`, `str()`, and `wstr()` methods return the matched
+text.  To get the first character of a match, use `chr()` or `wchr()`.  The
+`chr()` and `wchr()` methods are much more efficient than `str()[0]` (or
+`text()[0]`) and `wstr()[0]`, respectively.  Normally, a match cannot be empty
+unless option `"N"` is specified to explicitly initialize a matcher, see
+\ref regex-matcher, \ref regex-pcre2, and \ref regex-boost.
 
 The `begin()`, `operator[0]`, and `operator[n]` return non-0-terminated
 strings.  You must use `end()` with `begin()` to determine the span of the
@@ -7478,9 +7492,9 @@ with the matched text as a substring.  These methods can be used to obtain the
 context of a match.
 
 @warning The methods `span()`, `line()`, and `wline()` invalidate the previous
-`text()`, `begin()`, `bol()`, and `end()` string pointers.  Call these methods
-again to retrieve the updated pointer or call `str()` or `wstr()` to obtain a
-string copy of the match:
+`text()`, `strview()`, `begin()`, `bol()`, and `end()` string pointers.  Call
+these methods again to retrieve the updated pointer or call `str()` or `wstr()`
+to obtain a string copy of the match:
 ~~~{.cpp}
     // INCORRECT, because t is invalid after line():
     const char *t = text();
@@ -7967,12 +7981,12 @@ for a RE/flex scanner, for example:
     }
 ~~~
 
-or for a regex matcher that uses Boost.Regex or PCRE2:
+or for a regex matcher that uses PCRE2 or Boost.Regex:
 
 ~~~{.cpp}
     if (is.good())
     {
-      reflex::BoostMatcher matcher("\\w+", is); // read normalized input (DOS CRLF -> LF)
+      reflex::PCRE2Matcher matcher("\\w+", is); // read normalized input (DOS CRLF -> LF)
       while (matcher.find() != 0)
         std::cout << "Found " << matcher.text() << std::endl;
     }
@@ -8291,8 +8305,9 @@ By contrast, the PCRE2 matcher can capture groups within a regex:
         << std::endl;
 ~~~
 
-The Boost.Regex library also supports group captures.  It als supports partial
-matches, but that feature appears to be broken, so all input must be buffered:
+The PCRE2 and Boost.Regex libraries also support group captures and partial
+matches, but that feature appears to be broken with Boost.Regex, so all input
+must be buffered when Boost.Regex is used:
 
 ~~~{.cpp}
     #include <reflex/boostmatcher.h>
@@ -9001,7 +9016,7 @@ example:
 ~~~{.cpp}
     std::setlocale(LC_ALL, "en_US.UTF-8");        // setlocale UTF-8
     std::ifstream ifs("file.txt", std::ios::in);  // open UTF-8/16/32 text file
-    reflex::BoostMatcher matcher("\\w+", ifs);    // not affected by setlocale
+    reflex::PCRE2Matcher matcher("\\w+", ifs);    // not affected by setlocale
     while (matcher.find() != 0)
     {
       std::wstring& match = matcher.wstr();       // not affected by setlocale
@@ -9017,7 +9032,7 @@ not on all systems (I'm looking at you, Mac OS X terminal!)  Instead of
 ~~~{.cpp}
     std::setlocale(LC_ALL, "en_US.UTF-8");       // setlocale UTF-8
     std::ifstream ifs("file.txt", std::ios::in); // open UTF-8/16/32 text file
-    reflex::BoostMatcher matcher("\\w+", ifs);   // not affected by setlocale
+    reflex::PCRE2Matcher matcher("\\w+", ifs);   // not affected by setlocale
     while (matcher.find() != 0)
     {
       std::string& match = matcher.str();        // not affected by setlocale
@@ -9434,13 +9449,13 @@ RE/flex applications:
   <i>`reflex/unicode`</i> directories of the RE/flex download package.  The
   header files are located in the <i>`reflex/include/reflex`</i> directory.
 
-- When Boost.Regex is used as a matcher engine, also link `libboost_regex`:
-
-      c++ ... -lreflex -lboost_regex
-
 - When PCRE2 is used as a matcher engine, also link `libpcre2-8`:
 
       c++ ... -lreflex -lpcre2-8
+
+- When Boost.Regex is used as a matcher engine, also link `libboost_regex`:
+
+      c++ ... -lreflex -lboost_regex
 
 - If you get compilation errors with the `std::regex` matching engine, you
   should compile the source code as C++11:
@@ -9538,26 +9553,71 @@ input buffer:
 🔝 [Back to table of contents](#)
 
 
-MSVC++ compiler bug                                                     {#msvc}
--------------------
+How to speed up matching and searching with zero copy overhead      {#zerocopy}
+--------------------------------------------------------------
 
-Some older MSVC++ compilers may cause problems with C++11 range-based loops.
-When a matcher object is constructed in a range-based loop it is destroyed
-before the first loop iteration.  This means that the following example
-crashes:
+All RE/flex matchers, including `reflex::Matcher`, `reflex::PCRE2Matcher`,
+`reflex::BoostMatcher`, `reflex::StdMatcher` and `reflex::FuzzyMatcher`, use an
+internal buffer of 256K.  This buffer is used to search and match input by
+copying the specified input into this buffer.  This allows the input to be
+modified, such as writing a zero byte to make the character strings returned by
+`text()` and `rest()` always 0-terminated.  The buffer shifts to handle input
+larger than 256K by consuming the input in blocks of up to 256K at a time.  The
+buffer only grows in size to accomodate pattern matches that are longer than
+256K, which will not happen when you specify regex patterns that do not match
+byte sequences longer than 256K, e.g. when patterns exclude `\n` (newline)
+characters when the input consists of regular lines of text.
+
+When the data you want to search resides in memory, you can eliminate the
+overhead of buffer copying as follows.  Before searching or matching the data,
+specify the memory region you want to search at address `b` of size `n` with
+`reflex::Matcher::buffer(b, n + 1)`.  Note that an extra byte after the end of
+the data must be avalable in this memory region, hence we pass `n + 1` to
+search `n` bytes.  The final byte at the end of the memory region will be set
+to zero when `unput(c)`, `wunput()`, `text()`, `rest()` or `span()` is used.
+But otherwise the memory region, including the final byte, remains completely
+untouched and you can safely specify `n + 1` even when the allocated region has
+`n` bytes of data.
+
+For example:
 
 ~~~{.cpp}
-    for (auto& match : reflex::BoostMatcher("\\w+", "How now brown cow.").find)
+    char *base = ...;  // points to the base address of the data
+    size_t size = ...; // length of the data including one extra byte
+    reflex::Matcher matcher(pattern);
+    matcher.buffer(base, size);
+    while (matcher.find() != 0)
+      std::cout << "Found: " << matcher.str() << std::endl;
+~~~
+
+See also \ref intro2 (towards the end of the section) and \ref reflex-input
+on zero copy overhead with RE/flex lexers.
+
+🔝 [Back to table of contents](#)
+
+
+A C++ range-based loop construct to avoid                               {#loop}
+-----------------------------------------
+
+When a matcher object is constructed as a temporary in a range-based loop it
+will be destroyed when we actually want to use it in the loop to find all
+matches.  This means that the following example crashes:
+
+~~~{.cpp}
+    for (auto& match : reflex::Matcher("\\w+", "How now brown cow.").find)
       std::cout << match.text() << std::endl;
 ~~~
 
-Instead, we should write the following:
+Instead, write:
 
 ~~~{.cpp}
-    reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
+    reflex::Matcher matcher("\\w+", "How now brown cow.");
     for (auto& match : matcher.find)
       std::cout << match.text() << std::endl;
 ~~~
+
+Note that some C++23 compilers handle this just fine as support for range-based
+loop temporaries was proposed to the C++ standards committee.
 
 🔝 [Back to table of contents](#)
 

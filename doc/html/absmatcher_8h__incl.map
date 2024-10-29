@@ -1,9 +1,9 @@
 <map id="absmatcher.h" name="absmatcher.h">
 <area shape="rect" id="node2" href="$convert_8h.html" title="RE/flex regex converter. " alt="" coords="309,80,421,107"/>
 <area shape="rect" id="node9" href="$debug_8h.html" title="RE/flex debug logs and assertions. " alt="" coords="5,80,109,107"/>
-<area shape="rect" id="node11" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="606,80,703,107"/>
-<area shape="rect" id="node15" href="$traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="738,80,835,107"/>
-<area shape="rect" id="node16" href="$simd_8h.html" title="RE/flex SIMD primitives. " alt="" coords="910,80,1007,107"/>
+<area shape="rect" id="node11" href="$input_8h.html" title="RE/flex input character sequence class. " alt="" coords="557,80,653,107"/>
+<area shape="rect" id="node16" href="$traits_8h.html" title="Type traits for (non&#45;)const type inference. " alt="" coords="1030,80,1127,107"/>
+<area shape="rect" id="node17" href="$simd_8h.html" title="RE/flex SIMD primitives. " alt="" coords="858,80,955,107"/>
 <area shape="rect" id="node3" href="$error_8h.html" title="RE/flex regex errors. " alt="" coords="234,155,328,182"/>
-<area shape="rect" id="node12" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="504,155,594,182"/>
+<area shape="rect" id="node12" href="$utf8_8h.html" title="RE/flex UCS to UTF&#45;8 converters. " alt="" coords="643,155,733,182"/>
 </map>

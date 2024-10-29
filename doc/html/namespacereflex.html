@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex Namespace Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Aug 1 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Oct 29 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -166,7 +166,7 @@ Typedefs</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a10f9faa3bb7ef4d3cee8339b8e647875">isword</a> (int c)</td></tr>
-<tr class="memdesc:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check ASCII word-like character <code>[A-Za-z0-9_]</code>, permitting the character range 0..303 (0x12F) and EOF.  <a href="#a10f9faa3bb7ef4d3cee8339b8e647875">More...</a><br /></td></tr>
+<tr class="memdesc:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check ASCII word-like character <code>[A-Za-z0-9_]</code>, permitting the character range 0..303 (0x12f) and EOF.  <a href="#a10f9faa3bb7ef4d3cee8339b8e647875">More...</a><br /></td></tr>
 <tr class="separator:a10f9faa3bb7ef4d3cee8339b8e647875"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab15e99233257097b3c83c47d9ce3f9e6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ab15e99233257097b3c83c47d9ce3f9e6">convert</a> (const char *pattern, const char *signature, <a class="el" href="namespacereflex.html#ab659f1b759d66631c2e2e32771af1200">convert_flag_type</a> flags=<a class="el" href="namespacereflex_1_1convert__flag.html#af5c6fe22fc79bb893e135d583d525930">convert_flag::none</a>, bool *multiline=NULL, const std::map&lt; std::string, std::string &gt; *macros=NULL)</td></tr>
 <tr class="memdesc:ab15e99233257097b3c83c47d9ce3f9e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the converted regex string given a regex library signature and conversion flags, throws <a class="el" href="classreflex_1_1regex__error.html" title="Regex syntax error exceptions. ">regex_error</a>.  <a href="#ab15e99233257097b3c83c47d9ce3f9e6">More...</a><br /></td></tr>
@@ -207,8 +207,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ab818b62aa222cc288dfdd6b72198b0e4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ab818b62aa222cc288dfdd6b72198b0e4">set_erase</a> (S &amp;s, const E &amp;e)</td></tr>
 <tr class="memdesc:ab818b62aa222cc288dfdd6b72198b0e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove element <code>e</code> from set <code>s</code> when present.  <a href="#ab818b62aa222cc288dfdd6b72198b0e4">More...</a><br /></td></tr>
 <tr class="separator:ab818b62aa222cc288dfdd6b72198b0e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8765224733219959ec990acd821d3700"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a8765224733219959ec990acd821d3700">nlcount</a> (const char *s, const char *t)</td></tr>
-<tr class="separator:a8765224733219959ec990acd821d3700"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52d50452d59b78229c800cffff315525"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a52d50452d59b78229c800cffff315525">nlcount</a> (const char *s, const char *e)</td></tr>
+<tr class="memdesc:a52d50452d59b78229c800cffff315525"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count newlines in string s up to position e in the string.  <a href="#a52d50452d59b78229c800cffff315525">More...</a><br /></td></tr>
+<tr class="separator:a52d50452d59b78229c800cffff315525"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab74e91cfc995859be6e69f954c0bcc10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#ab74e91cfc995859be6e69f954c0bcc10">isutf8</a> (const char *s, const char *e)</td></tr>
+<tr class="memdesc:ab74e91cfc995859be6e69f954c0bcc10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if valid UTF-8 encoding and does not include a NUL, but accept surrogates and 3/4 byte overlongs.  <a href="#ab74e91cfc995859be6e69f954c0bcc10">More...</a><br /></td></tr>
+<tr class="separator:ab74e91cfc995859be6e69f954c0bcc10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71864a441be594417621cd31599387fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacereflex.html#a71864a441be594417621cd31599387fa">timer_start</a> (<a class="el" href="namespacereflex.html#a87040a2fe4499e9b735f2564a50c58b9">timer_type</a> &amp;t)</td></tr>
 <tr class="memdesc:a71864a441be594417621cd31599387fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start timer.  <a href="#a71864a441be594417621cd31599387fa">More...</a><br /></td></tr>
 <tr class="separator:a71864a441be594417621cd31599387fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -564,6 +568,34 @@ template&lt;typename S1 , typename S2 &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="ab74e91cfc995859be6e69f954c0bcc10"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::isutf8 </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>e</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if valid UTF-8 encoding and does not include a NUL, but accept surrogates and 3/4 byte overlongs. </p>
+
+</div>
+</div>
 <a class="anchor" id="a10f9faa3bb7ef4d3cee8339b8e647875"></a>
 <div class="memitem">
 <div class="memproto">
@@ -586,7 +618,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Check ASCII word-like character <code>[A-Za-z0-9_]</code>, permitting the character range 0..303 (0x12F) and EOF. </p>
+<p>Check ASCII word-like character <code>[A-Za-z0-9_]</code>, permitting the character range 0..303 (0x12f) and EOF. </p>
 <dl class="section return"><dt>Returns</dt><dd>nonzero if argument c is in <code>[A-Za-z0-9_]</code>, zero otherwise </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -647,7 +679,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a8765224733219959ec990acd821d3700"></a>
+<a class="anchor" id="a52d50452d59b78229c800cffff315525"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -661,7 +693,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
+          <td class="paramname"><em>e</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -670,6 +702,8 @@ template&lt;typename S1 , typename S2 &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Count newlines in string s up to position e in the string. </p>
 
 </div>
 </div>
@@ -1203,7 +1237,7 @@ template&lt;typename S1 , typename S2 &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Aug 1 2024 11:49:37 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Oct 29 2024 12:14:59 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

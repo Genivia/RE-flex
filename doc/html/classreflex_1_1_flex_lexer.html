@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::FlexLexer&lt; M &gt; Class Template Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Thu Aug 1 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Oct 29 2024 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -224,13 +224,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ad708880eff5601208180600758773a1f inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Echo the matched text to the current output.  <a href="#ad708880eff5601208180600758773a1f">More...</a><br /></td></tr>
 <tr class="separator:ad708880eff5601208180600758773a1f inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1696b73ebd927f1093985f866d73bf6 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#ac1696b73ebd927f1093985f866d73bf6">text</a> () const </td></tr>
-<tr class="memdesc:ac1696b73ebd927f1093985f866d73bf6 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns string with the text matched.  <a href="#ac1696b73ebd927f1093985f866d73bf6">More...</a><br /></td></tr>
+<tr class="memdesc:ac1696b73ebd927f1093985f866d73bf6 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns 0-terminated pattern match as a char pointer, does not include matched \0s, this is a constant-time operation.  <a href="#ac1696b73ebd927f1093985f866d73bf6">More...</a><br /></td></tr>
 <tr class="separator:ac1696b73ebd927f1093985f866d73bf6 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25b43d3eabdf73eaf8106c33af71fb57 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a25b43d3eabdf73eaf8106c33af71fb57">str</a> () const </td></tr>
-<tr class="memdesc:a25b43d3eabdf73eaf8106c33af71fb57 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns string with a copy of the text matched.  <a href="#a25b43d3eabdf73eaf8106c33af71fb57">More...</a><br /></td></tr>
+<tr class="memdesc:a25b43d3eabdf73eaf8106c33af71fb57 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the pattern match as a string, a copy of <a class="el" href="classreflex_1_1_abstract_lexer.html#ac1696b73ebd927f1093985f866d73bf6" title="Returns 0-terminated pattern match as a char pointer, does not include matched \0s, this is a constant-time operation. ">text()</a>, may include pattern-matched \0s.  <a href="#a25b43d3eabdf73eaf8106c33af71fb57">More...</a><br /></td></tr>
 <tr class="separator:a25b43d3eabdf73eaf8106c33af71fb57 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cefad78219d2fe0b10e49a4f74204cc inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#a9cefad78219d2fe0b10e49a4f74204cc">wstr</a> () const </td></tr>
-<tr class="memdesc:a9cefad78219d2fe0b10e49a4f74204cc inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns wide string with a copy of the text matched.  <a href="#a9cefad78219d2fe0b10e49a4f74204cc">More...</a><br /></td></tr>
+<tr class="memdesc:a9cefad78219d2fe0b10e49a4f74204cc inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the pattern match as a wide string, converted from UTF-8 <a class="el" href="classreflex_1_1_abstract_lexer.html#ac1696b73ebd927f1093985f866d73bf6" title="Returns 0-terminated pattern match as a char pointer, does not include matched \0s, this is a constant-time operation. ">text()</a>, may include pattern-matched \0s.  <a href="#a9cefad78219d2fe0b10e49a4f74204cc">More...</a><br /></td></tr>
 <tr class="separator:a9cefad78219d2fe0b10e49a4f74204cc inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa08720e165486e2db19cdcd99ee80fb1 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_abstract_lexer.html#aa08720e165486e2db19cdcd99ee80fb1">chr</a> () const </td></tr>
 <tr class="memdesc:aa08720e165486e2db19cdcd99ee80fb1 inherit pub_methods_classreflex_1_1_abstract_lexer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the first 8-bit character of the text matched.  <a href="#aa08720e165486e2db19cdcd99ee80fb1">More...</a><br /></td></tr>
@@ -872,7 +872,7 @@ template&lt;typename M &gt; </div>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Thu Aug 1 2024 11:49:37 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Oct 29 2024 12:14:59 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
