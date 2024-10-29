@@ -269,8 +269,6 @@ bool Matcher::simd_advance_string_avx512bw(size_t loc)
   return advance_string(loc);
 }
 
-#if defined(WITH_STRING_PM)
-
 /// Implements AVX512BW string search scheme based on http://0x80.pl/articles/simd-friendly-karp-rabin.html
 bool Matcher::simd_advance_string_pma_avx512bw(size_t loc)
 {
@@ -364,8 +362,6 @@ bool Matcher::simd_advance_string_pmh_avx512bw(size_t loc)
   }
   return advance_string_pmh(loc);
 }
-
-#endif // WITH_STRING_PM
 
 #else
 
