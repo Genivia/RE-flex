@@ -2017,7 +2017,6 @@ std::string convert(const char *pattern, const char *signature, convert_flag_typ
             ++pos;
             loc = pos;
             const std::string& subregex = expand(macros, pattern, len, pos);
-            int c;
             if ((flags & convert_flag::lex) && pos + 5 < len && pattern[pos + 1] == '{' && ((c = pattern[pos + 2]) == '+' || c == '|' || c == '&' || c == '-') && pattern[pos + 3] == '}')
             {
               size_t subpos = 0;

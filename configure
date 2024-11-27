@@ -4853,7 +4853,7 @@ printf "%s\n" "#define uint64_t $ac_cv_c_uint64_t" >>confdefs.h
 
 
 # if CXXFLAGS is undefined, set it to our preferred default flags
-: ${CXXFLAGS="-Wall -Wextra -Wunused -O2"}
+: ${CXXFLAGS="-Wall -Wextra -Wunused -Wshadow -O2"}
 
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'

@@ -11,7 +11,7 @@ AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 
 # if CXXFLAGS is undefined, set it to our preferred default flags
-: ${CXXFLAGS="-Wall -Wextra -Wunused -O2"}
+: ${CXXFLAGS="-Wall -Wextra -Wunused -Wshadow -O2"}
 
 AC_LANG([C++])
 AC_PROG_CXX

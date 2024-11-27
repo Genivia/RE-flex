@@ -381,13 +381,13 @@ void Reflex::init(int argc, char **argv)
               size_t pos;
               while ((pos = name.find('-')) != std::string::npos)
                 name[pos] = '_';
-              StringMap::iterator i = options.find(name);
-              if (i == options.end())
+              StringMap::iterator it = options.find(name);
+              if (it == options.end())
                 help("unknown option --", arg);
               if (val != NULL)
-                i->second = val + 1;
+                it->second = val + 1;
               else
-                i->second = "true";
+                it->second = "true";
             }
             is_grouped = false;
             break;
