@@ -606,6 +606,7 @@ Changelog
 - Jun  6, 2024: 4.4.0 upgraded `reflex::Matcher` and `reflex::FuzzyMatcher` to respect Unicode word boundaries instead of only ASCII `\<`, `\>`, `\b`, `\B`; upgraded regex Unicode converters to Unicode `[::]` character classes instead of only ASCII `[[:alpha:]]` etc.; improved FSM code generation without local c0.
 - Aug  1, 2024: 4.5.0 minor speed improvements.
 - Oct 29, 2024: 5.0.0 faster SIMD regex search methods; improved anchor and word boundary matching speed and support; new `std::string_view strview()` matcher method.
+- Nov 29, 2024: 5.1.0 appease `-Woverload-virtual` and `-Wshadow` warnings; fix a bug in case-insensitive Unicode negated character class matching too much.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

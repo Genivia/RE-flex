@@ -1365,13 +1365,13 @@ matcher specified with option `-m`.
 
 #### `-T N`, `−−tabs=N`
 
-This option sets the default tab size to `N`, where `N` is 1, 2, 4, or 8.  The
-tab size is used internally to determine the column position for
-\ref reflex-pattern-dents matching and to determine the column position
-returned by `columno()`, `columno_end()`, and the number of columns returned by
-`columns()`.  It has no effect otherwise.  This option assigns the `T=N` value
-of the `reflex::Matcher` constructor options at runtime.  The value may be set
-at runtime with `matcher().tabs(N)` with `N` 1, 2, 4, or 8.
+This option sets the tab size to `N`, where `N` can be set to 1 (no expansion),
+2, 4, or 8.  The default tab size is 8.  The tab size determines the column
+position for \ref reflex-pattern-dents matching and to determine the column
+position returned by `columno()`, `columno_end()`, and the number of columns
+returned by `columns()`.  It has no effect otherwise.  This option assigns the
+`T=N` value of the `reflex::Matcher` constructor options at runtime.  The value
+may be set at runtime with `matcher().tabs(N)` with `N` 1, 2, 4, or 8.
 
 #### `-u`, `−−unicode`
 
@@ -3237,13 +3237,13 @@ the left margin, but should exclude `\n`.  For example:
 
 The `\h` pattern matches space and tabs, where tabs advance to the next column
 that is a multiple of 8.  The tab multiplier can be changed by setting the
-`−−tabs=N` option where `N` must be 1, 2, 4, or 8.  The tabs value can be
-changed at runtime with `matcher().tabs(N)`:
+`−−tabs=N` option where `N` must be 1 (no expansion), 2, 4, or 8.  The tabs
+value can be changed at runtime with `matcher().tabs(N)`:
 
   RE/flex action      | Result
   ------------------- | -------------------------------------------------------
   `matcher().tabs()`  | returns the current tabs value 1, 2, 4, or 8
-  `matcher().tabs(n)` | set the tabs value `n` where `n` is 1, 2, 4 or 8
+  `matcher().tabs(n)` | set the tabs value `n` where `n` is 1, 2, 4, or 8
 
 Using negative patterns we can ignore empty lines and multi-line comments that
 would otherwise affect indent stops:

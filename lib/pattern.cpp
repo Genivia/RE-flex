@@ -2656,19 +2656,29 @@ void Pattern::compile_list(Location loc, Chars& chars, const Mods modifiers) con
       {
         if (!is_meta(lo))
         {
-          if (lo <= c)
-            chars.add(lo, c);
-          else
-            error(regex_error::invalid_class_range, loc);
           if (is_modified(ModConst::i, modifiers, loc))
           {
-            for (Char a = lo; a <= c; ++a)
-            {
-              if (a >= 'A' && a <= 'Z')
-                chars.add(lowercase(a));
-              else if (a >= 'a' && a <= 'z')
-                chars.add(uppercase(a));
-            }
+            Char a = lo;
+            Char b = c;
+            if (a >= 'a' && a <= 'z' && b <= 'z')
+              a = uppercase(a);
+            if (b >= 'a' && b <= 'z' && a <= uppercase(b))
+              b = uppercase(b);
+            if (a > b)
+              error(regex_error::invalid_class_range, loc);
+            chars.add(a, b);
+            a = std::max<Char>(lo, 'A');
+            b = std::min<Char>(c, 'Z');
+            if (a <= b)
+              chars.add(lowercase(a), lowercase(b));
+            a = std::max<Char>(lo, 'a');
+            b = std::min<Char>(c, 'z');
+            if (a <= b)
+              chars.add(uppercase(a), uppercase(b));
+          }
+          else
+          {
+            chars.add(lo, c);
           }
           c = META_EOL;
         }
