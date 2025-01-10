@@ -9471,8 +9471,8 @@ RE/flex applications:
 🔝 [Back to table of contents](#)
 
 
-Minimized library and cross compiling                                {#linking}
--------------------------------------
+Minimized library and (cross) compiling from source                  {#linking}
+---------------------------------------------------
 
 RE/flex scanners generated with <b>`reflex`</b> can be linked against a
 minimized version of the RE/flex library `libreflexmin`:
@@ -9490,11 +9490,11 @@ directories as follows:
     c++ -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
         lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp
 
-This compiles the code without SIMD optimizations, despite compiling
+This compiles the code *without SIMD optimizations*, despite compiling
 `lib/simd.cpp`.  SIMD intrinsics for SSE/AVX and ARM NEON/AArch64 are used to
-speed up string search and newline detection in the library.  These
-optimizations are for the most part applicable to speed up searching with the
-`Matcher::find()` method.
+speed up string search and newline detection and counting in the library.
+These optimizations are for the most part applicable to speed up searching with
+the `Matcher::find()` method.
 
 To compile with NEON/AArch64 optimizations applied (omit `-mfpu=neon` for AArch64):
 
@@ -9527,8 +9527,8 @@ support AVX512BW:
 How to minimize runtime memory usage                                {#memusage}
 ------------------------------------
 
-Runtime memory usage is determined by two entities, the pattern DFA and the
-input buffer:
+Runtime memory usage is largely determined by two entities, the pattern DFA and
+the input buffer:
 
 - Use <b>`reflex`</b> option `−−full` to create a statically-allocated table
   DFA for the scanner's regular expression patterns or option `−−fast` to

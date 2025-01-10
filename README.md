@@ -101,7 +101,7 @@ Features
   regex engines, including the RE/flex regex engine, PCRE2, and Boost.Regex.
 - The RE/flex regex library makes C++11 std::regex, PCRE2, and Boost.Regex much
   easier to use for pattern matching on (wide) strings, files, and streams.
-- IEEE POSIX P1003.2 standard compliant (like Lex and Flex).
+- IEEE POSIX P1003.2 standard compliant like Lex and Flex (but generates C++).
 - Extensive documentation in the online [User Guide][manual-url].
 - Lots of other improvements over Flex++, such as `yypush_buffer_state` saves
   the scanner state (line, column, and indentation positions), not just the
@@ -607,6 +607,7 @@ Changelog
 - Aug  1, 2024: 4.5.0 minor speed improvements.
 - Oct 29, 2024: 5.0.0 faster SIMD regex search methods; improved anchor and word boundary matching speed and support; new `std::string_view strview()` matcher method.
 - Nov 29, 2024: 5.1.0 appease `-Woverload-virtual` and `-Wshadow` warnings; fix a bug in case-insensitive Unicode negated character class matching too much.
+- Jan  9, 2025: 5.1.1 fix a minor issue with case-insentitive matching when regex patterns are specified in certain ways in combination with "string-like" patterns such that one ore more alternating sub-patterns overlap from the start.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

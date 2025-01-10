@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">RE/flex user guide</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Nov 29 2024 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Jan 9 2025 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -148,7 +148,7 @@
 <li class="level2"><a href="#readline">Interactive input with GNU readline                                 </a></li>
 <li class="level2"><a href="#nonblock">Registering a handler to support non-blocking reads                 </a></li>
 <li class="level2"><a href="#link-errors">Undefined symbols and link errors                                </a></li>
-<li class="level2"><a href="#linking">Minimized library and cross compiling                                </a></li>
+<li class="level2"><a href="#linking">Minimized library and (cross) compiling from source                  </a></li>
 <li class="level2"><a href="#memusage">How to minimize runtime memory usage                                </a></li>
 <li class="level2"><a href="#zerocopy">How to speed up matching and searching with zero copy overhead      </a></li>
 <li class="level2"><a href="#loop">A C++ range-based loop construct to avoid                               </a></li>
@@ -3714,12 +3714,12 @@ Undefined symbols and link errors                                </h2>
 </ul>
 <p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="linking"></a>
-Minimized library and cross compiling                                </h2>
+Minimized library and (cross) compiling from source                  </h2>
 <p>RE/flex scanners generated with <b><code>reflex</code></b> can be linked against a minimized version of the RE/flex library <code>libreflexmin</code>: </p><pre class="fragment">c++ ... -lreflexmin
 </pre><p>The regex Unicode converters and the Unicode tables that are not used at run time are excluded from the minimized library.</p>
 <p>If the RE/flex library is not installed, for example when cross-compiling a RE/flex scanner to a different platform, then compile directly from the RE/flex C++ source files located in the <code>reflex/lib</code> and <code>reflex/include</code> directories as follows: </p><pre class="fragment">c++ -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
     lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp
-</pre><p>This compiles the code without SIMD optimizations, despite compiling <code>lib/simd.cpp</code>. SIMD intrinsics for SSE/AVX and ARM NEON/AArch64 are used to speed up string search and newline detection in the library. These optimizations are for the most part applicable to speed up searching with the <code>Matcher::find()</code> method.</p>
+</pre><p>This compiles the code <em>without SIMD optimizations</em>, despite compiling <code>lib/simd.cpp</code>. SIMD intrinsics for SSE/AVX and ARM NEON/AArch64 are used to speed up string search and newline detection and counting in the library. These optimizations are for the most part applicable to speed up searching with the <code>Matcher::find()</code> method.</p>
 <p>To compile with NEON/AArch64 optimizations applied (omit <code>-mfpu=neon</code> for AArch64): </p><pre class="fragment">c++ -DHAVE_NEON -mfpu=neon -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
     lib/input.cpp lib/matcher.cpp lib/pattern.cpp lib/utf8.cpp lib/simd.cpp
 </pre><p>To compile with SSE2 optimizations applied: </p><pre class="fragment">c++ -DHAVE_SSE2 -msse2 -I. -Iinclude lex.yy.cpp lib/debug.cpp lib/error.cpp \
@@ -3733,7 +3733,7 @@ Minimized library and cross compiling                                </h2>
 </pre><p>🔝 <a href="#">Back to table of contents</a></p>
 <h2><a class="anchor" id="memusage"></a>
 How to minimize runtime memory usage                                </h2>
-<p>Runtime memory usage is determined by two entities, the pattern DFA and the input buffer:</p>
+<p>Runtime memory usage is largely determined by two entities, the pattern DFA and the input buffer:</p>
 <ul>
 <li>Use <b><code>reflex</code></b> option <code>−−full</code> to create a statically-allocated table DFA for the scanner's regular expression patterns or option <code>−−fast</code> to generate a direct-coded DFA. Without one of these options, by default a DFA is created at runtime and stored in heap space.</li>
 <li>Compile the generated source code with <code>-DREFLEX_BUFSZ=16384</code> to override the internal buffer <code><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a79db8b02dc5dce0da626fa2900273d87" title="initial buffer size, at least 4096 bytes ">reflex::AbstractMatcher::Const::BUFSZ</a></code> size. By default, the buffer size is 256K, which is optimal for high-performance file searching and tokenization. The buffer is a sliding window over the input, i.e. input files may be much larger than the buffer size. A reasonably small <code>REFLEX_BUFSZ</code> is 16384 for a 16K buffer. A small buffer automatically expands to accommodate larger pattern matches. However, when using the <code>line()</code> and <code>wline()</code> methods, very long lines may not fit and the return string values of <code>line()</code> and <code>wline()</code> may be truncated as a result. Furtheremore, a small buffer increase processing time, i.e. to frequently move the buffered window along a file and increases the cost to decode UTF-16/32 into UTF-8 multibyte sequences.</li>
@@ -3779,7 +3779,7 @@ License and copyright                                                </h1>
 </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Nov 29 2024 16:20:18 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Jan 9 2025 16:27:12 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
