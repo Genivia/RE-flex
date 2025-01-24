@@ -17,8 +17,8 @@ indent/dedent anchors, POSIX regex lazy quantifiers, word boundaries, functions
 for lex and syntax error reporting, lexer rule execution performance profiling,
 and other new features.
 
-Only RE/flex supports POSIX regex lazy matching in linear time using an
-advanced DFA transformation algorithm (invented by Dr. Robert van Engelen.)
+Only RE/flex supports backtrack-free regex lazy matching in linear time using
+an advanced DFA transformation algorithm (invented by Dr. Robert van Engelen.)
 
 RE/flex is faster than Flex and much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a 2 KB
@@ -607,7 +607,8 @@ Changelog
 - Aug  1, 2024: 4.5.0 minor speed improvements.
 - Oct 29, 2024: 5.0.0 faster SIMD regex search methods; improved anchor and word boundary matching speed and support; new `std::string_view strview()` matcher method.
 - Nov 29, 2024: 5.1.0 appease `-Woverload-virtual` and `-Wshadow` warnings; fix a bug in case-insensitive Unicode negated character class matching too much.
-- Jan  9, 2025: 5.1.1 fix a minor issue with case-insentitive matching when regex patterns are specified in certain ways in combination with "string-like" patterns such that one ore more alternating sub-patterns overlap from the start.
+- Jan  9, 2025: 5.1.1 fix a minor issue with case-insensitive matching when regex patterns are specified in certain ways in combination with "string-like" patterns such that one ore more alternating sub-patterns overlap from the start.
+- Jan 24, 2025: 5.2.0 new file encoding type `null_data` to read NUL as LF and vice versa; supports reading `xargs -0` output for example.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

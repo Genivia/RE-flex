@@ -75,7 +75,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "5.1.1"
+#define REFLEX_VERSION "5.2.0"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**

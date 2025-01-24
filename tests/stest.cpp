@@ -103,6 +103,7 @@ Test tests[] = {
   { "(?i:abc)|xyz", "", "", "abcABCxyz", { 1, 1, 2 } },
   { "(?i:abc)|(?i:xyz)", "", "", "abcABCxyzXYZ", { 1, 1, 2, 2 } },
   { "(?i)a[^b]c|abc", "", "", "aacAACabcABCaBcAbC", { 1, 1, 2, 2, 2, 2 } },
+  { "(?i:abcd(ef)?)", "", "", "ABCdefabcd", { 1, 1 } },
   // Pattern option x
   { "(?x) a\tb\n c | ( xy ) z ?", "", "", "abcxy", { 1, 2 } },
   { "(?x: a b\n c)", "", "", "abc", { 1 } },

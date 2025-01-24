@@ -7827,29 +7827,35 @@ The current file encoding used by a matcher is obtained with the
   `reflex::Input::file_encoding::koi8_r`     | KOI8-R
   `reflex::Input::file_encoding::koi8_u`     | KOI8-U
   `reflex::Input::file_encoding::koi8_ru`    | KOI8-RU
+  `reflex::Input::file_encoding::null_data`  | convert between NUL <-> LF
   `reflex::Input::file_encoding::custom`     | user-defined custom code page
 
-To set the file encoding when assigning a file to read with `reflex::Input`,
-use `reflex::Input(file, enc)` with one of the encoding constants shown in
-the table.
+The `null_data` encoding type converts between NUL (zere byte) and LF (`\n`)
+to support input from tools that output NUL for newlines, such as `xargs -0`.
 
-For example, use `reflex::Input::file_encoding::latin` to override the encoding
-when the file contains ISO-8859-1.  This way you can match its content using
-Unicode patterns (matcher engines internally normalizes ISO-8859-1 to UTF-8):
+To specify a file encoding when assigning a file to be read, use
+`reflex::Input(file, enc)` with `enc` one of the encoding constants shown in
+the table above.
+
+For example, `reflex::Input::file_encoding::latin` supports files with
+ISO-8859-1 content.  This way you can match its content using Unicode patterns,
+since the RE/flex matcher engines internally normalize the specified encodings
+to UTF-8 for pattern matching:
 
 ~~~{.cpp}
     reflex::Input input(stdin, reflex::Input::file_encoding::latin);
     reflex::Matcher matcher(pattern, input);
 ~~~
 
-This sets the standard input encoding to ISO-8859-1, but only if no UTF BOM was
-detected on the standard input, because the UTF encoding of a `FILE*` that
-starts with a UTF BOM cannot be overruled.
+This sets the input encoding to ISO-8859-1, but only if no UTF BOM was detected
+on the standard input we are reading from.  The encoding of an input file
+specified as a `FILE*` argument when the file has a UTF BOM cannot be changed.
+The input of UTF-encoded files is normalized to UTF-8 when read.
 
-To define a custom code page to translate files, define a code page table with
-256 entries that maps each 8-bit input character to a 16-bit Unicode character
-(UCS-2).  Then use `reflex::Input::file_encoding::custom` with a pointer to
-your code page to construct an input object.  For example:
+To define a custom code page to normalize the input to Unicode, define a code
+page table with 256 entries that maps each 8-bit input character to a 16-bit
+Unicode character (UCS-2).  Then use `reflex::Input::file_encoding::custom`
+with a pointer to your code page to construct an input object.  For example:
 
 ~~~{.cpp}
     static const unsigned short CP[256] = {
