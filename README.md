@@ -609,6 +609,7 @@ Changelog
 - Nov 29, 2024: 5.1.0 appease `-Woverload-virtual` and `-Wshadow` warnings; fix a bug in case-insensitive Unicode negated character class matching too much.
 - Jan  9, 2025: 5.1.1 fix a minor issue with case-insensitive matching when regex patterns are specified in certain ways in combination with "string-like" patterns such that one ore more alternating sub-patterns overlap from the start.
 - Jan 24, 2025: 5.2.0 new file encoding type `null_data` to read NUL as LF and vice versa; supports reading `xargs -0` output for example.
+- Jan 27, 2025: 5.2.1 fix a regression issue with non-SIMD-optimized search with `Matcher::find()`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
