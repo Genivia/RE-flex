@@ -217,8 +217,8 @@ bool Matcher::simd_advance_pattern_pin1_pma_avx2(size_t loc)
       s += 32;
     }
     loc = s - lcp - buf_;
-    set_current_and_peek_more(loc - 1);
-    loc = cur_ + 1;
+    set_current_and_peek_more(loc);
+    loc = cur_;
     if (loc + min > end_)
       return false;
     if (loc + min + 31 > end_)
@@ -259,8 +259,8 @@ bool Matcher::simd_advance_pattern_pin1_pmh_avx2(size_t loc)
       s += 32;
     }
     loc = s - lcp - buf_;
-    set_current_and_peek_more(loc - 1);
-    loc = cur_ + 1;
+    set_current_and_peek_more(loc);
+    loc = cur_;
     if (loc + MIN > end_)
       return false;
     if (loc + MIN + 31 > end_)
@@ -299,8 +299,8 @@ bool Matcher::simd_advance_pattern_pin##N##_one_avx2(size_t loc) \
       s += 32; \
     } \
     loc = s - buf_; \
-    set_current_and_peek_more(loc - 1); \
-    loc = cur_ + 1; \
+    set_current_and_peek_more(loc); \
+    loc = cur_; \
     if (loc + 1 > end_) \
       return false; \
     if (loc + 32 > end_) \
@@ -470,8 +470,8 @@ bool Matcher::simd_advance_pattern_pin##N##_pma_avx2(size_t loc) \
       s += 32; \
     } \
     loc = s - lcp - buf_; \
-    set_current_and_peek_more(loc - 1); \
-    loc = cur_ + 1; \
+    set_current_and_peek_more(loc); \
+    loc = cur_; \
     if (loc + min > end_) \
       return false; \
     if (loc + min + 31 > end_) \
@@ -513,8 +513,8 @@ bool Matcher::simd_advance_pattern_pin##N##_pmh_avx2(size_t loc) \
       s += 32; \
     } \
     loc = s - lcp - buf_; \
-    set_current_and_peek_more(loc - 1); \
-    loc = cur_ + 1; \
+    set_current_and_peek_more(loc); \
+    loc = cur_; \
     if (loc + MIN > end_) \
       return false; \
     if (loc + MIN + 31 > end_) \
@@ -818,8 +818,8 @@ bool Matcher::simd_advance_pattern_min4_avx2(size_t loc)
       s += 4;
     }
     loc = s - buf_;
-    set_current_and_peek_more(loc - 1);
-    loc = cur_ + 1;
+    set_current_and_peek_more(loc);
+    loc = cur_;
     if (loc + 3 >= end_)
       return advance_pattern_min4<MIN>(loc - MIN);
   }
@@ -862,8 +862,8 @@ bool Matcher::simd_advance_chars_avx2(size_t loc)
       s += 32;
     }
     loc = s - lcp - buf_;
-    set_current_and_peek_more(loc - 1);
-    loc = cur_ + 1;
+    set_current_and_peek_more(loc);
+    loc = cur_;
     if (loc + LEN > end_)
       return false;
     if (loc + LEN + 31 > end_)
@@ -911,8 +911,8 @@ bool Matcher::simd_advance_chars_pma_avx2(size_t loc)
       s += 32;
     }
     loc = s - lcp - buf_;
-    set_current_and_peek_more(loc - 1);
-    loc = cur_ + 1;
+    set_current_and_peek_more(loc);
+    loc = cur_;
     if (loc + LEN + min > end_)
       return false;
     if (loc + LEN + min + 31 > end_)
@@ -958,8 +958,8 @@ bool Matcher::simd_advance_chars_pmh_avx2(size_t loc)
       s += 32;
     }
     loc = s - lcp - buf_;
-    set_current_and_peek_more(loc - 1);
-    loc = cur_ + 1;
+    set_current_and_peek_more(loc);
+    loc = cur_;
     if (loc + LEN + min > end_)
       return false;
     if (loc + LEN + min + 31 > end_)
@@ -1002,8 +1002,8 @@ bool Matcher::simd_advance_string_avx2(size_t loc)
       s += 32;
     }
     loc = s - lcp - buf_;
-    set_current_and_peek_more(loc - 1);
-    loc = cur_ + 1;
+    set_current_and_peek_more(loc);
+    loc = cur_;
     if (loc + len > end_)
       return false;
     if (loc + len + 31 > end_)
@@ -1050,8 +1050,8 @@ bool Matcher::simd_advance_string_pma_avx2(size_t loc)
       s += 32;
     }
     loc = s - lcp - buf_;
-    set_current_and_peek_more(loc - 1);
-    loc = cur_ + 1;
+    set_current_and_peek_more(loc);
+    loc = cur_;
     if (loc + len + min > end_)
       return false;
     if (loc + len + min + 31 > end_)
@@ -1096,8 +1096,8 @@ bool Matcher::simd_advance_string_pmh_avx2(size_t loc)
       s += 32;
     }
     loc = s - lcp - buf_;
-    set_current_and_peek_more(loc - 1);
-    loc = cur_ + 1;
+    set_current_and_peek_more(loc);
+    loc = cur_;
     if (loc + len + min > end_)
       return false;
     if (loc + len + min + 31 > end_)
