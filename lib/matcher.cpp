@@ -70,6 +70,7 @@ size_t Matcher::match(Method method)
       }
       else if (pat_->one_)
       {
+        // one string match, no need to perform a regex match
         size_t k = cur_ + pat_->len_;
         int ch = k < end_ ? static_cast<unsigned char>(buf_[k]) : EOF;
         if (!opt_.W || (at_wb() && (at_end() || at_we(ch, k))))
@@ -655,6 +656,7 @@ redo:
               DBGLOG("Find: look back %zu to pos %zu", retry, cur_);
               goto scan;
             }
+            // if not one string match then perform a regex match, else we're done
             if (!pat_->one_)
               goto scan;
             size_t k = cur_ + pat_->len_;
@@ -1271,7 +1273,7 @@ bool Matcher::advance_pattern_pin1_pmh(size_t loc)
 
 #if defined(HAVE_AVX512BW) || defined(HAVE_AVX2) || defined(HAVE_SSE2)
 
-/// My homegrown "needle search" methods
+/// My homegrown "needle search" methods for pins with min=0 or 1
 #define ADV_PAT_PIN_ONE(N, INIT, COMP) \
 bool Matcher::advance_pattern_pin##N##_one(size_t loc) \
 { \
@@ -1308,7 +1310,7 @@ bool Matcher::advance_pattern_pin##N##_one(size_t loc) \
     if (loc + 16 > end_) \
       break; \
   } \
-  return advance_pattern_pma(loc); \
+  return advance_pattern_min1(loc); \
 }
 
 ADV_PAT_PIN_ONE(2, \
@@ -1402,7 +1404,7 @@ ADV_PAT_PIN_ONE(8, \
     veq = _mm_or_si128(veq, _mm_cmpeq_epi8(v7, vstr)); \
   )
 
-/// My homegrown "needle search" methods
+/// My homegrown "needle search" methods for pins with min=2 or 3 (pma) and min>=4 (pmh)
 #define ADV_PAT_PIN(N, INIT, COMP) \
 bool Matcher::advance_pattern_pin##N##_pma(size_t loc) \
 { \
@@ -1646,7 +1648,7 @@ ADV_PAT_PIN(8, \
 
 #elif defined(HAVE_NEON)
 
-/// My homegrown "needle search" methods
+/// My homegrown "needle search" methods for pins with min=0 or 1
 #define ADV_PAT_PIN_ONE(N, INIT, COMP) \
 bool Matcher::advance_pattern_pin##N##_one(size_t loc) \
 { \
@@ -1717,7 +1719,7 @@ bool Matcher::advance_pattern_pin##N##_one(size_t loc) \
     if (loc + 16 > end_) \
       break; \
   } \
-  return advance_pattern_pma(loc); \
+  return advance_pattern_min1(loc); \
 }
 
 ADV_PAT_PIN_ONE(2, \
@@ -1850,7 +1852,7 @@ ADV_PAT_PIN_ONE(8, \
         vceqq_u8(v7, vstr)); \
   )
 
-/// My homegrown "needle search" methods
+/// My homegrown "needle search" methods for pins with min=2 or 3 (pma) and min>=4 (pmh)
 #define ADV_PAT_PIN(N, INIT, COMP) \
 bool Matcher::advance_pattern_pin##N##_pma(size_t loc) \
 { \
@@ -2238,7 +2240,7 @@ ADV_PAT_PIN(8, \
 
 #endif
 
-/// Minimal 1 byte long patterns using 4-way bitap hashed pairs then PM4
+/// Minimal 1 byte long patterns with min=0 or 1 using 4-way bitap hashed pairs then PM4
 bool Matcher::advance_pattern_min1(size_t loc)
 {
   const Pattern::Pred *tap = pat_->tap_;
@@ -2280,13 +2282,24 @@ bool Matcher::advance_pattern_min1(size_t loc)
     loc = cur_;
     if (loc + 4 >= end_)
     {
+      s = buf_ + loc;
+      e = buf_ + end_;
+      while (s < e)
+      {
+        uint8_t c1 = s + 1 < e ? static_cast<uint8_t>(s[1]) : 0;
+        if (!(tap[Pattern::bihash(c0, c1)] & 1))
+          break;
+        c0 = c1;
+        ++s;
+      }
+      loc = s - buf_;
       set_current(loc);
       return loc + 1 <= end_;
     }
   }
 }
 
-/// Minimal 2 byte long patterns using bitap hashed pairs and PM4
+/// Minimal 2 byte long patterns with min=2 using bitap hashed pairs and PM4
 bool Matcher::advance_pattern_min2(size_t loc)
 {
   const Pattern::Pred *tap = pat_->tap_;
@@ -2312,11 +2325,20 @@ bool Matcher::advance_pattern_min2(size_t loc)
     set_current_and_peek_more(loc);
     loc = cur_;
     if (loc + 1 >= end_)
+    {
+      uint8_t c1 = 0; // reached the end
+      state = (state << 1) | tap[Pattern::bihash(c0, c1)];
+      if ((state & 2) == 0)
+      {
+        set_current(loc - 1);
+        return true;
+      }
       return false;
+    }
   }
 }
 
-/// Minimal 3 byte long pattern using bitap hashed pairs and PM4
+/// Minimal 3 byte long pattern with min=3 using bitap hashed pairs and PM4
 bool Matcher::advance_pattern_min3(size_t loc)
 {
   const Pattern::Pred *tap = pat_->tap_;
@@ -2342,7 +2364,16 @@ bool Matcher::advance_pattern_min3(size_t loc)
     set_current_and_peek_more(loc);
     loc = cur_;
     if (loc + 1 >= end_)
+    {
+      uint8_t c1 = 0; // reached the end
+      state = (state << 1) | tap[Pattern::bihash(c0, c1)];
+      if ((state & 4) == 0)
+      {
+        set_current(loc - 2);
+        return true;
+      }
       return false;
+    }
   }
 }
 
@@ -2420,34 +2451,30 @@ bool Matcher::advance_pattern_min4(size_t loc)
   }
 }
 
-/// Minimal 1 byte long pattern using PM4
+/// Minimal 1 byte long pattern with min=0 or 1 using PM4
 bool Matcher::advance_pattern_pma(size_t loc)
 {
   while (true)
   {
     const char *s = buf_ + loc;
     const char *e = buf_ + end_;
-    while (s < e - 6 &&
-        !pat_->predict_match(s) &&
-        !pat_->predict_match(++s) &&
-        !pat_->predict_match(++s) &&
-        !pat_->predict_match(++s))
+    while (s < e - 6)
     {
-      ++s;
+      if (pat_->predict_match(s++) ||
+          pat_->predict_match(s++) ||
+          pat_->predict_match(s++) ||
+          pat_->predict_match(s++))
+      {
+        loc = s - buf_ - 1;
+        set_current(loc);
+        return true;
+      }
     }
     loc = s - buf_;
-    if (s < e)
-    {
-      set_current(loc);
-      return true;
-    }
     set_current_and_peek_more(loc);
     loc = cur_;
     if (loc + 6 >= end_)
-    {
-      set_current(loc);
-      return loc + pat_->min_ <= end_;
-    }
+      return advance_pattern_min1(loc);
   }
 }
 
