@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Unicode::Tables Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Mon Feb 3 2025 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Fri Feb 28 2025 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -53,6 +53,7 @@
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="classreflex_1_1_unicode_1_1_tables-members.html">List of all members</a>  </div>
@@ -67,7 +68,7 @@ Inheritance diagram for reflex::Unicode::Tables:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreflex_1_1_unicode_1_1_tables__inherit__graph.png" border="0" usemap="#reflex_1_1_unicode_1_1_tables_inherit__map" alt="Inheritance graph"/></div>
 <map name="reflex_1_1_unicode_1_1_tables_inherit__map" id="reflex_1_1_unicode_1_1_tables_inherit__map">
-<area shape="rect" id="node2" href="classreflex_1_1_posix_1_1_tables.html" title="reflex::Posix::Tables" alt="" coords="13,5,156,32"/>
+<area shape="rect" id="node2" href="classreflex_1_1_posix_1_1_tables.html" title="Tables of character ranges [lo,hi] for each character class. " alt="" coords="13,5,153,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -75,7 +76,7 @@ Collaboration diagram for reflex::Unicode::Tables:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreflex_1_1_unicode_1_1_tables__coll__graph.png" border="0" usemap="#reflex_1_1_unicode_1_1_tables_coll__map" alt="Collaboration graph"/></div>
 <map name="reflex_1_1_unicode_1_1_tables_coll__map" id="reflex_1_1_unicode_1_1_tables_coll__map">
-<area shape="rect" id="node2" href="classreflex_1_1_posix_1_1_tables.html" title="reflex::Posix::Tables" alt="" coords="8,117,149,143"/>
+<area shape="rect" id="node2" href="classreflex_1_1_posix_1_1_tables.html" title="Tables of character ranges [lo,hi] for each character class. " alt="" coords="8,118,148,145"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -94,6 +95,13 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classreflex_1_1_posix_1_1_tables"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreflex_1_1_posix_1_1_tables')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreflex_1_1_posix_1_1_tables.html">reflex::Posix::Tables</a></td></tr>
 <tr class="memitem:a4609d844bb8dedfd8234bfc28c0f623b inherit pub_methods_classreflex_1_1_posix_1_1_tables"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_posix_1_1_tables.html#a4609d844bb8dedfd8234bfc28c0f623b">Tables</a> ()</td></tr>
 <tr class="separator:a4609d844bb8dedfd8234bfc28c0f623b inherit pub_methods_classreflex_1_1_posix_1_1_tables"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a67607568887bb11108142054191bc016"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_unicode_1_1_tables.html#a67607568887bb11108142054191bc016">toupper</a> (int c)</td></tr>
+<tr class="separator:a67607568887bb11108142054191bc016"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99de4e3c68003c90a51f2bcc7ba597d6"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_unicode_1_1_tables.html#a99de4e3c68003c90a51f2bcc7ba597d6">tolower</a> (int c)</td></tr>
+<tr class="separator:a99de4e3c68003c90a51f2bcc7ba597d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -236,6 +244,54 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a99de4e3c68003c90a51f2bcc7ba597d6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int reflex::Unicode::Tables::tolower </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a67607568887bb11108142054191bc016"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int reflex::Unicode::Tables::toupper </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a class="anchor" id="a7a78e7cd9922196fcc48d562c7dbb5c7"></a>
 <div class="memitem">
@@ -255,7 +311,7 @@ Private Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Mon Feb 3 2025 13:39:53 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Fri Feb 28 2025 17:19:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

@@ -536,10 +536,10 @@ class Pattern {
   typedef std::map<Position,Positions> Follow;
   typedef std::pair<Chars,Positions>   Move;
   typedef std::list<Move>              Moves;
-  inline static void pos_insert(Positions& s1, const Positions& s2) { s1.insert(s1.end(), s2.begin(), s2.end()); }
-  inline static void pos_add(Positions& s, const Position& e) { s.insert(s.end(), e); }
-  inline static void lazy_insert(Lazypos& s1, const Lazypos& s2) { s1.insert(s1.end(), s2.begin(), s2.end()); }
-  inline static void lazy_add(Lazypos& s, const Lazy i, Location p) { s.insert(s.end(), Position(p).lazy(i)); }
+  static inline void pos_insert(Positions& s1, const Positions& s2) { s1.insert(s1.end(), s2.begin(), s2.end()); }
+  static inline void pos_add(Positions& s, const Position& e) { s.insert(s.end(), e); }
+  static inline void lazy_insert(Lazypos& s1, const Lazypos& s2) { s1.insert(s1.end(), s2.begin(), s2.end()); }
+  static inline void lazy_add(Lazypos& s, const Lazy i, Location p) { s.insert(s.end(), Position(p).lazy(i)); }
 #ifndef WITH_TREE_DFA
   /// Tree DFA constructed from string patterns.
   struct Tree {

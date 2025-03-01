@@ -29,7 +29,7 @@ install:		release
 			@echo "Installing reflex header files in $(INSTALL_INC)"
 			-cp -f ../include/reflex/*.h $(INSTALL_INC)
 
-libreflex.a:		convert.o debug.o error.o input.o block_scripts.o language_scripts.o letter_scripts.o composer.o matcher.o matcher_avx2.o matcher_avx512bw.o pattern.o posix.o simd.o simd_avx2.o simd_avx512bw.o unicode.o utf8.o
+libreflex.a:		convert.o debug.o error.o input.o block_scripts.o language_scripts.o letter_scripts.o composer.o letter_case.o matcher.o matcher_avx2.o matcher_avx512bw.o pattern.o posix.o simd.o simd_avx2.o simd_avx512bw.o unicode.o utf8.o
 			$(AR) -rsc $@ $^
 			$(RANLIB) $@
 
@@ -37,7 +37,7 @@ libreflexmin.a:		debug.o error.o input.o matcher.o matcher_avx2.o matcher_avx512
 			$(AR) -rsc $@ $^
 			$(RANLIB) $@
 
-libreflex.so:		convert.cpp debug.cpp error.cpp input.cpp ../unicode/block_scripts.cpp ../unicode/language_scripts.cpp ../unicode/letter_scripts.cpp ../unicode/composer.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp posix.cpp simd.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp
+libreflex.so:		convert.cpp debug.cpp error.cpp input.cpp ../unicode/block_scripts.cpp ../unicode/language_scripts.cpp ../unicode/letter_scripts.cpp ../unicode/letter_case.cpp ../unicode/composer.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp posix.cpp simd.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp
 			$(CPP) $(CFLAGS) -shared -o $@ -fPIC $^
 
 libreflexmin.so:	debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp simd.cpp simd_avx2.cpp simd_avx512bw.cpp utf8.cpp
@@ -50,6 +50,9 @@ language_scripts.o:	../unicode/language_scripts.cpp
 			$(CPP) $(CFLAGS) -c $^
 
 letter_scripts.o:	../unicode/letter_scripts.cpp
+			$(CPP) $(CFLAGS) -c $^
+
+letter_case.o:		../unicode/letter_case.cpp
 			$(CPP) $(CFLAGS) -c $^
 
 composer.o:		../unicode/composer.cpp

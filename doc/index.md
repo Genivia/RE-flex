@@ -4,10 +4,10 @@ RE/flex user guide                                                  {#mainpage}
                                                                @tableofcontents
 
 
-  "The asteroid to kill this dinosaur is still in orbit."  -- Lex Manual
+  "The asteroid to kill this dinosaur is still in orbit."         -- Lex Manual
 
-  "Reflex: a thing that is determined by and reproduces
-   the essential features or qualities of something else." -- Oxford Dictionary
+  "Reflex: a thing that is determined by and reproduces the
+   essential features or qualities of something else."     -- Oxford Dictionary
 
 
 What is RE/flex?                                                       {#intro}
@@ -16,20 +16,29 @@ What is RE/flex?                                                       {#intro}
 A high-performance C++ regex library and a lexical analyzer generator like
 Flex and Lex.
 
-The RE/flex lexical analyzer generator extends Flex++ with Unicode support
-and many other useful features, such as regex indentation anchors, regex lazy
-quantifiers, regex word boundaries, methods for error reporting and recovery,
-and options to simplify integration with with Bison and other parsers.
+Firstly, the high-performance RE/flex regex engine internally builds finite
+state machine tables or generates direct code to scan and search input
+efficiently.
+
+RE/flex also supports other regex engines under the same uniform C++ class API,
+namely RE/flex with fuzzy matching, the PCRE2 library, the Boost.Regex library,
+and std::regex.
+
+This uniform API implements pattern matching on files, streams, strings, and
+memory directly.  Input is internally buffered in a window so that very large
+files can be searched.  File encodings are normalized to UTF-8 to apply UTF-8
+Unicode regex pattern matching.
+
+Secondly, the RE/flex lexical analyzer generator extends Flex++ with Unicode
+support and many new useful features, such as regex indentation anchors, regex
+lazy quantifiers, regex word boundaries, methods for error reporting and
+recovery, and new options to simplify integration with with Bison and other
+parsers.
 
 The RE/flex lexical analyzer generator does all the heavy-lifting for you to
 make it easier to integrate advanced tokenizers with Bison and other parsers.
 It generates the necessary gluing code depending on the type of Bison parser
 used, such as advanced "Bison complete parsers".
-
-The high-performance RE/flex regex library generates finite state machine
-tables or direct code to scan and search input efficiently.  RE/flex also
-includes a smart input class to normalize input from files, streams, strings,
-and memory to standard UTF-8 streams.
 
 In a nutshell, the RE/flex lexical analyzer generator
 
@@ -305,18 +314,20 @@ and splitting input from strings, files and streams in regular C++ applications
 🔝 [Back to table of contents](#)
 
 
-A flexible regex library                                              {#intro2}
-------------------------
+Flexible high-performance regex classes                               {#intro2}
+---------------------------------------
 
-The RE/flex regex pattern matching classes include two classes for Boost.Regex,
-two classes for PCRE2, two classes for C++11 std::regex, and a RE/flex class:
+The regex pattern matching C++ classes include the high-performance RE/flex
+regex engine, the RE/flex fuzzy matching engine, classes for Boost.Regex,
+classes for PCRE2, and classes for C++11 std::regex:
 
   Engine        | Header file to include  | C++ matcher classes
   ------------- | ----------------------- | -----------------------------------
-  RE/flex regex | `reflex/matcher.h`      | `Matcher`
-  PCRE2         | `reflex/pcre2matcher.h` | `PCRE2Matcher`, `PCRE2UTFMatcher`
-  Boost.Regex   | `reflex/boostmatcher.h` | `BoostMatcher`, `BoostPosixMatcher`
-  std::regex    | `reflex/stdmatcher.h`   | `StdMatcher`, `StdPosixMatcher`
+  RE/flex regex | `reflex/matcher.h`      | `reflex::Matcher`
+  RE/flex regex | `reflex/fuzzymatcher.h` | `reflex::FuzzyMatcher`
+  PCRE2         | `reflex/pcre2matcher.h` | `reflex::PCRE2Matcher`, `reflex::PCRE2UTFMatcher`
+  Boost.Regex   | `reflex/boostmatcher.h` | `reflex::BoostMatcher`, `reflex::BoostPerlMatcher`, `reflex::BoostPosixMatcher`
+  std::regex    | `reflex/stdmatcher.h`   | `reflex::StdMatcher`, `reflex::StdEcmaMatcher`, `reflex::StdPosixMatcher`
 
 The RE/flex `reflex::Matcher` class compiles regex patterns to efficient
 non-backtracking deterministic finite state machines (FSM) when instantiated.
@@ -325,6 +336,13 @@ considerably, at the cost of the initial FSM construction (see further below
 for hints on how to avoid this run time overhead).  RE/flex matchers only
 support POSIX mode matching, see \ref reflex-posix-perl.
 
+The RE/flex `reflex::FuzzyMatcher` class derived from `reflex::Matcher`
+supports the same features as the `reflex::Matcher` class but performs
+approximate regex pattern matching.  The constructor accepts an optional second
+parameter that specifies the "edit distance" for approximate matching.  Pattern
+search is not as efficient as the `reflex::Matcher` class that uses SIMD
+acceleration to speed up search for the `find()` method.
+
 The `reflex::PCRE2Matcher` and `reflex::PCRE2UTFMatcher` classes are for
 efficient Perl mode matching with PCRE2 using JIT (just-in-time compilation),
 where the latter uses native PCRE2 Unicode matching with `PCRE2_UTF+PCRE2_UCP`.
@@ -332,13 +350,15 @@ The PCRE2 matchers use JIT optimizations to speed up matching, which comes at a
 cost of extra processing when the matcher is instantiated.  The benefit
 outweighs the cost when many matches are processed.
 
-The `reflex::BoostMatcher` and `reflex::BoostPosixMatcher` classes are for Perl
-mode and POSIX mode matching using the Boost Regex library, respectively.
+The `reflex::BoostMatcher`, `reflex::BoostPerlMatcher`, and
+`reflex::BoostPosixMatcher` classes are for default mode, Perl mode, and POSIX
+mode matching using the Boost Regex library, respectively.
 
 C++11 std::regex supports ECMAScript and AWK POSIX syntax with the `StdMatcher`
-and `reflex::StdPosixMatcher` classes respectively.  The std::regex syntax is
-therefore a lot more limited compared to PCRE2, Boost.Regex, and RE/flex.
-These regex matchers are considerably slower compared to the other matchers.
+(or `StdEcmaMatcher`) and `reflex::StdPosixMatcher` classes respectively.  The
+std::regex syntax is therefore a lot more limited compared to PCRE2,
+Boost.Regex, and RE/flex.  These regex matchers are considerably slower
+compared to the other matchers.
 
 The RE/flex regex common interface API is implemented in an abstract base class
 template `reflex::AbstractMatcher` from which all regex matcher engine classes
@@ -371,9 +391,7 @@ For example, to check if a string is a valid date using Boost.Regex:
       std::cout << "Valid date!" << std::endl;
 ~~~
 
-We can perform exactly the same check with PCRE2 instead of Boost.Regex.
-However, the JIT-optimized PCRE2 matcher is better suited when many matches are
-processed, not just one as shown here:
+We can perform exactly the same check with PCRE2 instead of Boost.Regex:
 
 ~~~{.cpp}
     #include <reflex/pcre2matcher.h> // reflex::PCRE2Matcher, reflex::Input
@@ -382,6 +400,9 @@ processed, not just one as shown here:
     if (reflex::PCRE2Matcher("\\d{4}-\\d{2}-\\d{2}", birthdate).matches())
       std::cout << "Valid date!" << std::endl;
 ~~~
+
+The JIT-optimized PCRE2 matcher is better suited when many matches are
+performed on multiple inputs, not just one match as shown above.
 
 Swapping regex libraries is simple.  Sometimes we may need a regex converter
 when a regex feature is used that the regex library does not support.
@@ -504,23 +525,32 @@ When executed this code prints:
 
 The regex engines currently available as classes in the `reflex` namespace are:
 
-  Class               | Mode  | Engine        | Performance
-  ------------------- | ----- |-------------- | ---------------------------------
-  `Matcher`           | POSIX | RE/flex lib   | deterministic finite automaton, no backtracking
-  `PCRE2Matcher`      | Perl  | PCRE2         | JIT-optimized backtracking
-  `PCRE2UTFMatcher`   | Perl  | PCRE2 UTF+UPC | JIT-optimized backtracking
-  `BoostMatcher`      | Perl  | Boost.Regex   | backtracking
-  `BoostPerlMatcher`  | Perl  | Boost.Regex   | backtracking
-  `BoostPosixMatcher` | POSIX | Boost.Regex   | backtracking
-  `StdMatcher`        | ECMA  | std::regex    | backtracking
-  `StdEcmaMatcher`    | ECMA  | std::regex    | backtracking
-  `StdPosixMatcher`   | POSIX | std::regex    | backtracking
+  Class                       | Mode  | Engine        | Performance
+  --------------------------- | ----- |-------------- | ---------------------------------
+  `reflex::Matcher`           | POSIX | RE/flex       | FSM, no backtracking
+  `reflex::FuzzyMatcher`      | POSIX | RE/flex       | FSM, minimal backtracking (fuzzy)
+  `reflex::PCRE2Matcher`      | Perl  | PCRE2         | JIT-optimized backtracking
+  `reflex::PCRE2UTFMatcher`   | Perl  | PCRE2 UTF+UPC | JIT-optimized backtracking
+  `reflex::BoostMatcher`      | Perl  | Boost.Regex   | backtracking
+  `reflex::BoostPerlMatcher`  | Perl  | Boost.Regex   | backtracking
+  `reflex::BoostPosixMatcher` | POSIX | Boost.Regex   | backtracking
+  `reflex::StdMatcher`        | ECMA  | std::regex    | backtracking
+  `reflex::StdEcmaMatcher`    | ECMA  | std::regex    | backtracking
+  `reflex::StdPosixMatcher`   | POSIX | std::regex    | backtracking
 
 The RE/flex regex engine uses a deterministic finite state machine (FSM) to get
 the best performance when matching.  However, constructing a FSM adds overhead.
 This matcher is better suitable for searching long texts.  The FSM construction 
 overhead can be eliminated by pre-converting the regex to C++ code tables ahead
-of time as we will see shortly.
+of time as we will see shortly.  RE/flex fuzzy matching may require minimal
+backtracking for approximate pattern matches to find a minimal, but not
+necessarily optimal (!), "edit distance" from an exact match.
+
+The PCRE2 engines use Perl mode matching.  PCRE2 also offers POSIX mode
+matching with `pcre2_dfa_match()`.  However, group captures are not supported
+in this mode.  Therefore, no PCRE2 POSIX mode class is included as a choice.
+JIT optimizations speed up matching.  However, this comes at a cost of extra
+processing when the PCRE2 matcher class is instantiated.
 
 The Boost.Regex engines normally use Perl mode matching.  We added a POSIX mode
 Boost.Regex engine class for the RE/flex scanner generator.  Scanners typically
@@ -529,12 +559,6 @@ use POSIX mode matching.  See \ref reflex-posix-perl for more information.
 The Boost.Regex engines are all initialized with `match_not_dot_newline`, which
 disables dotall matching as the default setting.  Dotall can be re-enabled with
 the `(?s)` regex mode modifier.  This is done for compatibility with scanners.
-
-The PCRE2 engines use Perl mode matching.  PCRE2 also offers POSIX mode
-matching with `pcre2_dfa_match()`.  However, group captures are not supported
-in this mode.  Therefore, no PCRE2 POSIX mode class is included as a choice.
-JIT optimizations speed up matching.  However, this comes at a cost of extra
-processing when the PCRE2 matcher class is instantiated.
 
 A matcher may be applied to strings and wide strings, such as `std::string` and
 `std::wstring`, `char*` and `wchar_t*`.  Wide strings are converted to UTF-8 to
@@ -3631,8 +3655,8 @@ To enable case-insensitive mode in <b>`reflex`</b> use the `-i` or
 Prepend `(?i)` to the regex to specify case-insensitive mode or use `(?i:φ)` to
 locally enable case-insensitive mode in the sub-pattern `φ`.  Use `(?-i:φ)` to
 locally disable case-insensitive mode in `φ`.  The regex pattern may require
-conversion when the regex library does not support case-insensitive mode
-modifiers, see \ref regex-convert for more details.
+conversion when the regex library does not support non-ASCII Unicode
+case-insensitive mode modifiers, see \ref regex-convert for more details.
 
 🔝 [Back to table of contents](#)
 
@@ -6823,8 +6847,8 @@ as regex texts are internally compiled into deterministic finite state machines
 by the `reflex::Pattern` class.  The machines are used by the `reflex::Matcher`
 for fast matching of regex patterns on some given input.  The `reflex::Matcher`
 is faster than the PCRE2 and Boost.Regex matchers.  The `reflex::FuzzyMatcher`
-subclass is included and performs approximate pattern matching, see the
-[FuzzyMatcher readme](https://github.com/Genivia/FuzzyMatcher).
+subclass is included and performs approximate regex pattern matching, see
+\ref regex-fuzzy-matcher.
 
 A `reflex::Matcher` engine is constructed from a `reflex::Pattern` object, or a
 string regex, and some given input:
@@ -6875,6 +6899,54 @@ See \ref regex-convert for more details on regex converters.
 
 🔝 [Back to table of contents](#)
 
+
+The reflex::FuzzyMatcher class                           {#regex-fuzzy-matcher}
+------------------------------
+
+The `reflex::FuzzyMatcher` class is derived from `reflex::Matcher` to support
+approximate regex pattern matching.  The approximation error is contrained by
+an "edit distance" which is one by default.  Instantiating a
+`reflex::FuzzyMatcher` takes an optional `MAX` paramter to contrain the edit
+distance permitted:
+
+~~~{.cpp}
+    #include <reflex/fuzzymatcher.h>
+
+    reflex::FuzzyMatcher matcher( reflex::Pattern or string, [MAX, ] reflex::Input [, "options"] )
+~~~
+
+The instantiated `reflex::FuzzyMatcher` class supports the same methods and
+features as the `reflex::Matcher` class, but with approximate pattern matching.
+
+When a `MAX` parameter is specified, it may be combined with one or more of the following flags:
+
+- `reflex::FuzzyMatcher::INS` insertions permit extra character(s) in the input
+- `reflex::FuzzyMatcher::DEL` deletions permit missing character(s) in the input
+- `reflex::FuzzyMatcher::SUB` substitutions count as one edit
+- `reflex::FuzzyMatcher::BIN` ASCII/binary fuzzy matching, the default is Unicode (full Unicode matching requires the Unicode pattern converter shown further below)
+
+For example, to allow approximate pattern matches to include up to three character insertions, but no deletions or substitutions (allowing insertions only is actually the most efficient fuzzy matching possible):
+
+~~~{.cpp}
+    reflex::FuzzyMatcher matcher(regex, 3 | reflex::FuzzyMatcher::INS, INPUT);
+~~~
+
+To allow up to three insertions or deletions (note that a substitution counts as two edits: one insertion and one deletion):
+
+~~~{.cpp}
+    reflex::FuzzyMatcher matcher(regex, 3 | reflex::FuzzyMatcher::INS | reflex::FuzzyMatcher::DEL, INPUT);
+~~~
+
+When no flags are specified with `MAX`, fuzzy matching is performed with insertions, deletions, and substitutions, each counting as one edit.
+
+To support full Unicode fuzzy pattern matching, such as `\p` Unicode character classes, we first convert the regex pattern before using it as follows:
+
+~~~{.cpp}
+    std::string regex(reflex::Matcher::convert("PATTERN", reflex::convert_flag::unicode));
+    reflex::FuzzyMatcher matcher(regex, [MAX,] INPUT);
+~~~
+
+🔝 [Back to table of contents](#)
 
 The reflex::Pattern class                                      {#regex-pattern}
 -------------------------
@@ -9004,15 +9076,15 @@ On using setlocale                                                 {#setlocale}
 The RE/flex scanners and regex matchers use an internal buffer with UTF-8
 encoded text content to scan wide strings and UTF-16/UTF-32 input.  This means
 that Unicode input is normalized to UTF-8 prior to matching.  This internal
-conversion is independent of the current C locale and is performed
-automatically by the `reflex::Input` class that passes the UTF-8-normalized
-input to the matchers.
+conversion is independent of the current locale and is performed automatically
+by the `reflex::Input` class that passes the UTF-8-normalized input to the
+matchers.
 
 Furthermore, RE/flex lexers may invoke the `wstr()`, `wchr()`, and `wpair()`
 methods to extract wide string and wide character matches.  These methods are
-also independent of the current C locale.
+also independent of the current locale.
 
-This means that setting the C locale in an application will not affect the
+This means that setting the locale in an application will not affect the
 performance of RE/flex scanners and regex matchers.
 
 As a side note, to display wide strings properly and to save wide strings to
@@ -9208,7 +9280,7 @@ If you need to read a file or stream again, you have two options:
 
 1. Save the current matcher and its input state with `push_matcher(m)` or
    `yypush_buffer_state(m)` to start using a new matcher `m`, e.g. created
-   with `Matcher m = new_matcher(i)` to consume the specified input `i`.
+   with `reflex::Matcher m = new_matcher(i)` to consume the specified input `i`.
    Restore the original matcher with `pop_matcher()` or `yypop_buffer_state()`.
    See also \ref reflex-multiple-input.
 
@@ -9500,7 +9572,7 @@ This compiles the code *without SIMD optimizations*, despite compiling
 `lib/simd.cpp`.  SIMD intrinsics for SSE/AVX and ARM NEON/AArch64 are used to
 speed up string search and newline detection and counting in the library.
 These optimizations are for the most part applicable to speed up searching with
-the `Matcher::find()` method.
+the `reflex::Matcher::find()` method.
 
 To compile with NEON/AArch64 optimizations applied (omit `-mfpu=neon` for AArch64):
 
@@ -9690,4 +9762,4 @@ The Free Software Foundation maintains a
 
 🔝 [Back to table of contents](#)
 
-Copyright (c) 2016,2024, Robert van Engelen.  All rights reserved.
+Copyright (c) 2016-2025, Robert van Engelen.  All rights reserved.

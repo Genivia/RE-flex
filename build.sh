@@ -73,12 +73,21 @@ if cc -c conftest.c >& /dev/null ; then
   echo "Compiling reflex with ARM NEON/AArch64 optimizations"
   echo
 elif cc -march=native -E conftest.c >& /dev/null ; then
+  echo "Checking for ARM NEON/AArch64 instructions (by compiling)"
   if cc -march=native -c conftest.c >& /dev/null ; then
     CMFLAGS='-march=native -DHAVE_NEON'
-  elif cc -march=native -mfpu=neon -c conftest.c >& /dev/null ; then
-    CMFLAGS='-march=native -mfpu=neon -DHAVE_NEON'
+    echo "Compiling reflex with ARM NEON/AArch64 optimizations"
+    echo
+  elif cc -o conftest -march=native -mfpu=neon conftest.c >& /dev/null ; then
+    echo "Checking for ARM NEON/AArch64 instructions (by execution)"
+    if ./conftest >& /dev/null ; then
+      CMFLAGS='-march=native -mfpu=neon -DHAVE_NEON'
+      echo "Compiling reflex with ARM NEON/AArch64 optimizations"
+    else
+      echo "Not compiling reflex with ARM NEON/AArch64 optimizations"
+    fi
+    echo
   fi
-  echo "Compiling reflex with ARM NEON/AArch64 optimizations"
   echo
 fi
 fi
@@ -86,7 +95,7 @@ fi
 fi
 
 # remove the conftest files
-rm -f conftest.c conftest.o
+rm -f conftest.c conftest.o conftest
 
 # compile
 cd lib; make -j -f Make CMFLAGS="$CMFLAGS" || exit 1; cd -

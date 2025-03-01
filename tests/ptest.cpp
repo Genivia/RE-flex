@@ -105,6 +105,7 @@ Test tests[] = {
   { "(?i)abc|(?-i:xyz)|(?-i:XYZ)", "", "", "abcABCxyzXYZ", { 1, 1, 2, 3 } },
   { "(?i:abc(?-i:xyz))|ABCXYZ", "", "", "abcxyzABCxyzABCXYZ", { 1, 1, 2 } },
   { "(?i)a[^b]c|abc", "", "", "aacAACabcABCaBcAbC", { 1, 1, 2, 2, 2, 2 } },
+  { "(?i)a[aC-Z]c|abc", "", "", "aacAACabcABCaBcAbC", { 1, 1, 2, 2, 2, 2 } },
   { "(?i:abcd(ef)?)", "", "", "ABCdefabcd", { 1, 1 } },
   // Pattern option x
   { "(?x) a\tb\n c | ( xy ) z ?", "", "", "abcxy", { 1, 2 } },

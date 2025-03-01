@@ -150,6 +150,7 @@ am_libreflex_a_OBJECTS = libreflex_a-convert.$(OBJEXT) \
 	$(top_builddir)/unicode/libreflex_a-block_scripts.$(OBJEXT) \
 	$(top_builddir)/unicode/libreflex_a-language_scripts.$(OBJEXT) \
 	$(top_builddir)/unicode/libreflex_a-letter_scripts.$(OBJEXT) \
+	$(top_builddir)/unicode/libreflex_a-letter_case.$(OBJEXT) \
 	$(top_builddir)/unicode/libreflex_a-composer.$(OBJEXT)
 libreflex_a_OBJECTS = $(am_libreflex_a_OBJECTS)
 libreflexmin_a_AR = $(AR) $(ARFLAGS)
@@ -182,6 +183,7 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Po \
 	$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Po \
 	$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Po \
+	$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_case.Po \
 	$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Po \
 	./$(DEPDIR)/libreflex_a-convert.Po \
 	./$(DEPDIR)/libreflex_a-debug.Po \
@@ -415,6 +417,7 @@ libreflex_a_SOURCES = \
         $(top_srcdir)/unicode/block_scripts.cpp \
         $(top_srcdir)/unicode/language_scripts.cpp \
         $(top_srcdir)/unicode/letter_scripts.cpp \
+        $(top_srcdir)/unicode/letter_case.cpp \
         $(top_srcdir)/unicode/composer.cpp
 
 libreflexmin_a_CPPFLAGS = \
@@ -513,6 +516,9 @@ $(top_builddir)/unicode/libreflex_a-language_scripts.$(OBJEXT):  \
 $(top_builddir)/unicode/libreflex_a-letter_scripts.$(OBJEXT):  \
 	$(top_builddir)/unicode/$(am__dirstamp) \
 	$(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp)
+$(top_builddir)/unicode/libreflex_a-letter_case.$(OBJEXT):  \
+	$(top_builddir)/unicode/$(am__dirstamp) \
+	$(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp)
 $(top_builddir)/unicode/libreflex_a-composer.$(OBJEXT):  \
 	$(top_builddir)/unicode/$(am__dirstamp) \
 	$(top_builddir)/unicode/$(DEPDIR)/$(am__dirstamp)
@@ -537,6 +543,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_case.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-convert.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libreflex_a-debug.Po@am__quote@ # am--include-marker
@@ -823,6 +830,20 @@ $(top_builddir)/unicode/libreflex_a-letter_scripts.obj: $(top_builddir)/unicode/
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/letter_scripts.cpp' object='$(top_builddir)/unicode/libreflex_a-letter_scripts.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-letter_scripts.obj `if test -f '$(top_builddir)/unicode/letter_scripts.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/letter_scripts.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/letter_scripts.cpp'; fi`
+
+$(top_builddir)/unicode/libreflex_a-letter_case.o: $(top_builddir)/unicode/letter_case.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-letter_case.o -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_case.Tpo -c -o $(top_builddir)/unicode/libreflex_a-letter_case.o `test -f '$(top_builddir)/unicode/letter_case.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/letter_case.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_case.Tpo $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_case.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/letter_case.cpp' object='$(top_builddir)/unicode/libreflex_a-letter_case.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-letter_case.o `test -f '$(top_builddir)/unicode/letter_case.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/letter_case.cpp
+
+$(top_builddir)/unicode/libreflex_a-letter_case.obj: $(top_builddir)/unicode/letter_case.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-letter_case.obj -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_case.Tpo -c -o $(top_builddir)/unicode/libreflex_a-letter_case.obj `if test -f '$(top_builddir)/unicode/letter_case.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/letter_case.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/letter_case.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_case.Tpo $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_case.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$(top_builddir)/unicode/letter_case.cpp' object='$(top_builddir)/unicode/libreflex_a-letter_case.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o $(top_builddir)/unicode/libreflex_a-letter_case.obj `if test -f '$(top_builddir)/unicode/letter_case.cpp'; then $(CYGPATH_W) '$(top_builddir)/unicode/letter_case.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/unicode/letter_case.cpp'; fi`
 
 $(top_builddir)/unicode/libreflex_a-composer.o: $(top_builddir)/unicode/composer.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libreflex_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT $(top_builddir)/unicode/libreflex_a-composer.o -MD -MP -MF $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Tpo -c -o $(top_builddir)/unicode/libreflex_a-composer.o `test -f '$(top_builddir)/unicode/composer.cpp' || echo '$(srcdir)/'`$(top_builddir)/unicode/composer.cpp
@@ -1144,6 +1165,7 @@ distclean: distclean-am
 		-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Po
 	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Po
 	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Po
+	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_case.Po
 	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-convert.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-debug.Po
@@ -1218,6 +1240,7 @@ maintainer-clean: maintainer-clean-am
 		-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-block_scripts.Po
 	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-composer.Po
 	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-language_scripts.Po
+	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_case.Po
 	-rm -f $(top_builddir)/unicode/$(DEPDIR)/libreflex_a-letter_scripts.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-convert.Po
 	-rm -f ./$(DEPDIR)/libreflex_a-debug.Po
@@ -1297,7 +1320,7 @@ libreflexmin_a-simd_avx512bw.$(OBJEXT) : CXXFLAGS += $(SIMD_AVX512BW_FLAGS)
 # lib_LTLIBRARIES       = libreflex.la libreflexmin.la
 #
 # libreflex_la_CPPFLAGS = -I$(top_srcdir)/include $(SIMD_FLAGS)
-# libreflex_la_SOURCES  = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp posix.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp $(top_srcdir)/unicode/composer.cpp
+# libreflex_la_SOURCES  = convert.cpp debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp posix.cpp simd_avx2.cpp simd_avx512bw.cpp unicode.cpp utf8.cpp $(top_srcdir)/unicode/block_scripts.cpp $(top_srcdir)/unicode/language_scripts.cpp $(top_srcdir)/unicode/letter_scripts.cpp $(top_srcdir)/unicode/letter_case.cpp $(top_srcdir)/unicode/composer.cpp
 #
 # libreflexmin_la_CPPFLAGS = -I$(top_srcdir)/include
 # libreflexmin_la_SOURCES  = debug.cpp error.cpp input.cpp matcher.cpp matcher_avx2.cpp matcher_avx512bw.cpp pattern.cpp simd_avx2.cpp simd_avx512bw.cpp utf8.cpp

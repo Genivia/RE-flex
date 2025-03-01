@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classreflex_1_1_posix_1_1_tables.html" title="reflex::Posix::Tables" alt="" coords="5,5,146,32"/>
+<area shape="rect" id="node1" href="$classreflex_1_1_posix_1_1_tables.html" title="Tables of character ranges [lo,hi] for each character class. " alt="" coords="5,5,146,32"/>
 <area shape="rect" id="node2" href="$classreflex_1_1_unicode_1_1_tables.html" title="reflex::Unicode::Tables" alt="" coords="194,5,349,32"/>
 </map>

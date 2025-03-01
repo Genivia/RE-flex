@@ -18,7 +18,7 @@ CFLAGS=$(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
 
 .PHONY:			all clean
 
-all:			block_scripts.cpp language_scripts.cpp letter_scripts.cpp composer.cpp
+all:			block_scripts.cpp language_scripts.cpp letter_scripts.cpp letter_case.cpp composer.cpp
 
 block_scripts.cpp:	Blocks.txt block_scripts.l
 			$(REFLEX) block_scripts.l
@@ -37,6 +37,12 @@ letter_scripts.cpp:	UnicodeData.txt letter_scripts.l
 			$(CPP) $(CFLAGS) -o gen_letter_scripts_cpp lex.yy.cpp $(LIBS)
 			./gen_letter_scripts_cpp < UnicodeData.txt > letter_scripts.cpp
 			-rm -f lex.yy.cpp gen_letter_scripts_cpp
+
+letter_case.cpp:	UnicodeData.txt letter_case.l
+			$(REFLEX) letter_case.l
+			$(CPP) $(CFLAGS) -o gen_letter_case_cpp lex.yy.cpp $(LIBS)
+			./gen_letter_case_cpp < UnicodeData.txt > letter_case.cpp
+			-rm -f lex.yy.cpp gen_letter_case_cpp
 
 composer.cpp:		UnicodeData.txt composer.l
 			$(REFLEX) composer.l

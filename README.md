@@ -611,6 +611,7 @@ Changelog
 - Jan 24, 2025: 5.2.0 new file encoding type `null_data` to read NUL as LF and vice versa; supports reading `xargs -0` output for example.
 - Jan 27, 2025: 5.2.1 fix a regression issue with non-SIMD-optimized search with `Matcher::find()`.
 - Feb  3, 2025: 5.2.2 `Matcher::find()` speed improvements for certain regex patterns that do not match the input.
+- Feb 28, 2025: 5.3.0 improve case-insensitive matching to support the Unicode upper/lower sets of letters.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

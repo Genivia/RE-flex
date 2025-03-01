@@ -189,9 +189,9 @@ void Matcher::simd_init_advance_avx2()
 bool Matcher::simd_advance_pattern_pin1_pma_avx2(size_t loc)
 {
   const char *chr = pat_->chr_;
-  size_t min = pat_->min_;
-  uint16_t lcp = pat_->lcp_;
-  uint16_t lcs = pat_->lcs_;
+  const size_t min = pat_->min_;
+  const uint16_t lcp = pat_->lcp_;
+  const uint16_t lcs = pat_->lcs_;
   __m256i vlcp = _mm256_set1_epi8(chr[0]);
   __m256i vlcs = _mm256_set1_epi8(chr[1]);
   while (true)
@@ -232,8 +232,8 @@ template <uint8_t MIN>
 bool Matcher::simd_advance_pattern_pin1_pmh_avx2(size_t loc)
 {
   const char *chr = pat_->chr_;
-  uint16_t lcp = pat_->lcp_;
-  uint16_t lcs = pat_->lcs_;
+  const uint16_t lcp = pat_->lcp_;
+  const uint16_t lcs = pat_->lcs_;
   __m256i vlcp = _mm256_set1_epi8(chr[0]);
   __m256i vlcs = _mm256_set1_epi8(chr[1]);
   while (true)
@@ -440,9 +440,9 @@ ADV_PAT_PIN_ONE(16, \
 bool Matcher::simd_advance_pattern_pin##N##_pma_avx2(size_t loc) \
 { \
   const char *chr = pat_->chr_; \
-  size_t min = pat_->min_; \
-  uint16_t lcp = pat_->lcp_; \
-  uint16_t lcs = pat_->lcs_; \
+  const size_t min = pat_->min_; \
+  const uint16_t lcp = pat_->lcp_; \
+  const uint16_t lcs = pat_->lcs_; \
   INIT \
   while (true) \
   { \
@@ -484,8 +484,8 @@ template <uint8_t MIN> \
 bool Matcher::simd_advance_pattern_pin##N##_pmh_avx2(size_t loc) \
 { \
   const char *chr = pat_->chr_; \
-  uint16_t lcp = pat_->lcp_; \
-  uint16_t lcs = pat_->lcs_; \
+  const uint16_t lcp = pat_->lcp_; \
+  const uint16_t lcs = pat_->lcs_; \
   INIT \
   while (true) \
   { \
@@ -831,8 +831,8 @@ bool Matcher::simd_advance_pattern_min4_avx2(size_t loc)
 template<uint8_t LEN>
 bool Matcher::simd_advance_chars_avx2(size_t loc)
 {
-  static const uint16_t lcp = 0;
-  static const uint16_t lcs = LEN - 1;
+  const uint16_t lcp = 0;
+  const uint16_t lcs = LEN - 1;
   const char *chr = pat_->chr_;
   while (true)
   {
@@ -876,10 +876,10 @@ bool Matcher::simd_advance_chars_avx2(size_t loc)
 template<uint8_t LEN>
 bool Matcher::simd_advance_chars_pma_avx2(size_t loc)
 {
-  static const uint16_t lcp = 0;
-  static const uint16_t lcs = LEN - 1;
+  const uint16_t lcp = 0;
+  const uint16_t lcs = LEN - 1;
   const char *chr = pat_->chr_;
-  size_t min = pat_->min_;
+  const size_t min = pat_->min_;
   while (true)
   {
     const char *s = buf_ + loc + lcp;
@@ -925,10 +925,10 @@ bool Matcher::simd_advance_chars_pma_avx2(size_t loc)
 template<uint8_t LEN>
 bool Matcher::simd_advance_chars_pmh_avx2(size_t loc)
 {
-  static const uint16_t lcp = 0;
-  static const uint16_t lcs = LEN - 1;
+  const uint16_t lcp = 0;
+  const uint16_t lcs = LEN - 1;
   const char *chr = pat_->chr_;
-  size_t min = pat_->min_;
+  const size_t min = pat_->min_;
   while (true)
   {
     const char *s = buf_ + loc + lcp;
@@ -972,9 +972,9 @@ bool Matcher::simd_advance_chars_pmh_avx2(size_t loc)
 bool Matcher::simd_advance_string_avx2(size_t loc)
 {
   const char *chr = pat_->chr_;
-  size_t len = pat_->len_;
-  uint16_t lcp = pat_->lcp_;
-  uint16_t lcs = pat_->lcs_;
+  const size_t len = pat_->len_;
+  const uint16_t lcp = pat_->lcp_;
+  const uint16_t lcs = pat_->lcs_;
   while (true)
   {
     const char *s = buf_ + loc + lcp;
@@ -1016,10 +1016,10 @@ bool Matcher::simd_advance_string_avx2(size_t loc)
 bool Matcher::simd_advance_string_pma_avx2(size_t loc)
 {
   const char *chr = pat_->chr_;
-  size_t len = pat_->len_;
-  size_t min = pat_->min_;
-  uint16_t lcp = pat_->lcp_;
-  uint16_t lcs = pat_->lcs_;
+  const size_t len = pat_->len_;
+  const size_t min = pat_->min_;
+  const uint16_t lcp = pat_->lcp_;
+  const uint16_t lcs = pat_->lcs_;
   while (true)
   {
     const char *s = buf_ + loc + lcp;
@@ -1064,10 +1064,10 @@ bool Matcher::simd_advance_string_pma_avx2(size_t loc)
 bool Matcher::simd_advance_string_pmh_avx2(size_t loc)
 {
   const char *chr = pat_->chr_;
-  size_t len = pat_->len_;
-  size_t min = pat_->min_;
-  uint16_t lcp = pat_->lcp_;
-  uint16_t lcs = pat_->lcs_;
+  const size_t len = pat_->len_;
+  const size_t min = pat_->min_;
+  const uint16_t lcp = pat_->lcp_;
+  const uint16_t lcs = pat_->lcs_;
   while (true)
   {
     const char *s = buf_ + loc + lcp;
