@@ -32,6 +32,7 @@ set(lib_sources
   unicode/block_scripts.cpp
   unicode/language_scripts.cpp
   unicode/letter_scripts.cpp
+  unicode/letter_case.cpp
   unicode/composer.cpp
 )
 
