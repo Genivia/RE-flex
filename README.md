@@ -258,8 +258,8 @@ There are two ways you can use this project:
 1. as a scanner generator for C++, similar to Flex;
 2. as a flexible regex library API for C++.
 
-For the first option, simply build the **reflex** tool and run it on the
-command line on a lexer specification:
+For the first use case, use the **reflex** tool on the command line on a lexer
+specification:
 
     $ reflex --flex --bison --graphs-file lexspec.l
 
@@ -275,13 +275,15 @@ visualized with the [Graphviz dot][dot-url] tool:
 Several examples are included to get you started.  See the [manual][manual-url]
 for more details.
 
-For the second option, simply use the RE/flex matcher API classes to start
-pattern search, matching, splitting and scanning on strings, wide strings,
-files, and streams.
+For the second use case, use the RE/flex matcher API classes to start pattern
+search, matching, splitting and scanning on strings, wide strings, files, and
+streams.
 
 You can select matchers that are based on different regex engines:
 
 - RE/flex regex: `#include <reflex/matcher.h>` and use `reflex::Matcher`;
+- RE/flex fuzzy regex for approximate matching:
+  `#include <reflex/fuzzymatcher.h>` and use `reflex::FuzzyMatcher`
 - PCRE2: `#include <reflex/pcre2matcher.h>` and use `reflex::PCRE2Matcher` or
   `reflex::PCRE2UTFMatcher`.
 - Boost.Regex: `#include <reflex/boostmatcher.h>` and use
@@ -292,13 +294,19 @@ You can select matchers that are based on different regex engines:
 Each matcher may differ in regex syntax features (see the full documentation),
 but they all share the same methods and iterators, such as:
 
-- `matches()` returns nonzero if the input matches the specified pattern;
-- `find()` search input and returns nonzero if a match was found;
-- `scan()` scan input and returns nonzero if input at current position matches;
-- `split()` returns nonzero for a split of the input at the next match;
-- `find.begin()`...`find.end()` filter iterator;
-- `scan.begin()`...`scan.end()` tokenizer iterator;
-- `split.begin()`...`split.end()` splitter iterator.
+- `matches()` returns nonzero if the whole input from start to end matches the specified pattern;
+- `find()` search input and returns nonzero if a match was found, can be repeated;
+- `scan()` scan input and returns nonzero if input at current position matches, can be repeated;
+- `split()` returns nonzero for a split of the input at the next match, can be repeated;
+- `find.begin()`...`find.end()` a filter iterator, iterates with `find()`;
+- `scan.begin()`...`scan.end()` a tokenizer iterator, iterates with `scan()`;
+- `split.begin()`...`split.end()` a splitter iterator, iterates with `split()`.
+
+The input matched and searched may be a string, a wide string, a file, or a
+stream.  Searching is incremental, meaning that the input is not buffered as a
+whole in memory, but rather buffered in parts in a sliding window of a few KB.
+The window size may grow to fit a pattern match.  UTF-16/32 file input with a
+UTF BOM is automatically normalized and matched as UTF-8.
 
 For example, using Boost.Regex (alternatively use PCRE2 `reflex::PCRE2Matcher`):
 
