@@ -327,14 +327,55 @@ if (matcher.matches() != 0)
   std::cout << std::string(matcher[1].first, matcher[1].second) << " was a good year!" << std::endl;
 ```
 
-To search a string for words `\w+`:
+A pattern match made by any of the regex engines to match input with
+`matches()`, or search with `find()`, or tokenize with `scan()`, or split with
+`split()` includes detailed information that can be retrieved with the
+following methods:
+
+- `accept()` returns group capture index (or zero if not captured/matched)
+- `text()` returns `const char*` to 0-terminated match (ends in `\0`)
+- `strview()`returns `std::string_view` text match (preserves `\0`s) (C++17)
+- `str()` returns `std::string` text match (preserves `\0`s)
+- `wstr()` returns `std::wstring` wide text match (converted from UTF-8)
+- `chr()` returns first 8-bit char of the text match (`str()[0]` as int)
+- `wchr()` returns first wide char of the text match (`wstr()[0]` as int)
+- `pair()` returns `std::pair<size_t,std::string>(accept(),str())`
+- `wpair()` returns `std::pair<size_t,std::wstring>(accept(),wstr())`
+- `size()` returns the length of the text match in bytes
+- `wsize()` returns the length of the match in number of wide characters
+- `lines()` returns the number of lines in the text match (>=1)
+- `columns()` returns the number of columns of the text match (>=0)
+- `begin()` returns `const char*` to non-0-terminated text match begin
+- `end()` returns `const char*` to non-0-terminated text match end
+- `rest()` returns `const char*` to 0-terminated rest of input
+- `span()` returns `const char*` to 0-terminated match enlarged to span the line
+- `line()` returns `std::string` line with the matched text as a substring
+- `wline()` returns `std::wstring` line with the matched text as a substring
+- `more()` tells the matcher to append the next match (when using `scan()`)
+- `less(n)` cuts `text()` to `n` bytes and repositions the matcher
+- `lineno()` returns line number of the match, starting at line 1
+- `columno()` returns column number of the match in characters, starting at 0
+- `lineno_end()` returns ending line number of the match, starting at line 1
+- `columno_end()` returns ending column number of the match, starting at 0
+- `bol()` returns `const char*` to begin of matching line (not 0-terminated)
+- `border()`returns the byte offset from the start of the line of the match
+- `first()` returns input position of the first character of the match
+- `last()` returns input position + 1 of the last character of the match
+- `at_bol()` true if matcher reached the begin of a new line `\n`
+- `at_bob()` true if matcher is at the begin of input and no input consumed
+- `at_end()` true if matcher is at the end of input
+- `[0]` operator returns `std::pair<const char*,size_t>(begin(),size())`
+- `[n]` operator returns n'th capture `std::pair<const char*,size_t>`
+
+To search a string for words `\w+` to display with the column number of each
+word found:
 
 ```{.cpp}
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
 // use a BoostMatcher to search for words in a sentence
 reflex::BoostMatcher matcher("\\w+", "How now brown cow.");
 while (matcher.find() != 0)
-  std::cout << "Found " << matcher.text() << std::endl;
+  std::cout << "Found " << matcher.text() << " at column " << matcher.columno() << std::endl;
 ```
 
 The `split` method is roughly the inverse of the `find` method and returns text
@@ -449,7 +490,7 @@ License and copyright
 ---------------------
 
 RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2016-2023, All rights reserved.
+Copyright (c) 2016-2025, All rights reserved.
 
 RE/flex is distributed under the BSD-3 license LICENSE.txt.
 Use, modification, and distribution are subject to the BSD-3 license.
