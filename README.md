@@ -308,7 +308,8 @@ whole in memory, but rather buffered in parts in a sliding window of a few KB.
 The window size may grow to fit a pattern match.  UTF-16/32 file input with a
 UTF BOM is automatically normalized and matched as UTF-8.
 
-For example, using Boost.Regex (alternatively use PCRE2 `reflex::PCRE2Matcher`):
+For example, using Boost.Regex (alternatively use PCRE2 `reflex::PCRE2Matcher`
+or `reflex::PCRE2UTFMatcher` to match Unicode UTF-8 input):
 
 ```{.cpp}
 #include <reflex/boostmatcher.h> // reflex::BoostMatcher, reflex::Input, boost::regex
@@ -366,6 +367,12 @@ following methods:
 - `at_end()` true if matcher is at the end of input
 - `[0]` operator returns `std::pair<const char*,size_t>(begin(),size())`
 - `[n]` operator returns n'th capture `std::pair<const char*,size_t>`
+
+Note: POSIX matchers do not generally support group capturing, e.g.
+`BoostPosixMatcher` and `StdPosixMatcher` do not.  RE/flex is an efficient
+backtrack-free DFA-based POSIX engine that supports a limited form of
+capturing, limited to outermost gouping, such as `(abc)|(def)` which has two
+groups.  This may be extended in a future release to full capturing.
 
 To search a string for words `\w+` to display with the column number of each
 word found:
