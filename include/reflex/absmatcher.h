@@ -583,7 +583,6 @@ class AbstractMatcher {
     }
     return *this;
   }
-  
   /// Returns nonzero capture index (i.e. true) if the entire input matches this matcher's pattern (and internally caches the true/false result to permit repeat invocations).
   inline size_t matches()
     /// @returns nonzero capture index if the entire input matched this matcher's pattern, zero (i.e. false) otherwise
@@ -1691,7 +1690,7 @@ class PatternMatcher : public AbstractMatcher {
       delete pat_;
   }
   /// Assign a matcher, the underlying pattern object is shared (not deep copied).
-  virtual PatternMatcher& operator=(const PatternMatcher& matcher) ///< matcher with pattern to use (pattern may be shared)
+  PatternMatcher& operator=(const PatternMatcher& matcher) ///< matcher with pattern to use (pattern may be shared)
   {
     scan.init(this, Const::SCAN);
     find.init(this, Const::FIND);
@@ -1842,7 +1841,7 @@ class PatternMatcher<std::string> : public AbstractMatcher {
       delete pat_;
   }
   /// Assign a matcher, the underlying pattern string is shared (not deep copied).
-  virtual PatternMatcher& operator=(const PatternMatcher& matcher) ///< matcher with pattern to use (pattern may be shared)
+  PatternMatcher& operator=(const PatternMatcher& matcher) ///< matcher with pattern to use (pattern may be shared)
   {
     scan.init(this, Const::SCAN);
     find.init(this, Const::FIND);

@@ -109,7 +109,7 @@ class Matcher : public PatternMatcher<reflex::Pattern> {
   }
   using PatternMatcher::operator=;
   /// Assign a matcher, the underlying pattern string is shared (not deep copied).
-  virtual Matcher& operator=(const Matcher& matcher) ///< matcher to copy
+  Matcher& operator=(const Matcher& matcher) ///< matcher to copy
   {
     PatternMatcher<reflex::Pattern>::operator=(matcher);
     ded_ = matcher.ded_;
