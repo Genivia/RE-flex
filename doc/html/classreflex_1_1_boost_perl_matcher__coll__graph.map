@@ -1,27 +1,27 @@
 <map id="reflex::BoostPerlMatcher" name="reflex::BoostPerlMatcher">
-<area shape="rect" id="node2" href="$classreflex_1_1_boost_matcher.html" title="Boost matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="2241,713,2384,740"/>
-<area shape="rect" id="node3" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; boost::regex \&gt;" alt="" coords="2041,706,2192,747"/>
-<area shape="rect" id="node4" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="1081,668,1240,695"/>
-<area shape="rect" id="node7" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1377,654,1536,695"/>
-<area shape="rect" id="node21" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="1381,582,1532,623"/>
-<area shape="rect" id="node5" href="$structreflex_1_1_abstract_matcher_1_1_handler.html" title="Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched. " alt="" coords="789,595,947,637"/>
-<area shape="rect" id="node6" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="789,661,947,702"/>
-<area shape="rect" id="node8" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="823,727,913,753"/>
-<area shape="rect" id="node9" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="537,703,681,729"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="564,753,655,780"/>
-<area shape="rect" id="node11" title="STL class. " alt="" coords="359,746,488,787"/>
-<area shape="rect" id="node12" title="STL class. " alt="" coords="155,753,309,780"/>
-<area shape="rect" id="node13" title="STL class. " alt="" coords="5,753,105,780"/>
-<area shape="rect" id="node14" href="$classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher..." alt="" coords="1860,309,1964,336"/>
-<area shape="rect" id="node15" href="$structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="1625,176,1775,203"/>
-<area shape="rect" id="node16" title="STL class. " alt="" coords="1121,81,1201,108"/>
-<area shape="rect" id="node17" title="STL class. " alt="" coords="805,69,931,110"/>
-<area shape="rect" id="node20" href="$classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="1645,452,1755,479"/>
-<area shape="rect" id="node25" href="$structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="1384,531,1529,557"/>
-<area shape="rect" id="node26" href="$structreflex_1_1_pattern_1_1_h_f_a.html" title="Indexing hash finite state automaton for indexed file search. " alt="" coords="1387,316,1526,343"/>
-<area shape="rect" id="node28" title="STL class. " alt="" coords="813,287,923,313"/>
-<area shape="rect" id="node37" title="STL class. " alt="" coords="830,135,906,161"/>
-<area shape="rect" id="node31" title="STL class. " alt="" coords="819,337,917,364"/>
-<area shape="rect" id="node34" href="$structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. " alt="" coords="1631,232,1769,259"/>
-<area shape="rect" id="node36" href="$structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html" title="reflex::Pattern::DFA\l::State" alt="" coords="1091,215,1230,257"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_boost_matcher.html" title="Boost matcher engine class implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="2231,719,2373,746"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; boost::regex \&gt;" alt="" coords="2031,712,2182,754"/>
+<area shape="rect" id="node4" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="1077,674,1234,701"/>
+<area shape="rect" id="node7" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1371,660,1529,702"/>
+<area shape="rect" id="node21" href="$classreflex_1_1_pattern_matcher.html" title="reflex::PatternMatcher\l\&lt; reflex::Pattern \&gt;" alt="" coords="1375,586,1525,628"/>
+<area shape="rect" id="node5" href="$structreflex_1_1_abstract_matcher_1_1_handler.html" title="Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched. " alt="" coords="786,600,943,642"/>
+<area shape="rect" id="node6" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="786,666,943,708"/>
+<area shape="rect" id="node8" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="819,733,910,760"/>
+<area shape="rect" id="node9" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to analyze FILE* input, handle errors and non&#45;blocking FILE* reads..." alt="" coords="535,709,679,736"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="562,759,652,786"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="358,752,486,794"/>
+<area shape="rect" id="node12" title="STL class. " alt="" coords="154,759,308,786"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="5,759,105,786"/>
+<area shape="rect" id="node14" href="$classreflex_1_1_pattern.html" title="Pattern class holds a regex pattern and its compiled FSM opcode table or code for the reflex::Matcher..." alt="" coords="1851,314,1954,341"/>
+<area shape="rect" id="node15" href="$structreflex_1_1_pattern_1_1_option.html" title="Global modifier modes, syntax flags, and compiler options. " alt="" coords="1617,178,1767,205"/>
+<area shape="rect" id="node16" title="STL class. " alt="" coords="1116,94,1195,121"/>
+<area shape="rect" id="node17" title="STL class. " alt="" coords="802,84,927,126"/>
+<area shape="rect" id="node20" href="$classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan..." alt="" coords="1638,457,1746,484"/>
+<area shape="rect" id="node25" href="$structreflex_1_1_matcher_1_1_f_s_m.html" title="FSM data for FSM code. " alt="" coords="1378,535,1522,562"/>
+<area shape="rect" id="node26" href="$structreflex_1_1_pattern_1_1_h_f_a.html" title="Indexing hash finite state automaton for indexed file search. " alt="" coords="1381,321,1519,348"/>
+<area shape="rect" id="node28" title="STL class. " alt="" coords="810,302,919,329"/>
+<area shape="rect" id="node37" title="STL class. " alt="" coords="827,150,902,177"/>
+<area shape="rect" id="node31" title="STL class. " alt="" coords="815,353,914,380"/>
+<area shape="rect" id="node34" href="$structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. " alt="" coords="1623,237,1761,264"/>
+<area shape="rect" id="node36" href="$structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html" title="reflex::Pattern::DFA\l::State" alt="" coords="1087,229,1225,271"/>
 </map>

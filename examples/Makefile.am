@@ -470,7 +470,7 @@ minic:		minic.l minic.y minic.hpp
 lua2lisp:	lua.l lua.y lua.hpp
 		$(BISON) -d lua.y
 		$(REFLEX) $(REFLAGS) lua.l
-		$(CXX) -std=c++11 $(CXXFLAGS) -Wno-potentially-evaluated-expression -o $@ LuaParser.cpp LuaScanner.cpp $(LIBREFLEX)
+		$(CXX) -std=gnu++11 $(CXXFLAGS) -Wno-potentially-evaluated-expression -o $@ LuaParser.cpp LuaScanner.cpp $(LIBREFLEX)
 
 .PHONY:		clean
 

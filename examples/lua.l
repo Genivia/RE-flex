@@ -160,26 +160,26 @@
   }
 
   // return token of matched text() matching {identifier}
-  LuaParser::symbol_type Name()
+  LuaParser::symbol_type token_Name()
   {
     int token = keyword_token(text());
     return token ? LuaParser::symbol_type(token, location()) : LuaParser::make_NAME(symbol(), location());
   }
 
   // return token of matched text() matching {integer}
-  LuaParser::symbol_type IntegerLiteral()
+  LuaParser::symbol_type token_IntegerLiteral()
   {
     return LuaParser::make_INTEGER(strtol(text(), NULL, 0), location());
   }
 
   // return token of matched text() matching {float}
-  LuaParser::symbol_type FloatLiteral()
+  LuaParser::symbol_type token_FloatLiteral()
   {
     return LuaParser::make_FLOAT(strtod(text(), NULL), location());
   }
 
   // return token of matched text() matching {string}
-  LuaParser::symbol_type StringLiteral()
+  LuaParser::symbol_type token_StringLiteral()
   {
     return LuaParser::make_STRING(string(), location());
   }
@@ -214,10 +214,10 @@ longbracket                     \[=*\[
 [[:space:]]+                    // skip white space
 "--" {longbracket}              { bracketlen = size()-2; start(LONGCOMMENT); }
 "--".*                          // ignore inline comment
-{name}                          { return Name(); }
-{integer}                       { return IntegerLiteral(); }
-{float}                         { return FloatLiteral(); }
-{string}                        { return StringLiteral(); }
+{name}                          { return token_Name(); }
+{integer}                       { return token_IntegerLiteral(); }
+{float}                         { return token_FloatLiteral(); }
+{string}                        { return token_StringLiteral(); }
 {longbracket}                   { bracketlen = size(); longstring.clear(); start(LONGSTRING); }
 "=="                            { return LuaParser::symbol_type(LuaParser::token::TOKEN_EQU, location()); }
 "~="                            { return LuaParser::symbol_type(LuaParser::token::TOKEN_NEQ, location()); }

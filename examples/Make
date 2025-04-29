@@ -431,9 +431,11 @@ mmap:		mmap.l
 fastfind:	fastfind.l
 		$(REFLEX) $(REFLAGS) fastfind.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+		./fastfind < fastfind.l
 
 fastsearch:	fastsearch.cpp fastsearch_fsm.cpp
 		$(CXX) $(CXXFLAGS) -o $@ fastsearch.cpp fastsearch_fsm.cpp $(LIBREFLEX)
+		./fastsearch ../tests/lorem.txt
 
 cards:		cards.cpp
 		$(CXX) $(CXXFLAGS) -o $@ cards.cpp $(LIBREFLEX)
@@ -477,7 +479,7 @@ minic:		minic.l minic.y minic.hpp
 lua2lisp:	lua.l lua.y lua.hpp
 		$(BISON) -d lua.y
 		$(REFLEX) $(REFLAGS) lua.l
-		$(CXX) -std=c++11 $(CXXFLAGS) -Wno-potentially-evaluated-expression -o $@ LuaParser.cpp LuaScanner.cpp $(LIBREFLEX)
+		$(CXX) -std=gnu++11 $(CXXFLAGS) -Wno-potentially-evaluated-expression -o $@ LuaParser.cpp LuaScanner.cpp $(LIBREFLEX)
 
 .PHONY:		clean
 

@@ -1,7 +1,7 @@
 <map id="reflex::Input" name="reflex::Input">
-<area shape="rect" id="node2" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="5,248,151,275"/>
-<area shape="rect" id="node3" title="STL class. " alt="" coords="175,248,266,275"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="156,157,285,199"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="143,81,298,108"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="171,5,271,32"/>
+<area shape="rect" id="node2" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to analyze FILE* input, handle errors and non&#45;blocking FILE* reads..." alt="" coords="5,249,149,276"/>
+<area shape="rect" id="node3" title="STL class. " alt="" coords="173,249,264,276"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="154,158,283,200"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="141,82,296,109"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="169,5,268,32"/>
 </map>

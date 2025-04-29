@@ -127,32 +127,32 @@
   }
 
   // return token of matched text() matching {identifier}
-  Parser::symbol_type ID()
+  Parser::symbol_type token_ID()
   {
     int token = keyword_token(text());
     return token ? Parser::symbol_type(token, location()) : Parser::make_ID(symbol(), location());
   }
 
   // return token of matched text() matching {integer}
-  Parser::symbol_type U8()
+  Parser::symbol_type token_U8()
   {
     return Parser::make_U8(strtoul(text(), NULL, 0), location());
   }
 
   // return token of matched text() matching {float}
-  Parser::symbol_type FP()
+  Parser::symbol_type token_FP()
   {
     return Parser::make_F8(strtod(text(), NULL), location());
   }
 
   // return token of matched text() matching {character}
-  Parser::symbol_type CH()
+  Parser::symbol_type token_CH()
   {
     return Parser::make_U8(translate_escapes()[0], location());
   }
 
   // return token of matched text() matching {string}
-  Parser::symbol_type CS()
+  Parser::symbol_type token_CS()
   {
     return Parser::make_CS(string(), location());
   }
@@ -229,11 +229,11 @@ include                         "#" \h* "include" \h* {string}
 "//".*                          // ignore inline comment
 "/*"(.|\n)*?"*/"                // ignore multi-line comment using a lazy regex pattern
 ^ \h* {include}                 { include(); }
-{identifier}                    { return ID(); }
-{integer}                       { return U8(); }
-{float}                         { return FP(); }
-{character}                     { return CH(); }
-{string}                        { return CS(); }
+{identifier}                    { return token_ID(); }
+{integer}                       { return token_U8(); }
+{float}                         { return token_FP(); }
+{character}                     { return token_CH(); }
+{string}                        { return token_CS(); }
 "+="                            { return Parser::symbol_type(Parser::token::TOKEN_PA, location()); }
 "-="                            { return Parser::symbol_type(Parser::token::TOKEN_NA, location()); }
 "*="                            { return Parser::symbol_type(Parser::token::TOKEN_TA, location()); }

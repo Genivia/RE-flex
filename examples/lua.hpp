@@ -112,7 +112,7 @@ class Transpiler {
   // integer literal expression
   struct Integer : public Expression {
     Integer(IntegerLiteral n) : literal(n) { }
-    virtual void transpile(Transpiler& transpiler) { fprintf(transpiler.out, "%llu", literal); }
+    virtual void transpile(Transpiler& transpiler) { fprintf(transpiler.out, "%llu", static_cast<unsigned long long>(literal)); }
     IntegerLiteral literal;
   };
 

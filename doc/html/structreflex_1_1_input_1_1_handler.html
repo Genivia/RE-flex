@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input::Handler Struct Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Feb 28 2025 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Apr 29 2025 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -58,20 +58,20 @@
 </div><!--header-->
 <div class="contents">
 
-<p>FILE* handler functor base class to handle FILE* errors and non-blocking FILE* reads.  
+<p>FILE* handler functor base class to analyze FILE* input, handle errors and non-blocking FILE* reads.  
  <a href="structreflex_1_1_input_1_1_handler.html#details">More...</a></p>
 
 <p><code>#include &lt;input.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a99a90e7876aaa46ca9148b6f8be9fe90"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1_handler.html#a99a90e7876aaa46ca9148b6f8be9fe90">operator()</a> (FILE *)=0</td></tr>
-<tr class="separator:a99a90e7876aaa46ca9148b6f8be9fe90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a749b06f3f5a05aa2282d007b56065827"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1_handler.html#a749b06f3f5a05aa2282d007b56065827">operator()</a> (FILE *<a class="el" href="classreflex_1_1_input.html#a9f64e5c813a08fd7a65819074ffcd20a">file</a>, char *buf, size_t len)=0</td></tr>
+<tr class="separator:a749b06f3f5a05aa2282d007b56065827"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef6ccf585e067a59bec85dac09ed9195"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1_handler.html#aef6ccf585e067a59bec85dac09ed9195">~Handler</a> ()</td></tr>
 <tr class="separator:aef6ccf585e067a59bec85dac09ed9195"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>FILE* handler functor base class to handle FILE* errors and non-blocking FILE* reads. </p>
+<div class="textblock"><p>FILE* handler functor base class to analyze FILE* input, handle errors and non-blocking FILE* reads. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="aef6ccf585e067a59bec85dac09ed9195"></a>
 <div class="memitem">
@@ -97,7 +97,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a99a90e7876aaa46ca9148b6f8be9fe90"></a>
+<a class="anchor" id="a749b06f3f5a05aa2282d007b56065827"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -105,11 +105,27 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int reflex::Input::Handler::operator() </td>
+          <td class="memname">virtual size_t reflex::Input::Handler::operator() </td>
           <td>(</td>
           <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -118,6 +134,14 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>open file </td></tr>
+    <tr><td class="paramname">buf</td><td>pointer to buffer with data read from file, may be changed by handler </td></tr>
+    <tr><td class="paramname">len</td><td>length of the buffered data, should be returned by the functor, or shorter to ignore or zero to force EOF and stop reading </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -127,7 +151,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Feb 28 2025 17:19:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Apr 29 2025 09:12:02 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

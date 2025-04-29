@@ -9,7 +9,7 @@
 #
 # Boost.regex normally includes libboost_regex-mt, if not change LIBBOOST below
 
-CXX       = c++ -std=c++11
+CXX       = c++ -std=gnu++11
 REFLEX    = ../bin/reflex
 REFLAGS   =
 LIBREFLEX =../lib/libreflex.a
@@ -24,6 +24,7 @@ CXXOFLAGS = -O2
 CXXWFLAGS = -Wall -Wunused -Wextra
 CXXIFLAGS = -I. -I../include -I $(INCPCRE2) -I $(INCBOOST)
 CXXMFLAGS =
+# CXXMFLAGS = -DINTERACTIVE
 CXXFLAGS  = $(CXXWFLAGS) $(CXXOFLAGS) $(CXXIFLAGS) $(CXXMFLAGS)
 
 all:		test_bits test_ranges lorem streams test rtest ptest btest stest

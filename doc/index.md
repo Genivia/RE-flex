@@ -333,8 +333,8 @@ The RE/flex `reflex::Matcher` class compiles regex patterns to efficient
 non-backtracking deterministic finite state machines (FSM) when instantiated.
 These deterministic finite automata (DFA) representations speed up matching
 considerably, at the cost of the initial FSM construction (see further below
-for hints on how to avoid this run time overhead).  RE/flex matchers only
-support POSIX mode matching, see \ref reflex-posix-perl.
+for hints on how to avoid this run-time overhead).  RE/flex matchers use POSIX
+mode matching, see \ref reflex-posix-perl for details.
 
 The RE/flex `reflex::FuzzyMatcher` class derived from `reflex::Matcher`
 supports the same features as the `reflex::Matcher` class but performs
@@ -6905,9 +6905,10 @@ The reflex::FuzzyMatcher class                           {#regex-fuzzy-matcher}
 
 The `reflex::FuzzyMatcher` class is derived from `reflex::Matcher` to support
 approximate regex pattern matching.  The approximation error is contrained by
-an "edit distance" which is one by default.  Instantiating a
-`reflex::FuzzyMatcher` takes an optional `MAX` paramter to contrain the edit
-distance permitted:
+an "edit distance" which is one by default.  The edit distance is also called
+[Levenshstein distance](https://en.wikipedia.org/wiki/Levenshtein_distance).
+Instantiating a `reflex::FuzzyMatcher` takes an optional `MAX` paramter to
+contrain the edit distance permitted:
 
 ~~~{.cpp}
     #include <reflex/fuzzymatcher.h>
@@ -6918,7 +6919,8 @@ distance permitted:
 The instantiated `reflex::FuzzyMatcher` class supports the same methods and
 features as the `reflex::Matcher` class, but with approximate pattern matching.
 
-When a `MAX` parameter is specified, it may be combined with one or more of the following flags:
+When a `MAX` edit distance parameter is specified, it may be combined with one
+or more of the following flags:
 
 - `reflex::FuzzyMatcher::INS` insertions permit extra character(s) in the input
 - `reflex::FuzzyMatcher::DEL` deletions permit missing character(s) in the input
@@ -6928,23 +6930,71 @@ When a `MAX` parameter is specified, it may be combined with one or more of the 
 For example, to allow approximate pattern matches to include up to three character insertions, but no deletions or substitutions (allowing insertions only is actually the most efficient fuzzy matching possible):
 
 ~~~{.cpp}
-    reflex::FuzzyMatcher matcher(regex, 3 | reflex::FuzzyMatcher::INS, INPUT);
+    reflex::FuzzyMatcher matcher(regex, 3 | reflex::FuzzyMatcher::INS, input);
 ~~~
 
-To allow up to three insertions or deletions (note that a substitution counts as two edits: one insertion and one deletion):
+To allow up to three insertions or deletions (note that a substitution counts
+as two edits: one insertion and one deletion):
 
 ~~~{.cpp}
-    reflex::FuzzyMatcher matcher(regex, 3 | reflex::FuzzyMatcher::INS | reflex::FuzzyMatcher::DEL, INPUT);
+    reflex::FuzzyMatcher matcher(regex, 3 | reflex::FuzzyMatcher::INS | reflex::FuzzyMatcher::DEL, input);
 ~~~
 
-When no flags are specified with `MAX`, fuzzy matching is performed with insertions, deletions, and substitutions, each counting as one edit.
+When no flags are specified with `MAX`, fuzzy matching is performed with
+insertions, deletions, and substitutions, each counting as one edit.  Newlines
+(`\n`) and NUL (`\0`) characters are never deleted or substituted to ensure
+that fuzzy matches do not extend the pattern match beyond the number of lines
+specified by the regex pattern
 
-To support full Unicode fuzzy pattern matching, such as `\p` Unicode character classes, we first convert the regex pattern before using it as follows:
+To support full Unicode fuzzy pattern matching, such as `\p` Unicode character
+classes, we first convert the regex pattern before using it as follows:
 
 ~~~{.cpp}
     std::string regex(reflex::Matcher::convert("PATTERN", reflex::convert_flag::unicode));
-    reflex::FuzzyMatcher matcher(regex, [MAX,] INPUT);
+    reflex::FuzzyMatcher matcher(regex, [MAX,] reflex::Input [, "options"] );
 ~~~
+
+Fuzzy `find()` and `split()` perform a second pass over a fuzzy-matched pattern
+when the match has a nonzero error.  This second pass checks if an exact match
+exists or if a better match exists that overlaps with the first pattern found.
+
+For example, the pattern `abc` is found to fuzzy match all of the text `aabc`
+with one error (an extra `a`).  The second pass of `find()` detects an exact
+match after skipping the first `a`.  Likewise, the pattern `abc` is found to
+fuzzy match `ababc` with a match for `aba` with one error (substitution of `c`
+by an `a`).  The second pass of `find()` detects an exact match after skipping
+`ab` in the text.  This approach is faster than minimizing the edit distance
+when searching text, while returning exact matches when possible.
+
+After a succesful fuzzy match or search with `matches()`, `scan()`, `find()` or
+`split()`, the method `reflex::FuzzyMatcher::edits()` returns the edit distance
+of the approximate pattern match, which is zero for an exact match.
+
+The first character of the pattern must match when searching a corpus with the
+fuzzy `find()` method:
+
+  Pattern    | MAX | Fuzzy find matches these ...      | ... but not these
+  ---------- | --- | --------------------------------- | -------------------------
+  `abc`      | 1   | `abc`, `ab`, `ac`, `axc`, `axbc`  | `a`, `axx`, `axbxc`, `bc`
+  `año`      | 1   | `año`, `ano`, `ao`                | `anno`, `ño`
+  `ab_cd`    | 2   | `ab_cd`, `ab-cd`, `ab Cd`, `abCd` | `ab\ncd`, `Ab_cd`, `Abcd`
+  `a[0-9]+z` | 1   | `a1z`, `a123z`, `az`, `axz`       | `axxz`, `A123z`, `123z`
+
+Note that we can use `.` as the first character or make the first character
+optional with `?` to "match fuzzily".
+
+By contrast, the fuzzy `matches()` method to match a corpus from start to end
+does not have this requirement:
+
+  Pattern    | MAX | Fuzzy matches these ...                              | ... but not these
+  ---------- | --- | ---------------------------------------------------- | -------------------------
+  `abc`      | 1   | `abc`, `ab`, `ac`, `Abc`, `xbc` `bc`, `axc`, `axbc`  | `a`, `axx`, `Ab`, `axbxc`
+  `año`      | 1   | `año`, `Año`, `ano`, `ao`, `ño`                      | `anno`
+  `ab_cd`    | 2   | `ab_cd`, `Ab_Cd`, `ab-cd`, `ab Cd`, `Ab_cd`, `abCd`  | `ab\ncd`, `AbCd`
+  `a[0-9]+z` | 1   | `a1z`, `A1z`, `a123z`, `az`, `Az`, `axz`, `123z`     | `axxz`
+
+Note that quoting text in patterns with `\Q` and `\E` fuzzy-matches the text.
+It does not escape fuzzy matching.
 
 🔝 [Back to table of contents](#)
 
@@ -9412,74 +9462,92 @@ example:
 🔝 [Back to table of contents](#)
 
 
-Registering a handler to support non-blocking reads                 {#nonblock}
----------------------------------------------------
+Registering a handler to support (non-)blocking reads               {#nonblock}
+-----------------------------------------------------
 
-When `FILE*` input is read, the read operation performed with an `fread` by the
-`reflex::Input` class should normally block until data is available.
-Otherwise, when no data is available, an EOF condition is set and further reads
-are blocked.
+This section is updated.  RE/flex 5.4 and greater support non-blocking `FILE*`
+input by waiting until input becomes available.  For this to work, the
+`reflex::Input::Handler::operator()()` method has completely changed in RE/flex
+5.4.  When a custom handler is defined, it is always invoked after a `FILE*`
+read.  The handler can be used to inspect the input before being passed on to
+the regex matcher.  It can be used to update an in-progress bar in a dialog
+window, for example.  It can be used to control non-blocking input, including
+exiting with EOF when a time out occurs.
 
-To support error recovery and non-blocking `FILE*` input, an event handler
-can be registered.  This handler is invoked when no input is available (i.e.
-`fread` returns zero) and the end of the file is not reached yet (i.e. `feof()`
-returns zero).
-
-The handler should be derived from the `reflex::Inout::Handler` abstract base
-functor class as follows:
+The input handler is derived from the `reflex::Input::Handler` abstract base
+class as follows:
 
 ~~~{.cpp}
-    struct NonBlockHandler : public reflex::Input::Handler {
-      NonBlockHandler(State& state)
+    struct MyHandler : public reflex::Input::Handler {
+      MyHandler(State& state)
       :
         state(state)
       { }
 
-      // state info: the handler does not need to be stateless
-      // for example this can be the FILE* or reflex::Input object
+      // state info: the handler can be stateful with your data as needed
       State& state;
 
-      // the functor operator invoked by the reflex::Input class when fread()==0 and feof()==0
-      int operator()()
+      // the functor operator invoked by reflex::Input
+      int operator()(
+        FILE *file, // open file
+        char *buf,  // pointer to buffer with data read from file, may be changed by handler
+        size_t len  // length of the buffered data, should be returned by the functor, or shorter to ignore or zero to force EOF and stop reading
+        )
       {
-        ... // perform some operation here
-
-        return 0; // do not continue, signals end of input
-        return 1; // continue reading, which may fail again
+        if (len == 0)
+        {
+          // zero len, no input is available on a non-blocking file or reached EOF
+          if (...)
+            return 0; // do nothing: wait until input is available, end when EOF
+          errno = ...; // some error condition != EAGAIN, EWOULDBLOCK, EINTR
+          return 0; // force EOF with errno
+        }
+        else
+        {
+          // can inspect buf[] here, return len or less to pass on to the regex matcher
+          return len;
+        }
       }
     };
 ~~~
 
-When your event handler allows non-blocking reads to continue, make sure that
-your handler does not return nonzero without delay.  A busy loop is otherwise
-the result that unnecessarily burns CPU cycles.  Instead of a fixed delay,
-`select()` can be effectively used to wait for input to become ready again:
+When `len` is zero, no input could be read on a non-blocking `FILE*`.  This may
+be temporary or an actual EOF.  A blocking `FILE*` always has a zero `len` on
+EOF.  Returning zero from the handler will let `reflex::Input` wait
+indefinitely until input becomes available or stops reading on EOF.
+
+If a timeout is desired, then this can be implemented in the custom handler as
+follows:
 
 ~~~{.cpp}
-    while (true)
+    if (len == 0 && !feof(file_))
     {
-      struct timeval tv;
-      fd_set fds;
-      FD_ZERO(&fds);
-      int fd = fileno(in.file());
-      FD_SET(fd, &fds);
-      tv.tv_sec = 1;
-      tv.tv_usec = 0;
-      int r = ::select(fd + 1, &fds, NULL, &fds, &tv);
-      if (r < 0 && errno != EINTR)
-        return 0;
-      if (r > 0)
-        return 1;
+      int timeout = 10; // 10 seconds timeout
+      for (int seconds = 0; seconds < timeout; ++seconds)
+      {
+        struct timeval tv;
+        fd_set rfds, efds;
+        FD_ZERO(&rfds);
+        FD_ZERO(&efds);
+        FD_SET(0, &rfds);
+        FD_SET(0, &efds);
+        tv.tv_sec = 1; // wait one second or until input is available
+        tv.tv_usec = 0;
+        int r = ::select(fileno(file_) + 1, &rfds, NULL, &efds, &tv);
+        if (r < 0 && errno != EINTR)
+          return 0; // errno is set
+        if (r > 0)
+          return 0; // OK
+      }
+      errno = ETIMEDOUT; // indicate EOF with errno ETIMEDOUT
     }
+    return len;
 ~~~
 
-Here we wait in periods of one second until data is pending on the `FILE*`
-stream `in.file()`, where `in` is a `reflex::Input` object.  This object can
-be part of the `NonBlockHandler` state.  A timeout can be implemented by
-bounding the number of loop iterations.
-
-Note that a `FILE*` stream is set to non-blocking mode in Unix/Linux with
-`fcntl()`.  Your handler is registered with `reflex::Input::set_handler()`:
+A `FILE*` stream is set to non-blocking mode in Unix/Linux with `fcntl()`.
+A custom handler is registered with `reflex::Input::set_handler()` and removed
+with a `NULL` handler (when new input is assigned, a handler is always
+removed):
 
 ~~~{.cpp}
     #include <fcntl.h>
@@ -9488,16 +9556,20 @@ Note that a `FILE*` stream is set to non-blocking mode in Unix/Linux with
     int fd = fileno(file);
     fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
     reflex::Input in(file);
-    NonBlockHandler nonblock_handler(in);
-    in.set_handler(&nonblock_handler);
+    MyHandler handler();
+    in.set_handler(&handler); // define handler
     ...
     fclose(in.file());
+    in.set_handler(NULL); // remove handler
 ~~~
 
 The custom event handler can also be used to detect and clear `FILE*` errors by
 checking if an error conditions exist on the `FILE*` input indicated by
-`ferror()`.  Errors are cleared with `clearerr()`.  Note that a non-blocking
-read that returns zero always produces nonzero `ferror()` values.
+`ferror()`.  When the handler functor returns zero, it indicates EOF and the
+remaining input is ignored.
+
+@note This feature is not available for MS Windows-compiled code, it assumes
+Unix/Linux with `fcntl()` non-blocking.
 
 🔝 [Back to table of contents](#)
 

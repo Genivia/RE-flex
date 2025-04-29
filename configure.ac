@@ -1,4 +1,4 @@
-AC_INIT([re-flex],[5.3.0],[https://github.com/Genivia/RE-flex/issues],[reflex])
+AC_INIT([re-flex],[5.4.0],[https://github.com/Genivia/RE-flex/issues],[reflex])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 AC_CONFIG_HEADERS([config.h])
 AC_COPYRIGHT([Copyright (C) 2016-2024 Robert van Engelen, Genivia Inc.])

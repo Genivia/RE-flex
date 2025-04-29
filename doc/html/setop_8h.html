@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">setop.h File Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Feb 28 2025 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Apr 29 2025 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -143,7 +143,7 @@ Functions</h2></td></tr>
 <div class="fragment"><div class="line">std::set&lt;int&gt; s1;</div><div class="line">s1.insert(1);</div><div class="line">assert(<a class="code" href="namespacereflex.html#a53a990336f7c3c72595d034bd685ee5c">reflex::is_in_set</a>(1, s1) == <span class="keyword">true</span>);</div><div class="line">std::set&lt;int&gt; s2;</div><div class="line">s2.insert(1);</div><div class="line">s2.insert(2);</div><div class="line">assert(<a class="code" href="namespacereflex.html#a3deed9d6b147d91074913f47c330d232">reflex::is_disjoint</a>(s1, s2) == <span class="keyword">false</span>);</div><div class="line">assert(<a class="code" href="namespacereflex.html#a088abc7ab84436832139b9c106cad426">reflex::is_subset</a>(s1, s2) == <span class="keyword">true</span>);</div><div class="line"><a class="code" href="structreflex_1_1lazy__union.html">reflex::lazy_union&lt; std::set&lt;int&gt;</a>,std::set&lt;int&gt; &gt; U(s1, s2);</div><div class="line"><span class="keywordflow">for</span> (<a class="code" href="structreflex_1_1lazy__union.html">reflex::lazy_union</a>&lt; std::set&lt;int&gt;,std::set&lt;int&gt; &gt;::iterator i = U.<a class="code" href="structreflex_1_1lazy__union.html#ac2f126923de1076116c11c48a6ac83a7">begin</a>(); i != U.end(); ++i)</div><div class="line">  std::cout &lt;&lt; *i &lt;&lt; std::endl; <span class="comment">// prints 1 and 2</span></div><div class="line"><a class="code" href="structreflex_1_1lazy__intersection.html">reflex::lazy_intersection&lt; std::set&lt;int&gt;</a>,std::set&lt;int&gt; &gt; I(s1, s2);</div><div class="line"><span class="keywordflow">for</span> (<a class="code" href="structreflex_1_1lazy__intersection.html">reflex::lazy_intersection</a>&lt; std::set&lt;int&gt;,std::set&lt;int&gt; &gt;::iterator i = I.<a class="code" href="structreflex_1_1lazy__intersection.html#aadabfc8d6abfbdd4afecfc66543d108e">begin</a>(); i != I.end(); ++i)</div><div class="line">  std::cout &lt;&lt; *i &lt;&lt; std::endl; <span class="comment">// prints 1</span></div></div><!-- fragment --> </div></div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Feb 28 2025 17:19:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Apr 29 2025 09:12:02 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

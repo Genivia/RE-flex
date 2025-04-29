@@ -1,8 +1,8 @@
 <map id="reflex::Input::streambuf" name="reflex::Input::streambuf">
-<area shape="rect" id="node3" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="128,337,220,364"/>
-<area shape="rect" id="node4" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="44,248,189,275"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="214,248,305,275"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="195,157,324,199"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="182,81,337,108"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="209,5,309,32"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="126,339,217,366"/>
+<area shape="rect" id="node4" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to analyze FILE* input, handle errors and non&#45;blocking FILE* reads..." alt="" coords="44,249,187,276"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="212,249,302,276"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="193,158,321,200"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="180,82,334,109"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="207,5,307,32"/>
 </map>

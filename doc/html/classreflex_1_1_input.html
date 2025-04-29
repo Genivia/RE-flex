@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Feb 28 2025 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Tue Apr 29 2025 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -78,11 +78,11 @@ Collaboration diagram for reflex::Input:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreflex_1_1_input__coll__graph.png" border="0" usemap="#reflex_1_1_input_coll__map" alt="Collaboration graph"/></div>
 <map name="reflex_1_1_input_coll__map" id="reflex_1_1_input_coll__map">
-<area shape="rect" id="node2" href="structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="5,248,151,275"/>
-<area shape="rect" id="node3" title="STL class. " alt="" coords="175,248,266,275"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="156,157,285,199"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="143,81,298,108"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="171,5,271,32"/>
+<area shape="rect" id="node2" href="structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to analyze FILE* input, handle errors and non&#45;blocking FILE* reads..." alt="" coords="5,249,149,276"/>
+<area shape="rect" id="node3" title="STL class. " alt="" coords="173,249,264,276"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="154,158,283,200"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="141,82,296,109"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="169,5,268,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -95,7 +95,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common <a class="el" href="structreflex_1_1_input_1_1file__encoding.html" title="Common file_encoding constants. ">file_encoding</a> constants.  <a href="structreflex_1_1_input_1_1file__encoding.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_input_1_1_handler.html">Handler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">FILE* handler functor base class to handle FILE* errors and non-blocking FILE* reads.  <a href="structreflex_1_1_input_1_1_handler.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">FILE* handler functor base class to analyze FILE* input, handle errors and non-blocking FILE* reads.  <a href="structreflex_1_1_input_1_1_handler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input_1_1streambuf.html">streambuf</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream buffer for <a class="el" href="classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. ">reflex::Input</a>, derived from std::streambuf.  <a href="classreflex_1_1_input_1_1streambuf.html#details">More...</a><br /></td></tr>
@@ -220,8 +220,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a603cfde978e8ff1153073540ff39aae8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> for a std::istream.  <a href="#a603cfde978e8ff1153073540ff39aae8">More...</a><br /></td></tr>
 <tr class="separator:a603cfde978e8ff1153073540ff39aae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37dd7c46da3413a52866bee4bb060cc5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a37dd7c46da3413a52866bee4bb060cc5">file_get</a> (char *s, size_t n)</td></tr>
-<tr class="memdesc:a37dd7c46da3413a52866bee4bb060cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a> on a FILE*.  <a href="#a37dd7c46da3413a52866bee4bb060cc5">More...</a><br /></td></tr>
+<tr class="memdesc:a37dd7c46da3413a52866bee4bb060cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a> on a FILE*, is non-blocking if file is non-blocking, <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a> blocks to read at least one byte.  <a href="#a37dd7c46da3413a52866bee4bb060cc5">More...</a><br /></td></tr>
 <tr class="separator:a37dd7c46da3413a52866bee4bb060cc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1359a5f01a11b400f36d488e9cbcc6a1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a1359a5f01a11b400f36d488e9cbcc6a1">file_read</a> (char *s, size_t n)</td></tr>
+<tr class="memdesc:a1359a5f01a11b400f36d488e9cbcc6a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read n bytes into buffer s from file, block when IO is non-blocking, return false when fewer bytes read on failure or eof.  <a href="#a1359a5f01a11b400f36d488e9cbcc6a1">More...</a><br /></td></tr>
+<tr class="separator:a1359a5f01a11b400f36d488e9cbcc6a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaafe97c6d976f73be9d2290590d3e6d1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#aaafe97c6d976f73be9d2290590d3e6d1">file_ready</a> ()</td></tr>
+<tr class="memdesc:aaafe97c6d976f73be9d2290590d3e6d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for non-blocking file input to be ready and return true or return false for eof and errors, ignore EINTR.  <a href="#aaafe97c6d976f73be9d2290590d3e6d1">More...</a><br /></td></tr>
+<tr class="separator:aaafe97c6d976f73be9d2290590d3e6d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3476671e945e7fb14e1aa800b8db15bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a3476671e945e7fb14e1aa800b8db15bc">set_handler</a> (<a class="el" href="structreflex_1_1_input_1_1_handler.html">Handler</a> *handler)</td></tr>
 <tr class="memdesc:a3476671e945e7fb14e1aa800b8db15bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set FILE* handler.  <a href="#a3476671e945e7fb14e1aa800b8db15bc">More...</a><br /></td></tr>
 <tr class="separator:a3476671e945e7fb14e1aa800b8db15bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -968,7 +974,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a> on a FILE*. </p>
+<p>Implements <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a> on a FILE*, is non-blocking if file is non-blocking, <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a> blocks to read at least one byte. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">s</td><td>points to the string buffer to fill with input </td></tr>
@@ -993,6 +999,66 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called by <a class="el" href="classreflex_1_1_input.html#a3b77d701d8ad80bd4e235e397c180bd5" title="Initialize the state after (re)setting the input source, auto-detects UTF BOM in FILE* input if the f...">init()</a> for a FILE*. </p>
+
+</div>
+</div>
+<a class="anchor" id="a1359a5f01a11b400f36d488e9cbcc6a1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Input::file_read </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Read n bytes into buffer s from file, block when IO is non-blocking, return false when fewer bytes read on failure or eof. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>points to the string buffer to file with input </td></tr>
+    <tr><td class="paramname">n</td><td>size of the buffer pointed to by s </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aaafe97c6d976f73be9d2290590d3e6d1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool reflex::Input::file_ready </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Wait for non-blocking file input to be ready and return true or return false for eof and errors, ignore EINTR. </p>
 
 </div>
 </div>
@@ -1674,7 +1740,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Feb 28 2025 17:19:51 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Tue Apr 29 2025 09:12:02 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

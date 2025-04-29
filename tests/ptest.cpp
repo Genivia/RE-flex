@@ -256,7 +256,7 @@ int main()
     std::string pattern(regex);
     MATCHER matcher(pattern, test->cstring, test->mopts);
 #ifdef INTERACTIVE
-    matcher.interactive(); // test with blk=1
+    matcher.interactive();
 #endif
     printf("Test \"%s\" against \"%s\"\n", test->pattern, test->cstring);
     if (*test->popts)

@@ -1,12 +1,12 @@
 <map id="reflex::LineMatcher" name="reflex::LineMatcher">
-<area shape="rect" id="node2" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="1024,78,1183,105"/>
-<area shape="rect" id="node5" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1289,120,1448,161"/>
-<area shape="rect" id="node3" href="$structreflex_1_1_abstract_matcher_1_1_handler.html" title="Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched. " alt="" coords="784,5,943,47"/>
-<area shape="rect" id="node4" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="784,71,943,112"/>
-<area shape="rect" id="node6" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="818,137,909,163"/>
-<area shape="rect" id="node7" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="537,111,681,138"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="564,162,655,189"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="359,155,488,196"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="155,162,309,189"/>
-<area shape="rect" id="node11" title="STL class. " alt="" coords="5,162,105,189"/>
+<area shape="rect" id="node2" href="$classreflex_1_1_abstract_matcher.html" title="The abstract matcher base class template defines an interface for all pattern matcher engines..." alt="" coords="1018,80,1175,107"/>
+<area shape="rect" id="node5" href="$classreflex_1_1_abstract_matcher_1_1_operation.html" title="AbstractMatcher::Operation functor to match input to a pattern, also provides a (const) AbstractMatch..." alt="" coords="1281,121,1439,163"/>
+<area shape="rect" id="node3" href="$structreflex_1_1_abstract_matcher_1_1_handler.html" title="Event handler functor base class to invoke when the buffer contents are shifted out, e.g. for logging the data searched. " alt="" coords="781,5,938,47"/>
+<area shape="rect" id="node4" href="$structreflex_1_1_abstract_matcher_1_1_option.html" title="AbstractMatcher::Options for matcher engines. " alt="" coords="781,72,938,114"/>
+<area shape="rect" id="node6" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="814,138,905,165"/>
+<area shape="rect" id="node7" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to analyze FILE* input, handle errors and non&#45;blocking FILE* reads..." alt="" coords="535,113,679,140"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="562,164,652,191"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="358,156,486,198"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="154,164,308,191"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="5,164,105,191"/>
 </map>

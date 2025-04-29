@@ -1,11 +1,11 @@
 <map id="reflex::AbstractLexer&lt; M &gt;::Matcher" name="reflex::AbstractLexer&lt; M &gt;::Matcher">
-<area shape="rect" id="node3" href="$classreflex_1_1_abstract_lexer.html" title="The abstract lexer class template that is the abstract root class of all reflex&#45;generated scanners..." alt="" coords="1109,140,1288,167"/>
-<area shape="rect" id="node5" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="879,56,971,83"/>
-<area shape="rect" id="node6" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to handle FILE* errors and non&#45;blocking FILE* reads. " alt="" coords="541,5,687,32"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="569,56,659,83"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="361,46,490,87"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="155,87,309,113"/>
-<area shape="rect" id="node13" title="STL class. " alt="" coords="359,111,492,153"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="5,87,105,113"/>
-<area shape="rect" id="node12" title="STL class. " alt="" coords="711,115,807,141"/>
+<area shape="rect" id="node3" href="$classreflex_1_1_abstract_lexer.html" title="The abstract lexer class template that is the abstract root class of all reflex&#45;generated scanners..." alt="" coords="1102,140,1280,167"/>
+<area shape="rect" id="node5" href="$classreflex_1_1_input.html" title="Input character sequence class for unified access to sources of input text. " alt="" coords="873,56,963,83"/>
+<area shape="rect" id="node6" href="$structreflex_1_1_input_1_1_handler.html" title="FILE* handler functor base class to analyze FILE* input, handle errors and non&#45;blocking FILE* reads..." alt="" coords="539,5,683,32"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="566,56,656,83"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="360,46,488,88"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="154,88,308,115"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="358,113,490,155"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="5,88,105,115"/>
+<area shape="rect" id="node12" title="STL class. " alt="" coords="707,115,801,142"/>
 </map>

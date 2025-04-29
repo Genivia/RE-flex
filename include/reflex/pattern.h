@@ -362,7 +362,7 @@ class Pattern {
   {
     return ams_;
   }
-  /// Returns true when match is predicted, based on s[0..3..e-1] (e >= s + 4).
+  /// Returns true when match is predicted, based on s[0..3..e-1] (e >= s + 4 and n >= 4).
   inline bool predict_match(const char *s, size_t n) const
   {
     uint32_t h = static_cast<uint8_t>(*s);
@@ -1244,6 +1244,21 @@ class Pattern {
   static inline Lookahead lookahead_of(Opcode opcode)
   {
     return opcode & 0xffff;
+  }
+  /// check if lower case
+  static inline bool islowercase(Char c)
+  {
+    return (c >= 'a' && c <= 'z');
+  }
+  /// check if upper case
+  static inline bool isuppercase(Char c)
+  {
+    return (c >= 'A' && c <= 'Z');
+  }
+  /// check if lower or upper case
+  static inline bool isanycase(Char c)
+  {
+    return islowercase(c) || isuppercase(c);
   }
   /// convert to lower case if c is a letter a-z, A-Z.
   static inline Char lowercase(Char c)

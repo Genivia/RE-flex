@@ -52,6 +52,9 @@
 */
 #define WITH_COMPACT_DFA -1
 
+/// optional: cut cycle detection versus simple loop detection to improve lbk accuracy
+// #define WITH_CUT_CYCLE
+
 #ifdef DEBUG
 # define DBGLOGPOS(p) \
   if ((p).accept()) \
@@ -296,7 +299,7 @@ void Pattern::init(const char *options, const uint8_t *pred)
           for (DFA::State::Edges::iterator t = state->edges.begin(); t != state->edges.end(); ++t)
           {
             Char c = t->first;
-            if (c >= 'a' && c <= 'z')
+            if (islowercase(c))
             {
               state->edges[uppercase(c)] = DFA::State::Edge(uppercase(c), t->second.second);
               ++eno_;
@@ -502,7 +505,7 @@ void Pattern::init(const char *options, const uint8_t *pred)
         chr_[k] = chr_[k - 1];
       pin_ = n;
     }
-    DBGLOG("min=%zu lcp=%hu(%hu) pin=%zu nlcp=%hu(%hu) freq=%hu(%hu) npy=%hu cut=%u", min, lcp_, lcs_, pin_, nlcp, nlcs, freqlcp, freqlcs, npy_, cut_);
+    DBGLOG("min=%zu lcp=%hu(%hu) pin=%zu nlcp=%hu(%hu) freq=%hu(%hu) npy=%hu cut=%u lbk=%u lbm=%u", min, lcp_, lcs_, pin_, nlcp, nlcs, freqlcp, freqlcs, npy_, cut_, lbk_, lbm_);
   }
   else if (len_ > 1)
   {
@@ -828,7 +831,7 @@ void Pattern::parse(
               c = static_cast<Char>(s - abtnvfr + '\a');
           }
         }
-        else if (c >= 'A' && c <= 'Z' && opt_.i)
+        else if (isuppercase(c) && opt_.i)
         {
           c = lowercase(c);
         }
@@ -1736,7 +1739,7 @@ void Pattern::compile(
             Char c = t->first;
             DFA::State *target_state = last_state = last_state->next = dfa_.state(t->second.second);
             state->edges[c] = DFA::State::Edge(c, target_state);
-            if (c >= 'a' && c <= 'z')
+            if (islowercase(c))
             {
               state->edges[uppercase(c)] = DFA::State::Edge(uppercase(c), target_state);
               ++eno_;
@@ -1765,7 +1768,7 @@ void Pattern::compile(
           {
             Char c = t->first;
             chars.add(c);
-            if (c >= 'a' && c <= 'z')
+            if (islowercase(c))
               chars.add(uppercase(c));
           }
         }
@@ -1791,9 +1794,9 @@ void Pattern::compile(
               {
                 if (common.contains(c))
                 {
-                  if (std::isalpha(c))
+                  if (isanycase(c))
                   {
-                    if (c >= 'a' && c <= 'z')
+                    if (islowercase(c))
                     {
                       pos = i->second;
                       DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edges[c].second, pos);
@@ -1853,7 +1856,7 @@ void Pattern::compile(
               if (chars.contains(c))
               {
                 DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edges[c].second);
-                if (std::isalpha(c))
+                if (isanycase(c))
                 {
                   state->edges[lowercase(c)] = DFA::State::Edge(lowercase(c), target_state);
                   state->edges[uppercase(c)] = DFA::State::Edge(uppercase(c), target_state);
@@ -1893,7 +1896,7 @@ void Pattern::compile(
           DFA::State *target_state = last_state = last_state->next = dfa_.state(&t->second);
           state->edges[c] = DFA::State::Edge(c, target_state);
           ++eno_;
-          if (opt_.i && c >= 'a' && c <= 'z')
+          if (opt_.i && islowercase(c))
           {
             state->edges[uppercase(c)] = DFA::State::Edge(uppercase(c), target_state);
             ++eno_;
@@ -1911,12 +1914,8 @@ void Pattern::compile(
           for (std::map<Char,Tree::Node>::iterator t = state->tnode->edges.begin(); t != state->tnode->edges.end(); ++t)
           {
             Char c = t->first;
-            if (c >= 'a')
-            {
-              if (c > 'z')
-                break;
+            if (islowercase(c))
               chars.add(uppercase(c));
-            }
           }
         }
         Moves::iterator i = moves.begin();
@@ -1936,9 +1935,9 @@ void Pattern::compile(
               {
                 if (common.contains(c))
                 {
-                  if (std::isalpha(c))
+                  if (isanycase(c))
                   {
-                    if (c >= 'a' && c <= 'z')
+                    if (islowercase(c))
                     {
                       pos = i->second;
                       DFA::State *target_state = last_state = last_state->next = dfa_.state(&state->tnode->edges[c], pos);
@@ -1996,7 +1995,7 @@ void Pattern::compile(
             if (chars.contains(c))
             {
               DFA::State *target_state = last_state = last_state->next = dfa_.state(&state->tnode->edges[c]);
-              if (opt_.i && std::isalpha(c))
+              if (opt_.i && isanycase(c))
               {
                 state->edges[lowercase(c)] = DFA::State::Edge(lowercase(c), target_state);
                 state->edges[uppercase(c)] = DFA::State::Edge(uppercase(c), target_state);
@@ -2027,7 +2026,7 @@ void Pattern::compile(
               {
                 Char c = (i << 4) + j;
                 DFA::State *target_state = last_state = last_state->next = dfa_.state(p[j]);
-                if (opt_.i && std::isalpha(c))
+                if (opt_.i && isanycase(c))
                 {
                   state->edges[lowercase(c)] = DFA::State::Edge(lowercase(c), target_state);
                   state->edges[uppercase(c)] = DFA::State::Edge(uppercase(c), target_state);
@@ -2083,9 +2082,9 @@ void Pattern::compile(
               {
                 if (common.contains(c))
                 {
-                  if (std::isalpha(c))
+                  if (isanycase(c))
                   {
-                    if (c >= 'a' && c <= 'z')
+                    if (islowercase(c))
                     {
                       pos = i->second;
                       DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edge[c >> 4][c & 0xf], pos);
@@ -2143,7 +2142,7 @@ void Pattern::compile(
             if (chars.contains(c))
             {
               DFA::State *target_state = last_state = last_state->next = dfa_.state(state->tnode->edge[c >> 4][c & 0xf]);
-              if (opt_.i && std::isalpha(c))
+              if (opt_.i && isanycase(c))
               {
                 state->edges[lowercase(c)] = DFA::State::Edge(lowercase(c), target_state);
                 state->edges[uppercase(c)] = DFA::State::Edge(uppercase(c), target_state);
@@ -2456,10 +2455,10 @@ void Pattern::compile_transition(
           Chars chars;
           if (literal)
           {
-            if (std::isalpha(c) && is_modified(ModConst::i, modifiers, loc))
+            if (isanycase(c) && is_modified(ModConst::i, modifiers, loc))
             {
-              chars.add(uppercase(c));
               chars.add(lowercase(c));
+              chars.add(uppercase(c));
             }
             else
             {
@@ -2499,10 +2498,10 @@ void Pattern::compile_transition(
                   switch (escape_at(loc))
                   {
                     case '\0': // no escape at current loc
-                      if (std::isalpha(c) && is_modified(ModConst::i, modifiers, loc))
+                      if (isanycase(c) && is_modified(ModConst::i, modifiers, loc))
                       {
-                        chars.add(uppercase(c));
                         chars.add(lowercase(c));
+                        chars.add(uppercase(c));
                       }
                       else
                       {
@@ -2539,10 +2538,10 @@ void Pattern::compile_transition(
                       break;
                     default:
                       c = parse_esc(loc, &chars);
-                      if (c <= 'z' && std::isalpha(c) && is_modified(ModConst::i, modifiers, loc))
+                      if (isanycase(c) && is_modified(ModConst::i, modifiers, loc))
                       {
-                        chars.add(uppercase(c));
                         chars.add(lowercase(c));
+                        chars.add(uppercase(c));
                       }
                   }
                 }
@@ -2667,7 +2666,7 @@ void Pattern::compile_list(Location loc, Chars& chars, const Mods modifiers) con
         {
           if (is_modified(ModConst::i, modifiers, loc))
           {
-            if (lo >= 'a' && lo <= 'z' && c >= 'A' && c <= 'Z')
+            if (islowercase(lo) && isuppercase(c))
               c = lowercase(c);
             Char a = lo;
             Char b = c;
@@ -2691,10 +2690,10 @@ void Pattern::compile_list(Location loc, Chars& chars, const Mods modifiers) con
         }
         else
         {
-          if (std::isalpha(c) && is_modified(ModConst::i, modifiers, loc))
+          if (isanycase(c) && is_modified(ModConst::i, modifiers, loc))
           {
-            chars.add(uppercase(c));
             chars.add(lowercase(c));
+            chars.add(uppercase(c));
           }
           else
           {
@@ -3827,15 +3826,15 @@ void Pattern::analyze_dfa(DFA::State *start)
     // We also cut away edges to states that precede the new starting states, because these repetitions can be ignored.
     // Characters on removed edges are recorded so we can look back to find a full match with the regex matcher.
     // We name an edge a "backedge" when it points to a state before the new starting states, i.e. a loop, not necessarily a cycle.
-    bool backedge = false;       // if we found a backedge during breadth-first search
-    bool has_backedge = false;   // if we found a backedge after the last cut to a state after the cut, not before the cut
+    bool backedge = false;       // if we found a loop backedge during breadth-first search
+    bool has_backedge = false;   // if we found a loop backedge after the last cut to a state after the cut, not before the cut
     uint16_t fin_depth = 0xffff; // shortest distance to a final state
     uint16_t fin_count = 0;      // number of characters to the final states cut off that are not included in the current cut
     std::set<DFA::State*> states;     // current set of breadth-first-search states
     std::set<DFA::State*> fin_states; // set of states to final states not included in the current cut
     reflex::ORanges<Char> chars;      // set of characters on edges before the current cut, the lookback set
     // current cut
-    bool cut_backedge = false;   // if we cound a backedge for the current cut
+    bool cut_backedge = false;   // if we found a loop backedge for the current cut
     uint16_t cut_depth = 0;      // breadth-first search depth of the current cut
     uint16_t cut_fin_depth = 0;  // shortest distance to a final state for the current cut
     uint16_t cut_fin_count = 0;  // number of characters to the final states
@@ -3932,7 +3931,7 @@ void Pattern::analyze_dfa(DFA::State *start)
         else if (fin_count == 0)
           make_cut = (cut_span > 6 && prev_min_count < 0xffff && prev_min_count > 8 && prev_min_count >= min_count);
         else
-          make_cut = (cut_span > 7 && prev_min_count < 0xffff && prev_min_count > 8 && min_count <= 2);
+          make_cut = (cut_span > 7 && prev_min_count < 0xffff && prev_min_count > 8 && min_count <= 8); // TODO was <= 2
         if (make_cut)
         {
           // determine if this is a better cut than the last
@@ -4001,10 +4000,27 @@ void Pattern::analyze_dfa(DFA::State *start)
       chars += next_chars;
       states.swap(next_states);
       // are we done?
-      if (count <= fin_count || !is_more)
+      if (count <= fin_count || (!is_more && cut_span < 2))
       {
         if (is_more)
           ++cut_span;
+        if (min_count < cut_count && min_count < best_min_count)
+        {
+          if (cut_span >= 2 && prev_min_count < 0xffff && prev_min_count >= 64 && min_count <= 8)
+          {
+            // save final best metrics when last character matters, update similar to search branch above
+            best_cut_states.swap(states);
+            best_cut_fin_states = fin_states;
+            best_cut_count = count + fin_count;
+            best_cut_chars = chars;
+            best_cut_backedge = backedge;
+            best_cut_depth = depth;
+            best_cut_fin_depth = fin_depth == 0xffff ? depth : fin_depth;
+            best_cut_fin_count = fin_count;
+            best_cut_span = cut_span;
+            best_min_count = min_count;
+          }
+        }
         break;
       }
     }
@@ -4047,7 +4063,40 @@ void Pattern::analyze_dfa(DFA::State *start)
         cut_fin_count = best_cut_fin_count;
       }
     }
-    // did we find a suitable cut?
+#ifdef WITH_CUT_CYCLE // TODO perhaps for future improvements, experimental: needs marking of states to run in linear time!
+    bool cut_cycle = false;
+    if (cut_backedge)
+    {
+      // depth-first search up to cut_depth to detect cycles, this improves lbk_ = 0xffff for actual cycles, not loops
+      // important: DFA::MetaEdgesClosure should be used instead of edge iterator, because we could have cycles via matas
+      std::vector<std::pair<DFA::State*,DFA::State::Edges::iterator> > visit; // depth-first states visited
+      visit.emplace_back(start, start->edges.begin());
+      while (!cut_cycle && !visit.empty())
+      {
+        DFA::State *state = visit.back().first;
+        DFA::State::Edges::iterator edge = visit.back().second;
+        if (edge != state->edges.end())
+        {
+          ++visit.back().second;
+          DFA::State *next_state = edge->second.second;
+          if (next_state == NULL)
+            continue;
+          for (std::vector<std::pair<DFA::State*,DFA::State::Edges::iterator> >::iterator it = visit.begin(); it != visit.end(); ++it)
+            if (next_state == it->first)
+              cut_cycle = true; // cycle detected
+          if (visit.size() <= cut_depth + 1 && !next_state->edges.empty())
+            visit.emplace_back(next_state, next_state->edges.begin());
+        }
+        else
+        {
+          visit.pop_back();
+        }
+      }
+      DBGLOGN("cycle=%d", cut_cycle);
+      cut_backedge = cut_cycle;
+    }
+#endif
+    // did we find a suitable cut or a back edge?
     if (cut_depth > 0 || cut_backedge)
     {
       cut_ = cut_depth + 1;
@@ -4204,7 +4253,11 @@ void Pattern::analyze_dfa(DFA::State *start)
           ++it;
       }
       // set the pattern's lookback distance lbk, lookback min distance lbm, and lookback characters cbk for the pattern matcher
+#ifdef WITH_CUT_CYCLE // see cycle detection above
+      lbk_ = cut_cycle ? 0xffff : cut_depth;
+#else
       lbk_ = cut_backedge ? 0xffff : cut_depth;
+#endif
       lbm_ = cut_fin_depth;
       for (reflex::ORanges<Char>::iterator range = cut_chars.begin(); range != cut_chars.end(); ++range)
         for (Char ch = range->first; ch < range->second; ++ch)
