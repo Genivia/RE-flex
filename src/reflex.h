@@ -41,6 +41,7 @@
 #include <reflex/error.h>
 #include <reflex/input.h>
 #include <reflex/pattern.h>
+#include <reflex/matcher.h>
 #include <reflex/utf8.h>
 #include <cctype>
 #include <cstdlib>
@@ -75,7 +76,7 @@
 #endif
 
 // DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "5.4.0"
+#define REFLEX_VERSION "5.5.0"
 
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
@@ -176,6 +177,7 @@ class Reflex
   void        write_final();
   void        write_regexp_file();
   void        write_header_file();
+  void        do_test();
   bool        get_line();
   bool        skip_comment(size_t& pos);
   bool        is(const char *s);

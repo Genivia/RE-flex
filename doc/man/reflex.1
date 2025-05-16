@@ -1,4 +1,4 @@
-.TH REFLEX "1" "April 29, 2025" "reflex 5.4.0" "User Commands"
+.TH REFLEX "1" "May 16, 2025" "reflex 5.5.0" "User Commands"
 .SH NAME
 \fBreflex\fR -- regex\-centric, fast and flexible lexical analyzer generator
 .SH SYNOPSIS
@@ -13,7 +13,7 @@ Generates lex.yy.cpp unless option \fB-o\fR specifies otherwise.
 .B Scanner:
 .TP
   \fB\-+\fR, \fB\-\-flex\fR
-generate Flex\-compatible C++ scanner
+Flex\-compatible C++ scanner
 .TP
   \fB\-a\fR, \fB\-\-dotall\fR
 dot in patterns match newline
@@ -148,6 +148,9 @@ use NAME as the return type of lex() and yylex() instead of int
 .TP
   \fB\-d\fR, \fB\-\-debug\fR
 enable debug mode in scanner
+.TP
+  \fB\-D\fR, \fB\-\-do\fR=\fI\fR[START:]FILE
+immediately test patterns on input FILE, start condition START
 .TP
   \fB\-p\fR, \fB\-\-perf\-report\fR
 scanner reports detailed performance statistics to stderr

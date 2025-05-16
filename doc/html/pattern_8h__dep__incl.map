@@ -1,6 +1,6 @@
 <map id="pattern.h" name="pattern.h">
 <area shape="rect" id="node2" href="$fuzzymatcher_8h.html" title="RE/flex fuzzy matcher engine. " alt="" coords="5,155,116,182"/>
-<area shape="rect" id="node3" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="71,80,149,107"/>
-<area shape="rect" id="node4" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="174,80,238,107"/>
-<area shape="rect" id="node5" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="167,155,245,182"/>
+<area shape="rect" id="node3" href="$matcher_8h.html" title="RE/flex matcher engine. " alt="" coords="77,80,156,107"/>
+<area shape="rect" id="node4" href="$reflex_8h.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="150,155,214,182"/>
+<area shape="rect" id="node5" href="$reflex_8cpp.html" title="RE/flex scanner generator replacement for Flex/Lex. " alt="" coords="143,230,221,257"/>
 </map>

@@ -669,6 +669,7 @@ Changelog
 - Feb  3, 2025: 5.2.2 `Matcher::find()` speed improvements for certain regex patterns that do not match the input.
 - Feb 28, 2025: 5.3.0 improve case-insensitive matching to support the Unicode upper/lower sets of letters.
 - Apr 29, 2025: 5.4.0 natively support non-blocking `FILE*` input, i.e. for `fcntl` `O_NONBLOCK` the regex matchers will wait for input to become available again instead of giving up with an error; changed `reflex::Input::Handler` see documentation; remove compiler warnings.
+- May 16, 2025: 5.5.0 new `reflex` option `-D` to immediately debug a scanner's lexer patterns against a specified input file; fix an issue with `Matcher::find()` for certain short patterns with ^$ anchors; mark `likely` and `unlikely` branches in hot paths for `Matcher::find()` performance.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

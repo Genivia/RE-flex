@@ -1685,18 +1685,28 @@ reached.  For `int` this is `int()`, which is zero.  By setting
 
 #### `-d`, `−−debug`
 
-This enables debug mode in the generated scanner.  Running the scanner produces
-debug messages on `std::cerr` standard error and the `debug()` function returns
-nonzero.  To temporarily turn off debug messages, use `set_debug(0)` in your
-action code.  To turn debug messages back on, use `set_debug(1)`.  The
-`set_debug()` and `debug()` methods are virtual methods of the lexer class, so
-you can override their behavior in a derived lexer class.  This option also
-enables assertions that check for internal errors.  See \ref reflex-debug for
-details.
+This option enables debug mode in the generated scanner.  Running the scanner
+produces debug messages on `std::cerr` standard error and the `debug()`
+function returns nonzero.  To temporarily turn off debug messages, use
+`set_debug(0)` in your action code.  To turn debug messages back on, use
+`set_debug(1)`.  The `set_debug()` and `debug()` methods are virtual methods of
+the lexer class, so you can override their behavior in a derived lexer class.
+This option also enables assertions that check for internal errors.  See \ref
+reflex-debug for details.
+
+#### `-D [START:]FILE`, `--do=[START:]FILE`
+
+This option immediately tests the lexer rule patterns against the specified
+input `FILE`.  No scanner code is generated.  The debug messages output by this
+option are identical to option `-d` messages output by the generated and
+compiled scanner when executed on the input `FILE`.  Only a single start
+condition state is active and never changed during scanning, because the
+scanner's lexer actions are not actually executed.  The start condition is 0 (or
+`INITIAL`) by default.
 
 #### `-p`, `−−perf-report`
 
-This enables the collection and reporting of statistics by the generated
+This option enables the collection and reporting of statistics by the generated
 scanner.  The scanner reports the performance statistics on `std::cerr` when
 EOF is reached.  If your scanner does not reach EOF, then invoke the lexer's
 `perf_report()` method explicitly in your code.  Invoking this method also
@@ -1706,13 +1716,13 @@ details.
 
 #### `-s`, `−−nodefault`
 
-This suppresses the default rule that echoes all unmatched input text when no
-rule matches.  With the `−−flex` option, the scanner reports "scanner jammed"
-when no rule matches by calling `yyFlexLexer::LexerError("scanner jammed")`.
-Without the `−−flex` and `−−debug` options, a `std::runtime` exception is
-raised by invoking `AbstractLexer::lexer_error("scanner jammed")`.  To throw a
-custom exception instead, use option `−−exception` or override the virtual
-method `lexer_error` in a derived lexer class.  The virtual methods
+This option suppresses the default rule that echoes all unmatched input text
+when no rule matches.  With the `−−flex` option, the scanner reports "scanner
+jammed" when no rule matches by calling `yyFlexLexer::LexerError("scanner
+jammed")`.  Without the `−−flex` and `−−debug` options, a `std::runtime`
+exception is raised by invoking `AbstractLexer::lexer_error("scanner jammed")`.
+To throw a custom exception instead, use option `−−exception` or override the
+virtual method `lexer_error` in a derived lexer class.  The virtual methods
 `LexerError` and `lexer_error` may be redefined by a user-specified derived
 lexer class, see \ref reflex-inherit.  Without the `−−flex` option, but with
 the `−−debug` option, the default rule is suppressed without invoking
@@ -1721,11 +1731,11 @@ the `−−debug` option, the default rule is suppressed without invoking
 
 #### `-v`, `−−verbose`
 
-This displays a summary of scanner statistics.
+This option displays a summary of scanner statistics.
 
 #### `-w`, `−−nowarn`
 
-This disables warnings.
+This option disables warnings.
 
 🔝 [Back to table of contents](#)
 
@@ -1733,11 +1743,11 @@ This disables warnings.
 
 #### `-h`, `−−help`
 
-This displays helpful information about <b>`reflex`</b>.
+This option displays helpful information about <b>`reflex`</b>.
 
 #### `-V`, `−−version`
 
-This displays the current <b>`reflex`</b> release version.
+This option displays the current <b>`reflex`</b> release version.
 
 #### `−−yylineno`, `−−yymore`
 
@@ -6076,11 +6086,17 @@ There are several <b>`reflex`</b> options to debug a lexer and analyze its
 performance given some input text to scan:
 
 - Option `-d` (or `−−debug`) generates a scanner that prints the matched text,
-  which allows you to debug your patterns.
+  which allows you to debug your lexer patterns.
+
+- Option `-D [START:]FILE` (or `−−do=[START:]FILE`) does not generate a
+  scanner, but immediately prints the matched text by matching the lexer
+  patterns against the specified input `FILE`.  This option allows you to debug
+  your patterns immediately.  An optional `START` condition state of the rules
+  may be specified, which is 0 (or `INITIAL`) by default.
 
 - Option `-p` (or `−−perf-report`) generates a scanner that profiles the
   performance of your lexer and the lexer rules executed, which allows you to
-  find hotspots and performance bottlenecks in your rules.
+  find hotspots and performance bottlenecks in your lexer.
 
 - Option `-s` (or `−−nodefault`) suppresses the default rule that echoes all
   unmatched text when no rule matches.  The scanner reports "scanner jammed"
@@ -6093,13 +6109,18 @@ performance given some input text to scan:
 
 ### Debugging
 
-Option `-d` generates a scnner that prints the matched text while scanning
+Option `-d` generates a scanner that prints the matched text while scanning
 input.  The output displayed is of the form:
 
-    −−accepting rule at line NNN ("TEXT")
+    −−rule FILE:LINE start(START) LINE,COLUMN:"TEXT"
 
-where NNN is the line number of the pattern in the lexer specification and TEXT
-is the matched text.
+where `FILE:LINE` is the source location of the lexer rule, `START` is the
+start condition state, `LINE,COLUMN` is the line and column number of the
+pattern match in the input, and `TEXT` is the matched text.
+
+Option `-D [START:]FILE` immediately debugs the lexer patterns on the specified
+input `FILE`.  The start condition state `START` is not changed during
+scanning, because the scanner's lexer actions are not actually executed.
 
 🔝 [Back to table of contents](#)
 
@@ -6120,7 +6141,7 @@ This is perhaps best illustrated with an example.  The JSON parser
 package was built with reflex option `-p` and then run on some given JSON input
 to analyze its performance:
 
-    reflex 0.9.22 json.l performance report:
+    reflex x.y.z json.l performance report:
       INITIAL rules matched:
         rule at line 51 accepted 58 times matching 255 bytes total in 0.009 ms
         rule at line 52 accepted 58 times matching 58 bytes total in 0.824 ms
@@ -6859,8 +6880,9 @@ string regex, and some given input:
     reflex::Matcher matcher( reflex::Pattern or string, reflex::Input [, "options"] )
 ~~~
 
-The regex is specified as a string or a `reflex::Pattern` object, see
-\ref regex-pattern below.
+The regex is specified as a string or a `reflex::Pattern` object.  The
+`reflex::Pattern` object is passed by referene and must persist when the
+matcher is in use.  See also \ref regex-pattern below.
 
 We use option `"N"` to permit empty matches when searching input with
 `reflex::Matcher::find`.  Option `"T=8"` sets the tab size to 8 for
@@ -6915,6 +6937,10 @@ contrain the edit distance permitted:
 
     reflex::FuzzyMatcher matcher( reflex::Pattern or string, [MAX, ] reflex::Input [, "options"] )
 ~~~
+
+The regex is specified as a string or a `reflex::Pattern` object.  The
+`reflex::Pattern` object is passed by referene and must persist when the
+matcher is in use.  See also \ref regex-pattern below.
 
 The instantiated `reflex::FuzzyMatcher` class supports the same methods and
 features as the `reflex::Matcher` class, but with approximate pattern matching.
@@ -7001,10 +7027,11 @@ It does not escape fuzzy matching.
 The reflex::Pattern class                                      {#regex-pattern}
 -------------------------
 
-The `reflex::Pattern` class is used by the `reflex::matcher` for pattern
-matching.  The `reflex::Pattern` class converts a regex pattern to an efficient
-FSM and takes a regex string and options to construct the FSM internally.
-The pattern instance is passed to a `reflex::Matcher` constructor:
+The `reflex::Pattern` class is used by `reflex::Matcher` and
+`reflex::FuzzyMatcher` for pattern matching.  The `reflex::Pattern` class
+converts a regex pattern to an efficient FSM and takes a regex string and
+options to construct the FSM internally.  The pattern instance is passed to a
+`reflex::Matcher` constructor:
 
 ~~~{.cpp}
     #include <reflex/matcher.h>
@@ -7014,7 +7041,9 @@ The pattern instance is passed to a `reflex::Matcher` constructor:
     reflex::Matcher matcher(pattern, reflex::Input [, "options"] )
 ~~~
 
-It may also be used to replace a matcher's current pattern, see \ref intro2.
+The `reflex::Pattern` object is passed by referene and must persist when the
+matcher is in use.  A new `reflex::Pattern` object may also be used to replace
+a matcher's current pattern at any time, see \ref intro2.
 
 To improve performance, it is recommended to create a `static` instance of the
 pattern if the regex string is fixed.  This avoids repeated FSM construction at

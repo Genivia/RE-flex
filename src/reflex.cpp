@@ -70,6 +70,7 @@ static const char *options_table[] = {
   "ctorinit",
   "debug",
   "default",
+  "do",
   "dotall",
   "exception",
   "extra_type",
@@ -315,7 +316,10 @@ void Reflex::main(int argc, char **argv)
 {
   init(argc, argv);
   parse();
-  write();
+  if (!options["do"].empty())
+    do_test();
+  else
+    write();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -342,7 +346,6 @@ void Reflex::init(int argc, char **argv)
   inclusive.insert(0);
   out = &std::cout;
   lineno = 0;
-
   for (int i = 1; i < argc; ++i)
   {
     const char *arg = argv[i];
@@ -404,6 +407,16 @@ void Reflex::init(int argc, char **argv)
             break;
           case 'd':
             options["debug"] = "true";
+            break;
+          case 'D':
+            ++arg;
+            if (*arg)
+              options["do"] = &arg[*arg == '='];
+            else if (++i < argc && *argv[i] != '-')
+              options["do"] = argv[i];
+            else
+              help("missing FILE for option -D [N:]FILE");
+            is_grouped = false;
             break;
           case 'f':
             options["full"] = "true";
@@ -517,7 +530,6 @@ void Reflex::init(int argc, char **argv)
       infile = argv[i];
     }
   }
-
 #if defined(OS_WIN) && !defined(__CYGWIN__)
   if (infile.empty() && _isatty(0) != 0)
     abort("no input file specified");
@@ -525,7 +537,6 @@ void Reflex::init(int argc, char **argv)
   if (infile.empty() && isatty(0) != 0)
     abort("no input file specified");
 #endif
-
   set_library();
 }
 
@@ -551,7 +562,7 @@ void Reflex::help(const char *message, const char *arg)
 \n\
     Scanner:\n\
         -+, --flex\n\
-                generate Flex-compatible C++ scanner\n\
+                Flex-compatible C++ scanner\n\
         -a, --dotall\n\
                 dot in patterns match newline\n\
         -B, --batch\n\
@@ -647,6 +658,8 @@ void Reflex::help(const char *message, const char *arg)
     Debugging:\n\
         -d, --debug\n\
                 enable debug mode in scanner\n\
+        -D, --do=[START:]FILE\n\
+                immediately test patterns on input FILE, start condition START\n\
         -p, --perf-report\n\
                 scanner reports detailed performance statistics to stderr\n\
         -s, --nodefault\n\
@@ -3496,4 +3509,115 @@ void Reflex::write_header_file()
       abort("error in writing");
     ofs.close();
   }
+}
+
+/// Debug and test the lexer patterns of a specified start condition on a specified input file.
+void Reflex::do_test()
+{
+  if (!options["matcher"].empty())
+    abort("incompatible options -D and -m (--do and --matcher)");
+  Start start = 0;
+  const char *arg = options["do"].c_str();
+  const char *sep = strchr(arg, ':');
+  if (sep != NULL)
+  {
+    if (std::isdigit(*arg))
+    {
+      start = strtoul(arg, NULL, 10);
+      if (start >= conditions.size())
+        abort("option -D N:FILE numeric argument N exceeds number of start conditions");
+    }
+    else
+    {
+      for (start = 0; start < conditions.size(); ++start)
+        if (arg + conditions[start].size() == sep && conditions[start].compare(0, sep - arg, arg, sep - arg) == 0)
+          break;
+      if (start >= conditions.size())
+        abort("option -D START:FILE undefined start condition");
+    }
+    arg = sep + 1;
+  }
+  FILE *file = NULL;
+  if (*arg != '\0' && strcmp(arg, "true") != 0)
+  {
+    fopen_s(&file, arg, "r");
+    if (file == NULL)
+      abort("cannot open test input file ", arg);
+  }
+  else
+  {
+    abort("option -D requires a test input file");
+  }
+  reflex::Input input(file);
+  try
+  {
+    reflex::Pattern pattern(patterns[start], "r");
+    reflex::Pattern::Index accept = 1;
+    for (size_t rule = 0; rule < rules[start].size(); ++rule)
+      if (rules[start][rule].regex != "<<EOF>>")
+        if (!pattern.reachable(accept++))
+          warning("rule cannot be matched because a previous rule subsumes it, perhaps try to move this rule up?", "", rules[start][rule].code.lineno);
+    reflex::Matcher matcher(pattern, input);
+    if (!options["find"].empty())
+    {
+      while (matcher.find())
+      {
+        Rule& rule = rules[start][matcher.accept() - 1];
+        std::cout << "--" <<
+          SGR("\033[1;35m") << "rule " << escape_bs(rule.code.file) << ":" << rule.code.lineno << SGR("\033[0m") <<
+          " start(" << start << ") " << matcher.lineno() << "," << matcher.columno() <<
+          ":\"" << SGR("\033[1m") << matcher.text() << SGR("\033[0m") << "\"\n";
+      }
+    }
+    else
+    {
+      while (!matcher.at_end())
+      {
+        if (matcher.scan())
+        {
+          Rule& rule = rules[start][matcher.accept() - 1];
+          std::cout << "--" <<
+            SGR("\033[1;35m") << "rule " << escape_bs(rule.code.file) << ":" << rule.code.lineno << SGR("\033[0m") <<
+            " start(" << start << ") " << matcher.lineno() << "," << matcher.columno() <<
+            ":\"" << SGR("\033[1m") << matcher.text() << SGR("\033[0m") << "\"\n";
+        }
+        else if (!matcher.at_end())
+        {
+          char ch = matcher.input();
+          std::cout << "--" << SGR("\033[1;31m");
+          if (!options["nodefault"].empty() ||
+              (!options["flex"].empty() && !options["yypanic"].empty() && options["noyypanic"].empty()) ||
+              !options["exception"].empty())
+            std::cout << "scanner jammed: suppressed ";
+          std::cout << "default rule " << SGR("\033[0m") <<
+            matcher.lineno() << "," << matcher.columno() << ":" <<
+            "'" << (ch > 32 && ch < 127 ? ch : ' ') << "'(" << static_cast<int>(ch) << ")\n";
+          if (!options["flex"].empty() && !options["yypanic"].empty() && options["noyypanic"].empty())
+            abort("yypanic(\"scanner jammed\")");
+          else if (!options["exception"].empty())
+            abort("throw ", options["exception"].c_str());
+        }
+      }
+    }
+    bool has_eof = false;
+    for (Rules::const_iterator rule = rules[start].begin(); rule != rules[start].end(); ++rule)
+    {
+      if (rule->regex == "<<EOF>>")
+      {
+        std::cout << "--" <<
+          SGR("\033[1;35m") << "EOF rule " << escape_bs(rule->code.file) << ":" << rule->code.lineno << SGR("\033[0m") <<
+          " start(" << start << ")\n";
+        has_eof = true;
+        break;
+      }
+    }
+    if (!has_eof)
+      std::cout << "--" << SGR("\033[1;35m") << "EOF" << SGR("\033[0m") << " start(" << start << ")\n";
+  }
+  catch (reflex::regex_error& e)
+  {
+    abort("malformed regular expression\n", e.what());
+  }
+  if (file != stdin)
+    fclose(file);
 }
