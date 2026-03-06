@@ -9,7 +9,7 @@ Unicode support.
 Two example use cases:
 
 1. A RE/flex-generated tokenizer is used by the
-   [Tiger Compiler](https://assignments.lrde.epita.fr/tools/reflex.html).
+   [Tiger Compiler](https://assignments.lre.epita.fr/tools/reflex.html).
 2. The RE/flex C++ regex engines are used by [ugrep](https://ugrep.com).
 
 The RE/flex lexical analyzer generator extends Flex++ with Unicode support,
