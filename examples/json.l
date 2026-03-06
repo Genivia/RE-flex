@@ -1,4 +1,4 @@
-// A fast JSON parser and JSON writer
+// JSON parser and JSON writer
 // Written by Robert van Engelen
 //
 // Passes tests suggested by <http://seriot.ch/parsing_json.php>

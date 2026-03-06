@@ -671,6 +671,7 @@ Changelog
 - Apr 29, 2025: 5.4.0 natively support non-blocking `FILE*` input, i.e. for `fcntl` `O_NONBLOCK` the regex matchers will wait for input to become available again instead of giving up with an error; changed `reflex::Input::Handler` see documentation; remove compiler warnings.
 - May 16, 2025: 5.5.0 new `reflex` option `-D` to immediately debug a scanner's lexer patterns against a specified input file; fix an issue with `Matcher::find()` for certain short patterns with ^$ anchors; mark `likely` and `unlikely` branches in hot paths for `Matcher::find()` performance.
 - Jun 19, 2025: 6.0.0 faster `Matcher::find()` with new and expanded predict-match PM3+PM5 methods to replace PM4; updated FSM code generation to support the expanded prediction tables now stored in compressed form as a hex string when reflex option `find` is used with `fast` or `full` to generate a pre-compiled search engine.
+- Mar  6, 2026: 6.1.0 minor improvements to align the code base with recent ugrep updates.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

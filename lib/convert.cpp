@@ -430,10 +430,11 @@ static void expand_list(const char *pattern, size_t len, size_t& loc, size_t& po
       c = pattern[++pos];
       if (c == 's' && (flags & convert_flag::notnewline))
       {
+        // \s is the same as \p{Space} without newline \n but with \0
         if (is_modified(mod, 'u'))
-          regex.append(&pattern[loc], pos - loc - 1).append("\\t\\x0b-\\r\\x85\\p{Z}");
+          regex.append(&pattern[loc], pos - loc - 1).append("\\x00\\t\\x0b-\\r\\x85\\p{Z}");
         else
-          regex.append(&pattern[loc], pos - loc - 1).append("\\h\\x0b-\\r\\x85\\xa0");
+          regex.append(&pattern[loc], pos - loc - 1).append("\\x00\\h\\x0b-\\r\\x85\\xa0");
         loc = pos + 1;
       }
       else if (c == 'p' || c == 'P')
@@ -452,8 +453,9 @@ static void expand_list(const char *pattern, size_t len, size_t& loc, size_t& po
       {
         if ((flags & convert_flag::notnewline))
         {
+          // [:space:] is the same as \p{Space} without newline \n but with \0
           if (pattern[pos + 1] == 's')
-            regex.append(&pattern[loc], pos - loc - 1).append("\\h\\x0b-\\r");
+            regex.append(&pattern[loc], pos - loc - 1).append("\\x00\\h\\x0b-\\r");
           else
             regex.append(&pattern[loc], pos - loc - 1).append("\\x00-\\t\\x0b-\\x1f\\x7f");
           pos += 7;
@@ -554,10 +556,14 @@ static void insert_escape_class(const char *pattern, size_t pos, convert_flag_ty
   {
     if (wc[0] <= '\n' && wc[1] >= '\n' && (flags & convert_flag::notnewline))
     {
+      // exclude \n
       if (wc[0] != '\n')
         ranges.insert(wc[0], '\n' - 1);
       if (wc[1] != '\n')
         ranges.insert('\n' + 1, wc[1]);
+      // include \0 in \s range
+      if (wc[0] > 0)
+        ranges.insert(0);
       wc += 2;
     }
     for (; wc[1] != 0; wc += 2)
@@ -801,10 +807,14 @@ static void insert_posix_class(const char *pattern, size_t len, size_t& pos, con
   {
     if (wc[0] <= '\n' && wc[1] >= '\n' && (flags & convert_flag::notnewline))
     {
+      // exclude \n
       if (wc[0] != '\n')
         ranges.insert(wc[0], '\n' - 1);
       if (wc[1] != '\n')
         ranges.insert('\n' + 1, wc[1]);
+      // include \0 in [:space:] range
+      if (wc[0] > 0)
+        ranges.insert(0);
       wc += 2;
     }
     for (; wc[1] != 0; wc += 2)
@@ -1416,13 +1426,13 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
   }
   else if (c == 's' && (flags & convert_flag::notnewline))
   {
-    // \s is the same as \p{Space} without newline \n
+    // \s is the same as \p{Space} without newline \n but with \0
     regex.append(&pattern[loc], pos - loc - 1);
     if (is_modified(mod, 'u'))
     {
       if (supports_escape(signature, 'p'))
       {
-        regex.append("[\\t\\x0b-\\r\\x85\\p{Z}]");
+        regex.append("[\\x00\\t\\x0b-\\r\\x85\\p{Z}]");
       }
       else
       {
@@ -1433,7 +1443,7 @@ static void convert_escape(const char *pattern, size_t len, size_t& loc, size_t&
     }
     else
     {
-      regex.append("[\\h\\x0b-\\r\\x85\\xa0]");
+      regex.append("[\\x00\\h\\x0b-\\r\\x85\\xa0]");
     }
     loc = pos + 1;
   }

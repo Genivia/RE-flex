@@ -144,6 +144,7 @@ static const char *posix_class[] = {
   "Word",
 };
 
+#ifndef WITH_NO_CODEGEN
 static uint8_t gethex(const char *& ptr)
 {
   int hi = *ptr++ - '0';
@@ -155,6 +156,7 @@ static uint8_t gethex(const char *& ptr)
     throw regex_error::load_tables;
   return static_cast<uint8_t>(byte);
 }
+#endif
 
 const std::string Pattern::operator[](Accept choice) const
 {
@@ -210,8 +212,8 @@ void Pattern::init(const char *options, const char *pred)
   {
     if (pred != NULL)
     {
-      len_ = gethex(pred);
 #ifndef WITH_NO_CODEGEN
+      len_ = gethex(pred);
       uint8_t mode = gethex(pred);
       min_ = mode & 0x0f;
       one_ = mode & 0x10;
@@ -311,6 +313,8 @@ void Pattern::init(const char *options, const char *pred)
         for (int i = 0; i < 256; ++i)
           fst_.set(i, (bit_[i] & 1) == 0);
       }
+#else
+      throw regex_error::load_tables;
 #endif
     }
   }
@@ -4400,7 +4404,7 @@ void Pattern::analyze_dfa(DFA::State *start)
     }
     for (Hash i = 0; i < Const::HASH; ++i)
     {
-      if (pma_[i] != (1 << (8 * Const::PM_M)) - 1)
+      if (pma_[i] != (1 << (2 * Const::PM_M)) - 1)
       {
         if (isprint(i))
           DBGLOGN("pma['%c'] = %04x", i, pma_[i]);
@@ -4459,9 +4463,10 @@ void Pattern::gen_predict_match(std::set<DFA::State*>& states)
   gen_min(states);
   std::map<DFA::State*,std::pair<ORanges<Hash>,ORanges<Char> > > hashes[Const::BITS];
   gen_predict_match_start(states, hashes[0]);
+  bool saturated = false; // PM hashes are saturated, e.g. \w{8,} explodes the hash space use and we can stop populating more
   for (uint16_t level = 1; level < Const::BITS && !hashes[level - 1].empty(); ++level)
     for (std::map<DFA::State*,std::pair<ORanges<Hash>,ORanges<Char> > >::iterator from = hashes[level - 1].begin(); from != hashes[level - 1].end(); ++from)
-      gen_predict_match_transitions(level, from->first, from->second, hashes[level]);
+      gen_predict_match_transitions(level, from->first, from->second, hashes[level], saturated);
 }
 
 void Pattern::gen_predict_match_start(std::set<DFA::State*>& states, std::map<DFA::State*,std::pair<ORanges<Hash>,ORanges<Char> > >& first_hashes)
@@ -4521,7 +4526,7 @@ void Pattern::gen_predict_match_start(std::set<DFA::State*>& states, std::map<DF
     it->second.second = it->second.first;
 }
 
-void Pattern::gen_predict_match_transitions(uint16_t level, DFA::State *state, const std::pair<ORanges<Hash>,ORanges<Char> >& previous, std::map<DFA::State*,std::pair<ORanges<Hash>,ORanges<Char> > >& level_hashes)
+void Pattern::gen_predict_match_transitions(uint16_t level, DFA::State *state, const std::pair<ORanges<Hash>,ORanges<Char> >& previous, std::map<DFA::State*,std::pair<ORanges<Hash>,ORanges<Char> > >& level_hashes, bool& saturated)
 {
   for (DFA::MetaEdgesClosure edge(state); !edge.done(); ++edge)
   {
@@ -4530,20 +4535,20 @@ void Pattern::gen_predict_match_transitions(uint16_t level, DFA::State *state, c
     if (lbk_ > 0 && next_state->first > 0 && next_state->first <= cut_)
       continue;
     // previous level hashes are completely saturated, or highly saturated after 4 levels, then next hashes will be saturated too
-    bool next_saturated = (level + 1 > 4 && level + 1 < Const::BITS ? previous.first.count() >= Const::HASH / 8 : previous.first.size() == 1 && previous.first.lo() == 0 && previous.first.hi() == Const::HASH - 1);
+    bool next_saturated = saturated || (previous.first.size() == 1 && previous.first.lo() == 0 && previous.first.hi() == Const::HASH - 1);
     // next state is accepting (closed over metas)
     bool next_accept = edge.next_accepting();
     std::pair<ORanges<Hash>,ORanges<Char> > *next_hashes = (level + 1 < Const::BITS && !next_accept) ? &level_hashes[next_state] : NULL;
     Char lo = edge.lo();
     Char hi = edge.hi();
-    DBGLOG("PM level %zu %p: %u~%u %s%s", level, state, lo, hi, next_accept ? "accept " : "", next_hashes ? "nexthashes" : "");
+    DBGLOG("PM level %hu %p: %u~%u %s%s", level, state, lo, hi, next_accept ? "accept " : "", next_hashes ? "nexthashes" : "");
     if (level < min_)
     {
       // populate bit array
       Bitap mask = ~(1 << level);
       for (Char ch = lo; ch <= hi; ++ch)
         bit_[ch] &= mask;
-      DBGLOG("%zu bitap %p: %u..%u -> %p", level, state, lo, hi, next_state);
+      DBGLOG("%hu bitap %p: %u..%u -> %p", level, state, lo, hi, next_state);
       // update tap_[] bitap hashed pairs at previous level using previous character ranges
       mask >>= 1;
       for (ORanges<Char>::iterator prev_range = previous.second.begin(); prev_range != previous.second.end(); ++prev_range)
@@ -4588,13 +4593,14 @@ void Pattern::gen_predict_match_transitions(uint16_t level, DFA::State *state, c
         }
       }
     }
-    if (level < Const::PM_M)
+    if (level < Const::PM_M && !saturated)
     {
       // populate predict match hashes
-      Pred pma_comb = (level + 1 == Const::PM_K && !next_accept ? 1 << (8 * sizeof(Pred) - 2 * Const::PM_K) : 0);
-      Pred pma_mask = ~(1 << (8 * sizeof(Pred) - 2 - 2 * level));
-      if (level + 1 == Const::PM_K || level + 1 == Const::PM_M || next_saturated || next_accept)
-        pma_mask &= ~(1 << (8 * sizeof(Pred) - 1 - 2 * level));
+      Pred pma_mask = ~(1 << (8 * sizeof(Pred) - 2 - 2 * level)); // bit pair 10: matching
+      if (level + 1 == Const::PM_M || next_saturated || next_accept)
+        pma_mask &= ~(1 << (8 * sizeof(Pred) - 1 - 2 * level)); // bit pair 00: matching and accepting
+      else if (level + 1 == Const::PM_K)
+        pma_mask = ~(1 << (8 * sizeof(Pred) - 1 - 2 * level)); // bit pair 01 (or 00): combine next PM (or leave accepting)
       if (!next_saturated && next_hashes != NULL)
       {
         ORanges<Hash>& next_hashes_first = next_hashes->first;
@@ -4610,28 +4616,16 @@ void Pattern::gen_predict_match_transitions(uint16_t level, DFA::State *state, c
             {
               next_hashes_first.insert(lo_h, hi_h);
               for (Hash h = lo_h; h <= hi_h; ++h)
-              {
-                Pred pma_keep = pma_[h] & pma_comb;
                 pma_[h] &= pma_mask;
-                pma_[h] |= pma_keep;
-              }
             }
             else
             {
               next_hashes_first.insert(lo_h, Const::HASH - 1);
               next_hashes_first.insert(0, hi_h);
               for (Hash h = lo_h; h < Const::HASH; ++h)
-              {
-                Pred pma_keep = pma_[h] & pma_comb;
                 pma_[h] &= pma_mask;
-                pma_[h] |= pma_keep;
-              }
               for (Hash h = 0; h <= hi_h; ++h)
-              {
-                Pred pma_keep = pma_[h] & pma_comb;
                 pma_[h] &= pma_mask;
-                pma_[h] |= pma_keep;
-              }
             }
           }
         }
@@ -4649,30 +4643,19 @@ void Pattern::gen_predict_match_transitions(uint16_t level, DFA::State *state, c
             if (lo_h <= hi_h)
             {
               for (Hash h = lo_h; h <= hi_h; ++h)
-              {
-                Pred pma_keep = pma_[h] & pma_comb;
                 pma_[h] &= pma_mask;
-                pma_[h] |= pma_keep;
-              }
             }
             else
             {
               for (Hash h = lo_h; h < Const::HASH; ++h)
-              {
-                Pred pma_keep = pma_[h] & pma_comb;
                 pma_[h] &= pma_mask;
-                pma_[h] |= pma_keep;
-              }
               for (Hash h = 0; h <= hi_h; ++h)
-              {
-                Pred pma_keep = pma_[h] & pma_comb;
                 pma_[h] &= pma_mask;
-                pma_[h] |= pma_keep;
-              }
             }
           }
         }
       }
+      saturated = next_saturated;
     }
   }
 }

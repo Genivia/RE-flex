@@ -425,7 +425,7 @@ class Pattern {
     uint8_t c2 = static_cast<uint8_t>(s[2]);
     uint32_t h1 = hash(c0, c1);
     uint32_t h2 = hash(h1, c2);
-    Pred p0 = (pma_[c0] & 0x4000) | (pma_[h1] & 0x1000) | (pma_[h2] & 0x0400);
+    Pred p0 = (pma_[c0] & 0x4000) | (pma_[h1] & 0x1000) | (pma_[h2] & 0x0c00);
     if (p0 > 0x0400)
       return false;
     if (p0 == 0)
@@ -1218,7 +1218,7 @@ class Pattern {
   void gen_min(std::set<DFA::State*>& states);
   void gen_predict_match(std::set<DFA::State*>& states);
   void gen_predict_match_start(std::set<DFA::State*>& states, std::map<DFA::State*,std::pair<ORanges<Hash>,ORanges<Char> > >& first_hashes);
-  void gen_predict_match_transitions(uint16_t level, DFA::State *state, const std::pair<ORanges<Hash>,ORanges<Char> >& previous, std::map<DFA::State*,std::pair<ORanges<Hash>,ORanges<Char> > >& level_hashes);
+  void gen_predict_match_transitions(uint16_t level, DFA::State *state, const std::pair<ORanges<Hash>,ORanges<Char> >& previous, std::map<DFA::State*,std::pair<ORanges<Hash>,ORanges<Char> > >& level_hashes, bool& saturated);
   void gen_match_hfa(DFA::State *start);
   void gen_match_hfa_start(DFA::State *start, HFA::State& index, HFA::StateHashes& hashes);
   bool gen_match_hfa_transitions(size_t level, size_t& max_level, DFA::State *state, const HFA::HashRanges& previous, HFA::State& index, HFA::StateHashes& hashes);
