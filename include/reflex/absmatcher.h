@@ -127,12 +127,12 @@ class AbstractMatcher {
     static const int EOB      = EOF;        ///< end of buffer meta-char marker
     static const size_t BLOCK = 4096;       ///< minimum remaining unused space in the buffer, to prevent excessive shifting
 #ifndef REFLEX_BUFSZ
-    static const size_t BUFSZ = (256*1024); ///< initial buffer size, at least 4096 bytes
+    static const size_t BUFSZ = (256*1024); ///< initial buffer size, at least 4096 bytes, doubling in size to grow
 #else
     static const size_t BUFSZ = REFLEX_BUFSZ;
 #endif
 #ifndef REFLEX_BOLSZ
-    static const size_t BOLSZ = BUFSZ;      ///< max begin of line size till match to retain in memory by growing the buffer
+    static const size_t BOLSZ = (256*1024*1024); ///< max (begin of) line size till match to retain, truncate lines otherwise
 #else
     static const size_t BOLSZ = REFLEX_BOLSZ;
 #endif
@@ -488,10 +488,10 @@ class AbstractMatcher {
     evh_ = handler;
   }
   /// Invoke handler explicitly (externally) with zero shift distance.
-  inline void handle()
+  inline void handle(size_t gap = 0)
   {
-    if (evh_)
-      (*evh_)(*this, buf_, 0, num_);
+    if (evh_ != NULL)
+      (*evh_)(*this, buf_, gap, num_);
   }
   /// Set reserved bytes for buffer shifting
   inline void set_reserve(size_t n)
@@ -1143,9 +1143,9 @@ class AbstractMatcher {
   {
     return txt_ >= buf_ + len ? txt_ - len : buf_;
   }
-  /// Return number of bytes available given number of bytes to fetch ahead, limited by input size and buffer size, DANGER: invalidates previous bol() and text() pointers, use fetch() before bol(), text(), begin(), and end() when those are used.
+  /// Return number of bytes available after the match position given len bytes to fetch ahead, limited by input size and buffer size, DANGER: invalidates previous bol() and text() pointers, use fetch() before bol(), text(), begin(), and end() when those are used.
   inline size_t fetch(size_t len)
-    /// @returns number of bytes available after fetching.
+    /// @returns number of bytes available after fetching after the match position.
   {
     DBGLOG("AbstractMatcher::fetch(%zu)", len);
     if (eof_)
@@ -1159,9 +1159,27 @@ class AbstractMatcher {
     end_ += get(buf_ + end_, len);
     return end_ - pos_;
   }
-  /// Returns the number of bytes in the buffer available to search from the current begin()/text() position.
-  inline size_t avail()
+  /// Returns the number of bytes in the buffer available to search from the current begin()/text() position, when not yet available, read more input to make len bytes available when specified and when the input is large enough.
+  inline size_t avail(size_t len = 0)
   {
+    if (len > 0)
+    {
+      // make len bytes of input available in the buffer to use, when possible
+      while (true)
+      {
+        size_t have = end_ - (txt_ - buf_);
+        if (have >= len || eof_)
+          return have;
+        size_t need = len - have;
+        if (end_ + need + 1 > max_)
+          (void)grow(end_ + need + 1 - max_);
+        size_t n = get(buf_ + end_, need);
+        if (n == 0)
+          eof_ = !wrap();
+        else
+          end_ += n;
+      }
+    }
     if (peek() == EOF)
       return 0;
     return end_ - (txt_ - buf_);
@@ -1439,7 +1457,7 @@ class AbstractMatcher {
 #if WITH_SPAN
     (void)lineno();
     cno_ = 0;
-    if (bol_ + Const::BOLSZ - buf_ < txt_ - bol_)
+    if (txt_ > bol_ + Const::BOLSZ)
     {
       // this line is too long, shift all the way to the match instead of to the begin of the last line
       DBGLOG("Line in buffer is too long to shift, moving bol position to text match position");
@@ -1452,8 +1470,7 @@ class AbstractMatcher {
       // keep reserved bytes before the current line in the buffer, when nonzero (default is zero)
       gap -= res_;
       // invoke user-defined handler when defined
-      if (evh_ != NULL)
-        (*evh_)(*this, buf_, gap, num_);
+      handle(gap);
       // update state and shift
       cur_ -= gap;
       ind_ -= gap;
@@ -1472,13 +1489,15 @@ class AbstractMatcher {
     else
     {
       size_t newmax = end_ + need;
-      // adjust max to ignore last byte
+      // readjust max to power of 2 (ignore last +1 byte)
       --max_;
       while (max_ < newmax)
         max_ *= 2;
-      // adjust max to add byte for a terminating \0
+      // adjust max +1 byte for a terminating \0
       ++max_;
       DBGLOG("Expand buffer to %zu bytes", max_);
+      // invoke user-defined handler when defined
+      handle();
 #if WITH_REALLOC
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(__BORLANDC__)
       char *newbuf = static_cast<char*>(_aligned_realloc(static_cast<void*>(buf_), max_, 4096));
@@ -1669,7 +1688,7 @@ class AbstractMatcher {
   const char *cpb_; ///< column pointer in buffer, updated when counting column numbers with columno()
 #endif
   size_t      cno_; ///< column number count (cached)
-  size_t      num_; ///< character count of the input till bol_
+  size_t      num_; ///< number of bytes shifted out so far, when buffer shifted
   size_t      res_; ///< reserve bytes to keep in the buffer before bol_ when shifting
   bool        own_; ///< true if AbstractMatcher::buf_ was allocated and should be deleted
   bool        eof_; ///< input has reached EOF

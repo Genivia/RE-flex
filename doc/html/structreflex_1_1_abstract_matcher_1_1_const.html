@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::AbstractMatcher::Const Struct Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Mar 6 2026 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun May 10 2026 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -93,10 +93,10 @@ Static Public Attributes</h2></td></tr>
 <tr class="memdesc:a6f7de58d1118b6f74f117a6b259359be"><td class="mdescLeft">&#160;</td><td class="mdescRight">minimum remaining unused space in the buffer, to prevent excessive shifting  <a href="#a6f7de58d1118b6f74f117a6b259359be">More...</a><br /></td></tr>
 <tr class="separator:a6f7de58d1118b6f74f117a6b259359be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79db8b02dc5dce0da626fa2900273d87"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a79db8b02dc5dce0da626fa2900273d87">BUFSZ</a> = (256*1024)</td></tr>
-<tr class="memdesc:a79db8b02dc5dce0da626fa2900273d87"><td class="mdescLeft">&#160;</td><td class="mdescRight">initial buffer size, at least 4096 bytes  <a href="#a79db8b02dc5dce0da626fa2900273d87">More...</a><br /></td></tr>
+<tr class="memdesc:a79db8b02dc5dce0da626fa2900273d87"><td class="mdescLeft">&#160;</td><td class="mdescRight">initial buffer size, at least 4096 bytes, doubling in size to grow  <a href="#a79db8b02dc5dce0da626fa2900273d87">More...</a><br /></td></tr>
 <tr class="separator:a79db8b02dc5dce0da626fa2900273d87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e2bc4d2e1ce810557872f9905ababaa"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6e2bc4d2e1ce810557872f9905ababaa">BOLSZ</a> = <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a79db8b02dc5dce0da626fa2900273d87">BUFSZ</a></td></tr>
-<tr class="memdesc:a6e2bc4d2e1ce810557872f9905ababaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">max begin of line size till match to retain in memory by growing the buffer  <a href="#a6e2bc4d2e1ce810557872f9905ababaa">More...</a><br /></td></tr>
+<tr class="memitem:a6e2bc4d2e1ce810557872f9905ababaa"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a6e2bc4d2e1ce810557872f9905ababaa">BOLSZ</a> = (256*1024*1024)</td></tr>
+<tr class="memdesc:a6e2bc4d2e1ce810557872f9905ababaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">max (begin of) line size till match to retain, truncate lines otherwise  <a href="#a6e2bc4d2e1ce810557872f9905ababaa">More...</a><br /></td></tr>
 <tr class="separator:a6e2bc4d2e1ce810557872f9905ababaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a677634d2b70980efed6ee1752dcb3085"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a677634d2b70980efed6ee1752dcb3085">REDO</a> = 0x7fffffff</td></tr>
 <tr class="memdesc:a677634d2b70980efed6ee1752dcb3085"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classreflex_1_1_abstract_matcher.html#af51252ce359e6106b58c81f70776ccfb" title="Returns a positive integer (true) indicating the capture index of the matched text in the pattern or ...">reflex::Matcher::accept()</a> returns "redo" with <a class="el" href="classreflex_1_1_matcher.html" title="RE/flex matcher engine class, implements reflex::PatternMatcher pattern matching interface with scan...">reflex::Matcher</a> option "A"  <a href="#a677634d2b70980efed6ee1752dcb3085">More...</a><br /></td></tr>
@@ -160,7 +160,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const size_t reflex::AbstractMatcher::Const::BOLSZ = <a class="el" href="structreflex_1_1_abstract_matcher_1_1_const.html#a79db8b02dc5dce0da626fa2900273d87">BUFSZ</a></td>
+          <td class="memname">const size_t reflex::AbstractMatcher::Const::BOLSZ = (256*1024*1024)</td>
         </tr>
       </table>
   </td>
@@ -170,7 +170,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>max begin of line size till match to retain in memory by growing the buffer </p>
+<p>max (begin of) line size till match to retain, truncate lines otherwise </p>
 
 </div>
 </div>
@@ -192,7 +192,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>initial buffer size, at least 4096 bytes </p>
+<p>initial buffer size, at least 4096 bytes, doubling in size to grow </p>
 
 </div>
 </div>
@@ -400,7 +400,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Mar 6 2026 15:24:52 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun May 10 2026 15:59:06 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

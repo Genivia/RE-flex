@@ -11,7 +11,8 @@ void yyerror(yyscan_t, const char*);
 #define YYLEX_PARAM   scanner
 %}
 
-%pure-parser
+/* %pure-parser the equivalent old declaration before Bison 3 (deprecated) */
+%define api.pure
 %lex-param { void *scanner }
 %parse-param { void *scanner }
 

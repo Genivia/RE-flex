@@ -15,8 +15,8 @@ struct pass_through {
 void yyerror(struct pass_through *param, const char *msg); /* yyerror accepts `params` */
 %}
 
-/* pure-parser adds yylval parameter to yylex() */
-%pure-parser
+/* api.pure (old deprecated pure-parser) adds yylval parameter to yylex() */
+%define api.pure
 /* Add params->scanner parameter to yylex() using YYLEX_PARAM */
 %lex-param { void *YYLEX_PARAM }
 /* Add pass-through parameter to yyparse() */

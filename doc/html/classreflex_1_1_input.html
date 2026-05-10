@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Input Class Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Fri Mar 6 2026 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Sun May 10 2026 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -196,7 +196,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a48e95f4f8c324d1249ee45b41648f114"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached.  <a href="#a48e95f4f8c324d1249ee45b41648f114">More...</a><br /></td></tr>
 <tr class="separator:a48e95f4f8c324d1249ee45b41648f114"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a3830a022486d78670f01003b56d5e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5">get</a> (char *s, size_t n)</td></tr>
-<tr class="memdesc:a3a3830a022486d78670f01003b56d5e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy character sequence data into buffer.  <a href="#a3a3830a022486d78670f01003b56d5e5">More...</a><br /></td></tr>
+<tr class="memdesc:a3a3830a022486d78670f01003b56d5e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read and copy input character sequence data into buffer.  <a href="#a3a3830a022486d78670f01003b56d5e5">More...</a><br /></td></tr>
 <tr class="separator:a3a3830a022486d78670f01003b56d5e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25682c7ebc7df115ade370d9d21ed888"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreflex_1_1_input.html#a25682c7ebc7df115ade370d9d21ed888">file_encoding</a> (<a class="el" href="classreflex_1_1_input.html#a70e8550b0b1649b2cd49b1b872949cc8">file_encoding_type</a> enc, const unsigned short *page=NULL)</td></tr>
 <tr class="memdesc:a25682c7ebc7df115ade370d9d21ed888"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set encoding for <code>FILE*</code> input.  <a href="#a25682c7ebc7df115ade370d9d21ed888">More...</a><br /></td></tr>
@@ -279,7 +279,7 @@ Protected Attributes</h2></td></tr>
 <li>When assigned a <code>FILE*</code> source as input, the file is checked for the presence of a UTF-8 or a UTF-16 BOM (Byte Order Mark). A UTF-8 BOM is ignored and will not appear on the input character stream (and size is adjusted by 3 bytes). A UTF-16 BOM is intepreted, resulting in the conversion of the file content automatically to an UTF-8 character sequence when reading the file with <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a>. Also, <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">size()</a> gives the content size in the number of UTF-8 bytes.</li>
 <li>An input object can be reassigned a new source of input for reading at any time.</li>
 <li>An input object obeys move semantics. That is, after assigning an input object to another, the former can no longer be used to read input. This prevents adding the overhead and complexity of file and stream duplication.</li>
-<li><code>size_t <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Copy character sequence data into buffer. ">Input::get(char *buf, size_t len)</a>;</code> reads source input and fills <code>buf</code> with up to <code>len</code> bytes, returning the number of bytes read or zero when a stream or file is bad or when EOF is reached.</li>
+<li><code>size_t <a class="el" href="classreflex_1_1_input.html#a3a3830a022486d78670f01003b56d5e5" title="Read and copy input character sequence data into buffer. ">Input::get(char *buf, size_t len)</a>;</code> reads source input and fills <code>buf</code> with up to <code>len</code> bytes, returning the number of bytes read or zero when a stream or file is bad or when EOF is reached.</li>
 <li><code>size_t <a class="el" href="classreflex_1_1_input.html#a4d1e21f3356426598bc6dc139812de31" title="Get the size of the input character sequence in number of ASCII/UTF-8 bytes (zero if size is not dete...">Input::size()</a>;</code> returns the number of ASCII/UTF-8 bytes available to read from the source input or zero (zero is also returned when the size is not determinable). Use this function only before reading input with <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a>. Wide character strings and UTF-16 <code>FILE*</code> content is counted as the total number of UTF-8 bytes that will be produced by <a class="el" href="classreflex_1_1_input.html#a48e95f4f8c324d1249ee45b41648f114" title="Get a single character (unsigned char 0..255) or EOF (-1) when end-of-input is reached. ">get()</a>. The size of a <code>std::istream</code> cannot be determined.</li>
 <li><code>bool <a class="el" href="classreflex_1_1_input.html#ad889f01290e7a5cdfd14b4c662635ff8" title="Check if input is available. ">Input::good()</a>;</code> returns true if the input is readable and has no EOF or error state. Returns false on EOF or if an error condition is present.</li>
 <li><code>bool <a class="el" href="classreflex_1_1_input.html#ae66cbeb78ac9c238f08ce5aa570b1fb7" title="Check if input reached EOF. ">Input::eof()</a>;</code> returns true if the input reached EOF. Note that <a class="el" href="classreflex_1_1_input.html#ad889f01290e7a5cdfd14b4c662635ff8" title="Check if input is available. ">good()</a> == ! <a class="el" href="classreflex_1_1_input.html#ae66cbeb78ac9c238f08ce5aa570b1fb7" title="Check if input reached EOF. ">eof()</a> for string source input only, since files and streams may have error conditions that prevent reading. That is, for files and streams <a class="el" href="classreflex_1_1_input.html#ae66cbeb78ac9c238f08ce5aa570b1fb7" title="Check if input reached EOF. ">eof()</a> implies <a class="el" href="classreflex_1_1_input.html#ad889f01290e7a5cdfd14b4c662635ff8" title="Check if input is available. ">good()</a> == false, but not vice versa. Thus, an error is diagnosed when the condition <a class="el" href="classreflex_1_1_input.html#ad889f01290e7a5cdfd14b4c662635ff8" title="Check if input is available. ">good()</a> == false &amp;&amp; <a class="el" href="classreflex_1_1_input.html#ae66cbeb78ac9c238f08ce5aa570b1fb7" title="Check if input reached EOF. ">eof()</a> == false holds. Note that get(buf, len) == 0 &amp;&amp; len &gt; 0 implies <a class="el" href="classreflex_1_1_input.html#ad889f01290e7a5cdfd14b4c662635ff8" title="Check if input is available. ">good()</a> == false.</li>
@@ -1136,7 +1136,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Copy character sequence data into buffer. </p>
+<p>Read and copy input character sequence data into buffer. </p>
 <dl class="section return"><dt>Returns</dt><dd>the nonzero number of (less or equal to n) 8-bit characters added to buffer s from the current input, or zero when EOF </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1740,7 +1740,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Fri Mar 6 2026 15:24:52 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Sun May 10 2026 15:59:06 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>
