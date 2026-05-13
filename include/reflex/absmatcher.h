@@ -1051,6 +1051,7 @@ class AbstractMatcher {
   void wunput(int c) ///< character to put back
   {
     DBGLOG("AbstractMatcher::wunput()");
+    reset_text();
     char tmp[8];
     size_t n = utf8(c, tmp);
     if (pos_ >= n)
@@ -1059,6 +1060,8 @@ class AbstractMatcher {
     }
     else if (own_)
     {
+      n -= pos_;
+      pos_ = 0;
       txt_ = buf_;
       len_ = 0;
       if (end_ + n >= max_)
