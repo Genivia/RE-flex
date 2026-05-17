@@ -30,8 +30,8 @@ ther in a spirit of brotherhood.
 class Braille : public Lexer {
  public:
   Braille() : caps(false) { }
-  using Lexer::translate; // to set Braille input/output
-  int translate();
+  using Lexer::translate; // to set Braille input/output, then calls translate()
+  int translate(); // the generated lexer
  private:
   void emit(const char *t) {
     if (caps)

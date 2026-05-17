@@ -61,6 +61,7 @@ examples:	flexexample1 \
 		jtokens \
 		ptokens \
 		echo \
+		words \
 		wc \
 		wcu \
 		wcpp \
@@ -320,6 +321,10 @@ calc:		calc.l calc.y
 		$(CXX) $(CXXFLAGS) -o $@ calc.tab.c lex.yy.cpp $(LIBREFLEX)
 		./calc < calc.test
 
+words:		words.l
+		$(REFLEX) $(REFLAGS) words.l
+		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
+
 wc:		wc.l
 		$(REFLEX) $(REFLAGS) --flex wc.l
 		$(CXX) $(CXXFLAGS) -o $@ lex.yy.cpp $(LIBREFLEX)
@@ -480,4 +485,4 @@ clean:
 		-rm -f lex.yy.h lex.yy.hpp lex.yy.cpp *.tab.h *.tab.c *.tab.hxx *.tab.cxx parser.hpp parser.cpp scanner.hpp scanner.cpp location.hh location.hpp position.hh position.hpp stack.hh stack.hpp reflex.*.cpp reflex.*.gv reflex.*.txt
 		-rm -f flexexample? reflexexample? flexexample?xx reflexexample?xx
 		-rm -f flexexample?? reflexexample?? flexexample??xx reflexexample??xx
-		-rm -f ctokens jtokens ptokens echo readline calc wc wcu wcpp wcwc rawk tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows moo indent1 indent2 json yaml braille unicode csv scanstrings yyscanstrings mmap fastfind fastsearch cards cvt2utf ugrep gz dos url_boost wc_boost url_pcre2 wc_pcre2 minic minicdemo.class LuaParser.cpp LuaParser.hpp LuaScanner.cpp LuaScanner.hpp lua2lisp
+		-rm -f ctokens jtokens ptokens echo readline calc words wc wcu wcpp wcwc rawk tag tag_lazy tag_lazystates tag_unicode tag_tidy cow cows moo indent1 indent2 json yaml braille unicode csv scanstrings yyscanstrings mmap fastfind fastsearch cards cvt2utf ugrep gz dos url_boost wc_boost url_pcre2 wc_pcre2 minic minicdemo.class LuaParser.cpp LuaParser.hpp LuaScanner.cpp LuaScanner.hpp lua2lisp

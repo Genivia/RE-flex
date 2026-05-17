@@ -2,6 +2,8 @@
 #include <reflex/unicode.h>
 void reflex::Unicode::Tables::letter_scripts(void)
 {
+
+  // Alnum class has 4744 code points in 213 blocks
   static const int Alnum[] = {
     48, 57,
     65, 90,
@@ -219,6 +221,8 @@ void reflex::Unicode::Tables::letter_scripts(void)
     0, 0
   };
   range["Alnum"] = Alnum;
+
+  // Alpha class has 4064 code points in 150 blocks
   static const int Alpha[] = {
     65, 90,
     97, 122,
@@ -373,6 +377,8 @@ void reflex::Unicode::Tables::letter_scripts(void)
     0, 0
   };
   range["Alpha"] = Alpha;
+
+  // Ll class has 2233 code points in 658 blocks
   static const int Ll[] = {
     97, 122,
     181, 181,
@@ -1035,6 +1041,8 @@ void reflex::Unicode::Tables::letter_scripts(void)
     0, 0
   };
   range["Ll"] = Ll;
+
+  // Lt class has 31 code points in 10 blocks
   static const int Lt[] = {
     453, 453,
     456, 456,
@@ -1049,6 +1057,8 @@ void reflex::Unicode::Tables::letter_scripts(void)
     0, 0
   };
   range["Lt"] = Lt;
+
+  // Lu class has 1831 code points in 646 blocks
   static const int Lu[] = {
     65, 90,
     192, 214,

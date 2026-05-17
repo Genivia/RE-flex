@@ -673,6 +673,7 @@ Changelog
 - Jun 19, 2025: 6.0.0 faster `Matcher::find()` with new and expanded predict-match PM3+PM5 methods to replace PM4; updated FSM code generation to support the expanded prediction tables now stored in compressed form as a hex string when reflex option `find` is used with `fast` or `full` to generate a pre-compiled search engine.
 - Mar  6, 2026: 6.1.0 minor improvements to align the code base with recent ugrep updates.
 - May 11, 2026: 6.2.0 pattern matcher's `AbstractMatcher::avail()` method accepts an optional max length parameter; permit very long lines in the input (256MB long lines) when using `AbstractMatcher::line()` and `AbstractMatcher::eol()` without a begin-of-line loss (`BOLSZ` threshold can be changed.)
+- May 17, 2026: 6.3.0 add new `AbstractMatcher` methods `chr_last()`, `wchr_last()`, `chr_next()`, `wchr_next()`, `empty()`; add new example `words.l`.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html

@@ -79,6 +79,9 @@ int main()
   for (Scripts::const_iterator i = p.begin(); i != p.end(); ++i)
   {
     const std::string& name = i->first;
+    std::cout << "\n  // " << name << " class has " <<
+      i->second.count() << " code points in " <<
+      i->second.size() << " blocks\n";
     std::cout << "  static const int " << name << "[] = {\n";
     for (Chars::const_iterator j = i->second.begin(); j != i->second.end(); ++j)
     {

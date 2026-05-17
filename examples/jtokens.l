@@ -11,7 +11,7 @@
 // {JavaIdentifierStart}     id.assign(wstr()); start(ID);
 // <ID>{JavaIdentifierPart}  id.append(wstr());
 // <ID>{IdentifierIgnorable} ;
-// <ID>.                     less(size()); start(INITIAL);
+// <ID>.                     less(0); start(INITIAL);
 
 %{
 #include <reflex/utf8.h>

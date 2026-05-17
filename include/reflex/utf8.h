@@ -76,7 +76,7 @@ std::string utf8(
 inline size_t utf8(
     int   c, ///< UCS-4 character U+0000 to U+10ffff (unless WITH_UTF8_UNRESTRICTED)
     char *s) ///< points to the buffer to populate with UTF-8 (1 to 6 bytes) not NUL-terminated
-  /// @returns length (in bytes) of UTF-8 character sequence stored in s
+  /// @returns length (in bytes) of UTF-8 character sequence stored in s without a terminating '\0'
 {
   if (c < 0x80)
   {

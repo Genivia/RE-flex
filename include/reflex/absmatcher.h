@@ -635,7 +635,7 @@ class AbstractMatcher {
   {
     return txt_ + len_;
   }
-  /// Returns 0-terminated pattern match as a char pointer, does not include matched \0s, this is a constant-time operation.
+  /// Returns 0-terminated pattern match as a char pointer, does not include matched `\0`s, this is a constant-time operation.
   inline const char *text()
     /// @returns 0-terminated const char* string with text matched
   {
@@ -647,34 +647,34 @@ class AbstractMatcher {
     return txt_;
   }
 #if __cplusplus >= 201703L
-  /// Returns the pattern match as a string_view (zero copy), does not include a terminating \0, this is a constant-time operation.
+  /// Returns the pattern match as a string_view (zero copy), does not include a terminating `\0`, this is a constant-time operation.
   inline const std::string_view strview() const
     /// @returns string_view with text matched
   {
     return std::string_view(txt_, len_);
   }
 #endif
-  /// Returns the text matched as a string, a copy of text(), may include pattern-matched \0s.
+  /// Returns the text matched as a string, a copy of text(), including pattern-matched `\0`s.
   inline std::string str() const
     /// @returns string with text matched
   {
     return std::string(txt_, len_);
   }
-  /// Returns the pattern match as a wide string, converted from UTF-8 text(), may include pattern-matched \0s.
+  /// Returns the pattern match as a wide string, converted from UTF-8 text(), including pattern-matched `\0`s.
   inline std::wstring wstr() const
     /// @returns wide string with text matched
   {
     return wcs(txt_, len_);
   }
-  /// Returns the length of the matched text in number of bytes, including pattern-matched \0s, a constant-time operation.
+  /// Returns the length of the matched text in number of bytes, including pattern-matched `\0`s, a constant-time operation.
   inline size_t size() const
     /// @returns match size in bytes
   {
     return len_;
   }
-  /// Returns the length of the matched text in number of wide characters.
+  /// Returns the length of the matched text in number of Unicode wide characters.
   inline size_t wsize() const
-    /// @returns the length of the match in number of wide (multibyte UTF-8) characters
+    /// @returns the length of the match in number of Unicode wide characters
   {
     size_t n = 0;
     const char *e = txt_ + len_;
@@ -682,17 +682,54 @@ class AbstractMatcher {
       n += (*s & 0xc0) != 0x80;
     return n;
   }
-  /// Returns the first 8-bit character of the text matched.
+  /// True if match was empty, same as (size() == 0), only possible with matcher init option "N" for Const::FIND, Const::SPLIT, Const::MATCH.
+  inline bool empty() const
+  {
+    return size() == 0;
+  }
+  /// Returns the first 8-bit character of the text matched, same as text()[0], undefined when size() == 0.
   inline int chr() const
     /// @returns 8-bit char
   {
     return *txt_;
   }
-  /// Returns the first wide character of the text matched.
+  /// Returns the first Unicode wide character code point U+0000 to U+10FFFF of the text matched, undefined when size() == 0.
   inline int wchr() const
-    /// @returns wide char (UTF-8 converted to Unicode)
+    /// @returns Unicode wide character code point U+0000 to U+10FFFF
   {
     return utf8(txt_);
+  }
+  /// Returns the last 8-bit character of the text matched or 0 when empty.
+  inline int chr_last() const
+    /// @returns 8-bit char
+  {
+    return len_ > 0 ? txt_[len_ - 1] : '\0';
+  }
+  /// Returns the last Unicode wide character code point U+0000 to U+10FFFF of the text matched or 0 when empty.
+  inline int wchr_last() const
+    /// @returns code point wide character code point U+0000 to U+10FFFF
+  {
+    if (len_ == 0)
+      return L'\0';
+    const char *s = txt_ + len_;
+    while (s > txt_ && (*--s & 0xc0) == 0x80)
+      continue;
+    return utf8(s);
+  }
+  /// Returns the 8-bit character that comes next in the input after of the text match, or EOF when the input ends.
+  inline int chr_next()
+    /// @returns 8-bit char
+  {
+    return at_end() ? EOF : chr_ != '\0' ? chr_ : txt_[len_];
+  }
+  /// Returns the Unicode wide character code point U+0000 to U+10FFFF that comes next in the input after the text match, or EOF when the input ends.
+  inline int wchr_next()
+    /// @returns wide character code point U+0000 to U+10FFFF
+  {
+    reset_text();
+    if (pos_ + 6 > end_ && !eof_)
+      (void)grow();
+    return at_end() ? EOF : utf8(txt_ + len_);
   }
 #if WITH_SPAN
   /// Set or reset mode to count matching lines only and skip all other (e.g. for speed).
@@ -807,7 +844,7 @@ class AbstractMatcher {
 #endif
     cno_ = n;
   }
-  /// Updates and returns the starting column number of the matched text, taking tab spacing into account and counting wide characters as one character each
+  /// Updates and returns the starting column number of the matched text, taking tab spacing into account and counting Unicode wide characters as one character each
   inline size_t columno()
     /// @returns column number
   {
@@ -830,7 +867,7 @@ class AbstractMatcher {
 #endif
     return cno_;
   }
-  /// Returns the number of columns of the matched text, taking tab spacing into account and counting wide characters as one character each.
+  /// Returns the number of columns of the matched text, taking tab spacing into account and counting Unicode wide characters as one character each.
   inline size_t columns()
     /// @returns number of columns
   {
@@ -877,7 +914,7 @@ class AbstractMatcher {
 #endif
   }
 #if WITH_SPAN
-  /// Returns the inclusive ending column number of the matched text on the ending matching line, taking tab spacing into account and counting wide characters as one character each
+  /// Returns the inclusive ending column number of the matched text on the ending matching line, taking tab spacing into account and counting Unicode wide characters as one character each
   inline size_t columno_end()
     /// @returns column number
   {
@@ -1009,9 +1046,9 @@ class AbstractMatcher {
     cur_ = pos_;
     return got_;
   }
-  /// Returns the next wide character (unsigned 0..U+10FFFF or EOF) from the input character sequence, while preserving the current text() match (but pointer returned by text() may change; warning: does not preserve the yytext string pointer when options --flex and --bison are used).
+  /// Returns the next Unicode character code point U+0000 to U+10FFFF or EOF from the input character sequence, while preserving the current text() match (but pointer returned by text() may change; warning: does not preserve the yytext string pointer when options --flex and --bison are used).
   int winput()
-    /// @returns the next wide character (unsigned 0..U+10FFFF) or EOF (-1)
+    /// @returns the next Unicode character code point U+00000 to U+10FFFF or EOF (-1)
   {
     DBGLOG("AbstractMatcher::winput()");
     char tmp[8] = { 0 }, *s = tmp;
@@ -1026,7 +1063,7 @@ class AbstractMatcher {
     }
     return utf8(tmp);
   }
-  /// Put back one character (8-bit) on the input character sequence for matching, DANGER: invalidates the previous text() pointer and match info, unput is not honored when matching in-place using buffer(base, size) and nothing has been read yet.
+  /// Put back one character (8-bit) on the input character sequence for matching, DANGER: invalidates the previous text() pointer and match info, unput is not honored when matching in-place using buffer(base, size) when nothing has been read yet.
   void unput(char c) ///< 8-bit character to put back
   {
     DBGLOG("AbstractMatcher::unput()");
@@ -1043,11 +1080,16 @@ class AbstractMatcher {
         (void)grow();
       std::memmove(buf_ + 1, buf_, end_);
       ++end_;
+#if WITH_SPAN
+      ++bol_;
+      ++cpb_;
+#endif
+      ++lpb_;
     }
     buf_[pos_] = c;
     cur_ = pos_;
   }
-  /// Put back one (wide) character on the input character sequence for matching, DANGER: invalidates the previous text() pointer and match info, unput is not honored when matching in-place using buffer(base, size) and nothing has been read yet.
+  /// Put back one (wide) character on the input character sequence for matching, DANGER: invalidates the previous text() pointer and match info, unput is not honored when matching in-place using buffer(base, size) when nothing has been read yet.
   void wunput(int c) ///< character to put back
   {
     DBGLOG("AbstractMatcher::wunput()");
@@ -1068,6 +1110,11 @@ class AbstractMatcher {
         (void)grow();
       std::memmove(buf_ + n, buf_, end_);
       end_ += n;
+#if WITH_SPAN
+      bol_ += n;
+      cpb_ += n;
+#endif
+      lpb_ += n;
     }
     std::memcpy(&buf_[pos_], tmp, n);
     cur_ = pos_;
@@ -1105,7 +1152,7 @@ class AbstractMatcher {
     return bol_;
   }
   /// Returns pointer to the end of the line (last char + 1) in the buffer containing the matched text, DANGER: invalidates previous bol() and text() pointers, use eol() before bol(), text(), begin(), and end() when those are used.
-  inline const char *eol(bool inclusive = false) ///< true if inclusive, i.e. point after \n instead of at \n
+  inline const char *eol(bool inclusive = false) ///< true if inclusive, i.e. point after `\n` instead of at `\n`
     /// @returns pointer to the end of line
   {
     if (chr_ == '\n' || (txt_ + len_ < buf_ + end_ && txt_[len_] == '\n'))
@@ -1146,7 +1193,7 @@ class AbstractMatcher {
   {
     return txt_ >= buf_ + len ? txt_ - len : buf_;
   }
-  /// Return number of bytes available after the match position given len bytes to fetch ahead, limited by input size and buffer size, DANGER: invalidates previous bol() and text() pointers, use fetch() before bol(), text(), begin(), and end() when those are used.
+  /// Return number of bytes available after the match position given len bytes to fetch ahead after the match, limited by input size and buffer size, DANGER: invalidates previous bol() and text() pointers, use fetch() before bol(), text(), begin(), and end() when those are used.
   inline size_t fetch(size_t len)
     /// @returns number of bytes available after fetching after the match position.
   {
@@ -1193,7 +1240,7 @@ class AbstractMatcher {
   {
     return txt_ - bol();
   }
-  /// Enlarge the match to span the entire line of input (excluding \n), return text().
+  /// Enlarge the match to span the entire line of input (excluding `\n`), return text().
   inline const char *span()
     /// @returns const char* span of text for the entire line
   {
@@ -1209,7 +1256,7 @@ class AbstractMatcher {
     len_ = e - bol_;
     return text();
   }
-  /// Returns the line of input (excluding \n) as a string containing the matched text as a substring.
+  /// Returns the line of input (excluding `\n`) as a string containing the matched text as a substring.
   inline std::string line()
     /// @returns matching line as a string
   {
@@ -1219,7 +1266,7 @@ class AbstractMatcher {
     const char *b = bol();
     return std::string(b, e - b);
   }
-  /// Returns the line of input (excluding \n) as a wide string containing the matched text as a substring.
+  /// Returns the line of input (excluding `\n`) as a wide string containing the matched text as a substring.
   inline std::wstring wline()
     /// @returns matching line as a wide string
   {
@@ -1335,7 +1382,7 @@ class AbstractMatcher {
   }
   /// Cast this matcher to positive integer indicating the nonzero capture index of the matched text in the pattern, same as AbstractMatcher::accept.
   inline operator size_t() const
-    /// @returns nonzero capture index of a match, which may be matcher dependent, or zero for a mismatch
+    /// @returns nonzero capture index of a match, which is matcher dependent, or zero for a mismatch
   {
     return accept();
   }
@@ -1597,7 +1644,7 @@ class AbstractMatcher {
     }
 #endif
   }
-  /// Reset the matched text by removing the terminating \0 when applicable, which is needed to search for a new match.
+  /// Reset the matched text by removing the terminating `\0` when applicable, which is needed to search for a new match.
   inline void reset_text()
   {
     if (chr_ != '\0')
@@ -1693,10 +1740,10 @@ class AbstractMatcher {
   size_t      cno_; ///< column number count (cached)
   size_t      num_; ///< number of bytes shifted out so far, when buffer shifted
   size_t      res_; ///< reserve bytes to keep in the buffer before bol_ when shifting
-  bool        own_; ///< true if AbstractMatcher::buf_ was allocated and should be deleted
-  bool        eof_; ///< input has reached EOF
-  bool        mat_; ///< true if AbstractMatcher::matches() was successful
-  bool        cml_; ///< true when counting matching lines instead of line numbers
+  bool        own_; ///< true when AbstractMatcher::buf_ allocation is owned and should be deleted
+  bool        eof_; ///< true when input has reached EOF
+  bool        mat_; ///< true when AbstractMatcher::matches() was successful
+  bool        cml_; ///< true when counting matching lines instead of line numbers, enabled by lineno_skip()
 };
 
 /// The pattern matcher class template extends abstract matcher base class.

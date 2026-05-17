@@ -1900,6 +1900,10 @@ void Reflex::write_prelude()
   if (!out->good())
     return;
   *out << "#define REFLEX_VERSION \"" REFLEX_VERSION "\"\n";
+  int major = atoi(REFLEX_VERSION);
+  int minor = atoi(strchr(REFLEX_VERSION, '.') + 1);
+  *out << "#define REFLEX_VERSION_MAJOR " << major << '\n';
+  *out << "#define REFLEX_VERSION_MINOR " << minor << '\n';
   write_banner("OPTIONS USED");
   if ((!options["prefix"].empty() && options["prefix"] != "yy") || !options["namespace"].empty())
   {

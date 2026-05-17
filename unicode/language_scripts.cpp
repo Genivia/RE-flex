@@ -2,11 +2,15 @@
 #include <reflex/unicode.h>
 void reflex::Unicode::Tables::language_scripts(void)
 {
+
+  // ASCII class has 128 code points in 1 blocks
   static const int ASCII[] = {
     0, 127,
     0, 0
   };
   range["ASCII"] = ASCII;
+
+  // Adlam class has 88 code points in 3 blocks
   static const int Adlam[] = {
     125184, 125259,
     125264, 125273,
@@ -14,6 +18,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Adlam"] = Adlam;
+
+  // Ahom class has 65 code points in 3 blocks
   static const int Ahom[] = {
     71424, 71450,
     71453, 71467,
@@ -21,11 +27,15 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Ahom"] = Ahom;
+
+  // Anatolian_Hieroglyphs class has 583 code points in 1 blocks
   static const int Anatolian_Hieroglyphs[] = {
     82944, 83526,
     0, 0
   };
   range["Anatolian_Hieroglyphs"] = Anatolian_Hieroglyphs;
+
+  // Arabic class has 1368 code points in 58 blocks
   static const int Arabic[] = {
     1536, 1540,
     1542, 1547,
@@ -88,6 +98,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Arabic"] = Arabic;
+
+  // Armenian class has 96 code points in 4 blocks
   static const int Armenian[] = {
     1329, 1366,
     1369, 1418,
@@ -96,36 +108,48 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Armenian"] = Armenian;
+
+  // Avestan class has 61 code points in 2 blocks
   static const int Avestan[] = {
     68352, 68405,
     68409, 68415,
     0, 0
   };
   range["Avestan"] = Avestan;
+
+  // Balinese class has 124 code points in 2 blocks
   static const int Balinese[] = {
     6912, 6988,
     6992, 7038,
     0, 0
   };
   range["Balinese"] = Balinese;
+
+  // Bamum class has 657 code points in 2 blocks
   static const int Bamum[] = {
     42656, 42743,
     92160, 92728,
     0, 0
   };
   range["Bamum"] = Bamum;
+
+  // Bassa_Vah class has 36 code points in 2 blocks
   static const int Bassa_Vah[] = {
     92880, 92909,
     92912, 92917,
     0, 0
   };
   range["Bassa_Vah"] = Bassa_Vah;
+
+  // Batak class has 56 code points in 2 blocks
   static const int Batak[] = {
     7104, 7155,
     7164, 7167,
     0, 0
   };
   range["Batak"] = Batak;
+
+  // Bengali class has 96 code points in 14 blocks
   static const int Bengali[] = {
     2432, 2435,
     2437, 2444,
@@ -144,6 +168,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Bengali"] = Bengali;
+
+  // Bhaiksuki class has 97 code points in 4 blocks
   static const int Bhaiksuki[] = {
     72704, 72712,
     72714, 72758,
@@ -152,6 +178,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Bhaiksuki"] = Bhaiksuki;
+
+  // Bopomofo class has 77 code points in 3 blocks
   static const int Bopomofo[] = {
     746, 747,
     12549, 12591,
@@ -159,6 +187,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Bopomofo"] = Bopomofo;
+
+  // Brahmi class has 115 code points in 3 blocks
   static const int Brahmi[] = {
     69632, 69709,
     69714, 69749,
@@ -166,22 +196,30 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Brahmi"] = Brahmi;
+
+  // Braille class has 256 code points in 1 blocks
   static const int Braille[] = {
     10240, 10495,
     0, 0
   };
   range["Braille"] = Braille;
+
+  // Buginese class has 30 code points in 2 blocks
   static const int Buginese[] = {
     6656, 6683,
     6686, 6687,
     0, 0
   };
   range["Buginese"] = Buginese;
+
+  // Buhid class has 20 code points in 1 blocks
   static const int Buhid[] = {
     5952, 5971,
     0, 0
   };
   range["Buhid"] = Buhid;
+
+  // C class has 235 code points in 23 blocks
   static const int C[] = {
     0, 31,
     127, 159,
@@ -209,6 +247,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["C"] = C;
+
+  // Canadian_Aboriginal class has 726 code points in 3 blocks
   static const int Canadian_Aboriginal[] = {
     5120, 5759,
     6320, 6389,
@@ -216,23 +256,31 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Canadian_Aboriginal"] = Canadian_Aboriginal;
+
+  // Carian class has 49 code points in 1 blocks
   static const int Carian[] = {
     66208, 66256,
     0, 0
   };
   range["Carian"] = Carian;
+
+  // Caucasian_Albanian class has 53 code points in 2 blocks
   static const int Caucasian_Albanian[] = {
     66864, 66915,
     66927, 66927,
     0, 0
   };
   range["Caucasian_Albanian"] = Caucasian_Albanian;
+
+  // Cc class has 65 code points in 2 blocks
   static const int Cc[] = {
     0, 31,
     127, 159,
     0, 0
   };
   range["Cc"] = Cc;
+
+  // Cf class has 170 code points in 21 blocks
   static const int Cf[] = {
     173, 173,
     1536, 1541,
@@ -258,12 +306,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Cf"] = Cf;
+
+  // Chakma class has 71 code points in 2 blocks
   static const int Chakma[] = {
     69888, 69940,
     69942, 69959,
     0, 0
   };
   range["Chakma"] = Chakma;
+
+  // Cham class has 83 code points in 4 blocks
   static const int Cham[] = {
     43520, 43574,
     43584, 43597,
@@ -272,6 +324,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Cham"] = Cham;
+
+  // Cherokee class has 172 code points in 3 blocks
   static const int Cherokee[] = {
     5024, 5109,
     5112, 5117,
@@ -279,11 +333,15 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Cherokee"] = Cherokee;
+
+  // Chorasmian class has 28 code points in 1 blocks
   static const int Chorasmian[] = {
     69552, 69579,
     0, 0
   };
   range["Chorasmian"] = Chorasmian;
+
+  // Common class has 8306 code points in 173 blocks
   static const int Common[] = {
     0, 64,
     91, 96,
@@ -461,6 +519,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Common"] = Common;
+
+  // Coptic class has 137 code points in 3 blocks
   static const int Coptic[] = {
     994, 1007,
     11392, 11507,
@@ -468,6 +528,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Coptic"] = Coptic;
+
+  // CsIdentifierPart class has 140259 code points in 782 blocks
   static const int CsIdentifierPart[] = {
     48, 57,
     65, 90,
@@ -1254,6 +1316,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["CsIdentifierPart"] = CsIdentifierPart;
+
+  // CsIdentifierStart class has 136973 code points in 669 blocks
   static const int CsIdentifierStart[] = {
     64, 90,
     95, 95,
@@ -1927,6 +1991,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["CsIdentifierStart"] = CsIdentifierStart;
+
+  // Cuneiform class has 1234 code points in 4 blocks
   static const int Cuneiform[] = {
     73728, 74649,
     74752, 74862,
@@ -1935,6 +2001,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Cuneiform"] = Cuneiform;
+
+  // Cypriot class has 55 code points in 6 blocks
   static const int Cypriot[] = {
     67584, 67589,
     67592, 67592,
@@ -1945,11 +2013,15 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Cypriot"] = Cypriot;
+
+  // Cypro_Minoan class has 99 code points in 1 blocks
   static const int Cypro_Minoan[] = {
     77712, 77810,
     0, 0
   };
   range["Cypro_Minoan"] = Cypro_Minoan;
+
+  // Cyrillic class has 506 code points in 10 blocks
   static const int Cyrillic[] = {
     1024, 1156,
     1159, 1327,
@@ -1964,11 +2036,15 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Cyrillic"] = Cyrillic;
+
+  // Deseret class has 80 code points in 1 blocks
   static const int Deseret[] = {
     66560, 66639,
     0, 0
   };
   range["Deseret"] = Deseret;
+
+  // Devanagari class has 164 code points in 5 blocks
   static const int Devanagari[] = {
     2304, 2384,
     2389, 2403,
@@ -1978,6 +2054,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Devanagari"] = Devanagari;
+
+  // Dives_Akuru class has 72 code points in 8 blocks
   static const int Dives_Akuru[] = {
     71936, 71942,
     71945, 71945,
@@ -1990,11 +2068,15 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Dives_Akuru"] = Dives_Akuru;
+
+  // Dogra class has 60 code points in 1 blocks
   static const int Dogra[] = {
     71680, 71739,
     0, 0
   };
   range["Dogra"] = Dogra;
+
+  // Duployan class has 143 code points in 5 blocks
   static const int Duployan[] = {
     113664, 113770,
     113776, 113788,
@@ -2004,21 +2086,29 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Duployan"] = Duployan;
+
+  // Egyptian_Hieroglyphs class has 1110 code points in 1 blocks
   static const int Egyptian_Hieroglyphs[] = {
     77824, 78933,
     0, 0
   };
   range["Egyptian_Hieroglyphs"] = Egyptian_Hieroglyphs;
+
+  // Elbasan class has 40 code points in 1 blocks
   static const int Elbasan[] = {
     66816, 66855,
     0, 0
   };
   range["Elbasan"] = Elbasan;
+
+  // Elymaic class has 23 code points in 1 blocks
   static const int Elymaic[] = {
     69600, 69622,
     0, 0
   };
   range["Elymaic"] = Elymaic;
+
+  // Ethiopic class has 523 code points in 36 blocks
   static const int Ethiopic[] = {
     4608, 4680,
     4682, 4685,
@@ -2059,6 +2149,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Ethiopic"] = Ethiopic;
+
+  // Georgian class has 173 code points in 10 blocks
   static const int Georgian[] = {
     4256, 4293,
     4295, 4295,
@@ -2073,6 +2165,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Georgian"] = Georgian;
+
+  // Glagolitic class has 134 code points in 6 blocks
   static const int Glagolitic[] = {
     11264, 11359,
     122880, 122886,
@@ -2083,11 +2177,15 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Glagolitic"] = Glagolitic;
+
+  // Gothic class has 27 code points in 1 blocks
   static const int Gothic[] = {
     66352, 66378,
     0, 0
   };
   range["Gothic"] = Gothic;
+
+  // Grantha class has 85 code points in 15 blocks
   static const int Grantha[] = {
     70400, 70403,
     70405, 70412,
@@ -2107,6 +2205,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Grantha"] = Grantha;
+
+  // Graph class has 1111810 code points in 26 blocks
   static const int Graph[] = {
     33, 126,
     161, 172,
@@ -2137,6 +2237,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Graph"] = Graph;
+
+  // Greek class has 518 code points in 36 blocks
   static const int Greek[] = {
     880, 883,
     885, 887,
@@ -2177,6 +2279,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Greek"] = Greek;
+
+  // Gujarati class has 91 code points in 14 blocks
   static const int Gujarati[] = {
     2689, 2691,
     2693, 2701,
@@ -2195,6 +2299,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Gujarati"] = Gujarati;
+
+  // Gunjala_Gondi class has 63 code points in 6 blocks
   static const int Gunjala_Gondi[] = {
     73056, 73061,
     73063, 73064,
@@ -2205,6 +2311,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Gunjala_Gondi"] = Gunjala_Gondi;
+
+  // Gurmukhi class has 80 code points in 16 blocks
   static const int Gurmukhi[] = {
     2561, 2563,
     2565, 2570,
@@ -2225,6 +2333,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Gurmukhi"] = Gurmukhi;
+
+  // Han class has 99030 code points in 22 blocks
   static const int Han[] = {
     11904, 11929,
     11931, 12019,
@@ -2251,6 +2361,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Han"] = Han;
+
+  // Hangul class has 11739 code points in 14 blocks
   static const int Hangul[] = {
     4352, 4607,
     12334, 12335,
@@ -2269,17 +2381,23 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Hangul"] = Hangul;
+
+  // Hanifi_Rohingya class has 50 code points in 2 blocks
   static const int Hanifi_Rohingya[] = {
     68864, 68903,
     68912, 68921,
     0, 0
   };
   range["Hanifi_Rohingya"] = Hanifi_Rohingya;
+
+  // Hanunoo class has 21 code points in 1 blocks
   static const int Hanunoo[] = {
     5920, 5940,
     0, 0
   };
   range["Hanunoo"] = Hanunoo;
+
+  // Hatran class has 26 code points in 3 blocks
   static const int Hatran[] = {
     67808, 67826,
     67828, 67829,
@@ -2287,6 +2405,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Hatran"] = Hatran;
+
+  // Hebrew class has 134 code points in 9 blocks
   static const int Hebrew[] = {
     1425, 1479,
     1488, 1514,
@@ -2300,6 +2420,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Hebrew"] = Hebrew;
+
+  // Hiragana class has 381 code points in 6 blocks
   static const int Hiragana[] = {
     12353, 12438,
     12445, 12447,
@@ -2310,6 +2432,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Hiragana"] = Hiragana;
+
+  // IdentifierIgnorable class has 56 code points in 3 blocks
   static const int IdentifierIgnorable[] = {
     0, 8,
     14, 27,
@@ -2317,12 +2441,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["IdentifierIgnorable"] = IdentifierIgnorable;
+
+  // Imperial_Aramaic class has 31 code points in 2 blocks
   static const int Imperial_Aramaic[] = {
     67648, 67669,
     67671, 67679,
     0, 0
   };
   range["Imperial_Aramaic"] = Imperial_Aramaic;
+
+  // Inherited class has 657 code points in 29 blocks
   static const int Inherited[] = {
     768, 879,
     1157, 1158,
@@ -2356,18 +2484,24 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Inherited"] = Inherited;
+
+  // Inscriptional_Pahlavi class has 27 code points in 2 blocks
   static const int Inscriptional_Pahlavi[] = {
     68448, 68466,
     68472, 68479,
     0, 0
   };
   range["Inscriptional_Pahlavi"] = Inscriptional_Pahlavi;
+
+  // Inscriptional_Parthian class has 30 code points in 2 blocks
   static const int Inscriptional_Parthian[] = {
     68416, 68437,
     68440, 68447,
     0, 0
   };
   range["Inscriptional_Parthian"] = Inscriptional_Parthian;
+
+  // JavaIdentifierPart class has 140378 code points in 799 blocks
   static const int JavaIdentifierPart[] = {
     0, 8,
     14, 27,
@@ -3171,6 +3305,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["JavaIdentifierPart"] = JavaIdentifierPart;
+
+  // JavaIdentifierStart class has 137035 code points in 684 blocks
   static const int JavaIdentifierStart[] = {
     36, 36,
     65, 90,
@@ -3859,6 +3995,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["JavaIdentifierStart"] = JavaIdentifierStart;
+
+  // Javanese class has 90 code points in 3 blocks
   static const int Javanese[] = {
     43392, 43469,
     43472, 43481,
@@ -3866,12 +4004,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Javanese"] = Javanese;
+
+  // Kaithi class has 68 code points in 2 blocks
   static const int Kaithi[] = {
     69760, 69826,
     69837, 69837,
     0, 0
   };
   range["Kaithi"] = Kaithi;
+
+  // Kannada class has 91 code points in 13 blocks
   static const int Kannada[] = {
     3200, 3212,
     3214, 3216,
@@ -3889,6 +4031,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Kannada"] = Kannada;
+
+  // Katakana class has 321 code points in 14 blocks
   static const int Katakana[] = {
     12449, 12538,
     12541, 12543,
@@ -3907,6 +4051,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Katakana"] = Katakana;
+
+  // Kawi class has 86 code points in 3 blocks
   static const int Kawi[] = {
     73472, 73488,
     73490, 73530,
@@ -3914,12 +4060,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Kawi"] = Kawi;
+
+  // Kayah_Li class has 47 code points in 2 blocks
   static const int Kayah_Li[] = {
     43264, 43309,
     43311, 43311,
     0, 0
   };
   range["Kayah_Li"] = Kayah_Li;
+
+  // Kharoshthi class has 68 code points in 8 blocks
   static const int Kharoshthi[] = {
     68096, 68099,
     68101, 68102,
@@ -3932,12 +4082,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Kharoshthi"] = Kharoshthi;
+
+  // Khitan_Small_Script class has 471 code points in 2 blocks
   static const int Khitan_Small_Script[] = {
     94180, 94180,
     101120, 101589,
     0, 0
   };
   range["Khitan_Small_Script"] = Khitan_Small_Script;
+
+  // Khmer class has 146 code points in 4 blocks
   static const int Khmer[] = {
     6016, 6109,
     6112, 6121,
@@ -3946,18 +4100,24 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Khmer"] = Khmer;
+
+  // Khojki class has 65 code points in 2 blocks
   static const int Khojki[] = {
     70144, 70161,
     70163, 70209,
     0, 0
   };
   range["Khojki"] = Khojki;
+
+  // Khudawadi class has 69 code points in 2 blocks
   static const int Khudawadi[] = {
     70320, 70378,
     70384, 70393,
     0, 0
   };
   range["Khudawadi"] = Khudawadi;
+
+  // L class has 136726 code points in 660 blocks
   static const int L[] = {
     65, 90,
     97, 122,
@@ -4622,6 +4782,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["L"] = L;
+
+  // L_ class has 4095 code points in 143 blocks
   static const int L_[] = {
     65, 90,
     97, 122,
@@ -4769,6 +4931,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["L&"] = L_;
+
+  // Lao class has 83 code points in 11 blocks
   static const int Lao[] = {
     3713, 3714,
     3716, 3716,
@@ -4784,6 +4948,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Lao"] = Lao;
+
+  // Latin class has 1481 code points in 39 blocks
   static const int Latin[] = {
     65, 90,
     97, 122,
@@ -4827,6 +4993,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Latin"] = Latin;
+
+  // Lepcha class has 74 code points in 3 blocks
   static const int Lepcha[] = {
     7168, 7223,
     7227, 7241,
@@ -4834,6 +5002,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Lepcha"] = Lepcha;
+
+  // Limbu class has 68 code points in 5 blocks
   static const int Limbu[] = {
     6400, 6430,
     6432, 6443,
@@ -4843,6 +5013,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Limbu"] = Limbu;
+
+  // Linear_A class has 341 code points in 3 blocks
   static const int Linear_A[] = {
     67072, 67382,
     67392, 67413,
@@ -4850,6 +5022,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Linear_A"] = Linear_A;
+
+  // Linear_B class has 211 code points in 7 blocks
   static const int Linear_B[] = {
     65536, 65547,
     65549, 65574,
@@ -4861,12 +5035,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Linear_B"] = Linear_B;
+
+  // Lisu class has 49 code points in 2 blocks
   static const int Lisu[] = {
     42192, 42239,
     73648, 73648,
     0, 0
   };
   range["Lisu"] = Lisu;
+
+  // Lm class has 397 code points in 71 blocks
   static const int Lm[] = {
     688, 705,
     710, 721,
@@ -4942,6 +5120,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Lm"] = Lm;
+
+  // Lo class has 132234 code points in 511 blocks
   static const int Lo[] = {
     170, 170,
     186, 186,
@@ -5457,17 +5637,23 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Lo"] = Lo;
+
+  // Lycian class has 29 code points in 1 blocks
   static const int Lycian[] = {
     66176, 66204,
     0, 0
   };
   range["Lycian"] = Lycian;
+
+  // Lydian class has 27 code points in 2 blocks
   static const int Lydian[] = {
     67872, 67897,
     67903, 67903,
     0, 0
   };
   range["Lydian"] = Lydian;
+
+  // M class has 2450 code points in 310 blocks
   static const int M[] = {
     768, 879,
     1155, 1161,
@@ -5782,16 +5968,22 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["M"] = M;
+
+  // Mahajani class has 39 code points in 1 blocks
   static const int Mahajani[] = {
     69968, 70006,
     0, 0
   };
   range["Mahajani"] = Mahajani;
+
+  // Makasar class has 25 code points in 1 blocks
   static const int Makasar[] = {
     73440, 73464,
     0, 0
   };
   range["Makasar"] = Makasar;
+
+  // Malayalam class has 118 code points in 7 blocks
   static const int Malayalam[] = {
     3328, 3340,
     3342, 3344,
@@ -5803,18 +5995,24 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Malayalam"] = Malayalam;
+
+  // Mandaic class has 29 code points in 2 blocks
   static const int Mandaic[] = {
     2112, 2139,
     2142, 2142,
     0, 0
   };
   range["Mandaic"] = Mandaic;
+
+  // Manichaean class has 51 code points in 2 blocks
   static const int Manichaean[] = {
     68288, 68326,
     68331, 68342,
     0, 0
   };
   range["Manichaean"] = Manichaean;
+
+  // Marchen class has 68 code points in 3 blocks
   static const int Marchen[] = {
     72816, 72847,
     72850, 72871,
@@ -5822,6 +6020,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Marchen"] = Marchen;
+
+  // Masaram_Gondi class has 75 code points in 7 blocks
   static const int Masaram_Gondi[] = {
     72960, 72966,
     72968, 72969,
@@ -5833,6 +6033,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Masaram_Gondi"] = Masaram_Gondi;
+
+  // Mc class has 452 code points in 182 blocks
   static const int Mc[] = {
     2307, 2307,
     2363, 2363,
@@ -6019,6 +6221,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Mc"] = Mc;
+
+  // Me class has 13 code points in 5 blocks
   static const int Me[] = {
     1160, 1161,
     6846, 6846,
@@ -6028,11 +6232,15 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Me"] = Me;
+
+  // Medefaidrin class has 91 code points in 1 blocks
   static const int Medefaidrin[] = {
     93760, 93850,
     0, 0
   };
   range["Medefaidrin"] = Medefaidrin;
+
+  // Meetei_Mayek class has 79 code points in 3 blocks
   static const int Meetei_Mayek[] = {
     43744, 43766,
     43968, 44013,
@@ -6040,12 +6248,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Meetei_Mayek"] = Meetei_Mayek;
+
+  // Mende_Kikakui class has 213 code points in 2 blocks
   static const int Mende_Kikakui[] = {
     124928, 125124,
     125127, 125142,
     0, 0
   };
   range["Mende_Kikakui"] = Mende_Kikakui;
+
+  // Meroitic_Cursive class has 90 code points in 3 blocks
   static const int Meroitic_Cursive[] = {
     68000, 68023,
     68028, 68047,
@@ -6053,11 +6265,15 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Meroitic_Cursive"] = Meroitic_Cursive;
+
+  // Meroitic_Hieroglyphs class has 32 code points in 1 blocks
   static const int Meroitic_Hieroglyphs[] = {
     67968, 67999,
     0, 0
   };
   range["Meroitic_Hieroglyphs"] = Meroitic_Hieroglyphs;
+
+  // Miao class has 149 code points in 3 blocks
   static const int Miao[] = {
     93952, 94026,
     94031, 94087,
@@ -6065,6 +6281,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Miao"] = Miao;
+
+  // Mn class has 1985 code points in 346 blocks
   static const int Mn[] = {
     768, 879,
     1155, 1159,
@@ -6415,12 +6633,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Mn"] = Mn;
+
+  // Modi class has 79 code points in 2 blocks
   static const int Modi[] = {
     71168, 71236,
     71248, 71257,
     0, 0
   };
   range["Modi"] = Modi;
+
+  // Mongolian class has 168 code points in 6 blocks
   static const int Mongolian[] = {
     6144, 6145,
     6148, 6148,
@@ -6431,6 +6653,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Mongolian"] = Mongolian;
+
+  // Mro class has 43 code points in 3 blocks
   static const int Mro[] = {
     92736, 92766,
     92768, 92777,
@@ -6438,6 +6662,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Mro"] = Mro;
+
+  // Multani class has 38 code points in 5 blocks
   static const int Multani[] = {
     70272, 70278,
     70280, 70280,
@@ -6447,6 +6673,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Multani"] = Multani;
+
+  // Myanmar class has 223 code points in 3 blocks
   static const int Myanmar[] = {
     4096, 4255,
     43488, 43518,
@@ -6454,6 +6682,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Myanmar"] = Myanmar;
+
+  // N class has 1831 code points in 137 blocks
   static const int N[] = {
     48, 57,
     178, 179,
@@ -6595,17 +6825,23 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["N"] = N;
+
+  // Nabataean class has 40 code points in 2 blocks
   static const int Nabataean[] = {
     67712, 67742,
     67751, 67759,
     0, 0
   };
   range["Nabataean"] = Nabataean;
+
+  // Nag_Mundari class has 42 code points in 1 blocks
   static const int Nag_Mundari[] = {
     124112, 124153,
     0, 0
   };
   range["Nag_Mundari"] = Nag_Mundari;
+
+  // Nandinagari class has 65 code points in 3 blocks
   static const int Nandinagari[] = {
     72096, 72103,
     72106, 72151,
@@ -6613,6 +6849,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Nandinagari"] = Nandinagari;
+
+  // Nd class has 680 code points in 64 blocks
   static const int Nd[] = {
     48, 57,
     1632, 1641,
@@ -6681,6 +6919,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Nd"] = Nd;
+
+  // New_Tai_Lue class has 83 code points in 4 blocks
   static const int New_Tai_Lue[] = {
     6528, 6571,
     6576, 6601,
@@ -6689,18 +6929,24 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["New_Tai_Lue"] = New_Tai_Lue;
+
+  // Newa class has 97 code points in 2 blocks
   static const int Newa[] = {
     70656, 70747,
     70749, 70753,
     0, 0
   };
   range["Newa"] = Newa;
+
+  // Nko class has 62 code points in 2 blocks
   static const int Nko[] = {
     1984, 2042,
     2045, 2047,
     0, 0
   };
   range["Nko"] = Nko;
+
+  // Nl class has 236 code points in 12 blocks
   static const int Nl[] = {
     5870, 5872,
     8544, 8578,
@@ -6717,6 +6963,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Nl"] = Nl;
+
+  // No class has 915 code points in 72 blocks
   static const int No[] = {
     178, 179,
     185, 185,
@@ -6793,18 +7041,24 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["No"] = No;
+
+  // Non_ASCII_Unicode class has 1111936 code points in 2 blocks
   static const int Non_ASCII_Unicode[] = {
     128, 55295,
     57344, 1114111,
     0, 0
   };
   range["Non_ASCII_Unicode"] = Non_ASCII_Unicode;
+
+  // Nushu class has 397 code points in 2 blocks
   static const int Nushu[] = {
     94177, 94177,
     110960, 111355,
     0, 0
   };
   range["Nushu"] = Nushu;
+
+  // Nyiakeng_Puachue_Hmong class has 71 code points in 4 blocks
   static const int Nyiakeng_Puachue_Hmong[] = {
     123136, 123180,
     123184, 123197,
@@ -6813,16 +7067,22 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Nyiakeng_Puachue_Hmong"] = Nyiakeng_Puachue_Hmong;
+
+  // Ogham class has 29 code points in 1 blocks
   static const int Ogham[] = {
     5760, 5788,
     0, 0
   };
   range["Ogham"] = Ogham;
+
+  // Ol_Chiki class has 48 code points in 1 blocks
   static const int Ol_Chiki[] = {
     7248, 7295,
     0, 0
   };
   range["Ol_Chiki"] = Ol_Chiki;
+
+  // Old_Hungarian class has 108 code points in 3 blocks
   static const int Old_Hungarian[] = {
     68736, 68786,
     68800, 68850,
@@ -6830,48 +7090,66 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Old_Hungarian"] = Old_Hungarian;
+
+  // Old_Italic class has 39 code points in 2 blocks
   static const int Old_Italic[] = {
     66304, 66339,
     66349, 66351,
     0, 0
   };
   range["Old_Italic"] = Old_Italic;
+
+  // Old_North_Arabian class has 32 code points in 1 blocks
   static const int Old_North_Arabian[] = {
     68224, 68255,
     0, 0
   };
   range["Old_North_Arabian"] = Old_North_Arabian;
+
+  // Old_Permic class has 43 code points in 1 blocks
   static const int Old_Permic[] = {
     66384, 66426,
     0, 0
   };
   range["Old_Permic"] = Old_Permic;
+
+  // Old_Persian class has 50 code points in 2 blocks
   static const int Old_Persian[] = {
     66464, 66499,
     66504, 66517,
     0, 0
   };
   range["Old_Persian"] = Old_Persian;
+
+  // Old_Sogdian class has 40 code points in 1 blocks
   static const int Old_Sogdian[] = {
     69376, 69415,
     0, 0
   };
   range["Old_Sogdian"] = Old_Sogdian;
+
+  // Old_South_Arabian class has 32 code points in 1 blocks
   static const int Old_South_Arabian[] = {
     68192, 68223,
     0, 0
   };
   range["Old_South_Arabian"] = Old_South_Arabian;
+
+  // Old_Turkic class has 73 code points in 1 blocks
   static const int Old_Turkic[] = {
     68608, 68680,
     0, 0
   };
   range["Old_Turkic"] = Old_Turkic;
+
+  // Old_Uyghur class has 26 code points in 1 blocks
   static const int Old_Uyghur[] = {
     69488, 69513,
     0, 0
   };
   range["Old_Uyghur"] = Old_Uyghur;
+
+  // Oriya class has 91 code points in 14 blocks
   static const int Oriya[] = {
     2817, 2819,
     2821, 2828,
@@ -6890,18 +7168,24 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Oriya"] = Oriya;
+
+  // Osage class has 72 code points in 2 blocks
   static const int Osage[] = {
     66736, 66771,
     66776, 66811,
     0, 0
   };
   range["Osage"] = Osage;
+
+  // Osmanya class has 40 code points in 2 blocks
   static const int Osmanya[] = {
     66688, 66717,
     66720, 66729,
     0, 0
   };
   range["Osmanya"] = Osmanya;
+
+  // P class has 842 code points in 191 blocks
   static const int P[] = {
     33, 35,
     37, 42,
@@ -7097,6 +7381,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["P"] = P;
+
+  // Pahawh_Hmong class has 127 code points in 5 blocks
   static const int Pahawh_Hmong[] = {
     92928, 92997,
     93008, 93017,
@@ -7106,16 +7392,22 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Pahawh_Hmong"] = Pahawh_Hmong;
+
+  // Palmyrene class has 32 code points in 1 blocks
   static const int Palmyrene[] = {
     67680, 67711,
     0, 0
   };
   range["Palmyrene"] = Palmyrene;
+
+  // Pau_Cin_Hau class has 57 code points in 1 blocks
   static const int Pau_Cin_Hau[] = {
     72384, 72440,
     0, 0
   };
   range["Pau_Cin_Hau"] = Pau_Cin_Hau;
+
+  // Pc class has 10 code points in 6 blocks
   static const int Pc[] = {
     95, 95,
     8255, 8256,
@@ -7126,6 +7418,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Pc"] = Pc;
+
+  // Pd class has 26 code points in 19 blocks
   static const int Pd[] = {
     45, 45,
     1418, 1418,
@@ -7149,6 +7443,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Pd"] = Pd;
+
+  // Pe class has 77 code points in 76 blocks
   static const int Pe[] = {
     41, 41,
     93, 93,
@@ -7229,6 +7525,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Pe"] = Pe;
+
+  // Pf class has 10 code points in 10 blocks
   static const int Pf[] = {
     187, 187,
     8217, 8217,
@@ -7243,17 +7541,23 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Pf"] = Pf;
+
+  // Phags_Pa class has 56 code points in 1 blocks
   static const int Phags_Pa[] = {
     43072, 43127,
     0, 0
   };
   range["Phags_Pa"] = Phags_Pa;
+
+  // Phoenician class has 29 code points in 2 blocks
   static const int Phoenician[] = {
     67840, 67867,
     67871, 67871,
     0, 0
   };
   range["Phoenician"] = Phoenician;
+
+  // Pi class has 12 code points in 11 blocks
   static const int Pi[] = {
     171, 171,
     8216, 8216,
@@ -7269,6 +7573,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Pi"] = Pi;
+
+  // Po class has 628 code points in 187 blocks
   static const int Po[] = {
     33, 35,
     37, 39,
@@ -7460,6 +7766,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Po"] = Po;
+
+  // Print class has 1111829 code points in 24 blocks
   static const int Print[] = {
     32, 126,
     160, 172,
@@ -7488,6 +7796,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Print"] = Print;
+
+  // Ps class has 79 code points in 79 blocks
   static const int Ps[] = {
     40, 40,
     91, 91,
@@ -7571,6 +7881,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Ps"] = Ps;
+
+  // Psalter_Pahlavi class has 29 code points in 3 blocks
   static const int Psalter_Pahlavi[] = {
     68480, 68497,
     68505, 68508,
@@ -7578,6 +7890,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Psalter_Pahlavi"] = Psalter_Pahlavi;
+
+  // PythonIdentifierPart class has 140101 code points in 772 blocks
   static const int PythonIdentifierPart[] = {
     48, 57,
     65, 90,
@@ -8354,6 +8668,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["PythonIdentifierPart"] = PythonIdentifierPart;
+
+  // PythonIdentifierStart class has 136968 code points in 661 blocks
   static const int PythonIdentifierStart[] = {
     65, 90,
     97, 122,
@@ -9019,18 +9335,24 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["PythonIdentifierStart"] = PythonIdentifierStart;
+
+  // Rejang class has 37 code points in 2 blocks
   static const int Rejang[] = {
     43312, 43347,
     43359, 43359,
     0, 0
   };
   range["Rejang"] = Rejang;
+
+  // Runic class has 86 code points in 2 blocks
   static const int Runic[] = {
     5792, 5866,
     5870, 5880,
     0, 0
   };
   range["Runic"] = Runic;
+
+  // S class has 7775 code points in 233 blocks
   static const int S[] = {
     36, 36,
     43, 43,
@@ -9268,18 +9590,24 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["S"] = S;
+
+  // Samaritan class has 61 code points in 2 blocks
   static const int Samaritan[] = {
     2048, 2093,
     2096, 2110,
     0, 0
   };
   range["Samaritan"] = Samaritan;
+
+  // Saurashtra class has 82 code points in 2 blocks
   static const int Saurashtra[] = {
     43136, 43205,
     43214, 43225,
     0, 0
   };
   range["Saurashtra"] = Saurashtra;
+
+  // Sc class has 63 code points in 21 blocks
   static const int Sc[] = {
     36, 36,
     162, 165,
@@ -9305,22 +9633,30 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Sc"] = Sc;
+
+  // Sharada class has 96 code points in 1 blocks
   static const int Sharada[] = {
     70016, 70111,
     0, 0
   };
   range["Sharada"] = Sharada;
+
+  // Shavian class has 48 code points in 1 blocks
   static const int Shavian[] = {
     66640, 66687,
     0, 0
   };
   range["Shavian"] = Shavian;
+
+  // Siddham class has 92 code points in 2 blocks
   static const int Siddham[] = {
     71040, 71093,
     71096, 71133,
     0, 0
   };
   range["Siddham"] = Siddham;
+
+  // SignWriting class has 672 code points in 3 blocks
   static const int SignWriting[] = {
     120832, 121483,
     121499, 121503,
@@ -9328,6 +9664,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["SignWriting"] = SignWriting;
+
+  // Sinhala class has 111 code points in 13 blocks
   static const int Sinhala[] = {
     3457, 3459,
     3461, 3478,
@@ -9345,6 +9683,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Sinhala"] = Sinhala;
+
+  // Sk class has 125 code points in 31 blocks
   static const int Sk[] = {
     94, 94,
     96, 96,
@@ -9380,6 +9720,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Sk"] = Sk;
+
+  // Sm class has 948 code points in 64 blocks
   static const int Sm[] = {
     43, 43,
     60, 62,
@@ -9448,6 +9790,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Sm"] = Sm;
+
+  // So class has 6639 code points in 185 blocks
   static const int So[] = {
     166, 166,
     169, 169,
@@ -9637,22 +9981,30 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["So"] = So;
+
+  // Sogdian class has 42 code points in 1 blocks
   static const int Sogdian[] = {
     69424, 69465,
     0, 0
   };
   range["Sogdian"] = Sogdian;
+
+  // Sora_Sompeng class has 35 code points in 2 blocks
   static const int Sora_Sompeng[] = {
     69840, 69864,
     69872, 69881,
     0, 0
   };
   range["Sora_Sompeng"] = Sora_Sompeng;
+
+  // Soyombo class has 83 code points in 1 blocks
   static const int Soyombo[] = {
     72272, 72354,
     0, 0
   };
   range["Soyombo"] = Soyombo;
+
+  // Space class has 22 code points in 8 blocks
   static const int Space[] = {
     9, 13,
     32, 32,
@@ -9665,17 +10017,23 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Space"] = Space;
+
+  // Sundanese class has 72 code points in 2 blocks
   static const int Sundanese[] = {
     7040, 7103,
     7360, 7367,
     0, 0
   };
   range["Sundanese"] = Sundanese;
+
+  // Syloti_Nagri class has 45 code points in 1 blocks
   static const int Syloti_Nagri[] = {
     43008, 43052,
     0, 0
   };
   range["Syloti_Nagri"] = Syloti_Nagri;
+
+  // Syriac class has 88 code points in 4 blocks
   static const int Syriac[] = {
     1792, 1805,
     1807, 1866,
@@ -9684,12 +10042,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Syriac"] = Syriac;
+
+  // Tagalog class has 23 code points in 2 blocks
   static const int Tagalog[] = {
     5888, 5909,
     5919, 5919,
     0, 0
   };
   range["Tagalog"] = Tagalog;
+
+  // Tagbanwa class has 18 code points in 3 blocks
   static const int Tagbanwa[] = {
     5984, 5996,
     5998, 6000,
@@ -9697,12 +10059,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Tagbanwa"] = Tagbanwa;
+
+  // Tai_Le class has 35 code points in 2 blocks
   static const int Tai_Le[] = {
     6480, 6509,
     6512, 6516,
     0, 0
   };
   range["Tai_Le"] = Tai_Le;
+
+  // Tai_Tham class has 127 code points in 5 blocks
   static const int Tai_Tham[] = {
     6688, 6750,
     6752, 6780,
@@ -9712,18 +10078,24 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Tai_Tham"] = Tai_Tham;
+
+  // Tai_Viet class has 72 code points in 2 blocks
   static const int Tai_Viet[] = {
     43648, 43714,
     43739, 43743,
     0, 0
   };
   range["Tai_Viet"] = Tai_Viet;
+
+  // Takri class has 68 code points in 2 blocks
   static const int Takri[] = {
     71296, 71353,
     71360, 71369,
     0, 0
   };
   range["Takri"] = Takri;
+
+  // Tamil class has 123 code points in 18 blocks
   static const int Tamil[] = {
     2946, 2947,
     2949, 2954,
@@ -9746,12 +10118,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Tamil"] = Tamil;
+
+  // Tangsa class has 89 code points in 2 blocks
   static const int Tangsa[] = {
     92784, 92862,
     92864, 92873,
     0, 0
   };
   range["Tangsa"] = Tangsa;
+
+  // Tangut class has 6914 code points in 4 blocks
   static const int Tangut[] = {
     94176, 94176,
     94208, 100343,
@@ -9760,6 +10136,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Tangut"] = Tangut;
+
+  // Telugu class has 100 code points in 13 blocks
   static const int Telugu[] = {
     3072, 3084,
     3086, 3088,
@@ -9777,17 +10155,23 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Telugu"] = Telugu;
+
+  // Thaana class has 50 code points in 1 blocks
   static const int Thaana[] = {
     1920, 1969,
     0, 0
   };
   range["Thaana"] = Thaana;
+
+  // Thai class has 86 code points in 2 blocks
   static const int Thai[] = {
     3585, 3642,
     3648, 3675,
     0, 0
   };
   range["Thai"] = Thai;
+
+  // Tibetan class has 207 code points in 7 blocks
   static const int Tibetan[] = {
     3840, 3911,
     3913, 3948,
@@ -9799,6 +10183,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Tibetan"] = Tibetan;
+
+  // Tifinagh class has 59 code points in 3 blocks
   static const int Tifinagh[] = {
     11568, 11623,
     11631, 11632,
@@ -9806,29 +10192,39 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Tifinagh"] = Tifinagh;
+
+  // Tirhuta class has 82 code points in 2 blocks
   static const int Tirhuta[] = {
     70784, 70855,
     70864, 70873,
     0, 0
   };
   range["Tirhuta"] = Tirhuta;
+
+  // Toto class has 31 code points in 1 blocks
   static const int Toto[] = {
     123536, 123566,
     0, 0
   };
   range["Toto"] = Toto;
+
+  // Ugaritic class has 31 code points in 2 blocks
   static const int Ugaritic[] = {
     66432, 66461,
     66463, 66463,
     0, 0
   };
   range["Ugaritic"] = Ugaritic;
+
+  // Unicode class has 1112064 code points in 2 blocks
   static const int Unicode[] = {
     0, 55295,
     57344, 1114111,
     0, 0
   };
   range["Unicode"] = Unicode;
+
+  // UnicodeIdentifierPart class has 140315 code points in 785 blocks
   static const int UnicodeIdentifierPart[] = {
     0, 8,
     14, 27,
@@ -10618,6 +11014,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["UnicodeIdentifierPart"] = UnicodeIdentifierPart;
+
+  // UnicodeIdentifierStart class has 136962 code points in 663 blocks
   static const int UnicodeIdentifierStart[] = {
     65, 90,
     97, 122,
@@ -11285,11 +11683,15 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["UnicodeIdentifierStart"] = UnicodeIdentifierStart;
+
+  // Vai class has 300 code points in 1 blocks
   static const int Vai[] = {
     42240, 42539,
     0, 0
   };
   range["Vai"] = Vai;
+
+  // Vithkuqi class has 70 code points in 8 blocks
   static const int Vithkuqi[] = {
     66928, 66938,
     66940, 66954,
@@ -11302,18 +11704,24 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Vithkuqi"] = Vithkuqi;
+
+  // Wancho class has 59 code points in 2 blocks
   static const int Wancho[] = {
     123584, 123641,
     123647, 123647,
     0, 0
   };
   range["Wancho"] = Wancho;
+
+  // Warang_Citi class has 84 code points in 2 blocks
   static const int Warang_Citi[] = {
     71840, 71922,
     71935, 71935,
     0, 0
   };
   range["Warang_Citi"] = Warang_Citi;
+
+  // Word class has 137416 code points in 712 blocks
   static const int Word[] = {
     48, 57,
     65, 90,
@@ -12030,6 +12438,8 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Word"] = Word;
+
+  // Yezidi class has 47 code points in 3 blocks
   static const int Yezidi[] = {
     69248, 69289,
     69291, 69293,
@@ -12037,12 +12447,16 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Yezidi"] = Yezidi;
+
+  // Yi class has 1220 code points in 2 blocks
   static const int Yi[] = {
     40960, 42124,
     42128, 42182,
     0, 0
   };
   range["Yi"] = Yi;
+
+  // Z class has 19 code points in 8 blocks
   static const int Z[] = {
     32, 32,
     160, 160,
@@ -12055,21 +12469,29 @@ void reflex::Unicode::Tables::language_scripts(void)
     0, 0
   };
   range["Z"] = Z;
+
+  // Zanabazar_Square class has 72 code points in 1 blocks
   static const int Zanabazar_Square[] = {
     72192, 72263,
     0, 0
   };
   range["Zanabazar_Square"] = Zanabazar_Square;
+
+  // Zl class has 1 code points in 1 blocks
   static const int Zl[] = {
     8232, 8232,
     0, 0
   };
   range["Zl"] = Zl;
+
+  // Zp class has 1 code points in 1 blocks
   static const int Zp[] = {
     8233, 8233,
     0, 0
   };
   range["Zp"] = Zp;
+
+  // Zs class has 17 code points in 7 blocks
   static const int Zs[] = {
     32, 32,
     160, 160,

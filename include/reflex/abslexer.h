@@ -290,10 +290,10 @@ class AbstractLexer {
   }
 #if __cplusplus >= 201703L
   /// Returns the pattern match as a string_view (zero copy), does not include a terminating \0, this is a constant-time operation.
-  inline const std::string_view strview() const
+  inline const std::string_view str_view() const
     /// @returns string_view with text matched
   {
-    return matcher().strview();
+    return matcher().str_view();
   }
 #endif
   /// Returns the pattern match as a string, a copy of text(), may include pattern-matched \0s.
@@ -308,6 +308,18 @@ class AbstractLexer {
   {
     return matcher().wstr();
   }
+  /// Returns the matched text size in number of bytes.
+  inline size_t size() const
+    /// @returns size of the matched text
+  {
+    return matcher().size();
+  }
+  /// Returns the matched text size in number of (wide) characters.
+  inline size_t wsize() const
+    /// @returns number of (wide) characters matched
+  {
+    return matcher().wsize();
+  }
   /// Returns the first 8-bit character of the text matched.
   inline int chr() const
     /// @returns 8-bit char
@@ -320,17 +332,29 @@ class AbstractLexer {
   {
     return matcher().wchr();
   }
-  /// Returns the matched text size in number of bytes.
-  inline size_t size() const
-    /// @returns size of the matched text
+  /// Returns the last 8-bit character of the text matched or 0 when empty.
+  inline int chr_last() const
+    /// @returns 8-bit char
   {
-    return matcher().size();
+    return matcher().chr_last();
   }
-  /// Returns the matched text size in number of (wide) characters.
-  inline size_t wsize() const
-    /// @returns number of (wide) characters matched
+  /// Returns the last wide character of the text matched or 0 when empty.
+  inline int wchr_last() const
+    /// @returns wide char (UTF-8 converted to Unicode)
   {
-    return matcher().wsize();
+    return matcher().wchr_last();
+  }
+  /// Returns the next 8-bit character after of the text match or EOF when the input ends.
+  inline int chr_next() const
+    /// @returns 8-bit char
+  {
+    return matcher().chr_next();
+  }
+  /// Returns the next wide character after the text match or EOF when the input ends.
+  inline int wchr_next() const
+    /// @returns wide char (UTF-8 converted to Unicode)
+  {
+    return matcher().wchr_next();
   }
   /// Returns the line number of matched text.
   inline size_t lineno() const

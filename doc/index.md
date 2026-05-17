@@ -169,7 +169,7 @@ The tokenizer returns zero (0) when the end of the input is reached.
 
 Lex and Flex have remained relatively stable (inert) tools while the demand has
 increased for tokenizing Unicode texts encoded in common wide character formats
-such as UTF-8, UCS/UTF-16, and UTF-32.  Also the regular expression syntax in
+such as UTF-8, UTF-16, and UTF-32.  Also the regular expression syntax in
 Flex/Lex is limited compared to modern regex syntax.  Flex has no support for
 Unicode patterns, no lazy repetitions, no word boundary anchors, no indentation
 matching with indent or dedent anchors, and a very limited collection of meta
@@ -202,9 +202,9 @@ We may claim our intricate pattern trophies as high achievements to the project
 team, but our team will quickly point out that a regex `<!−−.*?−−>` suffices to
 match HTML comments with the *lazy repetition* `X*?` construct, also known as a
 *non-greedy repeat*.  The `?` is a *lazy quantifier* that modifies the behavior
-of the `X*?` repeat to match only `X` repeately if the rest of the pattern does
-not match.  Therefore, the regex `<!−−.*?−−>` matches HTML comments and nothing
-more.
+of the `X*?` repeat to match only `X` repeatedly if the rest of the pattern
+does not match.  Therefore, the regex `<!−−.*?−−>` matches HTML comments and
+nothing more.
 
 But Flex/Lex does not permit us to be lazy!
 
@@ -481,8 +481,8 @@ or PCRE2, which may be used interchangeably.
 
 The `scan` method is similar to the `find` method, but `scan` matches only from
 the current position in the input.  It fails when no partial match was possible
-at the current position.  Repeately scanning an input source means that matches
-must be continuous, otherwise `scan` returns zero (no match).
+at the current position.  Repeatedly scanning an input source means that
+matches must be continuous, otherwise `scan` returns zero (no match).
 
 The `split` method is roughly the inverse of the `find` method and returns text
 located between matches.  For example using non-word matching `\W+`:
@@ -750,12 +750,17 @@ This method and other methods may be used to obtain the details of a match:
   `strview()`     | returns `std::string_view` text match (preserves `\0`s) (C++17)
   `str()`         | returns `std::string` text match (preserves `\0`s)
   `wstr()`        | returns `std::wstring` wide text match (converted from UTF-8)
-  `chr()`         | returns first 8-bit char of the text match (`str()[0]` as int)
-  `wchr()`        | returns first wide char of the text match (`wstr()[0]` as int)
+  `chr()`         | returns first 8-bit char of the text match (`str()[0]`)
+  `wchr()`        | returns first wide char of the text match (`wstr()[0]`)
+  `chr_last()`    | returns last 8-bit char of the text match or 0 when empty
+  `wchr_last()`   | returns last wide char of the text match or 0 when empty
+  `chr_next()`    | returns next 8-bit char after the text match or EOF at end
+  `wchr_next()`   | returns next wide char after the text match or EOF at end
   `pair()`        | returns `std::pair<size_t,std::string>(accept(),str())`
   `wpair()`       | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`        | returns the length of the text match in bytes
   `wsize()`       | returns the length of the match in number of wide characters
+  `empty()`       | returns true if the match is empty (`size() == 0`)
   `lines()`       | returns the number of lines in the text match (>=1)
   `columns()`     | returns the number of columns of the text match (>=0)
   `begin()`       | returns `const char*` to non-0-terminated text match begin
@@ -855,7 +860,7 @@ change its pattern, use the following methods:
   `own_pattern()` | true if the matcher has a pattern to manage and delete
   `pattern()`     | a reference to the pattern object
   `buffer()`      | buffer all input at once, returns true if successful
-  `buffer(n)`     | set the buffer size to `n` bytes to buffer input
+  `buffer(n)`     | set the buffer window size to `n` bytes to read in chunks
   `buffer(b, n)`  | use buffer of `n` bytes at address `b` with to a string of `n`-1 bytes (zero copy)
   `interactive()` | set buffer size to 1 for console-based (TTY) input
   `flush()`       | flush the remaining input from the internal buffer
@@ -2136,6 +2141,10 @@ are the classic Flex actions shown in the second column of this table:
   `wstr()`                 | *n/a*                | `std::wstring` wide text match
   `chr()`                  | `yytext[0]`          | first 8-bit char of text match
   `wchr()`                 | *n/a*                | first wide char of text match
+  `chr_last()`             | `yytext[yyleng-1]`   | last 8-bit char of text match
+  `wchr_last()`            | *n/a*                | last wide char of text match
+  `chr_next()`             | *n/a*                | next 8-bit char after text match
+  `wchr_next()`            | *n/a*                | next wide char after text match
   `size()`                 | `YYLeng()`, `yyleng` | size of the match in bytes
   `wsize()`                | *n/a*                | number of wide chars matched
   `lines()`                | *n/a*                | number of lines matched (>=1)
@@ -2166,6 +2175,10 @@ are the classic Flex actions shown in the second column of this table:
   `matcher().wstr()`       | *n/a*                | same as `wstr()`
   `matcher().chr()`        | `yytext[0]`          | same as `chr()`
   `matcher().wchr()`       | *n/a*                | same as `wchr()`
+  `matcher().chr_last()`   | `yytext[yyleng-1]`   | same as `chr_last()`
+  `matcher().wchr_last()`  | *n/a*                | same as `wchr_last()`
+  `matcher().chr_next()`   | *n/a*                | same as `chr_next()`
+  `matcher().wchr_next()`  | *n/a*                | same as `wchr_next()`
   `matcher().size()`       | `YYLeng()`, `yyleng` | same as `size()`
   `matcher().wsize()`      | *n/a*                | same as `wsize()`
   `matcher().lines()`      | *n/a*                | same as `lines()`
@@ -2290,9 +2303,9 @@ The starting byte offset of the match on a line is `border()` and the inclusive
 ending byte offset of the match is `border() + size() - 1`.
 
 @note A wide character is counted as one, thus `columno()`, `columno_end()`,
-and `columns()` do not take the character width of full-width and combining
-Unicode characters into account.  It is recommended to use the `wcwidth`
-function or
+and `columns()` do not take the character display width of full-width and
+combining Unicode characters into account.  It is recommended to use the
+`wcwidth` function or
 [wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to determine Unicode
 character widths.
 
@@ -3308,8 +3321,10 @@ value can be changed at runtime with `matcher().tabs(N)`:
   `matcher().tabs()`  | returns the current tabs value 1, 2, 4, or 8
   `matcher().tabs(n)` | set the tabs value `n` where `n` is 1, 2, 4, or 8
 
-Using negative patterns we can ignore empty lines and multi-line comments that
-would otherwise affect indent stops:
+Using negative patterns of the form `(?^φ)` where `φ` is a regex pattern that
+is consumed but never returned by the matcher as pattern match, see
+\ref reflex-pattern-negative, we can ignore empty lines and multi-line comments
+that would otherwise affect indent stops:
 
 <div class="alt">
 ~~~{.cpp}
@@ -3515,14 +3530,15 @@ See \ref reflex-states for more information about start condition states.  See
 
 ### Negative patterns                                {#reflex-pattern-negative}
 
-When negative patterns of the form `(?^φ)` match, they are simply ignored by
-the matcher and never returned as matches.  They are useful to return matches
-for some given pattern except when this pattern is more specific.  For example,
-to match any sequence of digits except digits starting with a zero the pattern
-`\d+|(?^0\d+)` can be used instead of `[1-9]\d+`.  While these two patterns may
-look similar at first glance, these two patterns differ in that the first
-pattern (with the negative sub-pattern `(?^0\d+)`) ignores numbers with leading
-zeros such as `012` while the second pattern will match the `12` in `012`.
+When negative regex patterns of the form `(?^φ)` match, they are simply ignored
+by the matcher and never returned as pattern matches.  They are useful to
+return matches for some given pattern except when this pattern is more specific
+and should be ignored in the input.  For example, to match any sequence of
+digits except digits starting with a zero the pattern `\d+|(?^0\d+)` can be
+used instead of `[1-9]\d+`.  While these two patterns may look similar at first
+glance, these two patterns differ in that the first pattern (with the negative
+sub-pattern `(?^0\d+)`) ignores numbers with leading zeros such as `012` while
+the second pattern will match the `12` in `012`.
 
 As another example, say we are searching for a given word while ignoring
 occurrences of the word in quoted strings.  We can use the pattern
@@ -3550,8 +3566,8 @@ patterns are a RE/flex feature.  For example:
 </div>
 
 The negative pattern `(?^\\\n\h+)` consumes input internally as if we are
-repeately calling `input()` (or `yyinput()` with `−−flex`).  We used it here to
-consume the line-ending `\` and the indent that followed it, as if this text
+repeatedly calling `input()` (or `yyinput()` with `−−flex`).  We used it here
+to consume the line-ending `\` and the indent that followed it, as if this text
 was not part of the input, which ensures that the current indent positions
 defined by `\i` are not affected.  See \ref reflex-pattern-dents for more
 details on indentation matching.
@@ -6035,12 +6051,13 @@ Basically, a Perl matcher works in an *operational* mode by working the regex
 pattern as a sequence of *operations* for matching, usually using backtracking
 to find a matching pattern.
 
-Perl matchers generally support lazy quantifiers and group captures, while most
-POSIX matchers do not (e.g. Boost.Regex in POSIX mode does not support lazy
-quantifiers).  The RE/flex POSIX matcher supports lazy quantifiers, but not
-group captures.  The added support for lazy quantifiers and word boundary
-anchors in RE/flex matching offers a reasonably new and useful feature for
-scanners that require POSIX mode matching.
+Perl matching differs from POSIX matching in that regex patterns are matched
+from the first to the last specified, with the first pattern match winning.
+This means that rule order is important, even more than POSIX matching.  By
+contrast, POSIX matches the longest pattern and ambiguity only exists when two
+regex patterns match the same input.  The RE/flex scanner generator warns about
+POSIX regex pattern rules ambiguities, but does not do so for overlapping Perl
+regex pattern rules.
 
 To prevent a Perl matcher from matching a keyword when an identifier starts
 with the name of that keyword, we could use a lookahead pattern such as
@@ -6056,9 +6073,64 @@ POSIX matching still requires the `int` matching rule before the identifier
 matching rule, as in the original lexer specification shown in this section.
 Otherwise an `int` on the input will be matched by the identifier rule.
 
-Lookaheads can also be used with POSIX matchers to prioratize rules.  Adding
-a lookahead lengthens the pattern while keeping only the part that matches
-before the lookahead.  For example, the following lexer specification
+Perl matchers generally support lazy quantifiers and group captures, while most
+POSIX matchers do not (e.g. Boost.Regex in POSIX mode does not support lazy
+quantifiers).  The RE/flex POSIX matcher supports lazy quantifiers, but not
+group captures.  The added support for lazy quantifiers and word boundary
+anchors in RE/flex matching offers a reasonably new and useful feature for
+scanners that require POSIX mode matching.
+
+For example, with the default RE/flex POSIX matcher (or with a Perl matcher) we
+can ignore single and multiline C/C++ comments using lazy repetitions:
+
+<div class="alt">
+~~~{.cpp}
+    "/*"(.|\n)*?"*/"  /* no action: eat multiline comment */
+    "//".*?\n         /* no action: eat comment */
+~~~
+</div>
+
+Likewise, this example ignores XML comments:
+
+<div class="alt">
+~~~{.cpp}
+    "<!--".*?"-->"  /* no action: eat comment */
+~~~
+</div>
+
+An example to match and scan quoted strings:
+
+<div class="alt">
+~~~{.cpp}
+    \".*?\"  /* we have a quoted string */
+~~~
+</div>
+
+If we permit strings to contain escaped quotes, then this example scans those:
+
+<div class="alt">
+~~~{.cpp}
+    \"([^\\]|\\\")*?\"  /* we have a quoted string, possibly with some \" */
+~~~
+</div>
+
+We can also scan nestings, such as `foo(bar(baz()))`, as one token stored in
+`yytext` using a single rule in a separate start condition state `NESTINGS`
+(to isolate this agressive scanning from the other rules):
+
+<div class="alt">
+~~~{.cpp}
+    <NESTINGS>{
+      .*?[()]  yymore();
+               if (yytext[yyleng-1] == '(') ++param;
+               else if (param-- <= 1) { do_something(yytext); yy_pop_state(); }
+    }
+~~~
+</div>
+
+Lookaheads can also be used with Perl and POSIX matchers to prioratize rules.
+Adding a lookahead lengthens the pattern while keeping only the part that
+matches before the lookahead.  For example, the following lexer specification
 attempts to remove leading `0` from numbers:
 
 <div class="alt">
@@ -6362,7 +6434,7 @@ regexes.
 
     name                    [A-Za-z_:\x80-\xFF][-.0-9A-Za-z_:\x80-\xFF]*
     pi                      <\?{name}
-    comment                 <!--.*?-->
+    comment                 "<!--".*?"-->"
     open                    <{name}
     close                   <\/{name}>
     cdata                   <!\[CDATA\[.*?]]>
@@ -7577,10 +7649,15 @@ To obtain properties of a match, use the following methods:
   `wstr()`        | returns `std::wstring` wide text match (converted from UTF-8)
   `chr()`         | returns first 8-bit char of the text match (`str()[0]` as int)
   `wchr()`        | returns first wide char of the text match (`wstr()[0]` as int)
+  `chr_last()`    | returns last 8-bit char of the text match or 0 when empty
+  `wchr_last()`   | returns last wide char of the text match or 0 when empty
+  `chr_next()`    | returns next 8-bit char after the text match or EOF at end
+  `wchr_next()`   | returns next wide char after the text match or EOF at end
   `pair()`        | returns `std::pair<size_t,std::string>(accept(),str())`
   `wpair()`       | returns `std::pair<size_t,std::wstring>(accept(),wstr())`
   `size()`        | returns the length of the text match in bytes
   `wsize()`       | returns the length of the match in number of wide characters
+  `empty()`       | returns true if the match is empty (`size() == 0`)
   `lines()`       | returns the number of lines in the text match (>=1)
   `columns()`     | returns the number of columns of the text match (>=0)
   `begin()`       | returns `const char*` to non-0-terminated text match begin
@@ -7613,9 +7690,13 @@ top-level alternations), because it uses an efficient FSM for matching.
 The `text()`, `strview()`, `str()`, and `wstr()` methods return the matched
 text.  To get the first character of a match, use `chr()` or `wchr()`.  The
 `chr()` and `wchr()` methods are much more efficient than `str()[0]` (or
-`text()[0]`) and `wstr()[0]`, respectively.  Normally, a match cannot be empty
-unless option `"N"` is specified to explicitly initialize a matcher, see
-\ref regex-matcher, \ref regex-pcre2, and \ref regex-boost.
+`text()[0]`) and `wstr()[0]`, respectively.  Likewise, `chr_last()` and
+`wchr_last()` return the last character of a match.  To get the first next
+character in the input after a match, use `chr_next()` or `wchr_next()`.
+
+Note that `empty()` returns true if a match is empty.  Normally, a match cannot
+be empty unless option `"N"` is specified to explicitly initialize a matcher,
+see \ref regex-matcher, \ref regex-pcre2, and \ref regex-boost.
 
 The `begin()`, `operator[0]`, and `operator[n]` return non-0-terminated
 strings.  You must use `end()` with `begin()` to determine the span of the
@@ -7644,9 +7725,9 @@ If the match spans multiple lines, `columns()` counts columns over all lines,
 without counting the newline characters.
 
 @note A wide character is counted as one, thus `columno()`, `columno_end()`,
-and `columns()` do not take the character width of full-width and combining
-Unicode characters into account.  It is recommended to use the `wcwidth`
-function or
+and `columns()` do not take the character display width of full-width and
+combining Unicode characters into account.  It is recommended to use the
+`wcwidth` function or
 [wcwidth.c](https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) to determine Unicode
 character widths.
 
@@ -8818,8 +8899,8 @@ to generate global `yy` variables and functions stored in the global
 Invalid UTF encodings and the dot pattern                        {#invalid-utf}
 -----------------------------------------
 
-It may be tempting to write a pattern with `.` (dot) as a wildcard in a lexer
-specification, but beware that in Unicode mode enabled with
+It may be tempting to write a lexer pattern with `.` (dot) as a wildcard in a
+lexer specification, but beware that in Unicode mode enabled with
 <i>`%%option unicode`</i> or with modifier `(?u:φ)`, the dot matches any code
 point, including code points outside of the valid Unicode character range and
 invalid overlong UTF-8 (except that it won't match newline unless
@@ -8834,23 +8915,27 @@ errors in the input:
 ~~~
 </div>
 
+The dot in Unicode mode lexing is self-synchronizing and consumes input up to
+the next valid ASCII or Unicode character, allowing the lexer to continue when
+desired.
+
+We can use `.|\n` or <i>`%%option dotall`</i> to also catch `\n` newlines
+besides catching unmatched input and invalid UTF-8/16/32 encodings.
+
 If dot in Unicode mode with <i>`%%option unicode`</i> would be restricted to
 match valid Unicode only, then the action above will never be triggered when
 invalid input is encountered.  Because all non-dot regex patterns are valid
 Unicode in RE/flex, it would be impossible to write a "catch all else" rule
 that catches input format errors!
 
-The dot in Unicode mode is self-synchronizing and consumes text up to the next
-ASCII or Unicode character.
-
 Because the `.` is "permissive" by design with <i>`%%option unicode`</i>,
-multiple `.` dots in sequence can match a single multi-byte Unicode character
-by its individual bytes.
+multiple `.` dots in sequence such as `...` can actually surprisingly match a
+single multi-byte Unicode character by matching its three individual UTF-8
+bytes.
 
 To accept only valid Unicode input in regex patterns, make sure to avoid `.`
 (dot) and use `\p{Unicode}` or `\X` instead, and reserve dot to catch anything,
-such as invalid UTF encodings.  We can use `.|\n` or <i>`%%option dotall`</i>
-to catch anything including `\n` and invalid UTF-8/16/32 encodings.
+such as invalid UTF encodings.
 
 Furthermore, before matching any input, invalid UTF-16 input is detected
 automatically by the `reflex::Input` class and replaced with the
@@ -9282,8 +9367,8 @@ Windows systems when the file is encoded in UTF-16 or UTF-32, but not UTF-8.
 🔝 [Back to table of contents](#)
 
 
-Handling old Macintosh files containing CR newlines                       {#cr}
----------------------------------------------------
+Handling old Macintosh files containing CR line endings                   {#cr}
+-------------------------------------------------------
 
 Old Macintosh OS file formats prior to Mac OS X use CR to end lines instead of
 LF.  To automatically read and normalize files encoded in MacRoman containing
@@ -9332,6 +9417,8 @@ useless when the regex pattern after the lazy repetitions permits empty input.
 For example, `.*?a?` only matches one `a` or nothing at all, because `a?`
 permits an empty match.
 
+See also \ref reflex-posix-perl.
+
 🔝 [Back to table of contents](#)
 
 
@@ -9357,15 +9444,15 @@ Otherwise, lazy optional pattern constructs will appear broken.
 🔝 [Back to table of contents](#)
 
 
-Repeately switching to the same input                              {#switching}
--------------------------------------
+Repeatedly switching to the same input                             {#switching}
+--------------------------------------
 
 The state of the input object `reflex::Input` changes as the scanner's matcher
 consumes more input.  If you switch to the same input again (e.g. with `in(i)`
 or `switch_stream(i)` for input source `i`), a portion of that input may end up
 being discarded as part of the matcher's internal buffer is flushed when input
 is assigned.  Therefore, the following code will not work because stdin is
-flushed repeately:
+flushed repeatedly:
 
 ~~~{.cpp}
     Lexer lexer(stdin);       // a lexer that reads stdin
@@ -9797,9 +9884,9 @@ on zero copy overhead with RE/flex lexers.
 A C++ range-based loop construct to avoid                               {#loop}
 -----------------------------------------
 
-When a matcher object is constructed as a temporary in a range-based loop it
-will be destroyed when we actually want to use it in the loop to find all
-matches.  This means that the following example crashes:
+When a matcher object is constructed as a temporary in a range-based loop, it
+will be destroyed before we actually use it in the loop to find all matches.
+This means that the following example crashes:
 
 ~~~{.cpp}
     for (auto& match : reflex::Matcher("\\w+", "How now brown cow.").find)
@@ -9816,6 +9903,106 @@ Instead, write:
 
 Note that some C++23 compilers handle this just fine as support for range-based
 loop temporaries was proposed to the C++ standards committee.
+
+🔝 [Back to table of contents](#)
+
+
+How to convert UTF-8 to wide strings?                              {#conv-utf8}
+-------------------------------------
+
+The RE/flex library includes some functions to convert UTF-8:
+
+- `size_t reflex::utf8(int wc, char *buf)` converts UCS-4 wide character code
+  point `wc` and stores the UTF-8 sequence in buffer `buf[]` without adding a
+  terminating `\0` to the buffer, returning the length of the sequence between
+  1 and 6, where `buf[]` must be at least 6 bytes long.
+- `int reflex::utf8(const char *s, const char **r)` returns the first UCS-4
+  wide character code point in the UTF-8 string `s` and sets `r` when not NULL
+  to point to the next character in `s`.
+- `std::wstring reflex::wcs(const char *s, size_t n)` returns the wide string
+  converted from UTF-8 string `s` of length `n`.
+- `std::wstring reflex::wcs(const std::string &s)` returns the wide string
+  converted from UTF-8 string `s`.
+
+Example:
+
+~~~{.cpp}
+    int wc = wchr(); // first wide character of a match (U+0000 to U+10FFFF)
+    char buf[8];
+    buf[reflex::utf8(wc, buf)] = '\0'; // convert and add terminating \0
+    std::cout << "first character matched: " << buf << std::endl;
+~~~
+
+🔝 [Back to table of contents](#)
+
+
+Why is the generated DFA table so large?                           {#large-dfa}
+----------------------------------------
+
+Certain Unicode character classes are very large, see table below.  Combining
+them with other patterns may grow the DFA tables quickly in size, sometimes
+even exponentially in size, which is unlikely but theoretically possible.
+
+Before using large Unicode classes in regex patterns, consider alternatives
+that are smaller in size.  A character class that has fewer character blocks is
+less complex than a character class that has many character blocks (a block
+contains a contiguous range of code points).
+
+The table below lists the largest Unicode classes specified with `\p{Class}`
+in comparison to the POSIX ASCII cases that don't have many characters, when
+defined:
+
+Unicode class                         | esc  | chars         | blocks | POSIX         | chars |
+------------------------------------- | ---- | ------------: | -----: | ------------- | ----: |
+`Alnum`                               |      | 4744          | 213    | `[[:alnum:]]` | 62    |
+`Alpha`                               |      | 4064          | 150    | `[[:alpha:]]` | 52    |
+`C`, `Cntrl`, `Other`                 |      | 235           | 23     | `[[:cntrl:]]` | 33    |
+`Cf`, `Format`                        |      | 170           | 21     |               |       |
+`Common`                              |      | 8306          | 173    |               |       |
+`CsIdentifierPart`                    |      | 140259        | 782    |               |       |
+`CsIdentifierStart`                   |      | 136973        | 669    |               |       |
+`Graph`                               |      | 1111810       | 25     | `[[:graph:]]` | 94    |
+`JavaIdentifierPart`                  |      | 140378        | 799    |               |       |
+`JavaIdentifierStart`                 |      | 137035        | 684    |               |       |
+`L`, `Letter`                         |      | 136726        | 660    |               |       |
+`L&`                                  |      | 4095          | 143    |               |       |
+`Latin`                               |      | 1481          | 39     |               |       |
+`Ll`, `Lower`, `Lowercase_Letter`     | `\l` | 2233          | 658    | `[[:lower:]]` | 26    |
+`Lm`, `Modifier_Letter`               |      | 397           | 71     |               |       |
+`Lo`, `Other_Letter`                  |      | 132234        | 511    |               |       |
+`Lt`, `Titlecase_Letter`              |      | 31            | 10     |               |       |
+`Lu`, `Upper`, `Uppercase_Letter`     | `\u` | 1831          | 646    | `[[:upper:]]` | 26    |
+`M`, `Mark`                           |      | 2450          | 310    |               |       |
+`Mc`, `Spacing_Combining_Mark`        |      | 452           | 182    |               |       |
+`Me`, `Enclosing_Mark`                |      | 91            | 1      |               |       |
+`Mn`, `Non_Spacing_Mark`              |      | 1985          | 346    |               |       |
+`N`, `Number`                         |      | 1831          | 137    |               |       |
+`Nd`, `Digit`, `Decimal_Digit_Number` | `\d` | 680           | 64     | `[[:digit:]]` | 10    |
+`Nl`, `Letter_Number`                 |      | 236           | 12     |               |       |
+`No` `Other_Number`                   |      | 915           | 72     |               |       |
+`P`, `Punct`, `Punctuation`           |      | 842           | 191    | `[[:punct:]]` | 32    |
+`Pd`, `Dash_Punctuation`              |      | 26            | 19     |               |       |
+`Pe`, `Close_Punctuation`             |      | 77            | 76     |               |       |
+`Po`, `Other_Punctuation`             |      | 628           | 187    |               |       |
+`Print`                               |      | 1111829       | 24     | `[[:print:]]` | 95    |
+`Ps`, `Open_Punctuation`              |      | 79            | 79     |               |       |
+`PythonIdentifierPart`                |      | 140101        | 772    |               |       |
+`PythonIdentifierStart`               |      | 136968        | 661    |               |       |
+`S`, `Symbol`, `S`                    |      | 7775          | 233    |               |       |
+`Sc`, `Currency_Symbol`               |      | 63            | 21     |               |       |
+`Sk`, `Modifier_Symbol`               |      | 125           | 31     |               |       |
+`Sm`, `Math_Symbol`                   |      | 948           | 64     |               |       |
+`So`, `Other_Symbol`                  |      | 6639          | 185    |               |       |
+`Unicode`                             | `\X` | 1112064       | 2      |               |       |
+`UnicodeIdentifierPart`               |      | 140315        | 785    |               |       |
+`UnicodeIdentifierStart`              |      | 136962        | 663    |               |       |
+`Word`                                | `\w` | 137416        | 712    | `[[:word:]]`  | 63    |
+
+For example, when matching in Unicode mode, matching a `\w` word character
+spans a huge number of characters and character blocks.  If only an ASCII word
+character should to be matched, then use `[[:word:]]` or `(?-u:\w)` where `-u`
+temporarily disables Unicode regex patterns in the parenthesis to match `\w` in
+POSIX ASCII as `[[:word:]]`.
 
 🔝 [Back to table of contents](#)
 
