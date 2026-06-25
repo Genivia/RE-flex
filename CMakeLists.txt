@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(reflex CXX)
+project(reflex VERSION 6.3.0 LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
@@ -114,4 +114,36 @@ configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/Config.cmake.in
 install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/ReflexConfig.cmake"
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/reflex
+)
+
+#
+# Packaging section (pkg-config support)
+#
+
+set(prefix "${CMAKE_INSTALL_PREFIX}")
+set(exec_prefix "\${prefix}")
+set(REFLEX_PKGCONFIG_LIBRARY "reflex_shared_lib")
+
+if(IS_ABSOLUTE "${CMAKE_INSTALL_LIBDIR}")
+  set(libdir "${CMAKE_INSTALL_LIBDIR}")
+else()
+  set(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
+endif()
+
+if(IS_ABSOLUTE "${CMAKE_INSTALL_INCLUDEDIR}")
+  set(includedir "${CMAKE_INSTALL_INCLUDEDIR}")
+else()
+  set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+endif()
+
+# Compatibility note: CMake currently installs libreflex_shared_lib rather than
+# libreflex, so its pkg-config file must use the CMake library name.
+configure_file(${PROJECT_SOURCE_DIR}/cmake/reflex.pc.in
+  "${CMAKE_CURRENT_BINARY_DIR}/reflex.pc"
+  @ONLY
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/reflex.pc"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
