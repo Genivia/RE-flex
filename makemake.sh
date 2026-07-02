@@ -17,7 +17,7 @@ echo "Bumping reflex version to $1"
 
 sed "s/REFLEX_VERSION \"[^\"]*\"/REFLEX_VERSION \"$1\"/" src/reflex.h > src/reflex.tmp && mv -f src/reflex.tmp src/reflex.h || exit 1
 
-sed "s/VERSION [0-9.]*/VERSION $1/" CMakeLists.txt > CMakeLists.tmp && mv -f CMakeLists.tmp CMakeLists.txt || exit 1
+sed "s/reflex VERSION [0-9.]*/reflex VERSION $1/" CMakeLists.txt > CMakeLists.tmp && mv -f CMakeLists.tmp CMakeLists.txt || exit 1
 
 # this may be needed to reconfigure for glibtoolize for example
 # autoreconf -fvi
