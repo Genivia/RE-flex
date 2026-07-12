@@ -6,11 +6,12 @@
 A high-performance C++ regex library and lexical analyzer generator with
 Unicode support.
 
-Two example use cases:
+Three example use cases:
 
 1. A RE/flex-generated tokenizer is used by the
    [Tiger Compiler](https://assignments.lre.epita.fr/tools/reflex.html).
 2. The RE/flex C++ regex engines are used by [ugrep](https://ugrep.com).
+3. As a build dependency for the GCC 3.3 portion of a [2026 port](https://github.com/BRS-PSP-Research-Initiative/Psptoolchain-Allegrex-3.3) of the open source PSXSDK to GCC 3.3.6, a common version used in the official Sony Playstation Portable development kit.
 
 The RE/flex lexical analyzer generator extends Flex++ with Unicode support,
 indent/dedent anchors, POSIX regex lazy quantifiers, word boundaries, functions
