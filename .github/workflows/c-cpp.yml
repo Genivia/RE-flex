@@ -18,22 +18,37 @@ jobs:
             os: ubuntu-24.04
             arch: x86_64
             target: native
+            configure_args: ""
+          - name: Linux GCC (no SSE2/AVX2)
+            os: ubuntu-24.04
+            arch: x86_64
+            target: native
+            configure_args: --disable-sse2 --disable-avx2
           - name: Linux ARM GCC
             os: ubuntu-24.04-arm
             arch: aarch64
             target: native
+            configure_args: ""
+          - name: Linux ARM GCC (no NEON)
+            os: ubuntu-24.04-arm
+            arch: aarch64
+            target: native
+            configure_args: --disable-neon
           - name: Windows MinGW
             os: windows-2025
             arch: x86_64
             target: native
+            configure_args: ""
           - name: Windows cross (MinGW)
             os: ubuntu-24.04
             arch: x86_64
             target: windows-cross
+            configure_args: ""
           - name: macOS ARM Clang
             os: macos-15
             arch: arm64
             target: native
+            configure_args: ""
 
     steps:
       - name: Configure Windows line endings
@@ -82,9 +97,9 @@ jobs:
             AR=x86_64-w64-mingw32-ar \
             RANLIB=x86_64-w64-mingw32-ranlib \
             LDFLAGS="-static -static-libgcc -static-libstdc++" \
-              ./configure --host=x86_64-w64-mingw32
+              ./configure --host=x86_64-w64-mingw32 ${{ matrix.configure_args }}
           else
-            ./configure
+            ./configure ${{ matrix.configure_args }}
           fi
           make -j2
           make -C tests
@@ -103,7 +118,7 @@ jobs:
           uname -a
           c++ --version
           autoreconf -i
-          ./configure
+          ./configure ${{ matrix.configure_args }}
           make -j2
           make -C tests
           ./tests/rtest
