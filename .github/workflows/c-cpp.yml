@@ -2,22 +2,77 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
 jobs:
   build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
 
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux GCC
+            os: ubuntu-24.04
+            arch: x86_64
+          - name: Windows MinGW
+            os: windows-2025
+            arch: x86_64
+          - name: macOS ARM Clang
+            os: macos-15
+            arch: arm64
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Bootstrap autotools
-      run: autoreconf -i
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make test
-      run: make test
+      - name: Configure Windows line endings
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: git config --global core.autocrlf input
+
+      - uses: actions/checkout@v6
+
+      - name: Set up MSYS2
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            autoconf
+            automake
+            bison
+            make
+            mingw-w64-ucrt-x86_64-gcc
+
+      - name: Install macOS build tools
+        if: runner.os == 'macOS'
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: 1
+        run: brew install autoconf automake
+
+      - name: Build and test
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          test "$(uname -m)" = "${{ matrix.arch }}"
+          uname -a
+          c++ --version
+          autoreconf -i
+          ./configure
+          make -j2
+          make -C tests
+          ./tests/rtest
+
+      - name: Build and test
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: |
+          test "$(uname -m)" = "${{ matrix.arch }}"
+          uname -a
+          c++ --version
+          autoreconf -i
+          ./configure
+          make -j2
+          make -C tests
+          ./tests/rtest
