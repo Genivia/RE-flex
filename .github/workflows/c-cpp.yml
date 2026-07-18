@@ -2,22 +2,123 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
 jobs:
   build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
 
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux GCC
+            os: ubuntu-24.04
+            arch: x86_64
+            target: native
+            configure_args: ""
+          - name: Linux GCC (no SSE2/AVX2)
+            os: ubuntu-24.04
+            arch: x86_64
+            target: native
+            configure_args: --disable-sse2 --disable-avx2
+          - name: Linux ARM GCC
+            os: ubuntu-24.04-arm
+            arch: aarch64
+            target: native
+            configure_args: ""
+          - name: Linux ARM GCC (no NEON)
+            os: ubuntu-24.04-arm
+            arch: aarch64
+            target: native
+            configure_args: --disable-neon
+          - name: Windows MinGW
+            os: windows-2025
+            arch: x86_64
+            target: native
+            configure_args: ""
+          - name: Windows cross (MinGW)
+            os: ubuntu-24.04
+            arch: x86_64
+            target: windows-cross
+            configure_args: ""
+          - name: macOS ARM Clang
+            os: macos-15
+            arch: arm64
+            target: native
+            configure_args: ""
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Bootstrap autotools
-      run: autoreconf -i
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make test
-      run: make test
+      - name: Configure Windows line endings
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: git config --global core.autocrlf input
+
+      - uses: actions/checkout@v6
+
+      - name: Set up MSYS2
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            autoconf
+            automake
+            bison
+            make
+            mingw-w64-ucrt-x86_64-gcc
+
+      - name: Install macOS build tools
+        if: runner.os == 'macOS'
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: 1
+        run: brew install autoconf automake
+
+      - name: Install Windows cross tools
+        if: matrix.target == 'windows-cross'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends --yes mingw-w64 wine
+
+      - name: Build and test
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          test "$(uname -m)" = "${{ matrix.arch }}"
+          uname -a
+          c++ --version
+          autoreconf -i
+          if test "${{ matrix.target }}" = "windows-cross"; then
+            CC=x86_64-w64-mingw32-gcc \
+            CXX=x86_64-w64-mingw32-g++ \
+            AR=x86_64-w64-mingw32-ar \
+            RANLIB=x86_64-w64-mingw32-ranlib \
+            LDFLAGS="-static -static-libgcc -static-libstdc++" \
+              ./configure --host=x86_64-w64-mingw32 ${{ matrix.configure_args }}
+          else
+            ./configure ${{ matrix.configure_args }}
+          fi
+          make -j2
+          make -C tests
+          if test "${{ matrix.target }}" = "windows-cross"; then
+            WINEARCH=win64 WINEDEBUG=-all WINEPREFIX="$RUNNER_TEMP/wine" \
+              wine ./tests/rtest.exe
+          else
+            ./tests/rtest
+          fi
+
+      - name: Build and test
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: |
+          test "$(uname -m)" = "${{ matrix.arch }}"
+          uname -a
+          c++ --version
+          autoreconf -i
+          ./configure ${{ matrix.configure_args }}
+          make -j2
+          make -C tests
+          ./tests/rtest
