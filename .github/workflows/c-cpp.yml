@@ -17,12 +17,23 @@ jobs:
           - name: Linux GCC
             os: ubuntu-24.04
             arch: x86_64
+            target: native
+          - name: Linux ARM GCC
+            os: ubuntu-24.04-arm
+            arch: aarch64
+            target: native
           - name: Windows MinGW
             os: windows-2025
             arch: x86_64
+            target: native
+          - name: Windows cross (MinGW)
+            os: ubuntu-24.04
+            arch: x86_64
+            target: windows-cross
           - name: macOS ARM Clang
             os: macos-15
             arch: arm64
+            target: native
 
     steps:
       - name: Configure Windows line endings
@@ -51,6 +62,12 @@ jobs:
           HOMEBREW_NO_AUTO_UPDATE: 1
         run: brew install autoconf automake
 
+      - name: Install Windows cross tools
+        if: matrix.target == 'windows-cross'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends --yes mingw-w64 wine
+
       - name: Build and test
         if: runner.os != 'Windows'
         shell: bash
@@ -59,10 +76,24 @@ jobs:
           uname -a
           c++ --version
           autoreconf -i
-          ./configure
+          if test "${{ matrix.target }}" = "windows-cross"; then
+            CC=x86_64-w64-mingw32-gcc \
+            CXX=x86_64-w64-mingw32-g++ \
+            AR=x86_64-w64-mingw32-ar \
+            RANLIB=x86_64-w64-mingw32-ranlib \
+            LDFLAGS="-static -static-libgcc -static-libstdc++" \
+              ./configure --host=x86_64-w64-mingw32
+          else
+            ./configure
+          fi
           make -j2
           make -C tests
-          ./tests/rtest
+          if test "${{ matrix.target }}" = "windows-cross"; then
+            WINEARCH=win64 WINEDEBUG=-all WINEPREFIX="$RUNNER_TEMP/wine" \
+              wine ./tests/rtest.exe
+          else
+            ./tests/rtest
+          fi
 
       - name: Build and test
         if: runner.os == 'Windows'

@@ -12,7 +12,7 @@ all-local:	cp2bin
 .PHONY:		cp2bin
 
 # to copy the reflex binary to reflex/bin
-cp2bin:		$(top_builddir)/src/reflex
+cp2bin:		$(top_builddir)/src/reflex$(EXEEXT)
 		-mkdir -p $(top_builddir)/bin
 		-cp -f $< $(top_builddir)/bin
 		@echo
@@ -50,5 +50,5 @@ install-data-hook:
 
 .PHONY:		test
 
-test:		$(top_builddir)/src/reflex
+test:		$(top_builddir)/src/reflex$(EXEEXT)
 		-cd tests; $(MAKE) && ./rtest
