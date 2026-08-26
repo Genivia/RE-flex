@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: C/C++ CMake CI
 
 on:
   push:
@@ -18,37 +18,37 @@ jobs:
             os: ubuntu-latest
             arch: x86_64
             target: native
-            configure_args: ""
+            cmake_args: ""
           - name: Linux GCC (no SSE2/AVX2)
             os: ubuntu-latest
             arch: x86_64
             target: native
-            configure_args: --disable-sse2 --disable-avx2
+            cmake_args: "-DUSE_SSE2=OFF -DUSE_AVX2=OFF"
           - name: Linux ARM GCC
             os: ubuntu-24.04-arm
             arch: aarch64
             target: native
-            configure_args: ""
+            cmake_args: ""
           - name: Linux ARM GCC (no NEON)
             os: ubuntu-24.04-arm
             arch: aarch64
             target: native
-            configure_args: --disable-neon
+            cmake_args: "-DUSE_NEON=OFF"
           - name: Windows MinGW
             os: windows-latest
             arch: x86_64
             target: native
-            configure_args: ""
+            cmake_args: ""
           - name: Windows cross (MinGW)
             os: ubuntu-latest
             arch: x86_64
             target: windows-cross
-            configure_args: ""
+            cmake_args: ""
           - name: macOS ARM Clang
             os: macos-latest
             arch: arm64
             target: native
-            configure_args: ""
+            cmake_args: ""
 
     steps:
       - name: Configure Windows line endings
@@ -65,17 +65,9 @@ jobs:
           msystem: UCRT64
           update: true
           install: >-
-            autoconf
-            automake
-            bison
-            make
+            mingw-w64-ucrt-x86_64-cmake
             mingw-w64-ucrt-x86_64-gcc
-
-      - name: Install macOS build tools
-        if: runner.os == 'macOS'
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: 1
-        run: brew install autoconf automake
+            mingw-w64-ucrt-x86_64-ninja
 
       - name: Install Windows cross tools
         if: matrix.target == 'windows-cross'
@@ -90,25 +82,30 @@ jobs:
           test "$(uname -m)" = "${{ matrix.arch }}"
           uname -a
           c++ --version
-          autoreconf -i
+          cmake --version
           if test "${{ matrix.target }}" = "windows-cross"; then
-            CC=x86_64-w64-mingw32-gcc \
-            CXX=x86_64-w64-mingw32-g++ \
-            AR=x86_64-w64-mingw32-ar \
-            RANLIB=x86_64-w64-mingw32-ranlib \
-            LDFLAGS="-static -static-libgcc -static-libstdc++" \
-              ./configure --host=x86_64-w64-mingw32 ${{ matrix.configure_args }}
+            cmake -S . -B build \
+              -DCMAKE_SYSTEM_NAME=Windows \
+              -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DBUILD_TESTING=ON \
+              -DCMAKE_CROSSCOMPILING_EMULATOR=wine \
+              -DCMAKE_EXE_LINKER_FLAGS="-static -static-libgcc -static-libstdc++" \
+              ${{ matrix.cmake_args }}
           else
-            ./configure ${{ matrix.configure_args }}
+            cmake -S . -B build \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DBUILD_TESTING=ON \
+              ${{ matrix.cmake_args }}
           fi
-          make -j2
-          make -C tests
+          cmake --build build --parallel 2
           if test "${{ matrix.target }}" = "windows-cross"; then
             WINEARCH=win64 WINEDEBUG=-all WINEPREFIX="$RUNNER_TEMP/wine" \
-              wine ./tests/rtest.exe
+              ctest --test-dir build --output-on-failure
           else
-            ./tests/rtest
+            ctest --test-dir build --output-on-failure
           fi
+          cmake --install build --prefix "$RUNNER_TEMP/reflex-install"
 
       - name: Build and test
         if: runner.os == 'Windows'
@@ -117,8 +114,11 @@ jobs:
           test "$(uname -m)" = "${{ matrix.arch }}"
           uname -a
           c++ --version
-          autoreconf -i
-          ./configure ${{ matrix.configure_args }}
-          make -j2
-          make -C tests
-          ./tests/rtest
+          cmake --version
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTING=ON \
+            ${{ matrix.cmake_args }}
+          cmake --build build --parallel 2
+          ctest --test-dir build --output-on-failure
+          cmake --install build --prefix "$RUNNER_TEMP/reflex-install"
