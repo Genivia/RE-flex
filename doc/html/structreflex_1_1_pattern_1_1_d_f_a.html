@@ -21,7 +21,7 @@
      <td>
       <div style="float: right; font-size: 18px; font-weight: bold;">reflex::Pattern::DFA Struct Reference</div>
       <br>
-      <div style="float: right; font-size: 10px;">updated Sun May 17 2026 by Robert van Engelen</div>
+      <div style="float: right; font-size: 10px;">updated Thu Aug 27 2026 by Robert van Engelen</div>
      </td>
      <td width="10%">&nbsp;</td>
     </tr>
@@ -102,7 +102,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a27a5d6b398d69ac9df85db687c3a9d5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">new <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> state with positions, destroys pos.  <a href="#a27a5d6b398d69ac9df85db687c3a9d5d">More...</a><br /></td></tr>
 <tr class="separator:a27a5d6b398d69ac9df85db687c3a9d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9af4ad56de221dc3efbc580702329a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">State</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#ab9af4ad56de221dc3efbc580702329a8">state</a> (<a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">State</a> *tnode)</td></tr>
-<tr class="memdesc:ab9af4ad56de221dc3efbc580702329a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">new <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> state with optional tree <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> node and positions, destroys pos.  <a href="#ab9af4ad56de221dc3efbc580702329a8">More...</a><br /></td></tr>
+<tr class="memdesc:ab9af4ad56de221dc3efbc580702329a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">new <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> state with optional tree <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> node and positions.  <a href="#ab9af4ad56de221dc3efbc580702329a8">More...</a><br /></td></tr>
 <tr class="separator:ab9af4ad56de221dc3efbc580702329a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59921949ab89403d30d4fcb6c5da03f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">State</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#a59921949ab89403d30d4fcb6c5da03f0">state</a> (<a class="el" href="structreflex_1_1_pattern_1_1_d_f_a_1_1_state.html">State</a> *tnode, <a class="el" href="classreflex_1_1_pattern.html#a9ea053204e8da308a99fc16d16a5b231">Positions</a> &amp;pos)</td></tr>
 <tr class="memdesc:a59921949ab89403d30d4fcb6c5da03f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">new <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> state with optional tree <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> node and positions, destroys pos.  <a href="#a59921949ab89403d30d4fcb6c5da03f0">More...</a><br /></td></tr>
@@ -122,6 +122,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a8df2f2778dddaf4e921a310f16ef11de"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#a8df2f2778dddaf4e921a310f16ef11de">next</a></td></tr>
 <tr class="memdesc:a8df2f2778dddaf4e921a310f16ef11de"><td class="mdescLeft">&#160;</td><td class="mdescRight">block allocation, next available slot in last block  <a href="#a8df2f2778dddaf4e921a310f16ef11de">More...</a><br /></td></tr>
 <tr class="separator:a8df2f2778dddaf4e921a310f16ef11de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee63db02d27a054aa0eb4609151157df"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#aee63db02d27a054aa0eb4609151157df">pno</a></td></tr>
+<tr class="memdesc:aee63db02d27a054aa0eb4609151157df"><td class="mdescLeft">&#160;</td><td class="mdescRight">total positions accumulated in <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> states, to check against MAX_POSITIONS  <a href="#aee63db02d27a054aa0eb4609151157df">More...</a><br /></td></tr>
+<tr class="separator:aee63db02d27a054aa0eb4609151157df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -131,9 +134,15 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:aab9ddac084fea46792aca0e63d294c63"><td class="memItemLeft" align="right" valign="top">static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#aab9ddac084fea46792aca0e63d294c63">MAX_DEPTH</a> = 256</td></tr>
 <tr class="memdesc:aab9ddac084fea46792aca0e63d294c63"><td class="mdescLeft">&#160;</td><td class="mdescRight">analyze <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> up to states this deep to improve predict match  <a href="#aab9ddac084fea46792aca0e63d294c63">More...</a><br /></td></tr>
 <tr class="separator:aab9ddac084fea46792aca0e63d294c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3402adb9c0d8a27b365972cc0fe87ec0"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#a3402adb9c0d8a27b365972cc0fe87ec0">MAX_STATES</a> = <a class="el" href="structreflex_1_1_pattern_1_1_const.html#aa341bfbbf4fb0372711e196132232853">Const::GMAX</a></td></tr>
-<tr class="memdesc:a3402adb9c0d8a27b365972cc0fe87ec0"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum number of states  <a href="#a3402adb9c0d8a27b365972cc0fe87ec0">More...</a><br /></td></tr>
+<tr class="memitem:a3402adb9c0d8a27b365972cc0fe87ec0"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#a3402adb9c0d8a27b365972cc0fe87ec0">MAX_STATES</a> = <a class="el" href="structreflex_1_1_pattern_1_1_const.html#aa341bfbbf4fb0372711e196132232853">Const::GMAX</a>/3</td></tr>
+<tr class="memdesc:a3402adb9c0d8a27b365972cc0fe87ec0"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum number of <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> states is constrained by opcode table size  <a href="#a3402adb9c0d8a27b365972cc0fe87ec0">More...</a><br /></td></tr>
 <tr class="separator:a3402adb9c0d8a27b365972cc0fe87ec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24ec028b72c6eb1dca6c202c9281079b"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#a24ec028b72c6eb1dca6c202c9281079b">MAX_EDGES</a> = 16*<a class="el" href="structreflex_1_1_pattern_1_1_const.html#aa341bfbbf4fb0372711e196132232853">Const::GMAX</a></td></tr>
+<tr class="memdesc:a24ec028b72c6eb1dca6c202c9281079b"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum number of <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> edges is constrained by opcode table size  <a href="#a24ec028b72c6eb1dca6c202c9281079b">More...</a><br /></td></tr>
+<tr class="separator:a24ec028b72c6eb1dca6c202c9281079b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79c922c9134683c9a2449bdde591225b"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#a79c922c9134683c9a2449bdde591225b">MAX_POSITIONS</a> = 4194304</td></tr>
+<tr class="memdesc:a79c922c9134683c9a2449bdde591225b"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum accumulated positions over all <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> states  <a href="#a79c922c9134683c9a2449bdde591225b">More...</a><br /></td></tr>
+<tr class="separator:a79c922c9134683c9a2449bdde591225b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6202d48b76eb8dcf0d96c5812d3d700d"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html#a6202d48b76eb8dcf0d96c5812d3d700d">DEAD_PATH</a> = 1</td></tr>
 <tr class="memdesc:a6202d48b76eb8dcf0d96c5812d3d700d"><td class="mdescLeft">&#160;</td><td class="mdescRight">state marker "path always and only reaches backedges" (a dead end)  <a href="#a6202d48b76eb8dcf0d96c5812d3d700d">More...</a><br /></td></tr>
 <tr class="separator:a6202d48b76eb8dcf0d96c5812d3d700d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -355,7 +364,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>new <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> state with optional tree <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> node and positions, destroys pos. </p>
+<p>new <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> state with optional tree <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> node and positions. </p>
 
 </div>
 </div>
@@ -520,7 +529,7 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3402adb9c0d8a27b365972cc0fe87ec0"></a>
+<a class="anchor" id="a24ec028b72c6eb1dca6c202c9281079b"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -528,7 +537,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a> reflex::Pattern::DFA::MAX_STATES = <a class="el" href="structreflex_1_1_pattern_1_1_const.html#aa341bfbbf4fb0372711e196132232853">Const::GMAX</a></td>
+          <td class="memname">const <a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a> reflex::Pattern::DFA::MAX_EDGES = 16*<a class="el" href="structreflex_1_1_pattern_1_1_const.html#aa341bfbbf4fb0372711e196132232853">Const::GMAX</a></td>
         </tr>
       </table>
   </td>
@@ -538,7 +547,51 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>maximum number of states </p>
+<p>maximum number of <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> edges is constrained by opcode table size </p>
+
+</div>
+</div>
+<a class="anchor" id="a79c922c9134683c9a2449bdde591225b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a> reflex::Pattern::DFA::MAX_POSITIONS = 4194304</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>maximum accumulated positions over all <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> states </p>
+
+</div>
+</div>
+<a class="anchor" id="a3402adb9c0d8a27b365972cc0fe87ec0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classreflex_1_1_pattern.html#a878042a0e46a089fd40b5f27bbf81ea3">Index</a> reflex::Pattern::DFA::MAX_STATES = <a class="el" href="structreflex_1_1_pattern_1_1_const.html#aa341bfbbf4fb0372711e196132232853">Const::GMAX</a>/3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>maximum number of <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> states is constrained by opcode table size </p>
 
 </div>
 </div>
@@ -556,13 +609,27 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aee63db02d27a054aa0eb4609151157df"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t reflex::Pattern::DFA::pno</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>total positions accumulated in <a class="el" href="structreflex_1_1_pattern_1_1_d_f_a.html" title="DFA created by subset construction from regex patterns. ">DFA</a> states, to check against MAX_POSITIONS </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="pattern_8h.html">pattern.h</a></li>
 </ul>
 </div><!-- contents -->
 <hr class="footer">
 <address class="footer"><small>
-Converted on Sun May 17 2026 15:28:29 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
+Converted on Thu Aug 27 2026 08:03:36 by <a target="_blank" href="http://www.doxygen.org/index.html">Doxygen</a> 1.8.11</small></address>
 <br>
 <div style="height: 246px; background: #DBDBDB;">
 </body>

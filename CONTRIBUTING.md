@@ -41,7 +41,14 @@ We love to hear from you!  [Contact us](https://www.genivia.com/contact.html).
 
 Contributions are covered under the [BSD-3 license](LICENSE.txt).
 
-Prepating a pull request
+Authenticity: no AI was used in the creation of the RE/flex tool and
+documentation.  Contributions must be authored by the submitter, with a few
+exceptions such as porting changes from another fork while maintaining
+attributions.  Contents sourced from AI tools such as LLMs, including but not
+limited to documentation files, source code, configuration scrips, issue and PR
+descriptions, are not permitted as they are unauthored.
+
+Preparing a pull request
 -------------------------------------------------------------
 
 When creating a pull request, please consider the following steps before
