@@ -1,0 +1,20 @@
+option(
+    'sse2',
+    type: 'feature',
+    value: 'auto',
+)
+option(
+    'avx2',
+    type: 'feature',
+    value: 'auto',
+)
+option(
+    'avx512bw',
+    type: 'feature',
+    value: 'auto',
+)
+option(
+    'neon',
+    type: 'feature',
+    value: 'auto',
+)
