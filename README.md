@@ -676,6 +676,7 @@ Changelog
 - May 11, 2026: 6.2.0 pattern matcher's `AbstractMatcher::avail()` method accepts an optional max length parameter; permit very long lines in the input (256MB long lines) when using `AbstractMatcher::line()` and `AbstractMatcher::eol()` without a begin-of-line loss (`BOLSZ` threshold can be changed.)
 - May 17, 2026: 6.3.0 add new `AbstractMatcher` methods `chr_last()`, `wchr_last()`, `chr_next()`, `wchr_next()`, `empty()`; add new example `words.l`.
 - Aug 26, 2026: 6.4.0 improve DFA growth control measures.
+- Sep 15, 2026: 6.5.0 fix an unlikely edge case when converting a file input encoding to UTF-8, inserts extra byte in the converted output; fix reflex tool option `-i` (lexer option `case-insensitive`) causing a "syntax error" issue with some inverted character classes.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
